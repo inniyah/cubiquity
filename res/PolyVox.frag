@@ -1,3 +1,5 @@
+#extension GL_OES_standard_derivatives : enable //http://www.khronos.org/registry/gles/extensions/OES/OES_standard_derivatives.txt
+
 #ifdef OPENGL_ES
 precision highp float;
 #endif
@@ -10,6 +12,7 @@ uniform vec3 u_lightDirection;       	        // Light direction
 
 // Inputs
 varying vec3 v_normalVector;                    // Normal vector in view space.
+varying vec4 v_worldSpacePosition;
 
 void main()
 {
@@ -18,7 +21,7 @@ void main()
 
     // Normalize the vectors.
     vec3 lightDirection = normalize(u_lightDirection);
-    vec3 normalVector = normalize(v_normalVector);
+    vec3 normalVector = normalize(cross(dFdy(v_worldSpacePosition.xyz), dFdx(v_worldSpacePosition.xyz)));
 
     // Ambient
     vec3 ambientColor = baseColor.rgb * u_ambientColor;
@@ -31,5 +34,5 @@ void main()
 
     // Light the pixel
     gl_FragColor.a = baseColor.a;
-    gl_FragColor.rgb = ambientColor + diffuseColor + vec3(0.5,0.0,0.0);
+    gl_FragColor.rgb = ambientColor + diffuseColor + abs(normalVector / 5.0);
 }

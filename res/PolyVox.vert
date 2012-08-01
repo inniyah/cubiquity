@@ -8,12 +8,15 @@ uniform mat4 u_inverseTransposeWorldViewMatrix;     // Matrix to transform a nor
 
 // Outputs
 varying vec3 v_normalVector;                        // Normal vector in view space.
+varying vec4 v_worldSpacePosition;
 
 void main()
 {
 	// Vertex attributes
     vec4 position = a_position;
     vec3 normal = a_normal;
+    
+    v_worldSpacePosition = position;
         
     // Transform position to clip space.
     gl_Position = u_worldViewProjectionMatrix * position;
