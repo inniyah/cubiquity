@@ -1,12 +1,12 @@
-material box
+material PolyVox
 {
     technique
     {
         pass
         {
             // shaders
-            vertexShader = res/colored.vert
-            fragmentShader = res/colored.frag
+            vertexShader = res/PolyVox.vert
+            fragmentShader = res/PolyVox.frag
             
             // uniforms
             u_worldViewProjectionMatrix = WORLD_VIEW_PROJECTION_MATRIX

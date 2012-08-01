@@ -31,5 +31,5 @@ void main()
 
     // Light the pixel
     gl_FragColor.a = baseColor.a;
-    gl_FragColor.rgb = ambientColor + diffuseColor;
+    gl_FragColor.rgb = ambientColor + diffuseColor + vec3(0.5,0.0,0.0);
 }

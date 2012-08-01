@@ -110,7 +110,7 @@ void Volume::updateMeshes()
 	meshPart->setIndexData(pIndices, 0, vecIndices.size());
 
     Model* model = Model::create(mesh);
-    model->setMaterial("res/box.material");
+    model->setMaterial("res/PolyVox.material");
     SAFE_RELEASE(mesh);
 
 	mRootNode->setModel(model);
