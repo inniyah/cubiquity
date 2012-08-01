@@ -1,27 +1,34 @@
-#ifndef Main_H_
-#define Main_H_
+#ifndef MESHGAME_H_
+#define MESHGAME_H_
 
 #include "gameplay.h"
+
+#include <bitset>
 
 using namespace gameplay;
 
 /**
- * Main game class.
+ * Sample game for rendering a scene with a model/mesh.
  */
-class Main: public Game
+class MeshGame: public Game
 {
 public:
 
     /**
-     * Constructror.
+     * Constructor.
      */
-    Main();
+    MeshGame();
+
+    /**
+     * Destructor.
+     */
+    virtual ~MeshGame();
 
     /**
      * @see Game::keyEvent
      */
-	void keyEvent(Keyboard::KeyEvent evt, int key);
-	
+    void keyEvent(Keyboard::KeyEvent evt, int key);
+
     /**
      * @see Game::touchEvent
      */
@@ -51,12 +58,21 @@ protected:
 
 private:
 
-    /**
-     * Draws the scene each frame.
-     */
     bool drawScene(Node* node);
 
+    void drawFrameRate(Font* font, const Vector4& color, unsigned int x, unsigned int y, unsigned int fps);
+
+    //Font* _font;
     Scene* _scene;
+    Node* _modelNode;
+	Node* _polyVoxNode;
+    int _touchX;
+	int _touchY;
+
+	Node* _cameraNode;
+
+	static const int mNoOfKeys = 0xFFFF;
+	std::bitset<mNoOfKeys> mPressedKeys;
 };
 
 #endif

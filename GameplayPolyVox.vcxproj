@@ -162,8 +162,8 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="bar-descriptor.xml" >
-        <SubType>Designer</SubType>
+    <None Include="bar-descriptor.xml">
+      <SubType>Designer</SubType>
     </None>
     <None Include="icon.png" />
     <None Include="res\box.dae" />
@@ -171,12 +171,25 @@
     <None Include="res\box.material" />
     <None Include="res\colored.frag" />
     <None Include="res\colored.vert" />
-  </ItemGroup> 
+  </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\ArraySizes.cpp" />
+    <ClCompile Include="src\GradientEstimators.cpp" />
+    <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\Main.cpp" />
+    <ClCompile Include="src\MarchingCubesTables.cpp" />
+    <ClCompile Include="src\MeshDecimator.cpp" />
+    <ClCompile Include="src\RandomUnitVectors.cpp" />
+    <ClCompile Include="src\RandomVectors.cpp" />
+    <ClCompile Include="src\Region.cpp" />
+    <ClCompile Include="src\Utility.cpp" />
+    <ClCompile Include="src\VertexTypes.cpp" />
+    <ClCompile Include="src\Volume.cpp" />
+    <ClCompile Include="src\VoxelFilters.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h" />
+    <ClInclude Include="src\Volume.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

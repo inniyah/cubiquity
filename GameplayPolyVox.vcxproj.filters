@@ -29,9 +29,48 @@
     <ClInclude Include="src\Main.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Volume.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ArraySizes.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GradientEstimators.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Log.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MarchingCubesTables.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MeshDecimator.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RandomUnitVectors.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RandomVectors.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Region.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Utility.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VertexTypes.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Volume.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VoxelFilters.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
