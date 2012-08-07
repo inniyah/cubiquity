@@ -1,6 +1,8 @@
 #ifndef VOLUME_H_
 #define VOLUME_H_
 
+#include "VolumeRegion.h"
+
 #include "Node.h"
 #include "Ref.h"
 
@@ -24,8 +26,10 @@ private:
 	void loadData();
 	void updateMeshes();
 
+public:
 	PolyVox::SimpleVolume<PolyVox::Material8>* mVolData;
 	gameplay::Node* mRootNode;
+	VolumeRegion* mVolumeRegion;
 };
 
-#endif
+#endif //VOLUME_H_

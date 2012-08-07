@@ -185,11 +185,13 @@
     <ClCompile Include="src\Utility.cpp" />
     <ClCompile Include="src\VertexTypes.cpp" />
     <ClCompile Include="src\Volume.cpp" />
+    <ClCompile Include="src\VolumeRegion.cpp" />
     <ClCompile Include="src\VoxelFilters.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h" />
     <ClInclude Include="src\Volume.h" />
+    <ClInclude Include="src\VolumeRegion.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

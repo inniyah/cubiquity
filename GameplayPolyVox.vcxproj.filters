@@ -32,6 +32,9 @@
     <ClInclude Include="src\Volume.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\VolumeRegion.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -71,6 +74,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\VoxelFilters.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VolumeRegion.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
