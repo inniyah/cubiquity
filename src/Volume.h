@@ -16,6 +16,8 @@ public:
 	static Volume* create();
 
 	gameplay::Node* getRootNode();
+
+	void setMaterial(gameplay::Material* material); //should take const param
 	void setVoxelAt(int x, int y, int z, PolyVox::Material8 value);
 
 private:
@@ -30,6 +32,9 @@ public:
 	PolyVox::SimpleVolume<PolyVox::Material8>* mVolData;
 	gameplay::Node* mRootNode;
 	VolumeRegion* mVolumeRegion;
+
+private:
+	gameplay::Material* mMaterial;
 };
 
 #endif //VOLUME_H_

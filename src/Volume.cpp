@@ -32,6 +32,13 @@ Node* Volume::getRootNode()
 	return mRootNode;
 }
 
+void Volume::setMaterial(gameplay::Material* material)
+{
+	mMaterial = material;
+
+	mVolumeRegion->mNode->getModel()->setMaterial(material);
+}
+
 void Volume::setVoxelAt(int x, int y, int z, PolyVox::Material8 value)
 {
 	mVolData->setVoxelAt(x, y, z, value);

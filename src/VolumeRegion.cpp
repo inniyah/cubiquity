@@ -44,7 +44,6 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 	meshPart->setIndexData(pIndices, 0, vecIndices.size());
 
     Model* model = Model::create(mesh);
-    model->setMaterial("res/PolyVox.material");
     SAFE_RELEASE(mesh);
 
 	mNode->setModel(model);

@@ -81,8 +81,10 @@ void MeshGame::initialize()
 	//_polyVoxNode->setTranslation(-8, -20, -8);
     //polyVoxModel->release();
 
-	volume->mVolumeRegion->mNode->getModel()->getMaterial()->getParameter("u_lightColor")->setValue(light->getColor());
-	volume->mVolumeRegion->mNode->getModel()->getMaterial()->getParameter("u_lightDirection")->bindValue(lightNode, &Node::getForwardVectorWorld);
+	gameplay::Material* material = gameplay::Material::create("res/PolyVox.material");
+	material->getParameter("u_lightColor")->setValue(light->getColor());
+	material->getParameter("u_lightDirection")->bindValue(lightNode, &Node::getForwardVectorWorld);
+	volume->setMaterial(material);
 }
 
 void MeshGame::finalize()
