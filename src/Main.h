@@ -68,6 +68,8 @@ private:
 	Node* _polyVoxNode;
     int _touchX;
 	int _touchY;
+	Light* _light;
+	Node* _lightNode;
 
 	Node* _cameraNode;
 

@@ -2,13 +2,18 @@
 
 #include "MeshPart.h"
 
+#include <sstream>
+
 using namespace gameplay;
 using namespace PolyVox;
 
 VolumeRegion::VolumeRegion(PolyVox::Region region)
 	:mRegion(region)
 {
-	 mNode = Node::create();
+	std::stringstream ss;
+	ss << "VolumeRegionNode(" << mRegion.getLowerCorner().getX() << "," << mRegion.getLowerCorner().getY() << "," << mRegion.getLowerCorner().getZ() << ")";
+	mNode = Node::create(ss.str().c_str());
+	 //mNode->setTranslation(mRegion.getLowerCorner().getX(), mRegion.getLowerCorner().getY(), mRegion.getLowerCorner().getZ());
 }
 
 VolumeRegion::~VolumeRegion()

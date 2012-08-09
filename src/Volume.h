@@ -6,6 +6,7 @@
 #include "Node.h"
 #include "Ref.h"
 
+#include "PolyVoxCore/Array.h"
 #include "PolyVoxCore/Material.h"
 #include "PolyVoxCore/SimpleVolume.h"
 #include "PolyVoxCore/CubicSurfaceExtractor.h"
@@ -13,28 +14,26 @@
 class Volume : public gameplay::Ref
 {
 public:	
-	static Volume* create();
+	static Volume* create(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth);
 
 	gameplay::Node* getRootNode();
 
-	void setMaterial(gameplay::Material* material); //should take const param
+	void setMaterial(const char* materialPath);
 	void setVoxelAt(int x, int y, int z, PolyVox::Material8 value);
-
-private:
-	Volume();
-	~Volume();
-	Volume& operator=(const Volume&);
 
 	void loadData();
 	void updateMeshes();
 
+private:
+	Volume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth);
+	~Volume();
+	Volume& operator=(const Volume&);
+
 public:
 	PolyVox::SimpleVolume<PolyVox::Material8>* mVolData;
 	gameplay::Node* mRootNode;
-	VolumeRegion* mVolumeRegion;
-
-private:
-	gameplay::Material* mMaterial;
+	//VolumeRegion* mVolumeRegion;
+	PolyVox::Array<3, VolumeRegion*> mVolumeRegions;
 };
 
 #endif //VOLUME_H_

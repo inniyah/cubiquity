@@ -47,12 +47,12 @@ void MeshGame::initialize()
 	_scene = Scene::createScene();
 
     // Find the light node
-	Light* light = Light::createDirectional(Vector3(1.0, 1.0, 1.0));
-	Node* lightNode = Node::create();
-	lightNode->setLight(light);
-	lightNode->setTranslation(0.0f, 100.0f, 0.0f);
-	pointNodeAtTarget(lightNode, Vector3(0.0f, 0.0f, 0.0f));
-	_scene->addNode(lightNode);
+	_light = Light::createDirectional(Vector3(1.0, 1.0, 1.0));
+	_lightNode = Node::create();
+	_lightNode->setLight(_light);
+	_lightNode->setTranslation(0.0f, 100.0f, 0.0f);
+	pointNodeAtTarget(_lightNode, Vector3(0.0f, 0.0f, 0.0f));
+	_scene->addNode(_lightNode);
 
 	Camera* camera = Camera::createPerspective(60.0f, 1.0f, 0.1f, 1000.0f);
 	_cameraNode = _scene->addNode();
@@ -74,17 +74,16 @@ void MeshGame::initialize()
 	_cameraNode->set(scale, rotation, translation);*/
 
 	// Create the volume and add it to the scene.
-	Volume* volume = Volume::create();
+	Volume* volume = Volume::create(0, 0, 0, 31, 7, 31, 8, 8, 8);
+	volume->loadData();
+	volume->updateMeshes();
 	_polyVoxNode = volume->getRootNode();
 	_scene->addNode(volume->getRootNode());
 
 	//_polyVoxNode->setTranslation(-8, -20, -8);
     //polyVoxModel->release();
 
-	gameplay::Material* material = gameplay::Material::create("res/PolyVox.material");
-	material->getParameter("u_lightColor")->setValue(light->getColor());
-	material->getParameter("u_lightDirection")->bindValue(lightNode, &Node::getForwardVectorWorld);
-	volume->setMaterial(material);
+	volume->setMaterial("res/PolyVox.material");
 }
 
 void MeshGame::finalize()
@@ -198,7 +197,11 @@ bool MeshGame::drawScene(Node* node)
 {
     Model* model = node->getModel();
     if (model)
+	{
+		model->getMaterial()->getParameter("u_lightColor")->setValue(_light->getColor());
+		model->getMaterial()->getParameter("u_lightDirection")->setValue(_lightNode->getForwardVectorWorld());
         model->draw();
+	}
     return true;
 }
 
