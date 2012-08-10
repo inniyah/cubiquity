@@ -106,7 +106,7 @@ void Volume::loadData()
 				uint8_t uMaterial = 1;
 
 				//If the current voxel is less than 'radius' units from the center then we make it solid.
-				if((x%2==0) && (z%2==0))
+				if((x%8==0) && (z%8==0))
 				{
 					//Our new density value
 					uMaterial = 0;

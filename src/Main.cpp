@@ -60,7 +60,7 @@ void MeshGame::initialize()
 	_scene->setActiveCamera(camera);
 	_scene->getActiveCamera()->setAspectRatio((float)getWidth() / (float)getHeight());
 	_cameraNode->setTranslation(50.0f, 50.0f, 50.0f);
-	pointNodeAtTarget(_cameraNode, Vector3(16.0f, 4.0f, 16.0f));
+	pointNodeAtTarget(_cameraNode, Vector3(64.0f, 4.0f, 64.0f));
 
 	Vector3 vec = _cameraNode->getForwardVector();
 	GP_WARN("Test%f", vec.x);
@@ -74,7 +74,7 @@ void MeshGame::initialize()
 	_cameraNode->set(scale, rotation, translation);*/
 
 	// Create the volume and add it to the scene.
-	Volume* volume = Volume::create(0, 0, 0, 31, 7, 31, 8, 8, 8);
+	Volume* volume = Volume::create(0, 0, 0, 127, 31, 127, 32, 32, 32);
 	volume->loadData();
 	volume->updateMeshes();
 	_polyVoxNode = volume->getRootNode();
