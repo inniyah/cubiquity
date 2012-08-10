@@ -62,6 +62,7 @@
        If this is not done in place, override ${out.dex.input.absolute.dir} */
        -->
     <target name="-post-compile">
+        <copy file="../res/arial40.gpb" tofile="assets/res/arial40.gpb"/>
         <copy file="../res/PolyVox.material" tofile="assets/res/PolyVox.material"/>
         <copy file="../res/PolyVox.vert" tofile="assets/res/PolyVox.vert"/>
         <copy file="../res/PolyVox.frag" tofile="assets/res/PolyVox.frag"/>

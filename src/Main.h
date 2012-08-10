@@ -62,7 +62,7 @@ private:
 
     void drawFrameRate(Font* font, const Vector4& color, unsigned int x, unsigned int y, unsigned int fps);
 
-    //Font* _font;
+    Font* _font;
     Scene* _scene;
     Node* _modelNode;
 	Node* _polyVoxNode;

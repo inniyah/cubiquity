@@ -31,7 +31,7 @@ void pointNodeAtTarget(Node* node, const Vector3& target, const Vector3& up = Ve
 MeshGame game;
 
 MeshGame::MeshGame()
-    : /*_font(NULL),*/ _scene(NULL), _touchX(0), _touchY(0)
+    : _font(NULL), _touchX(0), _touchY(0)
 {
 }
 
@@ -42,7 +42,7 @@ MeshGame::~MeshGame()
 void MeshGame::initialize()
 {    
     // Load font
-    //_font = Font::create("res/arial40.gpb");
+    _font = Font::create("res/arial40.gpb");
 
 	_scene = Scene::createScene();
 
@@ -131,7 +131,7 @@ void MeshGame::render(float elapsedTime)
     _scene->visit(this, &MeshGame::drawScene);
 
     // Draw the fps
-    //drawFrameRate(_font, Vector4(0, 0.5f, 1, 1), 5, 1, getFrameRate());
+    drawFrameRate(_font, Vector4(0, 0.5f, 1, 1), 5, 1, getFrameRate());
 }
 
 void MeshGame::keyEvent(Keyboard::KeyEvent evt, int key)
