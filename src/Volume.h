@@ -19,9 +19,9 @@ public:
 	gameplay::Node* getRootNode();
 
 	void setMaterial(const char* materialPath);
-	void setVoxelAt(int x, int y, int z, PolyVox::Material8 value);
+	void setVoxelAt(int x, int y, int z, PolyVox::Material16 value);
 
-	void loadData();
+	void loadData(const char* filename);
 	void updateMeshes();
 
 private:
@@ -30,7 +30,7 @@ private:
 	Volume& operator=(const Volume&);
 
 public:
-	PolyVox::SimpleVolume<PolyVox::Material8>* mVolData;
+	PolyVox::SimpleVolume<PolyVox::Material16>* mVolData;
 	gameplay::Node* mRootNode;
 	//VolumeRegion* mVolumeRegion;
 	PolyVox::Array<3, VolumeRegion*> mVolumeRegions;

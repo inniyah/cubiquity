@@ -23,7 +23,7 @@ Volume::Volume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int u
 	mRootNode = Node::create();
 	//mVolumeRegion = new VolumeRegion(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ));
 	//mRootNode->addChild(mVolumeRegion->mNode);
-	mVolData = new SimpleVolume<Material8>(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ));
+	mVolData = new SimpleVolume<Material16>(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ));
 
 	unsigned int volumeWidthInRegions = volumeWidth / regionWidth;
 	unsigned int volumeHeightInRegions = volumeHeight / regionHeight;
@@ -80,16 +80,20 @@ void Volume::setMaterial(const char* materialPath)
 	}
 }
 
-void Volume::setVoxelAt(int x, int y, int z, PolyVox::Material8 value)
+void Volume::setVoxelAt(int x, int y, int z, PolyVox::Material16 value)
 {
 	mVolData->setVoxelAt(x, y, z, value);
 }
 
-void Volume::loadData()
+void Volume::loadData(const char* filename)
 {
-	//This vector hold the position of the center of the volume
-	float fRadius = 6.0f;
-	Vector3DFloat v3dVolCenter(mVolData->getWidth() / 2, mVolData->getHeight() / 2, mVolData->getDepth() / 2);
+	FILE* inputFile = fopen(filename, "rb");
+	if(!inputFile)
+	{
+		GP_ERROR("Failed to open volume file");
+	}
+
+	fseek(inputFile, 6, SEEK_SET);
 
 	//This three-level for loop iterates over every voxel in the volume
 	for (int z = 0; z < mVolData->getWidth(); z++)
@@ -98,31 +102,27 @@ void Volume::loadData()
 		{
 			for (int x = 0; x < mVolData->getDepth(); x++)
 			{
-				//Store our current position as a vector...
-				Vector3DFloat v3dCurrentPos(x,y,z);	
-				//And compute how far the current position is from the center of the volume
-				float fDistToCenter = (v3dCurrentPos - v3dVolCenter).length();
+				uint16_t diskVal;
 
-				uint8_t uMaterial = 1;
-
-				//If the current voxel is less than 'radius' units from the center then we make it solid.
-				if((x%8==0) && (z%8==0))
+				//Slow and inefficient reading one voxel at a time!
+				size_t elementsRead = fread(&diskVal, sizeof(diskVal), 1,inputFile);
+				if(elementsRead != 1)
 				{
-					//Our new density value
-					uMaterial = 0;
+					GP_ERROR("Failed to read voxel %d, %d, %d", x, y, z);
 				}
 
-				//Get the old voxel
-				Material8 voxel = mVolData->getVoxelAt(x,y,z);
+				if(diskVal > 0)
+					diskVal = 1;
 
-				//Modify the density and material
-				voxel.setMaterial(uMaterial);
+				Material16 voxel(diskVal);
 
 				//Wrte the voxel value into the volume	
 				setVoxelAt(x, y, z, voxel);
 			}
 		}
 	}
+
+	fclose(inputFile);
 }
 
 void Volume::updateMeshes()
@@ -135,10 +135,13 @@ void Volume::updateMeshes()
 			{
 				//Extract the surface
 				SurfaceMesh<PositionMaterial> polyVoxMesh;
-				CubicSurfaceExtractor< SimpleVolume<Material8> > surfaceExtractor(mVolData, mVolumeRegions[x][y][z]->mRegion, &polyVoxMesh);
+				CubicSurfaceExtractor< SimpleVolume<Material16> > surfaceExtractor(mVolData, mVolumeRegions[x][y][z]->mRegion, &polyVoxMesh);
 				surfaceExtractor.execute();	
 
-				mVolumeRegions[x][y][z]->buildGraphicsMesh(polyVoxMesh);
+				if(polyVoxMesh.getNoOfIndices() > 0)
+				{
+					mVolumeRegions[x][y][z]->buildGraphicsMesh(polyVoxMesh);
+				}
 			}
 		}
 	}

@@ -75,6 +75,9 @@ private:
 
 	static const int mNoOfKeys = 0xFFFF;
 	std::bitset<mNoOfKeys> mPressedKeys;
+
+	float mCameraElevationAngle;
+	float mCameraRotationAngle;
 };
 
 #endif

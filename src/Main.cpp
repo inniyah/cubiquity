@@ -59,67 +59,39 @@ void MeshGame::initialize()
 	_cameraNode->setCamera(camera);
 	_scene->setActiveCamera(camera);
 	_scene->getActiveCamera()->setAspectRatio((float)getWidth() / (float)getHeight());
-	_cameraNode->setTranslation(50.0f, 50.0f, 50.0f);
-	pointNodeAtTarget(_cameraNode, Vector3(64.0f, 4.0f, 64.0f));
 
-	Vector3 vec = _cameraNode->getForwardVector();
-	GP_WARN("Test%f", vec.x);
-
-	/*Vector3 scale;
-	Quaternion rotation;
-	Vector3 translation;
-	Matrix lookAt;
-	Matrix::createLookAt(0,0,-20,0,0,0,0,1,0,&lookAt);
-	lookAt.decompose(&scale, &rotation, &translation);
-	_cameraNode->set(scale, rotation, translation);*/
+	mCameraElevationAngle = -0.5f;
+	mCameraRotationAngle = 0.0f;
 
 	// Create the volume and add it to the scene.
 	Volume* volume = Volume::create(0, 0, 0, 127, 31, 127, 32, 32, 32);
-	volume->loadData();
+	//Rather dirty hack until I figure out how to package volume data with gameplay
+#ifdef WIN32
+	volume->loadData("res/level2.vol");
+#else
+	volume->loadData("/sdcard/external_sd/level2.vol");
+#endif
 	volume->updateMeshes();
 	_polyVoxNode = volume->getRootNode();
 	_scene->addNode(volume->getRootNode());
-
-	//_polyVoxNode->setTranslation(-8, -20, -8);
-    //polyVoxModel->release();
 
 	volume->setMaterial("res/PolyVox.material");
 }
 
 void MeshGame::finalize()
 {
-    //SAFE_RELEASE(_font);
+    SAFE_RELEASE(_font);
     SAFE_RELEASE(_scene);
 }
 
 void MeshGame::update(float elapsedTime)
 {
-    // Rotate model
-    //_modelNode->rotateY(elapsedTime * MATH_DEG_TO_RAD(0.05f));
-
-	float cameraSpeed = 0.1f;
-	Vector3 cameraMovement(0.0f, 0.0f, 0.0f);
-
-	if(mPressedKeys.test(Keyboard::KEY_W))
-	{
-		cameraMovement += _cameraNode->getForwardVector() * cameraSpeed;
-	}
-	if(mPressedKeys.test(Keyboard::KEY_S))
-	{
-		cameraMovement -= _cameraNode->getForwardVector() * cameraSpeed;
-	}
-	if(mPressedKeys.test(Keyboard::KEY_D))
-	{
-		cameraMovement += _cameraNode->getRightVector() * cameraSpeed;
-	}
-	if(mPressedKeys.test(Keyboard::KEY_A))
-	{
-		cameraMovement -= _cameraNode->getRightVector() * cameraSpeed;
-	}
-
-	Vector3 cameraPos = _cameraNode->getTranslation();
-	cameraPos += cameraMovement;
-	_cameraNode->setTranslation(cameraPos);	
+	_cameraNode->setTranslation(64.0f, 40.0f, 64.0f);
+	_cameraNode->setRotation(Quaternion::identity());
+	_cameraNode->rotateY(mCameraRotationAngle);
+	_cameraNode->rotateX(mCameraElevationAngle);
+	
+	_cameraNode->translate(_cameraNode->getForwardVector() * -150.0f);
 }
 
 void MeshGame::render(float elapsedTime)
@@ -184,8 +156,21 @@ void MeshGame::touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int cont
 			int deltaY = y - _touchY;
             _touchX = x;
             _touchY = y;
-			_cameraNode->rotate(Vector3(0.0,1.0,0.0), MATH_DEG_TO_RAD(-deltaX * 0.5f));
-			_cameraNode->rotate(Vector3(1.0,0.0,0.0), MATH_DEG_TO_RAD(-deltaY * 0.5f));
+			
+			float cameraSensitivity = 0.01f;
+			mCameraRotationAngle -= (deltaX * cameraSensitivity);
+			mCameraElevationAngle -= (deltaY * cameraSensitivity);
+
+			/*float cameraSpeed = 0.5f;
+			Vector3 cameraMovement(0.0f, 0.0f, 0.0f);
+
+			cameraMovement += _cameraNode->getRightVector() * cameraSpeed * deltaX;
+			//cameraMovement += _cameraNode->getUpVector() * cameraSpeed * deltaY;
+
+			Vector3 cameraPos = _cameraNode->getTranslation();
+			cameraPos += cameraMovement;
+			_cameraNode->setTranslation(cameraPos);	
+			pointNodeAtTarget(_cameraNode, Vector3(64.0f, 4.0f, 64.0f));*/
         }
         break;
     default:
