@@ -11,13 +11,13 @@ uniform vec3 u_lightColor;                      // Light color
 uniform vec3 u_lightDirection;       	        // Light direction
 
 // Inputs
-varying vec3 v_normalVector;                    // Normal vector in view space.
 varying vec4 v_worldSpacePosition;
+varying vec4 v_colour;
 
 void main()
 {
 	// Base color
-    vec4 baseColor = u_diffuseColor;
+    vec4 baseColor = v_colour;
 
     // Normalize the vectors.
     vec3 lightDirection = normalize(u_lightDirection);

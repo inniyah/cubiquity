@@ -111,12 +111,12 @@ void Volume::loadData(const char* filename)
 					GP_ERROR("Failed to read voxel %d, %d, %d", x, y, z);
 				}
 
-				if(diskVal > 0)
-					diskVal = 1;
-
-				Material16 voxel(diskVal);
+				//HACK - For some reason the valures coming from Voxeliens
+				//seem to have the endianness the wrong way round? Swap them.
+				diskVal = (((diskVal & 0xff)<<8) | ((diskVal & 0xff00)>>8));
 
 				//Wrte the voxel value into the volume	
+				Material16 voxel(diskVal);
 				setVoxelAt(x, y, z, voxel);
 			}
 		}
