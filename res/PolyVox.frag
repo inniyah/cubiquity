@@ -14,6 +14,23 @@ uniform vec3 u_lightDirection;       	        // Light direction
 varying vec4 v_worldSpacePosition;
 varying vec4 v_colour;
 
+// Computes a noise value based on a voxel position (x,y,z) and a strength value (packed into w).
+float positionBasedNoise(vec4 positionAndStrength)
+{
+    //'floor' is more widely supported than 'round'. Include tiny offset to stop sparkles.
+    vec3 roundedPos = floor(positionAndStrength.xyz + vec3(0.501));
+    
+    //Large number is arbitrary, but smaller number lead to banding. May need to change this for larger terrains?
+    float noise = 1000000.0 / dot(roundedPos, roundedPos);
+    noise = fract(noise);
+    
+    //Scale the noise
+    float halfNoiseStrength = positionAndStrength.w * 0.5;
+    noise = -halfNoiseStrength + positionAndStrength.w * noise; //http://www.opengl.org/wiki/GLSL_Optimizations#Get_MAD
+    
+    return noise;
+}
+
 void main()
 {
 	// Base color
@@ -23,11 +40,9 @@ void main()
     vec3 lightDirection = normalize(u_lightDirection);
     vec3 normalVector = normalize(cross(dFdy(v_worldSpacePosition.xyz), dFdx(v_worldSpacePosition.xyz)));
     
-    vec3 roundedPos = floor(v_worldSpacePosition.xyz + vec3(0.501, 0.501, 0.501)) ; //'floor' is more widely supported than 'round'
-    float noise = 1000000.0 / dot(roundedPos, roundedPos);
-    noise = fract(noise);
-    noise *= 0.1;
-    noise -= 0.05;
+    //Compute noise. All colour channels get the same value.
+    const float noiseStrength = 0.2;
+    vec3 noise = vec3(positionBasedNoise(vec4(v_worldSpacePosition.xyz, noiseStrength)));
 
     // Ambient
     vec3 ambientColor = baseColor.rgb * u_ambientColor;
@@ -40,5 +55,5 @@ void main()
 
     // Light the pixel
     gl_FragColor.a = baseColor.a;
-    gl_FragColor.rgb = ambientColor + diffuseColor + vec3(noise, noise, noise);
+    gl_FragColor.rgb = ambientColor + diffuseColor + noise;
 }
