@@ -11,16 +11,21 @@ uniform vec3 u_lightColor;                      // Light color
 uniform vec3 u_lightDirection;       	        // Light direction
 
 // Inputs
-varying vec4 v_worldSpacePosition;
+varying vec4 v_modelSpacePosition;
 varying vec4 v_colour;
 
 // Computes a noise value based on a voxel position (x,y,z) and a strength value (packed into w).
+// Currently suggested to operate on model space positions because maybe banding occurs for the larger
+// world space positions? If we have to change this then maybe modf the positions to keep them small.
 float positionBasedNoise(vec4 positionAndStrength)
 {
-    //'floor' is more widely supported than 'round'. Include tiny offset to stop sparkles.
-    vec3 roundedPos = floor(positionAndStrength.xyz + vec3(0.501));
+    //'floor' is more widely supported than 'round'. Offset consists of:
+    //  - A small integer to push us away from the origin (prevent divide by zero)
+    //  - 0.5 to perform the rounding
+    //  - A tiny offset to prevent sparkes as faces are exactly on rounding boundary.
+    vec3 roundedPos = floor(positionAndStrength.xyz + vec3(7.501));
     
-    //Large number is arbitrary, but smaller number lead to banding. May need to change this for larger terrains?
+    //Large number is arbitrary, but smaller number lead to banding.
     float noise = 1000000.0 / dot(roundedPos, roundedPos);
     noise = fract(noise);
     
@@ -38,11 +43,12 @@ void main()
 
     // Normalize the vectors.
     vec3 lightDirection = normalize(u_lightDirection);
-    vec3 normalVector = normalize(cross(dFdy(v_worldSpacePosition.xyz), dFdx(v_worldSpacePosition.xyz)));
+    vec3 normalVector = normalize(cross(dFdy(v_modelSpacePosition.xyz), dFdx(v_modelSpacePosition.xyz)));
     
-    //Compute noise. All colour channels get the same value.
-    const float noiseStrength = 0.2;
-    vec3 noise = vec3(positionBasedNoise(vec4(v_worldSpacePosition.xyz, noiseStrength)));
+    // Compute noise. All colour channels get the same value. Use model
+    // space position, or perhaps banding occurs for larger terrains?
+    const float noiseStrength = 0.15;
+    vec3 noise = vec3(positionBasedNoise(vec4(v_modelSpacePosition.xyz, noiseStrength)));
 
     // Ambient
     vec3 ambientColor = baseColor.rgb * u_ambientColor;

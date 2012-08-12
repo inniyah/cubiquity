@@ -6,7 +6,7 @@ uniform mat4 u_worldViewProjectionMatrix;           // Matrix to transform a pos
 uniform mat4 u_inverseTransposeWorldViewMatrix;     // Matrix to transform a normal to view space.
 
 // Outputs
-varying vec4 v_worldSpacePosition;
+varying vec4 v_modelSpacePosition;
 varying vec4 v_colour;
 
 vec4 floatToRGBA(float inputVal)
@@ -32,8 +32,8 @@ void main()
     v_colour = floatToRGBA(a_position.w);
     
     //Vertex position
-    v_worldSpacePosition = vec4(a_position.xyz, 1.0);
+    v_modelSpacePosition = vec4(a_position.xyz, 1.0);
         
     // Transform position to clip space.
-    gl_Position = u_worldViewProjectionMatrix * v_worldSpacePosition;    
+    gl_Position = u_worldViewProjectionMatrix * v_modelSpacePosition;
 }
