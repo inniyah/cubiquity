@@ -34,6 +34,8 @@ public:
      */
     void touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int contactIndex);
 
+	bool mouseEvent(Mouse::MouseEvent evt, int x, int y, int wheelDelta);
+
 protected:
 
     /**
@@ -78,6 +80,7 @@ private:
 
 	float mCameraElevationAngle;
 	float mCameraRotationAngle;
+	float mCameraDistance;
 };
 
 #endif

@@ -60,8 +60,9 @@ void MeshGame::initialize()
 	_scene->setActiveCamera(camera);
 	_scene->getActiveCamera()->setAspectRatio((float)getWidth() / (float)getHeight());
 
-	mCameraElevationAngle = -0.5f;
-	mCameraRotationAngle = 0.0f;
+	mCameraElevationAngle = MATH_DEG_TO_RAD(30.0f); //Value from voxeliens
+	mCameraRotationAngle = 0.0f; //Value from voxeliens
+	mCameraDistance = 145.0f; //Value from voxeliens
 
 	// Create the volume and add it to the scene.
 	Volume* volume = Volume::create(0, 0, 0, 127, 31, 127, 32, 32, 32);
@@ -86,12 +87,12 @@ void MeshGame::finalize()
 
 void MeshGame::update(float elapsedTime)
 {
-	_cameraNode->setTranslation(64.0f, 40.0f, 64.0f);
+	_cameraNode->setTranslation(64.0f, 16.0f, 64.0f);
 	_cameraNode->setRotation(Quaternion::identity());
 	_cameraNode->rotateY(mCameraRotationAngle);
-	_cameraNode->rotateX(mCameraElevationAngle);
+	_cameraNode->rotateX(-mCameraElevationAngle); //Why negative?
 	
-	_cameraNode->translate(_cameraNode->getForwardVector() * -150.0f);
+	_cameraNode->translate(_cameraNode->getForwardVector() * -mCameraDistance);
 }
 
 void MeshGame::render(float elapsedTime)
@@ -159,7 +160,10 @@ void MeshGame::touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int cont
 			
 			float cameraSensitivity = 0.01f;
 			mCameraRotationAngle -= (deltaX * cameraSensitivity);
-			mCameraElevationAngle -= (deltaY * cameraSensitivity);
+			mCameraElevationAngle += (deltaY * cameraSensitivity);
+
+			mCameraElevationAngle = min(mCameraElevationAngle, MATH_DEG_TO_RAD(70.0f)); //Value from voxeliens
+			mCameraElevationAngle = max(mCameraElevationAngle, MATH_DEG_TO_RAD(-5.0f)); //Value from voxeliens
 
 			/*float cameraSpeed = 0.5f;
 			Vector3 cameraMovement(0.0f, 0.0f, 0.0f);
@@ -176,6 +180,20 @@ void MeshGame::touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int cont
     default:
         break;
     };
+}
+
+bool MeshGame::mouseEvent(Mouse::MouseEvent evt, int x, int y, int wheelDelta)
+{
+	wheelDelta *= 10; //To match Voxeliens
+
+	// Pushing forward (positive wheelDelta) should reduce distance to world.
+	mCameraDistance -= wheelDelta;
+
+	//Values copied from Voxeliens
+	mCameraDistance = min(mCameraDistance, 200.0f);
+	mCameraDistance = max(mCameraDistance, 91.0f); //sqrt(64*64+64*64) to stop camera clipping with volume
+
+	return false;
 }
 
 bool MeshGame::drawScene(Node* node)
