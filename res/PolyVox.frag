@@ -43,7 +43,7 @@ void main()
 
     // Normalize the vectors.
     vec3 lightDirection = normalize(u_lightDirection);
-    vec3 normalVector = normalize(cross(dFdy(v_modelSpacePosition.xyz), dFdx(v_modelSpacePosition.xyz)));
+    vec3 normalVector = normalize(cross(dFdx(v_modelSpacePosition.xyz), dFdy(v_modelSpacePosition.xyz)));
     
     // Compute noise. All colour channels get the same value. Use model
     // space position, or perhaps banding occurs for larger terrains?
@@ -55,7 +55,7 @@ void main()
 
     // Diffuse
 	float attenuation = 1.0;
-    float ddot = dot(normalVector, lightDirection);
+    float ddot = dot(normalVector, -lightDirection); //Vector to light is inverse of light direction
     float intensity =  max(0.0, attenuation * ddot);
     vec3 diffuseColor = u_lightColor * baseColor.rgb * intensity;
 
