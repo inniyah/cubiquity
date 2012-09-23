@@ -1,0 +1,22 @@
+material SmoothTerrain
+{
+    technique
+    {
+        pass
+        {
+            // shaders
+            vertexShader = res/SmoothTerrain.vert
+            fragmentShader = res/SmoothTerrain.frag
+            
+            // uniforms
+            u_worldViewProjectionMatrix = WORLD_VIEW_PROJECTION_MATRIX
+
+            // render state
+            renderState
+            {
+                cullFace = true
+                depthTest = true
+            }
+        }
+    }
+}

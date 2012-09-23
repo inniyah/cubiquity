@@ -24,8 +24,8 @@ freely, subject to the following restrictions:
 #ifndef __PolyVox_MaterialDensityPair_H__
 #define __PolyVox_MaterialDensityPair_H__
 
-#include "PolyVoxCore/SurfaceExtractionController.h" //We'll specialise the controller contained in here
-#include "PolyVoxCore/Voxel.h"
+#include "PolyVoxCore/DefaultIsQuadNeeded.h" //we'll specialise this function for this voxel type
+#include "PolyVoxCore/DefaultMarchingCubesController.h" //We'll specialise the controller contained in here
 
 #include "PolyVoxImpl/TypeDef.h"
 
@@ -96,11 +96,20 @@ namespace PolyVox
 		static DensityType getMaxDensity() throw() { return (0x01 << NoOfDensityBits) - 1; }
 		static DensityType getMinDensity() throw() { return 0; }
 
-		static bool isQuadNeeded(MaterialDensityPair<Type, NoOfMaterialBits, NoOfDensityBits> from, MaterialDensityPair<Type, NoOfMaterialBits, NoOfDensityBits> to, float& materialToUse)
+	private:
+		MaterialType m_uMaterial : NoOfMaterialBits;
+		DensityType m_uDensity : NoOfDensityBits;
+	};
+
+	template<typename Type, uint8_t NoOfMaterialBits, uint8_t NoOfDensityBits>
+	class DefaultIsQuadNeeded< MaterialDensityPair<Type, NoOfMaterialBits, NoOfDensityBits> >
+	{
+	public:
+		bool operator()(MaterialDensityPair<Type, NoOfMaterialBits, NoOfDensityBits> back, MaterialDensityPair<Type, NoOfMaterialBits, NoOfDensityBits> front, float& materialToUse)
 		{
-			if((from.getMaterial() > 0) && (to.getMaterial() == 0))
+			if((back.getMaterial() > 0) && (front.getMaterial() == 0))
 			{
-				materialToUse = static_cast<float>(from.getMaterial());
+				materialToUse = static_cast<float>(back.getMaterial());
 				return true;
 			}
 			else
@@ -108,18 +117,25 @@ namespace PolyVox
 				return false;
 			}
 		}
-
-	private:
-		MaterialType m_uMaterial : NoOfMaterialBits;
-		DensityType m_uDensity : NoOfDensityBits;
 	};
 
 	template <typename Type, uint8_t NoOfMaterialBits, uint8_t NoOfDensityBits>
-	class SurfaceExtractionController< MaterialDensityPair<Type, NoOfMaterialBits, NoOfDensityBits> >
+	class DefaultMarchingCubesController< MaterialDensityPair<Type, NoOfMaterialBits, NoOfDensityBits> >
 	{
 	public:
 		typedef Type DensityType;
 		typedef Type MaterialType;
+
+		DefaultMarchingCubesController(void)
+		{
+			// Default to a threshold value halfway between the min and max possible values.
+			m_tThreshold = (MaterialDensityPair<Type, NoOfMaterialBits, NoOfDensityBits>::getMinDensity() + MaterialDensityPair<Type, NoOfMaterialBits, NoOfDensityBits>::getMaxDensity()) / 2;
+		}
+
+		DefaultMarchingCubesController(DensityType tThreshold)
+		{
+			m_tThreshold = tThreshold;
+		}
 
 		DensityType convertToDensity(MaterialDensityPair<Type, NoOfMaterialBits, NoOfDensityBits> voxel)
 		{
@@ -132,10 +148,12 @@ namespace PolyVox
 		}
 
 		DensityType getThreshold(void)
-		{
-			// Returns a threshold value halfway between the min and max possible values.
-			return (MaterialDensityPair<Type, NoOfMaterialBits, NoOfDensityBits>::getMinDensity() + MaterialDensityPair<Type, NoOfMaterialBits, NoOfDensityBits>::getMaxDensity()) / 2;
-		}
+		{			
+			return m_tThreshold;
+		}		
+
+	private:
+		DensityType m_tThreshold;
 	};
 
 	typedef MaterialDensityPair<uint8_t, 4, 4> MaterialDensityPair44;

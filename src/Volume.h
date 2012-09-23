@@ -10,11 +10,23 @@
 #include "PolyVoxCore/Material.h"
 #include "PolyVoxCore/SimpleVolume.h"
 #include "PolyVoxCore/CubicSurfaceExtractor.h"
+#include "PolyVoxCore/CubicSurfaceExtractorWithNormals.h"
+#include "PolyVoxCore/MarchingCubesSurfaceExtractor.h"
+
+namespace VolumeTypes
+{
+	enum VolumeType
+	{
+		ColouredCubes = 0,
+		SmoothTerrain = 1
+	};
+}
+typedef VolumeTypes::VolumeType VolumeType;
 
 class Volume : public gameplay::Ref
 {
 public:	
-	static Volume* create(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth);
+	static Volume* create(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth);
 
 	gameplay::Node* getRootNode();
 
@@ -25,9 +37,11 @@ public:
 	void updateMeshes();
 
 private:
-	Volume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth);
+	Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth);
 	~Volume();
 	Volume& operator=(const Volume&);
+
+	VolumeType mType;
 
 public:
 	PolyVox::SimpleVolume<PolyVox::Material16>* mVolData;

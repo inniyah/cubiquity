@@ -15,6 +15,7 @@ public:
 	~VolumeRegion();
 
 	void buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial>& polyVoxMesh);
+	void buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal>& polyVoxMesh);
 
 	PolyVox::Region mRegion;
 	gameplay::Node* mNode;

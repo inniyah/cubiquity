@@ -31,13 +31,13 @@ namespace PolyVox
 {
 	void extractCubicMesh(Volume& volume, const Region& region, Mesh& resultMesh)
 	{
-		CubicSurfaceExtractorWithNormals< SimpleVolume<MaterialDensityPair88> > surfaceExtractor(&volume, region, &resultMesh, MaterialDensityPair88::isQuadNeeded);
+		CubicSurfaceExtractorWithNormals< SimpleVolume<MaterialDensityPair88> > surfaceExtractor(&volume, region, &resultMesh);
 		surfaceExtractor.execute();
 	}
 
 	void extractSmoothMesh(Volume& volume, const Region& region, Mesh& resultMesh)
 	{
-		SurfaceExtractor< SimpleVolume<MaterialDensityPair88> > surfaceExtractor(&volume, region, &resultMesh);
+		MarchingCubesSurfaceExtractor< SimpleVolume<MaterialDensityPair88> > surfaceExtractor(&volume, region, &resultMesh);
 		surfaceExtractor.execute();
 	}
 }

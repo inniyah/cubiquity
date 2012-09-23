@@ -361,15 +361,11 @@ namespace PolyVox
 		m_vecTriangleIndices.resize(noOfNonDegenerate * 3);
 	}
 
-	template <typename VertexType>
+	/*template <typename VertexType>
 	void SurfaceMesh<VertexType>::removeUnusedVertices(void)
 	{
 		std::vector<bool> isVertexUsed(m_vecVertices.size());
-		//fill(isVertexUsed.begin(), isVertexUsed.end(), false);
-        for(int ct = 0; ct < isVertexUsed.size(); ct++)
-        {
-            isVertexUsed[ct] = false;
-        }
+		fill(isVertexUsed.begin(), isVertexUsed.end(), false);
 
 		for(uint32_t triCt = 0; triCt < m_vecTriangleIndices.size(); triCt++)
 		{
@@ -395,7 +391,7 @@ namespace PolyVox
 		{
 			m_vecTriangleIndices[triCt] = newPos[m_vecTriangleIndices[triCt]];
 		}
-	}
+	}*/
 
 	//Currently a free function - think where this needs to go.
 	/*template <typename VertexType>

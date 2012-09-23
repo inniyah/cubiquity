@@ -80,7 +80,7 @@ namespace PolyVox
 
 	   int noOfDegenerateTris(void);
 	   void removeDegenerateTris(void);
-	   void removeUnusedVertices(void);
+	   //void removeUnusedVertices(void);
 
 	   Region m_Region;
 

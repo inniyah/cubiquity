@@ -24,8 +24,7 @@ freely, subject to the following restrictions:
 #ifndef __PolyVox_Density_H__
 #define __PolyVox_Density_H__
 
-#include "PolyVoxCore/SurfaceExtractionController.h" //We'll specialise the controller contained in here
-#include "PolyVoxCore/Voxel.h"
+#include "PolyVoxCore/DefaultMarchingCubesController.h" //We'll specialise the controller contained in here
 
 #include "PolyVoxImpl/TypeDef.h"
 
@@ -102,12 +101,26 @@ namespace PolyVox
 	// most games) but 16-bit and float types do have uses particularly in medical/scientific visualisation.
 	typedef Density<uint8_t> Density8;
 
+	/**
+	 * This is a specialisation of DefaultMarchingCubesController for the Density voxel type
+	 */
 	template <typename Type>
-	class SurfaceExtractionController< Density<Type> >
+	class DefaultMarchingCubesController< Density<Type> >
 	{
 	public:
 		typedef Type DensityType;
 		typedef float MaterialType;
+
+		DefaultMarchingCubesController(void)
+		{
+			// Default to a threshold value halfway between the min and max possible values.
+			m_tThreshold = (Density<Type>::getMinDensity() + Density<Type>::getMaxDensity()) / 2;
+		}
+
+		DefaultMarchingCubesController(DensityType tThreshold)
+		{
+			m_tThreshold = tThreshold;
+		}
 
 		DensityType convertToDensity(Density<Type> voxel)
 		{
@@ -120,10 +133,12 @@ namespace PolyVox
 		}
 
 		DensityType getThreshold(void)
-		{
-			// Returns a threshold value halfway between the min and max possible values.
-			return (Density<Type>::getMinDensity() + Density<Type>::getMaxDensity()) / 2;
+		{			
+			return m_tThreshold;
 		}
+
+	private:
+		DensityType m_tThreshold;
 	};
 }
 

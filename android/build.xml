@@ -67,6 +67,9 @@
         <copy file="../res/PolyVox.material" tofile="assets/res/PolyVox.material"/>
         <copy file="../res/PolyVox.vert" tofile="assets/res/PolyVox.vert"/>
         <copy file="../res/PolyVox.frag" tofile="assets/res/PolyVox.frag"/>
+        <copy file="../res/PolyVox.material" tofile="assets/res/SmoothTerrain.material"/>
+        <copy file="../res/PolyVox.vert" tofile="assets/res/SmoothTerrain.vert"/>
+        <copy file="../res/PolyVox.frag" tofile="assets/res/SmoothTerrain.frag"/>
     </target>
 
     <!-- Import the actual build file.

@@ -24,9 +24,9 @@ freely, subject to the following restrictions:
 #ifndef __PolyVox_Material_H__
 #define __PolyVox_Material_H__
 
-#include "PolyVoxCore/Voxel.h"
-
 #include "PolyVoxImpl/TypeDef.h"
+
+#include "PolyVoxCore/DefaultIsQuadNeeded.h" //we'll specialise this function for this voxel type
 
 #include <cassert>
 
@@ -75,11 +75,22 @@ namespace PolyVox
 		MaterialType getMaterial() const throw() { return m_uMaterial; }
 		void setMaterial(MaterialType uMaterial) { m_uMaterial = uMaterial; }
 
-		static bool isQuadNeeded(Material<Type> from, Material<Type> to, float& materialToUse)
+	private:
+		MaterialType m_uMaterial;
+	};
+
+	typedef Material<uint8_t> Material8;
+	typedef Material<uint16_t> Material16;
+
+	template<typename Type>
+	class DefaultIsQuadNeeded< Material<Type> >
+	{
+	public:
+		bool operator()(Material<Type> back, Material<Type> front, float& materialToUse)
 		{
-			if((from.getMaterial() > 0) && (to.getMaterial() == 0))
+			if((back.getMaterial() > 0) && (front.getMaterial() == 0))
 			{
-				materialToUse = static_cast<float>(from.getMaterial());
+				materialToUse = static_cast<float>(back.getMaterial());
 				return true;
 			}
 			else
@@ -87,13 +98,7 @@ namespace PolyVox
 				return false;
 			}
 		}
-
-	private:
-		MaterialType m_uMaterial;
 	};
-
-	typedef Material<uint8_t> Material8;
-	typedef Material<uint16_t> Material16;
 }
 
 #endif //__PolyVox_Material_H__

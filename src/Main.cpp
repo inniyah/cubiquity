@@ -65,7 +65,7 @@ void MeshGame::initialize()
 	mCameraDistance = 145.0f; //Value from voxeliens
 
 	// Create the volume and add it to the scene.
-	Volume* volume = Volume::create(0, 0, 0, 127, 31, 127, 32, 32, 32);
+	Volume* volume = Volume::create(VolumeTypes::ColouredCubes, 0, 0, 0, 127, 31, 127, 32, 32, 32);
 	//Rather dirty hack until I figure out how to package volume data with gameplay
 #ifdef WIN32
 	volume->loadData("res/level2.vol");
@@ -76,7 +76,7 @@ void MeshGame::initialize()
 	_polyVoxNode = volume->getRootNode();
 	_scene->addNode(volume->getRootNode());
 
-	volume->setMaterial("res/PolyVox.material");
+	volume->setMaterial("res/SmoothTerrain.material");
 }
 
 void MeshGame::finalize()
@@ -201,8 +201,8 @@ bool MeshGame::drawScene(Node* node)
     Model* model = node->getModel();
     if (model)
 	{
-		model->getMaterial()->getParameter("u_lightColor")->setValue(_light->getColor());
-		model->getMaterial()->getParameter("u_lightDirection")->setValue(_lightNode->getForwardVectorWorld());
+		//model->getMaterial()->getParameter("u_lightColor")->setValue(_light->getColor());
+		//model->getMaterial()->getParameter("u_lightDirection")->setValue(_lightNode->getForwardVectorWorld());
         model->draw();
 	}
     return true;
