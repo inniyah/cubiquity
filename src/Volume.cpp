@@ -71,7 +71,7 @@ Volume::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, 
 				int regUpperX = regLowerX + regionWidth - 1;
 				int regUpperY = regLowerY + regionHeight - 1;
 				int regUpperZ = regLowerZ + regionDepth - 1;
-				mVolumeRegions[x][y][z] = new VolumeRegion(Region(regLowerX, regLowerY, regLowerZ, regUpperX, regUpperY, regUpperZ));
+				mVolumeRegions[x][y][z] = new VolumeRegion(this, Region(regLowerX, regLowerY, regLowerZ, regUpperX, regUpperY, regUpperZ));
 				mRootNode->addChild(mVolumeRegions[x][y][z]->mNode);
 				//mVolumeRegions[x][y][z]->mNode->setTranslation(regLowerX, regLowerY, regLowerZ);
 				mVolumeRegions[x][y][z]->mNode->translate(regLowerX, regLowerY, regLowerZ);
@@ -96,18 +96,9 @@ Node* Volume::getRootNode()
 	return mRootNode;
 }
 
-void Volume::setMaterial(const char* materialPath)
+VolumeType Volume::getType(void) const
 {
-	for(int z = 0; z < mVolumeRegions.getDimension(2); z++)
-	{
-		for(int y = 0; y < mVolumeRegions.getDimension(1); y++)
-		{
-			for(int x = 0; x < mVolumeRegions.getDimension(0); x++)
-			{
-				mVolumeRegions[x][y][z]->mNode->getModel()->setMaterial(materialPath);
-			}
-		}
-	}
+	return mType;
 }
 
 void Volume::setVoxelAt(int x, int y, int z, PolyVox::Material16 value)
@@ -164,20 +155,30 @@ void Volume::updateMeshes()
 			for(int x = 0; x < mVolumeRegions.getDimension(0); x++)
 			{
 				//Extract the surface
-				/*SurfaceMesh<PositionMaterial> polyVoxMesh;
-				CubicSurfaceExtractor< SimpleVolume<Material16> > surfaceExtractor(mVolData, mVolumeRegions[x][y][z]->mRegion, &polyVoxMesh);
-				surfaceExtractor.execute();	*/
-
-				SurfaceMesh<PositionMaterialNormal> polyVoxMesh;
-				GameplayMarchingCubesController controller;
-				Region regionToExtract = mVolumeRegions[x][y][z]->mRegion;
-				regionToExtract.shiftUpperCorner(Vector3DInt32(1,1,1)); //To prevent gaps when using marching cubes.
-				MarchingCubesSurfaceExtractor< SimpleVolume<Material16>, GameplayMarchingCubesController > surfaceExtractor(mVolData, regionToExtract, &polyVoxMesh, controller);
-				surfaceExtractor.execute();
-
-				if(polyVoxMesh.getNoOfIndices() > 0)
+				if(getType() == VolumeTypes::ColouredCubes)
 				{
-					mVolumeRegions[x][y][z]->buildGraphicsMesh(polyVoxMesh);
+					SurfaceMesh<PositionMaterial> colouredCubicMesh;
+					CubicSurfaceExtractor< SimpleVolume<Material16> > surfaceExtractor(mVolData, mVolumeRegions[x][y][z]->mRegion, &colouredCubicMesh);
+					surfaceExtractor.execute();
+
+					if(colouredCubicMesh.getNoOfIndices() > 0)
+					{
+						mVolumeRegions[x][y][z]->buildGraphicsMesh(colouredCubicMesh);
+					}
+				}
+				else if(getType() == VolumeTypes::SmoothTerrain)
+				{
+					SurfaceMesh<PositionMaterialNormal> smoothTerrainMesh;
+					GameplayMarchingCubesController controller;
+					Region regionToExtract = mVolumeRegions[x][y][z]->mRegion;
+					regionToExtract.shiftUpperCorner(Vector3DInt32(1,1,1)); //To prevent gaps when using marching cubes.
+					MarchingCubesSurfaceExtractor< SimpleVolume<Material16>, GameplayMarchingCubesController > surfaceExtractor(mVolData, regionToExtract, &smoothTerrainMesh, controller);
+					surfaceExtractor.execute();
+
+					if(smoothTerrainMesh.getNoOfIndices() > 0)
+					{
+						mVolumeRegions[x][y][z]->buildGraphicsMesh(smoothTerrainMesh);
+					}
 				}
 			}
 		}

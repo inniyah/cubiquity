@@ -1,5 +1,7 @@
 #include "VolumeRegion.h"
 
+#include "Volume.h"
+
 #include "MeshPart.h"
 
 #include <sstream>
@@ -7,8 +9,9 @@
 using namespace gameplay;
 using namespace PolyVox;
 
-VolumeRegion::VolumeRegion(PolyVox::Region region)
+VolumeRegion::VolumeRegion(const Volume* volume, PolyVox::Region region)
 	:mRegion(region)
+	,mVolume(volume)
 {
 	std::stringstream ss;
 	ss << "VolumeRegionNode(" << mRegion.getLowerCorner().getX() << "," << mRegion.getLowerCorner().getY() << "," << mRegion.getLowerCorner().getZ() << ")";
@@ -49,6 +52,18 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 	meshPart->setIndexData(pIndices, 0, vecIndices.size());
 
     Model* model = Model::create(mesh);
+	switch(mVolume->getType())
+	{
+	case VolumeTypes::ColouredCubes:
+		model->setMaterial("res/PolyVox.material");
+		break;
+	case VolumeTypes::SmoothTerrain:
+		model->setMaterial("res/SmoothTerrain.material");
+		break;
+	default:
+		//Add fallback material here
+		break;
+	}	
     SAFE_RELEASE(mesh);
 
 	mNode->setModel(model);
@@ -63,11 +78,12 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 
 	VertexFormat::Element elements[] =
     {
-        VertexFormat::Element(VertexFormat::POSITION, 4)
+        VertexFormat::Element(VertexFormat::POSITION, 4),
+		VertexFormat::Element(VertexFormat::NORMAL, 3)
     };
 
 	//Create the vertex data in the expected format
-	float* vertexData = new float[polyVoxMesh.getVertices().size() * 4]; //7 float per vertex
+	float* vertexData = new float[polyVoxMesh.getVertices().size() * 7]; //7 float per vertex
 	float* ptr = vertexData;
 	for(int i = 0; i < vecVertices.size(); i++)
 	{
@@ -75,9 +91,12 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 		*ptr = vecVertices[i].getPosition().getY(); ptr++;
 		*ptr = vecVertices[i].getPosition().getZ(); ptr++;
 		*ptr = 1.0;  ptr++;
+		*ptr = vecVertices[i].getNormal().getX(); ptr++;
+		*ptr = vecVertices[i].getNormal().getY(); ptr++;
+		*ptr = vecVertices[i].getNormal().getZ(); ptr++;
 	}
 
-    Mesh* mesh = Mesh::createMesh(VertexFormat(elements, 1), polyVoxMesh.getVertices().size(), false);
+    Mesh* mesh = Mesh::createMesh(VertexFormat(elements, 2), polyVoxMesh.getVertices().size(), false);
     /*if (mesh == NULL)
     {
         return NULL;
@@ -94,6 +113,18 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 	meshPart->setIndexData(pIndices, 0, vecIndices.size());
 
     Model* model = Model::create(mesh);
+	switch(mVolume->getType())
+	{
+	case VolumeTypes::ColouredCubes:
+		model->setMaterial("res/PolyVox.material");
+		break;
+	case VolumeTypes::SmoothTerrain:
+		model->setMaterial("res/SmoothTerrain.material");
+		break;
+	default:
+		//Add fallback material here
+		break;
+	}	
     SAFE_RELEASE(mesh);
 
 	mNode->setModel(model);

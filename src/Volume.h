@@ -29,8 +29,8 @@ public:
 	static Volume* create(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth);
 
 	gameplay::Node* getRootNode();
+	VolumeType getType(void) const;
 
-	void setMaterial(const char* materialPath);
 	void setVoxelAt(int x, int y, int z, PolyVox::Material16 value);
 
 	void loadData(const char* filename);
@@ -48,6 +48,7 @@ public:
 	gameplay::Node* mRootNode;
 	//VolumeRegion* mVolumeRegion;
 	PolyVox::Array<3, VolumeRegion*> mVolumeRegions;
+	std::string mMaterialPath;
 };
 
 #endif //VOLUME_H_
