@@ -65,12 +65,38 @@ Volume::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, 
 		{
 			for(int x = 0; x < volumeWidthInRegions; x++)
 			{
+				// Set up the regions so they exactly touchand neighbouring regions share
+				// voxels on thier faces. This is what we need for the Marching Cubes surface
 				int regLowerX = lowerX + x * regionWidth;
 				int regLowerY = lowerY + y * regionHeight;
 				int regLowerZ = lowerZ + z * regionDepth;
-				int regUpperX = regLowerX + regionWidth - 1;
-				int regUpperY = regLowerY + regionHeight - 1;
-				int regUpperZ = regLowerZ + regionDepth - 1;
+				int regUpperX = regLowerX + regionWidth;
+				int regUpperY = regLowerY + regionHeight;
+				int regUpperZ = regLowerZ + regionDepth;
+
+				// The above actually causes the the regions to extend outside the upper range of
+				// the volume. For the Marching cubes this is fine as it ensures the volume will
+				// get closed, so we wnt to mimic this behaviour on the lower edges too.
+				if(getType() == VolumeTypes::SmoothTerrain)
+				{
+					if(x == 0) regLowerX--;
+					if(y == 0) regLowerY--;
+					if(z == 0) regLowerZ--;
+				}
+
+				// This wasn't necessary for the coloured cubes because this surface extractor already
+				// peeks outside the region in the negative direction. But we do need to add a gap between
+				// the regions for the cubic surface extractor as in this case voxels should not be shared
+				// between regions (see the cubic surface extractor docs for a diagram). However, we skip
+				// this for the upper extremes as we do want to preserve the property of the regions
+				// extending outside the volumes (to close off the mesh).
+				if(getType() == VolumeTypes::ColouredCubes)
+				{
+					if(x < (volumeWidthInRegions - 1)) regUpperX--;
+					if(y < (volumeHeightInRegions - 1)) regUpperY--;
+					if(z < (volumeDepthInRegions - 1)) regUpperZ--;
+				}
+
 				mVolumeRegions[x][y][z] = new VolumeRegion(this, Region(regLowerX, regLowerY, regLowerZ, regUpperX, regUpperY, regUpperZ));
 				mRootNode->addChild(mVolumeRegions[x][y][z]->mNode);
 				//mVolumeRegions[x][y][z]->mNode->setTranslation(regLowerX, regLowerY, regLowerZ);
@@ -154,11 +180,12 @@ void Volume::updateMeshes()
 		{
 			for(int x = 0; x < mVolumeRegions.getDimension(0); x++)
 			{
+				Region regionToExtract = mVolumeRegions[x][y][z]->mRegion;
 				//Extract the surface
 				if(getType() == VolumeTypes::ColouredCubes)
 				{
 					SurfaceMesh<PositionMaterial> colouredCubicMesh;
-					CubicSurfaceExtractor< SimpleVolume<Material16> > surfaceExtractor(mVolData, mVolumeRegions[x][y][z]->mRegion, &colouredCubicMesh);
+					CubicSurfaceExtractor< SimpleVolume<Material16> > surfaceExtractor(mVolData, regionToExtract, &colouredCubicMesh);
 					surfaceExtractor.execute();
 
 					if(colouredCubicMesh.getNoOfIndices() > 0)
@@ -169,9 +196,7 @@ void Volume::updateMeshes()
 				else if(getType() == VolumeTypes::SmoothTerrain)
 				{
 					SurfaceMesh<PositionMaterialNormal> smoothTerrainMesh;
-					GameplayMarchingCubesController controller;
-					Region regionToExtract = mVolumeRegions[x][y][z]->mRegion;
-					regionToExtract.shiftUpperCorner(Vector3DInt32(1,1,1)); //To prevent gaps when using marching cubes.
+					GameplayMarchingCubesController controller;					
 					MarchingCubesSurfaceExtractor< SimpleVolume<Material16>, GameplayMarchingCubesController > surfaceExtractor(mVolData, regionToExtract, &smoothTerrainMesh, controller);
 					surfaceExtractor.execute();
 
