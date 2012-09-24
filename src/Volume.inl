@@ -96,7 +96,7 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 					if(z < (volumeDepthInRegions - 1)) regUpperZ--;
 				}
 
-				mVolumeRegions[x][y][z] = new VolumeRegion<VoxelType>(this, Region(regLowerX, regLowerY, regLowerZ, regUpperX, regUpperY, regUpperZ));
+				mVolumeRegions[x][y][z] = new VolumeRegion(Region(regLowerX, regLowerY, regLowerZ, regUpperX, regUpperY, regUpperZ));
 				mRootNode->addChild(mVolumeRegions[x][y][z]->mNode);
 				//mVolumeRegions[x][y][z]->mNode->setTranslation(regLowerX, regLowerY, regLowerZ);
 				mVolumeRegions[x][y][z]->mNode->translate(regLowerX, regLowerY, regLowerZ);

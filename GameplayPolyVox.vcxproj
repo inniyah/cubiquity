@@ -172,7 +172,6 @@
     <None Include="res\colored.frag" />
     <None Include="res\colored.vert" />
     <None Include="src\Volume.inl" />
-    <None Include="src\VolumeRegion.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ArraySizes.cpp" />
@@ -186,6 +185,7 @@
     <ClCompile Include="src\Region.cpp" />
     <ClCompile Include="src\Utility.cpp" />
     <ClCompile Include="src\VertexTypes.cpp" />
+    <ClCompile Include="src\VolumeRegion.cpp" />
     <ClCompile Include="src\VoxelFilters.cpp" />
   </ItemGroup>
   <ItemGroup>

@@ -9,10 +9,8 @@
 using namespace gameplay;
 using namespace PolyVox;
 
-template <typename VoxelType>
-VolumeRegion<VoxelType>::VolumeRegion(const Volume<VoxelType>* volume, PolyVox::Region region)
+VolumeRegion::VolumeRegion(PolyVox::Region region)
 	:mRegion(region)
-	,mVolume(volume)
 {
 	std::stringstream ss;
 	ss << "VolumeRegionNode(" << mRegion.getLowerCorner().getX() << "," << mRegion.getLowerCorner().getY() << "," << mRegion.getLowerCorner().getZ() << ")";
@@ -20,14 +18,12 @@ VolumeRegion<VoxelType>::VolumeRegion(const Volume<VoxelType>* volume, PolyVox::
 	 //mNode->setTranslation(mRegion.getLowerCorner().getX(), mRegion.getLowerCorner().getY(), mRegion.getLowerCorner().getZ());
 }
 
-template <typename VoxelType>
-VolumeRegion<VoxelType>::~VolumeRegion()
+VolumeRegion::~VolumeRegion()
 {
 	 SAFE_RELEASE(mNode);
 }
 
-template <typename VoxelType>
-void VolumeRegion<VoxelType>::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial>& polyVoxMesh)
+void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial>& polyVoxMesh)
 {
 	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
 	const std::vector<PositionMaterial>& vecVertices = polyVoxMesh.getVertices();
@@ -60,8 +56,7 @@ void VolumeRegion<VoxelType>::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyV
 	mNode->setModel(model);
 }
 
-template <typename VoxelType>
-void VolumeRegion<VoxelType>::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal>& polyVoxMesh)
+void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal>& polyVoxMesh)
 {
 	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
 	const std::vector<PositionMaterialNormal>& vecVertices = polyVoxMesh.getVertices();
@@ -110,8 +105,7 @@ void VolumeRegion<VoxelType>::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyV
 	mNode->setModel(model);
 }
 
-template <typename VoxelType>
-void VolumeRegion<VoxelType>::setMaterial(const char* material)
+void VolumeRegion::setMaterial(const char* material)
 {
 	mNode->getModel()->setMaterial(material);
 }

@@ -46,7 +46,7 @@ public:
 	PolyVox::SimpleVolume<VoxelType>* mVolData;
 	gameplay::Node* mRootNode;
 	//VolumeRegion* mVolumeRegion;
-	PolyVox::Array<3, VolumeRegion<VoxelType>*> mVolumeRegions;
+	PolyVox::Array<3, VolumeRegion*> mVolumeRegions;
 	std::string mMaterialPath;
 };
 

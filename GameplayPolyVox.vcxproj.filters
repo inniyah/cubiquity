@@ -27,9 +27,6 @@
     <None Include="src\Volume.inl">
       <Filter>src</Filter>
     </None>
-    <None Include="src\VolumeRegion.inl">
-      <Filter>src</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h">
@@ -83,6 +80,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\VoxelFilters.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VolumeRegion.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

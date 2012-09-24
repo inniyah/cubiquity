@@ -1,7 +1,6 @@
 #ifndef VOLUME_REGION_H_
 #define VOLUME_REGION_H_
 
-#include "Material.h"
 #include "Node.h"
 #include "Ref.h"
 
@@ -12,11 +11,10 @@
 template <typename VoxelType>
 class Volume;
 
-template <typename VoxelType>
 class VolumeRegion
 {
 public:	
-	VolumeRegion(const Volume<VoxelType>* volume, PolyVox::Region region);
+	VolumeRegion(PolyVox::Region region);
 	~VolumeRegion();
 
 	void buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial>& polyVoxMesh);
@@ -24,11 +22,8 @@ public:
 
 	void setMaterial(const char* material); //Should be const material - fix gameplay
 
-	const Volume<VoxelType>* mVolume;
 	PolyVox::Region mRegion;
 	gameplay::Node* mNode;
 };
-
-#include "VolumeRegion.inl"
 
 #endif //VOLUME_REGION_H_
