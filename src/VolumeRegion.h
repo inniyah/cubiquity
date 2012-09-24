@@ -26,6 +26,6 @@ public:
 	gameplay::Node* mNode;
 };
 
-#include "VolumeRegion.cpp"
+#include "VolumeRegion.inl"
 
 #endif //VOLUME_REGION_H_

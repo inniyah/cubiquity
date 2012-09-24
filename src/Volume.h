@@ -52,6 +52,6 @@ public:
 	std::string mMaterialPath;
 };
 
-#include "Volume.cpp"
+#include "Volume.inl"
 
 #endif //VOLUME_H_

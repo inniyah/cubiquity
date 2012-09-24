@@ -171,6 +171,8 @@
     <None Include="res\box.material" />
     <None Include="res\colored.frag" />
     <None Include="res\colored.vert" />
+    <None Include="src\Volume.inl" />
+    <None Include="src\VolumeRegion.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ArraySizes.cpp" />
