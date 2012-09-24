@@ -55,18 +55,6 @@ void VolumeRegion<VoxelType>::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyV
 	meshPart->setIndexData(pIndices, 0, vecIndices.size());
 
     Model* model = Model::create(mesh);
-	switch(mVolume->getType())
-	{
-	case VolumeTypes::ColouredCubes:
-		model->setMaterial("res/PolyVox.material");
-		break;
-	case VolumeTypes::SmoothTerrain:
-		model->setMaterial("res/SmoothTerrain.material");
-		break;
-	default:
-		//Add fallback material here
-		break;
-	}	
     SAFE_RELEASE(mesh);
 
 	mNode->setModel(model);
@@ -117,19 +105,13 @@ void VolumeRegion<VoxelType>::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyV
 	meshPart->setIndexData(pIndices, 0, vecIndices.size());
 
     Model* model = Model::create(mesh);
-	switch(mVolume->getType())
-	{
-	case VolumeTypes::ColouredCubes:
-		model->setMaterial("res/PolyVox.material");
-		break;
-	case VolumeTypes::SmoothTerrain:
-		model->setMaterial("res/SmoothTerrain.material");
-		break;
-	default:
-		//Add fallback material here
-		break;
-	}	
     SAFE_RELEASE(mesh);
 
 	mNode->setModel(model);
+}
+
+template <typename VoxelType>
+void VolumeRegion<VoxelType>::setMaterial(const char* material)
+{
+	mNode->getModel()->setMaterial(material);
 }

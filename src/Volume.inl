@@ -204,6 +204,19 @@ void Volume<VoxelType>::updateMeshes()
 						mVolumeRegions[x][y][z]->buildGraphicsMesh(smoothTerrainMesh);
 					}
 				}
+
+				switch(getType())
+				{
+				case VolumeTypes::ColouredCubes:
+					mVolumeRegions[x][y][z]->setMaterial("res/PolyVox.material");
+					break;
+				case VolumeTypes::SmoothTerrain:
+					mVolumeRegions[x][y][z]->setMaterial("res/SmoothTerrain.material");
+					break;
+				default:
+					//Add fallback material here
+					break;
+				}	
 			}
 		}
 	}

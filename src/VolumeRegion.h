@@ -1,6 +1,7 @@
 #ifndef VOLUME_REGION_H_
 #define VOLUME_REGION_H_
 
+#include "Material.h"
 #include "Node.h"
 #include "Ref.h"
 
@@ -20,6 +21,8 @@ public:
 
 	void buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial>& polyVoxMesh);
 	void buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal>& polyVoxMesh);
+
+	void setMaterial(const char* material); //Should be const material - fix gameplay
 
 	const Volume<VoxelType>* mVolume;
 	PolyVox::Region mRegion;
