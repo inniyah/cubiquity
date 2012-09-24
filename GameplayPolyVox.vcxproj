@@ -189,7 +189,9 @@
     <ClCompile Include="src\VoxelFilters.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ColouredCubesVolume.h" />
     <ClInclude Include="src\Main.h" />
+    <ClInclude Include="src\SmoothTerrainVolume.h" />
     <ClInclude Include="src\Volume.h" />
     <ClInclude Include="src\VolumeRegion.h" />
   </ItemGroup>

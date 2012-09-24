@@ -27,8 +27,6 @@ template <typename VoxelType>
 class Volume : public gameplay::Ref
 {
 public:	
-	static Volume<VoxelType>* create(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth);
-
 	gameplay::Node* getRootNode();
 	VolumeType getType(void) const;
 
@@ -37,7 +35,7 @@ public:
 	void loadData(const char* filename);
 	void updateMeshes();
 
-private:
+protected:
 	Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth);
 	~Volume();
 	Volume& operator=(const Volume&);

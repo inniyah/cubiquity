@@ -41,6 +41,12 @@
     <ClInclude Include="src\VolumeRegion.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\ColouredCubesVolume.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SmoothTerrainVolume.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">

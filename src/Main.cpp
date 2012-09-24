@@ -1,5 +1,7 @@
 #include "Main.h"
-#include "Volume.h"
+//#include "Volume.h"
+#include "ColouredCubesVolume.h"
+#include "SmoothTerrainVolume.h"
 
 #include "PolyVoxCore/Material.h"
 #include "PolyVoxCore/SimpleVolume.h"
@@ -65,7 +67,7 @@ void MeshGame::initialize()
 	mCameraDistance = 145.0f; //Value from voxeliens
 
 	// Create the volume and add it to the scene.
-	Volume<Material16>* volume = Volume<Material16>::create(VolumeTypes::ColouredCubes, 0, 0, 0, 127, 31, 127, 32, 32, 32);
+	SmoothTerrainVolume* volume = SmoothTerrainVolume::create(VolumeTypes::SmoothTerrain, 0, 0, 0, 127, 31, 127, 32, 32, 32);
 	//Rather dirty hack until I figure out how to package volume data with gameplay
 #ifdef WIN32
 	volume->loadData("res/level2.vol");
