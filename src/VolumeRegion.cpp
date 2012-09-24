@@ -9,7 +9,8 @@
 using namespace gameplay;
 using namespace PolyVox;
 
-VolumeRegion::VolumeRegion(const Volume* volume, PolyVox::Region region)
+template <typename VoxelType>
+VolumeRegion<VoxelType>::VolumeRegion(const Volume<VoxelType>* volume, PolyVox::Region region)
 	:mRegion(region)
 	,mVolume(volume)
 {
@@ -19,12 +20,14 @@ VolumeRegion::VolumeRegion(const Volume* volume, PolyVox::Region region)
 	 //mNode->setTranslation(mRegion.getLowerCorner().getX(), mRegion.getLowerCorner().getY(), mRegion.getLowerCorner().getZ());
 }
 
-VolumeRegion::~VolumeRegion()
+template <typename VoxelType>
+VolumeRegion<VoxelType>::~VolumeRegion()
 {
 	 SAFE_RELEASE(mNode);
 }
 
-void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial>& polyVoxMesh)
+template <typename VoxelType>
+void VolumeRegion<VoxelType>::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial>& polyVoxMesh)
 {
 	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
 	const std::vector<PositionMaterial>& vecVertices = polyVoxMesh.getVertices();
@@ -69,7 +72,8 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 	mNode->setModel(model);
 }
 
-void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal>& polyVoxMesh)
+template <typename VoxelType>
+void VolumeRegion<VoxelType>::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal>& polyVoxMesh)
 {
 	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
 	const std::vector<PositionMaterialNormal>& vecVertices = polyVoxMesh.getVertices();

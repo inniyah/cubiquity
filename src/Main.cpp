@@ -65,7 +65,7 @@ void MeshGame::initialize()
 	mCameraDistance = 145.0f; //Value from voxeliens
 
 	// Create the volume and add it to the scene.
-	Volume* volume = Volume::create(VolumeTypes::SmoothTerrain, 0, 0, 0, 127, 31, 127, 32, 32, 32);
+	Volume<Material16>* volume = Volume<Material16>::create(VolumeTypes::ColouredCubes, 0, 0, 0, 127, 31, 127, 32, 32, 32);
 	//Rather dirty hack until I figure out how to package volume data with gameplay
 #ifdef WIN32
 	volume->loadData("res/level2.vol");

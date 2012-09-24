@@ -23,15 +23,16 @@ namespace VolumeTypes
 }
 typedef VolumeTypes::VolumeType VolumeType;
 
+template <typename VoxelType>
 class Volume : public gameplay::Ref
 {
 public:	
-	static Volume* create(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth);
+	static Volume<VoxelType>* create(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth);
 
 	gameplay::Node* getRootNode();
 	VolumeType getType(void) const;
 
-	void setVoxelAt(int x, int y, int z, PolyVox::Material16 value);
+	void setVoxelAt(int x, int y, int z, VoxelType value);
 
 	void loadData(const char* filename);
 	void updateMeshes();
@@ -44,11 +45,13 @@ private:
 	VolumeType mType;
 
 public:
-	PolyVox::SimpleVolume<PolyVox::Material16>* mVolData;
+	PolyVox::SimpleVolume<VoxelType>* mVolData;
 	gameplay::Node* mRootNode;
 	//VolumeRegion* mVolumeRegion;
-	PolyVox::Array<3, VolumeRegion*> mVolumeRegions;
+	PolyVox::Array<3, VolumeRegion<VoxelType>*> mVolumeRegions;
 	std::string mMaterialPath;
 };
+
+#include "Volume.cpp"
 
 #endif //VOLUME_H_

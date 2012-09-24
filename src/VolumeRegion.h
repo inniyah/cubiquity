@@ -8,20 +8,24 @@
 #include "PolyVoxCore/SimpleVolume.h"
 #include "PolyVoxCore/CubicSurfaceExtractor.h"
 
+template <typename VoxelType>
 class Volume;
 
+template <typename VoxelType>
 class VolumeRegion
 {
 public:	
-	VolumeRegion(const Volume* volume, PolyVox::Region region);
+	VolumeRegion(const Volume<VoxelType>* volume, PolyVox::Region region);
 	~VolumeRegion();
 
 	void buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial>& polyVoxMesh);
 	void buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal>& polyVoxMesh);
 
-	const Volume* mVolume;
+	const Volume<VoxelType>* mVolume;
 	PolyVox::Region mRegion;
 	gameplay::Node* mNode;
 };
+
+#include "VolumeRegion.cpp"
 
 #endif //VOLUME_REGION_H_

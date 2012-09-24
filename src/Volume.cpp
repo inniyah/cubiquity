@@ -1,5 +1,3 @@
-#include "Volume.h"
-
 #include "MeshPart.h"
 
 using namespace gameplay;
@@ -34,7 +32,8 @@ public:
 	}
 };
 
-Volume::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)
+template <typename VoxelType>
+Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)
 	:mVolData(0)
 	,mRootNode(0)
 	//,mVolumeRegion(0)
@@ -97,7 +96,7 @@ Volume::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, 
 					if(z < (volumeDepthInRegions - 1)) regUpperZ--;
 				}
 
-				mVolumeRegions[x][y][z] = new VolumeRegion(this, Region(regLowerX, regLowerY, regLowerZ, regUpperX, regUpperY, regUpperZ));
+				mVolumeRegions[x][y][z] = new VolumeRegion<VoxelType>(this, Region(regLowerX, regLowerY, regLowerZ, regUpperX, regUpperY, regUpperZ));
 				mRootNode->addChild(mVolumeRegions[x][y][z]->mNode);
 				//mVolumeRegions[x][y][z]->mNode->setTranslation(regLowerX, regLowerY, regLowerZ);
 				mVolumeRegions[x][y][z]->mNode->translate(regLowerX, regLowerY, regLowerZ);
@@ -106,33 +105,39 @@ Volume::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, 
 	}
 }
 
-Volume::~Volume()
+template <typename VoxelType>
+Volume<VoxelType>::~Volume()
 {
 	SAFE_RELEASE(mRootNode);
 }
 
-Volume* Volume::create(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)
+template <typename VoxelType>
+Volume<VoxelType>* Volume<VoxelType>::create(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)
 {
-	Volume* volume = new Volume(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth);
+	Volume<VoxelType>* volume = new Volume<VoxelType>(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth);
 	return volume;
 }
 
-Node* Volume::getRootNode()
+template <typename VoxelType>
+Node* Volume<VoxelType>::getRootNode()
 {
 	return mRootNode;
 }
 
-VolumeType Volume::getType(void) const
+template <typename VoxelType>
+VolumeType Volume<VoxelType>::getType(void) const
 {
 	return mType;
 }
 
-void Volume::setVoxelAt(int x, int y, int z, PolyVox::Material16 value)
+template <typename VoxelType>
+void Volume<VoxelType>::setVoxelAt(int x, int y, int z, VoxelType value)
 {
 	mVolData->setVoxelAt(x, y, z, value);
 }
 
-void Volume::loadData(const char* filename)
+template <typename VoxelType>
+void Volume<VoxelType>::loadData(const char* filename)
 {
 	FILE* inputFile = fopen(filename, "rb");
 	if(!inputFile)
@@ -172,7 +177,8 @@ void Volume::loadData(const char* filename)
 	fclose(inputFile);
 }
 
-void Volume::updateMeshes()
+template <typename VoxelType>
+void Volume<VoxelType>::updateMeshes()
 {
 	for(int z = 0; z < mVolumeRegions.getDimension(2); z++)
 	{

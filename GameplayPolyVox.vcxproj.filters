@@ -70,13 +70,7 @@
     <ClCompile Include="src\VertexTypes.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Volume.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\VoxelFilters.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VolumeRegion.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
