@@ -49,10 +49,8 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 	GP_ASSERT(volumeHeight % regionHeight == 0);
 	GP_ASSERT(volumeDepth % regionDepth == 0);
 
-	mRootNode = Node::create();
-	//mVolumeRegion = new VolumeRegion(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ));
-	//mRootNode->addChild(mVolumeRegion->mNode);
 	mVolData = new SimpleVolume<Material16>(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ));
+	mRootNode = Node::create();
 
 	unsigned int volumeWidthInRegions = volumeWidth / regionWidth;
 	unsigned int volumeHeightInRegions = volumeHeight / regionHeight;
@@ -73,32 +71,8 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 				int regUpperY = regLowerY + regionHeight;
 				int regUpperZ = regLowerZ + regionDepth;
 
-				// The above actually causes the the regions to extend outside the upper range of
-				// the volume. For the Marching cubes this is fine as it ensures the volume will
-				// get closed, so we wnt to mimic this behaviour on the lower edges too.
-				if(getType() == VolumeTypes::SmoothTerrain)
-				{
-					if(x == 0) regLowerX--;
-					if(y == 0) regLowerY--;
-					if(z == 0) regLowerZ--;
-				}
-
-				// This wasn't necessary for the coloured cubes because this surface extractor already
-				// peeks outside the region in the negative direction. But we do need to add a gap between
-				// the regions for the cubic surface extractor as in this case voxels should not be shared
-				// between regions (see the cubic surface extractor docs for a diagram). However, we skip
-				// this for the upper extremes as we do want to preserve the property of the regions
-				// extending outside the volumes (to close off the mesh).
-				if(getType() == VolumeTypes::ColouredCubes)
-				{
-					if(x < (volumeWidthInRegions - 1)) regUpperX--;
-					if(y < (volumeHeightInRegions - 1)) regUpperY--;
-					if(z < (volumeDepthInRegions - 1)) regUpperZ--;
-				}
-
 				mVolumeRegions[x][y][z] = new VolumeRegion(Region(regLowerX, regLowerY, regLowerZ, regUpperX, regUpperY, regUpperZ));
 				mRootNode->addChild(mVolumeRegions[x][y][z]->mNode);
-				//mVolumeRegions[x][y][z]->mNode->setTranslation(regLowerX, regLowerY, regLowerZ);
 				mVolumeRegions[x][y][z]->mNode->translate(regLowerX, regLowerY, regLowerZ);
 			}
 		}
