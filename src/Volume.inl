@@ -38,6 +38,9 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 	,mRootNode(0)
 	//,mVolumeRegion(0)
 	,mType(type)
+	,mRegionWidth(regionWidth)
+	,mRegionHeight(regionHeight)
+	,mRegionDepth(regionDepth)
 {
 	int volumeWidth = (upperX - lowerX) + 1;
 	int volumeHeight = (upperY - lowerY) + 1;
@@ -127,6 +130,48 @@ template <typename VoxelType>
 void Volume<VoxelType>::setVoxelAt(int x, int y, int z, VoxelType value)
 {
 	mVolData->setVoxelAt(x, y, z, value);
+
+	int regionX = x / mRegionWidth;
+	int regionY = y / mRegionHeight;
+	int regionZ = z / mRegionDepth;
+	mVolumeRegions[regionX][regionY][regionZ]->mIsMeshUpToDate = false;
+}
+
+template <typename VoxelType>
+void Volume<VoxelType>::createSphereAt(const gameplay::Vector3& centre, float radius, VoxelType value)
+{
+	int firstX = static_cast<int>(std::floor(centre.x - radius));
+	int firstY = static_cast<int>(std::floor(centre.y - radius));
+	int firstZ = static_cast<int>(std::floor(centre.z - radius));
+
+	int lastX = static_cast<int>(std::ceil(centre.x + radius));
+	int lastY = static_cast<int>(std::ceil(centre.y + radius));
+	int lastZ = static_cast<int>(std::ceil(centre.z + radius));
+
+	float radiusSquared = radius * radius;
+
+	//Check bounds.
+	firstX = std::max(firstX,mVolData->getEnclosingRegion().getLowerCorner().getX());
+	firstY = std::max(firstY,mVolData->getEnclosingRegion().getLowerCorner().getY());
+	firstZ = std::max(firstZ,mVolData->getEnclosingRegion().getLowerCorner().getZ());
+
+	lastX = std::min(lastX,mVolData->getEnclosingRegion().getUpperCorner().getX());
+	lastY = std::min(lastY,mVolData->getEnclosingRegion().getUpperCorner().getY());
+	lastZ = std::min(lastZ,mVolData->getEnclosingRegion().getUpperCorner().getZ());
+
+	for(int z = firstZ; z <= lastZ; ++z)
+	{
+		for(int y = firstY; y <= lastY; ++y)
+		{
+			for(int x = firstX; x <= lastX; ++x)
+			{
+				if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
+				{
+					setVoxelAt(x,y,z,value);
+				}
+			}
+		}
+	}
 }
 
 template <typename VoxelType>

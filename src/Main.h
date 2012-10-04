@@ -86,6 +86,7 @@ private:
 	float mCameraDistance;
 
 	SmoothTerrainVolume* mVolume;
+	//ColouredCubesVolume* mVolume;
 };
 
 #endif

@@ -32,6 +32,8 @@ public:
 
 	void setVoxelAt(int x, int y, int z, VoxelType value);
 
+	void createSphereAt(const gameplay::Vector3& centre, float radius, VoxelType value);
+
 	void loadData(const char* filename);
 	void updateMeshes();
 
@@ -48,6 +50,10 @@ public:
 	//VolumeRegion* mVolumeRegion;
 	PolyVox::Array<3, VolumeRegion*> mVolumeRegions;
 	std::string mMaterialPath;
+
+	unsigned int mRegionWidth;
+	unsigned int mRegionHeight;
+	unsigned int mRegionDepth;
 };
 
 #include "Volume.inl"
