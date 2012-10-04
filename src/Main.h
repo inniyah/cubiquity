@@ -7,6 +7,9 @@
 
 using namespace gameplay;
 
+class ColouredCubesVolume;
+class SmoothTerrainVolume;
+
 /**
  * Sample game for rendering a scene with a model/mesh.
  */
@@ -81,6 +84,8 @@ private:
 	float mCameraElevationAngle;
 	float mCameraRotationAngle;
 	float mCameraDistance;
+
+	SmoothTerrainVolume* mVolume;
 };
 
 #endif

@@ -24,6 +24,7 @@ public:
 
 	PolyVox::Region mRegion;
 	gameplay::Node* mNode;
+	bool mIsMeshUpToDate;
 };
 
 #endif //VOLUME_REGION_H_

@@ -1,5 +1,5 @@
 #include "Main.h"
-//#include "Volume.h"
+
 #include "ColouredCubesVolume.h"
 #include "SmoothTerrainVolume.h"
 
@@ -67,16 +67,16 @@ void MeshGame::initialize()
 	mCameraDistance = 145.0f; //Value from voxeliens
 
 	// Create the volume and add it to the scene.
-	SmoothTerrainVolume* volume = SmoothTerrainVolume::create(VolumeTypes::SmoothTerrain, 0, 0, 0, 127, 31, 127, 32, 32, 32);
+	mVolume = SmoothTerrainVolume::create(VolumeTypes::SmoothTerrain, 0, 0, 0, 127, 31, 127, 32, 32, 32);
 	//Rather dirty hack until I figure out how to package volume data with gameplay
 #ifdef WIN32
-	volume->loadData("res/level2.vol");
+	mVolume->loadData("res/level2.vol");
 #else
-	volume->loadData("/sdcard/external_sd/level2.vol");
+	mVolume->loadData("/sdcard/external_sd/level2.vol");
 #endif
-	volume->updateMeshes();
-	_polyVoxNode = volume->getRootNode();
-	_scene->addNode(volume->getRootNode());
+	
+	_polyVoxNode = mVolume->getRootNode();
+	_scene->addNode(mVolume->getRootNode());
 }
 
 void MeshGame::finalize()
@@ -93,6 +93,8 @@ void MeshGame::update(float elapsedTime)
 	_cameraNode->rotateX(-mCameraElevationAngle); //Why negative?
 	
 	_cameraNode->translate(_cameraNode->getForwardVector() * -mCameraDistance);
+
+	mVolume->updateMeshes();
 }
 
 void MeshGame::render(float elapsedTime)

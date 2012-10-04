@@ -179,44 +179,51 @@ void Volume<VoxelType>::updateMeshes()
 		{
 			for(int x = 0; x < mVolumeRegions.getDimension(0); x++)
 			{
-				Region regionToExtract = mVolumeRegions[x][y][z]->mRegion;
-				//Extract the surface
-				if(getType() == VolumeTypes::ColouredCubes)
+				if(mVolumeRegions[x][y][z]->mIsMeshUpToDate == false)
 				{
-					SurfaceMesh<PositionMaterial> colouredCubicMesh;
-					CubicSurfaceExtractor< SimpleVolume<Material16> > surfaceExtractor(mVolData, regionToExtract, &colouredCubicMesh);
-					surfaceExtractor.execute();
-
-					if(colouredCubicMesh.getNoOfIndices() > 0)
+					Region regionToExtract = mVolumeRegions[x][y][z]->mRegion;
+					//Extract the surface
+					if(getType() == VolumeTypes::ColouredCubes)
 					{
-						mVolumeRegions[x][y][z]->buildGraphicsMesh(colouredCubicMesh);
-					}
-				}
-				else if(getType() == VolumeTypes::SmoothTerrain)
-				{
-					SurfaceMesh<PositionMaterialNormal> smoothTerrainMesh;
-					GameplayMarchingCubesController controller;					
-					MarchingCubesSurfaceExtractor< SimpleVolume<Material16>, GameplayMarchingCubesController > surfaceExtractor(mVolData, regionToExtract, &smoothTerrainMesh, controller);
-					surfaceExtractor.execute();
+						SurfaceMesh<PositionMaterial> colouredCubicMesh;
+						CubicSurfaceExtractor< SimpleVolume<Material16> > surfaceExtractor(mVolData, regionToExtract, &colouredCubicMesh);
+						surfaceExtractor.execute();
 
-					if(smoothTerrainMesh.getNoOfIndices() > 0)
+						if(colouredCubicMesh.getNoOfIndices() > 0)
+						{
+							mVolumeRegions[x][y][z]->buildGraphicsMesh(colouredCubicMesh);
+						}
+					}
+					else if(getType() == VolumeTypes::SmoothTerrain)
 					{
-						mVolumeRegions[x][y][z]->buildGraphicsMesh(smoothTerrainMesh);
-					}
-				}
+						SurfaceMesh<PositionMaterialNormal> smoothTerrainMesh;
+						GameplayMarchingCubesController controller;					
+						MarchingCubesSurfaceExtractor< SimpleVolume<Material16>, GameplayMarchingCubesController > surfaceExtractor(mVolData, regionToExtract, &smoothTerrainMesh, controller);
+						surfaceExtractor.execute();
 
-				switch(getType())
-				{
-				case VolumeTypes::ColouredCubes:
-					mVolumeRegions[x][y][z]->setMaterial("res/PolyVox.material");
-					break;
-				case VolumeTypes::SmoothTerrain:
-					mVolumeRegions[x][y][z]->setMaterial("res/SmoothTerrain.material");
-					break;
-				default:
-					//Add fallback material here
-					break;
-				}	
+						if(smoothTerrainMesh.getNoOfIndices() > 0)
+						{
+							mVolumeRegions[x][y][z]->buildGraphicsMesh(smoothTerrainMesh);
+						}
+					}
+
+					// FIXME - We shouldn't really set this here as it's not changing every time we update the mesh data.
+					// But before deciding on a material handling strategy let's see what options we come up with for texturing smooth terrain.
+					switch(getType())
+					{
+						case VolumeTypes::ColouredCubes:
+							mVolumeRegions[x][y][z]->setMaterial("res/PolyVox.material");
+							break;
+						case VolumeTypes::SmoothTerrain:
+							mVolumeRegions[x][y][z]->setMaterial("res/SmoothTerrain.material");
+							break;
+						default:
+							//Add fallback material here
+						break;
+					}
+
+					mVolumeRegions[x][y][z]->mIsMeshUpToDate = true;
+				}
 			}
 		}
 	}

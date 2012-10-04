@@ -11,6 +11,7 @@ using namespace PolyVox;
 
 VolumeRegion::VolumeRegion(PolyVox::Region region)
 	:mRegion(region)
+	,mIsMeshUpToDate(false)
 {
 	std::stringstream ss;
 	ss << "VolumeRegionNode(" << mRegion.getLowerCorner().getX() << "," << mRegion.getLowerCorner().getY() << "," << mRegion.getLowerCorner().getZ() << ")";
