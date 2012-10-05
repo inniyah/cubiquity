@@ -69,6 +69,7 @@ void MeshGame::initialize()
 	// Create the volume and add it to the scene.
 	mVolume = SmoothTerrainVolume::create(VolumeTypes::SmoothTerrain, 0, 0, 0, 127, 31, 127, 32, 32, 32);
 	//mVolume = ColouredCubesVolume::create(VolumeTypes::ColouredCubes, 0, 0, 0, 127, 31, 127, 32, 32, 32);
+
 	//Rather dirty hack until I figure out how to package volume data with gameplay
 #ifdef WIN32
 	mVolume->loadData("res/level2.vol");
@@ -76,7 +77,7 @@ void MeshGame::initialize()
 	mVolume->loadData("/sdcard/external_sd/level2.vol");
 #endif
 
-	mVolume->createSphereAt(Vector3(10.0f, 10.0f, 10.0f), 20, 0);
+	//mVolume->createSphereAt(Vector3(10.0f, 10.0f, 10.0f), 20, 0);
 	
 	_polyVoxNode = mVolume->getRootNode();
 	_scene->addNode(mVolume->getRootNode());

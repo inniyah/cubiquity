@@ -78,7 +78,7 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 		*ptr = vecVertices[i].getPosition().getX(); ptr++;
 		*ptr = vecVertices[i].getPosition().getY(); ptr++;
 		*ptr = vecVertices[i].getPosition().getZ(); ptr++;
-		*ptr = 1.0;  ptr++;
+		*ptr = vecVertices[i].getMaterial();  ptr++;
 		*ptr = vecVertices[i].getNormal().getX(); ptr++;
 		*ptr = vecVertices[i].getNormal().getY(); ptr++;
 		*ptr = vecVertices[i].getNormal().getZ(); ptr++;

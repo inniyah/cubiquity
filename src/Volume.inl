@@ -3,7 +3,12 @@
 using namespace gameplay;
 using namespace PolyVox;
 
-class GameplayMarchingCubesController
+#include "PolyVoxCore/MaterialDensityPair.h"
+
+
+//We never actually call the marching cubes algorithm on a Material16 volume but we need to be able to compile it.
+template<>
+class DefaultMarchingCubesController< Material16 >
 {
 public:
 	typedef float DensityType;
@@ -55,7 +60,7 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 	mRootNode = Node::create();
 	//mVolumeRegion = new VolumeRegion(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ));
 	//mRootNode->addChild(mVolumeRegion->mNode);
-	mVolData = new SimpleVolume<Material16>(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ));
+	mVolData = new SimpleVolume<VoxelType>(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ));
 
 	unsigned int volumeWidthInRegions = volumeWidth / regionWidth;
 	unsigned int volumeHeightInRegions = volumeHeight / regionHeight;
@@ -195,7 +200,7 @@ void Volume<VoxelType>::loadData(const char* filename)
 				uint16_t diskVal;
 
 				//Slow and inefficient reading one voxel at a time!
-				size_t elementsRead = fread(&diskVal, sizeof(diskVal), 1,inputFile);
+				size_t elementsRead = fread(&diskVal, sizeof(uint16_t), 1,inputFile);
 				if(elementsRead != 1)
 				{
 					GP_ERROR("Failed to read voxel %d, %d, %d", x, y, z);
@@ -205,8 +210,37 @@ void Volume<VoxelType>::loadData(const char* filename)
 				//seem to have the endianness the wrong way round? Swap them.
 				diskVal = (((diskVal & 0xff)<<8) | ((diskVal & 0xff00)>>8));
 
-				//Wrte the voxel value into the volume	
-				Material16 voxel(diskVal);
+				//Wrte the voxel value into the volume
+
+				//VolumeTypes::ColouredCubes
+				/*VoxelType voxel(diskVal);				setVoxelAt(x, y, z, voxel);*/
+				//VolumeTypes::SmoothTerrain
+				VoxelType voxel;
+				voxel.setMaterial(0);
+				voxel.setDensity(0);
+
+				if(diskVal == 34383) // Soil
+				{				
+					voxel.setDensity(255);
+					voxel.setMaterial(1);					
+				}
+				else if(diskVal == 18751) // Grass
+				{				
+					voxel.setDensity(255);
+					voxel.setMaterial(2);					
+				}
+				else if(diskVal == 255) // Water
+				{				
+					voxel.setDensity(255);
+					voxel.setMaterial(3);					
+				}
+				else
+				{
+					voxel.setDensity(0);
+					voxel.setMaterial(0);
+					//GP_WARN("%d", diskVal);
+				}
+
 				setVoxelAt(x, y, z, voxel);
 			}
 		}
@@ -231,7 +265,7 @@ void Volume<VoxelType>::updateMeshes()
 					if(getType() == VolumeTypes::ColouredCubes)
 					{
 						SurfaceMesh<PositionMaterial> colouredCubicMesh;
-						CubicSurfaceExtractor< SimpleVolume<Material16> > surfaceExtractor(mVolData, regionToExtract, &colouredCubicMesh);
+						CubicSurfaceExtractor< SimpleVolume<VoxelType> > surfaceExtractor(mVolData, regionToExtract, &colouredCubicMesh);
 						surfaceExtractor.execute();
 
 						if(colouredCubicMesh.getNoOfIndices() > 0)
@@ -242,8 +276,7 @@ void Volume<VoxelType>::updateMeshes()
 					else if(getType() == VolumeTypes::SmoothTerrain)
 					{
 						SurfaceMesh<PositionMaterialNormal> smoothTerrainMesh;
-						GameplayMarchingCubesController controller;					
-						MarchingCubesSurfaceExtractor< SimpleVolume<Material16>, GameplayMarchingCubesController > surfaceExtractor(mVolData, regionToExtract, &smoothTerrainMesh, controller);
+						MarchingCubesSurfaceExtractor< SimpleVolume<VoxelType> > surfaceExtractor(mVolData, regionToExtract, &smoothTerrainMesh);
 						surfaceExtractor.execute();
 
 						if(smoothTerrainMesh.getNoOfIndices() > 0)
