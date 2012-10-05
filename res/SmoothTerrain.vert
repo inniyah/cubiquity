@@ -12,10 +12,6 @@ void main()
     //Vertex position
     vec4 modelSpacePosition = vec4(a_position.xyz, 1.0);
     
-    a_position.xyz += a_normal * 5.0;
-    
-    //v_colour = abs(vec4(a_normal, 1.0)); //vec4(0.0, 1.0, 0.0, 1.0);
-    
     v_normal = a_normal;
         
     // Transform position to clip space.

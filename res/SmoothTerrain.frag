@@ -16,6 +16,7 @@ void main()
     // Normalize the vectors.
     vec3 lightDirection = normalize(u_lightDirection);
     vec3 normalVector = v_normal;
+    
 
     // Ambient
     vec3 ambientColor = baseColor.rgb * u_ambientColor;
@@ -28,5 +29,5 @@ void main()
 
     // Light the pixel
     gl_FragColor.a = baseColor.a;
-    gl_FragColor.rgb = ambientColor + diffuseColor/* + noise*/;
+    gl_FragColor.rgb = ambientColor + diffuseColor;
 }
