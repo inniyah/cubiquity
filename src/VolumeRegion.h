@@ -5,8 +5,10 @@
 #include "Ref.h"
 
 #include "PolyVoxCore/Material.h"
+#include "PolyVoxCore/MaterialDensityPair.h"
 #include "PolyVoxCore/SimpleVolume.h"
 #include "PolyVoxCore/CubicSurfaceExtractor.h"
+#include "PolyVoxCore/DefaultMarchingCubesController.h"
 
 template <typename VoxelType>
 class Volume;
@@ -18,7 +20,7 @@ public:
 	~VolumeRegion();
 
 	void buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial>& polyVoxMesh);
-	void buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal<uint16_t> >& polyVoxMesh);
+	void buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< PolyVox::DefaultMarchingCubesController< PolyVox::MaterialDensityPair88 >::MaterialType > >& polyVoxMesh);
 
 	void setMaterial(const char* material); //Should be const material - fix gameplay
 
