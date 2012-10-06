@@ -6,6 +6,8 @@
 #include "PolyVoxCore/DefaultIsQuadNeeded.h" //we'll specialise this function for this voxel type
 #include "PolyVoxCore/DefaultMarchingCubesController.h" //We'll specialise the controller contained in here
 
+#include "PolyVoxCore/Vector.h"
+
 #include <cassert>
 
 class MultiMaterial
@@ -16,9 +18,9 @@ public:
 	//using code such as 'VoxelType::DensityType value = voxel.getDensity()'
 	//or 'VoxelType::MaterialType value = voxel.getMaterial()'.
 	typedef float DensityType;
-	typedef float MaterialType;
+	typedef PolyVox::Vector3DFloat MaterialType;
 
-	MultiMaterial() : m_uMaterial(0) {}
+	MultiMaterial() : m_uMaterial(PolyVox::Vector3DFloat(0, 0, 0)) {}
 	MultiMaterial(MaterialType uMaterial) : m_uMaterial(uMaterial) {}
 
 	bool operator==(const MultiMaterial& rhs) const throw()
@@ -43,7 +45,7 @@ class PolyVox::DefaultMarchingCubesController< MultiMaterial >
 {
 public:
 	typedef float DensityType;
-	typedef float MaterialType;
+	typedef PolyVox::Vector3DFloat MaterialType;
 
 	DefaultMarchingCubesController(void)
 	{
@@ -58,7 +60,7 @@ public:
 
 	DensityType convertToDensity(MultiMaterial voxel)
 	{
-		return voxel.getMaterial();
+		return voxel.getMaterial().getX() + voxel.getMaterial().getY() + voxel.getMaterial().getZ();
 	}
 
 	MaterialType convertToMaterial(MultiMaterial voxel)
@@ -75,21 +77,17 @@ private:
 	DensityType m_tThreshold;
 };
 
+//This is just a dummy to keep everything compiling
 template<>
 class PolyVox::DefaultIsQuadNeeded< MultiMaterial >
 {
 public:
+	typedef float DensityType;
+	typedef int MaterialType;
+
 	bool operator()(MultiMaterial back, MultiMaterial front, float& materialToUse)
 	{
-		if((back.getMaterial() > 0) && (front.getMaterial() == 0))
-		{
-			materialToUse = static_cast<float>(back.getMaterial());
-			return true;
-		}
-		else
-		{
-			return false;
-		}
+		return false;
 	}
 };
 

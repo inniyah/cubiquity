@@ -217,26 +217,28 @@ void Volume<VoxelType>::loadData(const char* filename)
 				setVoxelAt(x, y, z, voxel);*/
 
 				//VolumeTypes::SmoothTerrain
-				VoxelType voxel;
-				voxel.setMaterial(0);
+				VoxelType voxel;				
+				Vector3DFloat material(0,0,0);
 
 				if(diskVal == 34383) // Soil
 				{				
-					voxel.setMaterial(1);					
+					material.setX(1);					
 				}
 				else if(diskVal == 18751) // Grass
 				{				
-					voxel.setMaterial(2);					
+					material.setY(1);					
 				}
 				else if(diskVal == 255) // Water
 				{				
-					voxel.setMaterial(3);					
+					material.setZ(1);					
 				}
 				else
 				{
-					voxel.setMaterial(0);
+					//voxel.setMaterial(0);
 					//GP_WARN("%d", diskVal);
 				}
+
+				voxel.setMaterial(material);
 
 				setVoxelAt(x, y, z, voxel);
 			}
@@ -261,14 +263,14 @@ void Volume<VoxelType>::updateMeshes()
 					//Extract the surface
 					if(getType() == VolumeTypes::ColouredCubes)
 					{
-						SurfaceMesh<PositionMaterial> colouredCubicMesh;
+						/*SurfaceMesh<PositionMaterial> colouredCubicMesh;
 						CubicSurfaceExtractor< SimpleVolume<VoxelType> > surfaceExtractor(mVolData, regionToExtract, &colouredCubicMesh);
 						surfaceExtractor.execute();
 
 						if(colouredCubicMesh.getNoOfIndices() > 0)
 						{
 							mVolumeRegions[x][y][z]->buildGraphicsMesh(colouredCubicMesh);
-						}
+						}*/
 					}
 					else if(getType() == VolumeTypes::SmoothTerrain)
 					{

@@ -448,7 +448,7 @@ namespace PolyVox
 					typename Controller::MaterialType uMaterial100 = m_controller.convertToMaterial(v100);
 					typename Controller::MaterialType uMaterial = (std::max)(uMaterial000, uMaterial100);
 
-					PositionMaterialNormal<typename Controller::MaterialType> surfaceVertex(v3dPosition, v3dNormal, static_cast<float>(uMaterial));
+					PositionMaterialNormal<typename Controller::MaterialType> surfaceVertex(v3dPosition, v3dNormal, uMaterial);
 					uint32_t uLastVertexIndex = m_meshCurrent->addVertex(surfaceVertex);
 					m_pCurrentVertexIndicesX[iXVolSpace - m_regSizeInVoxels.getLowerCorner().getX()][iYVolSpace - m_regSizeInVoxels.getLowerCorner().getY()] = uLastVertexIndex;
 
@@ -474,7 +474,7 @@ namespace PolyVox
 					typename Controller::MaterialType uMaterial010 = m_controller.convertToMaterial(v010);
 					typename Controller::MaterialType uMaterial = (std::max)(uMaterial000, uMaterial010);
 
-					PositionMaterialNormal<typename Controller::MaterialType> surfaceVertex(v3dPosition, v3dNormal, static_cast<float>(uMaterial));
+					PositionMaterialNormal<typename Controller::MaterialType> surfaceVertex(v3dPosition, v3dNormal, uMaterial);
 					uint32_t uLastVertexIndex = m_meshCurrent->addVertex(surfaceVertex);
 					m_pCurrentVertexIndicesY[iXVolSpace - m_regSizeInVoxels.getLowerCorner().getX()][iYVolSpace - m_regSizeInVoxels.getLowerCorner().getY()] = uLastVertexIndex;
 
@@ -500,7 +500,7 @@ namespace PolyVox
 					typename Controller::MaterialType uMaterial001 = m_controller.convertToMaterial(v001);
 					typename Controller::MaterialType uMaterial = (std::max)(uMaterial000, uMaterial001);
 
-					PositionMaterialNormal<typename Controller::MaterialType> surfaceVertex(v3dPosition, v3dNormal, static_cast<float>(uMaterial));
+					PositionMaterialNormal<typename Controller::MaterialType> surfaceVertex(v3dPosition, v3dNormal, uMaterial);
 					uint32_t uLastVertexIndex = m_meshCurrent->addVertex(surfaceVertex);
 					m_pCurrentVertexIndicesZ[iXVolSpace - m_regSizeInVoxels.getLowerCorner().getX()][iYVolSpace - m_regSizeInVoxels.getLowerCorner().getY()] = uLastVertexIndex;
 
