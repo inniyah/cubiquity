@@ -35,7 +35,7 @@ namespace PolyVox
 	const uint32_t CubicSurfaceExtractor<VolumeType, IsQuadNeeded>::MaxVerticesPerPosition = 6;
 
 	template<typename VolumeType, typename IsQuadNeeded>
-	CubicSurfaceExtractor<VolumeType, IsQuadNeeded>::CubicSurfaceExtractor(VolumeType* volData, Region region, SurfaceMesh<PositionMaterial>* result, bool bMergeQuads, IsQuadNeeded isQuadNeeded)
+	CubicSurfaceExtractor<VolumeType, IsQuadNeeded>::CubicSurfaceExtractor(VolumeType* volData, Region region, SurfaceMesh<PositionMaterial<float> >* result, bool bMergeQuads, IsQuadNeeded isQuadNeeded)
 		:m_volData(volData)
 		,m_regSizeInVoxels(region)
 		,m_meshCurrent(result)
@@ -212,7 +212,7 @@ namespace PolyVox
 			if(rEntry.iIndex == -1)
 			{
 				//No vertices matched and we've now hit an empty space. Fill it by creating a vertex.
-				rEntry.iIndex = m_meshCurrent->addVertex(PositionMaterial(Vector3DFloat(fX, fY, fZ), uMaterialIn));
+				rEntry.iIndex = m_meshCurrent->addVertex(PositionMaterial<float> (Vector3DFloat(fX, fY, fZ), uMaterialIn));
 				rEntry.uMaterial = uMaterialIn;
 
 				return rEntry.iIndex;

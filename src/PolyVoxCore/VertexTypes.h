@@ -36,18 +36,40 @@ namespace PolyVox
 #ifdef SWIG
 	class PositionMaterial
 #else
+	template<typename MaterialType>
 	class POLYVOX_API PositionMaterial
 #endif
 	{
 	public:	
-		PositionMaterial();
-		PositionMaterial(Vector3DFloat positionToSet, float materialToSet);
+		PositionMaterial()
+		{
+		}
 
-		float getMaterial(void) const;
-		const Vector3DFloat& getPosition(void) const;
+		PositionMaterial(Vector3DFloat positionToSet, MaterialType materialToSet)
+			:position(positionToSet)
+			,material(materialToSet)
+		{
+		}
 
-		void setMaterial(float materialToSet);
-		void setPosition(const Vector3DFloat& positionToSet);
+		MaterialType getMaterial(void) const
+		{
+			return material;
+		}
+
+		const Vector3DFloat& getPosition(void) const
+		{
+			return position;
+		}
+
+		void setMaterial(MaterialType materialToSet)
+		{
+			material = materialToSet;
+		}
+
+		void setPosition(const Vector3DFloat& positionToSet)
+		{
+			position = positionToSet;
+		}
 	public:		
 		//Nicely fits into four floats.
 		Vector3DFloat position;

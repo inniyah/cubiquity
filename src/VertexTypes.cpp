@@ -29,34 +29,5 @@ namespace PolyVox
 	// PositionMaterial
 	////////////////////////////////////////////////////////////////////////////////
 
-	PositionMaterial::PositionMaterial()
-	{
-	}
-
-	PositionMaterial::PositionMaterial(Vector3DFloat positionToSet, float materialToSet)
-		:position(positionToSet)
-		,material(materialToSet)
-	{
-		
-	}
-
-	float PositionMaterial::getMaterial(void) const
-	{
-		return material;
-	}
-
-	const Vector3DFloat& PositionMaterial::getPosition(void) const
-	{
-		return position;
-	}
-
-	void PositionMaterial::setMaterial(float materialToSet)
-	{
-		material = materialToSet;
-	}
-
-	void PositionMaterial::setPosition(const Vector3DFloat& positionToSet)
-	{
-		position = positionToSet;
-	}
+	
 }

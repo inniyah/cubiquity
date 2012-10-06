@@ -184,11 +184,11 @@ void Volume<VoxelType>::loadData(const char* filename)
 				//Wrte the voxel value into the volume
 
 				//VolumeTypes::ColouredCubes
-				/*VoxelType voxel(diskVal);
-				setVoxelAt(x, y, z, voxel);*/
+				VoxelType voxel(diskVal);
+				setVoxelAt(x, y, z, voxel);
 
 				//VolumeTypes::SmoothTerrain
-				VoxelType voxel;				
+				/*VoxelType voxel;				
 				Vector3DFloat material(0,0,0);
 
 				if(diskVal == 34383) // Soil
@@ -211,7 +211,7 @@ void Volume<VoxelType>::loadData(const char* filename)
 
 				voxel.setMaterial(material);
 
-				setVoxelAt(x, y, z, voxel);
+				setVoxelAt(x, y, z, voxel);*/
 			}
 		}
 	}
@@ -234,15 +234,15 @@ void Volume<VoxelType>::updateMeshes()
 					//Extract the surface
 					if(getType() == VolumeTypes::ColouredCubes)
 					{
-						/*GameplayIsQuadNeeded<VoxelType> isQuadNeeded;
-						SurfaceMesh<PositionMaterial> colouredCubicMesh;
+						GameplayIsQuadNeeded<VoxelType> isQuadNeeded;
+						SurfaceMesh<PositionMaterial<float> > colouredCubicMesh;
 						CubicSurfaceExtractor< SimpleVolume<VoxelType>, GameplayIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, regionToExtract, &colouredCubicMesh, true, isQuadNeeded);
 						surfaceExtractor.execute();
 
 						if(colouredCubicMesh.getNoOfIndices() > 0)
 						{
 							mVolumeRegions[x][y][z]->buildGraphicsMesh(colouredCubicMesh);
-						}*/
+						}
 					}
 					else if(getType() == VolumeTypes::SmoothTerrain)
 					{

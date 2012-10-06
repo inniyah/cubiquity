@@ -1,7 +1,6 @@
 #ifndef __GameplayIsQuadNeeded_H__
 #define __GameplayIsQuadNeeded_H__
 
-
 template<typename VoxelType>
 class GameplayIsQuadNeeded
 {

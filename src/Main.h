@@ -85,8 +85,8 @@ private:
 	float mCameraRotationAngle;
 	float mCameraDistance;
 
-	SmoothTerrainVolume* mVolume;
-	//ColouredCubesVolume* mVolume;
+	//SmoothTerrainVolume* mVolume;
+	ColouredCubesVolume* mVolume;
 };
 
 #endif

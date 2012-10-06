@@ -107,7 +107,7 @@ namespace PolyVox
 		};
 
 	public:
-		CubicSurfaceExtractor(VolumeType* volData, Region region, SurfaceMesh<PositionMaterial>* result, bool bMergeQuads = true, IsQuadNeeded isQuadNeeded = IsQuadNeeded());
+		CubicSurfaceExtractor(VolumeType* volData, Region region, SurfaceMesh<PositionMaterial<float> >* result, bool bMergeQuads = true, IsQuadNeeded isQuadNeeded = IsQuadNeeded());
 
 		void execute();		
 
@@ -125,7 +125,7 @@ namespace PolyVox
 		Region m_regSizeInVoxels;
 
 		//The surface patch we are currently filling.
-		SurfaceMesh<PositionMaterial>* m_meshCurrent;
+		SurfaceMesh<PositionMaterial<float> >* m_meshCurrent;
 
 		//Used to avoid creating duplicate vertices.
 		Array<3, IndexAndMaterial> m_previousSliceVertices;
