@@ -57,10 +57,10 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 	mNode->setModel(model);
 }
 
-void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal>& polyVoxMesh)
+void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal<uint16_t> >& polyVoxMesh)
 {
 	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
-	const std::vector<PositionMaterialNormal>& vecVertices = polyVoxMesh.getVertices();
+	const std::vector<PositionMaterialNormal<uint16_t> >& vecVertices = polyVoxMesh.getVertices();
 	const float* pVerticesConst = reinterpret_cast<const float*>(&vecVertices[0]);
 	float* pVertices = const_cast<float*>(pVerticesConst);
 
@@ -78,7 +78,7 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 		*ptr = vecVertices[i].getPosition().getX(); ptr++;
 		*ptr = vecVertices[i].getPosition().getY(); ptr++;
 		*ptr = vecVertices[i].getPosition().getZ(); ptr++;
-		*ptr = vecVertices[i].getMaterial();  ptr++;
+		*ptr = static_cast<float>(vecVertices[i].getMaterial());  ptr++;
 		*ptr = vecVertices[i].getNormal().getX(); ptr++;
 		*ptr = vecVertices[i].getNormal().getY(); ptr++;
 		*ptr = vecVertices[i].getNormal().getZ(); ptr++;

@@ -35,7 +35,7 @@ namespace PolyVox
 	class CubicSurfaceExtractorWithNormals
 	{
 	public:
-		CubicSurfaceExtractorWithNormals(VolumeType* volData, Region region, SurfaceMesh<PositionMaterialNormal>* result, IsQuadNeeded isQuadNeeded = IsQuadNeeded());
+		CubicSurfaceExtractorWithNormals(VolumeType* volData, Region region, SurfaceMesh<PositionMaterialNormal<float> >* result, IsQuadNeeded isQuadNeeded = IsQuadNeeded());
 
 		void execute();
 
@@ -48,7 +48,7 @@ namespace PolyVox
 		typename VolumeType::Sampler m_sampVolume;
 
 		//The surface patch we are currently filling.
-		SurfaceMesh<PositionMaterialNormal>* m_meshCurrent;
+		SurfaceMesh<PositionMaterialNormal<float> >* m_meshCurrent;
 
 		//Information about the region we are currently processing
 		Region m_regSizeInVoxels;

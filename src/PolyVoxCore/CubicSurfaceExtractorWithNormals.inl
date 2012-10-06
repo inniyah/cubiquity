@@ -24,7 +24,7 @@ freely, subject to the following restrictions:
 namespace PolyVox
 {
 	template<typename VolumeType, typename IsQuadNeeded>
-	CubicSurfaceExtractorWithNormals<VolumeType, IsQuadNeeded>::CubicSurfaceExtractorWithNormals(VolumeType* volData, Region region, SurfaceMesh<PositionMaterialNormal>* result, IsQuadNeeded isQuadNeeded)
+	CubicSurfaceExtractorWithNormals<VolumeType, IsQuadNeeded>::CubicSurfaceExtractorWithNormals(VolumeType* volData, Region region, SurfaceMesh<PositionMaterialNormal<float> >* result, IsQuadNeeded isQuadNeeded)
 		:m_volData(volData)
 		,m_sampVolume(volData)
 		,m_meshCurrent(result)

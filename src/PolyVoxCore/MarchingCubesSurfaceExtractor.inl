@@ -24,7 +24,7 @@ freely, subject to the following restrictions:
 namespace PolyVox
 {
 	template<typename VolumeType, typename Controller>
-	MarchingCubesSurfaceExtractor<VolumeType, Controller>::MarchingCubesSurfaceExtractor(VolumeType* volData, Region region, SurfaceMesh<PositionMaterialNormal>* result, Controller controller)
+	MarchingCubesSurfaceExtractor<VolumeType, Controller>::MarchingCubesSurfaceExtractor(VolumeType* volData, Region region, SurfaceMesh<PositionMaterialNormal<typename Controller::MaterialType> >* result, Controller controller)
 		:m_volData(volData)
 		,m_sampVolume(volData)
 		,m_meshCurrent(result)
@@ -448,7 +448,7 @@ namespace PolyVox
 					typename Controller::MaterialType uMaterial100 = m_controller.convertToMaterial(v100);
 					typename Controller::MaterialType uMaterial = (std::max)(uMaterial000, uMaterial100);
 
-					PositionMaterialNormal surfaceVertex(v3dPosition, v3dNormal, static_cast<float>(uMaterial));
+					PositionMaterialNormal<typename Controller::MaterialType> surfaceVertex(v3dPosition, v3dNormal, static_cast<float>(uMaterial));
 					uint32_t uLastVertexIndex = m_meshCurrent->addVertex(surfaceVertex);
 					m_pCurrentVertexIndicesX[iXVolSpace - m_regSizeInVoxels.getLowerCorner().getX()][iYVolSpace - m_regSizeInVoxels.getLowerCorner().getY()] = uLastVertexIndex;
 
@@ -474,7 +474,7 @@ namespace PolyVox
 					typename Controller::MaterialType uMaterial010 = m_controller.convertToMaterial(v010);
 					typename Controller::MaterialType uMaterial = (std::max)(uMaterial000, uMaterial010);
 
-					PositionMaterialNormal surfaceVertex(v3dPosition, v3dNormal, static_cast<float>(uMaterial));
+					PositionMaterialNormal<typename Controller::MaterialType> surfaceVertex(v3dPosition, v3dNormal, static_cast<float>(uMaterial));
 					uint32_t uLastVertexIndex = m_meshCurrent->addVertex(surfaceVertex);
 					m_pCurrentVertexIndicesY[iXVolSpace - m_regSizeInVoxels.getLowerCorner().getX()][iYVolSpace - m_regSizeInVoxels.getLowerCorner().getY()] = uLastVertexIndex;
 
@@ -500,7 +500,7 @@ namespace PolyVox
 					typename Controller::MaterialType uMaterial001 = m_controller.convertToMaterial(v001);
 					typename Controller::MaterialType uMaterial = (std::max)(uMaterial000, uMaterial001);
 
-					PositionMaterialNormal surfaceVertex(v3dPosition, v3dNormal, static_cast<float>(uMaterial));
+					PositionMaterialNormal<typename Controller::MaterialType> surfaceVertex(v3dPosition, v3dNormal, static_cast<float>(uMaterial));
 					uint32_t uLastVertexIndex = m_meshCurrent->addVertex(surfaceVertex);
 					m_pCurrentVertexIndicesZ[iXVolSpace - m_regSizeInVoxels.getLowerCorner().getX()][iYVolSpace - m_regSizeInVoxels.getLowerCorner().getY()] = uLastVertexIndex;
 

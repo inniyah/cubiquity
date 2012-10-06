@@ -213,7 +213,9 @@ void Volume<VoxelType>::loadData(const char* filename)
 				//Wrte the voxel value into the volume
 
 				//VolumeTypes::ColouredCubes
-				/*VoxelType voxel(diskVal);				setVoxelAt(x, y, z, voxel);*/
+				/*VoxelType voxel(diskVal);
+				setVoxelAt(x, y, z, voxel);*/
+
 				//VolumeTypes::SmoothTerrain
 				VoxelType voxel;
 				voxel.setMaterial(0);
@@ -275,7 +277,7 @@ void Volume<VoxelType>::updateMeshes()
 					}
 					else if(getType() == VolumeTypes::SmoothTerrain)
 					{
-						SurfaceMesh<PositionMaterialNormal> smoothTerrainMesh;
+						SurfaceMesh<PositionMaterialNormal<uint16_t> > smoothTerrainMesh;
 						MarchingCubesSurfaceExtractor< SimpleVolume<VoxelType> > surfaceExtractor(mVolData, regionToExtract, &smoothTerrainMesh);
 						surfaceExtractor.execute();
 

@@ -37,7 +37,7 @@ namespace PolyVox
 	class MarchingCubesSurfaceExtractor
 	{
 	public:
-		MarchingCubesSurfaceExtractor(VolumeType* volData, Region region, SurfaceMesh<PositionMaterialNormal>* result, Controller controller = Controller());
+		MarchingCubesSurfaceExtractor(VolumeType* volData, Region region, SurfaceMesh<PositionMaterialNormal<typename Controller::MaterialType> >* result, Controller controller = Controller());
 
 		void execute();
 
@@ -196,7 +196,7 @@ namespace PolyVox
 		uint32_t m_uNoOfOccupiedCells;
 
 		//The surface patch we are currently filling.
-		SurfaceMesh<PositionMaterialNormal>* m_meshCurrent;
+		SurfaceMesh<PositionMaterialNormal<typename Controller::MaterialType> >* m_meshCurrent;
 
 		//Information about the region we are currently processing
 		Region m_regSizeInVoxels;

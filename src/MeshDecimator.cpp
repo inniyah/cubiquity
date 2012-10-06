@@ -101,7 +101,7 @@ namespace PolyVox
 	}
 
 	template<>
-	POLYVOX_API void MeshDecimator<PositionMaterialNormal>::fillInitialVertexMetadata(std::vector<InitialVertexMetadata>& vecVertexMetadata)
+	POLYVOX_API void MeshDecimator<PositionMaterialNormal<float> >::fillInitialVertexMetadata(std::vector<InitialVertexMetadata>& vecVertexMetadata)
 	{
 		vecVertexMetadata.clear();
 		vecVertexMetadata.resize(m_pOutputMesh->m_vecVertices.size());
@@ -154,7 +154,7 @@ namespace PolyVox
 	}
 
 	template<> 
-	POLYVOX_API bool MeshDecimator<PositionMaterialNormal>::canCollapseNormalEdge(uint32_t uSrc, uint32_t uDst)
+	POLYVOX_API bool MeshDecimator<PositionMaterialNormal<float> >::canCollapseNormalEdge(uint32_t uSrc, uint32_t uDst)
 	{
 		if(m_vecInitialVertexMetadata[uSrc].normal.dot(m_vecInitialVertexMetadata[uDst].normal) < m_fMinDotProductForCollapse)
 		{
