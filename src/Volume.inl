@@ -5,37 +5,8 @@ using namespace PolyVox;
 
 #include "PolyVoxCore/MaterialDensityPair.h"
 
-
-//We never actually call the marching cubes algorithm on a Material16 volume but we need to be able to compile it.
-template<>
-class DefaultMarchingCubesController< Material16 >
-{
-public:
-	typedef float DensityType;
-	typedef float MaterialType;
-
-	float convertToDensity(Material16 voxel)
-	{
-		if(voxel.getMaterial() > 0)
-		{
-			return 100.0f;
-		}
-		else
-		{
-			return 0.0f;
-		}
-	}
-
-	float convertToMaterial(Material16 voxel)
-	{
-		return 1;
-	}
-
-	float getThreshold(void)
-	{
-		return 50.0f;
-	}
-};
+#include "GameplayMarchingCubesController.h"
+#include "GameplayIsQuadNeeded.h"
 
 template <typename VoxelType>
 Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)
@@ -206,7 +177,7 @@ void Volume<VoxelType>::loadData(const char* filename)
 					GP_ERROR("Failed to read voxel %d, %d, %d", x, y, z);
 				}
 
-				//HACK - For some reason the valures coming from Voxeliens
+				//HACK - For some reason the values coming from Voxeliens
 				//seem to have the endianness the wrong way round? Swap them.
 				diskVal = (((diskVal & 0xff)<<8) | ((diskVal & 0xff00)>>8));
 
@@ -263,8 +234,9 @@ void Volume<VoxelType>::updateMeshes()
 					//Extract the surface
 					if(getType() == VolumeTypes::ColouredCubes)
 					{
-						/*SurfaceMesh<PositionMaterial> colouredCubicMesh;
-						CubicSurfaceExtractor< SimpleVolume<VoxelType> > surfaceExtractor(mVolData, regionToExtract, &colouredCubicMesh);
+						/*GameplayIsQuadNeeded<VoxelType> isQuadNeeded;
+						SurfaceMesh<PositionMaterial> colouredCubicMesh;
+						CubicSurfaceExtractor< SimpleVolume<VoxelType>, GameplayIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, regionToExtract, &colouredCubicMesh, true, isQuadNeeded);
 						surfaceExtractor.execute();
 
 						if(colouredCubicMesh.getNoOfIndices() > 0)
@@ -274,8 +246,9 @@ void Volume<VoxelType>::updateMeshes()
 					}
 					else if(getType() == VolumeTypes::SmoothTerrain)
 					{
-						SurfaceMesh<PositionMaterialNormal< DefaultMarchingCubesController< MultiMaterial >::MaterialType > > smoothTerrainMesh;
-						MarchingCubesSurfaceExtractor< SimpleVolume<VoxelType> > surfaceExtractor(mVolData, regionToExtract, &smoothTerrainMesh);
+						GameplayMarchingCubesController<VoxelType> controller;
+						SurfaceMesh<PositionMaterialNormal< GameplayMarchingCubesController<VoxelType>::MaterialType > > smoothTerrainMesh;
+						MarchingCubesSurfaceExtractor< SimpleVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor(mVolData, regionToExtract, &smoothTerrainMesh, controller);
 						surfaceExtractor.execute();
 
 						if(smoothTerrainMesh.getNoOfIndices() > 0)

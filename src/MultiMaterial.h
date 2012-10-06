@@ -3,9 +3,6 @@
 
 #include "PolyVoxImpl/TypeDef.h"
 
-#include "PolyVoxCore/DefaultIsQuadNeeded.h" //we'll specialise this function for this voxel type
-#include "PolyVoxCore/DefaultMarchingCubesController.h" //We'll specialise the controller contained in here
-
 #include "PolyVoxCore/Vector.h"
 
 #include <cassert>
@@ -38,57 +35,6 @@ public:
 
 private:
 	MaterialType m_uMaterial;
-};
-
-template <>
-class PolyVox::DefaultMarchingCubesController< MultiMaterial >
-{
-public:
-	typedef float DensityType;
-	typedef PolyVox::Vector3DFloat MaterialType;
-
-	DefaultMarchingCubesController(void)
-	{
-		// Default to a threshold value halfway between the min and max possible values.
-		m_tThreshold = 0.5f;
-	}
-
-	DefaultMarchingCubesController(DensityType tThreshold)
-	{
-		m_tThreshold = tThreshold;
-	}
-
-	DensityType convertToDensity(MultiMaterial voxel)
-	{
-		return voxel.getMaterial().getX() + voxel.getMaterial().getY() + voxel.getMaterial().getZ();
-	}
-
-	MaterialType convertToMaterial(MultiMaterial voxel)
-	{
-		return voxel.getMaterial();
-	}
-
-	DensityType getThreshold(void)
-	{			
-		return m_tThreshold;
-	}
-
-private:
-	DensityType m_tThreshold;
-};
-
-//This is just a dummy to keep everything compiling
-template<>
-class PolyVox::DefaultIsQuadNeeded< MultiMaterial >
-{
-public:
-	typedef float DensityType;
-	typedef int MaterialType;
-
-	bool operator()(MultiMaterial back, MultiMaterial front, float& materialToUse)
-	{
-		return false;
-	}
 };
 
 #endif //__MultiMaterial_H__
