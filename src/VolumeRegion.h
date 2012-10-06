@@ -22,6 +22,7 @@ public:
 	~VolumeRegion();
 
 	void buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<PolyVox::Material16> >& polyVoxMesh);
+	void buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<MultiMaterial> >& polyVoxMesh);
 	void buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< GameplayMarchingCubesController< MultiMaterial >::MaterialType > >& polyVoxMesh);
 
 	void setMaterial(const char* material); //Should be const material - fix gameplay
