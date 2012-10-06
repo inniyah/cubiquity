@@ -35,7 +35,7 @@ namespace PolyVox
 	const uint32_t CubicSurfaceExtractor<VolumeType, IsQuadNeeded>::MaxVerticesPerPosition = 6;
 
 	template<typename VolumeType, typename IsQuadNeeded>
-	CubicSurfaceExtractor<VolumeType, IsQuadNeeded>::CubicSurfaceExtractor(VolumeType* volData, Region region, SurfaceMesh<PositionMaterial<float> >* result, bool bMergeQuads, IsQuadNeeded isQuadNeeded)
+	CubicSurfaceExtractor<VolumeType, IsQuadNeeded>::CubicSurfaceExtractor(VolumeType* volData, Region region, SurfaceMesh<PositionMaterial<typename VolumeType::VoxelType> >* result, bool bMergeQuads, IsQuadNeeded isQuadNeeded)
 		:m_volData(volData)
 		,m_regSizeInVoxels(region)
 		,m_meshCurrent(result)
@@ -212,7 +212,7 @@ namespace PolyVox
 			if(rEntry.iIndex == -1)
 			{
 				//No vertices matched and we've now hit an empty space. Fill it by creating a vertex.
-				rEntry.iIndex = m_meshCurrent->addVertex(PositionMaterial<float> (Vector3DFloat(fX, fY, fZ), uMaterialIn));
+				rEntry.iIndex = m_meshCurrent->addVertex(PositionMaterial<typename VolumeType::VoxelType> (Vector3DFloat(fX, fY, fZ), uMaterialIn));
 				rEntry.uMaterial = uMaterialIn;
 
 				return rEntry.iIndex;
@@ -266,7 +266,7 @@ namespace PolyVox
 	{
 		//All four vertices of a given quad have the same material,
 		//so just check that the first pair of vertices match.
-		if(std::abs(m_meshCurrent->getVertices()[q1.vertices[0]].getMaterial() - m_meshCurrent->getVertices()[q2.vertices[0]].getMaterial()) < 0.001)
+		if(m_meshCurrent->getVertices()[q1.vertices[0]].getMaterial() == m_meshCurrent->getVertices()[q2.vertices[0]].getMaterial())
 		{
 			//Now check whether quad 2 is adjacent to quad one by comparing vertices.
 			//Adjacent quads must share two vertices, and the second quad could be to the

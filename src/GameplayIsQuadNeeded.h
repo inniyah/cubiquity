@@ -23,11 +23,11 @@ template<>
 class GameplayIsQuadNeeded< PolyVox::Material16 >
 {
 public:
-	bool operator()(PolyVox::Material16 back, PolyVox::Material16 front, float& materialToUse)
+	bool operator()(PolyVox::Material16 back, PolyVox::Material16 front, PolyVox::Material16& materialToUse)
 	{
 		if((back.getMaterial() > 0) && (front.getMaterial() == 0))
 		{
-			materialToUse = static_cast<float>(back.getMaterial());
+			materialToUse = back.getMaterial();
 			return true;
 		}
 		else
@@ -41,7 +41,7 @@ template<>
 class GameplayIsQuadNeeded< MultiMaterial >
 {
 public:
-	bool operator()(MultiMaterial back, MultiMaterial front, float& materialToUse)
+	bool operator()(MultiMaterial back, MultiMaterial front, MultiMaterial& materialToUse)
 	{
 		return false;
 	}

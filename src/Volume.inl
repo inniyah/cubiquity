@@ -235,7 +235,7 @@ void Volume<VoxelType>::updateMeshes()
 					if(getType() == VolumeTypes::ColouredCubes)
 					{
 						GameplayIsQuadNeeded<VoxelType> isQuadNeeded;
-						SurfaceMesh<PositionMaterial<float> > colouredCubicMesh;
+						SurfaceMesh<PositionMaterial<VoxelType> > colouredCubicMesh;
 						CubicSurfaceExtractor< SimpleVolume<VoxelType>, GameplayIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, regionToExtract, &colouredCubicMesh, true, isQuadNeeded);
 						surfaceExtractor.execute();
 

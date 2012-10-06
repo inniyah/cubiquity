@@ -73,7 +73,7 @@ namespace PolyVox
 	public:		
 		//Nicely fits into four floats.
 		Vector3DFloat position;
-		float material;
+		MaterialType material;
 	};	
 
 #ifdef SWIG
