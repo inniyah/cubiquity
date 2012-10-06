@@ -1,11 +1,12 @@
 #ifndef SMOOTHTERRAINVOLUME_H_
 #define SMOOTHTERRAINVOLUME_H_
 
+#include "MultiMaterial.h"
 #include "Volume.h"
 
 #include "PolyVoxCore/MaterialDensityPair.h"
 
-class SmoothTerrainVolume : public Volume<PolyVox::MaterialDensityPair88>
+class SmoothTerrainVolume : public Volume<MultiMaterial>
 {
 public:
 	static SmoothTerrainVolume* create(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)
@@ -16,7 +17,7 @@ public:
 
 protected:
 	SmoothTerrainVolume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)
-		:Volume<PolyVox::MaterialDensityPair88>(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth) {}
+		:Volume<MultiMaterial>(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth) {}
 };
 
 #endif //SMOOTHTERRAINVOLUME_H_

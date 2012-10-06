@@ -219,26 +219,21 @@ void Volume<VoxelType>::loadData(const char* filename)
 				//VolumeTypes::SmoothTerrain
 				VoxelType voxel;
 				voxel.setMaterial(0);
-				voxel.setDensity(0);
 
 				if(diskVal == 34383) // Soil
 				{				
-					voxel.setDensity(255);
 					voxel.setMaterial(1);					
 				}
 				else if(diskVal == 18751) // Grass
 				{				
-					voxel.setDensity(255);
 					voxel.setMaterial(2);					
 				}
 				else if(diskVal == 255) // Water
 				{				
-					voxel.setDensity(255);
 					voxel.setMaterial(3);					
 				}
 				else
 				{
-					voxel.setDensity(0);
 					voxel.setMaterial(0);
 					//GP_WARN("%d", diskVal);
 				}
@@ -277,7 +272,7 @@ void Volume<VoxelType>::updateMeshes()
 					}
 					else if(getType() == VolumeTypes::SmoothTerrain)
 					{
-						SurfaceMesh<PositionMaterialNormal<uint16_t> > smoothTerrainMesh;
+						SurfaceMesh<PositionMaterialNormal< DefaultMarchingCubesController< MultiMaterial >::MaterialType > > smoothTerrainMesh;
 						MarchingCubesSurfaceExtractor< SimpleVolume<VoxelType> > surfaceExtractor(mVolData, regionToExtract, &smoothTerrainMesh);
 						surfaceExtractor.execute();
 
