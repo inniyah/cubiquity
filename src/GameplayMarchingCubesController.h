@@ -1,6 +1,7 @@
 #ifndef __GameplayMarchingCubesController_H__
 #define __GameplayMarchingCubesController_H__
 
+#include <cassert>
 #include <limits>
 
 #include "MultiMaterial.h"
@@ -81,7 +82,7 @@ private:
 	DensityType m_tThreshold;
 };
 
-//This is a dummy so the code can still compile.
+// We never use the marching cubes surface extractor with Material16 so this is just a dummy specialisation.
 template<>
 class GameplayMarchingCubesController< PolyVox::Material16 >
 {
@@ -91,16 +92,19 @@ public:
 
 	float convertToDensity(PolyVox::Material16 voxel)
 	{
+		assert(false);
 		return 0;
 	}
 
 	MaterialType convertToMaterial(PolyVox::Material16 voxel)
 	{
+		assert(false);
 		return PolyVox::Vector3DFloat(0,0,0);
 	}
 
 	float getThreshold(void)
 	{
+		assert(false);
 		return 0;
 	}
 };

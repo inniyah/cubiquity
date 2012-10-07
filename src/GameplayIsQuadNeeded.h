@@ -1,6 +1,8 @@
 #ifndef __GameplayIsQuadNeeded_H__
 #define __GameplayIsQuadNeeded_H__
 
+#include <cassert>
+
 template<typename VoxelType>
 class GameplayIsQuadNeeded
 {
@@ -37,12 +39,14 @@ public:
 	}
 };
 
+// We never use the cubic surface extractor with MultiMaterial so this is just a dummy specialisation.
 template<>
 class GameplayIsQuadNeeded< MultiMaterial >
 {
 public:
 	bool operator()(MultiMaterial back, MultiMaterial front, MultiMaterial& materialToUse)
 	{
+		assert(false);
 		return false;
 	}
 };

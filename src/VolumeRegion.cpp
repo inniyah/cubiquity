@@ -44,14 +44,7 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 		*ptr = vecVertices[i].getPosition().getX(); ptr++;
 		*ptr = vecVertices[i].getPosition().getY(); ptr++;
 		*ptr = vecVertices[i].getPosition().getZ(); ptr++;
-
-		Material16 temp = vecVertices[i].getMaterial();
-		uint16_t temp2 = temp.getMaterial();
-		*ptr = static_cast<float>(temp2); ptr++;
-		//*ptr = 1.0;  ptr++;
-		//*ptr = vecVertices[i].getNormal().getX(); ptr++;
-		//*ptr = vecVertices[i].getNormal().getY(); ptr++;
-		//*ptr = vecVertices[i].getNormal().getZ(); ptr++;
+		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial()); ptr++;
 	}
 
     Mesh* mesh = Mesh::createMesh(VertexFormat(elements, 1), polyVoxMesh.getVertices().size(), false);
@@ -78,6 +71,12 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 
 void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<MultiMaterial> >& polyVoxMesh)
 {
+	GP_ERROR("This function should never be called!"); //See note in header
+}
+
+void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< PolyVox::Material16 > >& polyVoxMesh)
+{
+	GP_ERROR("This function should never be called!"); //See note in header
 }
 
 void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial >::MaterialType> >& polyVoxMesh)
