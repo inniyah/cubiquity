@@ -50,7 +50,7 @@ class GameplayMarchingCubesController< MultiMaterial >
 {
 public:
 	typedef float DensityType;
-	typedef PolyVox::Vector3DFloat MaterialType;
+	typedef MultiMaterial MaterialType;
 
 	GameplayMarchingCubesController(void)
 	{
@@ -70,20 +70,18 @@ public:
 
 	MaterialType convertToMaterial(MultiMaterial voxel)
 	{
-		return voxel.getMaterial();
+		return voxel;
 	}
 
 	MaterialType blendMaterials(MaterialType a, MaterialType b) //Should take some weighting into account here
 	{
-		/*PolyVox::Vector3DFloat aVec = a.getMaterial();
+		PolyVox::Vector3DFloat aVec = a.getMaterial();
 		PolyVox::Vector3DFloat bVec = b.getMaterial();
 		PolyVox::Vector3DFloat blendedVec = aVec + bVec;
 		blendedVec = blendedVec / 2.0f;
 		MultiMaterial result;
 		result.setMaterial(blendedVec);
-		return result;*/
-
-		return a;
+		return result;
 	}
 
 	DensityType getThreshold(void)
@@ -101,7 +99,7 @@ class GameplayMarchingCubesController< PolyVox::Material16 >
 {
 public:
 	typedef float DensityType;
-	typedef PolyVox::Vector3DFloat MaterialType;
+	typedef MultiMaterial MaterialType;
 
 	float convertToDensity(PolyVox::Material16 voxel)
 	{

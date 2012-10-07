@@ -7,11 +7,17 @@ uniform vec3 u_lightColor;                      // Light color
 uniform vec3 u_lightDirection;       	        // Light direction
 
 varying vec4 v_normalAndMaterial;
+varying vec4 v_texCoord0;
 
 void main()
 {	
     // Base color
-    vec4 baseColor = vec4(1.0,0.0,1.0,1.0);
+    vec4 baseColor = vec4(0.0,0.0,0.0,1.0);
+    baseColor += v_texCoord0.x * vec4(1.0,0.0,0.0,1.0);
+    baseColor += v_texCoord0.y * vec4(0.0,1.0,0.0,1.0);
+    baseColor += v_texCoord0.z * vec4(0.0,0.0,1.0,1.0);
+    
+    /*vec4 baseColor = vec4(1.0,0.0,1.0,1.0);
     
     float material = v_normalAndMaterial.w;
     if(material > 0.5)
@@ -29,7 +35,7 @@ void main()
     if(material > 3.5)
     {
         baseColor = vec4(1.0,1.0,1.0,1.0);
-    }
+    }*/
 
     // Normalize the vectors.
     vec3 lightDirection = normalize(u_lightDirection);

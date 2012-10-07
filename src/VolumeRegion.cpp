@@ -89,25 +89,31 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 	VertexFormat::Element elements[] =
     {
         VertexFormat::Element(VertexFormat::POSITION, 4),
+		VertexFormat::Element(VertexFormat::TEXCOORD0, 4),
 		VertexFormat::Element(VertexFormat::NORMAL, 3)
     };
 
 	//Create the vertex data in the expected format
-	float* vertexData = new float[polyVoxMesh.getVertices().size() * 7]; //7 float per vertex
+	float* vertexData = new float[polyVoxMesh.getVertices().size() * 11]; //11 float per vertex
 	float* ptr = vertexData;
 	for(int i = 0; i < vecVertices.size(); i++)
 	{
 		*ptr = vecVertices[i].getPosition().getX(); ptr++;
 		*ptr = vecVertices[i].getPosition().getY(); ptr++;
 		*ptr = vecVertices[i].getPosition().getZ(); ptr++;
-		*ptr = static_cast<float>(vecVertices[i].getMaterial().getX());  ptr++;
-		//*ptr = 1.0;  ptr++;
+		*ptr = 1.0;  ptr++;
+
+		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial().getX()); ptr++;
+		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial().getY()); ptr++;
+		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial().getZ()); ptr++;
+		*ptr = 1.0;  ptr++;
+		
 		*ptr = vecVertices[i].getNormal().getX(); ptr++;
 		*ptr = vecVertices[i].getNormal().getY(); ptr++;
 		*ptr = vecVertices[i].getNormal().getZ(); ptr++;
 	}
 
-    Mesh* mesh = Mesh::createMesh(VertexFormat(elements, 2), polyVoxMesh.getVertices().size(), false);
+    Mesh* mesh = Mesh::createMesh(VertexFormat(elements, 3), polyVoxMesh.getVertices().size(), false);
     /*if (mesh == NULL)
     {
         return NULL;
