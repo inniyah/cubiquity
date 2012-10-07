@@ -15,11 +15,13 @@ void main()
     texCoord0 = normalize(texCoord0);
     
     // Base color
-    vec4 baseColor = vec4(0.0,0.0,0.0,1.0);
+    vec4 baseColor = vec4(0.3,0.3,0.3,1.0);
     baseColor += texCoord0.x * vec4(1.0,0.0,0.0,1.0);
     baseColor += texCoord0.y * vec4(0.0,1.0,0.0,1.0);
     baseColor += texCoord0.z * vec4(0.0,0.0,1.0,1.0);
     gl_FragColor = baseColor;
+    
+    //gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
     
     /*float total = v_texCoord0.x + v_texCoord0.y + v_texCoord0.z;
     vec4 baseColor = vec4(total,total,total,1.0);

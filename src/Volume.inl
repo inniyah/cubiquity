@@ -217,16 +217,18 @@ void Volume<VoxelType>::loadData(const char* filename)
 		}
 	}
 
-	/*SimpleVolume<VoxelType> resultVolume(mVolData->getEnclosingRegion());
+	SimpleVolume<VoxelType> resultVolume(mVolData->getEnclosingRegion());
 	Region regToProcess = mVolData->getEnclosingRegion();
 	regToProcess.shiftLowerCorner(Vector3DInt32(1,1,1));
 	regToProcess.shiftUpperCorner(Vector3DInt32(-1,-1,-1));
 
 	LowPassFilter<SimpleVolume<VoxelType>, SimpleVolume<VoxelType>, VoxelType> pass1(mVolData, regToProcess, &resultVolume, regToProcess, 3);
 	pass1.execute();
+	normaliseVolume(&resultVolume, mVolData);
 
 	LowPassFilter<SimpleVolume<VoxelType>, SimpleVolume<VoxelType>, VoxelType> pass2(&resultVolume, regToProcess, mVolData, regToProcess, 3);
-	pass2.execute();*/
+	pass2.execute();
+	normaliseVolume(mVolData, &resultVolume);
 
 	fclose(inputFile);
 }
