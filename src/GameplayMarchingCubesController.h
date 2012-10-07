@@ -73,6 +73,19 @@ public:
 		return voxel.getMaterial();
 	}
 
+	MaterialType blendMaterials(MaterialType a, MaterialType b) //Should take some weighting into account here
+	{
+		/*PolyVox::Vector3DFloat aVec = a.getMaterial();
+		PolyVox::Vector3DFloat bVec = b.getMaterial();
+		PolyVox::Vector3DFloat blendedVec = aVec + bVec;
+		blendedVec = blendedVec / 2.0f;
+		MultiMaterial result;
+		result.setMaterial(blendedVec);
+		return result;*/
+
+		return a;
+	}
+
 	DensityType getThreshold(void)
 	{			
 		return m_tThreshold;
@@ -100,6 +113,19 @@ public:
 	{
 		assert(false);
 		return PolyVox::Vector3DFloat(0,0,0);
+	}
+
+	MaterialType blendMaterials(MaterialType a, MaterialType b) //Should take some weighting into account here
+	{
+		/*PolyVox::Vector3DFloat aVec = a.getMaterial();
+		PolyVox::Vector3DFloat bVec = b.getMaterial();
+		PolyVox::Vector3DFloat blendedVec = aVec + bVec;
+		blendedVec = blendedVec / 2.0f;
+		MultiMaterial result;
+		result.setMaterial(blendedVec);
+		return result;*/
+
+		return a;
 	}
 
 	float getThreshold(void)
