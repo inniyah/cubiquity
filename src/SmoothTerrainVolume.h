@@ -6,9 +6,9 @@
 
 #include "PolyVoxCore/MaterialDensityPair.h"
 
-void normaliseVolume(SimpleVolume<MultiMaterial>* toNormalise, const SimpleVolume<MultiMaterial>* basedOn)
+void copyVolume(const SimpleVolume<MultiMaterial>* src, SimpleVolume<MultiMaterial>* dst)
 {
-	Region reg = toNormalise->getEnclosingRegion();
+	Region reg = src->getEnclosingRegion();
 	int minX = reg.getLowerCorner().getX();
 	int minY = reg.getLowerCorner().getY();
 	int minZ = reg.getLowerCorner().getZ();
@@ -22,7 +22,9 @@ void normaliseVolume(SimpleVolume<MultiMaterial>* toNormalise, const SimpleVolum
 		{
 			for(int x = minX; x <= maxX; x++)
 			{
-				float targetLength = basedOn->getVoxelAt(x,y,z).getMaterial().length();
+				dst->setVoxelAt(x,y,z,src->getVoxelAt(x,y,z));
+
+				/*float targetLength = basedOn->getVoxelAt(x,y,z).getMaterial().length();
 				float currentLength = toNormalise->getVoxelAt(x,y,z).getMaterial().length();
 				float multiplier = targetLength / currentLength;
 
@@ -39,7 +41,7 @@ void normaliseVolume(SimpleVolume<MultiMaterial>* toNormalise, const SimpleVolum
 				MultiMaterial value;
 				value.setMaterial(values);
 				toNormalise->setVoxelAt(x,y,z,value);
-				}
+				}*/
 			}
 		}
 	}

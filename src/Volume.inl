@@ -211,8 +211,12 @@ void Volume<VoxelType>::loadData(const char* filename)
 				}
 
 				voxel.setMaterial(material);
-
 				setVoxelAt(x, y, z, voxel);
+				if(diskVal == 18751) // Grass
+				{
+					setVoxelAt(x, y-1, z, voxel);
+					setVoxelAt(x, y-2, z, voxel);
+				}
 			}
 		}
 	}
@@ -224,11 +228,11 @@ void Volume<VoxelType>::loadData(const char* filename)
 
 	LowPassFilter<SimpleVolume<VoxelType>, SimpleVolume<VoxelType>, VoxelType> pass1(mVolData, regToProcess, &resultVolume, regToProcess, 3);
 	pass1.execute();
-	normaliseVolume(&resultVolume, mVolData);
+	copyVolume(&resultVolume, mVolData);
 
 	LowPassFilter<SimpleVolume<VoxelType>, SimpleVolume<VoxelType>, VoxelType> pass2(&resultVolume, regToProcess, mVolData, regToProcess, 3);
 	pass2.execute();
-	normaliseVolume(mVolData, &resultVolume);
+	copyVolume(&resultVolume, mVolData);
 
 	fclose(inputFile);
 }

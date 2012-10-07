@@ -15,11 +15,10 @@ void main()
     texCoord0 = normalize(texCoord0);
     
     // Base color
-    vec4 baseColor = vec4(0.3,0.3,0.3,1.0);
+    vec4 baseColor = vec4(0.0,0.0,0.0,1.0);
     baseColor += texCoord0.x * vec4(1.0,0.0,0.0,1.0);
     baseColor += texCoord0.y * vec4(0.0,1.0,0.0,1.0);
     baseColor += texCoord0.z * vec4(0.0,0.0,1.0,1.0);
-    gl_FragColor = baseColor;
     
     //gl_FragColor = vec4(1.0, 1.0, 1.0, 1.0);
     
@@ -48,7 +47,7 @@ void main()
     }*/
 
     // Normalize the vectors.
-    /*vec3 lightDirection = normalize(u_lightDirection);
+    vec3 lightDirection = normalize(u_lightDirection);
     vec3 normalVector = v_normalAndMaterial.xyz;    
 
     // Ambient
@@ -62,5 +61,5 @@ void main()
 
     // Light the pixel
     gl_FragColor.a = baseColor.a;
-    gl_FragColor.rgb = ambientColor + diffuseColor;*/
+    gl_FragColor.rgb = ambientColor + diffuseColor;
 }
