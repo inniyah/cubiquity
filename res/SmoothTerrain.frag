@@ -11,11 +11,19 @@ varying vec4 v_texCoord0;
 
 void main()
 {	
+    vec3 texCoord0 = v_texCoord0.xyz;
+    texCoord0 = normalize(texCoord0);
+    
     // Base color
     vec4 baseColor = vec4(0.0,0.0,0.0,1.0);
-    baseColor += v_texCoord0.x * vec4(1.0,0.0,0.0,1.0);
-    baseColor += v_texCoord0.y * vec4(0.0,1.0,0.0,1.0);
-    baseColor += v_texCoord0.z * vec4(0.0,0.0,1.0,1.0);
+    baseColor += texCoord0.x * vec4(1.0,0.0,0.0,1.0);
+    baseColor += texCoord0.y * vec4(0.0,1.0,0.0,1.0);
+    baseColor += texCoord0.z * vec4(0.0,0.0,1.0,1.0);
+    gl_FragColor = baseColor;
+    
+    /*float total = v_texCoord0.x + v_texCoord0.y + v_texCoord0.z;
+    vec4 baseColor = vec4(total,total,total,1.0);
+    gl_FragColor = baseColor;*/
     
     /*vec4 baseColor = vec4(1.0,0.0,1.0,1.0);
     
@@ -38,7 +46,7 @@ void main()
     }*/
 
     // Normalize the vectors.
-    vec3 lightDirection = normalize(u_lightDirection);
+    /*vec3 lightDirection = normalize(u_lightDirection);
     vec3 normalVector = v_normalAndMaterial.xyz;    
 
     // Ambient
@@ -52,5 +60,5 @@ void main()
 
     // Light the pixel
     gl_FragColor.a = baseColor.a;
-    gl_FragColor.rgb = ambientColor + diffuseColor;
+    gl_FragColor.rgb = ambientColor + diffuseColor;*/
 }

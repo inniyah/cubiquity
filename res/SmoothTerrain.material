@@ -11,7 +11,7 @@ material SmoothTerrain
             // uniforms
             u_worldViewProjectionMatrix = WORLD_VIEW_PROJECTION_MATRIX
             
-            u_ambientColor = 0.3, 0.3, 0.3
+            //u_ambientColor = 0.3, 0.3, 0.3
 
             // render state
             renderState

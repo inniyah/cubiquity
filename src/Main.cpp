@@ -207,8 +207,8 @@ bool MeshGame::drawScene(Node* node)
     Model* model = node->getModel();
     if (model)
 	{
-		model->getMaterial()->getParameter("u_lightColor")->setValue(_light->getColor());
-		model->getMaterial()->getParameter("u_lightDirection")->setValue(_lightNode->getForwardVectorWorld());
+		//model->getMaterial()->getParameter("u_lightColor")->setValue(_light->getColor());
+		//model->getMaterial()->getParameter("u_lightDirection")->setValue(_lightNode->getForwardVectorWorld());
         model->draw();
 	}
     return true;

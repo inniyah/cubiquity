@@ -10,7 +10,6 @@
 #include "PolyVoxCore/Material.h"
 #include "PolyVoxCore/SimpleVolume.h"
 #include "PolyVoxCore/CubicSurfaceExtractor.h"
-#include "PolyVoxCore/CubicSurfaceExtractorWithNormals.h"
 #include "PolyVoxCore/MarchingCubesSurfaceExtractor.h"
 
 namespace VolumeTypes

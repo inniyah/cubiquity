@@ -17,6 +17,7 @@ public:
 	typedef float DensityType;
 	typedef PolyVox::Vector3DFloat MaterialType;
 
+	MultiMaterial(float val) : m_uMaterial(PolyVox::Vector3DFloat(val, val, val)) {}
 	MultiMaterial() : m_uMaterial(PolyVox::Vector3DFloat(0, 0, 0)) {}
 	MultiMaterial(MaterialType uMaterial) : m_uMaterial(uMaterial) {}
 
@@ -28,6 +29,24 @@ public:
 	bool operator!=(const MultiMaterial& rhs) const throw()
 	{
 		return !(*this == rhs);
+	}
+
+	MultiMaterial& operator+=(const MultiMaterial& rhs)
+	{
+		m_uMaterial += rhs.m_uMaterial;
+		return *this;
+	}
+
+	MultiMaterial& operator-=(const MultiMaterial& rhs)
+	{
+		m_uMaterial -= rhs.m_uMaterial;
+		return *this;
+	}
+
+	MultiMaterial& operator/=(uint32_t rhs)
+	{
+		m_uMaterial /= rhs;
+		return *this;
 	}
 
 	MaterialType getMaterial() const throw() { return m_uMaterial; }

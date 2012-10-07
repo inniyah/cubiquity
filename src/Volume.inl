@@ -3,6 +3,7 @@
 using namespace gameplay;
 using namespace PolyVox;
 
+#include "PolyVoxCore/LowPassFilter.h"
 #include "PolyVoxCore/MaterialDensityPair.h"
 
 #include "GameplayMarchingCubesController.h"
@@ -216,6 +217,17 @@ void Volume<VoxelType>::loadData(const char* filename)
 		}
 	}
 
+	/*SimpleVolume<VoxelType> resultVolume(mVolData->getEnclosingRegion());
+	Region regToProcess = mVolData->getEnclosingRegion();
+	regToProcess.shiftLowerCorner(Vector3DInt32(1,1,1));
+	regToProcess.shiftUpperCorner(Vector3DInt32(-1,-1,-1));
+
+	LowPassFilter<SimpleVolume<VoxelType>, SimpleVolume<VoxelType>, VoxelType> pass1(mVolData, regToProcess, &resultVolume, regToProcess, 3);
+	pass1.execute();
+
+	LowPassFilter<SimpleVolume<VoxelType>, SimpleVolume<VoxelType>, VoxelType> pass2(&resultVolume, regToProcess, mVolData, regToProcess, 3);
+	pass2.execute();*/
+
 	fclose(inputFile);
 }
 
@@ -247,7 +259,7 @@ void Volume<VoxelType>::updateMeshes()
 					else if(getType() == VolumeTypes::SmoothTerrain)
 					{
 						GameplayMarchingCubesController<VoxelType> controller;
-						SurfaceMesh<PositionMaterialNormal< GameplayMarchingCubesController<VoxelType>::MaterialType > > smoothTerrainMesh;
+						SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > > smoothTerrainMesh;
 						MarchingCubesSurfaceExtractor< SimpleVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor(mVolData, regionToExtract, &smoothTerrainMesh, controller);
 						surfaceExtractor.execute();
 
