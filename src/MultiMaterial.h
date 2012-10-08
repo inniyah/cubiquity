@@ -15,10 +15,10 @@ public:
 	//using code such as 'VoxelType::DensityType value = voxel.getDensity()'
 	//or 'VoxelType::MaterialType value = voxel.getMaterial()'.
 	typedef float DensityType;
-	typedef PolyVox::Vector3DFloat MaterialType;
+	typedef PolyVox::Vector4DFloat MaterialType;
 
-	MultiMaterial(float val) : m_uMaterial(PolyVox::Vector3DFloat(val, val, val)) {}
-	MultiMaterial() : m_uMaterial(PolyVox::Vector3DFloat(0, 0, 0)) {}
+	MultiMaterial(float val) : m_uMaterial(PolyVox::Vector4DFloat(val, val, val, val)) {}
+	MultiMaterial() : m_uMaterial(PolyVox::Vector4DFloat(0, 0, 0, 0)) {}
 	MultiMaterial(MaterialType uMaterial) : m_uMaterial(uMaterial) {}
 
 	bool operator==(const MultiMaterial& rhs) const throw()

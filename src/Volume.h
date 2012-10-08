@@ -34,6 +34,7 @@ public:
 	void createSphereAt(const gameplay::Vector3& centre, float radius, VoxelType value);
 
 	void loadData(const char* filename);
+	void saveData(const char* filename);
 	void updateMeshes();
 
 protected:

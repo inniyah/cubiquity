@@ -65,7 +65,7 @@ public:
 
 	DensityType convertToDensity(MultiMaterial voxel)
 	{
-		return voxel.getMaterial().getX() + voxel.getMaterial().getY() + voxel.getMaterial().getZ();
+		return voxel.getMaterial().getX() + voxel.getMaterial().getY() + voxel.getMaterial().getZ() + voxel.getMaterial().getW();
 	}
 
 	MaterialType convertToMaterial(MultiMaterial voxel)
@@ -75,9 +75,9 @@ public:
 
 	MaterialType blendMaterials(MaterialType a, MaterialType b, float weight) //Should take some weighting into account here
 	{
-		PolyVox::Vector3DFloat aVec = a.getMaterial();
-		PolyVox::Vector3DFloat bVec = b.getMaterial();
-		PolyVox::Vector3DFloat blendedVec = (bVec - aVec) * weight + aVec;
+		PolyVox::Vector4DFloat aVec = a.getMaterial();
+		PolyVox::Vector4DFloat bVec = b.getMaterial();
+		PolyVox::Vector4DFloat blendedVec = (bVec - aVec) * weight + aVec;
 		MultiMaterial result;
 		result.setMaterial(blendedVec);
 		return result;
@@ -109,19 +109,11 @@ public:
 	MaterialType convertToMaterial(PolyVox::Material16 voxel)
 	{
 		assert(false);
-		return PolyVox::Vector3DFloat(0,0,0);
+		return PolyVox::Vector4DFloat(0,0,0,0);
 	}
 
 	MaterialType blendMaterials(MaterialType a, MaterialType b) //Should take some weighting into account here
 	{
-		/*PolyVox::Vector3DFloat aVec = a.getMaterial();
-		PolyVox::Vector3DFloat bVec = b.getMaterial();
-		PolyVox::Vector3DFloat blendedVec = aVec + bVec;
-		blendedVec = blendedVec / 2.0f;
-		MultiMaterial result;
-		result.setMaterial(blendedVec);
-		return result;*/
-
 		return a;
 	}
 

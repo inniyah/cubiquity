@@ -190,7 +190,7 @@ void Volume<VoxelType>::loadData(const char* filename)
 
 				//VolumeTypes::SmoothTerrain
 				VoxelType voxel;				
-				Vector3DFloat material(0,0,0);
+				Vector4DFloat material(0,0,0,0);
 
 				if(diskVal == 34383) // Soil
 				{				
@@ -239,6 +239,38 @@ void Volume<VoxelType>::loadData(const char* filename)
 	copyVolume(&resultVolume, mVolData);
 
 	fclose(inputFile);
+}
+
+template <typename VoxelType>
+void Volume<VoxelType>::saveData(const char* filename)
+{
+	FILE* outputFile = fopen(filename, "wb");
+	if(!outputFile)
+	{
+		GP_ERROR("Failed to open volume file");
+	}
+
+	uint16_t width = mVolData->getWidth();
+	uint16_t height = mVolData->getHeight();
+	uint16_t depth = mVolData->getDepth();
+	fwrite(&width, sizeof(uint16_t), 1, outputFile);
+	fwrite(&height, sizeof(uint16_t), 1, outputFile);
+	fwrite(&depth, sizeof(uint16_t), 1, outputFile);
+
+	//This three-level for loop iterates over every voxel in the volume
+	for (int z = 0; z < mVolData->getWidth(); z++)
+	{
+		for (int y = 0; y < mVolData->getHeight(); y++)
+		{
+			for (int x = 0; x < mVolData->getDepth(); x++)
+			{
+				VoxelType value = mVolData->getVoxelAt(x,y,z);
+				fwrite(&value, sizeof(VoxelType), 1,outputFile);
+			}
+		}
+	}
+
+	fclose(outputFile);
 }
 
 template <typename VoxelType>

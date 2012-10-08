@@ -168,6 +168,23 @@ namespace PolyVox
         std::ostream& operator<<(std::ostream& os, const Vector<Size,Type>& vector) throw();
 
 	//Some handy typedefs
+	///A 2D Vector of floats.
+	typedef Vector<2,float> Vector2DFloat;
+	///A 2D Vector of doubles.
+    typedef Vector<2,double> Vector2DDouble;
+	///A 2D Vector of signed 8-bit values.
+	typedef Vector<2,int8_t> Vector2DInt8;
+	///A 2D Vector of unsigned 8-bit values.
+	typedef Vector<2,uint8_t> Vector2DUint8;
+	///A 2D Vector of signed 16-bit values.
+	typedef Vector<2,int16_t> Vector2DInt16;
+	///A 2D Vector of unsigned 16-bit values.
+	typedef Vector<2,uint16_t> Vector2DUint16;
+	///A 2D Vector of signed 32-bit values.
+	typedef Vector<2,int32_t> Vector2DInt32;
+	///A 2D Vector of unsigned 32-bit values.
+	typedef Vector<2,uint32_t> Vector2DUint32;
+
 	///A 3D Vector of floats.
 	typedef Vector<3,float> Vector3DFloat;
 	///A 3D Vector of doubles.
@@ -185,7 +202,22 @@ namespace PolyVox
 	///A 3D Vector of unsigned 32-bit values.
 	typedef Vector<3,uint32_t> Vector3DUint32;
 
-
+	///A 4D Vector of floats.
+	typedef Vector<4,float> Vector4DFloat;
+	///A 4D Vector of doubles.
+    typedef Vector<4,double> Vector4DDouble;
+	///A 4D Vector of signed 8-bit values.
+	typedef Vector<4,int8_t> Vector4DInt8;
+	///A 4D Vector of unsigned 8-bit values.
+	typedef Vector<4,uint8_t> Vector4DUint8;
+	///A 4D Vector of signed 16-bit values.
+	typedef Vector<4,int16_t> Vector4DInt16;
+	///A 4D Vector of unsigned 16-bit values.
+	typedef Vector<4,uint16_t> Vector4DUint16;
+	///A 4D Vector of signed 32-bit values.
+	typedef Vector<4,int32_t> Vector4DInt32;
+	///A 4D Vector of unsigned 32-bit values.
+	typedef Vector<4,uint32_t> Vector4DUint32;
 
 }//namespace PolyVox
 

@@ -11,7 +11,7 @@ varying vec4 v_texCoord0;
 
 void main()
 {	
-    vec3 texCoord0 = v_texCoord0.xyz;
+    vec4 texCoord0 = v_texCoord0;
     texCoord0 = normalize(texCoord0);
     
     // Base color
