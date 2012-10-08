@@ -169,10 +169,10 @@ void Volume<VoxelType>::loadData(const char* filename)
 		{
 			for (int x = 0; x < mVolData->getDepth(); x++)
 			{
-				uint16_t diskVal;
+				VoxelType value;
 
 				//Slow and inefficient reading one voxel at a time!
-				size_t elementsRead = fread(&diskVal, sizeof(uint16_t), 1,inputFile);
+				size_t elementsRead = fread(&value, sizeof(VoxelType), 1,inputFile);
 				if(elementsRead != 1)
 				{
 					GP_ERROR("Failed to read voxel %d, %d, %d", x, y, z);
@@ -180,63 +180,13 @@ void Volume<VoxelType>::loadData(const char* filename)
 
 				//HACK - For some reason the values coming from Voxeliens
 				//seem to have the endianness the wrong way round? Swap them.
-				diskVal = (((diskVal & 0xff)<<8) | ((diskVal & 0xff00)>>8));
+				//value.setMaterial(((value.getMaterial() & 0xff)<<8) | ((value.getMaterial() & 0xff00)>>8));
 
-				//Wrte the voxel value into the volume
-
-				//VolumeTypes::ColouredCubes
-				/*VoxelType voxel(diskVal);
-				setVoxelAt(x, y, z, voxel);*/
-
-				//VolumeTypes::SmoothTerrain
-				VoxelType voxel;				
-				Vector4DFloat material(0,0,0,0);
-
-				if(diskVal == 34383) // Soil
-				{				
-					material.setX(1);					
-				}
-				else if(diskVal == 18751) // Grass
-				{				
-					material.setY(1);					
-				}
-				else if(diskVal == 255) // Water
-				{				
-					material.setZ(1);					
-				}
-				else
-				{
-					//voxel.setMaterial(0);
-					//GP_WARN("%d", diskVal);
-				}
-
-				voxel.setMaterial(material);
-				setVoxelAt(x, y, z, voxel);
-				if(diskVal == 18751) // Grass
-				{
-					setVoxelAt(x, y-1, z, voxel);
-					setVoxelAt(x, y-2, z, voxel);
-				}
+				//Write the voxel value into the volume
+				setVoxelAt(x, y, z, value);
 			}
 		}
 	}
-
-	SimpleVolume<VoxelType> resultVolume(mVolData->getEnclosingRegion());
-	Region regToProcess = mVolData->getEnclosingRegion();
-	regToProcess.shiftLowerCorner(Vector3DInt32(1,1,1));
-	regToProcess.shiftUpperCorner(Vector3DInt32(-1,-1,-1));
-
-	LowPassFilter<SimpleVolume<VoxelType>, SimpleVolume<VoxelType>, VoxelType> pass1(mVolData, regToProcess, &resultVolume, regToProcess, 3);
-	pass1.execute();
-	copyVolume(&resultVolume, mVolData);
-
-	LowPassFilter<SimpleVolume<VoxelType>, SimpleVolume<VoxelType>, VoxelType> pass2(mVolData, regToProcess, &resultVolume, regToProcess, 3);
-	pass2.execute();
-	copyVolume(&resultVolume, mVolData);
-
-	LowPassFilter<SimpleVolume<VoxelType>, SimpleVolume<VoxelType>, VoxelType> pass3(mVolData, regToProcess, &resultVolume, regToProcess, 3);
-	pass3.execute();
-	copyVolume(&resultVolume, mVolData);
 
 	fclose(inputFile);
 }

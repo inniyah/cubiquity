@@ -72,9 +72,23 @@ void MeshGame::initialize()
 
 	//Rather dirty hack until I figure out how to package volume data with gameplay
 #ifdef WIN32
-	mVolume->loadData("res/level2.vol");
+	if(mVolume->getType() == VolumeTypes::SmoothTerrain)
+	{
+		mVolume->loadData("res/level2MultiMaterial.vol");
+	}
+	else
+	{
+		mVolume->loadData("res/level2.vol");
+	}
 #else
-	mVolume->loadData("/sdcard/external_sd/level2.vol");
+	if(mVolume->getType() == VolumeTypes::SmoothTerrain)
+	{
+		mVolume->loadData("/sdcard/external_sd/level2MultiMaterial.vol");
+	}
+	else
+	{
+		mVolume->loadData("/sdcard/external_sd/level2.vol");
+	}
 #endif
 
 	//mVolume->createSphereAt(Vector3(10.0f, 10.0f, 10.0f), 20, 0);

@@ -73,7 +73,7 @@ public:
 		return voxel;
 	}
 
-	MaterialType blendMaterials(MaterialType a, MaterialType b, float weight) //Should take some weighting into account here
+	MaterialType blendMaterials(MaterialType a, MaterialType b, float weight)
 	{
 		PolyVox::Vector4DFloat aVec = a.getMaterial();
 		PolyVox::Vector4DFloat bVec = b.getMaterial();
@@ -112,7 +112,7 @@ public:
 		return PolyVox::Vector4DFloat(0,0,0,0);
 	}
 
-	MaterialType blendMaterials(MaterialType a, MaterialType b) //Should take some weighting into account here
+	MaterialType blendMaterials(MaterialType a, MaterialType b, float weight)
 	{
 		return a;
 	}
