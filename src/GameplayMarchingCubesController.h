@@ -73,12 +73,11 @@ public:
 		return voxel;
 	}
 
-	MaterialType blendMaterials(MaterialType a, MaterialType b) //Should take some weighting into account here
+	MaterialType blendMaterials(MaterialType a, MaterialType b, float weight) //Should take some weighting into account here
 	{
 		PolyVox::Vector3DFloat aVec = a.getMaterial();
 		PolyVox::Vector3DFloat bVec = b.getMaterial();
-		PolyVox::Vector3DFloat blendedVec = aVec + bVec;
-		blendedVec = blendedVec / 2.0f;
+		PolyVox::Vector3DFloat blendedVec = (bVec - aVec) * weight + aVec;
 		MultiMaterial result;
 		result.setMaterial(blendedVec);
 		return result;

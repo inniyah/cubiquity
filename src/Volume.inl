@@ -230,8 +230,12 @@ void Volume<VoxelType>::loadData(const char* filename)
 	pass1.execute();
 	copyVolume(&resultVolume, mVolData);
 
-	LowPassFilter<SimpleVolume<VoxelType>, SimpleVolume<VoxelType>, VoxelType> pass2(&resultVolume, regToProcess, mVolData, regToProcess, 3);
+	LowPassFilter<SimpleVolume<VoxelType>, SimpleVolume<VoxelType>, VoxelType> pass2(mVolData, regToProcess, &resultVolume, regToProcess, 3);
 	pass2.execute();
+	copyVolume(&resultVolume, mVolData);
+
+	LowPassFilter<SimpleVolume<VoxelType>, SimpleVolume<VoxelType>, VoxelType> pass3(mVolData, regToProcess, &resultVolume, regToProcess, 3);
+	pass3.execute();
 	copyVolume(&resultVolume, mVolData);
 
 	fclose(inputFile);

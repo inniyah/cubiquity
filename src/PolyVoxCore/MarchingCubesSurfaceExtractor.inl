@@ -447,7 +447,7 @@ namespace PolyVox
 					typename Controller::MaterialType uMaterial000 = m_controller.convertToMaterial(v000);
 					typename Controller::MaterialType uMaterial100 = m_controller.convertToMaterial(v100);
 					//typename Controller::MaterialType uMaterial = (std::max)(uMaterial000, uMaterial100);
-					typename Controller::MaterialType uMaterial = m_controller.blendMaterials(uMaterial000, uMaterial100);
+					typename Controller::MaterialType uMaterial = m_controller.blendMaterials(uMaterial000, uMaterial100, fInterp);
 
 					PositionMaterialNormal<typename Controller::MaterialType> surfaceVertex(v3dPosition, v3dNormal, uMaterial);
 					uint32_t uLastVertexIndex = m_meshCurrent->addVertex(surfaceVertex);
@@ -474,7 +474,7 @@ namespace PolyVox
 					typename Controller::MaterialType uMaterial000 = m_controller.convertToMaterial(v000);
 					typename Controller::MaterialType uMaterial010 = m_controller.convertToMaterial(v010);
 					//typename Controller::MaterialType uMaterial = (std::max)(uMaterial000, uMaterial010);
-					typename Controller::MaterialType uMaterial = m_controller.blendMaterials(uMaterial000, uMaterial010);
+					typename Controller::MaterialType uMaterial = m_controller.blendMaterials(uMaterial000, uMaterial010, fInterp);
 
 					PositionMaterialNormal<typename Controller::MaterialType> surfaceVertex(v3dPosition, v3dNormal, uMaterial);
 					uint32_t uLastVertexIndex = m_meshCurrent->addVertex(surfaceVertex);
@@ -501,7 +501,7 @@ namespace PolyVox
 					typename Controller::MaterialType uMaterial000 = m_controller.convertToMaterial(v000);
 					typename Controller::MaterialType uMaterial001 = m_controller.convertToMaterial(v001);
 					//typename Controller::MaterialType uMaterial = (std::max)(uMaterial000, uMaterial001);
-					typename Controller::MaterialType uMaterial = m_controller.blendMaterials(uMaterial000, uMaterial001);
+					typename Controller::MaterialType uMaterial = m_controller.blendMaterials(uMaterial000, uMaterial001, fInterp);
 
 					PositionMaterialNormal<typename Controller::MaterialType> surfaceVertex(v3dPosition, v3dNormal, uMaterial);
 					uint32_t uLastVertexIndex = m_meshCurrent->addVertex(surfaceVertex);
