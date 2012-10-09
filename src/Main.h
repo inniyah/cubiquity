@@ -78,6 +78,8 @@ private:
 
 	Node* _cameraNode;
 
+	Node* mSphereNode;
+
 	static const int mNoOfKeys = 0xFFFF;
 	std::bitset<mNoOfKeys> mPressedKeys;
 

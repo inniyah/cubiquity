@@ -48,6 +48,18 @@ void MeshGame::initialize()
 
 	_scene = Scene::createScene();
 
+	// Load mesh/scene from file
+    Bundle* bundle = Bundle::create("res/Icosphere3.gpb");
+	Mesh* sphere = bundle->loadMesh("Sphere_002");
+    SAFE_RELEASE(bundle);
+
+	Model* model = Model::create(sphere);
+	model->setMaterial("res/White.material");
+	mSphereNode = Node::create();
+	mSphereNode->setModel(model);
+	mSphereNode->setScale(5, 5, 5);
+	_scene->addNode(mSphereNode);
+
     // Find the light node
 	_light = Light::createDirectional(Vector3(1.0, 1.0, 1.0));
 	_lightNode = Node::create();
