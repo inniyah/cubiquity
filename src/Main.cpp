@@ -54,7 +54,7 @@ void MeshGame::initialize()
     SAFE_RELEASE(bundle);
 
 	Model* model = Model::create(sphere);
-	model->setMaterial("res/White.material");
+	model->setMaterial("res/Icosphere3.material");
 	mSphereNode = Node::create();
 	mSphereNode->setModel(model);
 	mSphereNode->setScale(5, 5, 5);
