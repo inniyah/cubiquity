@@ -50,7 +50,7 @@ void MeshGame::initialize()
 
 	// Load mesh/scene from file
     Bundle* bundle = Bundle::create("res/Icosphere3.gpb");
-	Mesh* sphere = bundle->loadMesh("Sphere_002");
+	Mesh* sphere = bundle->loadMesh("Sphere_001");
     SAFE_RELEASE(bundle);
 
 	Model* model = Model::create(sphere);
