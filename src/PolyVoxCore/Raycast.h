@@ -35,7 +35,7 @@ namespace PolyVox
 	/// the ray hit any solid voxels, and if so the 'intersectionVoxel' field indicates
 	///the voxel's position
 	////////////////////////////////////////////////////////////////////////////////
-	struct RaycastResult
+	/*struct RaycastResult
 	{
 		///Indicates whether an intersection was found
 		bool foundIntersection;
@@ -119,7 +119,20 @@ namespace PolyVox
 		Vector3DFloat m_v3dStart;
 		Vector3DFloat m_v3dDirectionAndLength;
 		float m_fMaxDistance;
-	};
+	};*/
+
+	namespace RaycastResults
+	{
+		enum RaycastResult
+		{
+			Completed,
+			Interupted
+		};
+	}
+	typedef RaycastResults::RaycastResult RaycastResult;
+
+	template<typename VolumeType, typename Callback>
+	RaycastResult smoothRaycastWithDirection(VolumeType* volData, const Vector3DFloat& v3dStart, const Vector3DFloat& v3dDirectionAndLength, Callback& callback);
 }
 
 #include "PolyVoxCore/Raycast.inl"

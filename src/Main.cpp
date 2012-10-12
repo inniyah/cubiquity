@@ -33,7 +33,7 @@ void pointNodeAtTarget(Node* node, const Vector3& target, const Vector3& up = Ve
 MeshGame game;
 
 MeshGame::MeshGame()
-    : _font(NULL), _touchX(0), _touchY(0)
+    : _font(NULL), mLastX(0), mLastY(0), mRightMouseDown(false)
 {
 }
 
@@ -169,46 +169,26 @@ void MeshGame::keyEvent(Keyboard::KeyEvent evt, int key)
 
 void MeshGame::touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int contactIndex)
 {
+	if(hasMouse())
+	{
+		// Ignore touch event on platform which support a mouse,
+		// as these touch events seem to be duplicates of mouse events.
+		return;
+	}
+
     switch (evt)
     {
     case Touch::TOUCH_PRESS:
-        {
-            _touchX = x;
-			_touchY = y;
-        }
-        break;
+		mLastX = x;
+		mLastY = y;
+		break;
     case Touch::TOUCH_RELEASE:
-        {
-            _touchX = 0;
-			_touchY = 0;
-        }
+		mLastX = 0;
+		mLastY = 0;
         break;
     case Touch::TOUCH_MOVE:
-        {
-            int deltaX = x - _touchX;
-			int deltaY = y - _touchY;
-            _touchX = x;
-            _touchY = y;
-			
-			float cameraSensitivity = 0.01f;
-			mCameraRotationAngle -= (deltaX * cameraSensitivity);
-			mCameraElevationAngle += (deltaY * cameraSensitivity);
-
-			mCameraElevationAngle = min(mCameraElevationAngle, MATH_DEG_TO_RAD(70.0f)); //Value from voxeliens
-			mCameraElevationAngle = max(mCameraElevationAngle, MATH_DEG_TO_RAD(-5.0f)); //Value from voxeliens
-
-			/*float cameraSpeed = 0.5f;
-			Vector3 cameraMovement(0.0f, 0.0f, 0.0f);
-
-			cameraMovement += _cameraNode->getRightVector() * cameraSpeed * deltaX;
-			//cameraMovement += _cameraNode->getUpVector() * cameraSpeed * deltaY;
-
-			Vector3 cameraPos = _cameraNode->getTranslation();
-			cameraPos += cameraMovement;
-			_cameraNode->setTranslation(cameraPos);	
-			pointNodeAtTarget(_cameraNode, Vector3(64.0f, 4.0f, 64.0f));*/
-        }
-        break;
+		moveCamera(x,y);
+		break;
     default:
         break;
     };
@@ -216,6 +196,37 @@ void MeshGame::touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int cont
 
 bool MeshGame::mouseEvent(Mouse::MouseEvent evt, int x, int y, int wheelDelta)
 {
+	if(evt == Mouse::MOUSE_PRESS_RIGHT_BUTTON)
+	{
+		mLastX = x;
+		mLastY = y;
+		mRightMouseDown = true;
+	}
+	if(evt == Mouse::MOUSE_RELEASE_RIGHT_BUTTON)
+	{
+		mLastX = 0;
+		mLastY = 0;
+		mRightMouseDown = false;
+	}
+
+	if(mRightMouseDown)
+	{
+		moveCamera(x,y);
+	}
+
+	Ray ray;
+	_cameraNode->getCamera()->pickRay(getViewport(), x, y, &ray);
+
+	Vector3 dir = ray.getDirection();
+	dir *= 200.0f;
+	ray.setDirection(dir);
+
+	Vector3 intersection;
+	if(mVolume->raycast(ray, 200.0f, intersection))
+	{
+		mSphereNode->setTranslation(intersection);
+	}
+
 	wheelDelta *= 10; //To match Voxeliens
 
 	// Pushing forward (positive wheelDelta) should reduce distance to world.
@@ -247,4 +258,19 @@ void MeshGame::drawFrameRate(Font* font, const Vector4& color, unsigned int x, u
     font->start();
     font->drawText(buffer, x, y, color, font->getSize());
     font->finish();
+}
+
+void MeshGame::moveCamera(int x, int y)
+{
+	int deltaX = x -  mLastX;
+	int deltaY = y -  mLastY;
+	mLastX = x;
+	mLastY = y;
+	
+	float cameraSensitivity = 0.01f;
+	mCameraRotationAngle -= (deltaX * cameraSensitivity);
+	mCameraElevationAngle += (deltaY * cameraSensitivity);
+	
+	mCameraElevationAngle = min(mCameraElevationAngle, MATH_DEG_TO_RAD(70.0f)); //Value from voxeliens
+	mCameraElevationAngle = max(mCameraElevationAngle, MATH_DEG_TO_RAD(-5.0f)); //Value from voxeliens
 }

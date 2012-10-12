@@ -10,7 +10,6 @@ MultiMaterial operator+(const MultiMaterial& lhs, const MultiMaterial& rhs) thro
 	return resultMat;
 }
 
-template <typename Type>
 MultiMaterial operator-(const MultiMaterial& lhs, const MultiMaterial& rhs) throw()
 {
 	PolyVox::Vector4DFloat a = lhs.getMaterial();
@@ -21,11 +20,19 @@ MultiMaterial operator-(const MultiMaterial& lhs, const MultiMaterial& rhs) thro
 	return resultMat;
 }
 
-template <typename Type>
-MultiMaterial operator/(const MultiMaterial& lhs, uint32_t rhs) throw()
+MultiMaterial operator*(const MultiMaterial& lhs, float rhs) throw()
 {
 	PolyVox::Vector4DFloat a = lhs.getMaterial();
-	PolyVox::Vector4DFloat result = a / static_cast<float>(rhs);
+	PolyVox::Vector4DFloat result = a * rhs;
+	MultiMaterial resultMat;
+	resultMat.setMaterial(result);
+	return resultMat;
+}
+
+MultiMaterial operator/(const MultiMaterial& lhs, float rhs) throw()
+{
+	PolyVox::Vector4DFloat a = lhs.getMaterial();
+	PolyVox::Vector4DFloat result = a / rhs;
 	MultiMaterial resultMat;
 	resultMat.setMaterial(result);
 	return resultMat;

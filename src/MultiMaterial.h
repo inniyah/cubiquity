@@ -43,7 +43,13 @@ public:
 		return *this;
 	}
 
-	MultiMaterial& operator/=(uint32_t rhs)
+	MultiMaterial& operator*=(float rhs)
+	{
+		m_uMaterial *= rhs;
+		return *this;
+	}
+
+	MultiMaterial& operator/=(float rhs)
 	{
 		m_uMaterial /= rhs;
 		return *this;
@@ -55,5 +61,13 @@ public:
 private:
 	MaterialType m_uMaterial;
 };
+
+MultiMaterial operator+(const MultiMaterial& lhs, const MultiMaterial& rhs) throw();
+
+MultiMaterial operator-(const MultiMaterial& lhs, const MultiMaterial& rhs) throw();
+
+MultiMaterial operator*(const MultiMaterial& lhs, float rhs) throw();
+
+MultiMaterial operator/(const MultiMaterial& lhs, float rhs) throw();
 
 #endif //__MultiMaterial_H__

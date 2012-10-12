@@ -5,9 +5,26 @@ using namespace PolyVox;
 
 #include "PolyVoxCore/LowPassFilter.h"
 #include "PolyVoxCore/MaterialDensityPair.h"
+#include "PolyVoxCore/Raycast.h"
 
 #include "GameplayMarchingCubesController.h"
 #include "GameplayIsQuadNeeded.h"
+
+class RaycastTestFunctor
+{
+public:
+	RaycastTestFunctor()
+	{
+	}
+
+	bool operator()(Vector3DFloat pos, const MultiMaterial& voxel)
+	{
+		mLastPos = pos;
+		return voxel.getMaterial().getX() + voxel.getMaterial().getY() + voxel.getMaterial().getZ() + voxel.getMaterial().getW() <= 0.5;
+	}
+
+	Vector3DFloat mLastPos;
+};
 
 template <typename VoxelType>
 Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)
@@ -281,4 +298,22 @@ void Volume<VoxelType>::updateMeshes()
 			}
 		}
 	}
+}
+
+template <typename VoxelType>
+bool Volume<VoxelType>::raycast(Ray ray, float distance, Vector3& result)
+{
+	Vector3DFloat v3dStart(ray.getOrigin().x, ray.getOrigin().y, ray.getOrigin().z);
+	Vector3DFloat v3dDirection(ray.getDirection().x, ray.getDirection().y, ray.getDirection().z);
+	v3dDirection *= distance;
+
+	RaycastTestFunctor raycastTestFunctor;
+	RaycastResult myResult = smoothRaycastWithDirection(mVolData, v3dStart, v3dDirection, raycastTestFunctor);
+	if(myResult == RaycastResults::Interupted)
+	{
+		result = Vector3(raycastTestFunctor.mLastPos.getX(), raycastTestFunctor.mLastPos.getY(), raycastTestFunctor.mLastPos.getZ());
+		return true;
+	}
+
+	return false;
 }

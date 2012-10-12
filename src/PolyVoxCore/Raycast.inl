@@ -31,7 +31,7 @@ namespace PolyVox
 	/// represents the length of the ray.
 	/// \param result An instance of RaycastResult in which the result will be stored.
 	////////////////////////////////////////////////////////////////////////////////
-	template<typename VolumeType>
+	/*template<typename VolumeType>
 	Raycast<VolumeType>::Raycast(VolumeType* volData, const Vector3DFloat& v3dStart, const Vector3DFloat& v3dDirectionAndLength, RaycastResult& result, polyvox_function<bool(const typename VolumeType::Sampler& sampler)> funcIsPassable)
 		:m_result(result)
 		,m_funcIsPassable(funcIsPassable)
@@ -179,5 +179,58 @@ namespace PolyVox
 		m_result.foundIntersection = false;
 		m_result.intersectionVoxel = Vector3DInt32(0,0,0);
 		m_result.previousVoxel = Vector3DInt32(0,0,0);
+	}*/
+
+	template<typename VolumeType, typename Callback>
+	RaycastResult smoothRaycastWithDirection(VolumeType* volData, const Vector3DFloat& v3dStart, const Vector3DFloat& v3dDirectionAndLength, Callback& callback)
+	{
+		float fStepSize = 1.0f;
+		int mMaxNoOfSteps = v3dDirectionAndLength.length() / fStepSize;
+
+		Vector3DFloat v3dPos = v3dStart;
+		const Vector3DFloat v3dStep =  v3dDirectionAndLength / static_cast<float>(mMaxNoOfSteps);
+		typename VolumeType::Sampler sampler(volData);
+
+		for(uint32_t ct = 0; ct < mMaxNoOfSteps; ct++)
+		{
+			// Peek functions do not respect the volume border and will crash if we
+			// access outside the volume. Put a test in and explicitely check the border if necessary.
+			if(volData->getEnclosingRegion().containsPoint(v3dPos, 2))
+			{
+				float fX = v3dPos.getX();
+				float fY = v3dPos.getY();
+				float fZ = v3dPos.getZ();
+
+				int32_t iX = static_cast<int32_t>(floor(fX) + 0.5f); 
+				int32_t iY = static_cast<int32_t>(floor(fY) + 0.5f); 
+				int32_t iZ = static_cast<int32_t>(floor(fZ) + 0.5f);
+
+				const typename VolumeType::VoxelType& voxel000 = volData->getVoxelAt(iX, iY, iZ);
+				const typename VolumeType::VoxelType& voxel001 = volData->getVoxelAt(iX, iY, iZ + 1);
+				const typename VolumeType::VoxelType& voxel010 = volData->getVoxelAt(iX, iY + 1, iZ);
+				const typename VolumeType::VoxelType& voxel011 = volData->getVoxelAt(iX, iY + 1, iZ + 1);
+				const typename VolumeType::VoxelType& voxel100 = volData->getVoxelAt(iX + 1, iY, iZ);
+				const typename VolumeType::VoxelType& voxel101 = volData->getVoxelAt(iX + 1, iY, iZ + 1);
+				const typename VolumeType::VoxelType& voxel110 = volData->getVoxelAt(iX + 1, iY + 1, iZ);
+				const typename VolumeType::VoxelType& voxel111 = volData->getVoxelAt(iX + 1, iY + 1, iZ + 1);
+
+				//FIXME - should accept all float parameters, but GCC complains?
+				double dummy;
+				fX = modf(fX, &dummy);
+				fY = modf(fY, &dummy);
+				fZ = modf(fZ, &dummy);
+
+				typename VolumeType::VoxelType tInterpolatedValue = trilinearlyInterpolate<typename VolumeType::VoxelType>(voxel000,voxel100,voxel010,voxel110,voxel001,voxel101,voxel011,voxel111,fX,fY,fZ);
+
+				if(!callback(v3dPos, tInterpolatedValue))
+				{
+					return RaycastResults::Interupted;
+				}
+			}
+
+			v3dPos += v3dStep;
+		}
+
+		return RaycastResults::Completed;
 	}
 }

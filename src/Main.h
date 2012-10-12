@@ -16,49 +16,16 @@ class SmoothTerrainVolume;
 class MeshGame: public Game
 {
 public:
-
-    /**
-     * Constructor.
-     */
     MeshGame();
-
-    /**
-     * Destructor.
-     */
     virtual ~MeshGame();
-
-    /**
-     * @see Game::keyEvent
-     */
     void keyEvent(Keyboard::KeyEvent evt, int key);
-
-    /**
-     * @see Game::touchEvent
-     */
     void touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int contactIndex);
-
 	bool mouseEvent(Mouse::MouseEvent evt, int x, int y, int wheelDelta);
 
 protected:
-
-    /**
-     * @see Game::initialize
-     */
     void initialize();
-
-    /**
-     * @see Game::finalize
-     */
     void finalize();
-
-    /**
-     * @see Game::update
-     */
     void update(float elapsedTime);
-
-    /**
-     * @see Game::render
-     */
     void render(float elapsedTime);
 
 private:
@@ -67,12 +34,14 @@ private:
 
     void drawFrameRate(Font* font, const Vector4& color, unsigned int x, unsigned int y, unsigned int fps);
 
+	void moveCamera(int x, int y);
+
     Font* _font;
     Scene* _scene;
     Node* _modelNode;
 	Node* _polyVoxNode;
-    int _touchX;
-	int _touchY;
+    int mLastX;
+	int mLastY;
 	Light* _light;
 	Node* _lightNode;
 
@@ -86,6 +55,8 @@ private:
 	float mCameraElevationAngle;
 	float mCameraRotationAngle;
 	float mCameraDistance;
+
+	bool mRightMouseDown;
 
 	SmoothTerrainVolume* mVolume;
 	//ColouredCubesVolume* mVolume;

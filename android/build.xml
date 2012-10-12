@@ -73,6 +73,9 @@
         <copy file="../res/Rock.png" tofile="assets/res/Rock.png"/>
         <copy file="../res/Grass.png" tofile="assets/res/Grass.png"/>
         <copy file="../res/Water.png" tofile="assets/res/Water.png"/>
+        <copy todir="assets/res">
+            <fileset dir="../res"/>
+        </copy>
     </target>
 
     <!-- Import the actual build file.
