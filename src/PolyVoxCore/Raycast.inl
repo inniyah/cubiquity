@@ -181,6 +181,14 @@ namespace PolyVox
 		m_result.previousVoxel = Vector3DInt32(0,0,0);
 	}*/
 
+	// Note: This function is not implemented in a very efficient manner and it rather slow.
+	// A better implementation should make use of the 'peek' functions to sample the voxel data,
+	// but this will require careful handling of the cases when the ray is outside the volume.
+	// Also, the large number of steps and samples could be probably be replaced with an approach
+	// similar to the other raycasting code where it samples only integer position first to
+	// determine whether there is any chance of a hit. But actually the use might not be searching
+	// for a hit (they might be appliying more general purpose operations) so actually the function
+	// should still be called for every sample even if there is no chance of a hit occuring.
 	template<typename VolumeType, typename Callback>
 	RaycastResult smoothRaycastWithDirection(VolumeType* volData, const Vector3DFloat& v3dStart, const Vector3DFloat& v3dDirectionAndLength, Callback& callback)
 	{
@@ -193,39 +201,37 @@ namespace PolyVox
 
 		for(uint32_t ct = 0; ct < mMaxNoOfSteps; ct++)
 		{
-			// Peek functions do not respect the volume border and will crash if we
-			// access outside the volume. Put a test in and explicitely check the border if necessary.
-			if(volData->getEnclosingRegion().containsPoint(v3dPos, 2))
+			float fPosX = v3dPos.getX();
+			float fPosY = v3dPos.getY();
+			float fPosZ = v3dPos.getZ();
+
+			float fFloorX = floor(fPosX);
+			float fFloorY = floor(fPosY);
+			float fFloorZ = floor(fPosZ);
+
+			float fInterpX = fPosX - fFloorX;
+			float fInterpY = fPosY - fFloorY;
+			float fInterpZ = fPosZ - fFloorZ;
+
+			// Conditional logic required to round negative floats correctly
+			int32_t iX = static_cast<int32_t>(fFloorX > 0.0f ? fFloorX + 0.5f : fFloorX - 0.5f); 
+			int32_t iY = static_cast<int32_t>(fFloorY > 0.0f ? fFloorY + 0.5f : fFloorY - 0.5f); 
+			int32_t iZ = static_cast<int32_t>(fFloorZ > 0.0f ? fFloorZ + 0.5f : fFloorZ - 0.5f);
+
+			const typename VolumeType::VoxelType& voxel000 = volData->getVoxelAt(iX, iY, iZ);
+			const typename VolumeType::VoxelType& voxel001 = volData->getVoxelAt(iX, iY, iZ + 1);
+			const typename VolumeType::VoxelType& voxel010 = volData->getVoxelAt(iX, iY + 1, iZ);
+			const typename VolumeType::VoxelType& voxel011 = volData->getVoxelAt(iX, iY + 1, iZ + 1);
+			const typename VolumeType::VoxelType& voxel100 = volData->getVoxelAt(iX + 1, iY, iZ);
+			const typename VolumeType::VoxelType& voxel101 = volData->getVoxelAt(iX + 1, iY, iZ + 1);
+			const typename VolumeType::VoxelType& voxel110 = volData->getVoxelAt(iX + 1, iY + 1, iZ);
+			const typename VolumeType::VoxelType& voxel111 = volData->getVoxelAt(iX + 1, iY + 1, iZ + 1);
+
+			typename VolumeType::VoxelType tInterpolatedValue = trilinearlyInterpolate<typename VolumeType::VoxelType>(voxel000,voxel100,voxel010,voxel110,voxel001,voxel101,voxel011,voxel111,fInterpX,fInterpY,fInterpZ);
+
+			if(!callback(v3dPos, tInterpolatedValue))
 			{
-				float fX = v3dPos.getX();
-				float fY = v3dPos.getY();
-				float fZ = v3dPos.getZ();
-
-				int32_t iX = static_cast<int32_t>(floor(fX) + 0.5f); 
-				int32_t iY = static_cast<int32_t>(floor(fY) + 0.5f); 
-				int32_t iZ = static_cast<int32_t>(floor(fZ) + 0.5f);
-
-				const typename VolumeType::VoxelType& voxel000 = volData->getVoxelAt(iX, iY, iZ);
-				const typename VolumeType::VoxelType& voxel001 = volData->getVoxelAt(iX, iY, iZ + 1);
-				const typename VolumeType::VoxelType& voxel010 = volData->getVoxelAt(iX, iY + 1, iZ);
-				const typename VolumeType::VoxelType& voxel011 = volData->getVoxelAt(iX, iY + 1, iZ + 1);
-				const typename VolumeType::VoxelType& voxel100 = volData->getVoxelAt(iX + 1, iY, iZ);
-				const typename VolumeType::VoxelType& voxel101 = volData->getVoxelAt(iX + 1, iY, iZ + 1);
-				const typename VolumeType::VoxelType& voxel110 = volData->getVoxelAt(iX + 1, iY + 1, iZ);
-				const typename VolumeType::VoxelType& voxel111 = volData->getVoxelAt(iX + 1, iY + 1, iZ + 1);
-
-				//FIXME - should accept all float parameters, but GCC complains?
-				double dummy;
-				fX = modf(fX, &dummy);
-				fY = modf(fY, &dummy);
-				fZ = modf(fZ, &dummy);
-
-				typename VolumeType::VoxelType tInterpolatedValue = trilinearlyInterpolate<typename VolumeType::VoxelType>(voxel000,voxel100,voxel010,voxel110,voxel001,voxel101,voxel011,voxel111,fX,fY,fZ);
-
-				if(!callback(v3dPos, tInterpolatedValue))
-				{
-					return RaycastResults::Interupted;
-				}
+				return RaycastResults::Interupted;
 			}
 
 			v3dPos += v3dStep;
