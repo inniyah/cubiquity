@@ -184,15 +184,13 @@ namespace PolyVox
 	// Note: This function is not implemented in a very efficient manner and it rather slow.
 	// A better implementation should make use of the 'peek' functions to sample the voxel data,
 	// but this will require careful handling of the cases when the ray is outside the volume.
-	// Also, the large number of steps and samples could be probably be replaced with an approach
-	// similar to the other raycasting code where it samples only integer position first to
-	// determine whether there is any chance of a hit. But actually the use might not be searching
-	// for a hit (they might be appliying more general purpose operations) so actually the function
-	// should still be called for every sample even if there is no chance of a hit occuring.
+	// It could also compute entry and exit points to avoid having to test every step for whether
+	// it is still inside the volume.
+	// Also, should we handle computing the exact intersection point? Repeatedly bisect the last
+	// two points, of perform interpolation between them? Maybe user code could perform such interpolation?
 	template<typename VolumeType, typename Callback>
-	RaycastResult smoothRaycastWithDirection(VolumeType* volData, const Vector3DFloat& v3dStart, const Vector3DFloat& v3dDirectionAndLength, Callback& callback)
-	{
-		float fStepSize = 1.0f;
+	RaycastResult smoothRaycastWithDirection(VolumeType* volData, const Vector3DFloat& v3dStart, const Vector3DFloat& v3dDirectionAndLength, Callback& callback, float fStepSize = 1.0f)
+	{		
 		int mMaxNoOfSteps = v3dDirectionAndLength.length() / fStepSize;
 
 		Vector3DFloat v3dPos = v3dStart;

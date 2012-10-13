@@ -301,14 +301,14 @@ void Volume<VoxelType>::updateMeshes()
 }
 
 template <typename VoxelType>
-bool Volume<VoxelType>::raycast(Ray ray, float distance, Vector3& result)
+bool Volume<VoxelType>::raycast(Ray startAndDirection, float length, Vector3& result)
 {
-	Vector3DFloat v3dStart(ray.getOrigin().x, ray.getOrigin().y, ray.getOrigin().z);
-	Vector3DFloat v3dDirection(ray.getDirection().x, ray.getDirection().y, ray.getDirection().z);
-	v3dDirection *= distance;
+	Vector3DFloat v3dStart(startAndDirection.getOrigin().x, startAndDirection.getOrigin().y, startAndDirection.getOrigin().z);
+	Vector3DFloat v3dDirection(startAndDirection.getDirection().x, startAndDirection.getDirection().y, startAndDirection.getDirection().z);
+	v3dDirection *= length;
 
 	RaycastTestFunctor raycastTestFunctor;
-	RaycastResult myResult = smoothRaycastWithDirection(mVolData, v3dStart, v3dDirection, raycastTestFunctor);
+	RaycastResult myResult = smoothRaycastWithDirection(mVolData, v3dStart, v3dDirection, raycastTestFunctor, 0.5f);
 	if(myResult == RaycastResults::Interupted)
 	{
 		result = Vector3(raycastTestFunctor.mLastPos.getX(), raycastTestFunctor.mLastPos.getY(), raycastTestFunctor.mLastPos.getZ());

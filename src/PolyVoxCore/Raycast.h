@@ -132,7 +132,7 @@ namespace PolyVox
 	typedef RaycastResults::RaycastResult RaycastResult;
 
 	template<typename VolumeType, typename Callback>
-	RaycastResult smoothRaycastWithDirection(VolumeType* volData, const Vector3DFloat& v3dStart, const Vector3DFloat& v3dDirectionAndLength, Callback& callback);
+	RaycastResult smoothRaycastWithDirection(VolumeType* volData, const Vector3DFloat& v3dStart, const Vector3DFloat& v3dDirectionAndLength, Callback& callback, float fStepSize);
 }
 
 #include "PolyVoxCore/Raycast.inl"
