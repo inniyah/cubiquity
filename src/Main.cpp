@@ -82,8 +82,12 @@ void MeshGame::initialize()
 	mCameraDistance = 145.0f; //Value from voxeliens
 
 	// Create the volume and add it to the scene.
+#ifdef TERRAIN_SMOOTH
 	mVolume = SmoothTerrainVolume::create(VolumeTypes::SmoothTerrain, 0, 0, 0, 127, 31, 127, 32, 32, 32);
-	//mVolume = ColouredCubesVolume::create(VolumeTypes::ColouredCubes, 0, 0, 0, 127, 31, 127, 32, 32, 32);
+#endif
+#ifdef TERRAIN_CUBIC
+	mVolume = ColouredCubesVolume::create(VolumeTypes::ColouredCubes, 0, 0, 0, 127, 31, 127, 32, 32, 32);
+#endif
 
 	//Rather dirty hack until I figure out how to package volume data with gameplay
 #ifdef WIN32
@@ -122,12 +126,14 @@ void MeshGame::update(float elapsedTime)
 {
 	mTimeBetweenUpdates = elapsedTime;
 
+#ifdef TERRAIN_SMOOTH
 	if(mLeftMouseDown)
 	{
 		PolyVox::Vector4DFloat vec(1.0, 0.0, 0.0, 0.0);
 		MultiMaterial material(vec);
 		createSphereAt(mSphereNode->getTranslation(), 5, material);
 	}
+#endif
 
 	_cameraNode->setTranslation(64.0f, 16.0f, 64.0f);
 	_cameraNode->setRotation(Quaternion::identity());
@@ -297,6 +303,7 @@ void MeshGame::moveCamera(int x, int y)
 
 void MeshGame::createSphereAt(const gameplay::Vector3& centre, float radius, MultiMaterial value)
 {
+#ifdef TERRAIN_SMOOTH
 	int firstX = static_cast<int>(std::floor(centre.x - radius));
 	int firstY = static_cast<int>(std::floor(centre.y - radius));
 	int firstZ = static_cast<int>(std::floor(centre.z - radius));
@@ -344,4 +351,5 @@ void MeshGame::createSphereAt(const gameplay::Vector3& centre, float radius, Mul
 			}
 		}
 	}
+#endif
 }

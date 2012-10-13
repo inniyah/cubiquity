@@ -10,7 +10,21 @@ using namespace PolyVox;
 #include "GameplayMarchingCubesController.h"
 #include "GameplayIsQuadNeeded.h"
 
+template <typename VoxelType>
 class RaycastTestFunctor
+{
+public:
+	RaycastTestFunctor()
+	{
+	}
+
+	bool operator()(Vector3DFloat pos, const VoxelType& voxel)
+	{
+	}
+};
+
+template <>
+class RaycastTestFunctor<MultiMaterial>
 {
 public:
 	RaycastTestFunctor()
@@ -21,6 +35,21 @@ public:
 	{
 		mLastPos = pos;
 		return voxel.getMaterial().getX() + voxel.getMaterial().getY() + voxel.getMaterial().getZ() + voxel.getMaterial().getW() <= 0.5;
+	}
+
+	Vector3DFloat mLastPos;
+};
+
+template <>
+class RaycastTestFunctor<Material16>
+{
+public:
+	RaycastTestFunctor()
+	{
+	}
+
+	bool operator()(Vector3DFloat pos, const Material16& voxel)
+	{
 	}
 
 	Vector3DFloat mLastPos;
@@ -276,13 +305,13 @@ bool Volume<VoxelType>::raycast(Ray startAndDirection, float length, Vector3& re
 	Vector3DFloat v3dDirection(startAndDirection.getDirection().x, startAndDirection.getDirection().y, startAndDirection.getDirection().z);
 	v3dDirection *= length;
 
-	RaycastTestFunctor raycastTestFunctor;
+	/*RaycastTestFunctor<VoxelType> raycastTestFunctor;
 	RaycastResult myResult = smoothRaycastWithDirection(mVolData, v3dStart, v3dDirection, raycastTestFunctor, 0.5f);
 	if(myResult == RaycastResults::Interupted)
 	{
 		result = Vector3(raycastTestFunctor.mLastPos.getX(), raycastTestFunctor.mLastPos.getY(), raycastTestFunctor.mLastPos.getZ());
 		return true;
-	}
+	}*/
 
 	return false;
 }

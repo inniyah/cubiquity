@@ -12,6 +12,9 @@ using namespace gameplay;
 class ColouredCubesVolume;
 class SmoothTerrainVolume;
 
+//#define TERRAIN_SMOOTH
+#define TERRAIN_CUBIC
+
 /**
  * Sample game for rendering a scene with a model/mesh.
  */
@@ -65,8 +68,13 @@ private:
 
 	float mTimeBetweenUpdates;
 
+#ifdef TERRAIN_SMOOTH
 	SmoothTerrainVolume* mVolume;
-	//ColouredCubesVolume* mVolume;
+#endif
+
+#ifdef TERRAIN_CUBIC
+	ColouredCubesVolume* mVolume;
+#endif
 };
 
 #endif
