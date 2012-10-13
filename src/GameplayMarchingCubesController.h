@@ -94,19 +94,19 @@ private:
 
 // We never use the marching cubes surface extractor with Material16 so this is just a dummy specialisation.
 template<>
-class GameplayMarchingCubesController< PolyVox::Material16 >
+class GameplayMarchingCubesController< Colour >
 {
 public:
 	typedef float DensityType;
 	typedef MultiMaterial MaterialType;
 
-	float convertToDensity(PolyVox::Material16 voxel)
+	float convertToDensity(Colour voxel)
 	{
 		assert(false);
 		return 0;
 	}
 
-	MaterialType convertToMaterial(PolyVox::Material16 voxel)
+	MaterialType convertToMaterial(Colour voxel)
 	{
 		assert(false);
 		return PolyVox::Vector4DFloat(0,0,0,0);

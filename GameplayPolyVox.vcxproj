@@ -175,6 +175,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ArraySizes.cpp" />
+    <ClCompile Include="src\Colour.cpp" />
     <ClCompile Include="src\GradientEstimators.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\Main.cpp" />
@@ -190,6 +191,7 @@
     <ClCompile Include="src\VoxelFilters.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\Colour.h" />
     <ClInclude Include="src\ColouredCubesVolume.h" />
     <ClInclude Include="src\Main.h" />
     <ClInclude Include="src\SmoothTerrainVolume.h" />

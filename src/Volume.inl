@@ -41,15 +41,16 @@ public:
 };
 
 template <>
-class RaycastTestFunctor<Material16>
+class RaycastTestFunctor<Colour>
 {
 public:
 	RaycastTestFunctor()
 	{
 	}
 
-	bool operator()(Vector3DFloat pos, const Material16& voxel)
+	bool operator()(Vector3DFloat pos, const Colour& voxel)
 	{
+		return false;
 	}
 
 	Vector3DFloat mLastPos;
@@ -305,13 +306,13 @@ bool Volume<VoxelType>::raycast(Ray startAndDirection, float length, Vector3& re
 	Vector3DFloat v3dDirection(startAndDirection.getDirection().x, startAndDirection.getDirection().y, startAndDirection.getDirection().z);
 	v3dDirection *= length;
 
-	/*RaycastTestFunctor<VoxelType> raycastTestFunctor;
+	RaycastTestFunctor<VoxelType> raycastTestFunctor;
 	RaycastResult myResult = smoothRaycastWithDirection(mVolData, v3dStart, v3dDirection, raycastTestFunctor, 0.5f);
 	if(myResult == RaycastResults::Interupted)
 	{
 		result = Vector3(raycastTestFunctor.mLastPos.getX(), raycastTestFunctor.mLastPos.getY(), raycastTestFunctor.mLastPos.getZ());
 		return true;
-	}*/
+	}
 
 	return false;
 }

@@ -22,10 +22,10 @@ public:
 };
 
 template<>
-class GameplayIsQuadNeeded< PolyVox::Material16 >
+class GameplayIsQuadNeeded< Colour >
 {
 public:
-	bool operator()(PolyVox::Material16 back, PolyVox::Material16 front, PolyVox::Material16& materialToUse)
+	bool operator()(Colour back, Colour front, Colour& materialToUse)
 	{
 		if((back.getMaterial() > 0) && (front.getMaterial() == 0))
 		{

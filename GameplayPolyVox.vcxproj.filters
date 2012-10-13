@@ -44,6 +44,9 @@
     <ClInclude Include="src\SmoothTerrainVolume.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Colour.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -86,6 +89,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\MultiMaterial.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Colour.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
