@@ -7,7 +7,10 @@
 #include "PolyVoxCore/SimpleVolume.h"
 #include "PolyVoxCore/CubicSurfaceExtractor.h"
 
+#include <algorithm>
+
 using namespace PolyVox;
+using namespace std;
 
 //Rotates the goven node to point at the target.
 //NOTE - Might only work if node position and target are in world space?
@@ -208,6 +211,12 @@ bool MeshGame::mouseEvent(Mouse::MouseEvent evt, int x, int y, int wheelDelta)
 		mLastY = 0;
 		mRightMouseDown = false;
 	}
+	if(evt == Mouse::MOUSE_PRESS_LEFT_BUTTON)
+	{
+		PolyVox::Vector4DFloat vec(1.0, 0.0, 0.0, 0.0);
+		MultiMaterial material(vec);
+		createSphereAt(mSphereNode->getTranslation(), 5, material);
+	}
 
 	if(mRightMouseDown)
 	{
@@ -273,4 +282,53 @@ void MeshGame::moveCamera(int x, int y)
 	
 	mCameraElevationAngle = min(mCameraElevationAngle, MATH_DEG_TO_RAD(70.0f)); //Value from voxeliens
 	mCameraElevationAngle = max(mCameraElevationAngle, MATH_DEG_TO_RAD(-5.0f)); //Value from voxeliens
+}
+
+void MeshGame::createSphereAt(const gameplay::Vector3& centre, float radius, MultiMaterial value)
+{
+	int firstX = static_cast<int>(std::floor(centre.x - radius));
+	int firstY = static_cast<int>(std::floor(centre.y - radius));
+	int firstZ = static_cast<int>(std::floor(centre.z - radius));
+
+	int lastX = static_cast<int>(std::ceil(centre.x + radius));
+	int lastY = static_cast<int>(std::ceil(centre.y + radius));
+	int lastZ = static_cast<int>(std::ceil(centre.z + radius));
+
+	float radiusSquared = radius * radius;
+
+	//Check bounds.
+	firstX = std::max(firstX,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getX());
+	firstY = std::max(firstY,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getY());
+	firstZ = std::max(firstZ,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getZ());
+
+	lastX = std::min(lastX,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getX());
+	lastY = std::min(lastY,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getY());
+	lastZ = std::min(lastZ,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getZ());
+
+	for(int z = firstZ; z <= lastZ; ++z)
+	{
+		for(int y = firstY; y <= lastY; ++y)
+		{
+			for(int x = firstX; x <= lastX; ++x)
+			{
+				float amountToAdd = (centre - Vector3(x,y,z)).length() / radius;
+				amountToAdd = max(amountToAdd, 0.0f);
+				amountToAdd = min(amountToAdd, 1.0f);
+				amountToAdd = 1.0f - amountToAdd;
+
+				if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
+				{
+					MultiMaterial material = mVolume->getVoxelAt(x, y, z);
+					Vector4DFloat vec = material.getMaterial();
+					float sum = vec.getX() + vec.getY() + vec.getZ() + vec.getW();
+					vec.setX(min(vec.getX() + amountToAdd, 1.0f));
+					float newSum = vec.getX() + vec.getY() + vec.getZ() + vec.getW();
+					float factor = sum / newSum;
+					vec *= factor;
+					material.setMaterial(vec);
+					mVolume->setVoxelAt(x,y,z,material);
+				}
+			}
+		}
+	}
 }

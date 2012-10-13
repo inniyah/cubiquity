@@ -1,6 +1,8 @@
 #ifndef MESHGAME_H_
 #define MESHGAME_H_
 
+#include "MultiMaterial.h"
+
 #include "gameplay.h"
 
 #include <bitset>
@@ -21,6 +23,8 @@ public:
     void keyEvent(Keyboard::KeyEvent evt, int key);
     void touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int contactIndex);
 	bool mouseEvent(Mouse::MouseEvent evt, int x, int y, int wheelDelta);
+
+	void createSphereAt(const gameplay::Vector3& centre, float radius, MultiMaterial value);
 
 protected:
     void initialize();

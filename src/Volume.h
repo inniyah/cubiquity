@@ -29,11 +29,10 @@ public:
 	gameplay::Node* getRootNode();
 	VolumeType getType(void) const;
 
+	VoxelType getVoxelAt(int x, int y, int z);
 	void setVoxelAt(int x, int y, int z, VoxelType value);
 
 	bool raycast(gameplay::Ray ray, float distance, gameplay::Vector3& result);
-
-	void createSphereAt(const gameplay::Vector3& centre, float radius, VoxelType value);
 
 	void loadData(const char* filename);
 	void saveData(const char* filename);
