@@ -36,7 +36,7 @@ void pointNodeAtTarget(Node* node, const Vector3& target, const Vector3& up = Ve
 MeshGame game;
 
 MeshGame::MeshGame()
-    : _font(NULL), mLastX(0), mLastY(0), mRightMouseDown(false)
+	: _font(NULL), mLastX(0), mLastY(0), mRightMouseDown(false), mLeftMouseDown(false), mTimeBetweenUpdates(0.0f)
 {
 }
 
@@ -120,6 +120,15 @@ void MeshGame::finalize()
 
 void MeshGame::update(float elapsedTime)
 {
+	mTimeBetweenUpdates = elapsedTime;
+
+	if(mLeftMouseDown)
+	{
+		PolyVox::Vector4DFloat vec(1.0, 0.0, 0.0, 0.0);
+		MultiMaterial material(vec);
+		createSphereAt(mSphereNode->getTranslation(), 5, material);
+	}
+
 	_cameraNode->setTranslation(64.0f, 16.0f, 64.0f);
 	_cameraNode->setRotation(Quaternion::identity());
 	_cameraNode->rotateY(mCameraRotationAngle);
@@ -213,10 +222,12 @@ bool MeshGame::mouseEvent(Mouse::MouseEvent evt, int x, int y, int wheelDelta)
 	}
 	if(evt == Mouse::MOUSE_PRESS_LEFT_BUTTON)
 	{
-		PolyVox::Vector4DFloat vec(1.0, 0.0, 0.0, 0.0);
-		MultiMaterial material(vec);
-		createSphereAt(mSphereNode->getTranslation(), 5, material);
+		mLeftMouseDown = true;
 	}
+	if(evt == Mouse::MOUSE_RELEASE_LEFT_BUTTON)
+	{
+		mLeftMouseDown = false;
+	}	
 
 	if(mRightMouseDown)
 	{
@@ -315,6 +326,8 @@ void MeshGame::createSphereAt(const gameplay::Vector3& centre, float radius, Mul
 				amountToAdd = max(amountToAdd, 0.0f);
 				amountToAdd = min(amountToAdd, 1.0f);
 				amountToAdd = 1.0f - amountToAdd;
+
+				amountToAdd *= (mTimeBetweenUpdates / 1000.0f);
 
 				if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
 				{

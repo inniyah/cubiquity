@@ -60,7 +60,10 @@ private:
 	float mCameraRotationAngle;
 	float mCameraDistance;
 
+	bool mLeftMouseDown;
 	bool mRightMouseDown;
+
+	float mTimeBetweenUpdates;
 
 	SmoothTerrainVolume* mVolume;
 	//ColouredCubesVolume* mVolume;
