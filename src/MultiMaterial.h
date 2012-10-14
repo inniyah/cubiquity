@@ -10,16 +10,9 @@
 class MultiMaterial
 {
 public:
-	//We expose DensityType and MaterialType in this way so that, when code is
-	//templatised on voxel type, it can determine the underlying storage type
-	//using code such as 'VoxelType::DensityType value = voxel.getDensity()'
-	//or 'VoxelType::MaterialType value = voxel.getMaterial()'.
-	typedef float DensityType;
-	typedef PolyVox::Vector4DFloat MaterialType;
-
 	MultiMaterial(float val) : m_uMaterial(PolyVox::Vector4DFloat(val, val, val, val)) {}
 	MultiMaterial() : m_uMaterial(PolyVox::Vector4DFloat(0, 0, 0, 0)) {}
-	MultiMaterial(MaterialType uMaterial) : m_uMaterial(uMaterial) {}
+	MultiMaterial(PolyVox::Vector4DFloat uMaterial) : m_uMaterial(uMaterial) {}
 
 	bool operator==(const MultiMaterial& rhs) const throw()
 	{
@@ -55,11 +48,11 @@ public:
 		return *this;
 	}
 
-	MaterialType getMaterial() const throw() { return m_uMaterial; }
-	void setMaterial(MaterialType uMaterial) { m_uMaterial = uMaterial; }
+	PolyVox::Vector4DFloat getMaterial() const throw() { return m_uMaterial; }
+	void setMaterial(PolyVox::Vector4DFloat uMaterial) { m_uMaterial = uMaterial; }
 
 private:
-	MaterialType m_uMaterial;
+	PolyVox::Vector4DFloat m_uMaterial;
 };
 
 MultiMaterial operator+(const MultiMaterial& lhs, const MultiMaterial& rhs) throw();

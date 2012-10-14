@@ -27,9 +27,9 @@ class GameplayIsQuadNeeded< Colour >
 public:
 	bool operator()(Colour back, Colour front, Colour& materialToUse)
 	{
-		if((back.getMaterial() > 0) && (front.getMaterial() == 0))
+		if((back.getAlpha() > 0) && (front.getAlpha() == 0))
 		{
-			materialToUse = back.getMaterial();
+			materialToUse = back;
 			return true;
 		}
 		else

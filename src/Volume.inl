@@ -194,10 +194,6 @@ void Volume<VoxelType>::loadData(const char* filename)
 					GP_ERROR("Failed to read voxel %d, %d, %d", x, y, z);
 				}
 
-				//HACK - For some reason the values coming from Voxeliens
-				//seem to have the endianness the wrong way round? Swap them.
-				//value.setMaterial(((value.getMaterial() & 0xff)<<8) | ((value.getMaterial() & 0xff00)>>8));
-
 				//Write the voxel value into the volume
 				setVoxelAt(x, y, z, value);
 			}
