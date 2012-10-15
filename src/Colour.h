@@ -20,46 +20,6 @@ public:
 		return !(*this == rhs);
 	}
 
-	Colour& operator+=(const Colour& rhs)
-	{
-		m_uRed   += rhs.m_uRed;
-		m_uGreen += rhs.m_uGreen;
-		m_uBlue  += rhs.m_uBlue;
-		m_uAlpha += rhs.m_uAlpha;
-
-		return *this;
-	}
-
-	Colour& operator-=(const Colour& rhs)
-	{
-		m_uRed   -= rhs.m_uRed;
-		m_uGreen -= rhs.m_uGreen;
-		m_uBlue  -= rhs.m_uBlue;
-		m_uAlpha -= rhs.m_uAlpha;
-
-		return *this;
-	}
-
-	Colour& operator*=(uint32_t rhs)
-	{
-		m_uRed   *= rhs;
-		m_uGreen *= rhs;
-		m_uBlue  *= rhs;
-		m_uAlpha *= rhs;
-
-		return *this;
-	}
-
-	Colour& operator/=(uint32_t rhs)
-	{
-		m_uRed   /= rhs;
-		m_uGreen /= rhs;
-		m_uBlue  /= rhs;
-		m_uAlpha /= rhs;
-
-		return *this;
-	}
-
 	uint16_t getRed(void)
 	{
 		return m_uRed;
@@ -95,6 +55,10 @@ public:
 	uint16_t m_uAlpha : 4;
 };
 
+// These operations are used by the smooth raycast to perform trilinear interpolation.
+// We never actually do that on this type (because colours are used for cubic surfaces
+// not smooth ones) but our use of templates means that this code path still gets compiled.
+// The actual implementations simply assert if they are ever called by mistake.
 Colour operator+(const Colour& lhs, const Colour& rhs) throw();
 Colour operator-(const Colour& lhs, const Colour& rhs) throw();
 Colour operator*(const Colour& lhs, float rhs) throw();
