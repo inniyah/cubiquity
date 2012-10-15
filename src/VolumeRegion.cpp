@@ -41,10 +41,15 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 	float* ptr = vertexData;
 	for(int i = 0; i < vecVertices.size(); i++)
 	{
+		// Position stored in x,y,z components.
 		*ptr = vecVertices[i].getPosition().getX(); ptr++;
 		*ptr = vecVertices[i].getPosition().getY(); ptr++;
 		*ptr = vecVertices[i].getPosition().getZ(); ptr++;
-		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial()); ptr++;
+
+		// Encode colour in w component
+		Colour colour = vecVertices[i].getMaterial();
+		uint16_t colourAsUint = (colour.getRed() << 12) | (colour.getGreen() << 8) | (colour.getBlue() << 4) | (colour.getAlpha());
+		*ptr = static_cast<float>(colourAsUint); ptr++;
 	}
 
     Mesh* mesh = Mesh::createMesh(VertexFormat(elements, 1), polyVoxMesh.getVertices().size(), false);

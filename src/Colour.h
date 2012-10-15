@@ -8,12 +8,11 @@
 class Colour
 {
 public:
-	Colour() : m_uColour(0) {}
-	Colour(uint16_t uColour) : m_uColour(uColour) {}
+	Colour() : m_uRed(0), m_uGreen(0), m_uBlue(0), m_uAlpha(0) {}
 
 	bool operator==(const Colour& rhs) const throw()
 	{
-		return (m_uColour == rhs.m_uColour);
+		return ((m_uRed == rhs.m_uRed) && (m_uGreen == rhs.m_uGreen) && (m_uBlue == rhs.m_uBlue) && (m_uAlpha == rhs.m_uAlpha));
 	};
 
 	bool operator!=(const Colour& rhs) const throw()
@@ -23,57 +22,77 @@ public:
 
 	Colour& operator+=(const Colour& rhs)
 	{
-		//m_uDensity += rhs.m_uDensity;
+		m_uRed   += rhs.m_uRed;
+		m_uGreen += rhs.m_uGreen;
+		m_uBlue  += rhs.m_uBlue;
+		m_uAlpha += rhs.m_uAlpha;
 
 		return *this;
 	}
 
 	Colour& operator-=(const Colour& rhs)
 	{
-		//m_uDensity += rhs.m_uDensity;
+		m_uRed   -= rhs.m_uRed;
+		m_uGreen -= rhs.m_uGreen;
+		m_uBlue  -= rhs.m_uBlue;
+		m_uAlpha -= rhs.m_uAlpha;
 
 		return *this;
 	}
 
 	Colour& operator*=(uint32_t rhs)
 	{
-		//m_uColour /= rhs;
+		m_uRed   *= rhs;
+		m_uGreen *= rhs;
+		m_uBlue  *= rhs;
+		m_uAlpha *= rhs;
+
 		return *this;
 	}
 
 	Colour& operator/=(uint32_t rhs)
 	{
-		//m_uColour /= rhs;
+		m_uRed   /= rhs;
+		m_uGreen /= rhs;
+		m_uBlue  /= rhs;
+		m_uAlpha /= rhs;
+
 		return *this;
 	}
 
 	uint16_t getRed(void)
 	{
-		return m_uColour & 0xF000;
+		return m_uRed;
 	}
 
 	uint16_t getGreen(void)
 	{
-		return m_uColour & 0x0F00;
+		return m_uGreen;
 	}
 
 	uint16_t getBlue(void)
 	{
-		return m_uColour & 0x00F0;
+		return m_uBlue;
 	}
 
 	uint16_t getAlpha(void)
 	{
-		return m_uColour & 0x000F;
+		return m_uAlpha;
 	}
 
-	uint16_t getMaterial(void)
+	void setColour(uint16_t red, uint16_t green, uint16_t blue, uint16_t alpha)
 	{
-		return m_uColour;
+		m_uRed = red;
+		m_uGreen = green;
+		m_uBlue = blue;
+		m_uAlpha = alpha;
 	}
 
-private:
-	uint16_t m_uColour;
+public:
+	uint16_t m_uRed : 4;
+	uint16_t m_uGreen : 4;
+	uint16_t m_uBlue : 4;
+	uint16_t m_uAlpha : 4;
 };
 
 Colour operator+(const Colour& lhs, const Colour& rhs) throw();
