@@ -129,7 +129,7 @@ void MeshGame::update(float elapsedTime)
 #ifdef TERRAIN_SMOOTH
 	if(mLeftMouseDown)
 	{
-		PolyVox::Vector4DFloat vec(1.0, 0.0, 0.0, 0.0);
+		PolyVox::Vector4DUint8 vec(255, 0, 0, 0);
 		MultiMaterial material(vec);
 		createSphereAt(mSphereNode->getTranslation(), 5, material);
 	}
@@ -333,20 +333,27 @@ void MeshGame::createSphereAt(const gameplay::Vector3& centre, float radius, Mul
 				amountToAdd = max(amountToAdd, 0.0f);
 				amountToAdd = min(amountToAdd, 1.0f);
 				amountToAdd = 1.0f - amountToAdd;
+				amountToAdd *= 255.0f;
 
 				amountToAdd *= (mTimeBetweenUpdates / 1000.0f);
+
+				uint8_t uToAdd = static_cast<uint8_t>(amountToAdd);
 
 				if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
 				{
 					MultiMaterial material = mVolume->getVoxelAt(x, y, z);
-					Vector4DFloat vec = material.getMaterial();
+					Vector4DUint8 vec = material.getMaterial();
 					float sum = vec.getX() + vec.getY() + vec.getZ() + vec.getW();
-					vec.setX(min(vec.getX() + amountToAdd, 1.0f));
+					vec.setX(min(vec.getX() + uToAdd, 255));
 					float newSum = vec.getX() + vec.getY() + vec.getZ() + vec.getW();
 					float factor = sum / newSum;
-					vec *= factor;
-					material.setMaterial(vec);
-					mVolume->setVoxelAt(x,y,z,material);
+					//vec *= factor;
+					vec.setX(vec.getX() * factor);
+					vec.setY(vec.getY() * factor);
+					vec.setZ(vec.getZ() * factor);
+					vec.setW(vec.getW() * factor);
+					MultiMaterial newMaterial(vec);
+					mVolume->setVoxelAt(x,y,z,newMaterial);
 				}
 			}
 		}

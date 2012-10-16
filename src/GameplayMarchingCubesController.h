@@ -49,13 +49,13 @@ template <>
 class GameplayMarchingCubesController< MultiMaterial >
 {
 public:
-	typedef float DensityType;
+	typedef uint8_t DensityType;
 	typedef MultiMaterial MaterialType;
 
 	GameplayMarchingCubesController(void)
 	{
 		// Default to a threshold value halfway between the min and max possible values.
-		m_tThreshold = 0.5f;
+		m_tThreshold = 127;
 	}
 
 	GameplayMarchingCubesController(DensityType tThreshold)
@@ -75,11 +75,11 @@ public:
 
 	MaterialType blendMaterials(MaterialType a, MaterialType b, float weight)
 	{
-		PolyVox::Vector4DFloat aVec = a.getMaterial();
-		PolyVox::Vector4DFloat bVec = b.getMaterial();
+		PolyVox::Vector4DFloat aVec = static_cast<PolyVox::Vector4DFloat>(a.getMaterial());
+		PolyVox::Vector4DFloat bVec = static_cast<PolyVox::Vector4DFloat>(b.getMaterial());
 		PolyVox::Vector4DFloat blendedVec = (bVec - aVec) * weight + aVec;
 		MultiMaterial result;
-		result.setMaterial(blendedVec);
+		result.setMaterial(static_cast<PolyVox::Vector4DUint8>(blendedVec));
 		return result;
 	}
 
@@ -109,7 +109,7 @@ public:
 	MaterialType convertToMaterial(Colour voxel)
 	{
 		assert(false);
-		return PolyVox::Vector4DFloat(0,0,0,0);
+		return PolyVox::Vector4DUint8(0,0,0,0);
 	}
 
 	MaterialType blendMaterials(MaterialType a, MaterialType b, float weight)
