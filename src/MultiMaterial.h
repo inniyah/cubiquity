@@ -27,7 +27,7 @@ public:
 	MultiMaterial& operator+=(const MultiMaterial& rhs)
 	{
 		PolyVox::Vector4DFloat temp = static_cast<PolyVox::Vector4DFloat>(m_uMaterial);
-		PolyVox::Vector4DFloat rhsFloat = static_cast<PolyVox::Vector4DFloat>(rhs.getMaterial());
+		PolyVox::Vector4DFloat rhsFloat = static_cast<PolyVox::Vector4DFloat>(rhs.m_uMaterial);
 		temp += rhsFloat;
 		m_uMaterial = static_cast<PolyVox::Vector4DUint8>(temp);
 		return *this;
@@ -36,7 +36,7 @@ public:
 	MultiMaterial& operator-=(const MultiMaterial& rhs)
 	{
 		PolyVox::Vector4DFloat temp = static_cast<PolyVox::Vector4DFloat>(m_uMaterial);
-		PolyVox::Vector4DFloat rhsFloat = static_cast<PolyVox::Vector4DFloat>(rhs.getMaterial());
+		PolyVox::Vector4DFloat rhsFloat = static_cast<PolyVox::Vector4DFloat>(rhs.m_uMaterial);
 		temp -= rhsFloat;
 		m_uMaterial = static_cast<PolyVox::Vector4DUint8>(temp);
 		return *this;
@@ -61,7 +61,24 @@ public:
 	PolyVox::Vector4DUint8 getMaterial() const throw() { return m_uMaterial; }
 	void setMaterial(PolyVox::Vector4DUint8 uMaterial) { m_uMaterial = uMaterial; }
 
-private:
+	uint8_t getMaterial(uint32_t id) const
+	{
+		assert(id < 4);
+		return m_uMaterial.getElement(id);
+	}
+
+	void setMaterial(uint32_t id, uint8_t value)
+	{
+		assert(id < 4);
+		m_uMaterial.setElement(id, value);
+	}
+
+	uint32_t getSumOfMaterials(void) const
+	{
+		return getMaterial().getX() + getMaterial().getY() + getMaterial().getZ() + getMaterial().getW();
+	}
+
+public:
 	PolyVox::Vector4DUint8 m_uMaterial;
 };
 

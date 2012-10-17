@@ -342,17 +342,17 @@ void MeshGame::createSphereAt(const gameplay::Vector3& centre, float radius, Mul
 				if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
 				{
 					MultiMaterial material = mVolume->getVoxelAt(x, y, z);
-					Vector4DUint8 vec = material.getMaterial();
-					float sum = vec.getX() + vec.getY() + vec.getZ() + vec.getW();
-					vec.setX(min(vec.getX() + uToAdd, 255));
-					float newSum = vec.getX() + vec.getY() + vec.getZ() + vec.getW();
+					//Vector4DUint8 vec = material.getMaterial();
+					float sum = material.getSumOfMaterials();
+					material.setMaterial(0, min(material.getMaterial(0) + uToAdd, 255));
+					float newSum = material.getSumOfMaterials();
 					float factor = sum / newSum;
 					//vec *= factor;
-					vec.setX(vec.getX() * factor);
-					vec.setY(vec.getY() * factor);
-					vec.setZ(vec.getZ() * factor);
-					vec.setW(vec.getW() * factor);
-					MultiMaterial newMaterial(vec);
+					material.setMaterial(0, material.getMaterial(0) * factor);
+					material.setMaterial(1, material.getMaterial(1) * factor);
+					material.setMaterial(2, material.getMaterial(2) * factor);
+					material.setMaterial(3, material.getMaterial(3) * factor);
+					MultiMaterial newMaterial(material);
 					mVolume->setVoxelAt(x,y,z,newMaterial);
 				}
 			}

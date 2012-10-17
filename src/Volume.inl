@@ -34,7 +34,7 @@ public:
 	bool operator()(Vector3DFloat pos, const MultiMaterial& voxel)
 	{
 		mLastPos = pos;
-		return voxel.getMaterial().getX() + voxel.getMaterial().getY() + voxel.getMaterial().getZ() + voxel.getMaterial().getW() <= 127;
+		return voxel.getSumOfMaterials() <= 127;
 	}
 
 	Vector3DFloat mLastPos;

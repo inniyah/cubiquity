@@ -65,7 +65,7 @@ public:
 
 	DensityType convertToDensity(MultiMaterial voxel)
 	{
-		return voxel.getMaterial().getX() + voxel.getMaterial().getY() + voxel.getMaterial().getZ() + voxel.getMaterial().getW();
+		return voxel.getSumOfMaterials();
 	}
 
 	MaterialType convertToMaterial(MultiMaterial voxel)

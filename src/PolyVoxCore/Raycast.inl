@@ -250,14 +250,14 @@ namespace PolyVox
 			const typename VolumeType::VoxelType& voxel110 = volData->getVoxelAt(iX + 1, iY + 1, iZ);
 			const typename VolumeType::VoxelType& voxel111 = volData->getVoxelAt(iX + 1, iY + 1, iZ + 1);*/
 
-			Vector4DFloat voxel000 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX, iY, iZ).getMaterial());
-			Vector4DFloat voxel001 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX, iY, iZ + 1).getMaterial());
-			Vector4DFloat voxel010 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX, iY + 1, iZ).getMaterial());
-			Vector4DFloat voxel011 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX, iY + 1, iZ + 1).getMaterial());
-			Vector4DFloat voxel100 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX + 1, iY, iZ).getMaterial());
-			Vector4DFloat voxel101 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX + 1, iY, iZ + 1).getMaterial());
-			Vector4DFloat voxel110 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX + 1, iY + 1, iZ).getMaterial());
-			Vector4DFloat voxel111 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX + 1, iY + 1, iZ + 1).getMaterial());
+			Vector4DFloat voxel000 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX, iY, iZ).m_uMaterial);
+			Vector4DFloat voxel001 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX, iY, iZ + 1).m_uMaterial);
+			Vector4DFloat voxel010 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX, iY + 1, iZ).m_uMaterial);
+			Vector4DFloat voxel011 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX, iY + 1, iZ + 1).m_uMaterial);
+			Vector4DFloat voxel100 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX + 1, iY, iZ).m_uMaterial);
+			Vector4DFloat voxel101 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX + 1, iY, iZ + 1).m_uMaterial);
+			Vector4DFloat voxel110 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX + 1, iY + 1, iZ).m_uMaterial);
+			Vector4DFloat voxel111 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX + 1, iY + 1, iZ + 1).m_uMaterial);
 
 			Vector4DFloat tInterpolatedValue = trilinearlyInterpolateTemp<Vector4DFloat>(voxel000,voxel100,voxel010,voxel110,voxel001,voxel101,voxel011,voxel111,fInterpX,fInterpY,fInterpZ);
 
