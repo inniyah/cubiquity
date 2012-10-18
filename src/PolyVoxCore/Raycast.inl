@@ -224,7 +224,7 @@ namespace PolyVox
 			const typename VolumeType::VoxelType& voxel110 = volData->getVoxelAt(iX + 1, iY + 1, iZ);
 			const typename VolumeType::VoxelType& voxel111 = volData->getVoxelAt(iX + 1, iY + 1, iZ + 1);
 
-			VolumeType::VoxelType tInterpolatedValue = trilinearlyInterpolate(voxel000,voxel100,voxel010,voxel110,voxel001,voxel101,voxel011,voxel111,fInterpX,fInterpY,fInterpZ);
+			typename VolumeType::VoxelType tInterpolatedValue = trilinearlyInterpolate(voxel000,voxel100,voxel010,voxel110,voxel001,voxel101,voxel011,voxel111,fInterpX,fInterpY,fInterpZ);
 		
 			if(!callback(v3dPos, tInterpolatedValue))
 			{

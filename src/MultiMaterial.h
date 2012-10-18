@@ -10,20 +10,17 @@
 class MultiMaterial
 {
 public:
-	//MultiMaterial(uint8_t val) : m_uMaterial(PolyVox::Vector4DUint8(val, val, val, val)) {}
 	MultiMaterial()
 	{
-		for(int ct = 0; ct < getNoOfMaterials(); ct++)
+		for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
 		{
 			mMaterials[ct] = 0;
 		}
 	}
 
-	//MultiMaterial(PolyVox::Vector4DUint8 uMaterial) : m_uMaterial(uMaterial) {}
-
 	bool operator==(const MultiMaterial& rhs) const throw()
 	{
-		for(int ct = 0; ct < getNoOfMaterials(); ct++)
+		for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
 		{
 			if(mMaterials[ct] != rhs.mMaterials[ct])
 			{
@@ -40,7 +37,7 @@ public:
 
 	MultiMaterial& operator+=(const MultiMaterial& rhs)
 	{
-		for(int ct = 0; ct < getNoOfMaterials(); ct++)
+		for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
 		{
 			float temp = static_cast<float>(mMaterials[ct]);
 			float rhsFloat = static_cast<float>(rhs.mMaterials[ct]);
@@ -52,7 +49,7 @@ public:
 
 	MultiMaterial& operator-=(const MultiMaterial& rhs)
 	{
-		for(int ct = 0; ct < getNoOfMaterials(); ct++)
+		for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
 		{
 			float temp = static_cast<float>(mMaterials[ct]);
 			float rhsFloat = static_cast<float>(rhs.mMaterials[ct]);
@@ -64,7 +61,7 @@ public:
 
 	MultiMaterial& operator*=(float rhs)
 	{
-		for(int ct = 0; ct < getNoOfMaterials(); ct++)
+		for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
 		{
 			float temp = static_cast<float>(mMaterials[ct]);
 			temp *= rhs;
@@ -75,7 +72,7 @@ public:
 
 	MultiMaterial& operator/=(float rhs)
 	{
-		for(int ct = 0; ct < getNoOfMaterials(); ct++)
+		for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
 		{
 			float temp = static_cast<float>(mMaterials[ct]);
 			temp /= rhs;

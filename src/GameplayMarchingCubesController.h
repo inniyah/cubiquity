@@ -76,7 +76,7 @@ public:
 	MaterialType blendMaterials(MaterialType a, MaterialType b, float weight)
 	{
 		MultiMaterial result;
-		for(int ct = 0; ct < result.getNoOfMaterials(); ct++)
+		for(uint32_t ct = 0; ct < result.getNoOfMaterials(); ct++)
 		{
 			float aFloat = static_cast<float>(a.getMaterial(ct));
 			float bFloat = static_cast<float>(b.getMaterial(ct));
