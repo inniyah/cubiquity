@@ -10,13 +10,27 @@
 class MultiMaterial
 {
 public:
-	MultiMaterial(uint8_t val) : m_uMaterial(PolyVox::Vector4DUint8(val, val, val, val)) {}
-	MultiMaterial() : m_uMaterial(PolyVox::Vector4DUint8(0, 0, 0, 0)) {}
-	MultiMaterial(PolyVox::Vector4DUint8 uMaterial) : m_uMaterial(uMaterial) {}
+	//MultiMaterial(uint8_t val) : m_uMaterial(PolyVox::Vector4DUint8(val, val, val, val)) {}
+	MultiMaterial()
+	{
+		for(int ct = 0; ct < getNoOfMaterials(); ct++)
+		{
+			mMaterials[ct] = 0;
+		}
+	}
+
+	//MultiMaterial(PolyVox::Vector4DUint8 uMaterial) : m_uMaterial(uMaterial) {}
 
 	bool operator==(const MultiMaterial& rhs) const throw()
 	{
-		return (m_uMaterial == rhs.m_uMaterial);
+		for(int ct = 0; ct < getNoOfMaterials(); ct++)
+		{
+			if(mMaterials[ct] != rhs.mMaterials[ct])
+			{
+				return false;
+			}
+		}
+		return true;
 	};
 
 	bool operator!=(const MultiMaterial& rhs) const throw()
@@ -26,40 +40,52 @@ public:
 
 	MultiMaterial& operator+=(const MultiMaterial& rhs)
 	{
-		PolyVox::Vector4DFloat temp = static_cast<PolyVox::Vector4DFloat>(m_uMaterial);
-		PolyVox::Vector4DFloat rhsFloat = static_cast<PolyVox::Vector4DFloat>(rhs.m_uMaterial);
-		temp += rhsFloat;
-		m_uMaterial = static_cast<PolyVox::Vector4DUint8>(temp);
+		for(int ct = 0; ct < getNoOfMaterials(); ct++)
+		{
+			float temp = static_cast<float>(mMaterials[ct]);
+			float rhsFloat = static_cast<float>(rhs.mMaterials[ct]);
+			temp += rhsFloat;
+			mMaterials[ct] = static_cast<uint8_t>(temp);
+		}
 		return *this;
 	}
 
 	MultiMaterial& operator-=(const MultiMaterial& rhs)
 	{
-		PolyVox::Vector4DFloat temp = static_cast<PolyVox::Vector4DFloat>(m_uMaterial);
-		PolyVox::Vector4DFloat rhsFloat = static_cast<PolyVox::Vector4DFloat>(rhs.m_uMaterial);
-		temp -= rhsFloat;
-		m_uMaterial = static_cast<PolyVox::Vector4DUint8>(temp);
+		for(int ct = 0; ct < getNoOfMaterials(); ct++)
+		{
+			float temp = static_cast<float>(mMaterials[ct]);
+			float rhsFloat = static_cast<float>(rhs.mMaterials[ct]);
+			temp -= rhsFloat;
+			mMaterials[ct] = static_cast<uint8_t>(temp);
+		}
 		return *this;
 	}
 
 	MultiMaterial& operator*=(float rhs)
 	{
-		PolyVox::Vector4DFloat temp = static_cast<PolyVox::Vector4DFloat>(m_uMaterial);
-		temp *= rhs;
-		m_uMaterial = static_cast<PolyVox::Vector4DUint8>(temp);
+		for(int ct = 0; ct < getNoOfMaterials(); ct++)
+		{
+			float temp = static_cast<float>(mMaterials[ct]);
+			temp *= rhs;
+			mMaterials[ct] = static_cast<uint8_t>(temp);
+		}
 		return *this;
 	}
 
 	MultiMaterial& operator/=(float rhs)
 	{
-		PolyVox::Vector4DFloat temp = static_cast<PolyVox::Vector4DFloat>(m_uMaterial);
-		temp /= rhs;
-		m_uMaterial = static_cast<PolyVox::Vector4DUint8>(temp);
+		for(int ct = 0; ct < getNoOfMaterials(); ct++)
+		{
+			float temp = static_cast<float>(mMaterials[ct]);
+			temp /= rhs;
+			mMaterials[ct] = static_cast<uint8_t>(temp);
+		}
 		return *this;
 	}
 
-	PolyVox::Vector4DUint8 getMaterial() const throw() { return m_uMaterial; }
-	void setMaterial(PolyVox::Vector4DUint8 uMaterial) { m_uMaterial = uMaterial; }
+	//PolyVox::Vector4DUint8 getMaterial() const throw() { return m_uMaterial; }
+	//void setMaterial(PolyVox::Vector4DUint8 uMaterial) { m_uMaterial = uMaterial; }
 
 	uint32_t getNoOfMaterials(void) const
 	{
@@ -69,22 +95,28 @@ public:
 	uint8_t getMaterial(uint32_t id) const
 	{
 		assert(id < 4);
-		return m_uMaterial.getElement(id);
+		return mMaterials[id];
 	}
 
 	void setMaterial(uint32_t id, uint8_t value)
 	{
 		assert(id < 4);
-		m_uMaterial.setElement(id, value);
+		mMaterials[id] = value;
 	}
 
 	uint32_t getSumOfMaterials(void) const
 	{
-		return getMaterial().getX() + getMaterial().getY() + getMaterial().getZ() + getMaterial().getW();
+		uint32_t sum = 0;
+		for(int ct = 0; ct < getNoOfMaterials(); ct++)
+		{
+			sum += mMaterials[ct];
+		}
+		return sum;
 	}
 
 public:
-	PolyVox::Vector4DUint8 m_uMaterial;
+	//PolyVox::Vector4DUint8 m_uMaterial;
+	uint8_t mMaterials[4];
 };
 
 MultiMaterial operator+(const MultiMaterial& lhs, const MultiMaterial& rhs) throw();

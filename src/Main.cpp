@@ -129,8 +129,8 @@ void MeshGame::update(float elapsedTime)
 #ifdef TERRAIN_SMOOTH
 	if(mLeftMouseDown)
 	{
-		PolyVox::Vector4DUint8 vec(255, 0, 0, 0);
-		MultiMaterial material(vec);
+		MultiMaterial material;
+		material.setMaterial(0, 255);
 		createSphereAt(mSphereNode->getTranslation(), 5, material);
 	}
 #endif
@@ -336,6 +336,7 @@ void MeshGame::createSphereAt(const gameplay::Vector3& centre, float radius, Mul
 				amountToAdd *= 255.0f;
 
 				amountToAdd *= (mTimeBetweenUpdates / 1000.0f);
+				amountToAdd *= 10.0f;
 
 				uint8_t uToAdd = static_cast<uint8_t>(amountToAdd);
 

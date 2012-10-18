@@ -108,10 +108,10 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 		*ptr = vecVertices[i].getPosition().getZ(); ptr++;
 		*ptr = 1.0;  ptr++;
 
-		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial().getX()); ptr++;
-		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial().getY()); ptr++;
-		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial().getZ()); ptr++;
-		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial().getW()); ptr++;
+		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial(0)); ptr++;
+		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial(1)); ptr++;
+		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial(2)); ptr++;
+		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial(3)); ptr++;
 		
 		*ptr = vecVertices[i].getNormal().getX(); ptr++;
 		*ptr = vecVertices[i].getNormal().getY(); ptr++;

@@ -75,11 +75,14 @@ public:
 
 	MaterialType blendMaterials(MaterialType a, MaterialType b, float weight)
 	{
-		PolyVox::Vector4DFloat aVec = static_cast<PolyVox::Vector4DFloat>(a.getMaterial());
-		PolyVox::Vector4DFloat bVec = static_cast<PolyVox::Vector4DFloat>(b.getMaterial());
-		PolyVox::Vector4DFloat blendedVec = (bVec - aVec) * weight + aVec;
 		MultiMaterial result;
-		result.setMaterial(static_cast<PolyVox::Vector4DUint8>(blendedVec));
+		for(int ct = 0; ct < result.getNoOfMaterials(); ct++)
+		{
+			float aFloat = static_cast<float>(a.getMaterial(ct));
+			float bFloat = static_cast<float>(b.getMaterial(ct));
+			float blended = (bFloat - aFloat) * weight + aFloat;
+			result.setMaterial(ct, static_cast<uint8_t>(blended));
+		}
 		return result;
 	}
 
@@ -109,7 +112,7 @@ public:
 	MaterialType convertToMaterial(Colour voxel)
 	{
 		assert(false);
-		return PolyVox::Vector4DUint8(0,0,0,0);
+		return MaterialType();
 	}
 
 	MaterialType blendMaterials(MaterialType a, MaterialType b, float weight)
