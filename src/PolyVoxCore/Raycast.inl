@@ -181,31 +181,6 @@ namespace PolyVox
 		m_result.previousVoxel = Vector3DInt32(0,0,0);
 	}*/
 
-	template <typename Type>
-        Type trilinearlyInterpolateTemp(
-        const Type& v000,const Type& v100,const Type& v010,const Type& v110,
-        const Type& v001,const Type& v101,const Type& v011,const Type& v111,
-        const float x, const float y, const float z)
-    {
-        assert((x >= 0.0f) && (y >= 0.0f) && (z >= 0.0f) && 
-            (x <= 1.0f) && (y <= 1.0f) && (z <= 1.0f));
-
-		//Interpolate along X
-		Type v000_v100 = (v100 - v000) * x + v000;
-		Type v001_v101 = (v101 - v001) * x + v001;
-		Type v010_v110 = (v110 - v010) * x + v010;
-		Type v011_v111 = (v111 - v011) * x + v011;
-
-		//Interpolate along Y
-		Type v000_v100__v010_v110 = (v010_v110 - v000_v100) * y + v000_v100;
-		Type v001_v101__v011_v111 = (v011_v111 - v001_v101) * y + v001_v101;
-
-		//Interpolate along Z
-		Type v000_v100__v010_v110____v001_v101__v011_v111 = (v001_v101__v011_v111 - v000_v100__v010_v110) * z + v000_v100__v010_v110;
-
-		return v000_v100__v010_v110____v001_v101__v011_v111;
-    }
-
 	// Note: This function is not implemented in a very efficient manner and it rather slow.
 	// A better implementation should make use of the 'peek' functions to sample the voxel data,
 	// but this will require careful handling of the cases when the ray is outside the volume.
@@ -220,7 +195,6 @@ namespace PolyVox
 
 		Vector3DFloat v3dPos = v3dStart;
 		const Vector3DFloat v3dStep =  v3dDirectionAndLength / static_cast<float>(mMaxNoOfSteps);
-		typename VolumeType::Sampler sampler(volData);
 
 		for(uint32_t ct = 0; ct < mMaxNoOfSteps; ct++)
 		{
@@ -241,27 +215,18 @@ namespace PolyVox
 			int32_t iY = static_cast<int32_t>(fFloorY > 0.0f ? fFloorY + 0.5f : fFloorY - 0.5f); 
 			int32_t iZ = static_cast<int32_t>(fFloorZ > 0.0f ? fFloorZ + 0.5f : fFloorZ - 0.5f);
 
-			/*const typename VolumeType::VoxelType& voxel000 = volData->getVoxelAt(iX, iY, iZ);
+			const typename VolumeType::VoxelType& voxel000 = volData->getVoxelAt(iX, iY, iZ);
 			const typename VolumeType::VoxelType& voxel001 = volData->getVoxelAt(iX, iY, iZ + 1);
 			const typename VolumeType::VoxelType& voxel010 = volData->getVoxelAt(iX, iY + 1, iZ);
 			const typename VolumeType::VoxelType& voxel011 = volData->getVoxelAt(iX, iY + 1, iZ + 1);
 			const typename VolumeType::VoxelType& voxel100 = volData->getVoxelAt(iX + 1, iY, iZ);
 			const typename VolumeType::VoxelType& voxel101 = volData->getVoxelAt(iX + 1, iY, iZ + 1);
 			const typename VolumeType::VoxelType& voxel110 = volData->getVoxelAt(iX + 1, iY + 1, iZ);
-			const typename VolumeType::VoxelType& voxel111 = volData->getVoxelAt(iX + 1, iY + 1, iZ + 1);*/
+			const typename VolumeType::VoxelType& voxel111 = volData->getVoxelAt(iX + 1, iY + 1, iZ + 1);
 
-			Vector4DFloat voxel000 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX, iY, iZ).m_uMaterial);
-			Vector4DFloat voxel001 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX, iY, iZ + 1).m_uMaterial);
-			Vector4DFloat voxel010 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX, iY + 1, iZ).m_uMaterial);
-			Vector4DFloat voxel011 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX, iY + 1, iZ + 1).m_uMaterial);
-			Vector4DFloat voxel100 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX + 1, iY, iZ).m_uMaterial);
-			Vector4DFloat voxel101 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX + 1, iY, iZ + 1).m_uMaterial);
-			Vector4DFloat voxel110 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX + 1, iY + 1, iZ).m_uMaterial);
-			Vector4DFloat voxel111 = static_cast<Vector4DFloat>(volData->getVoxelAt(iX + 1, iY + 1, iZ + 1).m_uMaterial);
-
-			Vector4DFloat tInterpolatedValue = trilinearlyInterpolateTemp<Vector4DFloat>(voxel000,voxel100,voxel010,voxel110,voxel001,voxel101,voxel011,voxel111,fInterpX,fInterpY,fInterpZ);
-
-			if(!callback(v3dPos, static_cast<Vector4DUint8>(tInterpolatedValue)))
+			VolumeType::VoxelType tInterpolatedValue = trilinearlyInterpolate(voxel000,voxel100,voxel010,voxel110,voxel001,voxel101,voxel011,voxel111,fInterpX,fInterpY,fInterpZ);
+		
+			if(!callback(v3dPos, tInterpolatedValue))
 			{
 				return RaycastResults::Interupted;
 			}

@@ -188,14 +188,16 @@ void Volume<VoxelType>::loadData(const char* filename)
 				VoxelType value;
 
 				//Slow and inefficient reading one voxel at a time!
-				size_t elementsRead = fread(&value, sizeof(VoxelType), 1,inputFile);
+				size_t elementsRead = fread(&value, sizeof(VoxelType), 1,inputFile);
+
 				if(elementsRead != 1)
 				{
 					GP_ERROR("Failed to read voxel %d, %d, %d", x, y, z);
 				}
 
 				//Write the voxel value into the volume
-				setVoxelAt(x, y, z, value);
+				setVoxelAt(x, y, z, value);
+
 			}
 		}
 	}
