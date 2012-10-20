@@ -178,6 +178,8 @@ void Volume<VoxelType>::loadData(const char* filename)
 
 	fseek(inputFile, 6, SEEK_SET);
 
+	VoxelType value;
+
 	//This three-level for loop iterates over every voxel in the volume
 	for (int z = 0; z < mVolData->getWidth(); z++)
 	{
@@ -185,8 +187,6 @@ void Volume<VoxelType>::loadData(const char* filename)
 		{
 			for (int x = 0; x < mVolData->getDepth(); x++)
 			{
-				VoxelType value;
-
 				//Slow and inefficient reading one voxel at a time!
 				size_t elementsRead = fread(&value, sizeof(VoxelType), 1,inputFile);
 

@@ -9,8 +9,11 @@
 
 class MultiMaterial
 {
-	static const uint8_t BitsPerMaterial = 4;
-	static const uint8_t MaxMaterialValue = 15;
+	typedef uint32_t StorageType;
+	static const uint8_t BitsPerMaterial = 8;
+	static const uint8_t NoOfMaterials = 4;
+	static const uint8_t MaxMaterialValue = 255;
+	static const uint8_t Mask = 0xFF;
 
 public:
 	MultiMaterial()
@@ -86,19 +89,36 @@ public:
 
 	uint32_t getNoOfMaterials(void) const
 	{
-		return 4;
+		return NoOfMaterials;
 	}
 
 	uint8_t getMaterial(uint32_t id) const
 	{
-		assert(id < 4);
-		return mMaterials[id];
+		assert(id < getNoOfMaterials());
+		StorageType result = mMaterials >> (BitsPerMaterial * id);
+		result = result & Mask;
+		return result;
 	}
 
 	void setMaterial(uint32_t id, uint8_t value)
 	{
-		assert(id < 4);
-		mMaterials[id] = value;
+		assert(id < getNoOfMaterials());
+
+		//Clear to zeros
+		if(id == 0)
+			mMaterials &= 0xFFFFFF00;
+		if(id == 1)
+			mMaterials &= 0xFFFF00FF;
+		if(id == 2)
+			mMaterials &= 0xFF00FFFF;
+		if(id == 3)
+			mMaterials &= 0x00FFFFFF;
+
+		StorageType temp = value;
+		temp = temp << (BitsPerMaterial * id);
+		mMaterials |= temp;
+
+		//mMaterials[id] = value;
 	}
 
 	uint32_t getSumOfMaterials(void) const
@@ -112,7 +132,8 @@ public:
 	}
 
 public:
-	uint8_t mMaterials[4];
+	//uint8_t mMaterials[NoOfMaterials];
+	StorageType mMaterials;
 };
 
 MultiMaterial operator+(const MultiMaterial& lhs, const MultiMaterial& rhs) throw();
