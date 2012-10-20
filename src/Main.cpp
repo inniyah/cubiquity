@@ -336,44 +336,15 @@ void MeshGame::createSphereAt(const gameplay::Vector3& centre, float radius, Mul
 				amountToAdd *= 255.0f;
 
 				amountToAdd *= (mTimeBetweenUpdates / 1000.0f);
-				amountToAdd *= 10.0f;
+				//amountToAdd *= 10.0f;
 
 				uint8_t uToAdd = static_cast<uint8_t>(amountToAdd);
 
 				if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
 				{
-					MultiMaterial originalMat = mVolume->getVoxelAt(x, y, z);
-					MultiMaterial afterAdding(originalMat);
-					//Vector4DUint8 vec = material.getMaterial();
-					float sum = originalMat.getSumOfMaterials();
-					afterAdding.setMaterial(0, min(originalMat.getMaterial(0) + uToAdd, 255));
-					float newSum = afterAdding.getSumOfMaterials();
-					float factor = sum / newSum;
-
-					MultiMaterial normalisedMat(afterAdding);
-					normalisedMat.setMaterial(0, static_cast<uint8_t>((static_cast<float>(afterAdding.getMaterial(0)) + 0.5f) * factor));
-					normalisedMat.setMaterial(1, static_cast<uint8_t>((static_cast<float>(afterAdding.getMaterial(1)) + 0.5f) * factor));
-					normalisedMat.setMaterial(2, static_cast<uint8_t>((static_cast<float>(afterAdding.getMaterial(2)) + 0.5f) * factor));
-					normalisedMat.setMaterial(3, static_cast<uint8_t>((static_cast<float>(afterAdding.getMaterial(3)) + 0.5f) * factor));
-					
-
-					//
-					/*if(material.getSumOfMaterials() != newMaterial.getSumOfMaterials())
-					{
-						cout << "SUM MISMATCH!" << endl;
-					}
-					else
-					{
-						cout << "Match" << endl;
-					}*/
-
-					//addToMaterial(0, uToAdd, material);
-
-					mVolume->setVoxelAt(x,y,z,normalisedMat);
-
-					uint32_t oldSumMat = afterAdding.getSumOfMaterials();
-					uint32_t newSumMat = normalisedMat.getSumOfMaterials();
-					assert(newSumMat == oldSumMat);
+					MultiMaterial originalMat = mVolume->getVoxelAt(x, y, z);	
+					addToMaterial(0, uToAdd, originalMat);
+					mVolume->setVoxelAt(x,y,z, originalMat);
 				}
 			}
 		}
@@ -383,33 +354,35 @@ void MeshGame::createSphereAt(const gameplay::Vector3& centre, float radius, Mul
 
 void MeshGame::addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial& material)
 {
-	uint8_t current = material.getMaterial(index);
-	if(current < material.getMaxMaterialValue())
+	uint32_t indexToRemoveFrom = 0; //FIXME - start somewhere random
+	uint32_t iterationWithNoRemovals = 0;
+	while(amountToAdd > 0)
 	{
-		material.setMaterial(index, current + amountToAdd);
-
-		uint8_t excess = amountToAdd;
-		bool someExcessRemoved = false;
-		uint32_t nextToShed = 0;
-		do
+		if(indexToRemoveFrom != index)
 		{
-			nextToShed++;
-			nextToShed %= material.getNoOfMaterials();
-
-			if(nextToShed == index)
+			if(material.getMaterial(indexToRemoveFrom) > 0)
 			{
-				continue;
+				material.setMaterial(index, material.getMaterial(index) + 1);
+				material.setMaterial(indexToRemoveFrom, material.getMaterial(indexToRemoveFrom) - 1);
+				amountToAdd--;
+				iterationWithNoRemovals = 0;
 			}
-
-			uint8_t val = material.getMaterial(nextToShed);
-			if(val > 0)
+			else
 			{
-				material.setMaterial(nextToShed, val - 1);
-				someExcessRemoved = true;
+				iterationWithNoRemovals++;
 			}
-			
+		}
+		else
+		{
+			iterationWithNoRemovals++;
+		}
 
-		}while((excess > 0) && (someExcessRemoved));
+		if(iterationWithNoRemovals == material.getNoOfMaterials())
+		{
+			break;
+		}
+
+		indexToRemoveFrom++;
+		indexToRemoveFrom %= material.getNoOfMaterials();
 	}
-
 }
