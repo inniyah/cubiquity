@@ -29,6 +29,8 @@ public:
 
 	void createSphereAt(const gameplay::Vector3& centre, float radius, MultiMaterial value);
 
+	void addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial& material);
+
 protected:
     void initialize();
     void finalize();
