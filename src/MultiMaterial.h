@@ -92,33 +92,32 @@ public:
 		return NoOfMaterials;
 	}
 
-	uint8_t getMaterial(uint32_t id) const
+	uint8_t getMaterial(uint32_t index) const
 	{
-		assert(id < getNoOfMaterials());
-		StorageType result = mMaterials >> (BitsPerMaterial * id);
+		assert(index < getNoOfMaterials());
+		StorageType result = mMaterials >> (BitsPerMaterial * index);
 		result = result & Mask;
 		return result;
 	}
 
-	void setMaterial(uint32_t id, uint8_t value)
+	void setMaterial(uint32_t index, uint8_t value)
 	{
-		assert(id < getNoOfMaterials());
+		assert(index < getNoOfMaterials());
 
-		//Clear to zeros
-		if(id == 0)
-			mMaterials &= 0xFFFFFF00;
-		if(id == 1)
-			mMaterials &= 0xFFFF00FF;
-		if(id == 2)
-			mMaterials &= 0xFF00FFFF;
-		if(id == 3)
-			mMaterials &= 0x00FFFFFF;
+		// The bits we want to set first get cleared to zeros.
+		// To do this we create a mask which is all '1' except
+		// for the bits we wish to clear (which are '0').
+		uint32_t mask = 0x000000FF;
+		mask  = mask << (BitsPerMaterial * index);
+		mask  = ~mask;
 
+		// Clear the bits which we're about to set.
+		mMaterials &= mask;
+
+		//OR with the value to set the bits
 		StorageType temp = value;
-		temp = temp << (BitsPerMaterial * id);
+		temp = temp << (BitsPerMaterial * index);
 		mMaterials |= temp;
-
-		//mMaterials[id] = value;
 	}
 
 	uint32_t getSumOfMaterials(void) const
