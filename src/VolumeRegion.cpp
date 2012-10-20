@@ -60,6 +60,7 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
     mesh->setPrimitiveType(Mesh::TRIANGLES);
     mesh->setVertexData(vertexData, 0, polyVoxMesh.getVertices().size());
 	mesh->setBoundingBox(BoundingBox(Vector3(0,0,0), Vector3(16, 16, 16)));
+	delete[] vertexData;
 
 	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
 	const std::vector<unsigned int>& vecIndices = polyVoxMesh.getIndices();
@@ -72,6 +73,7 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
     SAFE_RELEASE(mesh);
 
 	mNode->setModel(model);
+	SAFE_RELEASE(model);
 }
 
 void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<MultiMaterial> >& polyVoxMesh)
@@ -126,6 +128,7 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
     mesh->setPrimitiveType(Mesh::TRIANGLES);
     mesh->setVertexData(vertexData, 0, polyVoxMesh.getVertices().size());
 	mesh->setBoundingBox(BoundingBox(Vector3(0,0,0), Vector3(16, 16, 16)));
+	delete[] vertexData;
 
 	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
 	const std::vector<unsigned int>& vecIndices = polyVoxMesh.getIndices();
@@ -138,6 +141,7 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
     SAFE_RELEASE(mesh);
 
 	mNode->setModel(model);
+	SAFE_RELEASE(model);
 }
 
 void VolumeRegion::setMaterial(const char* material)
