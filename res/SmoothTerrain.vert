@@ -9,7 +9,7 @@ uniform mat4 u_viewProjectionMatrix;  // Matrix to transform a position to clip 
 
 //Outputs
 varying vec4 v_worldSpacePosition;
-varying vec4 v_normalAndMaterial;
+varying vec3 v_normal;
 varying vec4 v_texCoord0;
 
 void main()
@@ -17,8 +17,7 @@ void main()
     //Vertex position
     vec4 modelSpacePosition = vec4(a_position.xyz, 1.0);
     
-    v_normalAndMaterial.xyz = a_normal;
-    v_normalAndMaterial.w = a_position.w;
+    v_normal.xyz = a_normal;
     
     v_texCoord0 = a_texCoord0;
     

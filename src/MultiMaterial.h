@@ -87,12 +87,12 @@ public:
 		return *this;
 	}
 
-	uint32_t getNoOfMaterials(void) const
+	static uint32_t getNoOfMaterials(void)
 	{
 		return NoOfMaterials;
 	}
 
-	uint8_t getMaxMaterialValue(void)
+	static uint8_t getMaxMaterialValue(void)
 	{
 		return MaxMaterialValue;
 	}

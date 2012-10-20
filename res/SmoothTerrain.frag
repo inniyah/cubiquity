@@ -10,7 +10,7 @@ uniform sampler2D u_texture1;
 uniform sampler2D u_texture2;
 
 varying vec4 v_worldSpacePosition;
-varying vec4 v_normalAndMaterial;
+varying vec3 v_normal;
 varying vec4 v_texCoord0;
 
 vec4 textureTriplanar(sampler2D texture, vec3 position, vec3 normal, float scale)
@@ -26,10 +26,9 @@ void main()
 {	
     // Normalize the vectors.
     vec3 lightDirection = normalize(u_lightDirection);
-    vec3 normalVector = v_normalAndMaterial.xyz;   
+    vec3 normalVector = v_normal;   
     
     vec4 texCoord0 = v_texCoord0;
-    texCoord0 = normalize(texCoord0);
     
     // Base color
     vec4 baseColor = vec4(0.0,0.0,0.0,1.0);

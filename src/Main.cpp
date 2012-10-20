@@ -377,12 +377,12 @@ void MeshGame::addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial&
 			iterationWithNoRemovals++;
 		}
 
-		if(iterationWithNoRemovals == material.getNoOfMaterials())
+		if(iterationWithNoRemovals == MultiMaterial::getNoOfMaterials())
 		{
 			break;
 		}
 
 		indexToRemoveFrom++;
-		indexToRemoveFrom %= material.getNoOfMaterials();
+		indexToRemoveFrom %= MultiMaterial::getNoOfMaterials();
 	}
 }
