@@ -134,7 +134,8 @@ void MeshGame::update(float elapsedTime)
 	{
 		MultiMaterial4 material;
 		material.setMaterial(0, 255);
-		createSphereAt(mSphereNode->getTranslation(), 5, material);
+		//createSphereAt(mSphereNode->getTranslation(), 5, material);
+		smoothAt(mSphereNode->getTranslation(), 10);
 	}
 #endif
 
@@ -379,8 +380,53 @@ void MeshGame::smoothAt(const gameplay::Vector3& centre, float radius)
 
 	Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
 	RawVolume<MultiMaterial4> tempVolume(region);
-	VolumeResampler< SimpleVolume<MultiMaterial4>, RawVolume<MultiMaterial4> > resampler(mVolume->mVolData, region, &tempVolume, region);
+	//VolumeResampler< SimpleVolume<MultiMaterial4>, RawVolume<MultiMaterial4> > resampler(mVolume->mVolData, region, &tempVolume, region);
+	LowPassFilter< SimpleVolume<MultiMaterial4>, RawVolume<MultiMaterial4>, MultiMaterial16> lowPassFilter(mVolume->mVolData, region, &tempVolume, region, 3);
+	lowPassFilter.execute();
 
+	//LowPassFilter< RawVolume<MultiMaterial4>, SimpleVolume<MultiMaterial4>, MultiMaterial16> lowPassFilter2(&tempVolume, region, mVolume->mVolData, region, 3);
+	//lowPassFilter2.execute();
+
+	for(int z = firstZ; z <= lastZ; ++z)
+	{
+		for(int y = firstY; y <= lastY; ++y)
+		{
+			for(int x = firstX; x <= lastX; ++x)
+			{
+				float amountToAdd = (centre - Vector3(x,y,z)).length() / radius;
+				amountToAdd = max(amountToAdd, 0.0f);
+				amountToAdd = min(amountToAdd, 1.0f);
+				amountToAdd = 1.0f - amountToAdd;
+
+				MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);
+				MultiMaterial4 smoothedMat = tempVolume.getVoxelAt(x, y, z);
+
+				//FIXME - expose linear interpolation as well as trilinear interpolation from PolyVox?
+				float orig0 = static_cast<float>(originalMat.getMaterial(0));
+				float orig1 = static_cast<float>(originalMat.getMaterial(1));
+				float orig2 = static_cast<float>(originalMat.getMaterial(2));
+				float orig3 = static_cast<float>(originalMat.getMaterial(3));
+
+				float smooth0 = static_cast<float>(smoothedMat.getMaterial(0));
+				float smooth1 = static_cast<float>(smoothedMat.getMaterial(1));
+				float smooth2 = static_cast<float>(smoothedMat.getMaterial(2));
+				float smooth3 = static_cast<float>(smoothedMat.getMaterial(3));
+
+				float interp0 = (smooth0 - orig0) * amountToAdd + orig0;
+				float interp1 = (smooth1 - orig1) * amountToAdd + orig1;
+				float interp2 = (smooth2 - orig2) * amountToAdd + orig2;
+				float interp3 = (smooth3 - orig3) * amountToAdd + orig3;
+
+				MultiMaterial4 interpMat;
+				interpMat.setMaterial(0, static_cast<uint32_t>(interp0));
+				interpMat.setMaterial(1, static_cast<uint32_t>(interp1));
+				interpMat.setMaterial(2, static_cast<uint32_t>(interp2));
+				interpMat.setMaterial(3, static_cast<uint32_t>(interp3));
+
+				mVolume->setVoxelAt(x,y,z, interpMat);
+			}
+		}
+	}
 	
 #endif
 }

@@ -11,15 +11,39 @@
 template <typename StorageType, uint32_t BitsPerMaterial, uint32_t NoOfMaterials>
 class MultiMaterial
 {
-	//static const uint8_t BitsPerMaterial = 8;
-	//static const uint8_t NoOfMaterials = 4;
-
 public:
 	MultiMaterial()
 	{
 		for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
 		{
 			setMaterial(ct, 0);
+		}
+	}
+
+	MultiMaterial(uint32_t value)
+	{
+		for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
+		{
+			setMaterial(ct, value);
+		}
+	}
+
+	//FIXME - These next two functions should just be one function templatised on cast type.
+	MultiMaterial(const MultiMaterial<uint64_t, 16, 4>& value) throw()
+	{
+		for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
+		{
+			//m_tElements[ct] = static_cast<Type>(vector.getElement(ct));
+			setMaterial(ct, value.getMaterial(ct));
+		}
+	}
+
+	MultiMaterial(const MultiMaterial<uint32_t, 8, 4>& value) throw()
+	{
+		for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
+		{
+			//m_tElements[ct] = static_cast<Type>(vector.getElement(ct));
+			setMaterial(ct, value.getMaterial(ct));
 		}
 	}
 
@@ -47,7 +71,7 @@ public:
 			float temp = static_cast<float>(getMaterial(ct));
 			float rhsFloat = static_cast<float>(rhs.getMaterial(ct));
 			temp += rhsFloat;
-			setMaterial(ct, static_cast<uint8_t>(temp));
+			setMaterial(ct, static_cast<uint32_t>(temp));
 		}
 		return *this;
 	}
@@ -59,7 +83,7 @@ public:
 			float temp = static_cast<float>(getMaterial(ct));
 			float rhsFloat = static_cast<float>(rhs.getMaterial(ct));
 			temp -= rhsFloat;
-			setMaterial(ct, static_cast<uint8_t>(temp));
+			setMaterial(ct, static_cast<uint32_t>(temp));
 		}
 		return *this;
 	}
@@ -70,7 +94,7 @@ public:
 		{
 			float temp = static_cast<float>(getMaterial(ct));
 			temp *= rhs;
-			setMaterial(ct, static_cast<uint8_t>(temp));
+			setMaterial(ct, static_cast<uint32_t>(temp));
 		}
 		return *this;
 	}
@@ -81,7 +105,7 @@ public:
 		{
 			float temp = static_cast<float>(getMaterial(ct));
 			temp /= rhs;
-			setMaterial(ct, static_cast<uint8_t>(temp));
+			setMaterial(ct, static_cast<uint32_t>(temp));
 		}
 		return *this;
 	}
@@ -91,12 +115,12 @@ public:
 		return NoOfMaterials;
 	}
 
-	static uint8_t getMaxMaterialValue(void)
+	static uint32_t getMaxMaterialValue(void)
 	{
 		return (0x01 << BitsPerMaterial) - 1;
 	}
 
-	uint8_t getMaterial(uint32_t index) const
+	uint32_t getMaterial(uint32_t index) const
 	{
 		assert(index < getNoOfMaterials());
 
@@ -109,10 +133,10 @@ public:
 		mask = ~mask; // And invert
 		result = result & mask;
 
-		return static_cast<uint8_t>(result);
+		return static_cast<uint32_t>(result);
 	}
 
-	void setMaterial(uint32_t index, uint8_t value)
+	void setMaterial(uint32_t index, uint32_t value)
 	{
 		assert(index < getNoOfMaterials());
 
@@ -145,7 +169,6 @@ public:
 	}
 
 public:
-	//uint8_t mMaterials[NoOfMaterials];
 	StorageType mMaterials;
 };
 
@@ -182,6 +205,7 @@ MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials> operator/(const Multi
 }
 
 typedef MultiMaterial<uint32_t, 8, 4> MultiMaterial4;
+typedef MultiMaterial<uint64_t, 16, 4> MultiMaterial16;
 
 // We overload the trilinear interpolation for the MultiMaterial type because it does not have enough precision.
 // The overloaded version converts the values to floats and interpolates those before converting back.
