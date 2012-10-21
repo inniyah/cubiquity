@@ -8,11 +8,11 @@
 #include <cassert>
 #include <limits>
 
-template <typename StorageType>
+template <typename StorageType, uint32_t BitsPerMaterial, uint32_t NoOfMaterials>
 class MultiMaterial
 {
-	static const uint8_t BitsPerMaterial = 8;
-	static const uint8_t NoOfMaterials = 4;
+	//static const uint8_t BitsPerMaterial = 8;
+	//static const uint8_t NoOfMaterials = 4;
 
 public:
 	MultiMaterial()
@@ -149,39 +149,39 @@ public:
 	StorageType mMaterials;
 };
 
-template <typename StorageType>
-MultiMaterial<StorageType> operator+(const MultiMaterial<StorageType>& lhs, const MultiMaterial<StorageType>& rhs) throw()
+template <typename StorageType, uint32_t BitsPerMaterial, uint32_t NoOfMaterials>
+MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials> operator+(const MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials>& lhs, const MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials>& rhs) throw()
 {
-	MultiMaterial<StorageType> resultMat = lhs;
+	MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials> resultMat = lhs;
 	resultMat += rhs;
 	return resultMat;
 }
 
-template <typename StorageType>
-MultiMaterial<StorageType> operator-(const MultiMaterial<StorageType>& lhs, const MultiMaterial<StorageType>& rhs) throw()
+template <typename StorageType, uint32_t BitsPerMaterial, uint32_t NoOfMaterials>
+MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials> operator-(const MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials>& lhs, const MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials>& rhs) throw()
 {
-	MultiMaterial<StorageType> resultMat = lhs;
+	MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials> resultMat = lhs;
 	resultMat -= rhs;
 	return resultMat;
 }
 
-template <typename StorageType>
-MultiMaterial<StorageType> operator*(const MultiMaterial<StorageType>& lhs, float rhs) throw()
+template <typename StorageType, uint32_t BitsPerMaterial, uint32_t NoOfMaterials>
+MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials> operator*(const MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials>& lhs, float rhs) throw()
 {
-	MultiMaterial<StorageType> resultMat = lhs;
+	MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials> resultMat = lhs;
 	resultMat *= rhs;
 	return resultMat;
 }
 
-template <typename StorageType>
-MultiMaterial<StorageType> operator/(const MultiMaterial<StorageType>& lhs, float rhs) throw()
+template <typename StorageType, uint32_t BitsPerMaterial, uint32_t NoOfMaterials>
+MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials> operator/(const MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials>& lhs, float rhs) throw()
 {
-	MultiMaterial<StorageType> resultMat = lhs;
+	MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials> resultMat = lhs;
 	resultMat /= rhs;
 	return resultMat;
 }
 
-typedef MultiMaterial<uint32_t> MultiMaterial4;
+typedef MultiMaterial<uint32_t, 8, 4> MultiMaterial4;
 
 // We overload the trilinear interpolation for the MultiMaterial type because it does not have enough precision.
 // The overloaded version converts the values to floats and interpolates those before converting back.
