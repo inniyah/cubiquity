@@ -102,7 +102,7 @@ void MeshGame::initialize()
 #else
 	if(mVolume->getType() == VolumeTypes::SmoothTerrain)
 	{
-		mVolume->loadData("/sdcard/external_sd/level2MultiMaterial.vol");
+		mVolume->loadData("/sdcard/external_sd/level2MultiMaterial4Bit.vol");
 	}
 	else
 	{
