@@ -46,16 +46,16 @@ private:
 };
 
 template <>
-class GameplayMarchingCubesController< MultiMaterial >
+class GameplayMarchingCubesController< MultiMaterial4 >
 {
 public:
 	typedef uint8_t DensityType;
-	typedef MultiMaterial MaterialType;
+	typedef MultiMaterial4 MaterialType;
 
 	GameplayMarchingCubesController(void)
 	{
 		// Default to a threshold value halfway between the min and max possible values.
-		m_tThreshold = MultiMaterial::getMaxMaterialValue() / 2;
+		m_tThreshold = MultiMaterial4::getMaxMaterialValue() / 2;
 	}
 
 	GameplayMarchingCubesController(DensityType tThreshold)
@@ -63,20 +63,20 @@ public:
 		m_tThreshold = tThreshold;
 	}
 
-	DensityType convertToDensity(MultiMaterial voxel)
+	DensityType convertToDensity(MultiMaterial4 voxel)
 	{
 		return voxel.getSumOfMaterials();
 	}
 
-	MaterialType convertToMaterial(MultiMaterial voxel)
+	MaterialType convertToMaterial(MultiMaterial4 voxel)
 	{
 		return voxel;
 	}
 
-	MaterialType blendMaterials(MaterialType a, MaterialType b, float weight)
+	MaterialType blendMaterials(MultiMaterial4 a, MaterialType b, float weight)
 	{
-		MultiMaterial result;
-		for(uint32_t ct = 0; ct < MultiMaterial::getNoOfMaterials(); ct++)
+		MultiMaterial4 result;
+		for(uint32_t ct = 0; ct < MultiMaterial4::getNoOfMaterials(); ct++)
 		{
 			float aFloat = static_cast<float>(a.getMaterial(ct));
 			float bFloat = static_cast<float>(b.getMaterial(ct));
@@ -101,7 +101,7 @@ class GameplayMarchingCubesController< Colour >
 {
 public:
 	typedef float DensityType;
-	typedef MultiMaterial MaterialType;
+	typedef MultiMaterial4 MaterialType;
 
 	float convertToDensity(Colour voxel)
 	{

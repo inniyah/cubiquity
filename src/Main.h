@@ -27,9 +27,10 @@ public:
     void touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int contactIndex);
 	bool mouseEvent(Mouse::MouseEvent evt, int x, int y, int wheelDelta);
 
-	void createSphereAt(const gameplay::Vector3& centre, float radius, MultiMaterial value);
+	void createSphereAt(const gameplay::Vector3& centre, float radius, MultiMaterial4 value);
+	void smoothAt(const gameplay::Vector3& centre, float radius);
 
-	void addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial& material);
+	void addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4& material);
 
 protected:
     void initialize();

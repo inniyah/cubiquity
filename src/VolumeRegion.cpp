@@ -76,7 +76,7 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 	SAFE_RELEASE(model);
 }
 
-void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<MultiMaterial> >& polyVoxMesh)
+void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<MultiMaterial4> >& polyVoxMesh)
 {
 	GP_ERROR("This function should never be called!"); //See note in header
 }
@@ -86,10 +86,10 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::Positi
 	GP_ERROR("This function should never be called!"); //See note in header
 }
 
-void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial >::MaterialType> >& polyVoxMesh)
+void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& polyVoxMesh)
 {
 	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
-	const std::vector<PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial >::MaterialType> >& vecVertices = polyVoxMesh.getVertices();
+	const std::vector<PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& vecVertices = polyVoxMesh.getVertices();
 	const float* pVerticesConst = reinterpret_cast<const float*>(&vecVertices[0]);
 	float* pVertices = const_cast<float*>(pVerticesConst);
 
@@ -110,10 +110,10 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 		*ptr = vecVertices[i].getPosition().getZ(); ptr++;
 		*ptr = 1.0;  ptr++;
 
-		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial(0)) / static_cast<float>(MultiMaterial::getMaxMaterialValue()); ptr++;
-		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial(1)) / static_cast<float>(MultiMaterial::getMaxMaterialValue()); ptr++;
-		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial(2)) / static_cast<float>(MultiMaterial::getMaxMaterialValue()); ptr++;
-		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial(3)) / static_cast<float>(MultiMaterial::getMaxMaterialValue()); ptr++;
+		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial(0)) / static_cast<float>(MultiMaterial4::getMaxMaterialValue()); ptr++;
+		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial(1)) / static_cast<float>(MultiMaterial4::getMaxMaterialValue()); ptr++;
+		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial(2)) / static_cast<float>(MultiMaterial4::getMaxMaterialValue()); ptr++;
+		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial(3)) / static_cast<float>(MultiMaterial4::getMaxMaterialValue()); ptr++;
 		
 		*ptr = vecVertices[i].getNormal().getX(); ptr++;
 		*ptr = vecVertices[i].getNormal().getY(); ptr++;

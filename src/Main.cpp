@@ -4,8 +4,11 @@
 #include "SmoothTerrainVolume.h"
 
 #include "PolyVoxCore/Material.h"
+#include "PolyVoxCore/RawVolume.h"
 #include "PolyVoxCore/SimpleVolume.h"
 #include "PolyVoxCore/CubicSurfaceExtractor.h"
+#include "PolyVoxCore/VolumeResampler.h"
+#include "PolyVoxCore/LowPassFilter.h"
 
 #include <algorithm>
 
@@ -93,7 +96,7 @@ void MeshGame::initialize()
 #ifdef WIN32
 	if(mVolume->getType() == VolumeTypes::SmoothTerrain)
 	{
-		mVolume->loadData("res/level2MultiMaterial4Bit.vol");
+		mVolume->loadData("res/level2MultiMaterial8Bit.vol");
 	}
 	else
 	{
@@ -102,7 +105,7 @@ void MeshGame::initialize()
 #else
 	if(mVolume->getType() == VolumeTypes::SmoothTerrain)
 	{
-		mVolume->loadData("/sdcard/external_sd/level2MultiMaterial4Bit.vol");
+		mVolume->loadData("/sdcard/external_sd/level2MultiMaterial8Bit.vol");
 	}
 	else
 	{
@@ -129,7 +132,7 @@ void MeshGame::update(float elapsedTime)
 #ifdef TERRAIN_SMOOTH
 	if(mLeftMouseDown)
 	{
-		MultiMaterial material;
+		MultiMaterial4 material;
 		material.setMaterial(0, 255);
 		createSphereAt(mSphereNode->getTranslation(), 5, material);
 	}
@@ -301,7 +304,7 @@ void MeshGame::moveCamera(int x, int y)
 	mCameraElevationAngle = max(mCameraElevationAngle, MATH_DEG_TO_RAD(-5.0f)); //Value from voxeliens
 }
 
-void MeshGame::createSphereAt(const gameplay::Vector3& centre, float radius, MultiMaterial value)
+void MeshGame::createSphereAt(const gameplay::Vector3& centre, float radius, MultiMaterial4 value)
 {
 #ifdef TERRAIN_SMOOTH
 	int firstX = static_cast<int>(std::floor(centre.x - radius));
@@ -342,7 +345,7 @@ void MeshGame::createSphereAt(const gameplay::Vector3& centre, float radius, Mul
 
 				if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
 				{
-					MultiMaterial originalMat = mVolume->getVoxelAt(x, y, z);	
+					MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);	
 					addToMaterial(0, uToAdd, originalMat);
 					mVolume->setVoxelAt(x,y,z, originalMat);
 				}
@@ -352,7 +355,37 @@ void MeshGame::createSphereAt(const gameplay::Vector3& centre, float radius, Mul
 #endif
 }
 
-void MeshGame::addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial& material)
+void MeshGame::smoothAt(const gameplay::Vector3& centre, float radius)
+{
+#ifdef TERRAIN_SMOOTH
+	int firstX = static_cast<int>(std::floor(centre.x - radius));
+	int firstY = static_cast<int>(std::floor(centre.y - radius));
+	int firstZ = static_cast<int>(std::floor(centre.z - radius));
+
+	int lastX = static_cast<int>(std::ceil(centre.x + radius));
+	int lastY = static_cast<int>(std::ceil(centre.y + radius));
+	int lastZ = static_cast<int>(std::ceil(centre.z + radius));
+
+	float radiusSquared = radius * radius;
+
+	//Check bounds.
+	firstX = std::max(firstX,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getX());
+	firstY = std::max(firstY,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getY());
+	firstZ = std::max(firstZ,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getZ());
+
+	lastX = std::min(lastX,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getX());
+	lastY = std::min(lastY,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getY());
+	lastZ = std::min(lastZ,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getZ());
+
+	Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
+	RawVolume<MultiMaterial4> tempVolume(region);
+	VolumeResampler< SimpleVolume<MultiMaterial4>, RawVolume<MultiMaterial4> > resampler(mVolume->mVolData, region, &tempVolume, region);
+
+	
+#endif
+}
+
+void MeshGame::addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4& material)
 {
 	uint32_t indexToRemoveFrom = 0; //FIXME - start somewhere random
 	uint32_t iterationWithNoRemovals = 0;
@@ -377,12 +410,12 @@ void MeshGame::addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial&
 			iterationWithNoRemovals++;
 		}
 
-		if(iterationWithNoRemovals == MultiMaterial::getNoOfMaterials())
+		if(iterationWithNoRemovals == MultiMaterial4::getNoOfMaterials())
 		{
 			break;
 		}
 
 		indexToRemoveFrom++;
-		indexToRemoveFrom %= MultiMaterial::getNoOfMaterials();
+		indexToRemoveFrom %= MultiMaterial4::getNoOfMaterials();
 	}
 }

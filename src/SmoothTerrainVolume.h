@@ -6,7 +6,7 @@
 
 #include "PolyVoxCore/MaterialDensityPair.h"
 
-void copyVolume(const SimpleVolume<MultiMaterial>* src, SimpleVolume<MultiMaterial>* dst)
+void copyVolume(const SimpleVolume<MultiMaterial4>* src, SimpleVolume<MultiMaterial4>* dst)
 {
 	Region reg = src->getEnclosingRegion();
 	int minX = reg.getLowerCorner().getX();
@@ -47,7 +47,7 @@ void copyVolume(const SimpleVolume<MultiMaterial>* src, SimpleVolume<MultiMateri
 	}
 }
 
-class SmoothTerrainVolume : public Volume<MultiMaterial>
+class SmoothTerrainVolume : public Volume<MultiMaterial4>
 {
 public:
 	static SmoothTerrainVolume* create(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)
@@ -58,7 +58,7 @@ public:
 
 protected:
 	SmoothTerrainVolume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)
-		:Volume<MultiMaterial>(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth) {}
+		:Volume<MultiMaterial4>(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth) {}
 };
 
 #endif //SMOOTHTERRAINVOLUME_H_

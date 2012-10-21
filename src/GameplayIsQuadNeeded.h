@@ -41,10 +41,10 @@ public:
 
 // We never use the cubic surface extractor with MultiMaterial so this is just a dummy specialisation.
 template<>
-class GameplayIsQuadNeeded< MultiMaterial >
+class GameplayIsQuadNeeded< MultiMaterial4 >
 {
 public:
-	bool operator()(MultiMaterial back, MultiMaterial front, MultiMaterial& materialToUse)
+	bool operator()(MultiMaterial4 back, MultiMaterial4 front, MultiMaterial4& materialToUse)
 	{
 		assert(false);
 		return false;

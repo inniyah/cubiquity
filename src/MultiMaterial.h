@@ -8,12 +8,11 @@
 #include <cassert>
 #include <limits>
 
+template <typename StorageType>
 class MultiMaterial
 {
-	typedef uint32_t StorageType;
-	static const uint8_t BitsPerMaterial = 4;
-	static const uint8_t NoOfMaterials = 8;
-	static const uint8_t MaxMaterialValue = 15;
+	static const uint8_t BitsPerMaterial = 8;
+	static const uint8_t NoOfMaterials = 4;
 
 public:
 	MultiMaterial()
@@ -94,7 +93,7 @@ public:
 
 	static uint8_t getMaxMaterialValue(void)
 	{
-		return MaxMaterialValue;
+		return (0x01 << BitsPerMaterial) - 1;
 	}
 
 	uint8_t getMaterial(uint32_t index) const
@@ -150,20 +149,49 @@ public:
 	StorageType mMaterials;
 };
 
-MultiMaterial operator+(const MultiMaterial& lhs, const MultiMaterial& rhs) throw();
+template <typename StorageType>
+MultiMaterial<StorageType> operator+(const MultiMaterial<StorageType>& lhs, const MultiMaterial<StorageType>& rhs) throw()
+{
+	MultiMaterial<StorageType> resultMat = lhs;
+	resultMat += rhs;
+	return resultMat;
+}
 
-MultiMaterial operator-(const MultiMaterial& lhs, const MultiMaterial& rhs) throw();
+template <typename StorageType>
+MultiMaterial<StorageType> operator-(const MultiMaterial<StorageType>& lhs, const MultiMaterial<StorageType>& rhs) throw()
+{
+	MultiMaterial<StorageType> resultMat = lhs;
+	resultMat -= rhs;
+	return resultMat;
+}
 
-MultiMaterial operator*(const MultiMaterial& lhs, float rhs) throw();
+template <typename StorageType>
+MultiMaterial<StorageType> operator*(const MultiMaterial<StorageType>& lhs, float rhs) throw()
+{
+	MultiMaterial<StorageType> resultMat = lhs;
+	resultMat *= rhs;
+	return resultMat;
+}
 
-MultiMaterial operator/(const MultiMaterial& lhs, float rhs) throw();
+template <typename StorageType>
+MultiMaterial<StorageType> operator/(const MultiMaterial<StorageType>& lhs, float rhs) throw()
+{
+	MultiMaterial<StorageType> resultMat = lhs;
+	resultMat /= rhs;
+	return resultMat;
+}
+
+typedef MultiMaterial<uint32_t> MultiMaterial4;
 
 // We overload the trilinear interpolation for the MultiMaterial type because it does not have enough precision.
 // The overloaded version converts the values to floats and interpolates those before converting back.
 // See also http://www.gotw.ca/publications/mill17.htm - Why Not Specialize Function Templates?
-MultiMaterial trilinearlyInterpolate(
-const MultiMaterial& v000,const MultiMaterial& v100,const MultiMaterial& v010,const MultiMaterial& v110,
-const MultiMaterial& v001,const MultiMaterial& v101,const MultiMaterial& v011,const MultiMaterial& v111,
-const float x, const float y, const float z);
+namespace PolyVox
+{
+	MultiMaterial4 trilinearlyInterpolate(
+		const MultiMaterial4& v000,const MultiMaterial4& v100,const MultiMaterial4& v010,const MultiMaterial4& v110,
+		const MultiMaterial4& v001,const MultiMaterial4& v101,const MultiMaterial4& v011,const MultiMaterial4& v111,
+		const float x, const float y, const float z);
+}
 
 #endif //__MultiMaterial_H__
