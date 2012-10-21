@@ -34,7 +34,7 @@ public:
 	bool operator()(Vector3DFloat pos, const MultiMaterial& voxel)
 	{
 		mLastPos = pos;
-		return voxel.getSumOfMaterials() <= 127;
+		return voxel.getSumOfMaterials() <= MultiMaterial::getMaxMaterialValue() / 2;
 	}
 
 	Vector3DFloat mLastPos;

@@ -11,9 +11,9 @@
 class MultiMaterial
 {
 	typedef uint32_t StorageType;
-	static const uint8_t BitsPerMaterial = 8;
-	static const uint8_t NoOfMaterials = 4;
-	static const uint8_t MaxMaterialValue = 255;
+	static const uint8_t BitsPerMaterial = 4;
+	static const uint8_t NoOfMaterials = 8;
+	static const uint8_t MaxMaterialValue = 15;
 
 public:
 	MultiMaterial()

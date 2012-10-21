@@ -55,7 +55,7 @@ public:
 	GameplayMarchingCubesController(void)
 	{
 		// Default to a threshold value halfway between the min and max possible values.
-		m_tThreshold = 127;
+		m_tThreshold = MultiMaterial::getMaxMaterialValue() / 2;
 	}
 
 	GameplayMarchingCubesController(DensityType tThreshold)

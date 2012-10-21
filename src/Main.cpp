@@ -93,7 +93,7 @@ void MeshGame::initialize()
 #ifdef WIN32
 	if(mVolume->getType() == VolumeTypes::SmoothTerrain)
 	{
-		mVolume->loadData("res/level2MultiMaterial.vol");
+		mVolume->loadData("res/level2MultiMaterial4Bit.vol");
 	}
 	else
 	{
