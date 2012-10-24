@@ -42,9 +42,31 @@ public:
 	{
 		for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
 		{
-			//m_tElements[ct] = static_cast<Type>(vector.getElement(ct));
 			setMaterial(ct, value.getMaterial(ct));
 		}
+	}
+
+	// This function lets us convert a Vector of floats into a MultiMaterial. 
+	// This is useful for performing certain operations with more precision.
+	MultiMaterial(const PolyVox::Vector<NoOfMaterials, float>& value) throw()
+	{
+		for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
+		{
+			setMaterial(ct, static_cast<uint32_t>(value.getElement(ct) + 0.5f));
+		}
+	}
+
+	// This function lets us convert a Vector of floats into a MultiMaterial. 
+	// This is useful for performing certain operations with more precision.
+	operator PolyVox::Vector<NoOfMaterials, float>()
+	{
+		PolyVox::Vector<NoOfMaterials, float> result;
+		for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
+		{
+			result.setElement(ct, static_cast<float>(getMaterial(ct)));
+		}
+
+		return result;
 	}
 
 	bool operator==(const MultiMaterial& rhs) const throw()

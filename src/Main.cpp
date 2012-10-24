@@ -342,7 +342,7 @@ void MeshGame::createSphereAt(const gameplay::Vector3& centre, float radius, Mul
 				amountToAdd *= (mTimeBetweenUpdates / 1000.0f);
 				//amountToAdd *= 10.0f;
 
-				uint8_t uToAdd = static_cast<uint8_t>(amountToAdd);
+				uint8_t uToAdd = static_cast<uint8_t>(amountToAdd + 0.5f);
 
 				if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
 				{
@@ -380,8 +380,9 @@ void MeshGame::smoothAt(const gameplay::Vector3& centre, float radius)
 
 	Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
 	RawVolume<MultiMaterial4> tempVolume(region);
-	//VolumeResampler< SimpleVolume<MultiMaterial4>, RawVolume<MultiMaterial4> > resampler(mVolume->mVolData, region, &tempVolume, region);
-	LowPassFilter< SimpleVolume<MultiMaterial4>, RawVolume<MultiMaterial4>, MultiMaterial16> lowPassFilter(mVolume->mVolData, region, &tempVolume, region, 3);
+	
+	//We might not need to do this at sloat precision, it should be tested again.
+	LowPassFilter< SimpleVolume<MultiMaterial4>, RawVolume<MultiMaterial4>, Vector<4, float> > lowPassFilter(mVolume->mVolData, region, &tempVolume, region, 3);
 	lowPassFilter.execute();
 
 	//LowPassFilter< RawVolume<MultiMaterial4>, SimpleVolume<MultiMaterial4>, MultiMaterial16> lowPassFilter2(&tempVolume, region, mVolume->mVolData, region, 3);
@@ -418,10 +419,12 @@ void MeshGame::smoothAt(const gameplay::Vector3& centre, float radius)
 				float interp3 = (smooth3 - orig3) * amountToAdd + orig3;
 
 				MultiMaterial4 interpMat;
-				interpMat.setMaterial(0, static_cast<uint32_t>(interp0));
-				interpMat.setMaterial(1, static_cast<uint32_t>(interp1));
-				interpMat.setMaterial(2, static_cast<uint32_t>(interp2));
-				interpMat.setMaterial(3, static_cast<uint32_t>(interp3));
+				// In theory we should add 0.5f before casting to round
+				// properly, but this seems to cause material to grow too much.
+				interpMat.setMaterial(0, static_cast<uint32_t>(interp0 + 0.25f));
+				interpMat.setMaterial(1, static_cast<uint32_t>(interp1 + 0.25f));
+				interpMat.setMaterial(2, static_cast<uint32_t>(interp2 + 0.25f));
+				interpMat.setMaterial(3, static_cast<uint32_t>(interp3 + 0.25f));
 
 				mVolume->setVoxelAt(x,y,z, interpMat);
 			}

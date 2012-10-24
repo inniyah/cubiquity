@@ -63,6 +63,8 @@ namespace PolyVox
     {
     public:
         ///Constructor.
+        Vector(Type x) throw();
+        ///Constructor.
         Vector(Type x, Type y) throw();
 		///Constructor.
 		Vector(Type x, Type y, Type z) throw();

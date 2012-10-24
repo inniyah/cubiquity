@@ -27,6 +27,17 @@ namespace PolyVox
     /**
     Creates a Vector object and initialises it with given values.
     \param x x component to set.
+    */
+    template <uint32_t Size,typename Type>
+        Vector<Size,Type>::Vector(Type x) throw()
+    {
+		m_tElements[0] = x;
+
+    }
+
+    /**
+    Creates a Vector object and initialises it with given values.
+    \param x x component to set.
     \param y y component to set.
     */
     template <uint32_t Size,typename Type>
