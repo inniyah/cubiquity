@@ -52,7 +52,7 @@ void MeshGame::initialize()
     // Load font
     _font = Font::create("res/arial40.gpb");
 
-	_scene = Scene::createScene();
+	_scene = Scene::create();
 
 	// Load mesh/scene from file
     Bundle* bundle = Bundle::create("res/Icosphere3.gpb");

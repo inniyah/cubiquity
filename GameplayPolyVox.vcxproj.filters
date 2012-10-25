@@ -7,6 +7,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+	<None Include="game.config" />
     <None Include="icon.png" />
     <None Include="bar-descriptor.xml" />
     <None Include="res\box.dae">
@@ -24,74 +25,14 @@
     <None Include="res\colored.vert">
       <Filter>res</Filter>
     </None>
-    <None Include="src\Volume.inl">
-      <Filter>src</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Volume.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\VolumeRegion.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ColouredCubesVolume.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SmoothTerrainVolume.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Colour.h">
-      <Filter>src</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ArraySizes.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GradientEstimators.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Log.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MarchingCubesTables.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MeshDecimator.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RandomUnitVectors.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RandomVectors.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Region.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Utility.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexTypes.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VoxelFilters.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VolumeRegion.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MultiMaterial.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Colour.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
