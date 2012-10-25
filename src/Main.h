@@ -71,6 +71,8 @@ private:
 
 	float mTimeBetweenUpdates;
 
+	Form* _form;
+
 #ifdef TERRAIN_SMOOTH
 	SmoothTerrainVolume* mVolume;
 #endif

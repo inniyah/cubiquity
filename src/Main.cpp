@@ -52,6 +52,10 @@ void MeshGame::initialize()
     // Load font
     _font = Font::create("res/arial40.gpb");
 
+	// Load the form for editing ParticleEmitters.
+    _form = Form::create("res/editor.form");
+    _form->setConsumeInputEvents(false);
+
 	_scene = Scene::create();
 
 	// Load mesh/scene from file
@@ -147,12 +151,18 @@ void MeshGame::update(float elapsedTime)
 	_cameraNode->translate(_cameraNode->getForwardVector() * -mCameraDistance);
 
 	mVolume->updateMeshes();
+
+	// Update UI.
+    _form->update(elapsedTime);
 }
 
 void MeshGame::render(float elapsedTime)
 {
     // Clear the color and depth buffers.
     clear(CLEAR_COLOR_DEPTH, Vector4::zero(), 1.0f, 0);
+
+    // Draw the UI.
+    _form->draw();
     
     // Visit all the nodes in the scene, drawing the models/mesh.
     _scene->visit(this, &MeshGame::drawScene);
