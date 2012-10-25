@@ -71,7 +71,11 @@ private:
 
 	float mTimeBetweenUpdates;
 
-	Form* _form;
+	Form* mForm;
+
+	RadioButton* mRotateButton;
+    RadioButton* mPaintButton;
+    RadioButton* mEditButton;
 
 #ifdef TERRAIN_SMOOTH
 	SmoothTerrainVolume* mVolume;

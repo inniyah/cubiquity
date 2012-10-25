@@ -4,7 +4,7 @@ form particleEditor
     autoWidth = true
     autoHeight = true
 
-    container presets
+    container mode
     {
         style = basic
         layout = LAYOUT_VERTICAL
@@ -15,37 +15,28 @@ form particleEditor
         {
             style = title
             size = 140, 30
-            text = Presets
+            text = Mode
         }
 
-        radioButton spiralFlame
+        radioButton RotateButton
         {
            style = iconNoBorder
-           text = Fire
-           group = presets
+           text = Rotate
+           group = mode
            size = 140, 40
            imageSize = 35, 35
            selected = true
         }
 
-        radioButton smoke : spiralFlame
+        radioButton PaintButton : RotateButton
         {
-            text = Smoke
+            text = Paint
             selected = false
         }
 
-        radioButton explosion : smoke
+        radioButton EditButton : PaintButton
         {
-            text = Explosion
-        }
-
-        button reset
-        {
-            style = buttonStyle
-            alignment = ALIGN_BOTTOM
-            autoWidth = true
-            height = 50
-            text = Reset
+            text = Edit
         }
     }
 

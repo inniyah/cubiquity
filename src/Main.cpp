@@ -53,8 +53,12 @@ void MeshGame::initialize()
     _font = Font::create("res/arial40.gpb");
 
 	// Load the form for editing ParticleEmitters.
-    _form = Form::create("res/editor.form");
-    _form->setConsumeInputEvents(false);
+    mForm = Form::create("res/editor.form");
+    mForm->setConsumeInputEvents(false);
+
+	mRotateButton = (RadioButton*)mForm->getControl("RotateButton");
+	mPaintButton = (RadioButton*)mForm->getControl("PaintButton");
+    mEditButton = (RadioButton*)mForm->getControl("EditButton");
 
 	_scene = Scene::create();
 
@@ -153,7 +157,7 @@ void MeshGame::update(float elapsedTime)
 	mVolume->updateMeshes();
 
 	// Update UI.
-    _form->update(elapsedTime);
+    mForm->update(elapsedTime);
 }
 
 void MeshGame::render(float elapsedTime)
@@ -162,7 +166,7 @@ void MeshGame::render(float elapsedTime)
     clear(CLEAR_COLOR_DEPTH, Vector4::zero(), 1.0f, 0);
 
     // Draw the UI.
-    _form->draw();
+    mForm->draw();
     
     // Visit all the nodes in the scene, drawing the models/mesh.
     _scene->visit(this, &MeshGame::drawScene);
@@ -201,26 +205,35 @@ void MeshGame::keyEvent(Keyboard::KeyEvent evt, int key)
 
 void MeshGame::touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int contactIndex)
 {
-	if(hasMouse())
+	/*if(hasMouse())
 	{
 		// Ignore touch event on platform which support a mouse,
 		// as these touch events seem to be duplicates of mouse events.
 		return;
-	}
+	}*/
 
     switch (evt)
     {
     case Touch::TOUCH_PRESS:
-		mLastX = x;
-		mLastY = y;
-		break;
+		{
+			mLastX = x;
+			mLastY = y;
+			break;
+		}
     case Touch::TOUCH_RELEASE:
-		mLastX = 0;
-		mLastY = 0;
-        break;
+		{
+			mLastX = 0;
+			mLastY = 0;
+			break;
+		}
     case Touch::TOUCH_MOVE:
-		moveCamera(x,y);
-		break;
+		{
+			if(mRotateButton->isSelected())
+			{
+				moveCamera(x,y);
+			}
+			break;
+		}
     default:
         break;
     };
@@ -228,7 +241,7 @@ void MeshGame::touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int cont
 
 bool MeshGame::mouseEvent(Mouse::MouseEvent evt, int x, int y, int wheelDelta)
 {
-	if(evt == Mouse::MOUSE_PRESS_RIGHT_BUTTON)
+	/*if(evt == Mouse::MOUSE_PRESS_RIGHT_BUTTON)
 	{
 		mLastX = x;
 		mLastY = y;
@@ -274,7 +287,7 @@ bool MeshGame::mouseEvent(Mouse::MouseEvent evt, int x, int y, int wheelDelta)
 
 	//Values copied from Voxeliens
 	mCameraDistance = min(mCameraDistance, 200.0f);
-	mCameraDistance = max(mCameraDistance, 91.0f); //sqrt(64*64+64*64) to stop camera clipping with volume
+	mCameraDistance = max(mCameraDistance, 91.0f); //sqrt(64*64+64*64) to stop camera clipping with volume*/
 
 	return false;
 }
