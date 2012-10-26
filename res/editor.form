@@ -96,14 +96,14 @@ form particleEditor
         size = 160, 50
         position = 0, 430
 
-        button zoomIn
+        button ZoomInButton
         {
             style = buttonStyle
             size = 80, 50
-            text = Zoom  In
+            text = Zoom In
         }
 
-        button zoomOut : zoomIn
+        button ZoomOutButton : ZoomInButton
         {
             position = 80, 0
             text = Zoom Out

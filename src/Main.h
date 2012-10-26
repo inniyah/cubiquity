@@ -18,7 +18,7 @@ class SmoothTerrainVolume;
 /**
  * Sample game for rendering a scene with a model/mesh.
  */
-class MeshGame: public Game
+class MeshGame: public Game, Control::Listener
 {
 public:
     MeshGame();
@@ -31,6 +31,8 @@ public:
 	void smoothAt(const gameplay::Vector3& centre, float radius);
 
 	void addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4& material);
+
+	void controlEvent(Control* control, EventType evt);
 
 protected:
     void initialize();
@@ -66,8 +68,8 @@ private:
 	float mCameraRotationAngle;
 	float mCameraDistance;
 
-	bool mLeftMouseDown;
-	bool mRightMouseDown;
+	bool mScreenPressed;
+	bool mSphereVisible;
 
 	float mTimeBetweenUpdates;
 
@@ -76,6 +78,9 @@ private:
 	RadioButton* mRotateButton;
     RadioButton* mPaintButton;
     RadioButton* mEditButton;
+
+	Button* mZoomInButton;
+	Button* mZoomOutButton;
 
 #ifdef TERRAIN_SMOOTH
 	SmoothTerrainVolume* mVolume;

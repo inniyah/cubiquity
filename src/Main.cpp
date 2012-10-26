@@ -39,7 +39,7 @@ void pointNodeAtTarget(Node* node, const Vector3& target, const Vector3& up = Ve
 MeshGame game;
 
 MeshGame::MeshGame()
-	: _font(NULL), mLastX(0), mLastY(0), mRightMouseDown(false), mLeftMouseDown(false), mTimeBetweenUpdates(0.0f)
+	: _font(NULL), mLastX(0), mLastY(0), mTimeBetweenUpdates(0.0f), mScreenPressed(false), mSphereVisible(false)
 {
 }
 
@@ -59,6 +59,12 @@ void MeshGame::initialize()
 	mRotateButton = (RadioButton*)mForm->getControl("RotateButton");
 	mPaintButton = (RadioButton*)mForm->getControl("PaintButton");
     mEditButton = (RadioButton*)mForm->getControl("EditButton");
+
+	mZoomInButton = (Button*)mForm->getControl("ZoomInButton");
+	mZoomOutButton = (Button*)mForm->getControl("ZoomOutButton");
+
+	mZoomInButton->addListener(this, Listener::PRESS);
+	mZoomOutButton->addListener(this, Listener::PRESS);
 
 	_scene = Scene::create();
 
@@ -138,12 +144,20 @@ void MeshGame::update(float elapsedTime)
 	mTimeBetweenUpdates = elapsedTime;
 
 #ifdef TERRAIN_SMOOTH
-	if(mLeftMouseDown)
+	if(mScreenPressed)
 	{
-		MultiMaterial4 material;
-		material.setMaterial(0, 255);
-		//createSphereAt(mSphereNode->getTranslation(), 5, material);
-		smoothAt(mSphereNode->getTranslation(), 10);
+		if(mPaintButton->isSelected())
+		{
+			MultiMaterial4 material;
+			material.setMaterial(0, 255);
+			//createSphereAt(mSphereNode->getTranslation(), 5, material);
+		}
+		if(mPaintButton->isSelected())
+		{
+			MultiMaterial4 material;
+			material.setMaterial(0, 255);
+			//smoothAt(mSphereNode->getTranslation(), 10);
+		}
 	}
 #endif
 
@@ -164,15 +178,42 @@ void MeshGame::render(float elapsedTime)
 {
     // Clear the color and depth buffers.
     clear(CLEAR_COLOR_DEPTH, Vector4::zero(), 1.0f, 0);
-
-    // Draw the UI.
-    mForm->draw();
     
     // Visit all the nodes in the scene, drawing the models/mesh.
     _scene->visit(this, &MeshGame::drawScene);
 
+	// Draw the UI.
+    mForm->draw();
+
     // Draw the fps
     drawFrameRate(_font, Vector4(0, 0.5f, 1, 1), 5, 1, getFrameRate());
+}
+
+void MeshGame::controlEvent(Control* control, EventType evt)
+{
+	switch(evt)
+    {
+		case Listener::PRESS:
+		{
+			//wheelDelta *= 10; //To match Voxeliens
+			int wheelDelta = 10;			
+
+			if (control == mZoomInButton)
+			{
+				// Pushing forward (positive wheelDelta) should reduce distance to world.
+				mCameraDistance -= wheelDelta;
+			}
+			else if (control == mZoomOutButton)
+			{
+				mCameraDistance += wheelDelta;
+			}
+
+			//Values copied from Voxeliens
+			mCameraDistance = min(mCameraDistance, 200.0f);
+			mCameraDistance = max(mCameraDistance, 91.0f); //sqrt(64*64+64*64) to stop camera clipping with volume
+			break;
+		}
+	}
 }
 
 void MeshGame::keyEvent(Keyboard::KeyEvent evt, int key)
@@ -205,12 +246,18 @@ void MeshGame::keyEvent(Keyboard::KeyEvent evt, int key)
 
 void MeshGame::touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int contactIndex)
 {
-	/*if(hasMouse())
+	Ray ray;
+	_cameraNode->getCamera()->pickRay(getViewport(), x, y, &ray);
+
+	Vector3 dir = ray.getDirection();
+	dir *= 200.0f;
+	ray.setDirection(dir);
+
+	Vector3 intersection;
+	if(mVolume->raycast(ray, 200.0f, intersection))
 	{
-		// Ignore touch event on platform which support a mouse,
-		// as these touch events seem to be duplicates of mouse events.
-		return;
-	}*/
+		mSphereNode->setTranslation(intersection);
+	}		
 
     switch (evt)
     {
@@ -218,12 +265,21 @@ void MeshGame::touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int cont
 		{
 			mLastX = x;
 			mLastY = y;
+			mScreenPressed = true;
+
+			if((mPaintButton->isSelected()) || (mEditButton->isSelected()))
+			{
+				mSphereVisible = true;
+			}
+
 			break;
 		}
     case Touch::TOUCH_RELEASE:
 		{
 			mLastX = 0;
 			mLastY = 0;
+			mScreenPressed = false;
+			mSphereVisible = false;
 			break;
 		}
     case Touch::TOUCH_MOVE:
@@ -294,6 +350,11 @@ bool MeshGame::mouseEvent(Mouse::MouseEvent evt, int x, int y, int wheelDelta)
 
 bool MeshGame::drawScene(Node* node)
 {
+	if((node == mSphereNode) && (mSphereVisible == false))
+	{
+		return true;
+	}
+
     Model* model = node->getModel();
     if (model)
 	{
