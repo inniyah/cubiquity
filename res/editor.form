@@ -76,7 +76,7 @@ form particleEditor
         {
             style = title
             size = 150, 30
-            text = Painting
+            text = Material
         }
         
         button Mat0Button
@@ -99,6 +99,26 @@ form particleEditor
         button Mat3Button : Mat2Button
         {
             text = 3
+        }
+        
+        label titleBrushSize
+        {
+            style = title
+            size = 150, 30
+            text = BrushSize
+        }
+        
+        slider BrushSizeSlider
+        {
+            style = noBorder
+            size = 150, 50
+            orientation = HORIZONTAL
+            min = 1
+            max = 10
+            value = 5
+            step = 1
+            text = Size Slider
+            consumeInputEvents = false
         }
     }
 }

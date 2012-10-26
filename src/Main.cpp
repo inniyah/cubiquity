@@ -39,7 +39,7 @@ void pointNodeAtTarget(Node* node, const Vector3& target, const Vector3& up = Ve
 MeshGame game;
 
 MeshGame::MeshGame()
-	: _font(NULL), mLastX(0), mLastY(0), mTimeBetweenUpdates(0.0f), mScreenPressed(false), mSphereVisible(false), mMaterialToPaintWith(0)
+	: _font(NULL), mLastX(0), mLastY(0), mTimeBetweenUpdates(0.0f), mScreenPressed(false), mSphereVisible(false), mMaterialToPaintWith(0), mSphereNode(0)
 {
 }
 
@@ -68,6 +68,8 @@ void MeshGame::initialize()
 	mMat2Button = (Button*)mForm->getControl("Mat2Button");
 	mMat3Button = (Button*)mForm->getControl("Mat3Button");
 
+	mBrushSizeSlider = (Slider*)mForm->getControl("BrushSizeSlider");
+
 	mZoomInButton->addListener(this, Listener::PRESS);
 	mZoomOutButton->addListener(this, Listener::PRESS);
 
@@ -75,6 +77,8 @@ void MeshGame::initialize()
 	mMat1Button->addListener(this, Listener::PRESS);
 	mMat2Button->addListener(this, Listener::PRESS);
 	mMat3Button->addListener(this, Listener::PRESS);
+
+	mBrushSizeSlider->addListener(this, Listener::VALUE_CHANGED);
 
 	_scene = Scene::create();
 
@@ -87,7 +91,8 @@ void MeshGame::initialize()
 	model->setMaterial("res/Icosphere3.material");
 	mSphereNode = Node::create();
 	mSphereNode->setModel(model);
-	mSphereNode->setScale(5, 5, 5);
+	float scale = mBrushSizeSlider->getValue();
+	mSphereNode->setScale(scale, scale, scale);
 	_scene->addNode(mSphereNode);
 
     // Find the light node
@@ -160,7 +165,7 @@ void MeshGame::update(float elapsedTime)
 		{
 			MultiMaterial4 material;
 			material.setMaterial(mMaterialToPaintWith, 255);
-			createSphereAt(mSphereNode->getTranslation(), 5, material);
+			createSphereAt(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), material);
 		}
 		if(mEditButton->isSelected())
 		{
@@ -242,6 +247,17 @@ void MeshGame::controlEvent(Control* control, EventType evt)
 			}
 
 			break;
+		}
+		case Listener::VALUE_CHANGED:
+		{
+			if(control == mBrushSizeSlider)
+			{
+				float scale = mBrushSizeSlider->getValue();
+				if(mSphereNode)
+				{
+					mSphereNode->setScale(scale, scale, scale);
+				}
+			}
 		}
 	}
 }

@@ -86,6 +86,8 @@ private:
 	Button* mMat2Button;
 	Button* mMat3Button;
 
+	Slider* mBrushSizeSlider;
+
 	uint32_t mMaterialToPaintWith;
 
 #ifdef TERRAIN_SMOOTH
