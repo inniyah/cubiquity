@@ -25,7 +25,6 @@ public:
     virtual ~MeshGame();
     void keyEvent(Keyboard::KeyEvent evt, int key);
     void touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int contactIndex);
-	bool mouseEvent(Mouse::MouseEvent evt, int x, int y, int wheelDelta);
 
 	void createSphereAt(const gameplay::Vector3& centre, float radius, MultiMaterial4 value);
 	void smoothAt(const gameplay::Vector3& centre, float radius);
@@ -81,6 +80,13 @@ private:
 
 	Button* mZoomInButton;
 	Button* mZoomOutButton;
+
+	Button* mMat0Button;
+	Button* mMat1Button;
+	Button* mMat2Button;
+	Button* mMat3Button;
+
+	uint32_t mMaterialToPaintWith;
 
 #ifdef TERRAIN_SMOOTH
 	SmoothTerrainVolume* mVolume;

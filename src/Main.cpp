@@ -39,7 +39,7 @@ void pointNodeAtTarget(Node* node, const Vector3& target, const Vector3& up = Ve
 MeshGame game;
 
 MeshGame::MeshGame()
-	: _font(NULL), mLastX(0), mLastY(0), mTimeBetweenUpdates(0.0f), mScreenPressed(false), mSphereVisible(false)
+	: _font(NULL), mLastX(0), mLastY(0), mTimeBetweenUpdates(0.0f), mScreenPressed(false), mSphereVisible(false), mMaterialToPaintWith(0)
 {
 }
 
@@ -63,8 +63,18 @@ void MeshGame::initialize()
 	mZoomInButton = (Button*)mForm->getControl("ZoomInButton");
 	mZoomOutButton = (Button*)mForm->getControl("ZoomOutButton");
 
+	mMat0Button = (Button*)mForm->getControl("Mat0Button");
+	mMat1Button = (Button*)mForm->getControl("Mat1Button");
+	mMat2Button = (Button*)mForm->getControl("Mat2Button");
+	mMat3Button = (Button*)mForm->getControl("Mat3Button");
+
 	mZoomInButton->addListener(this, Listener::PRESS);
 	mZoomOutButton->addListener(this, Listener::PRESS);
+
+	mMat0Button->addListener(this, Listener::PRESS);
+	mMat1Button->addListener(this, Listener::PRESS);
+	mMat2Button->addListener(this, Listener::PRESS);
+	mMat3Button->addListener(this, Listener::PRESS);
 
 	_scene = Scene::create();
 
@@ -149,14 +159,14 @@ void MeshGame::update(float elapsedTime)
 		if(mPaintButton->isSelected())
 		{
 			MultiMaterial4 material;
-			material.setMaterial(0, 255);
-			//createSphereAt(mSphereNode->getTranslation(), 5, material);
+			material.setMaterial(mMaterialToPaintWith, 255);
+			createSphereAt(mSphereNode->getTranslation(), 5, material);
 		}
-		if(mPaintButton->isSelected())
+		if(mEditButton->isSelected())
 		{
 			MultiMaterial4 material;
 			material.setMaterial(0, 255);
-			//smoothAt(mSphereNode->getTranslation(), 10);
+			smoothAt(mSphereNode->getTranslation(), 10);
 		}
 	}
 #endif
@@ -195,22 +205,42 @@ void MeshGame::controlEvent(Control* control, EventType evt)
     {
 		case Listener::PRESS:
 		{
-			//wheelDelta *= 10; //To match Voxeliens
-			int wheelDelta = 10;			
-
-			if (control == mZoomInButton)
+			if(control == mZoomInButton)
 			{
+				//wheelDelta *= 10; //To match Voxeliens
+				int wheelDelta = 10;
 				// Pushing forward (positive wheelDelta) should reduce distance to world.
 				mCameraDistance -= wheelDelta;
+				//Values copied from Voxeliens
+				mCameraDistance = min(mCameraDistance, 200.0f);
+				mCameraDistance = max(mCameraDistance, 91.0f); //sqrt(64*64+64*64) to stop camera clipping with volume
 			}
-			else if (control == mZoomOutButton)
+			else if(control == mZoomOutButton)
 			{
+				//wheelDelta *= 10; //To match Voxeliens
+				int wheelDelta = 10;
 				mCameraDistance += wheelDelta;
+				//Values copied from Voxeliens
+				mCameraDistance = min(mCameraDistance, 200.0f);
+				mCameraDistance = max(mCameraDistance, 91.0f); //sqrt(64*64+64*64) to stop camera clipping with volume
+			}
+			else if(control == mMat0Button)
+			{
+				mMaterialToPaintWith = 0;
+			}
+			else if(control == mMat1Button)
+			{
+				mMaterialToPaintWith = 1;
+			}
+			else if(control == mMat2Button)
+			{
+				mMaterialToPaintWith = 2;
+			}
+			else if(control == mMat3Button)
+			{
+				mMaterialToPaintWith = 3;
 			}
 
-			//Values copied from Voxeliens
-			mCameraDistance = min(mCameraDistance, 200.0f);
-			mCameraDistance = max(mCameraDistance, 91.0f); //sqrt(64*64+64*64) to stop camera clipping with volume
 			break;
 		}
 	}
@@ -293,59 +323,6 @@ void MeshGame::touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int cont
     default:
         break;
     };
-}
-
-bool MeshGame::mouseEvent(Mouse::MouseEvent evt, int x, int y, int wheelDelta)
-{
-	/*if(evt == Mouse::MOUSE_PRESS_RIGHT_BUTTON)
-	{
-		mLastX = x;
-		mLastY = y;
-		mRightMouseDown = true;
-	}
-	if(evt == Mouse::MOUSE_RELEASE_RIGHT_BUTTON)
-	{
-		mLastX = 0;
-		mLastY = 0;
-		mRightMouseDown = false;
-	}
-	if(evt == Mouse::MOUSE_PRESS_LEFT_BUTTON)
-	{
-		mLeftMouseDown = true;
-	}
-	if(evt == Mouse::MOUSE_RELEASE_LEFT_BUTTON)
-	{
-		mLeftMouseDown = false;
-	}	
-
-	if(mRightMouseDown)
-	{
-		moveCamera(x,y);
-	}
-
-	Ray ray;
-	_cameraNode->getCamera()->pickRay(getViewport(), x, y, &ray);
-
-	Vector3 dir = ray.getDirection();
-	dir *= 200.0f;
-	ray.setDirection(dir);
-
-	Vector3 intersection;
-	if(mVolume->raycast(ray, 200.0f, intersection))
-	{
-		mSphereNode->setTranslation(intersection);
-	}
-
-	wheelDelta *= 10; //To match Voxeliens
-
-	// Pushing forward (positive wheelDelta) should reduce distance to world.
-	mCameraDistance -= wheelDelta;
-
-	//Values copied from Voxeliens
-	mCameraDistance = min(mCameraDistance, 200.0f);
-	mCameraDistance = max(mCameraDistance, 91.0f); //sqrt(64*64+64*64) to stop camera clipping with volume*/
-
-	return false;
 }
 
 bool MeshGame::drawScene(Node* node)
@@ -431,7 +408,7 @@ void MeshGame::createSphereAt(const gameplay::Vector3& centre, float radius, Mul
 				if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
 				{
 					MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);	
-					addToMaterial(0, uToAdd, originalMat);
+					addToMaterial(mMaterialToPaintWith, uToAdd, originalMat);
 					mVolume->setVoxelAt(x,y,z, originalMat);
 				}
 			}
