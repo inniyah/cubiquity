@@ -87,6 +87,7 @@ private:
 	Button* mMat3Button;
 
 	Slider* mBrushSizeSlider;
+	Slider* mBrushIntensitySlider;
 
 	uint32_t mMaterialToPaintWith;
 

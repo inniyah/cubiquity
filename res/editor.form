@@ -117,7 +117,25 @@ form particleEditor
             max = 10
             value = 5
             step = 1
-            text = Size Slider
+            consumeInputEvents = false
+        }
+        
+        label titleBrushIntensity
+        {
+            style = title
+            size = 150, 30
+            text = BrushSize
+        }
+        
+        slider BrushIntensitySlider
+        {
+            style = noBorder
+            size = 150, 50
+            orientation = HORIZONTAL
+            min = 1
+            max = 10
+            value = 5
+            step = 1
             consumeInputEvents = false
         }
     }

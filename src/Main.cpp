@@ -69,6 +69,7 @@ void MeshGame::initialize()
 	mMat3Button = (Button*)mForm->getControl("Mat3Button");
 
 	mBrushSizeSlider = (Slider*)mForm->getControl("BrushSizeSlider");
+	mBrushIntensitySlider = (Slider*)mForm->getControl("BrushIntensitySlider");
 
 	mZoomInButton->addListener(this, Listener::PRESS);
 	mZoomOutButton->addListener(this, Listener::PRESS);
@@ -79,6 +80,7 @@ void MeshGame::initialize()
 	mMat3Button->addListener(this, Listener::PRESS);
 
 	mBrushSizeSlider->addListener(this, Listener::VALUE_CHANGED);
+	mBrushIntensitySlider->addListener(this, Listener::VALUE_CHANGED);
 
 	_scene = Scene::create();
 
@@ -417,7 +419,7 @@ void MeshGame::createSphereAt(const gameplay::Vector3& centre, float radius, Mul
 				amountToAdd *= 255.0f;
 
 				amountToAdd *= (mTimeBetweenUpdates / 1000.0f);
-				//amountToAdd *= 10.0f;
+				amountToAdd *= mBrushIntensitySlider->getValue();
 
 				uint8_t uToAdd = static_cast<uint8_t>(amountToAdd + 0.5f);
 
