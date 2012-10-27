@@ -12,7 +12,7 @@ material SmoothTerrain
             u_worldMatrix = WORLD_MATRIX
             u_viewProjectionMatrix = VIEW_PROJECTION_MATRIX
             
-            u_ambientColor = 0.3, 0.3, 0.3
+            u_ambientColor = 0.5, 0.5, 0.5
             
             // samplers
             sampler u_texture0
@@ -38,6 +38,16 @@ material SmoothTerrain
             sampler u_texture2
             {
                 path = res/Water.png
+                mipmap = true
+                wrapS = REPEAT
+                wrapT = REPEAT
+                minFilter = NEAREST_MIPMAP_LINEAR
+                magFilter = LINEAR
+            }
+            
+            sampler u_texture3
+            {
+                path = res/SandDiffuseMap.png
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT

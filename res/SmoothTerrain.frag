@@ -8,6 +8,7 @@ uniform vec3 u_lightDirection;       	        // Light direction
 uniform sampler2D u_texture0;
 uniform sampler2D u_texture1;
 uniform sampler2D u_texture2;
+uniform sampler2D u_texture3;
 
 varying vec4 v_worldSpacePosition;
 varying vec3 v_normal;
@@ -16,6 +17,10 @@ varying vec4 v_texCoord0;
 vec4 textureTriplanar(sampler2D texture, vec3 position, vec3 normal, float scale)
 {
     float invScale = 1.0 / scale;
+    
+    //Squaring a unit vector makes the components add to one.
+    normal = normal * normal;
+    
     vec4 xy = texture2D(texture, position.xy * invScale) * abs(normal.z);
     vec4 yz = texture2D(texture, position.yz * invScale) * abs(normal.x);
     vec4 zx = texture2D(texture, position.zx * invScale) * abs(normal.y);
@@ -35,6 +40,7 @@ void main()
     baseColor += texCoord0.x * textureTriplanar(u_texture0, v_worldSpacePosition.xyz, normalVector, 10.0);
     baseColor += texCoord0.y * textureTriplanar(u_texture1, v_worldSpacePosition.xyz, normalVector, 10.0);
     baseColor += texCoord0.z * textureTriplanar(u_texture2, v_worldSpacePosition.xyz, normalVector, 10.0);
+    baseColor += texCoord0.w * textureTriplanar(u_texture3, v_worldSpacePosition.xyz, normalVector, 10.0);
 
     // Ambient
     vec3 ambientColor = baseColor.rgb * u_ambientColor;
