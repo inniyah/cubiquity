@@ -69,7 +69,7 @@ void MeshGame::initialize()
 	mMat3Button = (Button*)mForm->getControl("Mat3Button");
 
 	mBrushSizeSlider = (Slider*)mForm->getControl("BrushSizeSlider");
-	mBrushIntensitySlider = (Slider*)mForm->getControl("BrushIntensitySlider");
+	mPaintIntensitySlider = (Slider*)mForm->getControl("PaintIntensitySlider");
 
 	mZoomInButton->addListener(this, Listener::PRESS);
 	mZoomOutButton->addListener(this, Listener::PRESS);
@@ -80,7 +80,7 @@ void MeshGame::initialize()
 	mMat3Button->addListener(this, Listener::PRESS);
 
 	mBrushSizeSlider->addListener(this, Listener::VALUE_CHANGED);
-	mBrushIntensitySlider->addListener(this, Listener::VALUE_CHANGED);
+	mPaintIntensitySlider->addListener(this, Listener::VALUE_CHANGED);
 
 	_scene = Scene::create();
 
@@ -143,8 +143,6 @@ void MeshGame::initialize()
 		mVolume->loadData("/sdcard/external_sd/level2.vol");
 	}
 #endif
-
-	//mVolume->createSphereAt(Vector3(10.0f, 10.0f, 10.0f), 20, 0);
 	
 	_polyVoxNode = mVolume->getRootNode();
 	_scene->addNode(mVolume->getRootNode());
@@ -165,9 +163,7 @@ void MeshGame::update(float elapsedTime)
 	{
 		if(mPaintButton->isSelected())
 		{
-			MultiMaterial4 material;
-			material.setMaterial(mMaterialToPaintWith, 255);
-			createSphereAt(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), material);
+			applyPaint(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mMaterialToPaintWith);
 		}
 		if(mEditButton->isSelected())
 		{
@@ -384,7 +380,7 @@ void MeshGame::moveCamera(int x, int y)
 	mCameraElevationAngle = max(mCameraElevationAngle, MATH_DEG_TO_RAD(-5.0f)); //Value from voxeliens
 }
 
-void MeshGame::createSphereAt(const gameplay::Vector3& centre, float radius, MultiMaterial4 value)
+void MeshGame::applyPaint(const gameplay::Vector3& centre, float radius, uint32_t materialToPaintWith)
 {
 #ifdef TERRAIN_SMOOTH
 	int firstX = static_cast<int>(std::floor(centre.x - radius));
@@ -419,14 +415,14 @@ void MeshGame::createSphereAt(const gameplay::Vector3& centre, float radius, Mul
 				amountToAdd *= 255.0f;
 
 				amountToAdd *= (mTimeBetweenUpdates / 1000.0f);
-				amountToAdd *= mBrushIntensitySlider->getValue();
+				amountToAdd *= mPaintIntensitySlider->getValue();
 
 				uint8_t uToAdd = static_cast<uint8_t>(amountToAdd + 0.5f);
 
 				if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
 				{
 					MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);	
-					addToMaterial(mMaterialToPaintWith, uToAdd, originalMat);
+					addToMaterial(materialToPaintWith, uToAdd, originalMat);
 					mVolume->setVoxelAt(x,y,z, originalMat);
 				}
 			}

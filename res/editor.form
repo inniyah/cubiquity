@@ -105,7 +105,7 @@ form particleEditor
         {
             style = title
             size = 150, 30
-            text = BrushSize
+            text = Brush Size
         }
         
         slider BrushSizeSlider
@@ -120,14 +120,14 @@ form particleEditor
             consumeInputEvents = false
         }
         
-        label titleBrushIntensity
+        label titlePaintIntensity
         {
             style = title
             size = 150, 30
-            text = BrushSize
+            text = Paint Intensity
         }
         
-        slider BrushIntensitySlider
+        slider PaintIntensitySlider
         {
             style = noBorder
             size = 150, 50

@@ -26,7 +26,7 @@ public:
     void keyEvent(Keyboard::KeyEvent evt, int key);
     void touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int contactIndex);
 
-	void createSphereAt(const gameplay::Vector3& centre, float radius, MultiMaterial4 value);
+	void applyPaint(const gameplay::Vector3& centre, float radius, uint32_t materialToPaintWith);
 	void smoothAt(const gameplay::Vector3& centre, float radius);
 
 	void addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4& material);
@@ -87,7 +87,7 @@ private:
 	Button* mMat3Button;
 
 	Slider* mBrushSizeSlider;
-	Slider* mBrushIntensitySlider;
+	Slider* mPaintIntensitySlider;
 
 	uint32_t mMaterialToPaintWith;
 
