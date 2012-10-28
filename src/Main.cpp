@@ -58,7 +58,7 @@ void MeshGame::initialize()
 
 	mRotateButton = (RadioButton*)mForm->getControl("RotateButton");
 	mPaintButton = (RadioButton*)mForm->getControl("PaintButton");
-    mEditButton = (RadioButton*)mForm->getControl("EditButton");
+    mSmoothButton = (RadioButton*)mForm->getControl("SmoothButton");
 
 	mZoomInButton = (Button*)mForm->getControl("ZoomInButton");
 	mZoomOutButton = (Button*)mForm->getControl("ZoomOutButton");
@@ -70,6 +70,7 @@ void MeshGame::initialize()
 
 	mBrushSizeSlider = (Slider*)mForm->getControl("BrushSizeSlider");
 	mPaintIntensitySlider = (Slider*)mForm->getControl("PaintIntensitySlider");
+	mSmoothBiasSlider = (Slider*)mForm->getControl("SmoothBiasSlider");
 
 	mZoomInButton->addListener(this, Listener::PRESS);
 	mZoomOutButton->addListener(this, Listener::PRESS);
@@ -165,11 +166,9 @@ void MeshGame::update(float elapsedTime)
 		{
 			applyPaint(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mMaterialToPaintWith);
 		}
-		if(mEditButton->isSelected())
+		if(mSmoothButton->isSelected())
 		{
-			MultiMaterial4 material;
-			material.setMaterial(0, 255);
-			smoothAt(mSphereNode->getTranslation(), 10);
+			smooth(mSphereNode->getTranslation(), 10);
 		}
 	}
 #endif
@@ -311,7 +310,7 @@ void MeshGame::touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int cont
 			mLastY = y;
 			mScreenPressed = true;
 
-			if((mPaintButton->isSelected()) || (mEditButton->isSelected()))
+			if((mPaintButton->isSelected()) || (mSmoothButton->isSelected()))
 			{
 				mSphereVisible = true;
 			}
@@ -431,7 +430,7 @@ void MeshGame::applyPaint(const gameplay::Vector3& centre, float radius, uint32_
 #endif
 }
 
-void MeshGame::smoothAt(const gameplay::Vector3& centre, float radius)
+void MeshGame::smooth(const gameplay::Vector3& centre, float radius)
 {
 #ifdef TERRAIN_SMOOTH
 	int firstX = static_cast<int>(std::floor(centre.x - radius));
@@ -496,10 +495,11 @@ void MeshGame::smoothAt(const gameplay::Vector3& centre, float radius)
 				MultiMaterial4 interpMat;
 				// In theory we should add 0.5f before casting to round
 				// properly, but this seems to cause material to grow too much.
-				interpMat.setMaterial(0, static_cast<uint32_t>(interp0 + 0.25f));
-				interpMat.setMaterial(1, static_cast<uint32_t>(interp1 + 0.25f));
-				interpMat.setMaterial(2, static_cast<uint32_t>(interp2 + 0.25f));
-				interpMat.setMaterial(3, static_cast<uint32_t>(interp3 + 0.25f));
+				float bias = mSmoothBiasSlider->getValue();
+				interpMat.setMaterial(0, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp0 + bias))));
+				interpMat.setMaterial(1, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp1 + bias))));
+				interpMat.setMaterial(2, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp2 + bias))));
+				interpMat.setMaterial(3, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp3 + bias))));
 
 				mVolume->setVoxelAt(x,y,z, interpMat);
 			}

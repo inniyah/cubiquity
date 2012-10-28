@@ -27,7 +27,7 @@ public:
     void touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int contactIndex);
 
 	void applyPaint(const gameplay::Vector3& centre, float radius, uint32_t materialToPaintWith);
-	void smoothAt(const gameplay::Vector3& centre, float radius);
+	void smooth(const gameplay::Vector3& centre, float radius);
 
 	void addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4& material);
 
@@ -76,7 +76,7 @@ private:
 
 	RadioButton* mRotateButton;
     RadioButton* mPaintButton;
-    RadioButton* mEditButton;
+    RadioButton* mSmoothButton;
 
 	Button* mZoomInButton;
 	Button* mZoomOutButton;
@@ -88,6 +88,7 @@ private:
 
 	Slider* mBrushSizeSlider;
 	Slider* mPaintIntensitySlider;
+	Slider* mSmoothBiasSlider;
 
 	uint32_t mMaterialToPaintWith;
 
