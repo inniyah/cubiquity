@@ -32,6 +32,7 @@ public:
 	void smooth(const gameplay::Vector3& centre, float radius);
 
 	void addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4& material);
+	void subtractFromMaterial(uint8_t amountToAdd, MultiMaterial4& material);
 
 	void controlEvent(Control* control, EventType evt);
 

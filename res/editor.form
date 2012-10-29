@@ -9,7 +9,7 @@ form particleEditor
         style = basic
         layout = LAYOUT_VERTICAL
         position = 0, 0
-        size = 160, 220
+        size = 160, 250
 
         label title
         {

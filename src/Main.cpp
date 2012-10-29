@@ -518,6 +518,41 @@ void MeshGame::smooth(const gameplay::Vector3& centre, float radius)
 #endif
 }
 
+void MeshGame::subtractFromMaterial(uint8_t amountToAdd, MultiMaterial4& material)
+{
+	uint32_t indexToRemoveFrom = 0; //FIXME - start somewhere random
+	uint32_t iterationWithNoRemovals = 0;
+	while(amountToAdd > 0)
+	{
+		//if(indexToRemoveFrom != index)
+		{
+			if(material.getMaterial(indexToRemoveFrom) > 0)
+			{
+				//material.setMaterial(index, material.getMaterial(index) + 1);
+				material.setMaterial(indexToRemoveFrom, material.getMaterial(indexToRemoveFrom) - 1);
+				amountToAdd--;
+				iterationWithNoRemovals = 0;
+			}
+			else
+			{
+				iterationWithNoRemovals++;
+			}
+		}
+		/*else
+		{
+			iterationWithNoRemovals++;
+		}*/
+
+		if(iterationWithNoRemovals == MultiMaterial4::getNoOfMaterials())
+		{
+			break;
+		}
+
+		indexToRemoveFrom++;
+		indexToRemoveFrom %= MultiMaterial4::getNoOfMaterials();
+	}
+}
+
 void MeshGame::addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4& material)
 {
 	uint32_t indexToRemoveFrom = 0; //FIXME - start somewhere random
@@ -640,27 +675,22 @@ void MeshGame::subtractMaterial(const gameplay::Vector3& centre, float radius)
 		{
 			for(int x = firstX; x <= lastX; ++x)
 			{
-				float subtractFactor = (centre - Vector3(x,y,z)).length() / radius;
-				subtractFactor = max(subtractFactor, 0.0f);
-				subtractFactor = min(subtractFactor, 1.0f);
-				//amountToAdd = 1.0f - amountToAdd;
-				//amountToAdd *= 255.0f;
+				float amountToAdd = (centre - Vector3(x,y,z)).length() / radius;
+				amountToAdd = max(amountToAdd, 0.0f);
+				amountToAdd = min(amountToAdd, 1.0f);
+				amountToAdd = 1.0f - amountToAdd;
+				amountToAdd *= 255.0f;
 
-				float interpFactor = (mTimeBetweenUpdates / 1000.0f) * mAddSubtractRateSlider->getValue();
+				amountToAdd *= (mTimeBetweenUpdates / 1000.0f);
+				amountToAdd *= mAddSubtractRateSlider->getValue();
 
-				float interpedFactor = (1.0 - subtractFactor) * interpFactor + subtractFactor;
-
-				//amountToAdd *= (mTimeBetweenUpdates / 1000.0f);
-				//amountToAdd *= mAddSubtractRateSlider->getValue();
-
-				//uint8_t uToAdd = static_cast<uint8_t>(amountToAdd + 0.5f);
+				uint8_t uToAdd = static_cast<uint8_t>(amountToAdd + 0.5f);
 
 				if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
 				{
-					MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);
-					Vector4DFloat originalVec = originalMat;
-					originalVec *= interpedFactor;
-					originalMat = originalVec;
+					MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);	
+					uint32_t sumOfMaterials = originalMat.getSumOfMaterials();
+					subtractFromMaterial(uToAdd, originalMat);
 					mVolume->setVoxelAt(x,y,z, originalMat);
 				}
 			}
