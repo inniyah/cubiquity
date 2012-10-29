@@ -28,6 +28,7 @@ public:
 
 	void applyPaint(const gameplay::Vector3& centre, float radius, uint32_t materialToPaintWith);
 	void addMaterial(const gameplay::Vector3& centre, float radius, uint32_t materialToAdd);
+	void subtractMaterial(const gameplay::Vector3& centre, float radius);
 	void smooth(const gameplay::Vector3& centre, float radius);
 
 	void addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4& material);
@@ -79,6 +80,7 @@ private:
     RadioButton* mPaintButton;
     RadioButton* mSmoothButton;
 	RadioButton* mAddButton;
+	RadioButton* mSubtractButton;
 
 	Button* mZoomInButton;
 	Button* mZoomOutButton;

@@ -60,6 +60,7 @@ void MeshGame::initialize()
 	mPaintButton = (RadioButton*)mForm->getControl("PaintButton");
     mSmoothButton = (RadioButton*)mForm->getControl("SmoothButton");
 	mAddButton = (RadioButton*)mForm->getControl("AddButton");
+	mSubtractButton = (RadioButton*)mForm->getControl("SubtractButton");
 
 	mZoomInButton = (Button*)mForm->getControl("ZoomInButton");
 	mZoomOutButton = (Button*)mForm->getControl("ZoomOutButton");
@@ -172,6 +173,10 @@ void MeshGame::update(float elapsedTime)
 		if(mAddButton->isSelected())
 		{
 			addMaterial(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mSelectedMaterial);
+		}
+		if(mSubtractButton->isSelected())
+		{
+			subtractMaterial(mSphereNode->getTranslation(), mBrushSizeSlider->getValue());
 		}
 	}
 #endif
@@ -599,6 +604,63 @@ void MeshGame::addMaterial(const gameplay::Vector3& centre, float radius, uint32
 					{
 						addToMaterial(materialToAdd, uToAdd, originalMat);
 					}
+					mVolume->setVoxelAt(x,y,z, originalMat);
+				}
+			}
+		}
+	}
+#endif
+}
+
+void MeshGame::subtractMaterial(const gameplay::Vector3& centre, float radius)
+{
+#ifdef TERRAIN_SMOOTH
+	int firstX = static_cast<int>(std::floor(centre.x - radius));
+	int firstY = static_cast<int>(std::floor(centre.y - radius));
+	int firstZ = static_cast<int>(std::floor(centre.z - radius));
+
+	int lastX = static_cast<int>(std::ceil(centre.x + radius));
+	int lastY = static_cast<int>(std::ceil(centre.y + radius));
+	int lastZ = static_cast<int>(std::ceil(centre.z + radius));
+
+	float radiusSquared = radius * radius;
+
+	//Check bounds.
+	firstX = std::max(firstX,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getX());
+	firstY = std::max(firstY,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getY());
+	firstZ = std::max(firstZ,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getZ());
+
+	lastX = std::min(lastX,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getX());
+	lastY = std::min(lastY,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getY());
+	lastZ = std::min(lastZ,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getZ());
+
+	for(int z = firstZ; z <= lastZ; ++z)
+	{
+		for(int y = firstY; y <= lastY; ++y)
+		{
+			for(int x = firstX; x <= lastX; ++x)
+			{
+				float subtractFactor = (centre - Vector3(x,y,z)).length() / radius;
+				subtractFactor = max(subtractFactor, 0.0f);
+				subtractFactor = min(subtractFactor, 1.0f);
+				//amountToAdd = 1.0f - amountToAdd;
+				//amountToAdd *= 255.0f;
+
+				float interpFactor = (mTimeBetweenUpdates / 1000.0f) * mAddSubtractRateSlider->getValue();
+
+				float interpedFactor = (1.0 - subtractFactor) * interpFactor + subtractFactor;
+
+				//amountToAdd *= (mTimeBetweenUpdates / 1000.0f);
+				//amountToAdd *= mAddSubtractRateSlider->getValue();
+
+				//uint8_t uToAdd = static_cast<uint8_t>(amountToAdd + 0.5f);
+
+				if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
+				{
+					MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);
+					Vector4DFloat originalVec = originalMat;
+					originalVec *= interpedFactor;
+					originalMat = originalVec;
 					mVolume->setVoxelAt(x,y,z, originalMat);
 				}
 			}

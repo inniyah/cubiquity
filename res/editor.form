@@ -43,6 +43,11 @@ form particleEditor
         {
             text = Add
         }
+        
+        radioButton SubtractButton : AddButton
+        {
+            text = Subtract
+        }
     }
 
     // Camera Zoom
