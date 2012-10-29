@@ -39,7 +39,7 @@ void pointNodeAtTarget(Node* node, const Vector3& target, const Vector3& up = Ve
 MeshGame game;
 
 MeshGame::MeshGame()
-	: _font(NULL), mLastX(0), mLastY(0), mTimeBetweenUpdates(0.0f), mScreenPressed(false), mSphereVisible(false), mMaterialToPaintWith(0), mSphereNode(0)
+	: _font(NULL), mLastX(0), mLastY(0), mTimeBetweenUpdates(0.0f), mScreenPressed(false), mSphereVisible(false), mSelectedMaterial(0), mSphereNode(0)
 {
 }
 
@@ -59,6 +59,7 @@ void MeshGame::initialize()
 	mRotateButton = (RadioButton*)mForm->getControl("RotateButton");
 	mPaintButton = (RadioButton*)mForm->getControl("PaintButton");
     mSmoothButton = (RadioButton*)mForm->getControl("SmoothButton");
+	mAddButton = (RadioButton*)mForm->getControl("AddButton");
 
 	mZoomInButton = (Button*)mForm->getControl("ZoomInButton");
 	mZoomOutButton = (Button*)mForm->getControl("ZoomOutButton");
@@ -71,6 +72,7 @@ void MeshGame::initialize()
 	mBrushSizeSlider = (Slider*)mForm->getControl("BrushSizeSlider");
 	mPaintIntensitySlider = (Slider*)mForm->getControl("PaintIntensitySlider");
 	mSmoothBiasSlider = (Slider*)mForm->getControl("SmoothBiasSlider");
+	mAddSubtractRateSlider = (Slider*)mForm->getControl("AddSubtractRateSlider");
 
 	mZoomInButton->addListener(this, Listener::PRESS);
 	mZoomOutButton->addListener(this, Listener::PRESS);
@@ -79,9 +81,6 @@ void MeshGame::initialize()
 	mMat1Button->addListener(this, Listener::PRESS);
 	mMat2Button->addListener(this, Listener::PRESS);
 	mMat3Button->addListener(this, Listener::PRESS);
-
-	mBrushSizeSlider->addListener(this, Listener::VALUE_CHANGED);
-	mPaintIntensitySlider->addListener(this, Listener::VALUE_CHANGED);
 
 	_scene = Scene::create();
 
@@ -164,11 +163,15 @@ void MeshGame::update(float elapsedTime)
 	{
 		if(mPaintButton->isSelected())
 		{
-			applyPaint(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mMaterialToPaintWith);
+			applyPaint(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mSelectedMaterial);
 		}
 		if(mSmoothButton->isSelected())
 		{
 			smooth(mSphereNode->getTranslation(), 10);
+		}
+		if(mAddButton->isSelected())
+		{
+			addMaterial(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mSelectedMaterial);
 		}
 	}
 #endif
@@ -228,19 +231,19 @@ void MeshGame::controlEvent(Control* control, EventType evt)
 			}
 			else if(control == mMat0Button)
 			{
-				mMaterialToPaintWith = 0;
+				mSelectedMaterial = 0;
 			}
 			else if(control == mMat1Button)
 			{
-				mMaterialToPaintWith = 1;
+				mSelectedMaterial = 1;
 			}
 			else if(control == mMat2Button)
 			{
-				mMaterialToPaintWith = 2;
+				mSelectedMaterial = 2;
 			}
 			else if(control == mMat3Button)
 			{
-				mMaterialToPaintWith = 3;
+				mSelectedMaterial = 3;
 			}
 
 			break;
@@ -495,6 +498,7 @@ void MeshGame::smooth(const gameplay::Vector3& centre, float radius)
 				MultiMaterial4 interpMat;
 				// In theory we should add 0.5f before casting to round
 				// properly, but this seems to cause material to grow too much.
+				// Instead we add a user-supplied bias value.
 				float bias = mSmoothBiasSlider->getValue();
 				interpMat.setMaterial(0, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp0 + bias))));
 				interpMat.setMaterial(1, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp1 + bias))));
@@ -542,4 +546,63 @@ void MeshGame::addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4
 		indexToRemoveFrom++;
 		indexToRemoveFrom %= MultiMaterial4::getNoOfMaterials();
 	}
+}
+
+void MeshGame::addMaterial(const gameplay::Vector3& centre, float radius, uint32_t materialToAdd)
+{
+#ifdef TERRAIN_SMOOTH
+	int firstX = static_cast<int>(std::floor(centre.x - radius));
+	int firstY = static_cast<int>(std::floor(centre.y - radius));
+	int firstZ = static_cast<int>(std::floor(centre.z - radius));
+
+	int lastX = static_cast<int>(std::ceil(centre.x + radius));
+	int lastY = static_cast<int>(std::ceil(centre.y + radius));
+	int lastZ = static_cast<int>(std::ceil(centre.z + radius));
+
+	float radiusSquared = radius * radius;
+
+	//Check bounds.
+	firstX = std::max(firstX,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getX());
+	firstY = std::max(firstY,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getY());
+	firstZ = std::max(firstZ,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getZ());
+
+	lastX = std::min(lastX,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getX());
+	lastY = std::min(lastY,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getY());
+	lastZ = std::min(lastZ,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getZ());
+
+	for(int z = firstZ; z <= lastZ; ++z)
+	{
+		for(int y = firstY; y <= lastY; ++y)
+		{
+			for(int x = firstX; x <= lastX; ++x)
+			{
+				float amountToAdd = (centre - Vector3(x,y,z)).length() / radius;
+				amountToAdd = max(amountToAdd, 0.0f);
+				amountToAdd = min(amountToAdd, 1.0f);
+				amountToAdd = 1.0f - amountToAdd;
+				amountToAdd *= 255.0f;
+
+				amountToAdd *= (mTimeBetweenUpdates / 1000.0f);
+				amountToAdd *= mAddSubtractRateSlider->getValue();
+
+				uint8_t uToAdd = static_cast<uint8_t>(amountToAdd + 0.5f);
+
+				if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
+				{
+					MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);	
+					uint32_t sumOfMaterials = originalMat.getSumOfMaterials();
+					if(sumOfMaterials + uToAdd <= originalMat.getMaxMaterialValue())
+					{
+						originalMat.setMaterial(materialToAdd, originalMat.getMaterial(materialToAdd) + uToAdd);
+					}
+					else
+					{
+						addToMaterial(materialToAdd, uToAdd, originalMat);
+					}
+					mVolume->setVoxelAt(x,y,z, originalMat);
+				}
+			}
+		}
+	}
+#endif
 }
