@@ -15,6 +15,18 @@ class SmoothTerrainVolume;
 #define TERRAIN_SMOOTH
 //#define TERRAIN_CUBIC
 
+namespace EditActions
+{
+	enum EditAction
+	{
+		Add,
+		Subtract,
+		Paint, 
+		Smooth
+	};
+}
+typedef EditActions::EditAction EditAction;
+
 /**
  * Sample game for rendering a scene with a model/mesh.
  */
@@ -30,6 +42,8 @@ public:
 	void addMaterial(const gameplay::Vector3& centre, float radius, uint32_t materialToAdd);
 	void subtractMaterial(const gameplay::Vector3& centre, float radius);
 	void smooth(const gameplay::Vector3& centre, float radius);
+
+	void edit(const gameplay::Vector3& centre, float radius, uint32_t materialToUse, EditAction editAction);
 
 	void addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4& material);
 	void subtractFromMaterial(uint8_t amountToAdd, MultiMaterial4& material);

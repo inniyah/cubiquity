@@ -389,133 +389,13 @@ void MeshGame::moveCamera(int x, int y)
 
 void MeshGame::applyPaint(const gameplay::Vector3& centre, float radius, uint32_t materialToPaintWith)
 {
-#ifdef TERRAIN_SMOOTH
-	int firstX = static_cast<int>(std::floor(centre.x - radius));
-	int firstY = static_cast<int>(std::floor(centre.y - radius));
-	int firstZ = static_cast<int>(std::floor(centre.z - radius));
-
-	int lastX = static_cast<int>(std::ceil(centre.x + radius));
-	int lastY = static_cast<int>(std::ceil(centre.y + radius));
-	int lastZ = static_cast<int>(std::ceil(centre.z + radius));
-
-	float radiusSquared = radius * radius;
-
-	//Check bounds.
-	firstX = std::max(firstX,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getX());
-	firstY = std::max(firstY,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getY());
-	firstZ = std::max(firstZ,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getZ());
-
-	lastX = std::min(lastX,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getX());
-	lastY = std::min(lastY,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getY());
-	lastZ = std::min(lastZ,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getZ());
-
-	for(int z = firstZ; z <= lastZ; ++z)
-	{
-		for(int y = firstY; y <= lastY; ++y)
-		{
-			for(int x = firstX; x <= lastX; ++x)
-			{
-				float amountToAdd = (centre - Vector3(x,y,z)).length() / radius;
-				amountToAdd = max(amountToAdd, 0.0f);
-				amountToAdd = min(amountToAdd, 1.0f);
-				amountToAdd = 1.0f - amountToAdd;
-				amountToAdd *= 255.0f;
-
-				amountToAdd *= (mTimeBetweenUpdates / 1000.0f);
-				amountToAdd *= mPaintIntensitySlider->getValue();
-
-				uint8_t uToAdd = static_cast<uint8_t>(amountToAdd + 0.5f);
-
-				if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
-				{
-					MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);	
-					addToMaterial(materialToPaintWith, uToAdd, originalMat);
-					mVolume->setVoxelAt(x,y,z, originalMat);
-				}
-			}
-		}
-	}
-#endif
+	edit(centre, radius, materialToPaintWith, EditActions::Paint);
 }
 
 void MeshGame::smooth(const gameplay::Vector3& centre, float radius)
 {
-#ifdef TERRAIN_SMOOTH
-	int firstX = static_cast<int>(std::floor(centre.x - radius));
-	int firstY = static_cast<int>(std::floor(centre.y - radius));
-	int firstZ = static_cast<int>(std::floor(centre.z - radius));
-
-	int lastX = static_cast<int>(std::ceil(centre.x + radius));
-	int lastY = static_cast<int>(std::ceil(centre.y + radius));
-	int lastZ = static_cast<int>(std::ceil(centre.z + radius));
-
-	float radiusSquared = radius * radius;
-
-	//Check bounds.
-	firstX = std::max(firstX,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getX());
-	firstY = std::max(firstY,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getY());
-	firstZ = std::max(firstZ,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getZ());
-
-	lastX = std::min(lastX,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getX());
-	lastY = std::min(lastY,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getY());
-	lastZ = std::min(lastZ,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getZ());
-
-	Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
-	RawVolume<MultiMaterial4> tempVolume(region);
-	
-	//We might not need to do this at sloat precision, it should be tested again.
-	LowPassFilter< SimpleVolume<MultiMaterial4>, RawVolume<MultiMaterial4>, Vector<4, float> > lowPassFilter(mVolume->mVolData, region, &tempVolume, region, 3);
-	lowPassFilter.execute();
-
-	//LowPassFilter< RawVolume<MultiMaterial4>, SimpleVolume<MultiMaterial4>, MultiMaterial16> lowPassFilter2(&tempVolume, region, mVolume->mVolData, region, 3);
-	//lowPassFilter2.execute();
-
-	for(int z = firstZ; z <= lastZ; ++z)
-	{
-		for(int y = firstY; y <= lastY; ++y)
-		{
-			for(int x = firstX; x <= lastX; ++x)
-			{
-				float amountToAdd = (centre - Vector3(x,y,z)).length() / radius;
-				amountToAdd = max(amountToAdd, 0.0f);
-				amountToAdd = min(amountToAdd, 1.0f);
-				amountToAdd = 1.0f - amountToAdd;
-
-				MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);
-				MultiMaterial4 smoothedMat = tempVolume.getVoxelAt(x, y, z);
-
-				//FIXME - expose linear interpolation as well as trilinear interpolation from PolyVox?
-				float orig0 = static_cast<float>(originalMat.getMaterial(0));
-				float orig1 = static_cast<float>(originalMat.getMaterial(1));
-				float orig2 = static_cast<float>(originalMat.getMaterial(2));
-				float orig3 = static_cast<float>(originalMat.getMaterial(3));
-
-				float smooth0 = static_cast<float>(smoothedMat.getMaterial(0));
-				float smooth1 = static_cast<float>(smoothedMat.getMaterial(1));
-				float smooth2 = static_cast<float>(smoothedMat.getMaterial(2));
-				float smooth3 = static_cast<float>(smoothedMat.getMaterial(3));
-
-				float interp0 = (smooth0 - orig0) * amountToAdd + orig0;
-				float interp1 = (smooth1 - orig1) * amountToAdd + orig1;
-				float interp2 = (smooth2 - orig2) * amountToAdd + orig2;
-				float interp3 = (smooth3 - orig3) * amountToAdd + orig3;
-
-				MultiMaterial4 interpMat;
-				// In theory we should add 0.5f before casting to round
-				// properly, but this seems to cause material to grow too much.
-				// Instead we add a user-supplied bias value.
-				float bias = mSmoothBiasSlider->getValue();
-				interpMat.setMaterial(0, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp0 + bias))));
-				interpMat.setMaterial(1, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp1 + bias))));
-				interpMat.setMaterial(2, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp2 + bias))));
-				interpMat.setMaterial(3, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp3 + bias))));
-
-				mVolume->setVoxelAt(x,y,z, interpMat);
-			}
-		}
-	}
-	
-#endif
+	// '0' is a dummy as the smooth operations smooths *all* materials
+	edit(centre, radius, 0, EditActions::Smooth);
 }
 
 void MeshGame::subtractFromMaterial(uint8_t amountToAdd, MultiMaterial4& material)
@@ -590,66 +470,18 @@ void MeshGame::addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4
 
 void MeshGame::addMaterial(const gameplay::Vector3& centre, float radius, uint32_t materialToAdd)
 {
-#ifdef TERRAIN_SMOOTH
-	int firstX = static_cast<int>(std::floor(centre.x - radius));
-	int firstY = static_cast<int>(std::floor(centre.y - radius));
-	int firstZ = static_cast<int>(std::floor(centre.z - radius));
-
-	int lastX = static_cast<int>(std::ceil(centre.x + radius));
-	int lastY = static_cast<int>(std::ceil(centre.y + radius));
-	int lastZ = static_cast<int>(std::ceil(centre.z + radius));
-
-	float radiusSquared = radius * radius;
-
-	//Check bounds.
-	firstX = std::max(firstX,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getX());
-	firstY = std::max(firstY,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getY());
-	firstZ = std::max(firstZ,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getZ());
-
-	lastX = std::min(lastX,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getX());
-	lastY = std::min(lastY,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getY());
-	lastZ = std::min(lastZ,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getZ());
-
-	for(int z = firstZ; z <= lastZ; ++z)
-	{
-		for(int y = firstY; y <= lastY; ++y)
-		{
-			for(int x = firstX; x <= lastX; ++x)
-			{
-				float amountToAdd = (centre - Vector3(x,y,z)).length() / radius;
-				amountToAdd = max(amountToAdd, 0.0f);
-				amountToAdd = min(amountToAdd, 1.0f);
-				amountToAdd = 1.0f - amountToAdd;
-				amountToAdd *= 255.0f;
-
-				amountToAdd *= (mTimeBetweenUpdates / 1000.0f);
-				amountToAdd *= mAddSubtractRateSlider->getValue();
-
-				uint8_t uToAdd = static_cast<uint8_t>(amountToAdd + 0.5f);
-
-				if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
-				{
-					MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);	
-					uint32_t sumOfMaterials = originalMat.getSumOfMaterials();
-					if(sumOfMaterials + uToAdd <= originalMat.getMaxMaterialValue())
-					{
-						originalMat.setMaterial(materialToAdd, originalMat.getMaterial(materialToAdd) + uToAdd);
-					}
-					else
-					{
-						addToMaterial(materialToAdd, uToAdd, originalMat);
-					}
-					mVolume->setVoxelAt(x,y,z, originalMat);
-				}
-			}
-		}
-	}
-#endif
+	edit(centre, radius, materialToAdd, EditActions::Add);
 }
 
 void MeshGame::subtractMaterial(const gameplay::Vector3& centre, float radius)
 {
-#ifdef TERRAIN_SMOOTH
+	// '0' is a dummy as the subtract operations reduces *all* materials
+	edit(centre, radius, 0, EditActions::Subtract);
+}
+
+void MeshGame::edit(const gameplay::Vector3& centre, float radius, uint32_t materialToUse, EditAction editAction)
+{
+	#ifdef TERRAIN_SMOOTH
 	int firstX = static_cast<int>(std::floor(centre.x - radius));
 	int firstY = static_cast<int>(std::floor(centre.y - radius));
 	int firstZ = static_cast<int>(std::floor(centre.z - radius));
@@ -669,29 +501,139 @@ void MeshGame::subtractMaterial(const gameplay::Vector3& centre, float radius)
 	lastY = std::min(lastY,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getY());
 	lastZ = std::min(lastZ,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getZ());
 
+	// FIXME!!! - We only actually need the temp volume when smoothing, and not for the other operations
+	// We shold cache it somewhere not recreate it each frame...
+	Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
+	RawVolume<MultiMaterial4> tempVolume(region);
+
+	if(editAction == EditActions::Smooth)
+	{
+		//We might not need to do this at float precision, it should be tested again.
+		LowPassFilter< SimpleVolume<MultiMaterial4>, RawVolume<MultiMaterial4>, Vector<4, float> > lowPassFilter(mVolume->mVolData, region, &tempVolume, region, 3);
+		lowPassFilter.execute();
+	}
+
 	for(int z = firstZ; z <= lastZ; ++z)
 	{
 		for(int y = firstY; y <= lastY; ++y)
 		{
 			for(int x = firstX; x <= lastX; ++x)
 			{
-				float amountToAdd = (centre - Vector3(x,y,z)).length() / radius;
-				amountToAdd = max(amountToAdd, 0.0f);
-				amountToAdd = min(amountToAdd, 1.0f);
-				amountToAdd = 1.0f - amountToAdd;
-				amountToAdd *= 255.0f;
-
-				amountToAdd *= (mTimeBetweenUpdates / 1000.0f);
-				amountToAdd *= mAddSubtractRateSlider->getValue();
-
-				uint8_t uToAdd = static_cast<uint8_t>(amountToAdd + 0.5f);
-
-				if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
+				switch(editAction)
 				{
-					MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);	
-					uint32_t sumOfMaterials = originalMat.getSumOfMaterials();
-					subtractFromMaterial(uToAdd, originalMat);
-					mVolume->setVoxelAt(x,y,z, originalMat);
+				case EditActions::Add:
+					{
+						float amountToAdd = (centre - Vector3(x,y,z)).length() / radius;
+						amountToAdd = max(amountToAdd, 0.0f);
+						amountToAdd = min(amountToAdd, 1.0f);
+						amountToAdd = 1.0f - amountToAdd;
+						amountToAdd *= 255.0f;
+
+						amountToAdd *= (mTimeBetweenUpdates / 1000.0f);
+						amountToAdd *= mAddSubtractRateSlider->getValue();
+
+						uint8_t uToAdd = static_cast<uint8_t>(amountToAdd + 0.5f);
+
+						if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
+						{
+							MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);	
+							uint32_t sumOfMaterials = originalMat.getSumOfMaterials();
+							if(sumOfMaterials + uToAdd <= originalMat.getMaxMaterialValue())
+							{
+								originalMat.setMaterial(materialToUse, originalMat.getMaterial(materialToUse) + uToAdd);
+							}
+							else
+							{
+								addToMaterial(materialToUse, uToAdd, originalMat);
+							}
+							mVolume->setVoxelAt(x,y,z, originalMat);
+						}
+
+						break;
+					}
+				case EditActions::Subtract:
+					{
+						float amountToAdd = (centre - Vector3(x,y,z)).length() / radius;
+						amountToAdd = max(amountToAdd, 0.0f);
+						amountToAdd = min(amountToAdd, 1.0f);
+						amountToAdd = 1.0f - amountToAdd;
+						amountToAdd *= 255.0f;
+
+						amountToAdd *= (mTimeBetweenUpdates / 1000.0f);
+						amountToAdd *= mAddSubtractRateSlider->getValue();
+
+						uint8_t uToAdd = static_cast<uint8_t>(amountToAdd + 0.5f);
+
+						if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
+						{
+							MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);	
+							uint32_t sumOfMaterials = originalMat.getSumOfMaterials();
+							subtractFromMaterial(uToAdd, originalMat);
+							mVolume->setVoxelAt(x,y,z, originalMat);
+						}
+
+						break;
+					}
+				case EditActions::Paint:
+					{
+						float amountToAdd = (centre - Vector3(x,y,z)).length() / radius;
+						amountToAdd = max(amountToAdd, 0.0f);
+						amountToAdd = min(amountToAdd, 1.0f);
+						amountToAdd = 1.0f - amountToAdd;
+						amountToAdd *= 255.0f;
+
+						amountToAdd *= (mTimeBetweenUpdates / 1000.0f);
+						amountToAdd *= mPaintIntensitySlider->getValue();
+
+						uint8_t uToAdd = static_cast<uint8_t>(amountToAdd + 0.5f);
+
+						if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
+						{
+							MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);	
+							addToMaterial(materialToUse, uToAdd, originalMat);
+							mVolume->setVoxelAt(x,y,z, originalMat);
+						}
+
+						break;
+					}
+				case EditActions::Smooth:
+					{
+						float amountToAdd = (centre - Vector3(x,y,z)).length() / radius;
+						amountToAdd = max(amountToAdd, 0.0f);
+						amountToAdd = min(amountToAdd, 1.0f);
+						amountToAdd = 1.0f - amountToAdd;
+
+						MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);
+						MultiMaterial4 smoothedMat = tempVolume.getVoxelAt(x, y, z);
+
+						//FIXME - expose linear interpolation as well as trilinear interpolation from PolyVox?
+						float orig0 = static_cast<float>(originalMat.getMaterial(0));
+						float orig1 = static_cast<float>(originalMat.getMaterial(1));
+						float orig2 = static_cast<float>(originalMat.getMaterial(2));
+						float orig3 = static_cast<float>(originalMat.getMaterial(3));
+
+						float smooth0 = static_cast<float>(smoothedMat.getMaterial(0));
+						float smooth1 = static_cast<float>(smoothedMat.getMaterial(1));
+						float smooth2 = static_cast<float>(smoothedMat.getMaterial(2));
+						float smooth3 = static_cast<float>(smoothedMat.getMaterial(3));
+
+						float interp0 = (smooth0 - orig0) * amountToAdd + orig0;
+						float interp1 = (smooth1 - orig1) * amountToAdd + orig1;
+						float interp2 = (smooth2 - orig2) * amountToAdd + orig2;
+						float interp3 = (smooth3 - orig3) * amountToAdd + orig3;
+
+						MultiMaterial4 interpMat;
+						// In theory we should add 0.5f before casting to round
+						// properly, but this seems to cause material to grow too much.
+						// Instead we add a user-supplied bias value.
+						float bias = mSmoothBiasSlider->getValue();
+						interpMat.setMaterial(0, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp0 + bias))));
+						interpMat.setMaterial(1, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp1 + bias))));
+						interpMat.setMaterial(2, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp2 + bias))));
+						interpMat.setMaterial(3, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp3 + bias))));
+
+						mVolume->setVoxelAt(x,y,z, interpMat);
+					}
 				}
 			}
 		}
