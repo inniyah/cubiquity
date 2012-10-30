@@ -526,27 +526,22 @@ void MeshGame::edit(const gameplay::Vector3& centre, float radius, uint32_t mate
 		{
 			for(int x = firstX; x <= lastX; ++x)
 			{
-				float amountToAddOrSubtract = 0.0f;
-				uint8_t uToAddOrSubtract = 0;
-				if((editAction == EditActions::Add) || (editAction == EditActions::Subtract))
+				if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
 				{
-					amountToAddOrSubtract = (centre - Vector3(x,y,z)).length() / radius;
-					amountToAddOrSubtract = max(amountToAddOrSubtract, 0.0f);
-					amountToAddOrSubtract = min(amountToAddOrSubtract, 1.0f);
-					amountToAddOrSubtract = 1.0f - amountToAddOrSubtract;
-					amountToAddOrSubtract *= 255.0f;
+					float falloff = falloff = (centre - Vector3(x,y,z)).length() / radius;
+					falloff = max(falloff, 0.0f);
+					falloff = min(falloff, 1.0f);
+					falloff = 1.0f - falloff;
 
+					float amountToAddOrSubtract = falloff * 255.0f;
 					amountToAddOrSubtract *= amount;
 
-					uToAddOrSubtract = static_cast<uint8_t>(amountToAddOrSubtract + 0.5f);
-				}
+					uint8_t uToAddOrSubtract = static_cast<uint8_t>(amountToAddOrSubtract + 0.5f);
 
-				switch(editAction)
-				{
-				case EditActions::Add:
-					{						
-						if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
-						{
+					switch(editAction)
+					{
+					case EditActions::Add:
+						{		
 							MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);	
 							uint32_t sumOfMaterials = originalMat.getSumOfMaterials();
 							if(sumOfMaterials + uToAddOrSubtract <= originalMat.getMaxMaterialValue())
@@ -558,84 +553,65 @@ void MeshGame::edit(const gameplay::Vector3& centre, float radius, uint32_t mate
 								addToMaterial(materialToUse, uToAddOrSubtract, originalMat);
 							}
 							mVolume->setVoxelAt(x,y,z, originalMat);
+							break;
 						}
-
-						break;
-					}
-				case EditActions::Subtract:
-					{
-						if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
+					case EditActions::Subtract:
 						{
 							MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);	
 							uint32_t sumOfMaterials = originalMat.getSumOfMaterials();
 							subtractFromMaterial(uToAddOrSubtract, originalMat);
 							mVolume->setVoxelAt(x,y,z, originalMat);
+							break;
 						}
-
-						break;
-					}
-				case EditActions::Paint:
-					{
-						float amountToAdd = (centre - Vector3(x,y,z)).length() / radius;
-						amountToAdd = max(amountToAdd, 0.0f);
-						amountToAdd = min(amountToAdd, 1.0f);
-						amountToAdd = 1.0f - amountToAdd;
-						amountToAdd *= 255.0f;
-
-						amountToAdd *= amount;
-						
-						uint8_t uToAdd = static_cast<uint8_t>(amountToAdd + 0.5f);
-
-						if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
-						{
+					case EditActions::Paint:
+						{						
 							MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);	
-							addToMaterial(materialToUse, uToAdd, originalMat);
+							addToMaterial(materialToUse, uToAddOrSubtract, originalMat);
 							mVolume->setVoxelAt(x,y,z, originalMat);
+							break;
 						}
+					case EditActions::Smooth:
+						{
+							float amountToAdd = (centre - Vector3(x,y,z)).length() / radius;
+							amountToAdd = max(amountToAdd, 0.0f);
+							amountToAdd = min(amountToAdd, 1.0f);
+							amountToAdd = 1.0f - amountToAdd;
 
-						break;
-					}
-				case EditActions::Smooth:
-					{
-						float amountToAdd = (centre - Vector3(x,y,z)).length() / radius;
-						amountToAdd = max(amountToAdd, 0.0f);
-						amountToAdd = min(amountToAdd, 1.0f);
-						amountToAdd = 1.0f - amountToAdd;
+							amountToAdd*= amount;
 
-						amountToAdd*= amount;
+							MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);
+							MultiMaterial4 smoothedMat = tempVolume.getVoxelAt(x, y, z);
 
-						MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);
-						MultiMaterial4 smoothedMat = tempVolume.getVoxelAt(x, y, z);
+							//FIXME - expose linear interpolation as well as trilinear interpolation from PolyVox?
+							float orig0 = static_cast<float>(originalMat.getMaterial(0));
+							float orig1 = static_cast<float>(originalMat.getMaterial(1));
+							float orig2 = static_cast<float>(originalMat.getMaterial(2));
+							float orig3 = static_cast<float>(originalMat.getMaterial(3));
 
-						//FIXME - expose linear interpolation as well as trilinear interpolation from PolyVox?
-						float orig0 = static_cast<float>(originalMat.getMaterial(0));
-						float orig1 = static_cast<float>(originalMat.getMaterial(1));
-						float orig2 = static_cast<float>(originalMat.getMaterial(2));
-						float orig3 = static_cast<float>(originalMat.getMaterial(3));
+							float smooth0 = static_cast<float>(smoothedMat.getMaterial(0));
+							float smooth1 = static_cast<float>(smoothedMat.getMaterial(1));
+							float smooth2 = static_cast<float>(smoothedMat.getMaterial(2));
+							float smooth3 = static_cast<float>(smoothedMat.getMaterial(3));
 
-						float smooth0 = static_cast<float>(smoothedMat.getMaterial(0));
-						float smooth1 = static_cast<float>(smoothedMat.getMaterial(1));
-						float smooth2 = static_cast<float>(smoothedMat.getMaterial(2));
-						float smooth3 = static_cast<float>(smoothedMat.getMaterial(3));
+							float interp0 = (smooth0 - orig0) * amountToAdd + orig0;
+							float interp1 = (smooth1 - orig1) * amountToAdd + orig1;
+							float interp2 = (smooth2 - orig2) * amountToAdd + orig2;
+							float interp3 = (smooth3 - orig3) * amountToAdd + orig3;
 
-						float interp0 = (smooth0 - orig0) * amountToAdd + orig0;
-						float interp1 = (smooth1 - orig1) * amountToAdd + orig1;
-						float interp2 = (smooth2 - orig2) * amountToAdd + orig2;
-						float interp3 = (smooth3 - orig3) * amountToAdd + orig3;
+							MultiMaterial4 interpMat;
+							// In theory we should add 0.5f before casting to round
+							// properly, but this seems to cause material to grow too much.
+							// Instead we add a user-supplied bias value.
+							float bias = mSmoothBiasSlider->getValue();
+							interpMat.setMaterial(0, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp0 + bias))));
+							interpMat.setMaterial(1, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp1 + bias))));
+							interpMat.setMaterial(2, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp2 + bias))));
+							interpMat.setMaterial(3, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp3 + bias))));
 
-						MultiMaterial4 interpMat;
-						// In theory we should add 0.5f before casting to round
-						// properly, but this seems to cause material to grow too much.
-						// Instead we add a user-supplied bias value.
-						float bias = mSmoothBiasSlider->getValue();
-						interpMat.setMaterial(0, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp0 + bias))));
-						interpMat.setMaterial(1, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp1 + bias))));
-						interpMat.setMaterial(2, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp2 + bias))));
-						interpMat.setMaterial(3, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp3 + bias))));
+							mVolume->setVoxelAt(x,y,z, interpMat);
 
-						mVolume->setVoxelAt(x,y,z, interpMat);
-
-						break;
+							break;
+						}
 					}
 				}
 			}
