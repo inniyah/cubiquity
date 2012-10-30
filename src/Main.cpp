@@ -71,9 +71,10 @@ void MeshGame::initialize()
 	mMat3Button = (Button*)mForm->getControl("Mat3Button");
 
 	mBrushSizeSlider = (Slider*)mForm->getControl("BrushSizeSlider");
-	mPaintIntensitySlider = (Slider*)mForm->getControl("PaintIntensitySlider");
-	mSmoothBiasSlider = (Slider*)mForm->getControl("SmoothBiasSlider");
 	mAddSubtractRateSlider = (Slider*)mForm->getControl("AddSubtractRateSlider");
+	mPaintIntensitySlider = (Slider*)mForm->getControl("PaintIntensitySlider");
+	mSmoothRateSlider = (Slider*)mForm->getControl("SmoothRateSlider");
+	mSmoothBiasSlider = (Slider*)mForm->getControl("SmoothBiasSlider");
 
 	mZoomInButton->addListener(this, Listener::PRESS);
 	mZoomOutButton->addListener(this, Listener::PRESS);
@@ -395,8 +396,10 @@ void MeshGame::applyPaint(const gameplay::Vector3& centre, float radius, uint32_
 
 void MeshGame::smooth(const gameplay::Vector3& centre, float radius)
 {
+	float amount = (mTimeBetweenUpdates / 1000.0f) * mSmoothRateSlider->getValue();
+
 	// '0' is a dummy as the smooth operations smooths *all* materials
-	edit(centre, radius, 0, EditActions::Smooth, 0.0f);
+	edit(centre, radius, 0, EditActions::Smooth, amount);
 }
 
 void MeshGame::subtractFromMaterial(uint8_t amountToAdd, MultiMaterial4& material)
@@ -598,6 +601,8 @@ void MeshGame::edit(const gameplay::Vector3& centre, float radius, uint32_t mate
 						amountToAdd = max(amountToAdd, 0.0f);
 						amountToAdd = min(amountToAdd, 1.0f);
 						amountToAdd = 1.0f - amountToAdd;
+
+						amountToAdd*= amount;
 
 						MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);
 						MultiMaterial4 smoothedMat = tempVolume.getVoxelAt(x, y, z);

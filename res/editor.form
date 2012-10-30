@@ -27,27 +27,27 @@ form particleEditor
            imageSize = 35, 35
            selected = true
         }
-
-        radioButton PaintButton : RotateButton
-        {
-            text = Paint
-            selected = false
-        }
-
-        radioButton SmoothButton : PaintButton
-        {
-            text = Smooth
-        }
         
-        radioButton AddButton : SmoothButton
+        radioButton AddButton : RotateButton
         {
             text = Add
+            selected = false
         }
         
         radioButton SubtractButton : AddButton
         {
             text = Subtract
         }
+
+        radioButton PaintButton : SubtractButton
+        {
+            text = Paint            
+        }
+
+        radioButton SmoothButton : PaintButton
+        {
+            text = Smooth
+        }        
     }
 
     // Camera Zoom
@@ -130,6 +130,25 @@ form particleEditor
             consumeInputEvents = false
         }
         
+        label titleAddSubtractRate
+        {
+            style = title
+            size = 150, 30
+            text = Add/Sub Rate
+        }
+        
+        slider AddSubtractRateSlider
+        {
+            style = noBorder
+            size = 150, 50
+            orientation = HORIZONTAL
+            min = 1
+            max = 10
+            value = 5
+            step = 1
+            consumeInputEvents = false
+        }
+        
         label titlePaintIntensity
         {
             style = title
@@ -145,6 +164,25 @@ form particleEditor
             min = 1
             max = 10
             value = 5
+            step = 1
+            consumeInputEvents = false
+        }
+        
+        label titleSmoothRate
+        {
+            style = title
+            size = 150, 30
+            text = Smooth Rate
+        }
+        
+        slider SmoothRateSlider
+        {
+            style = noBorder
+            size = 150, 50
+            orientation = HORIZONTAL
+            min = 1
+            max = 100
+            value = 50
             step = 1
             consumeInputEvents = false
         }
@@ -165,25 +203,6 @@ form particleEditor
             max = 0.75
             value = 0.25
             step = 0.01
-            consumeInputEvents = false
-        }
-        
-        label titleAddSubtractRate
-        {
-            style = title
-            size = 150, 30
-            text = Add/Sub Rate
-        }
-        
-        slider AddSubtractRateSlider
-        {
-            style = noBorder
-            size = 150, 50
-            orientation = HORIZONTAL
-            min = 1
-            max = 10
-            value = 5
-            step = 1
             consumeInputEvents = false
         }
     }
