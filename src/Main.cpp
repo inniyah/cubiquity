@@ -389,13 +389,14 @@ void MeshGame::moveCamera(int x, int y)
 
 void MeshGame::applyPaint(const gameplay::Vector3& centre, float radius, uint32_t materialToPaintWith)
 {
-	edit(centre, radius, materialToPaintWith, EditActions::Paint);
+	float amount = (mTimeBetweenUpdates / 1000.0f) * mPaintIntensitySlider->getValue();
+	edit(centre, radius, materialToPaintWith, EditActions::Paint, amount);
 }
 
 void MeshGame::smooth(const gameplay::Vector3& centre, float radius)
 {
 	// '0' is a dummy as the smooth operations smooths *all* materials
-	edit(centre, radius, 0, EditActions::Smooth);
+	edit(centre, radius, 0, EditActions::Smooth, 0.0f);
 }
 
 void MeshGame::subtractFromMaterial(uint8_t amountToAdd, MultiMaterial4& material)
@@ -470,16 +471,19 @@ void MeshGame::addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4
 
 void MeshGame::addMaterial(const gameplay::Vector3& centre, float radius, uint32_t materialToAdd)
 {
-	edit(centre, radius, materialToAdd, EditActions::Add);
+	float amount = (mTimeBetweenUpdates / 1000.0f) * mAddSubtractRateSlider->getValue();
+	edit(centre, radius, materialToAdd, EditActions::Add, amount);
 }
 
 void MeshGame::subtractMaterial(const gameplay::Vector3& centre, float radius)
 {
+	float amount = (mTimeBetweenUpdates / 1000.0f) * mAddSubtractRateSlider->getValue();
+
 	// '0' is a dummy as the subtract operations reduces *all* materials
-	edit(centre, radius, 0, EditActions::Subtract);
+	edit(centre, radius, 0, EditActions::Subtract, amount);
 }
 
-void MeshGame::edit(const gameplay::Vector3& centre, float radius, uint32_t materialToUse, EditAction editAction)
+void MeshGame::edit(const gameplay::Vector3& centre, float radius, uint32_t materialToUse, EditAction editAction, float amount)
 {
 	#ifdef TERRAIN_SMOOTH
 	int firstX = static_cast<int>(std::floor(centre.x - radius));
@@ -519,32 +523,36 @@ void MeshGame::edit(const gameplay::Vector3& centre, float radius, uint32_t mate
 		{
 			for(int x = firstX; x <= lastX; ++x)
 			{
+				float amountToAddOrSubtract = 0.0f;
+				uint8_t uToAddOrSubtract = 0;
+				if((editAction == EditActions::Add) || (editAction == EditActions::Subtract))
+				{
+					amountToAddOrSubtract = (centre - Vector3(x,y,z)).length() / radius;
+					amountToAddOrSubtract = max(amountToAddOrSubtract, 0.0f);
+					amountToAddOrSubtract = min(amountToAddOrSubtract, 1.0f);
+					amountToAddOrSubtract = 1.0f - amountToAddOrSubtract;
+					amountToAddOrSubtract *= 255.0f;
+
+					amountToAddOrSubtract *= amount;
+
+					uToAddOrSubtract = static_cast<uint8_t>(amountToAddOrSubtract + 0.5f);
+				}
+
 				switch(editAction)
 				{
 				case EditActions::Add:
-					{
-						float amountToAdd = (centre - Vector3(x,y,z)).length() / radius;
-						amountToAdd = max(amountToAdd, 0.0f);
-						amountToAdd = min(amountToAdd, 1.0f);
-						amountToAdd = 1.0f - amountToAdd;
-						amountToAdd *= 255.0f;
-
-						amountToAdd *= (mTimeBetweenUpdates / 1000.0f);
-						amountToAdd *= mAddSubtractRateSlider->getValue();
-
-						uint8_t uToAdd = static_cast<uint8_t>(amountToAdd + 0.5f);
-
+					{						
 						if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
 						{
 							MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);	
 							uint32_t sumOfMaterials = originalMat.getSumOfMaterials();
-							if(sumOfMaterials + uToAdd <= originalMat.getMaxMaterialValue())
+							if(sumOfMaterials + uToAddOrSubtract <= originalMat.getMaxMaterialValue())
 							{
-								originalMat.setMaterial(materialToUse, originalMat.getMaterial(materialToUse) + uToAdd);
+								originalMat.setMaterial(materialToUse, originalMat.getMaterial(materialToUse) + uToAddOrSubtract);
 							}
 							else
 							{
-								addToMaterial(materialToUse, uToAdd, originalMat);
+								addToMaterial(materialToUse, uToAddOrSubtract, originalMat);
 							}
 							mVolume->setVoxelAt(x,y,z, originalMat);
 						}
@@ -553,22 +561,11 @@ void MeshGame::edit(const gameplay::Vector3& centre, float radius, uint32_t mate
 					}
 				case EditActions::Subtract:
 					{
-						float amountToAdd = (centre - Vector3(x,y,z)).length() / radius;
-						amountToAdd = max(amountToAdd, 0.0f);
-						amountToAdd = min(amountToAdd, 1.0f);
-						amountToAdd = 1.0f - amountToAdd;
-						amountToAdd *= 255.0f;
-
-						amountToAdd *= (mTimeBetweenUpdates / 1000.0f);
-						amountToAdd *= mAddSubtractRateSlider->getValue();
-
-						uint8_t uToAdd = static_cast<uint8_t>(amountToAdd + 0.5f);
-
 						if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
 						{
 							MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);	
 							uint32_t sumOfMaterials = originalMat.getSumOfMaterials();
-							subtractFromMaterial(uToAdd, originalMat);
+							subtractFromMaterial(uToAddOrSubtract, originalMat);
 							mVolume->setVoxelAt(x,y,z, originalMat);
 						}
 
@@ -582,9 +579,8 @@ void MeshGame::edit(const gameplay::Vector3& centre, float radius, uint32_t mate
 						amountToAdd = 1.0f - amountToAdd;
 						amountToAdd *= 255.0f;
 
-						amountToAdd *= (mTimeBetweenUpdates / 1000.0f);
-						amountToAdd *= mPaintIntensitySlider->getValue();
-
+						amountToAdd *= amount;
+						
 						uint8_t uToAdd = static_cast<uint8_t>(amountToAdd + 0.5f);
 
 						if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
@@ -633,6 +629,8 @@ void MeshGame::edit(const gameplay::Vector3& centre, float radius, uint32_t mate
 						interpMat.setMaterial(3, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp3 + bias))));
 
 						mVolume->setVoxelAt(x,y,z, interpMat);
+
+						break;
 					}
 				}
 			}

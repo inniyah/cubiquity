@@ -43,7 +43,7 @@ public:
 	void subtractMaterial(const gameplay::Vector3& centre, float radius);
 	void smooth(const gameplay::Vector3& centre, float radius);
 
-	void edit(const gameplay::Vector3& centre, float radius, uint32_t materialToUse, EditAction editAction);
+	void edit(const gameplay::Vector3& centre, float radius, uint32_t materialToUse, EditAction editAction, float amount);
 
 	void addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4& material);
 	void subtractFromMaterial(uint8_t amountToAdd, MultiMaterial4& material);
