@@ -39,7 +39,7 @@ void pointNodeAtTarget(Node* node, const Vector3& target, const Vector3& up = Ve
 MeshGame game;
 
 MeshGame::MeshGame()
-	: _font(NULL), mLastX(0), mLastY(0), mTimeBetweenUpdates(0.0f), mScreenPressed(false), mSphereVisible(false), mSelectedMaterial(0), mSphereNode(0)
+	: _font(NULL), mLastX(0), mLastY(0), mTimeBetweenUpdatesInSeconds(0.0f), mScreenPressed(false), mSphereVisible(false), mSelectedMaterial(0), mSphereNode(0)
 {
 }
 
@@ -158,7 +158,7 @@ void MeshGame::finalize()
 
 void MeshGame::update(float elapsedTime)
 {
-	mTimeBetweenUpdates = elapsedTime;
+	mTimeBetweenUpdatesInSeconds = elapsedTime;
 
 #ifdef TERRAIN_SMOOTH
 	if(mScreenPressed)
@@ -390,16 +390,13 @@ void MeshGame::moveCamera(int x, int y)
 
 void MeshGame::applyPaint(const gameplay::Vector3& centre, float radius, uint32_t materialToPaintWith)
 {
-	float amount = (mTimeBetweenUpdates / 1000.0f) * mPaintIntensitySlider->getValue();
-	edit(centre, radius, materialToPaintWith, EditActions::Paint, amount);
+	edit(centre, radius, materialToPaintWith, EditActions::Paint, mTimeBetweenUpdatesInSeconds, mAddSubtractRateSlider->getValue(), 0.0f);
 }
 
 void MeshGame::smooth(const gameplay::Vector3& centre, float radius)
 {
-	float amount = (mTimeBetweenUpdates / 1000.0f) * mSmoothRateSlider->getValue();
-
 	// '0' is a dummy as the smooth operations smooths *all* materials
-	edit(centre, radius, 0, EditActions::Smooth, amount);
+	edit(centre, radius, 0, EditActions::Smooth, mTimeBetweenUpdatesInSeconds, mAddSubtractRateSlider->getValue(), mSmoothRateSlider->getValue());
 }
 
 void MeshGame::subtractFromMaterial(uint8_t amountToAdd, MultiMaterial4& material)
@@ -474,19 +471,16 @@ void MeshGame::addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4
 
 void MeshGame::addMaterial(const gameplay::Vector3& centre, float radius, uint32_t materialToAdd)
 {
-	float amount = (mTimeBetweenUpdates / 1000.0f) * mAddSubtractRateSlider->getValue();
-	edit(centre, radius, materialToAdd, EditActions::Add, amount);
+	edit(centre, radius, materialToAdd, EditActions::Add, mTimeBetweenUpdatesInSeconds, mAddSubtractRateSlider->getValue(), 0.0f);
 }
 
 void MeshGame::subtractMaterial(const gameplay::Vector3& centre, float radius)
 {
-	float amount = (mTimeBetweenUpdates / 1000.0f) * mAddSubtractRateSlider->getValue();
-
 	// '0' is a dummy as the subtract operations reduces *all* materials
-	edit(centre, radius, 0, EditActions::Subtract, amount);
+	edit(centre, radius, 0, EditActions::Subtract, mTimeBetweenUpdatesInSeconds, mAddSubtractRateSlider->getValue(), 0.0f);
 }
 
-void MeshGame::edit(const gameplay::Vector3& centre, float radius, uint32_t materialToUse, EditAction editAction, float amount)
+void MeshGame::edit(const gameplay::Vector3& centre, float radius, uint32_t materialToUse, EditAction editAction, float timeElapsedInSeconds, float amount, float smoothBias)
 {
 	#ifdef TERRAIN_SMOOTH
 	int firstX = static_cast<int>(std::floor(centre.x - radius));
@@ -529,14 +523,20 @@ void MeshGame::edit(const gameplay::Vector3& centre, float radius, uint32_t mate
 				if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
 				{
 					float falloff = falloff = (centre - Vector3(x,y,z)).length() / radius;
-					falloff = max(falloff, 0.0f);
-					falloff = min(falloff, 1.0f);
+					falloff = min(max(falloff, 0.0f), 1.0f);
 					falloff = 1.0f - falloff;
 
-					float amountToAddOrSubtract = falloff * 255.0f;
-					amountToAddOrSubtract *= amount;
+					float amountToEditBy = falloff * timeElapsedInSeconds * amount;
 
-					uint8_t uToAddOrSubtract = static_cast<uint8_t>(amountToAddOrSubtract + 0.5f);
+					// The logic for smoothing is rather different from adding/subtracting/painting
+					// so the 'amountToEditBy' doesn't apply in the same way. The multiplier below
+					// just makes it behave sensibly.
+					if(editAction == EditActions::Smooth)
+					{
+						amountToEditBy *= 0.1f;
+					}
+
+					uint8_t uToAddOrSubtract = static_cast<uint8_t>(amountToEditBy + 0.5f);
 
 					switch(editAction)
 					{
@@ -572,13 +572,6 @@ void MeshGame::edit(const gameplay::Vector3& centre, float radius, uint32_t mate
 						}
 					case EditActions::Smooth:
 						{
-							float amountToAdd = (centre - Vector3(x,y,z)).length() / radius;
-							amountToAdd = max(amountToAdd, 0.0f);
-							amountToAdd = min(amountToAdd, 1.0f);
-							amountToAdd = 1.0f - amountToAdd;
-
-							amountToAdd*= amount;
-
 							MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);
 							MultiMaterial4 smoothedMat = tempVolume.getVoxelAt(x, y, z);
 
@@ -593,10 +586,10 @@ void MeshGame::edit(const gameplay::Vector3& centre, float radius, uint32_t mate
 							float smooth2 = static_cast<float>(smoothedMat.getMaterial(2));
 							float smooth3 = static_cast<float>(smoothedMat.getMaterial(3));
 
-							float interp0 = (smooth0 - orig0) * amountToAdd + orig0;
-							float interp1 = (smooth1 - orig1) * amountToAdd + orig1;
-							float interp2 = (smooth2 - orig2) * amountToAdd + orig2;
-							float interp3 = (smooth3 - orig3) * amountToAdd + orig3;
+							float interp0 = (smooth0 - orig0) * amountToEditBy + orig0;
+							float interp1 = (smooth1 - orig1) * amountToEditBy + orig1;
+							float interp2 = (smooth2 - orig2) * amountToEditBy + orig2;
+							float interp3 = (smooth3 - orig3) * amountToEditBy + orig3;
 
 							MultiMaterial4 interpMat;
 							// In theory we should add 0.5f before casting to round
