@@ -71,9 +71,7 @@ void MeshGame::initialize()
 	mMat3Button = (Button*)mForm->getControl("Mat3Button");
 
 	mBrushSizeSlider = (Slider*)mForm->getControl("BrushSizeSlider");
-	mAddSubtractRateSlider = (Slider*)mForm->getControl("AddSubtractRateSlider");
-	mPaintIntensitySlider = (Slider*)mForm->getControl("PaintIntensitySlider");
-	mSmoothRateSlider = (Slider*)mForm->getControl("SmoothRateSlider");
+	mBrushIntensitySlider = (Slider*)mForm->getControl("BrushIntensitySlider");
 	mSmoothBiasSlider = (Slider*)mForm->getControl("SmoothBiasSlider");
 
 	mZoomInButton->addListener(this, Listener::PRESS);
@@ -390,13 +388,13 @@ void MeshGame::moveCamera(int x, int y)
 
 void MeshGame::applyPaint(const gameplay::Vector3& centre, float radius, uint32_t materialToPaintWith)
 {
-	edit(centre, radius, materialToPaintWith, EditActions::Paint, mTimeBetweenUpdatesInSeconds, mAddSubtractRateSlider->getValue(), 0.0f);
+	edit(centre, radius, materialToPaintWith, EditActions::Paint, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue(), 0.0f);
 }
 
 void MeshGame::smooth(const gameplay::Vector3& centre, float radius)
 {
 	// '0' is a dummy as the smooth operations smooths *all* materials
-	edit(centre, radius, 0, EditActions::Smooth, mTimeBetweenUpdatesInSeconds, mAddSubtractRateSlider->getValue(), mSmoothRateSlider->getValue());
+	edit(centre, radius, 0, EditActions::Smooth, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue(), mSmoothBiasSlider->getValue());
 }
 
 void MeshGame::subtractFromMaterial(uint8_t amountToAdd, MultiMaterial4& material)
@@ -471,13 +469,13 @@ void MeshGame::addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4
 
 void MeshGame::addMaterial(const gameplay::Vector3& centre, float radius, uint32_t materialToAdd)
 {
-	edit(centre, radius, materialToAdd, EditActions::Add, mTimeBetweenUpdatesInSeconds, mAddSubtractRateSlider->getValue(), 0.0f);
+	edit(centre, radius, materialToAdd, EditActions::Add, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue(), 0.0f);
 }
 
 void MeshGame::subtractMaterial(const gameplay::Vector3& centre, float radius)
 {
 	// '0' is a dummy as the subtract operations reduces *all* materials
-	edit(centre, radius, 0, EditActions::Subtract, mTimeBetweenUpdatesInSeconds, mAddSubtractRateSlider->getValue(), 0.0f);
+	edit(centre, radius, 0, EditActions::Subtract, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue(), 0.0f);
 }
 
 void MeshGame::edit(const gameplay::Vector3& centre, float radius, uint32_t materialToUse, EditAction editAction, float timeElapsedInSeconds, float amount, float smoothBias)

@@ -130,14 +130,14 @@ form particleEditor
             consumeInputEvents = false
         }
         
-        label titleAddSubtractRate
+        label titleBrushIntensity
         {
             style = title
             size = 150, 30
-            text = Add/Sub Rate
+            text = Brush Intensity
         }
         
-        slider AddSubtractRateSlider
+        slider BrushIntensitySlider
         {
             style = noBorder
             size = 150, 50
@@ -146,44 +146,6 @@ form particleEditor
             max = 1.0
             value = 0.5
             step = 0.01
-            consumeInputEvents = false
-        }
-        
-        label titlePaintIntensity
-        {
-            style = title
-            size = 150, 30
-            text = Paint Intensity
-        }
-        
-        slider PaintIntensitySlider
-        {
-            style = noBorder
-            size = 150, 50
-            orientation = HORIZONTAL
-            min = 1
-            max = 10
-            value = 5
-            step = 1
-            consumeInputEvents = false
-        }
-        
-        label titleSmoothRate
-        {
-            style = title
-            size = 150, 30
-            text = Smooth Rate
-        }
-        
-        slider SmoothRateSlider
-        {
-            style = noBorder
-            size = 150, 50
-            orientation = HORIZONTAL
-            min = 1
-            max = 100
-            value = 50
-            step = 1
             consumeInputEvents = false
         }
         

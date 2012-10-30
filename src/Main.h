@@ -106,9 +106,7 @@ private:
 	Button* mMat3Button;
 
 	Slider* mBrushSizeSlider;
-	Slider* mAddSubtractRateSlider;
-	Slider* mPaintIntensitySlider;
-	Slider* mSmoothRateSlider;
+	Slider* mBrushIntensitySlider;
 	Slider* mSmoothBiasSlider;
 
 	uint32_t mSelectedMaterial;
