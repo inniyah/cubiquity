@@ -162,17 +162,17 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <None Include="bar-descriptor.xml" >
-        <SubType>Designer</SubType>
+    <None Include="bar-descriptor.xml">
+      <SubType>Designer</SubType>
     </None>
     <None Include="game.config" />
-	<None Include="icon.png" />
+    <None Include="icon.png" />
     <None Include="res\box.dae" />
     <None Include="res\box.gpb" />
     <None Include="res\box.material" />
     <None Include="res\colored.frag" />
     <None Include="res\colored.vert" />
-  </ItemGroup> 
+  </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\ArraySizes.cpp" />
     <ClCompile Include="src\Colour.cpp" />
@@ -185,6 +185,7 @@
     <ClCompile Include="src\RandomUnitVectors.cpp" />
     <ClCompile Include="src\RandomVectors.cpp" />
     <ClCompile Include="src\Region.cpp" />
+    <ClCompile Include="src\SmoothTerrainVolume.cpp" />
     <ClCompile Include="src\Utility.cpp" />
     <ClCompile Include="src\VertexTypes.cpp" />
     <ClCompile Include="src\VolumeRegion.cpp" />

@@ -6,7 +6,7 @@
 
 #include "PolyVoxCore/MaterialDensityPair.h"
 
-void copyVolume(const SimpleVolume<MultiMaterial4>* src, SimpleVolume<MultiMaterial4>* dst)
+/*void copyVolume(const SimpleVolume<MultiMaterial4>* src, SimpleVolume<MultiMaterial4>* dst)
 {
 	Region reg = src->getEnclosingRegion();
 	int minX = reg.getLowerCorner().getX();
@@ -23,29 +23,22 @@ void copyVolume(const SimpleVolume<MultiMaterial4>* src, SimpleVolume<MultiMater
 			for(int x = minX; x <= maxX; x++)
 			{
 				dst->setVoxelAt(x,y,z,src->getVoxelAt(x,y,z));
-
-				/*float targetLength = basedOn->getVoxelAt(x,y,z).getMaterial().length();
-				float currentLength = toNormalise->getVoxelAt(x,y,z).getMaterial().length();
-				float multiplier = targetLength / currentLength;
-
-				if(currentLength < 0.001)
-				{
-					toNormalise->setVoxelAt(x,y,z,basedOn->getVoxelAt(x,y,z));
-				}
-				else
-				{
-				Vector3DFloat values = toNormalise->getVoxelAt(x,y,z).getMaterial();
-				values *= multiplier;
-				float resultLength = values.length();
-				assert(abs(targetLength - resultLength) < 0.001);
-				MultiMaterial value;
-				value.setMaterial(values);
-				toNormalise->setVoxelAt(x,y,z,value);
-				}*/
 			}
 		}
 	}
+}*/
+
+namespace EditActions
+{
+	enum EditAction
+	{
+		Add,
+		Subtract,
+		Paint, 
+		Smooth
+	};
 }
+typedef EditActions::EditAction EditAction;
 
 class SmoothTerrainVolume : public Volume<MultiMaterial4>
 {
@@ -55,6 +48,15 @@ public:
 		SmoothTerrainVolume* volume = new SmoothTerrainVolume(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth);
 		return volume;
 	}
+
+	void edit(const gameplay::Vector3& centre, float radius, uint32_t materialToUse, EditAction editAction, float timeElapsedInSeconds, float amount, float smoothBias);
+	void addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4& material);
+	void subtractFromMaterial(uint8_t amountToAdd, MultiMaterial4& material);
+
+	void applyPaint(const gameplay::Vector3& centre, float radius, uint32_t materialToPaintWith, float timeElapsedInSeconds, float amount, float smoothBias);
+	void smooth(const gameplay::Vector3& centre, float radius, float timeElapsedInSeconds, float amount, float smoothBias);
+	void addMaterial(const gameplay::Vector3& centre, float radius, uint32_t materialToAdd, float timeElapsedInSeconds, float amount, float smoothBias);
+	void subtractMaterial(const gameplay::Vector3& centre, float radius, float timeElapsedInSeconds, float amount, float smoothBias);
 
 protected:
 	SmoothTerrainVolume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)

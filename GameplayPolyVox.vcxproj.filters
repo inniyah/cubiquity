@@ -7,7 +7,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-	<None Include="game.config" />
+    <None Include="game.config" />
     <None Include="icon.png" />
     <None Include="bar-descriptor.xml" />
     <None Include="res\box.dae">
@@ -30,10 +30,30 @@
     <ClInclude Include="src\Main.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Colour.h" />
+    <ClInclude Include="src\ColouredCubesVolume.h" />
+    <ClInclude Include="src\SmoothTerrainVolume.h" />
+    <ClInclude Include="src\Volume.h" />
+    <ClInclude Include="src\VolumeRegion.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\ArraySizes.cpp" />
+    <ClCompile Include="src\Colour.cpp" />
+    <ClCompile Include="src\GradientEstimators.cpp" />
+    <ClCompile Include="src\Log.cpp" />
+    <ClCompile Include="src\MarchingCubesTables.cpp" />
+    <ClCompile Include="src\MeshDecimator.cpp" />
+    <ClCompile Include="src\MultiMaterial.cpp" />
+    <ClCompile Include="src\RandomUnitVectors.cpp" />
+    <ClCompile Include="src\RandomVectors.cpp" />
+    <ClCompile Include="src\Region.cpp" />
+    <ClCompile Include="src\Utility.cpp" />
+    <ClCompile Include="src\VertexTypes.cpp" />
+    <ClCompile Include="src\VolumeRegion.cpp" />
+    <ClCompile Include="src\VoxelFilters.cpp" />
+    <ClCompile Include="src\SmoothTerrainVolume.cpp" />
   </ItemGroup>
 </Project>
