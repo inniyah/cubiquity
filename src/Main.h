@@ -23,12 +23,9 @@ class MeshGame: public Game, Control::Listener
 public:
     MeshGame();
     virtual ~MeshGame();
+
     void keyEvent(Keyboard::KeyEvent evt, int key);
     void touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int contactIndex);
-
-	void addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4& material);
-	void subtractFromMaterial(uint8_t amountToAdd, MultiMaterial4& material);
-
 	void controlEvent(Control* control, EventType evt);
 
 protected:

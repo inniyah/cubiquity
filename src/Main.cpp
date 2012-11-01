@@ -163,7 +163,7 @@ void MeshGame::update(float elapsedTime)
 	{
 		if(mPaintButton->isSelected())
 		{
-			mVolume->applyPaint(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue(), mSmoothBiasSlider->getValue());
+			mVolume->applyPaint(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
 		}
 		if(mSmoothButton->isSelected())
 		{
@@ -171,11 +171,11 @@ void MeshGame::update(float elapsedTime)
 		}
 		if(mAddButton->isSelected())
 		{
-			mVolume->addMaterial(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue(), mSmoothBiasSlider->getValue());
+			mVolume->addMaterial(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
 		}
 		if(mSubtractButton->isSelected())
 		{
-			mVolume->subtractMaterial(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue(), mSmoothBiasSlider->getValue());
+			mVolume->subtractMaterial(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
 		}
 	}
 #endif
