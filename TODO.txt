@@ -1,0 +1,3 @@
+Lua bindings
+LOD for smooth terrain
+Clever material handling for smooth terrain. Only pass most important materials? Pack more than one material intensity into a single float? Sort material intensities so that we can just process the first x materials in fragment shader?
