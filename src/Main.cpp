@@ -98,7 +98,7 @@ void MeshGame::initialize()
 	_scene->addNode(mSphereNode);
 
     // Find the light node
-	_light = Light::createDirectional(Vector3(1.0, 1.0, 1.0));
+	_light = Light::createDirectional(Vector3(0.7, 0.7, 0.7));
 	_lightNode = Node::create();
 	_lightNode->setLight(_light);
 	_lightNode->setTranslation(0.0f, 100.0f, 0.0f);

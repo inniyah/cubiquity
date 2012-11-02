@@ -110,10 +110,16 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 		*ptr = vecVertices[i].getPosition().getZ(); ptr++;
 		*ptr = 1.0;  ptr++;
 
-		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial(0)) / static_cast<float>(MultiMaterial4::getMaxMaterialValue()); ptr++;
-		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial(1)) / static_cast<float>(MultiMaterial4::getMaxMaterialValue()); ptr++;
-		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial(2)) / static_cast<float>(MultiMaterial4::getMaxMaterialValue()); ptr++;
-		*ptr = static_cast<float>(vecVertices[i].getMaterial().getMaterial(3)) / static_cast<float>(MultiMaterial4::getMaxMaterialValue()); ptr++;
+		// Material values range from 0 - getMaxMaterialValue() for each voxel. At the position
+		// of the isosurface materials are not at their full intensity (they are at roughly half
+		// because that's where the theshold is). We need to normalise the values to thier full range.
+		Vector<8, float> matAsVec = vecVertices[i].getMaterial();
+		matAsVec.normalise();
+
+		*ptr = matAsVec.getElement(0); ptr++;
+		*ptr = matAsVec.getElement(1); ptr++;
+		*ptr = matAsVec.getElement(2); ptr++;
+		*ptr = matAsVec.getElement(3); ptr++;
 		
 		*ptr = vecVertices[i].getNormal().getX(); ptr++;
 		*ptr = vecVertices[i].getNormal().getY(); ptr++;
