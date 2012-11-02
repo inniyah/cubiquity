@@ -127,7 +127,7 @@ void MeshGame::initialize()
 #ifdef WIN32
 	if(mVolume->getType() == VolumeTypes::SmoothTerrain)
 	{
-		mVolume->loadData("res/level2MultiMaterial8Bit.vol");
+		mVolume->loadData("res/level2MultiMaterial4Bit.vol");
 	}
 	else
 	{
@@ -136,7 +136,7 @@ void MeshGame::initialize()
 #else
 	if(mVolume->getType() == VolumeTypes::SmoothTerrain)
 	{
-		mVolume->loadData("/sdcard/external_sd/level2MultiMaterial8Bit.vol");
+		mVolume->loadData("/sdcard/external_sd/level2MultiMaterial4Bit.vol");
 	}
 	else
 	{
@@ -161,6 +161,19 @@ void MeshGame::update(float elapsedTime)
 #ifdef TERRAIN_SMOOTH
 	if(mScreenPressed)
 	{
+		Ray ray;
+		_cameraNode->getCamera()->pickRay(getViewport(), mLastX, mLastY, &ray);
+
+		Vector3 dir = ray.getDirection();
+		dir *= 200.0f;
+		ray.setDirection(dir);
+
+		Vector3 intersection;
+		if(mVolume->raycast(ray, 200.0f, intersection))
+		{
+			mSphereNode->setTranslation(intersection);
+		}		
+
 		if(mPaintButton->isSelected())
 		{
 			mVolume->applyPaint(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
@@ -296,19 +309,6 @@ void MeshGame::keyEvent(Keyboard::KeyEvent evt, int key)
 
 void MeshGame::touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int contactIndex)
 {
-	Ray ray;
-	_cameraNode->getCamera()->pickRay(getViewport(), x, y, &ray);
-
-	Vector3 dir = ray.getDirection();
-	dir *= 200.0f;
-	ray.setDirection(dir);
-
-	Vector3 intersection;
-	if(mVolume->raycast(ray, 200.0f, intersection))
-	{
-		mSphereNode->setTranslation(intersection);
-	}		
-
     switch (evt)
     {
     case Touch::TOUCH_PRESS:
@@ -333,11 +333,14 @@ void MeshGame::touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int cont
 			break;
 		}
     case Touch::TOUCH_MOVE:
-		{
+		{			
 			if(mRotateButton->isSelected())
 			{
 				moveCamera(x,y);
 			}
+
+			mLastX = x;
+			mLastY = y;
 			break;
 		}
     default:

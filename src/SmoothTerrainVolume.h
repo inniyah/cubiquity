@@ -23,7 +23,7 @@ public:
 
 protected:
 	SmoothTerrainVolume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)
-		:Volume<MultiMaterial4>(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth)
+		:Volume<VoxelType>(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth)
 		,mSmoothingVolume(0)
 	{
 	}
@@ -51,11 +51,11 @@ private:
 	};
 	typedef EditActions::EditAction EditAction;
 
-	void addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4& material);
-	void subtractFromMaterial(uint8_t amountToAdd, MultiMaterial4& material);
+	void addToMaterial(uint32_t index, uint8_t amountToAdd, VoxelType& material);
+	void subtractFromMaterial(uint8_t amountToAdd, VoxelType& material);
 	void edit(const gameplay::Vector3& centre, float radius, uint32_t materialToUse, EditAction editAction, float timeElapsedInSeconds, float amount, float smoothBias);
 
-	RawVolume<MultiMaterial4>* mSmoothingVolume;
+	RawVolume<VoxelType>* mSmoothingVolume;
 };
 
 #endif //SMOOTHTERRAINVOLUME_H_

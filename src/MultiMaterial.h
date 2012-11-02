@@ -28,24 +28,6 @@ public:
 		}
 	}
 
-	//FIXME - These next two functions should just be one function templatised on cast type.
-	MultiMaterial(const MultiMaterial<uint64_t, 16, 4>& value) throw()
-	{
-		for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
-		{
-			//m_tElements[ct] = static_cast<Type>(vector.getElement(ct));
-			setMaterial(ct, value.getMaterial(ct));
-		}
-	}
-
-	MultiMaterial(const MultiMaterial<uint32_t, 8, 4>& value) throw()
-	{
-		for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
-		{
-			setMaterial(ct, value.getMaterial(ct));
-		}
-	}
-
 	// This function lets us convert a Vector of floats into a MultiMaterial. 
 	// This is useful for performing certain operations with more precision.
 	MultiMaterial(const PolyVox::Vector<NoOfMaterials, float>& value) throw()
@@ -56,7 +38,7 @@ public:
 		}
 	}
 
-	// This function lets us convert a Vector of floats into a MultiMaterial. 
+	// This function lets us convert a MultiMaterial into a Vector of floats. 
 	// This is useful for performing certain operations with more precision.
 	operator PolyVox::Vector<NoOfMaterials, float>()
 	{
@@ -226,8 +208,7 @@ MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials> operator/(const Multi
 	return resultMat;
 }
 
-typedef MultiMaterial<uint32_t, 8, 4> MultiMaterial4;
-typedef MultiMaterial<uint64_t, 16, 4> MultiMaterial16;
+typedef MultiMaterial<uint32_t, 4, 8> MultiMaterial4;
 
 // We overload the trilinear interpolation for the MultiMaterial type because it does not have enough precision.
 // The overloaded version converts the values to floats and interpolates those before converting back.
