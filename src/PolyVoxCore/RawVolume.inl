@@ -33,6 +33,7 @@ namespace PolyVox
 		const Region& regValid
 	)
 	:BaseVolume<VoxelType>(regValid)
+	,m_bClampInsteadOfBorder(false)
 	{
 		setBorderValue(VoxelType());
 
@@ -70,6 +71,16 @@ namespace PolyVox
 	template <typename VoxelType>
 	VoxelType RawVolume<VoxelType>::getVoxelAt(int32_t uXPos, int32_t uYPos, int32_t uZPos) const
 	{
+		if(m_bClampInsteadOfBorder)
+		{
+			Vector3DInt32 lower = this->m_regValidRegion.getLowerCorner();
+			Vector3DInt32 upper = this->m_regValidRegion.getUpperCorner();
+
+			uXPos = std::min(std::max(uXPos, lower.getX()), upper.getX());
+			uYPos = std::min(std::max(uYPos, lower.getY()), upper.getY());
+			uZPos = std::min(std::max(uZPos, lower.getZ()), upper.getZ());
+		}
+
 		if(this->m_regValidRegion.containsPoint(Vector3DInt32(uXPos, uYPos, uZPos)))
 		{
 			const Vector3DInt32& v3dLowerCorner = this->m_regValidRegion.getLowerCorner();

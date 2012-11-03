@@ -141,6 +141,9 @@ namespace PolyVox
 		/// Calculates approximatly how many bytes of memory the volume is currently using.
 		uint32_t calculateSizeInBytes(void);
 
+		//Really we should use an enum for the various options.
+		bool m_bClampInsteadOfBorder;
+
 private:
 		void initialise(const Region& regValidRegion);
 
