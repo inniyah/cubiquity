@@ -13,18 +13,24 @@ VolumeRegion::VolumeRegion(PolyVox::Region region)
 	:mRegion(region)
 	,mIsMeshUpToDate(false)
 {
-	std::stringstream ss;
-	ss << "VolumeRegionNode(" << mRegion.getLowerCorner().getX() << "," << mRegion.getLowerCorner().getY() << "," << mRegion.getLowerCorner().getZ() << ")";
-	mNode = Node::create(ss.str().c_str());
-	 //mNode->setTranslation(mRegion.getLowerCorner().getX(), mRegion.getLowerCorner().getY(), mRegion.getLowerCorner().getZ());
+	for(uint32_t lod = 0; lod < NoOfLodLevels; lod++)
+	{
+		std::stringstream ss;
+		ss << "VolumeRegionNode(" << mRegion.getLowerCorner().getX() << "," << mRegion.getLowerCorner().getY() << "," << mRegion.getLowerCorner().getZ() << "), LOD = " << lod;
+		mNode[lod] = Node::create(ss.str().c_str());
+		 //mNode->setTranslation(mRegion.getLowerCorner().getX(), mRegion.getLowerCorner().getY(), mRegion.getLowerCorner().getZ());
+	}
 }
 
 VolumeRegion::~VolumeRegion()
 {
-	 SAFE_RELEASE(mNode);
+	for(uint32_t lod = 0; lod < NoOfLodLevels; lod++)
+	{
+		SAFE_RELEASE(mNode[lod]);
+	}
 }
 
-void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<Colour> >& polyVoxMesh)
+void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<Colour> >& polyVoxMesh, uint32_t lod)
 {
 	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
 	const std::vector<PositionMaterial<Colour> >& vecVertices = polyVoxMesh.getVertices();
@@ -72,21 +78,21 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
     Model* model = Model::create(mesh);
     SAFE_RELEASE(mesh);
 
-	mNode->setModel(model);
+	mNode[lod]->setModel(model);
 	SAFE_RELEASE(model);
 }
 
-void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<MultiMaterial4> >& polyVoxMesh)
+void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<MultiMaterial4> >& polyVoxMesh, uint32_t lod)
 {
 	GP_ERROR("This function should never be called!"); //See note in header
 }
 
-void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< Colour > >& polyVoxMesh)
+void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< Colour > >& polyVoxMesh, uint32_t lod)
 {
 	GP_ERROR("This function should never be called!"); //See note in header
 }
 
-void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& polyVoxMesh)
+void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& polyVoxMesh, uint32_t lod)
 {
 	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
 	const std::vector<PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& vecVertices = polyVoxMesh.getVertices();
@@ -146,14 +152,17 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
     Model* model = Model::create(mesh);
     SAFE_RELEASE(mesh);
 
-	mNode->setModel(model);
+	mNode[lod]->setModel(model);
 	SAFE_RELEASE(model);
 }
 
 void VolumeRegion::setMaterial(const char* material)
 {
-	if(mNode->getModel())
+	for(uint32_t lod = 0; lod < NoOfLodLevels; lod++)
 	{
-		mNode->getModel()->setMaterial(material);
+		if(mNode[lod]->getModel())
+		{
+			mNode[lod]->getModel()->setMaterial(material);
+		}
 	}
 }

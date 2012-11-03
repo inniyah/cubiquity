@@ -6,6 +6,7 @@ using namespace PolyVox;
 #include "PolyVoxCore/LowPassFilter.h"
 #include "PolyVoxCore/MaterialDensityPair.h"
 #include "PolyVoxCore/Raycast.h"
+#include "PolyVoxCore/VolumeResampler.h"
 
 #include "GameplayMarchingCubesController.h"
 #include "GameplayIsQuadNeeded.h"
@@ -102,12 +103,13 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 
 				// The above actually causes the the regions to extend outside the upper range of
 				// the volume. For the Marching cubes this is fine as it ensures the volume will
-				// get closed, so we wnt to mimic this behaviour on the lower edges too.
+				// get closed, so we want to mimic this behaviour on the lower edges too.
 				if(getType() == VolumeTypes::SmoothTerrain)
 				{
-					if(x == 0) regLowerX--;
-					if(y == 0) regLowerY--;
-					if(z == 0) regLowerZ--;
+					//We only need to subtract 1 for highest LOD, but subtract 4 to allow 3 LOD levels.
+					if(x == 0) regLowerX -= 4;
+					if(y == 0) regLowerY -= 4;
+					if(z == 0) regLowerZ -= 4;
 				}
 
 				// This wasn't necessary for the coloured cubes because this surface extractor already
@@ -124,9 +126,12 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 				}
 
 				mVolumeRegions[x][y][z] = new VolumeRegion(Region(regLowerX, regLowerY, regLowerZ, regUpperX, regUpperY, regUpperZ));
-				mRootNode->addChild(mVolumeRegions[x][y][z]->mNode);
-				//mVolumeRegions[x][y][z]->mNode->setTranslation(regLowerX, regLowerY, regLowerZ);
-				mVolumeRegions[x][y][z]->mNode->translate(regLowerX, regLowerY, regLowerZ);
+
+				for(uint32_t lod = 0; lod < VolumeRegion::NoOfLodLevels; lod++)
+				{
+					mRootNode->addChild(mVolumeRegions[x][y][z]->mNode[lod]);
+					mVolumeRegions[x][y][z]->mNode[lod]->translate(regLowerX, regLowerY, regLowerZ);
+				}
 			}
 		}
 	}
@@ -259,7 +264,7 @@ void Volume<VoxelType>::updateMeshes()
 
 						if(colouredCubicMesh.getNoOfIndices() > 0)
 						{
-							mVolumeRegions[x][y][z]->buildGraphicsMesh(colouredCubicMesh);
+							mVolumeRegions[x][y][z]->buildGraphicsMesh(colouredCubicMesh, 0);
 						}
 					}
 					else if(getType() == VolumeTypes::SmoothTerrain)
@@ -269,9 +274,34 @@ void Volume<VoxelType>::updateMeshes()
 						MarchingCubesSurfaceExtractor< SimpleVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor(mVolData, regionToExtract, &smoothTerrainMesh, controller);
 						surfaceExtractor.execute();
 
-						if(smoothTerrainMesh.getNoOfIndices() > 0)
+						/*if(smoothTerrainMesh.getNoOfIndices() > 0)
 						{
-							mVolumeRegions[x][y][z]->buildGraphicsMesh(smoothTerrainMesh);
+							mVolumeRegions[x][y][z]->buildGraphicsMesh(smoothTerrainMesh, 0);
+						}*/
+
+						Region lowLodRegion(regionToExtract);
+						Vector3DInt32 lowerCorner = lowLodRegion.getLowerCorner();
+						Vector3DInt32 upperCorner = lowLodRegion.getUpperCorner();
+
+						upperCorner = upperCorner - lowerCorner;
+						upperCorner = upperCorner / 2;
+						upperCorner = upperCorner + lowerCorner;
+
+						lowLodRegion.setUpperCorner(upperCorner);
+
+						RawVolume<VoxelType> lowLodVolume(lowLodRegion);
+						VolumeResampler< SimpleVolume<VoxelType>, RawVolume<VoxelType> > volumeResampler(mVolData, regionToExtract, &lowLodVolume, lowLodRegion);
+						volumeResampler.execute();
+
+						SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > > lowLodMesh;
+						MarchingCubesSurfaceExtractor< RawVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor2(&lowLodVolume, lowLodRegion, &lowLodMesh, controller);
+						surfaceExtractor2.execute();
+
+						lowLodMesh.scaleVertices(2.0f);
+
+						if(lowLodMesh.getNoOfIndices() > 0)
+						{
+							mVolumeRegions[x][y][z]->buildGraphicsMesh(lowLodMesh, 0);
 						}
 					}
 
