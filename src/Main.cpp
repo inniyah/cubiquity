@@ -127,7 +127,7 @@ void MeshGame::initialize()
 #ifdef WIN32
 	if(mVolume->getType() == VolumeTypes::SmoothTerrain)
 	{
-		mVolume->loadData("res/level2MultiMaterial4Bit.vol");
+		mVolume->loadData("res/level2MultiMaterial8Bit.vol");
 	}
 	else
 	{
@@ -136,7 +136,7 @@ void MeshGame::initialize()
 #else
 	if(mVolume->getType() == VolumeTypes::SmoothTerrain)
 	{
-		mVolume->loadData("/sdcard/external_sd/level2MultiMaterial4Bit.vol");
+		mVolume->loadData("/sdcard/external_sd/level2MultiMaterial8Bit.vol");
 	}
 	else
 	{
@@ -375,7 +375,7 @@ bool MeshGame::drawScene(Node* node)
 	{
 		model->getMaterial()->getParameter("u_lightColor")->setValue(_light->getColor());
 		model->getMaterial()->getParameter("u_lightDirection")->setValue(_lightNode->getForwardVectorWorld());
-        model->draw(true);
+        model->draw(false);
 	}
     return true;
 }

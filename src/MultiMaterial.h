@@ -208,7 +208,7 @@ MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials> operator/(const Multi
 	return resultMat;
 }
 
-typedef MultiMaterial<uint32_t, 4, 8> MultiMaterial4;
+typedef MultiMaterial<uint32_t, 8, 4> MultiMaterial4;
 
 // We overload the trilinear interpolation for the MultiMaterial type because it does not have enough precision.
 // The overloaded version converts the values to floats and interpolates those before converting back.

@@ -129,7 +129,7 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 		// Material values range from 0 - getMaxMaterialValue() for each voxel. At the position
 		// of the isosurface materials are not at their full intensity (they are at roughly half
 		// because that's where the theshold is). We need to normalise the values to thier full range.
-		Vector<8, float> matAsVec = vecVertices[i].getMaterial();
+		Vector<4, float> matAsVec = vecVertices[i].getMaterial();
 		matAsVec.normalise();
 
 		*ptr = matAsVec.getElement(0); ptr++;
