@@ -125,15 +125,7 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 					if(z < (volumeDepthInRegions - 1)) regUpperZ--;
 				}
 
-				mVolumeRegions[x][y][z] = new VolumeRegion(Region(regLowerX, regLowerY, regLowerZ, regUpperX, regUpperY, regUpperZ));
-
-				for(uint32_t lod = 0; lod < VolumeRegion::NoOfLodLevels; lod++)
-				{
-					Node* nodeToAdd = mVolumeRegions[x][y][z]->mNode[lod];
-					mRootNode->addChild(nodeToAdd);
-					nodeToAdd->translate(regLowerX, regLowerY, regLowerZ);
-					SAFE_RELEASE(nodeToAdd);					
-				}
+				mVolumeRegions[x][y][z] = new VolumeRegion(Region(regLowerX, regLowerY, regLowerZ, regUpperX, regUpperY, regUpperZ), mRootNode);
 			}
 		}
 	}

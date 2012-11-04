@@ -18,7 +18,7 @@ void lodCleanupCallback(void* ptr)
 	}
 }
 
-VolumeRegion::VolumeRegion(PolyVox::Region region)
+VolumeRegion::VolumeRegion(PolyVox::Region region, Node* parentNode)
 	:mRegion(region)
 	,mIsMeshUpToDate(false)
 {
@@ -27,7 +27,8 @@ VolumeRegion::VolumeRegion(PolyVox::Region region)
 		std::stringstream ss;
 		ss << "VolumeRegionNode(" << mRegion.getLowerCorner().getX() << "," << mRegion.getLowerCorner().getY() << "," << mRegion.getLowerCorner().getZ() << "), LOD = " << lod;
 		mNode[lod] = Node::create(ss.str().c_str());
-		 //mNode->setTranslation(mRegion.getLowerCorner().getX(), mRegion.getLowerCorner().getY(), mRegion.getLowerCorner().getZ());
+		parentNode->addChild(mNode[lod]);
+		 mNode[lod]->setTranslation(mRegion.getLowerCorner().getX(), mRegion.getLowerCorner().getY(), mRegion.getLowerCorner().getZ());
 	}
 }
 
