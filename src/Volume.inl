@@ -129,8 +129,10 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 
 				for(uint32_t lod = 0; lod < VolumeRegion::NoOfLodLevels; lod++)
 				{
-					mRootNode->addChild(mVolumeRegions[x][y][z]->mNode[lod]);
-					mVolumeRegions[x][y][z]->mNode[lod]->translate(regLowerX, regLowerY, regLowerZ);
+					Node* nodeToAdd = mVolumeRegions[x][y][z]->mNode[lod];
+					mRootNode->addChild(nodeToAdd);
+					nodeToAdd->translate(regLowerX, regLowerY, regLowerZ);
+					SAFE_RELEASE(nodeToAdd);					
 				}
 			}
 		}
@@ -140,6 +142,16 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 template <typename VoxelType>
 Volume<VoxelType>::~Volume()
 {
+	for(int z = 0; z < mVolumeRegions.getDimension(2); z++)
+	{
+		for(int y = 0; y < mVolumeRegions.getDimension(1); y++)
+		{
+			for(int x = 0; x < mVolumeRegions.getDimension(0); x++)
+			{
+				delete mVolumeRegions[x][y][z];
+			}
+		}
+	}
 	SAFE_RELEASE(mRootNode);
 }
 
@@ -274,12 +286,9 @@ void Volume<VoxelType>::updateMeshes()
 						MarchingCubesSurfaceExtractor< SimpleVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor(mVolData, lod0Region, &smoothTerrainMesh, controller);
 						surfaceExtractor.execute();
 
-						if(x < 2)
-						{
 						if(smoothTerrainMesh.getNoOfIndices() > 0)
 						{
 							mVolumeRegions[x][y][z]->buildGraphicsMesh(smoothTerrainMesh, 0);
-						}
 						}
 
 						lod0Region.shiftLowerCorner(Vector3DInt32(-1, -1, -1));
@@ -310,12 +319,9 @@ void Volume<VoxelType>::updateMeshes()
 						lowLodMesh.scaleVertices(2.0f);
 						lowLodMesh.translateVertices(Vector3DFloat(-1.0, -1.0, -1.0));
 
-						if(x >= 2)
-						{
 						if(lowLodMesh.getNoOfIndices() > 0)
 						{
-							mVolumeRegions[x][y][z]->buildGraphicsMesh(lowLodMesh, 0);
-						}
+							mVolumeRegions[x][y][z]->buildGraphicsMesh(lowLodMesh, 1);
 						}
 					}
 

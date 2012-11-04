@@ -9,6 +9,15 @@
 using namespace gameplay;
 using namespace PolyVox;
 
+void lodCleanupCallback(void* ptr)
+{
+	uint32_t* pLodLevel = static_cast<uint32_t*>(ptr);
+	if(pLodLevel)
+	{
+		delete pLodLevel;
+	}
+}
+
 VolumeRegion::VolumeRegion(PolyVox::Region region)
 	:mRegion(region)
 	,mIsMeshUpToDate(false)
@@ -152,6 +161,10 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
     Model* model = Model::create(mesh);
     SAFE_RELEASE(mesh);
 
+	uint32_t* pLod = new uint32_t;
+	*pLod = lod;
+
+	mNode[lod]->setUserPointer(pLod, lodCleanupCallback);
 	mNode[lod]->setModel(model);
 	SAFE_RELEASE(model);
 }

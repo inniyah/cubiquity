@@ -152,6 +152,7 @@ void MeshGame::finalize()
 {
     SAFE_RELEASE(_font);
     SAFE_RELEASE(_scene);
+	SAFE_RELEASE(mVolume);
 }
 
 void MeshGame::update(float elapsedTime)
@@ -355,12 +356,26 @@ bool MeshGame::drawScene(Node* node)
 		return true;
 	}
 
+	uint32_t* pLodLevel = static_cast<uint32_t*>(node->getUserPointer());
+	if(pLodLevel)
+	{
+		float distance = (_cameraNode->getTranslationWorld() - node->getTranslationWorld()).length();
+
+		uint32_t desiredLod = 0;
+		if(distance > 150)
+		{
+			desiredLod = 1;
+		}
+		if(*pLodLevel != desiredLod)
+			return true;
+	}
+
     Model* model = node->getModel();
     if (model)
 	{
 		model->getMaterial()->getParameter("u_lightColor")->setValue(_light->getColor());
 		model->getMaterial()->getParameter("u_lightDirection")->setValue(_lightNode->getForwardVectorWorld());
-        model->draw();
+        model->draw(true);
 	}
     return true;
 }
