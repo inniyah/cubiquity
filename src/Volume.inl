@@ -282,7 +282,13 @@ void Volume<VoxelType>::updateMeshes()
 						}
 						}
 
+						lod0Region.shiftLowerCorner(Vector3DInt32(-1, -1, -1));
+						lod0Region.shiftUpperCorner(Vector3DInt32(1, 1, 1));
+
 						Region lod1Region(lod0Region);
+
+						
+
 						Vector3DInt32 lowerCorner = lod1Region.getLowerCorner();
 						Vector3DInt32 upperCorner = lod1Region.getUpperCorner();
 
@@ -293,7 +299,7 @@ void Volume<VoxelType>::updateMeshes()
 						lod1Region.setUpperCorner(upperCorner);
 
 						RawVolume<VoxelType> lowLodVolume(lod1Region);
-						lowLodVolume.m_bClampInsteadOfBorder = true;
+						lowLodVolume.m_bClampInsteadOfBorder = true; //We're extracting right to the edge of our small volume, so this keeps the normals correct(ish)
 						VolumeResampler< SimpleVolume<VoxelType>, RawVolume<VoxelType> > volumeResampler(mVolData, lod0Region, &lowLodVolume, lod1Region);
 						volumeResampler.execute();
 
@@ -302,6 +308,7 @@ void Volume<VoxelType>::updateMeshes()
 						surfaceExtractor2.execute();
 
 						lowLodMesh.scaleVertices(2.0f);
+						lowLodMesh.translateVertices(Vector3DFloat(-1.0, -1.0, -1.0));
 
 						if(x >= 2)
 						{
