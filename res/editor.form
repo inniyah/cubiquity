@@ -53,21 +53,52 @@ form particleEditor
     // Camera Zoom
     container zoom
     {
-        style = noBorder
-        size = 160, 50
+        style = basic
+        size = 160, 250
         position = 0, 430
 
         button ZoomInButton
         {
             style = buttonStyle
-            size = 80, 50
+            size = 70, 50
             text = Zoom In
         }
 
         button ZoomOutButton : ZoomInButton
         {
-            position = 80, 0
+            position = 70, 0
             text = Zoom Out
+        }
+        
+        checkBox WireframeCheckBox
+        {
+            style = iconNoBorder
+            size = 140, 40
+            position = 0, 60
+            imageSize = 35, 35
+            text = Wireframe
+            checked = false
+        }
+        
+        label titleLod1Start
+        {
+            style = title
+            size = 150, 30
+            position = 0, 110
+            text = Lod 1 Start
+        }
+        
+        slider Lod1StartSlider
+        {
+            style = noBorder
+            size = 150, 50
+            position = 0, 140
+            orientation = HORIZONTAL
+            min = 1.0
+            max = 500.0
+            value = 100.0
+            step = 1.0
+            consumeInputEvents = false
         }
     }
 

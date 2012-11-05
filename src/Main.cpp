@@ -70,9 +70,12 @@ void MeshGame::initialize()
 	mMat2Button = (Button*)mForm->getControl("Mat2Button");
 	mMat3Button = (Button*)mForm->getControl("Mat3Button");
 
+	mLod1StartSlider = (Slider*)mForm->getControl("Lod1StartSlider");
 	mBrushSizeSlider = (Slider*)mForm->getControl("BrushSizeSlider");
 	mBrushIntensitySlider = (Slider*)mForm->getControl("BrushIntensitySlider");
 	mSmoothBiasSlider = (Slider*)mForm->getControl("SmoothBiasSlider");
+
+	mWireframeCheckBox = (CheckBox*)mForm->getControl("WireframeCheckBox");
 
 	mZoomInButton->addListener(this, Listener::PRESS);
 	mZoomOutButton->addListener(this, Listener::PRESS);
@@ -362,7 +365,7 @@ bool MeshGame::drawScene(Node* node)
 		float distance = (_cameraNode->getTranslationWorld() - node->getTranslationWorld()).length();
 
 		uint32_t desiredLod = 0;
-		if(distance > 150)
+		if(distance > mLod1StartSlider->getValue())
 		{
 			desiredLod = 1;
 		}
@@ -375,7 +378,7 @@ bool MeshGame::drawScene(Node* node)
 	{
 		model->getMaterial()->getParameter("u_lightColor")->setValue(_light->getColor());
 		model->getMaterial()->getParameter("u_lightDirection")->setValue(_lightNode->getForwardVectorWorld());
-        model->draw(false);
+		model->draw(mWireframeCheckBox->isChecked());
 	}
     return true;
 }

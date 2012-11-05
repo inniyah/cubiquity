@@ -83,9 +83,12 @@ private:
 	Button* mMat2Button;
 	Button* mMat3Button;
 
+	Slider* mLod1StartSlider;
 	Slider* mBrushSizeSlider;
 	Slider* mBrushIntensitySlider;
 	Slider* mSmoothBiasSlider;
+
+	CheckBox* mWireframeCheckBox;
 
 	uint32_t mSelectedMaterial;
 
