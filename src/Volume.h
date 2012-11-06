@@ -26,8 +26,6 @@ template <typename VoxelType>
 class Volume : public gameplay::Ref
 {
 public:	
-	typedef VoxelType VoxelType;
-
 	gameplay::Node* getRootNode();
 	VolumeType getType(void) const;
 

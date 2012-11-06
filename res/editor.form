@@ -55,7 +55,7 @@ form particleEditor
     {
         style = basic
         size = 160, 250
-        position = 0, 430
+        position = 0, 250
 
         button ZoomInButton
         {

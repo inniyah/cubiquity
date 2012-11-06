@@ -57,7 +57,7 @@ void SmoothTerrainVolume::edit(const gameplay::Vector3& centre, float radius, ui
 		// Make sure our temporary target exists, and create it if not.
 		if(!mSmoothingVolume)
 		{
-			mSmoothingVolume = new RawVolume<VoxelType>(region);
+			mSmoothingVolume = new RawVolume<MultiMaterial4>(region);
 		}
 		else
 		{
@@ -65,12 +65,12 @@ void SmoothTerrainVolume::edit(const gameplay::Vector3& centre, float radius, ui
 			if(mSmoothingVolume->getEnclosingRegion() != region)
 			{
 				delete mSmoothingVolume;
-				mSmoothingVolume = new RawVolume<VoxelType>(region);
+				mSmoothingVolume = new RawVolume<MultiMaterial4>(region);
 			}
 		}
 
 		// We might not need to do this at float precision, it should be tested again.
-		LowPassFilter< SimpleVolume<VoxelType>, RawVolume<VoxelType>, Vector<4, float> > lowPassFilter(mVolData, region, mSmoothingVolume, region, 3);
+		LowPassFilter< SimpleVolume<MultiMaterial4>, RawVolume<MultiMaterial4>, Vector<4, float> > lowPassFilter(mVolData, region, mSmoothingVolume, region, 3);
 		lowPassFilter.execute();
 	}
 
@@ -91,7 +91,7 @@ void SmoothTerrainVolume::edit(const gameplay::Vector3& centre, float radius, ui
 					falloff *= 0.3f;
 					falloff += 0.7f;
 
-					float amountToEditBy = falloff * timeElapsedInSeconds * amount * static_cast<float>(VoxelType::getMaxMaterialValue());
+					float amountToEditBy = falloff * timeElapsedInSeconds * amount * static_cast<float>(MultiMaterial4::getMaxMaterialValue());
 
 					// The logic for smoothing is rather different from adding/subtracting/painting
 					// so the 'amountToEditBy' doesn't apply in the same way. The multiplier below
@@ -111,7 +111,7 @@ void SmoothTerrainVolume::edit(const gameplay::Vector3& centre, float radius, ui
 					{
 					case EditActions::Add:
 						{		
-							VoxelType originalMat = getVoxelAt(x, y, z);	
+							MultiMaterial4 originalMat = getVoxelAt(x, y, z);	
 							uint32_t sumOfMaterials = originalMat.getSumOfMaterials();
 							if(sumOfMaterials + uToAddOrSubtract <= originalMat.getMaxMaterialValue())
 							{
@@ -126,7 +126,7 @@ void SmoothTerrainVolume::edit(const gameplay::Vector3& centre, float radius, ui
 						}
 					case EditActions::Subtract:
 						{
-							VoxelType originalMat = getVoxelAt(x, y, z);	
+							MultiMaterial4 originalMat = getVoxelAt(x, y, z);	
 							uint32_t sumOfMaterials = originalMat.getSumOfMaterials();
 							subtractFromMaterial(uToAddOrSubtract, originalMat);
 							setVoxelAt(x,y,z, originalMat);
@@ -134,15 +134,15 @@ void SmoothTerrainVolume::edit(const gameplay::Vector3& centre, float radius, ui
 						}
 					case EditActions::Paint:
 						{						
-							VoxelType originalMat = getVoxelAt(x, y, z);	
+							MultiMaterial4 originalMat = getVoxelAt(x, y, z);	
 							addToMaterial(materialToUse, uToAddOrSubtract, originalMat);
 							setVoxelAt(x,y,z, originalMat);
 							break;
 						}
 					case EditActions::Smooth:
 						{		
-							VoxelType originalMat = getVoxelAt(x, y, z);
-							VoxelType smoothedMat = mSmoothingVolume->getVoxelAt(x, y, z);
+							MultiMaterial4 originalMat = getVoxelAt(x, y, z);
+							MultiMaterial4 smoothedMat = mSmoothingVolume->getVoxelAt(x, y, z);
 
 							//FIXME - expose linear interpolation as well as trilinear interpolation from PolyVox?
 							float orig0 = static_cast<float>(originalMat.getMaterial(0));
@@ -160,7 +160,7 @@ void SmoothTerrainVolume::edit(const gameplay::Vector3& centre, float radius, ui
 							float interp2 = (smooth2 - orig2) * amountToEditBy + orig2;
 							float interp3 = (smooth3 - orig3) * amountToEditBy + orig3;
 
-							VoxelType interpMat;
+							MultiMaterial4 interpMat;
 							// In theory we should add 0.5f before casting to round
 							// properly, but this seems to cause material to grow too much.
 							// Instead we add a user-supplied bias value.
@@ -181,7 +181,7 @@ void SmoothTerrainVolume::edit(const gameplay::Vector3& centre, float radius, ui
 	}
 }
 
-void SmoothTerrainVolume::subtractFromMaterial(uint8_t amountToAdd, VoxelType& material)
+void SmoothTerrainVolume::subtractFromMaterial(uint8_t amountToAdd, MultiMaterial4& material)
 {
 	uint32_t indexToRemoveFrom = 0; //FIXME - start somewhere random
 	uint32_t iterationWithNoRemovals = 0;
@@ -206,17 +206,17 @@ void SmoothTerrainVolume::subtractFromMaterial(uint8_t amountToAdd, VoxelType& m
 			iterationWithNoRemovals++;
 		}*/
 
-		if(iterationWithNoRemovals == VoxelType::getNoOfMaterials())
+		if(iterationWithNoRemovals == MultiMaterial4::getNoOfMaterials())
 		{
 			break;
 		}
 
 		indexToRemoveFrom++;
-		indexToRemoveFrom %= VoxelType::getNoOfMaterials();
+		indexToRemoveFrom %= MultiMaterial4::getNoOfMaterials();
 	}
 }
 
-void SmoothTerrainVolume::addToMaterial(uint32_t index, uint8_t amountToAdd, VoxelType& material)
+void SmoothTerrainVolume::addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4& material)
 {
 	uint32_t indexToRemoveFrom = 0; //FIXME - start somewhere random
 	uint32_t iterationWithNoRemovals = 0;
@@ -241,12 +241,12 @@ void SmoothTerrainVolume::addToMaterial(uint32_t index, uint8_t amountToAdd, Vox
 			iterationWithNoRemovals++;
 		}
 
-		if(iterationWithNoRemovals == VoxelType::getNoOfMaterials())
+		if(iterationWithNoRemovals == MultiMaterial4::getNoOfMaterials())
 		{
 			break;
 		}
 
 		indexToRemoveFrom++;
-		indexToRemoveFrom %= VoxelType::getNoOfMaterials();
+		indexToRemoveFrom %= MultiMaterial4::getNoOfMaterials();
 	}
 }
