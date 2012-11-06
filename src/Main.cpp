@@ -71,6 +71,7 @@ void MeshGame::initialize()
 	mMat3Button = (Button*)mForm->getControl("Mat3Button");
 
 	mLod1StartSlider = (Slider*)mForm->getControl("Lod1StartSlider");
+	mLod2StartSlider = (Slider*)mForm->getControl("Lod2StartSlider");
 	mBrushSizeSlider = (Slider*)mForm->getControl("BrushSizeSlider");
 	mBrushIntensitySlider = (Slider*)mForm->getControl("BrushIntensitySlider");
 	mSmoothBiasSlider = (Slider*)mForm->getControl("SmoothBiasSlider");
@@ -368,6 +369,10 @@ bool MeshGame::drawScene(Node* node)
 		if(distance > mLod1StartSlider->getValue())
 		{
 			desiredLod = 1;
+		}
+		if(distance > mLod2StartSlider->getValue())
+		{
+			desiredLod = 2;
 		}
 		if(*pLodLevel != desiredLod)
 			return true;

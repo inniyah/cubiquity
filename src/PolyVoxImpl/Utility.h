@@ -33,6 +33,8 @@ namespace PolyVox
 	POLYVOX_API uint8_t logBase2(uint32_t uInput);
 	POLYVOX_API bool isPowerOf2(uint32_t uInput);
 
+	int32_t roundTowardsNegInf(float r);
+
 	template <typename Type>
         Type trilinearlyInterpolate(
         const Type& v000,const Type& v100,const Type& v010,const Type& v110,

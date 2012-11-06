@@ -103,7 +103,11 @@ namespace PolyVox
 					sy += m_regSrc.getLowerCorner().getY();
 					sz += m_regSrc.getLowerCorner().getZ();
 
-					sampler.setPosition(sx,sy,sz);
+					int32_t iSx = roundTowardsNegInf(sx);
+					int32_t iSy = roundTowardsNegInf(sy);
+					int32_t iSz = roundTowardsNegInf(sz);
+
+					sampler.setPosition(iSx,iSy,iSz);
 					const typename SrcVolumeType::VoxelType& voxel000 = sampler.peekVoxel0px0py0pz();
 					const typename SrcVolumeType::VoxelType& voxel001 = sampler.peekVoxel0px0py1pz();
 					const typename SrcVolumeType::VoxelType& voxel010 = sampler.peekVoxel0px1py0pz();
@@ -114,10 +118,14 @@ namespace PolyVox
 					const typename SrcVolumeType::VoxelType& voxel111 = sampler.peekVoxel1px1py1pz();
 
 					//FIXME - should accept all float parameters, but GCC complains?
-					double dummy;
+					/*double dummy;
 					sx = modf(sx, &dummy);
 					sy = modf(sy, &dummy);
-					sz = modf(sz, &dummy);
+					sz = modf(sz, &dummy);*/
+
+					sx = sx - iSx;
+					sy = sy - iSy;
+					sz = sz - iSz;
 
 					typename SrcVolumeType::VoxelType tInterpolatedValue = trilinearlyInterpolate(voxel000,voxel100,voxel010,voxel110,voxel001,voxel101,voxel011,voxel111,sx,sy,sz);
 
