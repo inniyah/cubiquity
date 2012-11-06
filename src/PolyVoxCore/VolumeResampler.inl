@@ -49,6 +49,10 @@ namespace PolyVox
 		{
 			resampleSameSize();
 		}
+		else if((uSrcWidth == uDstWidth * 2 - 1) && (uSrcHeight == uDstHeight * 2 - 1) && (uSrcDepth == uDstDepth * 2 - 1))
+		{
+			resampleJustOverHalfSize();
+		}
 		else
 		{
 			resampleArbitrary();
@@ -67,6 +71,112 @@ namespace PolyVox
 					const typename SrcVolumeType::VoxelType& tSrcVoxel = m_pVolSrc->getVoxelAt(sx,sy,sz);
 					const typename DstVolumeType::VoxelType& tDstVoxel = static_cast<typename DstVolumeType::VoxelType>(tSrcVoxel);
 					m_pVolDst->setVoxelAt(dx,dy,dz,tDstVoxel);
+				}
+			}
+		}
+	}
+
+	template< typename SrcVolumeType, typename DstVolumeType>
+	void VolumeResampler<SrcVolumeType, DstVolumeType>::resampleJustOverHalfSize()
+	{
+		typename SrcVolumeType::Sampler srcSampler(m_pVolSrc);
+
+		for(int32_t dz = m_regDst.getLowerCorner().getZ(); dz <= m_regDst.getUpperCorner().getZ(); dz++)
+		{
+			for(int32_t dy = m_regDst.getLowerCorner().getY(); dy <= m_regDst.getUpperCorner().getY(); dy++)
+			{
+				for(int32_t dx = m_regDst.getLowerCorner().getX(); dx <= m_regDst.getUpperCorner().getX(); dx++)
+				{
+					int32_t sx = (dx - m_regDst.getLowerCorner().getX()) * 2;
+					int32_t sy = (dy - m_regDst.getLowerCorner().getY()) * 2;
+					int32_t sz = (dz - m_regDst.getLowerCorner().getZ()) * 2;
+
+					sx += m_regSrc.getLowerCorner().getX();
+					sy += m_regSrc.getLowerCorner().getY();
+					sz += m_regSrc.getLowerCorner().getZ();
+
+					typename SrcVolumeType::VoxelType result;
+
+					typedef Vector<4, float> AccumulationType;
+					AccumulationType tSrcVoxel(0);
+
+					for(int32_t iOffsetZ = -1; iOffsetZ <=1; iOffsetZ++)
+					{
+						for(int32_t iOffsetY = -1; iOffsetY <=1; iOffsetY++)
+						{
+							for(int32_t iOffsetX = -1; iOffsetX <=1; iOffsetX++)
+							{
+								int32_t x = sx + iOffsetX;
+								int32_t y = sy + iOffsetY;
+								int32_t z = sz + iOffsetZ;
+
+								// This effectively does clamping to prevent sampling outside the source volume.
+								// It would probably be better if wrap modes could be set on samplers (rather than
+								// volumes) so that we could use the peekXXX() functions here.
+								x = min(x, m_regSrc.getUpperCorner().getX());
+								y = min(y, m_regSrc.getUpperCorner().getY());
+								z = min(z, m_regSrc.getUpperCorner().getZ());
+
+								x = max(x, m_regSrc.getLowerCorner().getX());
+								y = max(y, m_regSrc.getLowerCorner().getY());
+								z = max(z, m_regSrc.getLowerCorner().getZ());
+
+								tSrcVoxel += static_cast<AccumulationType>(m_pVolSrc->getVoxelAt(x, y, z));
+							}
+						}
+					}
+
+					tSrcVoxel /= 27;
+
+					result = static_cast<typename SrcVolumeType::VoxelType>(tSrcVoxel);
+
+					/*srcSampler.setPosition(sx,sy,sz);
+					if((dx > m_regDst.getLowerCorner().getX()) && (dx < m_regDst.getUpperCorner().getX()) && (dy > m_regDst.getLowerCorner().getY()) && (dy < m_regDst.getUpperCorner().getY()) && (dz > m_regDst.getLowerCorner().getZ()) && (dz < m_regDst.getUpperCorner().getZ()))
+					{
+						typedef Vector<4, float> AccumulationType;
+						AccumulationType tSrcVoxel(0);
+
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1nx1ny1nz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1nx1ny0pz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1nx1ny1pz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1nx0py1nz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1nx0py0pz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1nx0py1pz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1nx1py1nz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1nx1py0pz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1nx1py1pz());
+
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel0px1ny1nz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel0px1ny0pz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel0px1ny1pz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel0px0py1nz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel0px0py0pz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel0px0py1pz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel0px1py1nz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel0px1py0pz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel0px1py1pz());
+
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1px1ny1nz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1px1ny0pz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1px1ny1pz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1px0py1nz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1px0py0pz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1px0py1pz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1px1py1nz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1px1py0pz());
+						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1px1py1pz());
+
+						tSrcVoxel /= 27;
+
+						result = static_cast<typename SrcVolumeType::VoxelType>(tSrcVoxel);
+					}
+					else
+					{
+						const typename SrcVolumeType::VoxelType& voxel000 = srcSampler.peekVoxel0px0py0pz();
+						result = voxel000;
+					}*/
+					
+					m_pVolDst->setVoxelAt(dx,dy,dz,result);
 				}
 			}
 		}
@@ -103,9 +213,13 @@ namespace PolyVox
 					sy += m_regSrc.getLowerCorner().getY();
 					sz += m_regSrc.getLowerCorner().getZ();
 
-					int32_t iSx = roundTowardsNegInf(sx);
-					int32_t iSy = roundTowardsNegInf(sy);
-					int32_t iSz = roundTowardsNegInf(sz);
+					sx = floor(sx);
+					sy = floor(sy);
+					sz = floor(sz);
+
+					int32_t iSx = roundToInteger(sx);
+					int32_t iSy = roundToInteger(sy);
+					int32_t iSz = roundToInteger(sz);
 
 					sampler.setPosition(iSx,iSy,iSz);
 					const typename SrcVolumeType::VoxelType& voxel000 = sampler.peekVoxel0px0py0pz();

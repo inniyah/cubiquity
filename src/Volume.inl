@@ -107,9 +107,9 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 				if(getType() == VolumeTypes::SmoothTerrain)
 				{
 					//We only need to subtract 1 for highest LOD, but subtract 4 to allow 3 LOD levels.
-					if(x == 0) regLowerX -= 4;
-					if(y == 0) regLowerY -= 4;
-					if(z == 0) regLowerZ -= 4;
+					//if(x == 0) regLowerX -= 4;
+					//if(y == 0) regLowerY -= 4;
+					//if(z == 0) regLowerZ -= 4;
 				}
 
 				// This wasn't necessary for the coloured cubes because this surface extractor already
@@ -283,8 +283,8 @@ void Volume<VoxelType>::updateMeshes()
 							mVolumeRegions[x][y][z]->buildGraphicsMesh(lod0Mesh, 0);
 						}
 
-						lod0Region.shiftLowerCorner(Vector3DInt32(-1, -1, -1));
-						lod0Region.shiftUpperCorner(Vector3DInt32(1, 1, 1));
+						//lod0Region.shiftLowerCorner(Vector3DInt32(-1, -1, -1));
+						//lod0Region.shiftUpperCorner(Vector3DInt32(1, 1, 1));
 
 						Region lod1Region(lod0Region);	
 						Vector3DInt32 lowerCorner = lod1Region.getLowerCorner();
@@ -305,15 +305,15 @@ void Volume<VoxelType>::updateMeshes()
 						surfaceExtractor2.execute();
 
 						lod1Mesh.scaleVertices(2.0f);
-						lod1Mesh.translateVertices(Vector3DFloat(-1.0, -1.0, -1.0));
+						//lod1Mesh.translateVertices(Vector3DFloat(-1.0, -1.0, -1.0));
 
 						if(lod1Mesh.getNoOfIndices() > 0)
 						{
 							mVolumeRegions[x][y][z]->buildGraphicsMesh(lod1Mesh, 1);
 						}
 
-						lod1Region.shiftLowerCorner(Vector3DInt32(-1, -1, -1));
-						lod1Region.shiftUpperCorner(Vector3DInt32(1, 1, 1));
+						//lod1Region.shiftLowerCorner(Vector3DInt32(-1, -1, -1));
+						//lod1Region.shiftUpperCorner(Vector3DInt32(1, 1, 1));
 
 						Region lod2Region(lod1Region);	
 						lowerCorner = lod2Region.getLowerCorner();
@@ -326,7 +326,7 @@ void Volume<VoxelType>::updateMeshes()
 
 						RawVolume<VoxelType> lod2Volume(lod2Region);
 						lod2Volume.m_bClampInsteadOfBorder = true; //We're extracting right to the edge of our small volume, so this keeps the normals correct(ish)
-						VolumeResampler< SimpleVolume<VoxelType>, RawVolume<VoxelType> > volumeResampler2(mVolData, lod0Region, &lod2Volume, lod2Region);
+						VolumeResampler< RawVolume<VoxelType>, RawVolume<VoxelType> > volumeResampler2(&lod1Volume, lod1Region, &lod2Volume, lod2Region);
 						volumeResampler2.execute();
 
 						SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > > lod2Mesh;
@@ -334,7 +334,7 @@ void Volume<VoxelType>::updateMeshes()
 						surfaceExtractor3.execute();
 
 						lod2Mesh.scaleVertices(4.0f);
-						lod2Mesh.translateVertices(Vector3DFloat(-2.0, -2.0, -2.0));
+						//lod2Mesh.translateVertices(Vector3DFloat(-2.0, -2.0, -2.0));
 
 						if(lod1Mesh.getNoOfIndices() > 0)
 						{

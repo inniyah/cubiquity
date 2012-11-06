@@ -38,6 +38,7 @@ namespace PolyVox
 
 	private:
 		void resampleSameSize();
+		void resampleJustOverHalfSize();
 		void resampleArbitrary();
 
 		//Source data

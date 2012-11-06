@@ -34,6 +34,7 @@ namespace PolyVox
 	POLYVOX_API bool isPowerOf2(uint32_t uInput);
 
 	int32_t roundTowardsNegInf(float r);
+	int32_t roundToInteger(float r);
 
 	template <typename Type>
         Type trilinearlyInterpolate(
