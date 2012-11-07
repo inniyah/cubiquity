@@ -100,6 +100,10 @@ namespace PolyVox
 					typedef Vector<4, float> AccumulationType;
 					AccumulationType tSrcVoxel(0);
 
+					int counter = 0;
+
+					float averageMagnitude = 0.0f;
+
 					for(int32_t iOffsetZ = -1; iOffsetZ <=1; iOffsetZ++)
 					{
 						for(int32_t iOffsetY = -1; iOffsetY <=1; iOffsetY++)
@@ -113,20 +117,41 @@ namespace PolyVox
 								// This effectively does clamping to prevent sampling outside the source volume.
 								// It would probably be better if wrap modes could be set on samplers (rather than
 								// volumes) so that we could use the peekXXX() functions here.
-								x = min(x, m_regSrc.getUpperCorner().getX());
+								/*x = min(x, m_regSrc.getUpperCorner().getX());
 								y = min(y, m_regSrc.getUpperCorner().getY());
 								z = min(z, m_regSrc.getUpperCorner().getZ());
 
 								x = max(x, m_regSrc.getLowerCorner().getX());
 								y = max(y, m_regSrc.getLowerCorner().getY());
-								z = max(z, m_regSrc.getLowerCorner().getZ());
+								z = max(z, m_regSrc.getLowerCorner().getZ());*/
 
-								tSrcVoxel += static_cast<AccumulationType>(m_pVolSrc->getVoxelAt(x, y, z));
+								float xDiff = m_pVolSrc->getVoxelAt(x+1, y, z).getSumOfMaterials() - m_pVolSrc->getVoxelAt(x-1, y, z).getSumOfMaterials();
+								float yDiff = m_pVolSrc->getVoxelAt(x, y+1, z).getSumOfMaterials() - m_pVolSrc->getVoxelAt(x, y-1, z).getSumOfMaterials();
+								float zDiff = m_pVolSrc->getVoxelAt(x, y, z+1).getSumOfMaterials() - m_pVolSrc->getVoxelAt(x, y, z-1).getSumOfMaterials();
+
+								Vector3DFloat gradient(xDiff, yDiff, zDiff);
+								float magnitude = /*gradient.lengthSquared() **/ gradient.lengthSquared() + 0.1f;
+
+								//magnitude /= 10000.0f;
+
+								averageMagnitude += magnitude;
+
+								tSrcVoxel += (static_cast<AccumulationType>(m_pVolSrc->getVoxelAt(x, y, z)) * magnitude);
+
+								/*if((x > m_regSrc.getLowerCorner().getX()) && (x < m_regSrc.getUpperCorner().getX()) && (y > m_regSrc.getLowerCorner().getY()) && (y < m_regSrc.getUpperCorner().getY()) && (z > m_regSrc.getLowerCorner().getZ()) && (z < m_regSrc.getUpperCorner().getZ()))
+								{
+									tSrcVoxel += static_cast<AccumulationType>(m_pVolSrc->getVoxelAt(x, y, z));
+									counter++;
+								}*/
 							}
 						}
 					}
 
 					tSrcVoxel /= 27;
+					averageMagnitude /= 27.0f;
+
+					tSrcVoxel /= averageMagnitude;
+					//tSrcVoxel /= counter;
 
 					result = static_cast<typename SrcVolumeType::VoxelType>(tSrcVoxel);
 
