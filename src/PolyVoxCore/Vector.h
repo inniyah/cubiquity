@@ -132,6 +132,8 @@ namespace PolyVox
         double length(void) const throw();
         ///Get the squared length of the vector.
         double lengthSquared(void) const throw();
+
+		double sumOfElements() const;
         ///Find the angle between this vector and that which is passed as a parameter.
         double angleTo(const Vector<Size,Type>& vector) const throw();
         ///Find the cross product between this vector and the vector passed as a parameter.

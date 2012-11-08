@@ -31,8 +31,10 @@ namespace PolyVox
     template <uint32_t Size,typename Type>
         Vector<Size,Type>::Vector(Type x) throw()
     {
-		m_tElements[0] = x;
-
+		for(uint32_t ct = 0; ct < Size; ++ct)
+		{
+			m_tElements[ct] = x;
+		}
     }
 
     /**
@@ -546,6 +548,17 @@ namespace PolyVox
 		for(uint32_t ct = 0; ct < Size; ++ct)
 		{
 			result += m_tElements[ct] * m_tElements[ct];
+		}
+		return result;
+    }
+
+		template <uint32_t Size, typename Type>
+        inline double Vector<Size, Type>::sumOfElements(void) const throw()
+    {
+		double result = 0.0f;
+		for(uint32_t ct = 0; ct < Size; ++ct)
+		{
+			result += m_tElements[ct];
 		}
 		return result;
     }
