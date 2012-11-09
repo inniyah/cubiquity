@@ -97,77 +97,10 @@ namespace PolyVox
 
 					typename SrcVolumeType::VoxelType result;
 
-					float sumOfMagnitudes = 0.0f;
-
-					float magnitudes[3][3][3];
-					for(int32_t iOffsetZ = -1; iOffsetZ <=1; iOffsetZ++)
-					{
-						for(int32_t iOffsetY = -1; iOffsetY <=1; iOffsetY++)
-						{
-							for(int32_t iOffsetX = -1; iOffsetX <=1; iOffsetX++)
-							{
-								int32_t x = sx + iOffsetX;
-								int32_t y = sy + iOffsetY;
-								int32_t z = sz + iOffsetZ;
-
-								float xDiff = m_pVolSrc->getVoxelAt(x+1, y, z).getSumOfMaterials() - m_pVolSrc->getVoxelAt(x-1, y, z).getSumOfMaterials();
-								float yDiff = m_pVolSrc->getVoxelAt(x, y+1, z).getSumOfMaterials() - m_pVolSrc->getVoxelAt(x, y-1, z).getSumOfMaterials();
-								float zDiff = m_pVolSrc->getVoxelAt(x, y, z+1).getSumOfMaterials() - m_pVolSrc->getVoxelAt(x, y, z-1).getSumOfMaterials();
-
-								Vector3DFloat gradient(xDiff, yDiff, zDiff);
-								float magnitude = gradient.lengthSquared() + 1.0f;
-
-								magnitudes[iOffsetX+1][iOffsetY+1][iOffsetZ+1] = magnitude;
-								sumOfMagnitudes += magnitude;
-							}
-						}
-					}
-
-					sumOfMagnitudes /= 27.0f;
-
-					int biggestX = 0;
-					int biggestY = 0;
-					int biggestZ = 0;
-					float biggestMag = -100000.0f;
-					for(int32_t iOffsetZ = -1; iOffsetZ <=1; iOffsetZ++)
-					{
-						for(int32_t iOffsetY = -1; iOffsetY <=1; iOffsetY++)
-						{
-							for(int32_t iOffsetX = -1; iOffsetX <=1; iOffsetX++)
-							{
-								magnitudes[iOffsetX+1][iOffsetY+1][iOffsetZ+1] /= sumOfMagnitudes;
-								if(magnitudes[iOffsetX+1][iOffsetY+1][iOffsetZ+1] > biggestMag)
-								{
-									biggestMag = magnitudes[iOffsetX+1][iOffsetY+1][iOffsetZ+1];
-									biggestX = iOffsetX;
-									biggestY = iOffsetY;
-									biggestZ = iOffsetZ;
-								}
-							}
-						}
-					}
-
-					for(int32_t iOffsetZ = -1; iOffsetZ <=1; iOffsetZ++)
-					{
-						for(int32_t iOffsetY = -1; iOffsetY <=1; iOffsetY++)
-						{
-							for(int32_t iOffsetX = -1; iOffsetX <=1; iOffsetX++)
-							{
-								if((biggestX == iOffsetX) && (biggestY == iOffsetY) && (biggestZ == iOffsetZ))
-								{
-									magnitudes[iOffsetX+1][iOffsetY+1][iOffsetZ+1] = 24.4f;
-								}
-								else
-								{
-									magnitudes[iOffsetX+1][iOffsetY+1][iOffsetZ+1] = 0.1f;
-								}
-							}
-						}
-					}
-
 					typedef Vector<4, float> AccumulationType;
 					AccumulationType tSrcVoxel(0);
-					AccumulationType tSrcVoxelUnweighted(0);
+
+					float averageMagnitude = 0.0f;
 
 					for(int32_t iOffsetZ = -1; iOffsetZ <=1; iOffsetZ++)
 					{
@@ -182,101 +115,33 @@ namespace PolyVox
 								// This effectively does clamping to prevent sampling outside the source volume.
 								// It would probably be better if wrap modes could be set on samplers (rather than
 								// volumes) so that we could use the peekXXX() functions here.
-								/*x = min(x, m_regSrc.getUpperCorner().getX());
+								x = min(x, m_regSrc.getUpperCorner().getX());
 								y = min(y, m_regSrc.getUpperCorner().getY());
 								z = min(z, m_regSrc.getUpperCorner().getZ());
 
 								x = max(x, m_regSrc.getLowerCorner().getX());
 								y = max(y, m_regSrc.getLowerCorner().getY());
-								z = max(z, m_regSrc.getLowerCorner().getZ());*/
+								z = max(z, m_regSrc.getLowerCorner().getZ());
 
-								//float xDiff = m_pVolSrc->getVoxelAt(x+1, y, z).getSumOfMaterials() - m_pVolSrc->getVoxelAt(x-1, y, z).getSumOfMaterials();
-								//float yDiff = m_pVolSrc->getVoxelAt(x, y+1, z).getSumOfMaterials() - m_pVolSrc->getVoxelAt(x, y-1, z).getSumOfMaterials();
-								//float zDiff = m_pVolSrc->getVoxelAt(x, y, z+1).getSumOfMaterials() - m_pVolSrc->getVoxelAt(x, y, z-1).getSumOfMaterials();
+								float xDiff = m_pVolSrc->getVoxelAt(x+1, y, z).getSumOfMaterials() - m_pVolSrc->getVoxelAt(x-1, y, z).getSumOfMaterials();
+								float yDiff = m_pVolSrc->getVoxelAt(x, y+1, z).getSumOfMaterials() - m_pVolSrc->getVoxelAt(x, y-1, z).getSumOfMaterials();
+								float zDiff = m_pVolSrc->getVoxelAt(x, y, z+1).getSumOfMaterials() - m_pVolSrc->getVoxelAt(x, y, z-1).getSumOfMaterials();
 
-								//Vector3DFloat gradient(xDiff, yDiff, zDiff);
-								//float magnitude = /*gradient.lengthSquared() **/ gradient.lengthSquared() + 0.1f;
-
-								//magnitude /= 10000.0f;
-
-								//averageMagnitude += magnitude;
+								Vector3DFloat gradient(xDiff, yDiff, zDiff);
+								float magnitude =  gradient.lengthSquared() + 0.1f;
+								averageMagnitude += magnitude;
 
 								AccumulationType sample = static_cast<AccumulationType>(m_pVolSrc->getVoxelAt(x, y, z));
-
-								tSrcVoxel += (sample * magnitudes[iOffsetX+1][iOffsetY+1][iOffsetZ+1] * (1.0f/27.0f)); /** magnitudes[iOffsetX+1][iOffsetY+1][iOffsetZ+1]*/ /** (1.0f/27.0f)*/
-								tSrcVoxelUnweighted += (sample * (1.0f/27.0f)); /** magnitudes[iOffsetX+1][iOffsetY+1][iOffsetZ+1]*/ /** (1.0f/27.0f)*/
-
-								/*if((x > m_regSrc.getLowerCorner().getX()) && (x < m_regSrc.getUpperCorner().getX()) && (y > m_regSrc.getLowerCorner().getY()) && (y < m_regSrc.getUpperCorner().getY()) && (z > m_regSrc.getLowerCorner().getZ()) && (z < m_regSrc.getUpperCorner().getZ()))
-								{
-									tSrcVoxel += static_cast<AccumulationType>(m_pVolSrc->getVoxelAt(x, y, z));
-									counter++;
-								}*/
+								tSrcVoxel += sample * magnitude;
 							}
 						}
 					}
 
-					//tSrcVoxel /= 27;
-					//averageMagnitude /= 27.0f;
+					tSrcVoxel /= 27;
+					averageMagnitude /= 27;
+					tSrcVoxel /= averageMagnitude;
 
-					//tSrcVoxel /= averageMagnitude;
-					//tSrcVoxel /= counter;
-
-					float length = tSrcVoxel.sumOfElements();
-					float lengthUnweighted = tSrcVoxelUnweighted.sumOfElements();
-					//if(abs(length - lengthUnweighted) > 0.0001f)
-					{
-						float factor = lengthUnweighted / length;
-						tSrcVoxel *= factor;
-					}
-
-					result = static_cast<typename SrcVolumeType::VoxelType>(tSrcVoxel);
-
-					/*srcSampler.setPosition(sx,sy,sz);
-					if((dx > m_regDst.getLowerCorner().getX()) && (dx < m_regDst.getUpperCorner().getX()) && (dy > m_regDst.getLowerCorner().getY()) && (dy < m_regDst.getUpperCorner().getY()) && (dz > m_regDst.getLowerCorner().getZ()) && (dz < m_regDst.getUpperCorner().getZ()))
-					{
-						typedef Vector<4, float> AccumulationType;
-						AccumulationType tSrcVoxel(0);
-
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1nx1ny1nz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1nx1ny0pz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1nx1ny1pz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1nx0py1nz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1nx0py0pz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1nx0py1pz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1nx1py1nz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1nx1py0pz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1nx1py1pz());
-
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel0px1ny1nz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel0px1ny0pz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel0px1ny1pz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel0px0py1nz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel0px0py0pz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel0px0py1pz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel0px1py1nz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel0px1py0pz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel0px1py1pz());
-
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1px1ny1nz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1px1ny0pz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1px1ny1pz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1px0py1nz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1px0py0pz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1px0py1pz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1px1py1nz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1px1py0pz());
-						tSrcVoxel += static_cast<AccumulationType>(srcSampler.peekVoxel1px1py1pz());
-
-						tSrcVoxel /= 27;
-
-						result = static_cast<typename SrcVolumeType::VoxelType>(tSrcVoxel);
-					}
-					else
-					{
-						const typename SrcVolumeType::VoxelType& voxel000 = srcSampler.peekVoxel0px0py0pz();
-						result = voxel000;
-					}*/
-					
+					result = static_cast<typename SrcVolumeType::VoxelType>(tSrcVoxel);					
 					m_pVolDst->setVoxelAt(dx,dy,dz,result);
 				}
 			}
