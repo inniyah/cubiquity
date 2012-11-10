@@ -249,11 +249,11 @@ void Volume<VoxelType>::saveData(const char* filename)
 template <typename VoxelType>
 void Volume<VoxelType>::updateMeshes()
 {
-	for(int z = 2; z < mVolumeRegions.getDimension(2); z++)
+	for(int z = 0; z < mVolumeRegions.getDimension(2); z++)
 	{
 		for(int y = 0; y < mVolumeRegions.getDimension(1); y++)
 		{
-			for(int x = 0; x < 2; x++)
+			for(int x = 0; x < mVolumeRegions.getDimension(0); x++)
 			{
 				if(mVolumeRegions[x][y][z]->mIsMeshUpToDate == false)
 				{
@@ -283,8 +283,16 @@ void Volume<VoxelType>::updateMeshes()
 							mVolumeRegions[x][y][z]->buildGraphicsMesh(lod0Mesh, 0);
 						}
 
-						lod0Region.shiftLowerCorner(Vector3DInt32(-1, -1, -1));
-						lod0Region.shiftUpperCorner(Vector3DInt32(1, 1, 1));
+						// I'm having a lot of difficulty getting the lod levels to work properly. Say I have a region of 17x17x17 voxels
+						// at the highest lod... that 16x16x16 cells. I currently downsample this to 9x9x9 voxels (8x8x8 cells) and then
+						// run the MC algorithm again on this region of 9x9x9 voxels. But to make the tiles overlap I'd like to actually 
+						// run it on an 11x11x11 region which extends outside the downsampled volume. The downsampled volume should be clamped
+						// (I think) and this doesn't seem to be working properly with the marching cubes.
+						//
+						// I can see it would make more sense if the Volume::Sampler handled the wrap mode rather than the Volume (which should
+						// then have no concept of borders, etc). This is more flexible as the same volume can then also be sampled in different
+						// ways, as well as allowing algorithms which use the sampler (such as MC) to properly honour the wrap mode. I will come
+						// back and look at this code again after I make these changes in PolyVox.
 
 						Region lod1MeshRegion(lod0Region);	
 						Vector3DInt32 lowerCorner = lod1MeshRegion.getLowerCorner();
@@ -305,15 +313,11 @@ void Volume<VoxelType>::updateMeshes()
 						surfaceExtractor2.execute();
 
 						lod1Mesh.scaleVertices(2.0f);
-						lod1Mesh.translateVertices(Vector3DFloat(-1.0, -1.0, -1.0));
 
 						if(lod1Mesh.getNoOfIndices() > 0)
 						{
 							mVolumeRegions[x][y][z]->buildGraphicsMesh(lod1Mesh, 1);
 						}
-
-						lod1MeshRegion.shiftLowerCorner(Vector3DInt32(-1, -1, -1));
-						lod1MeshRegion.shiftUpperCorner(Vector3DInt32(1, 1, 1));
 
 						Region lod2MeshRegion(lod1MeshRegion);	
 						lowerCorner = lod2MeshRegion.getLowerCorner();
@@ -334,7 +338,6 @@ void Volume<VoxelType>::updateMeshes()
 						surfaceExtractor3.execute();
 
 						lod2Mesh.scaleVertices(4.0f);
-						lod2Mesh.translateVertices(Vector3DFloat(-2.0, -2.0, -2.0));
 
 						if(lod1Mesh.getNoOfIndices() > 0)
 						{
