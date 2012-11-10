@@ -76,6 +76,8 @@ namespace PolyVox
 		}
 	}
 
+	// This function is a bit of a hack, specific for computing LOD levels in Cubiquity. It's behaviour
+	// is not consistent with the other functions in this class and it should not be merged back into PolyVox.
 	template< typename SrcVolumeType, typename DstVolumeType>
 	void VolumeResampler<SrcVolumeType, DstVolumeType>::resampleJustOverHalfSize()
 	{
@@ -127,6 +129,8 @@ namespace PolyVox
 								float yDiff = m_pVolSrc->getVoxelAt(x, y+1, z).getSumOfMaterials() - m_pVolSrc->getVoxelAt(x, y-1, z).getSumOfMaterials();
 								float zDiff = m_pVolSrc->getVoxelAt(x, y, z+1).getSumOfMaterials() - m_pVolSrc->getVoxelAt(x, y, z-1).getSumOfMaterials();
 
+								// This code weights the materials by the length of their normal. The idea is that when materials are averaged together,
+								// the stongest contribution should come the voxels which are near the isosurface. And these should have a bigger gradient.
 								Vector3DFloat gradient(xDiff, yDiff, zDiff);
 								float magnitude =  gradient.lengthSquared() + 0.1f;
 								averageMagnitude += magnitude;
