@@ -101,6 +101,19 @@ void MeshGame::initialize()
 	mSphereNode->setScale(scale, scale, scale);
 	_scene->addNode(mSphereNode);
 
+	Bundle* boxBundle = Bundle::create("res/box.gpb");
+	Mesh* objectMesh = boxBundle->loadMesh("boxShape");
+	Model* objectModel = Model::create(objectMesh);
+	objectModel->setMaterial("res/Icosphere3.material");
+	Node* objectNode = Node::create();
+	objectNode->setModel(objectModel);
+	_scene->addNode(objectNode);
+	objectNode->translate(55.0, 40.0, 64.0);
+
+	PhysicsRigidBody::Parameters boxParams;
+	boxParams.mass = 10.0f;
+	objectNode->setCollisionObject(PhysicsCollisionObject::RIGID_BODY, PhysicsCollisionShape::box(), &boxParams);
+
     // Find the light node
 	_light = Light::createDirectional(Vector3(0.7, 0.7, 0.7));
 	_lightNode = Node::create();
@@ -411,4 +424,3 @@ void MeshGame::moveCamera(int x, int y)
 	mCameraElevationAngle = min(mCameraElevationAngle, MATH_DEG_TO_RAD(70.0f)); //Value from voxeliens
 	mCameraElevationAngle = max(mCameraElevationAngle, MATH_DEG_TO_RAD(-5.0f)); //Value from voxeliens
 }
-

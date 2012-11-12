@@ -168,6 +168,28 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 	mNode[lod]->setUserPointer(pLod, lodCleanupCallback);
 	mNode[lod]->setModel(model);
 	SAFE_RELEASE(model);
+
+	//Now set up the physics
+	vertexData = new float[polyVoxMesh.getVertices().size() * 3];
+	unsigned int* physicsIndices = new unsigned int [vecIndices.size()];
+	for(int ct = 0; ct < vecIndices.size(); ct++)
+	{
+		physicsIndices[ct] = vecIndices[ct];
+	}
+
+	ptr = vertexData;
+	for(int i = 0; i < vecVertices.size(); i++)
+	{
+		// Position stored in x,y,z components.
+		*ptr = vecVertices[i].getPosition().getX(); ptr++;
+		*ptr = vecVertices[i].getPosition().getY(); ptr++;
+		*ptr = vecVertices[i].getPosition().getZ(); ptr++;
+	}
+
+	//Putting the physics mesh on LOD 0.
+	PhysicsRigidBody::Parameters groundParams;
+	groundParams.mass = 0.0f;
+	mNode[0]->setCollisionObject(PhysicsCollisionObject::RIGID_BODY, PhysicsCollisionShape::custom(vertexData, polyVoxMesh.getVertices().size(), physicsIndices, vecIndices.size()), &groundParams);
 }
 
 void VolumeRegion::setMaterial(const char* material)
