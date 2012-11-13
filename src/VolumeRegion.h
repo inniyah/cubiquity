@@ -11,8 +11,8 @@
 
 #include "PolyVoxCore/Material.h"
 #include "PolyVoxCore/MaterialDensityPair.h"
-#include "PolyVoxCore/SimpleVolume.h"
-#include "PolyVoxCore/CubicSurfaceExtractor.h"
+#include "PolyVoxCore/Region.h"
+#include "PolyVoxCore/SurfaceMesh.h"
 
 template <typename VoxelType>
 class Volume;

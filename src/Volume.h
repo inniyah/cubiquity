@@ -8,7 +8,7 @@
 
 #include "PolyVoxCore/Array.h"
 #include "PolyVoxCore/Material.h"
-#include "PolyVoxCore/SimpleVolume.h"
+#include "PolyVoxCore/RawVolume.h"
 #include "PolyVoxCore/CubicSurfaceExtractor.h"
 #include "PolyVoxCore/MarchingCubesSurfaceExtractor.h"
 
@@ -46,7 +46,7 @@ protected:
 	VolumeType mType;
 
 public:
-	PolyVox::SimpleVolume<VoxelType>* mVolData;
+	PolyVox::RawVolume<VoxelType>* mVolData;
 	gameplay::Node* mRootNode;
 	//VolumeRegion* mVolumeRegion;
 	PolyVox::Array<3, VolumeRegion*> mVolumeRegions;

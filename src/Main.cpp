@@ -3,13 +3,6 @@
 #include "ColouredCubesVolume.h"
 #include "SmoothTerrainVolume.h"
 
-#include "PolyVoxCore/Material.h"
-#include "PolyVoxCore/RawVolume.h"
-#include "PolyVoxCore/SimpleVolume.h"
-#include "PolyVoxCore/CubicSurfaceExtractor.h"
-#include "PolyVoxCore/VolumeResampler.h"
-#include "PolyVoxCore/LowPassFilter.h"
-
 #include <algorithm>
 
 using namespace PolyVox;

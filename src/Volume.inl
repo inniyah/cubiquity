@@ -80,7 +80,7 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 	mRootNode = Node::create();
 	//mVolumeRegion = new VolumeRegion(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ));
 	//mRootNode->addChild(mVolumeRegion->mNode);
-	mVolData = new SimpleVolume<VoxelType>(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ));
+	mVolData = new RawVolume<VoxelType>(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ));
 
 	unsigned int volumeWidthInRegions = volumeWidth / regionWidth;
 	unsigned int volumeHeightInRegions = volumeHeight / regionHeight;
@@ -263,7 +263,7 @@ void Volume<VoxelType>::updateMeshes()
 					{
 						GameplayIsQuadNeeded<VoxelType> isQuadNeeded;
 						SurfaceMesh<PositionMaterial<VoxelType> > colouredCubicMesh;
-						CubicSurfaceExtractor< SimpleVolume<VoxelType>, GameplayIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, lod0Region, &colouredCubicMesh, true, isQuadNeeded);
+						CubicSurfaceExtractor< RawVolume<VoxelType>, GameplayIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, lod0Region, &colouredCubicMesh, true, isQuadNeeded);
 						surfaceExtractor.execute();
 
 						if(colouredCubicMesh.getNoOfIndices() > 0)
@@ -275,7 +275,7 @@ void Volume<VoxelType>::updateMeshes()
 					{
 						GameplayMarchingCubesController<VoxelType> controller;
 						SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > > lod0Mesh;
-						MarchingCubesSurfaceExtractor< SimpleVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor(mVolData, lod0Region, &lod0Mesh, controller);
+						MarchingCubesSurfaceExtractor< RawVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor(mVolData, lod0Region, &lod0Mesh, controller);
 						surfaceExtractor.execute();
 
 						if(lod0Mesh.getNoOfIndices() > 0)
@@ -305,7 +305,7 @@ void Volume<VoxelType>::updateMeshes()
 
 						RawVolume<VoxelType> lod1Volume(lod1MeshRegion);
 						lod1Volume.m_bClampInsteadOfBorder = true; //We're extracting right to the edge of our small volume, so this keeps the normals correct(ish)
-						VolumeResampler< SimpleVolume<VoxelType>, RawVolume<VoxelType> > volumeResampler(mVolData, lod0Region, &lod1Volume, lod1MeshRegion);
+						VolumeResampler< RawVolume<VoxelType>, RawVolume<VoxelType> > volumeResampler(mVolData, lod0Region, &lod1Volume, lod1MeshRegion);
 						volumeResampler.execute();
 
 						SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > > lod1Mesh;

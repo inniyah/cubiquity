@@ -70,7 +70,7 @@ void SmoothTerrainVolume::edit(const gameplay::Vector3& centre, float radius, ui
 		}
 
 		// We might not need to do this at float precision, it should be tested again.
-		LowPassFilter< SimpleVolume<MultiMaterial4>, RawVolume<MultiMaterial4>, Vector<4, float> > lowPassFilter(mVolData, region, mSmoothingVolume, region, 3);
+		LowPassFilter< RawVolume<MultiMaterial4>, RawVolume<MultiMaterial4>, Vector<4, float> > lowPassFilter(mVolData, region, mSmoothingVolume, region, 3);
 		lowPassFilter.execute();
 	}
 
