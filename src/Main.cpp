@@ -101,18 +101,26 @@ void MeshGame::initialize()
 	mSphereNode->setScale(scale, scale, scale);
 	_scene->addNode(mSphereNode);
 
+	//Create some physics object for testing.
 	Bundle* boxBundle = Bundle::create("res/box.gpb");
 	Mesh* objectMesh = boxBundle->loadMesh("boxShape");
-	Model* objectModel = Model::create(objectMesh);
-	objectModel->setMaterial("res/Icosphere3.material");
-	Node* objectNode = Node::create();
-	objectNode->setModel(objectModel);
-	_scene->addNode(objectNode);
-	objectNode->translate(55.0, 40.0, 64.0);
+	for(int z = 0; z < 128; z += 40)
+	{
+		for(int x = 0; x < 128; x += 40)
+		{
+			Model* objectModel = Model::create(objectMesh);
+			objectModel->setMaterial("res/Icosphere3.material");
 
-	PhysicsRigidBody::Parameters boxParams;
-	boxParams.mass = 10.0f;
-	objectNode->setCollisionObject(PhysicsCollisionObject::RIGID_BODY, PhysicsCollisionShape::box(), &boxParams);
+			Node* objectNode = Node::create();
+			objectNode->setModel(objectModel);
+			_scene->addNode(objectNode);
+			objectNode->translate(x, 40.0, z);
+
+			PhysicsRigidBody::Parameters boxParams;
+			boxParams.mass = 10.0f;
+			objectNode->setCollisionObject(PhysicsCollisionObject::RIGID_BODY, PhysicsCollisionShape::box(), &boxParams);
+		}
+	}
 
     // Find the light node
 	_light = Light::createDirectional(Vector3(0.7, 0.7, 0.7));
@@ -379,14 +387,14 @@ bool MeshGame::drawScene(Node* node)
 		float distance = (_cameraNode->getTranslationWorld() - node->getTranslationWorld()).length();
 
 		uint32_t desiredLod = 0;
-		if(distance > mLod1StartSlider->getValue())
+		/*if(distance > mLod1StartSlider->getValue())
 		{
 			desiredLod = 1;
 		}
 		if(distance > mLod2StartSlider->getValue())
 		{
 			desiredLod = 2;
-		}
+		}*/
 		if(*pLodLevel != desiredLod)
 			return true;
 	}
