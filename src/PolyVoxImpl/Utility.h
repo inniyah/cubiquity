@@ -37,6 +37,12 @@ namespace PolyVox
 	int32_t roundToInteger(float r);
 
 	template <typename Type>
+	Type clamp(const Type& value, const Type& low, const Type& high)
+	{
+		return std::min(high, std::max(low, value));
+	}
+
+	template <typename Type>
         Type trilinearlyInterpolate(
         const Type& v000,const Type& v100,const Type& v010,const Type& v110,
         const Type& v001,const Type& v101,const Type& v011,const Type& v111,

@@ -380,14 +380,14 @@ bool MeshGame::drawScene(Node* node)
 		float distance = (_cameraNode->getTranslationWorld() - node->getTranslationWorld()).length();
 
 		uint32_t desiredLod = 0;
-		/*if(distance > mLod1StartSlider->getValue())
+		if(distance > mLod1StartSlider->getValue())
 		{
 			desiredLod = 1;
 		}
 		if(distance > mLod2StartSlider->getValue())
 		{
 			desiredLod = 2;
-		}*/
+		}
 		if(*pLodLevel != desiredLod)
 			return true;
 	}

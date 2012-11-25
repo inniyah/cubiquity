@@ -293,50 +293,64 @@ void Volume<VoxelType>::updateMeshes()
 						// then have no concept of borders, etc). This is more flexible as the same volume can then also be sampled in different
 						// ways, as well as allowing algorithms which use the sampler (such as MC) to properly honour the wrap mode. I will come
 						// back and look at this code again after I make these changes in PolyVox.
+						//
+						// Actually, I'm now concluding that the lower LOD volume data does need to overlap for better continuity. Otherwise 
+						// we're seeing cracks een between meshes of the same LOD level.
 
-						Region lod1MeshRegion(lod0Region);	
-						Vector3DInt32 lowerCorner = lod1MeshRegion.getLowerCorner();
-						Vector3DInt32 upperCorner = lod1MeshRegion.getUpperCorner();
+						Region lod1VolumeRegion(lod0Region);	
+						Vector3DInt32 lowerCorner = lod1VolumeRegion.getLowerCorner();
+						Vector3DInt32 upperCorner = lod1VolumeRegion.getUpperCorner();
 
 						upperCorner = upperCorner - lowerCorner;
 						upperCorner = upperCorner / 2;
 						upperCorner = upperCorner + lowerCorner;
-						lod1MeshRegion.setUpperCorner(upperCorner);
+						lod1VolumeRegion.setUpperCorner(upperCorner);
 
-						RawVolume<VoxelType> lod1Volume(lod1MeshRegion);
+						RawVolume<VoxelType> lod1Volume(lod1VolumeRegion);
 						lod1Volume.m_bClampInsteadOfBorder = true; //We're extracting right to the edge of our small volume, so this keeps the normals correct(ish)
-						VolumeResampler< RawVolume<VoxelType>, RawVolume<VoxelType> > volumeResampler(mVolData, lod0Region, &lod1Volume, lod1MeshRegion);
+						VolumeResampler< RawVolume<VoxelType>, RawVolume<VoxelType> > volumeResampler(mVolData, lod0Region, &lod1Volume, lod1VolumeRegion);
 						volumeResampler.execute();
+
+						Region lod1MeshRegion(lod1VolumeRegion);
+						//lod1MeshRegion.shiftUpperCorner(Vector3DInt32( 1, 1, 1));
+						//lod1MeshRegion.shiftLowerCorner(Vector3DInt32(-1,-1,-1));
 
 						SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > > lod1Mesh;
 						MarchingCubesSurfaceExtractor< RawVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor2(&lod1Volume, lod1MeshRegion, &lod1Mesh, controller);
 						surfaceExtractor2.execute();
 
+						//lod1Mesh.translateVertices(Vector3DFloat(-1.0f, -1.0f, -1.0f));
 						lod1Mesh.scaleVertices(2.0f);
+						
 
 						if(lod1Mesh.getNoOfIndices() > 0)
 						{
 							mVolumeRegions[x][y][z]->buildGraphicsMesh(lod1Mesh, 1);
 						}
 
-						Region lod2MeshRegion(lod1MeshRegion);	
-						lowerCorner = lod2MeshRegion.getLowerCorner();
-						upperCorner = lod2MeshRegion.getUpperCorner();
+						Region lod2VolumeRegion(lod1VolumeRegion);	
+						lowerCorner = lod2VolumeRegion.getLowerCorner();
+						upperCorner = lod2VolumeRegion.getUpperCorner();
 
 						upperCorner = upperCorner - lowerCorner;
 						upperCorner = upperCorner / 2;
 						upperCorner = upperCorner + lowerCorner;
-						lod2MeshRegion.setUpperCorner(upperCorner);
+						lod2VolumeRegion.setUpperCorner(upperCorner);
 
-						RawVolume<VoxelType> lod2Volume(lod2MeshRegion);
+						RawVolume<VoxelType> lod2Volume(lod2VolumeRegion);
 						lod2Volume.m_bClampInsteadOfBorder = true; //We're extracting right to the edge of our small volume, so this keeps the normals correct(ish)
-						VolumeResampler< RawVolume<VoxelType>, RawVolume<VoxelType> > volumeResampler2(&lod1Volume, lod1MeshRegion, &lod2Volume, lod2MeshRegion);
+						VolumeResampler< RawVolume<VoxelType>, RawVolume<VoxelType> > volumeResampler2(&lod1Volume, lod1VolumeRegion, &lod2Volume, lod2VolumeRegion);
 						volumeResampler2.execute();
+
+						Region lod2MeshRegion(lod2VolumeRegion);
+						//lod2MeshRegion.shiftUpperCorner(Vector3DInt32( 1, 1, 1));
+						//lod2MeshRegion.shiftLowerCorner(Vector3DInt32(-1,-1,-1));
 
 						SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > > lod2Mesh;
 						MarchingCubesSurfaceExtractor< RawVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor3(&lod2Volume, lod2MeshRegion, &lod2Mesh, controller);
 						surfaceExtractor3.execute();
 
+						//lod2Mesh.translateVertices(Vector3DFloat(-1.0f, -1.0f, -1.0f));
 						lod2Mesh.scaleVertices(4.0f);
 
 						if(lod1Mesh.getNoOfIndices() > 0)

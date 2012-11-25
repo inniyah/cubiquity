@@ -37,6 +37,16 @@ freely, subject to the following restrictions:
 
 namespace PolyVox
 {
+	namespace WrapModes
+	{
+		enum WrapMode
+		{
+			Clamp = 0,
+			Border = 1
+		};
+	}
+	typedef WrapModes::WrapMode WrapMode;
+
 	template <typename VoxelType>
 	class RawVolume : public BaseVolume<VoxelType>
 	{
@@ -64,6 +74,7 @@ namespace PolyVox
 			void setPosition(const Vector3DInt32& v3dNewPos);
 			void setPosition(int32_t xPos, int32_t yPos, int32_t zPos);
 			inline bool setVoxel(VoxelType tValue);
+			void setWrapMode(WrapMode eWrapMode, VoxelType tBorder = VoxelType(0));
 
 			void movePositiveX(void);
 			void movePositiveY(void);
@@ -104,8 +115,16 @@ namespace PolyVox
 			inline VoxelType peekVoxel1px1py1pz(void) const;
 
 		private:
+			VoxelType getVoxelAt(int32_t uXPos, int32_t uYPos, int32_t uZPos) const;
+			bool isCurrentPositionValid(void) const;
+
+
 			//Other current position information
 			VoxelType* mCurrentVoxel;
+
+			VoxelType m_tBorder;
+
+			WrapMode m_eWrapMode;
 
 			//Whether the current position is inside the volume
 			//FIXME - Replace these with flags
