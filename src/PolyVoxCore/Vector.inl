@@ -553,7 +553,7 @@ namespace PolyVox
     }
 
 		template <uint32_t Size, typename Type>
-        inline double Vector<Size, Type>::sumOfElements(void) const throw()
+        inline double Vector<Size, Type>::sumOfElements(void) const
     {
 		double result = 0.0f;
 		for(uint32_t ct = 0; ct < Size; ++ct)

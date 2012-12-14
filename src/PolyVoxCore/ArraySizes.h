@@ -24,8 +24,8 @@ distribution.
 #ifndef __PolyVox_ArraySizes_H__
 #define __PolyVox_ArraySizes_H__
 
-#include "PolyVoxImpl/ArraySizesImpl.h"
-#include "PolyVoxImpl/TypeDef.h"
+#include "PolyVoxCore/Impl/ArraySizesImpl.h"
+#include "PolyVoxCore/Impl/TypeDef.h"
 
 namespace PolyVox
 {

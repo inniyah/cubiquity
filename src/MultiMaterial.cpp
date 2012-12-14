@@ -1,6 +1,6 @@
 #include "MultiMaterial.h"
 
-#include "PolyVoxImpl/Utility.h" //Interpolation could probably be brought out of PolyVoxImpl?
+#include "PolyVoxCore/Impl/Utility.h" //Interpolation could probably be brought out of PolyVoxImpl?
 
 namespace PolyVox
 {

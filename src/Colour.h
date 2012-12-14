@@ -1,7 +1,7 @@
 #ifndef __COLOUR_H__
 #define __COLOUR_H__
 
-#include "PolyVoxImpl/TypeDef.h"
+#include "PolyVoxCore/Impl/TypeDef.h"
 
 #include <cassert>
 

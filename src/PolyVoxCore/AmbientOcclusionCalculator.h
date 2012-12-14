@@ -24,8 +24,8 @@ freely, subject to the following restrictions:
 #ifndef __AmbientOcclusionCalculator_H__
 #define __AmbientOcclusionCalculator_H__
 
-#include "PolyVoxImpl/RandomUnitVectors.h"
-#include "PolyVoxImpl/RandomVectors.h"
+#include "PolyVoxCore/Impl/RandomUnitVectors.h"
+#include "PolyVoxCore/Impl/RandomVectors.h"
 
 #include "PolyVoxCore/Array.h"
 #include "PolyVoxCore/Region.h"

@@ -24,7 +24,7 @@ freely, subject to the following restrictions:
 #ifndef __PolyVox_SurfaceMesh_H__
 #define __PolyVox_SurfaceMesh_H__
 
-#include "PolyVoxImpl/TypeDef.h"
+#include "PolyVoxCore/Impl/TypeDef.h"
 
 #include "PolyVoxCore/Region.h"
 #include "PolyVoxCore/VertexTypes.h" //Should probably do away with this on in the future...
@@ -95,8 +95,8 @@ namespace PolyVox
 		std::vector<LodRecord> m_vecLodRecords;
 	};	
 
-	template <typename VertexType>
-	polyvox_shared_ptr< SurfaceMesh<VertexType> > extractSubset(SurfaceMesh<VertexType>& inputMesh, std::set<uint8_t> setMaterials);
+	/*template <typename VertexType>
+	polyvox_shared_ptr< SurfaceMesh<VertexType> > extractSubset(SurfaceMesh<VertexType>& inputMesh, std::set<uint8_t> setMaterials);*/
 }
 
 #include "PolyVoxCore/SurfaceMesh.inl"

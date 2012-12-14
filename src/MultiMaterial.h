@@ -1,7 +1,7 @@
 #ifndef __MultiMaterial_H__
 #define __MultiMaterial_H__
 
-#include "PolyVoxImpl/TypeDef.h"
+#include "PolyVoxCore/Impl/TypeDef.h"
 
 #include "PolyVoxCore/Vector.h"
 
