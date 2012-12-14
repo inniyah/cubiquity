@@ -502,7 +502,7 @@ namespace PolyVox
     }
 
 	/**
-	\param tX The new value for the Y component of a 2, 3, or 4 dimensional Vector.
+	\param tY The new value for the Y component of a 2, 3, or 4 dimensional Vector.
 	*/
     template <uint32_t Size, typename Type>
         inline void Vector<Size, Type>::setY(Type tY) throw()
@@ -511,7 +511,7 @@ namespace PolyVox
     }
 
 	/**
-	\param tX The new value for the Z component of a 3 or 4 dimensional Vector.
+	\param tZ The new value for the Z component of a 3 or 4 dimensional Vector.
 	*/
     template <uint32_t Size, typename Type>
         inline void Vector<Size, Type>::setZ(Type tZ) throw()
@@ -520,7 +520,7 @@ namespace PolyVox
     }
 
 	/**
-	\param tX The new value for the W component of a 4 dimensional Vector.
+	\param tW The new value for the W component of a 4 dimensional Vector.
 	*/
 	template <uint32_t Size, typename Type>
         inline void Vector<Size, Type>::setW(Type tW) throw()
@@ -529,7 +529,7 @@ namespace PolyVox
     }
 
 	/**
-	NOTE: This function does not make much sense on integer Vectors.
+	\note This function does not make much sense on integer Vectors.
     \return Length of the Vector.
     */
     template <uint32_t Size, typename Type>
@@ -567,9 +567,9 @@ namespace PolyVox
     This function is commutative, such that a.angleTo(b) == b.angleTo(a). The angle
     returned is in radians and varies between 0 and 3.14(pi). It is always positive.
 
-	NOTE: This function does not make much sense on integer Vectors.
+	\note This function does not make much sense on integer Vectors.
 
-    \param Vector3D The Vector to find the angle to.
+    \param vector The Vector to find the angle to.
     \return The angle between them in radians.
     */
     template <uint32_t Size, typename Type>
@@ -586,8 +586,7 @@ namespace PolyVox
 	right-hand rule such that if the two vectors are given by the index
 	finger and middle finger respectively then the cross product is given
 	by the thumb.
-    \param a first Vector.
-    \param b Second Vector.
+    \param vector The vector to cross with this
     \return The value of the cross product.
     \see dot()
     */
@@ -621,20 +620,20 @@ namespace PolyVox
     /**
     Divides the i, j, and k components by the length to give a Vector of length 1.0.
 
-	NOTE: This function does not make much sense on integer Vectors.
+	\note This function does not make much sense on integer Vectors.
     */
     template <uint32_t Size, typename Type>
         inline void Vector<Size, Type>::normalise(void) throw()
     {
-        double length = this->length();
+        Type tLength = this->length();
 		//FIXME - throw div by zero exception?
-		if(length < 0.0001f)
+		if(tLength < 0.0001f)
 		{
 			return;
 		}
 		for(uint32_t ct = 0; ct < Size; ++ct)
 		{
-			m_tElements[ct] /= static_cast<Type>(length);
+			m_tElements[ct] /= tLength;
 		}
     }
 }//namespace PolyVox
