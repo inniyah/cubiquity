@@ -29,7 +29,7 @@ using namespace std;
 namespace PolyVox
 {
 	template<>
-	POLYVOX_API void MeshDecimator<PositionMaterial<float> >::fillInitialVertexMetadata(std::vector<InitialVertexMetadata>& vecVertexMetadata)
+	POLYVOX_API void MeshDecimator<PositionMaterial>::fillInitialVertexMetadata(std::vector<InitialVertexMetadata>& vecVertexMetadata)
 	{
 		vecVertexMetadata.clear();
 		vecVertexMetadata.resize(m_pOutputMesh->m_vecVertices.size());
@@ -101,7 +101,7 @@ namespace PolyVox
 	}
 
 	template<>
-	POLYVOX_API void MeshDecimator<PositionMaterialNormal<float> >::fillInitialVertexMetadata(std::vector<InitialVertexMetadata>& vecVertexMetadata)
+	POLYVOX_API void MeshDecimator<PositionMaterialNormal>::fillInitialVertexMetadata(std::vector<InitialVertexMetadata>& vecVertexMetadata)
 	{
 		vecVertexMetadata.clear();
 		vecVertexMetadata.resize(m_pOutputMesh->m_vecVertices.size());
@@ -141,8 +141,8 @@ namespace PolyVox
 			uint32_t v2 = m_vecTriangles[ct].v2;
 
 			bool allMatch = 
-				(m_pOutputMesh->m_vecVertices[v0].material == m_pOutputMesh->m_vecVertices[v1].material) && 
-				(m_pOutputMesh->m_vecVertices[v1].material == m_pOutputMesh->m_vecVertices[v2].material);
+				(m_pOutputMesh->m_vecVertices[v0].material - m_pOutputMesh->m_vecVertices[v1].material < 0.001f) && 
+				(m_pOutputMesh->m_vecVertices[v1].material - m_pOutputMesh->m_vecVertices[v2].material < 0.001f);
 
 			if(!allMatch)
 			{
@@ -154,7 +154,7 @@ namespace PolyVox
 	}
 
 	template<> 
-	POLYVOX_API bool MeshDecimator<PositionMaterialNormal<float> >::canCollapseNormalEdge(uint32_t uSrc, uint32_t uDst)
+	POLYVOX_API bool MeshDecimator<PositionMaterialNormal>::canCollapseNormalEdge(uint32_t uSrc, uint32_t uDst)
 	{
 		if(m_vecInitialVertexMetadata[uSrc].normal.dot(m_vecInitialVertexMetadata[uDst].normal) < m_fMinDotProductForCollapse)
 		{
@@ -166,7 +166,7 @@ namespace PolyVox
 	}
 
 	template<> 
-	POLYVOX_API bool MeshDecimator<PositionMaterial<float> >::canCollapseNormalEdge(uint32_t uSrc, uint32_t uDst)
+	POLYVOX_API bool MeshDecimator<PositionMaterial>::canCollapseNormalEdge(uint32_t uSrc, uint32_t uDst)
 	{
 		//We don't actually use the normal here, because we want to allow face
 		//vertices to collapse onto edge vertices. Simply checking whether anything

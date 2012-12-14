@@ -37,16 +37,6 @@ freely, subject to the following restrictions:
 
 namespace PolyVox
 {
-	namespace WrapModes
-	{
-		enum WrapMode
-		{
-			Clamp = 0,
-			Border = 1
-		};
-	}
-	typedef WrapModes::WrapMode WrapMode;
-
 	template <typename VoxelType>
 	class RawVolume : public BaseVolume<VoxelType>
 	{
@@ -74,7 +64,6 @@ namespace PolyVox
 			void setPosition(const Vector3DInt32& v3dNewPos);
 			void setPosition(int32_t xPos, int32_t yPos, int32_t zPos);
 			inline bool setVoxel(VoxelType tValue);
-			void setWrapMode(WrapMode eWrapMode, VoxelType tBorder = VoxelType(0));
 
 			void movePositiveX(void);
 			void movePositiveY(void);
@@ -115,16 +104,8 @@ namespace PolyVox
 			inline VoxelType peekVoxel1px1py1pz(void) const;
 
 		private:
-			VoxelType getVoxelAt(int32_t uXPos, int32_t uYPos, int32_t uZPos) const;
-			bool isCurrentPositionValid(void) const;
-
-
 			//Other current position information
 			VoxelType* mCurrentVoxel;
-
-			VoxelType m_tBorder;
-
-			WrapMode m_eWrapMode;
 
 			//Whether the current position is inside the volume
 			//FIXME - Replace these with flags
@@ -136,10 +117,8 @@ namespace PolyVox
 
 	public:
 		/// Constructor for creating a fixed size volume.
-		RawVolume
-		(
-			const Region& regValid
-		);
+		RawVolume(const Region& regValid);
+
 		/// Destructor
 		~RawVolume();
 
@@ -160,10 +139,14 @@ namespace PolyVox
 		/// Calculates approximatly how many bytes of memory the volume is currently using.
 		uint32_t calculateSizeInBytes(void);
 
-		//Really we should use an enum for the various options.
-		bool m_bClampInsteadOfBorder;
+	protected:
+		/// Copy constructor
+		RawVolume(const RawVolume& rhs);
 
-private:
+		/// Assignment operator
+		RawVolume& operator=(const RawVolume& rhs);
+
+	private:
 		void initialise(const Region& regValidRegion);
 
 		//The block data

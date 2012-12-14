@@ -45,7 +45,6 @@
     <ClCompile Include="src\GradientEstimators.cpp" />
     <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\MarchingCubesTables.cpp" />
-    <ClCompile Include="src\MeshDecimator.cpp" />
     <ClCompile Include="src\MultiMaterial.cpp" />
     <ClCompile Include="src\RandomUnitVectors.cpp" />
     <ClCompile Include="src\RandomVectors.cpp" />

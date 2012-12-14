@@ -307,7 +307,7 @@ void Volume<VoxelType>::updateMeshes()
 						lod1VolumeRegion.setUpperCorner(upperCorner);
 
 						RawVolume<VoxelType> lod1Volume(lod1VolumeRegion);
-						lod1Volume.m_bClampInsteadOfBorder = true; //We're extracting right to the edge of our small volume, so this keeps the normals correct(ish)
+						//lod1Volume.m_bClampInsteadOfBorder = true; //We're extracting right to the edge of our small volume, so this keeps the normals correct(ish)
 						VolumeResampler< RawVolume<VoxelType>, RawVolume<VoxelType> > volumeResampler(mVolData, lod0Region, &lod1Volume, lod1VolumeRegion);
 						volumeResampler.execute();
 
@@ -338,7 +338,7 @@ void Volume<VoxelType>::updateMeshes()
 						lod2VolumeRegion.setUpperCorner(upperCorner);
 
 						RawVolume<VoxelType> lod2Volume(lod2VolumeRegion);
-						lod2Volume.m_bClampInsteadOfBorder = true; //We're extracting right to the edge of our small volume, so this keeps the normals correct(ish)
+						//lod2Volume.m_bClampInsteadOfBorder = true; //We're extracting right to the edge of our small volume, so this keeps the normals correct(ish)
 						VolumeResampler< RawVolume<VoxelType>, RawVolume<VoxelType> > volumeResampler2(&lod1Volume, lod1VolumeRegion, &lod2Volume, lod2VolumeRegion);
 						volumeResampler2.execute();
 

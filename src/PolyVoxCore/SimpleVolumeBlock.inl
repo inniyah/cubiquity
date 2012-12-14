@@ -109,7 +109,7 @@ namespace PolyVox
 		//Release mode validation
 		if(!isPowerOf2(uSideLength))
 		{
-			//throw std::invalid_argument("Block side length must be a power of two.");
+			throw std::invalid_argument("Block side length must be a power of two.");
 		}
 
 		//Compute the side length		

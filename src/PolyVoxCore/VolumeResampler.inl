@@ -49,10 +49,10 @@ namespace PolyVox
 		{
 			resampleSameSize();
 		}
-		else if((uSrcWidth == uDstWidth * 2 - 1) && (uSrcHeight == uDstHeight * 2 - 1) && (uSrcDepth == uDstDepth * 2 - 1))
+		/*else if((uSrcWidth == uDstWidth * 2 - 1) && (uSrcHeight == uDstHeight * 2 - 1) && (uSrcDepth == uDstDepth * 2 - 1))
 		{
 			resampleJustOverHalfSize();
-		}
+		}*/
 		else
 		{
 			resampleArbitrary();
@@ -78,7 +78,7 @@ namespace PolyVox
 
 	// This function is a bit of a hack, specific for computing LOD levels in Cubiquity. It's behaviour
 	// is not consistent with the other functions in this class and it should not be merged back into PolyVox.
-	template< typename SrcVolumeType, typename DstVolumeType>
+	/*template< typename SrcVolumeType, typename DstVolumeType>
 	void VolumeResampler<SrcVolumeType, DstVolumeType>::resampleJustOverHalfSize()
 	{
 		typename SrcVolumeType::Sampler srcSampler(m_pVolSrc);
@@ -150,7 +150,7 @@ namespace PolyVox
 				}
 			}
 		}
-	}
+	}*/
 
 	template< typename SrcVolumeType, typename DstVolumeType>
 	void VolumeResampler<SrcVolumeType, DstVolumeType>::resampleArbitrary()
