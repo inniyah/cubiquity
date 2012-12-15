@@ -552,17 +552,6 @@ namespace PolyVox
 		return result;
     }
 
-		template <uint32_t Size, typename Type>
-        inline double Vector<Size, Type>::sumOfElements(void) const
-    {
-		double result = 0.0f;
-		for(uint32_t ct = 0; ct < Size; ++ct)
-		{
-			result += m_tElements[ct];
-		}
-		return result;
-    }
-
     /**
     This function is commutative, such that a.angleTo(b) == b.angleTo(a). The angle
     returned is in radians and varies between 0 and 3.14(pi). It is always positive.
