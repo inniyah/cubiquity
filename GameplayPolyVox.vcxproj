@@ -74,7 +74,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../gameplay/external-deps/lua/include;../gameplay/external-deps/bullet/include;../gameplay/gameplay/src;../gameplay/external-deps/openal/include/AL;../gameplay/external-deps/oggvorbis/include;../gameplay/external-deps/libpng/include;../gameplay/external-deps/zlib/include;../gameplay/external-deps/glew/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../gameplay/external-deps/lua/include;../gameplay/external-deps/bullet/include;../gameplay/gameplay/src;../gameplay/external-deps/openal/include/AL;../gameplay/external-deps/oggvorbis/include;../gameplay/external-deps/libpng/include;../gameplay/external-deps/zlib/include;../gameplay/external-deps/glew/include;../polyvox/library/PolyVoxCore/include</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
@@ -104,7 +104,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;GAMEPLAY_MEM_LEAK_DETECTION;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../gameplay/external-deps/lua/include;../gameplay/external-deps/bullet/include;../gameplay/gameplay/src;../gameplay/external-deps/openal/include/AL;../gameplay/external-deps/oggvorbis/include;../gameplay/external-deps/libpng/include;../gameplay/external-deps/zlib/include;../gameplay/external-deps/glew/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../gameplay/external-deps/lua/include;../gameplay/external-deps/bullet/include;../gameplay/gameplay/src;../gameplay/external-deps/openal/include/AL;../gameplay/external-deps/oggvorbis/include;../gameplay/external-deps/libpng/include;../gameplay/external-deps/zlib/include;../gameplay/external-deps/glew/include;../polyvox/library/PolyVoxCore/include</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <ShowIncludes>false</ShowIncludes>
       <PreprocessToFile>false</PreprocessToFile>
@@ -138,7 +138,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../gameplay/external-deps/lua/include;../gameplay/external-deps/bullet/include;../gameplay/gameplay/src;../gameplay/external-deps/openal/include/AL;../gameplay/external-deps/oggvorbis/include;../gameplay/external-deps/libpng/include;../gameplay/external-deps/zlib/include;../gameplay/external-deps/glew/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../gameplay/external-deps/lua/include;../gameplay/external-deps/bullet/include;../gameplay/gameplay/src;../gameplay/external-deps/openal/include/AL;../gameplay/external-deps/oggvorbis/include;../gameplay/external-deps/libpng/include;../gameplay/external-deps/zlib/include;../gameplay/external-deps/glew/include;../polyvox/library/PolyVoxCore/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -172,27 +172,31 @@
     <None Include="res\box.material" />
     <None Include="res\colored.frag" />
     <None Include="res\colored.vert" />
+    <None Include="src\volume.inl" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\ArraySizes.cpp" />
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\ArraySizes.cpp" />
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\AStarPathfinder.cpp" />
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\MarchingCubesTables.cpp" />
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\RandomUnitVectors.cpp" />
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\RandomVectors.cpp" />
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\Utility.cpp" />
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Log.cpp" />
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Region.cpp" />
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\VertexTypes.cpp" />
     <ClCompile Include="src\Colour.cpp" />
-    <ClCompile Include="src\GradientEstimators.cpp" />
-    <ClCompile Include="src\Log.cpp" />
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\MarchingCubesTables.cpp" />
     <ClCompile Include="src\MultiMaterial.cpp" />
-    <ClCompile Include="src\RandomUnitVectors.cpp" />
-    <ClCompile Include="src\RandomVectors.cpp" />
-    <ClCompile Include="src\Region.cpp" />
     <ClCompile Include="src\SmoothTerrainVolume.cpp" />
-    <ClCompile Include="src\Utility.cpp" />
-    <ClCompile Include="src\VertexTypes.cpp" />
     <ClCompile Include="src\VolumeRegion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Colour.h" />
     <ClInclude Include="src\ColouredCubesVolume.h" />
+    <ClInclude Include="src\gameplayisquadneeded.h" />
+    <ClInclude Include="src\gameplaymarchingcubescontroller.h" />
     <ClInclude Include="src\Main.h" />
+    <ClInclude Include="src\multimaterial.h" />
     <ClInclude Include="src\SmoothTerrainVolume.h" />
     <ClInclude Include="src\Volume.h" />
     <ClInclude Include="src\VolumeRegion.h" />

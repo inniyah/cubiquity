@@ -5,6 +5,9 @@
     </Filter>
     <Filter Include="src">
     </Filter>
+    <Filter Include="PolyVox">
+      <UniqueIdentifier>{d6362c29-8fb8-40ac-bd59-cd053c203e16}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="game.config" />
@@ -25,6 +28,7 @@
     <None Include="res\colored.vert">
       <Filter>res</Filter>
     </None>
+    <None Include="src\volume.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h">
@@ -35,23 +39,44 @@
     <ClInclude Include="src\SmoothTerrainVolume.h" />
     <ClInclude Include="src\Volume.h" />
     <ClInclude Include="src\VolumeRegion.h" />
+    <ClInclude Include="src\gameplayisquadneeded.h" />
+    <ClInclude Include="src\gameplaymarchingcubescontroller.h" />
+    <ClInclude Include="src\multimaterial.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\ArraySizes.cpp" />
     <ClCompile Include="src\Colour.cpp" />
-    <ClCompile Include="src\GradientEstimators.cpp" />
-    <ClCompile Include="src\Log.cpp" />
-    <ClCompile Include="src\MarchingCubesTables.cpp" />
     <ClCompile Include="src\MultiMaterial.cpp" />
-    <ClCompile Include="src\RandomUnitVectors.cpp" />
-    <ClCompile Include="src\RandomVectors.cpp" />
-    <ClCompile Include="src\Region.cpp" />
-    <ClCompile Include="src\Utility.cpp" />
-    <ClCompile Include="src\VertexTypes.cpp" />
     <ClCompile Include="src\VolumeRegion.cpp" />
     <ClCompile Include="src\SmoothTerrainVolume.cpp" />
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\ArraySizes.cpp">
+      <Filter>PolyVox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\AStarPathfinder.cpp">
+      <Filter>PolyVox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Log.cpp">
+      <Filter>PolyVox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Region.cpp">
+      <Filter>PolyVox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\VertexTypes.cpp">
+      <Filter>PolyVox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\MarchingCubesTables.cpp">
+      <Filter>PolyVox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\RandomUnitVectors.cpp">
+      <Filter>PolyVox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\RandomVectors.cpp">
+      <Filter>PolyVox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\Utility.cpp">
+      <Filter>PolyVox</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

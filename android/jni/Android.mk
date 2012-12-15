@@ -75,10 +75,10 @@ LOCAL_PATH := $(SAMPLE_PATH)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE    := GameplayPolyVox
-LOCAL_SRC_FILES := ../../gameplay/gameplay/src/gameplay-main-android.cpp ArraySizes.cpp Colour.cpp GradientEstimators.cpp Main.cpp MultiMaterial.cpp RandomVectors.cpp SmoothTerrainVolume.cpp VertexTypes.cpp Log.cpp MarchingCubesTables.cpp RandomUnitVectors.cpp Region.cpp Utility.cpp VolumeRegion.cpp
+LOCAL_SRC_FILES := ../../gameplay/gameplay/src/gameplay-main-android.cpp ../../polyvox/library/polyvoxcore/source/ArraySizes.cpp Colour.cpp Main.cpp MultiMaterial.cpp ../../polyvox/library/polyvoxcore/source/Impl/RandomVectors.cpp SmoothTerrainVolume.cpp ../../polyvox/library/polyvoxcore/source/VertexTypes.cpp ../../polyvox/library/polyvoxcore/source/Log.cpp ../../polyvox/library/polyvoxcore/source/Impl/MarchingCubesTables.cpp ../../polyvox/library/polyvoxcore/source/Impl/RandomUnitVectors.cpp ../../polyvox/library/polyvoxcore/source/Region.cpp ../../polyvox/library/polyvoxcore/source/Impl/Utility.cpp VolumeRegion.cpp
 
 LOCAL_LDLIBS    := -llog -landroid -lEGL -lGLESv2 -lOpenSLES
-LOCAL_CFLAGS    := -D__ANDROID__ -Wno-psabi -I"../../gameplay/external-deps/lua/include" -I"../../gameplay/external-deps/bullet/include" -I"../../gameplay/external-deps/libpng/include" -I"../../gameplay/external-deps/oggvorbis/include" -I"../../gameplay/external-deps/openal/include" -I"../../gameplay/gameplay/src"
+LOCAL_CFLAGS    := -D__ANDROID__ -Wno-psabi -I"../../gameplay/external-deps/lua/include" -I"../../gameplay/external-deps/bullet/include" -I"../../gameplay/external-deps/libpng/include" -I"../../gameplay/external-deps/oggvorbis/include" -I"../../gameplay/external-deps/openal/include" -I"../../gameplay/gameplay/src" -I"../../polyvox/library/PolyVoxCore/include"
 
 LOCAL_STATIC_LIBRARIES := android_native_app_glue libgameplay libpng libzlib liblua libbullet libvorbis libOpenAL
 
