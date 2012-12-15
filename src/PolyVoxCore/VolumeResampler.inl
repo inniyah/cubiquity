@@ -21,12 +21,20 @@ freely, subject to the following restrictions:
     distribution. 	
 *******************************************************************************/
 
-#include "PolyVoxCore/Impl/Utility.h"
+#include "PolyVoxCore/Interpolation.h"
+
+#include <cmath>
 
 namespace PolyVox
 {
+	/**
+	 * \param pVolSrc
+	 * \param regSrc
+	 * \param[out] pVolDst
+	 * \param regDst
+	 */
 	template< typename SrcVolumeType, typename DstVolumeType>
-	VolumeResampler<SrcVolumeType, DstVolumeType>::VolumeResampler(SrcVolumeType* pVolSrc, Region regSrc, DstVolumeType* pVolDst, Region regDst)
+	VolumeResampler<SrcVolumeType, DstVolumeType>::VolumeResampler(SrcVolumeType* pVolSrc, const Region &regSrc, DstVolumeType* pVolDst, const Region& regDst)
 		:m_pVolSrc(pVolSrc)
 		,m_regSrc(regSrc)
 		,m_pVolDst(pVolDst)
@@ -48,10 +56,6 @@ namespace PolyVox
 		if((uSrcWidth == uDstWidth) && (uSrcHeight == uDstHeight) && (uSrcDepth == uDstDepth))
 		{
 			resampleSameSize();
-		}
-		else if((uSrcWidth == uDstWidth * 2 - 1) && (uSrcHeight == uDstHeight * 2 - 1) && (uSrcDepth == uDstDepth * 2 - 1))
-		{
-			resampleJustOverHalfSize();
 		}
 		else
 		{
@@ -76,93 +80,17 @@ namespace PolyVox
 		}
 	}
 
-	// This function is a bit of a hack, specific for computing LOD levels in Cubiquity. It's behaviour
-	// is not consistent with the other functions in this class and it should not be merged back into PolyVox.
-	template< typename SrcVolumeType, typename DstVolumeType>
-	void VolumeResampler<SrcVolumeType, DstVolumeType>::resampleJustOverHalfSize()
-	{
-		typename SrcVolumeType::Sampler srcSampler(m_pVolSrc);
-
-		for(int32_t dz = m_regDst.getLowerCorner().getZ(); dz <= m_regDst.getUpperCorner().getZ(); dz++)
-		{
-			for(int32_t dy = m_regDst.getLowerCorner().getY(); dy <= m_regDst.getUpperCorner().getY(); dy++)
-			{
-				for(int32_t dx = m_regDst.getLowerCorner().getX(); dx <= m_regDst.getUpperCorner().getX(); dx++)
-				{
-					int32_t sx = (dx - m_regDst.getLowerCorner().getX()) * 2;
-					int32_t sy = (dy - m_regDst.getLowerCorner().getY()) * 2;
-					int32_t sz = (dz - m_regDst.getLowerCorner().getZ()) * 2;
-
-					sx += m_regSrc.getLowerCorner().getX();
-					sy += m_regSrc.getLowerCorner().getY();
-					sz += m_regSrc.getLowerCorner().getZ();
-
-					typename SrcVolumeType::VoxelType result;
-
-					typedef Vector<4, float> AccumulationType;
-					AccumulationType tSrcVoxel(0);
-
-					float averageMagnitude = 0.0f;
-
-					for(int32_t iOffsetZ = -1; iOffsetZ <=1; iOffsetZ++)
-					{
-						for(int32_t iOffsetY = -1; iOffsetY <=1; iOffsetY++)
-						{
-							for(int32_t iOffsetX = -1; iOffsetX <=1; iOffsetX++)
-							{
-								int32_t x = sx + iOffsetX;
-								int32_t y = sy + iOffsetY;
-								int32_t z = sz + iOffsetZ;
-
-								// This effectively does clamping to prevent sampling outside the source volume.
-								// It would probably be better if wrap modes could be set on samplers (rather than
-								// volumes) so that we could use the peekXXX() functions here.
-								x = min(x, m_regSrc.getUpperCorner().getX());
-								y = min(y, m_regSrc.getUpperCorner().getY());
-								z = min(z, m_regSrc.getUpperCorner().getZ());
-
-								x = max(x, m_regSrc.getLowerCorner().getX());
-								y = max(y, m_regSrc.getLowerCorner().getY());
-								z = max(z, m_regSrc.getLowerCorner().getZ());
-
-								float xDiff = m_pVolSrc->getVoxelAt(x+1, y, z).getSumOfMaterials() - m_pVolSrc->getVoxelAt(x-1, y, z).getSumOfMaterials();
-								float yDiff = m_pVolSrc->getVoxelAt(x, y+1, z).getSumOfMaterials() - m_pVolSrc->getVoxelAt(x, y-1, z).getSumOfMaterials();
-								float zDiff = m_pVolSrc->getVoxelAt(x, y, z+1).getSumOfMaterials() - m_pVolSrc->getVoxelAt(x, y, z-1).getSumOfMaterials();
-
-								// This code weights the materials by the length of their normal. The idea is that when materials are averaged together,
-								// the stongest contribution should come the voxels which are near the isosurface. And these should have a bigger gradient.
-								Vector3DFloat gradient(xDiff, yDiff, zDiff);
-								float magnitude =  gradient.lengthSquared() + 0.1f;
-								averageMagnitude += magnitude;
-
-								AccumulationType sample = static_cast<AccumulationType>(m_pVolSrc->getVoxelAt(x, y, z));
-								tSrcVoxel += sample * magnitude;
-							}
-						}
-					}
-
-					tSrcVoxel /= 27;
-					averageMagnitude /= 27;
-					tSrcVoxel /= averageMagnitude;
-
-					result = static_cast<typename SrcVolumeType::VoxelType>(tSrcVoxel);					
-					m_pVolDst->setVoxelAt(dx,dy,dz,result);
-				}
-			}
-		}
-	}
-
 	template< typename SrcVolumeType, typename DstVolumeType>
 	void VolumeResampler<SrcVolumeType, DstVolumeType>::resampleArbitrary()
 	{
-		float srcWidth  = m_regSrc.getUpperCorner().getX() - m_regSrc.getLowerCorner().getX();
-		float srcHeight = m_regSrc.getUpperCorner().getY() - m_regSrc.getLowerCorner().getY();
-		float srcDepth  = m_regSrc.getUpperCorner().getZ() - m_regSrc.getLowerCorner().getZ();
+		float srcWidth  = m_regSrc.getWidthInCells();
+		float srcHeight = m_regSrc.getHeightInCells();
+		float srcDepth  = m_regSrc.getDepthInCells();
 
-		float dstWidth  = m_regDst.getUpperCorner().getX() - m_regDst.getLowerCorner().getX();
-		float dstHeight = m_regDst.getUpperCorner().getY() - m_regDst.getLowerCorner().getY();
-		float dstDepth  = m_regDst.getUpperCorner().getZ() - m_regDst.getLowerCorner().getZ();
-
+		float dstWidth  = m_regDst.getWidthInCells();
+		float dstHeight = m_regDst.getHeightInCells();
+		float dstDepth  = m_regDst.getDepthInCells();
+		
 		float fScaleX = srcWidth / dstWidth;
 		float fScaleY = srcHeight / dstHeight;
 		float fScaleZ = srcDepth / dstDepth;
@@ -183,15 +111,7 @@ namespace PolyVox
 					sy += m_regSrc.getLowerCorner().getY();
 					sz += m_regSrc.getLowerCorner().getZ();
 
-					sx = floor(sx);
-					sy = floor(sy);
-					sz = floor(sz);
-
-					int32_t iSx = roundToInteger(sx);
-					int32_t iSy = roundToInteger(sy);
-					int32_t iSz = roundToInteger(sz);
-
-					sampler.setPosition(iSx,iSy,iSz);
+					sampler.setPosition(sx,sy,sz);
 					const typename SrcVolumeType::VoxelType& voxel000 = sampler.peekVoxel0px0py0pz();
 					const typename SrcVolumeType::VoxelType& voxel001 = sampler.peekVoxel0px0py1pz();
 					const typename SrcVolumeType::VoxelType& voxel010 = sampler.peekVoxel0px1py0pz();
@@ -202,14 +122,10 @@ namespace PolyVox
 					const typename SrcVolumeType::VoxelType& voxel111 = sampler.peekVoxel1px1py1pz();
 
 					//FIXME - should accept all float parameters, but GCC complains?
-					/*double dummy;
+					double dummy;
 					sx = modf(sx, &dummy);
 					sy = modf(sy, &dummy);
-					sz = modf(sz, &dummy);*/
-
-					sx = sx - iSx;
-					sy = sy - iSy;
-					sz = sz - iSz;
+					sz = modf(sz, &dummy);
 
 					typename SrcVolumeType::VoxelType tInterpolatedValue = trilinearlyInterpolate(voxel000,voxel100,voxel010,voxel110,voxel001,voxel101,voxel011,voxel111,sx,sy,sz);
 
