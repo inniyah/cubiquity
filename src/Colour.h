@@ -10,6 +10,10 @@ class Colour
 public:
 	Colour() : m_uRed(0), m_uGreen(0), m_uBlue(0), m_uAlpha(0) {}
 
+	// This is a bit of a hack as PolyVox initialies voxels with VoxelType(0), so we
+	// need to be able to be constructed with an int parameter. Is there a better way?
+	Colour(int value) : m_uRed(value), m_uGreen(value), m_uBlue(value), m_uAlpha(value) {}
+
 	bool operator==(const Colour& rhs) const throw()
 	{
 		return ((m_uRed == rhs.m_uRed) && (m_uGreen == rhs.m_uGreen) && (m_uBlue == rhs.m_uBlue) && (m_uAlpha == rhs.m_uAlpha));
