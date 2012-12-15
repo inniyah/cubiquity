@@ -215,7 +215,7 @@ typedef MultiMaterial<uint32_t, 8, 4> MultiMaterial4;
 // See also http://www.gotw.ca/publications/mill17.htm - Why Not Specialize Function Templates?
 namespace PolyVox
 {
-	MultiMaterial4 trilinearlyInterpolate(
+	MultiMaterial4 trilerp(
 		const MultiMaterial4& v000,const MultiMaterial4& v100,const MultiMaterial4& v010,const MultiMaterial4& v110,
 		const MultiMaterial4& v001,const MultiMaterial4& v101,const MultiMaterial4& v011,const MultiMaterial4& v111,
 		const float x, const float y, const float z);

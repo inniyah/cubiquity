@@ -62,14 +62,4 @@ namespace PolyVox
 		else
 			return ((uInput & (uInput-1)) == 0);
 	}
-
-	int32_t roundTowardsNegInf(float r)
-	{
-		return (r > 0.0) ? static_cast<int32_t>(r) : static_cast<int32_t>(r - 1.0f);
-	}
-
-	int32_t roundToInteger(float r)
-	{
-		return (r > 0.0) ? static_cast<int32_t>(r + 0.5f) : static_cast<int32_t>(r - 0.5f);
-	}
 }
