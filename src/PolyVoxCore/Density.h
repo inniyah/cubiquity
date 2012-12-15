@@ -26,7 +26,7 @@ freely, subject to the following restrictions:
 
 #include "PolyVoxCore/DefaultMarchingCubesController.h" //We'll specialise the controller contained in here
 
-#include "PolyVoxCore/Impl/TypeDef.h"
+#include "Impl/TypeDef.h"
 
 #include <cassert>
 #include <limits>
@@ -55,17 +55,17 @@ namespace PolyVox
 
 		// The LowPassFilter uses this to convert between normal and accumulated types.
 		/// Copy constructor with cast
-		template <typename CastType> explicit Density(const Density<CastType>& density) throw()
+		template <typename CastType> explicit Density(const Density<CastType>& density)
 		{
 			m_uDensity = static_cast<Type>(density.getDensity());
 		}
 
-		bool operator==(const Density& rhs) const throw()
+		bool operator==(const Density& rhs) const
 		{
 			return (m_uDensity == rhs.m_uDensity);
 		};
 
-		bool operator!=(const Density& rhs) const throw()
+		bool operator!=(const Density& rhs) const
 		{
 			return !(*this == rhs);
 		}
@@ -93,7 +93,7 @@ namespace PolyVox
 		}
 
 		/// \return The current density of the voxel
-		Type getDensity() const throw() { return m_uDensity; }
+		Type getDensity() const { return m_uDensity; }
 		/**
 		 * Set the density of the voxel
 		 * 
@@ -102,16 +102,16 @@ namespace PolyVox
 		void setDensity(Type uDensity) { m_uDensity = uDensity; }
 
 		/// \return The maximum allowed density of the voxel
-		static Type getMaxDensity() throw() { return (std::numeric_limits<Type>::max)(); } 
+		static Type getMaxDensity() { return (std::numeric_limits<Type>::max)(); } 
 		/// \return The minimum allowed density of the voxel
-		static Type getMinDensity() throw() { return (std::numeric_limits<Type>::min)(); }
+		static Type getMinDensity() { return (std::numeric_limits<Type>::min)(); }
 
 	private:
 		Type m_uDensity;
 	};
 
 	template <typename Type>
-	Density<Type> operator+(const Density<Type>& lhs, const Density<Type>& rhs) throw()
+	Density<Type> operator+(const Density<Type>& lhs, const Density<Type>& rhs)
 	{
 		Density<Type> result = lhs;
 		result += rhs;
@@ -119,7 +119,7 @@ namespace PolyVox
 	}
 
 	template <typename Type>
-	Density<Type> operator-(const Density<Type>& lhs, const Density<Type>& rhs) throw()
+	Density<Type> operator-(const Density<Type>& lhs, const Density<Type>& rhs)
 	{
 		Density<Type> result = lhs;
 		result -= rhs;
@@ -127,7 +127,7 @@ namespace PolyVox
 	}
 
 	template <typename Type>
-	Density<Type> operator/(const Density<Type>& lhs, uint32_t rhs) throw()
+	Density<Type> operator/(const Density<Type>& lhs, uint32_t rhs)
 	{
 		Density<Type> result = lhs;
 		result /= rhs;
@@ -155,11 +155,13 @@ namespace PolyVox
 		{
 			// Default to a threshold value halfway between the min and max possible values.
 			m_tThreshold = (Density<Type>::getMinDensity() + Density<Type>::getMaxDensity()) / 2;
+			m_eWrapMode = WrapModes::Border;
 		}
 
 		DefaultMarchingCubesController(DensityType tThreshold)
 		{
 			m_tThreshold = tThreshold;
+			m_eWrapMode = WrapModes::Border;
 		}
 
 		DensityType convertToDensity(Density<Type> voxel)
@@ -172,13 +174,35 @@ namespace PolyVox
 			return 1;
 		}
 
+		Density<Type> getBorderValue(void)
+		{
+			return m_tBorder;
+		}
+
 		DensityType getThreshold(void)
 		{			
 			return m_tThreshold;
 		}
 
+		WrapMode getWrapMode(void)
+		{
+			return m_eWrapMode;
+		}
+
+		void setThreshold(DensityType tThreshold)
+		{
+			m_tThreshold = tThreshold;
+		}
+
+		void setWrapMode(WrapMode eWrapMode)
+		{
+			m_eWrapMode = eWrapMode;
+		}
+
 	private:
 		DensityType m_tThreshold;
+		WrapMode m_eWrapMode;
+		Density<Type> m_tBorder;
 	};
 }
 

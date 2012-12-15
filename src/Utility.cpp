@@ -25,7 +25,6 @@ freely, subject to the following restrictions:
 
 #include <cassert>
 #include <stdexcept>
-#include <string>
 
 namespace PolyVox
 {

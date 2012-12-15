@@ -24,7 +24,9 @@ freely, subject to the following restrictions:
 #ifndef __PolyVox_CubicSurfaceExtractor_H__
 #define __PolyVox_CubicSurfaceExtractor_H__
 
-#include "PolyVoxCore/Impl/TypeDef.h"
+#include "Impl/TypeDef.h"
+
+#include "PolyVoxForwardDeclarations.h"
 
 #include "PolyVoxCore/Array.h"
 #include "PolyVoxCore/DefaultIsQuadNeeded.h"

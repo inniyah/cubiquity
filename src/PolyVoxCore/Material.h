@@ -24,7 +24,7 @@ freely, subject to the following restrictions:
 #ifndef __PolyVox_Material_H__
 #define __PolyVox_Material_H__
 
-#include "PolyVoxCore/Impl/TypeDef.h"
+#include "Impl/TypeDef.h"
 
 #include "PolyVoxCore/DefaultIsQuadNeeded.h" //we'll specialise this function for this voxel type
 
@@ -48,18 +48,18 @@ namespace PolyVox
 		Material() : m_uMaterial(0) {}
 		Material(Type uMaterial) : m_uMaterial(uMaterial) {}
 
-		bool operator==(const Material& rhs) const throw()
+		bool operator==(const Material& rhs) const
 		{
 			return (m_uMaterial == rhs.m_uMaterial);
 		};
 
-		bool operator!=(const Material& rhs) const throw()
+		bool operator!=(const Material& rhs) const
 		{
 			return !(*this == rhs);
 		}
 
 		/// \return The current material value of the voxel
-		Type getMaterial() const throw() { return m_uMaterial; }
+		Type getMaterial() const { return m_uMaterial; }
 		/**
 		 * Set the material value of the voxel
 		 * 

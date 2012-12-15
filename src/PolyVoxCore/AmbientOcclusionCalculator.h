@@ -24,8 +24,8 @@ freely, subject to the following restrictions:
 #ifndef __AmbientOcclusionCalculator_H__
 #define __AmbientOcclusionCalculator_H__
 
-#include "PolyVoxCore/Impl/RandomUnitVectors.h"
-#include "PolyVoxCore/Impl/RandomVectors.h"
+#include "Impl/RandomUnitVectors.h"
+#include "Impl/RandomVectors.h"
 
 #include "PolyVoxCore/Array.h"
 #include "PolyVoxCore/Region.h"
@@ -60,7 +60,7 @@ namespace PolyVox
 			return func;
 		}
 
-		const IsVoxelTransparentCallback& mIsVoxelTransparentCallback;
+		IsVoxelTransparentCallback mIsVoxelTransparentCallback;
 	};
 
 	// NOTE: The callback needs to be a functor not a function. I haven't been
@@ -74,7 +74,7 @@ namespace PolyVox
 	
 	/// Calculate the ambient occlusion for the volume
 	template<typename VolumeType, typename IsVoxelTransparentCallback>
-	void calculateAmbientOcclusion(VolumeType* volInput, Array<3, uint8_t>* arrayResult, Region region, float fRayLength, uint8_t uNoOfSamplesPerOutputElement, const IsVoxelTransparentCallback& isVoxelTransparentCallback);
+	void calculateAmbientOcclusion(VolumeType* volInput, Array<3, uint8_t>* arrayResult, Region region, float fRayLength, uint8_t uNoOfSamplesPerOutputElement, IsVoxelTransparentCallback isVoxelTransparentCallback);
 }
 
 #include "PolyVoxCore/AmbientOcclusionCalculator.inl"

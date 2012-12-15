@@ -52,7 +52,6 @@
     <ClCompile Include="src\Utility.cpp" />
     <ClCompile Include="src\VertexTypes.cpp" />
     <ClCompile Include="src\VolumeRegion.cpp" />
-    <ClCompile Include="src\VoxelFilters.cpp" />
     <ClCompile Include="src\SmoothTerrainVolume.cpp" />
   </ItemGroup>
 </Project>

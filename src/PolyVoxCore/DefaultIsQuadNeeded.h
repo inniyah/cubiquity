@@ -24,6 +24,8 @@ freely, subject to the following restrictions:
 #ifndef __PolyVox_DefaultIsQuadNeeded_H__
 #define __PolyVox_DefaultIsQuadNeeded_H__
 
+#include "PolyVoxCore/Impl/TypeDef.h"
+
 namespace PolyVox
 {
 	template<typename VoxelType>
