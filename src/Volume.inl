@@ -469,12 +469,20 @@ void Volume<VoxelType>::recalculateMaterials(SurfaceMesh<PositionMaterialNormal<
 	std::vector< PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >& vertices = mesh->getRawVertexData();
 	for(int ct = 0; ct < vertices.size(); ct++)
 	{
-		//PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > vertex = mesh->getVertices()[ct];
 		const Vector3DFloat& vertexPos = vertices[ct].getPosition() + meshOffset;
-		VoxelType value = volume->getVoxelWithWrapping(static_cast<Vector3DInt32>(vertexPos));
-		///*VoxelType*/ value = vertices[ct].getMaterial();
-		//value = MultiMaterial4(0);
-		//value.setMaterial(1, 255);
+		VoxelType value = volume->getInterpolatedValue(vertexPos);
+
+		// It seems that sometimes the vertices can fall in an empty cell. The reason for this
+		// isn't clear but it might be inaccuraceies in the lower LOD mesh. It also might only 
+		// happen right on the edge of the volume so wrap modes might help. Hopefully we can
+		// remove this hack in the future.
+		Vector<4, float> matAsVec = value;
+		if(matAsVec.length() < 0.001f)
+		{
+			value = VoxelType(0);
+			value.setMaterial(0, 255);
+		}
+
 		vertices[ct].setMaterial(value);
 	}
 }
