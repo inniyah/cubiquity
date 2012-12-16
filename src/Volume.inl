@@ -378,6 +378,8 @@ void Volume<VoxelType>::updateMeshes()
 
 						//lod1Mesh.translateVertices(Vector3DFloat(-1.0f, -1.0f, -1.0f));
 						lod1Mesh.scaleVertices(2.0f);
+
+						recalculateMaterials(&lod1Mesh, static_cast<Vector3DFloat>(lod0Region.getLowerCorner()), mVolData);
 						
 
 						if(lod1Mesh.getNoOfIndices() > 0)
@@ -409,6 +411,8 @@ void Volume<VoxelType>::updateMeshes()
 
 						//lod2Mesh.translateVertices(Vector3DFloat(-1.0f, -1.0f, -1.0f));
 						lod2Mesh.scaleVertices(4.0f);
+
+						recalculateMaterials(&lod2Mesh, static_cast<Vector3DFloat>(lod0Region.getLowerCorner()), mVolData);
 
 						if(lod1Mesh.getNoOfIndices() > 0)
 						{
@@ -457,4 +461,20 @@ bool Volume<VoxelType>::raycast(Ray startAndDirection, float length, Vector3& re
 	}
 
 	return false;
+}
+
+template <typename VoxelType>
+void Volume<VoxelType>::recalculateMaterials(SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >* mesh, const Vector3DFloat& meshOffset,  RawVolume<VoxelType>* volume)
+{
+	std::vector< PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >& vertices = mesh->getRawVertexData();
+	for(int ct = 0; ct < vertices.size(); ct++)
+	{
+		//PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > vertex = mesh->getVertices()[ct];
+		const Vector3DFloat& vertexPos = vertices[ct].getPosition() + meshOffset;
+		VoxelType value = volume->getVoxelWithWrapping(static_cast<Vector3DInt32>(vertexPos));
+		///*VoxelType*/ value = vertices[ct].getMaterial();
+		//value = MultiMaterial4(0);
+		//value.setMaterial(1, 255);
+		vertices[ct].setMaterial(value);
+	}
 }
