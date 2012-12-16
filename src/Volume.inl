@@ -330,6 +330,7 @@ void Volume<VoxelType>::updateMeshes()
 					else if(getType() == VolumeTypes::SmoothTerrain)
 					{
 						GameplayMarchingCubesController<VoxelType> controller;
+						controller.setWrapMode(WrapModes::Clamp);
 						SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > > lod0Mesh;
 						MarchingCubesSurfaceExtractor< RawVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor(mVolData, lod0Region, &lod0Mesh, controller);
 						surfaceExtractor.execute();

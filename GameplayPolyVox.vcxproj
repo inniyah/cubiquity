@@ -162,6 +162,32 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\AmbientOcclusionCalculator.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Array.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\AStarPathfinder.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\BaseVolume.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\BaseVolumeSampler.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\CubicSurfaceExtractor.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\CubicSurfaceExtractorWithNormals.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\GradientEstimators.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Block.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\SubArray.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\IteratorController.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\LargeVolume.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\LargeVolumeSampler.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\LowPassFilter.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\MarchingCubesSurfaceExtractor.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\RawVolume.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\RawVolumeSampler.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Raycast.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\SimpleVolume.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\SimpleVolumeBlock.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\SimpleVolumeSampler.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\SurfaceMesh.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Vector.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VolumeResampler.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.inl" />
     <None Include="bar-descriptor.xml">
       <SubType>Designer</SubType>
     </None>
@@ -191,6 +217,45 @@
     <ClCompile Include="src\VolumeRegion.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\AmbientOcclusionCalculator.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Array.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\ArraySizes.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\AStarPathfinder.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\BaseVolume.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\ConstVolumeProxy.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\CubicSurfaceExtractor.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\CubicSurfaceExtractorWithNormals.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\DefaultIsQuadNeeded.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\DefaultMarchingCubesController.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Density.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\GradientEstimators.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\AStarPathfinderImpl.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Block.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\MarchingCubesTables.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\RandomUnitVectors.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\RandomVectors.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\SubArray.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\TypeDef.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Utility.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Interpolation.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\IteratorController.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\LargeVolume.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Log.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\LowPassFilter.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\MarchingCubesSurfaceExtractor.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Material.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\MaterialDensityPair.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\PolyVoxForwardDeclarations.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\RawVolume.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Raycast.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Region.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\SimpleVolume.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\SurfaceMesh.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Vector.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VertexTypes.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VolumeResampler.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.h" />
     <ClInclude Include="src\Colour.h" />
     <ClInclude Include="src\ColouredCubesVolume.h" />
     <ClInclude Include="src\gameplayisquadneeded.h" />

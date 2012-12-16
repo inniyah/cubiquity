@@ -6,6 +6,7 @@
 
 #include "MultiMaterial.h"
 
+#include "PolyVoxCore/BaseVolume.h"
 #include "PolyVoxCore/Material.h"
 #include "PolyVoxCore/Vector.h"
 
@@ -19,11 +20,6 @@ public:
 	GameplayMarchingCubesController(void)
 	{
 		m_tThreshold = ((std::numeric_limits<DensityType>::min)() + (std::numeric_limits<DensityType>::max)()) / 2;
-	}
-
-	GameplayMarchingCubesController(DensityType tThreshold)
-	{
-		m_tThreshold = tThreshold;
 	}
 
 	DensityType convertToDensity(VoxelType voxel)
@@ -58,11 +54,6 @@ public:
 		m_tThreshold = MultiMaterial4::getMaxMaterialValue() / 2;
 	}
 
-	GameplayMarchingCubesController(DensityType tThreshold)
-	{
-		m_tThreshold = tThreshold;
-	}
-
 	DensityType convertToDensity(MultiMaterial4 voxel)
 	{
 		return voxel.getSumOfMaterials();
@@ -86,13 +77,36 @@ public:
 		return result;
 	}
 
+	MultiMaterial4 getBorderValue(void)
+	{
+		return m_tBorder;
+	}
+
 	DensityType getThreshold(void)
 	{			
 		return m_tThreshold;
 	}
 
+	PolyVox::WrapMode getWrapMode(void)
+	{
+		return m_eWrapMode;
+	}
+
+	void setThreshold(DensityType tThreshold)
+	{
+		m_tThreshold = tThreshold;
+	}
+
+	void setWrapMode(PolyVox::WrapMode eWrapMode, MultiMaterial4 tBorder = MultiMaterial4(0))
+	{
+		m_eWrapMode = eWrapMode;
+		m_tBorder = tBorder;
+	}
+
 private:
 	DensityType m_tThreshold;
+	PolyVox::WrapMode m_eWrapMode;
+	MultiMaterial4 m_tBorder;
 };
 
 // We never use the marching cubes surface extractor with Material16 so this is just a dummy specialisation.

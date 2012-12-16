@@ -24,7 +24,7 @@ void pointNodeAtTarget(Node* node, const Vector3& target, const Vector3& up = Ve
 	crossProd.normalize();
 
 	Quaternion rotation(crossProd, acos(oldDir.dot(newDir)));
-
+	
 	node->rotate(rotation);
 }
 
