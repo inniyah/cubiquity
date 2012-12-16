@@ -115,7 +115,7 @@ class GameplayMarchingCubesController< Colour >
 {
 public:
 	typedef float DensityType;
-	typedef MultiMaterial4 MaterialType;
+	typedef Colour MaterialType;
 
 	float convertToDensity(Colour voxel)
 	{
@@ -125,7 +125,6 @@ public:
 
 	MaterialType convertToMaterial(Colour voxel)
 	{
-		assert(false);
 		return MaterialType();
 	}
 
@@ -134,10 +133,32 @@ public:
 		return a;
 	}
 
+	Colour getBorderValue(void)
+	{
+		assert(false);
+		return Colour(0);
+	}
+
 	float getThreshold(void)
 	{
 		assert(false);
 		return 0;
+	}
+
+	PolyVox::WrapMode getWrapMode(void)
+	{
+		assert(false);
+		return PolyVox::WrapModes::Border;
+	}
+
+	void setThreshold(DensityType tThreshold)
+	{
+		assert(false);
+	}
+
+	void setWrapMode(PolyVox::WrapMode eWrapMode, Colour tBorder = Colour(0))
+	{
+		assert(false);
 	}
 };
 
