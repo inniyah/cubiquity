@@ -12,7 +12,7 @@ material SmoothTerrain
             u_worldMatrix = WORLD_MATRIX
             u_viewProjectionMatrix = VIEW_PROJECTION_MATRIX
             
-            u_ambientColor = 0.3, 0.3, 0.3
+            u_ambientColor = 0.25, 0.25, 0.25
             
             // samplers
             sampler u_texture0

@@ -116,7 +116,7 @@ void MeshGame::initialize()
 	}
 
     // Find the light node
-	_light = Light::createDirectional(Vector3(0.7, 0.7, 0.7));
+	_light = Light::createDirectional(Vector3(0.75, 0.75, 0.75));
 	_lightNode = Node::create();
 	_lightNode->setLight(_light);
 	_lightNode->setTranslation(0.0f, 100.0f, 0.0f);
@@ -129,7 +129,7 @@ void MeshGame::initialize()
 	_scene->setActiveCamera(camera);
 	_scene->getActiveCamera()->setAspectRatio((float)getWidth() / (float)getHeight());
 
-	mCameraElevationAngle = MATH_DEG_TO_RAD(30.0f); //Value from voxeliens
+	mCameraElevationAngle = MATH_DEG_TO_RAD(45.0f); //Value from voxeliens
 	mCameraRotationAngle = 0.0f; //Value from voxeliens
 	mCameraDistance = 145.0f; //Value from voxeliens
 

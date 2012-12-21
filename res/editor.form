@@ -95,7 +95,7 @@ form particleEditor
             position = 0, 140
             orientation = HORIZONTAL
             min = 50.0
-            max = 200.0
+            max = 300.0
             value = 100.0
             step = 1.0
             consumeInputEvents = false
@@ -116,7 +116,7 @@ form particleEditor
             position = 0, 200
             orientation = HORIZONTAL
             min = 50.0
-            max = 200.0
+            max = 300.0
             value = 100.0
             step = 1.0
             consumeInputEvents = false

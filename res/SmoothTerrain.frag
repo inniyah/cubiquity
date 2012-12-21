@@ -37,6 +37,11 @@ void main()
     
     // Base color
     vec4 baseColor = vec4(0.0,0.0,0.0,1.0);
+
+	//baseColor += texCoord0.x * vec4(147.0/255.0, 115/255.0, 69/255.0, 1.0);
+    //baseColor += texCoord0.y * vec4(112.0/255.0, 129/255.0, 51/255.0, 1.0);
+    //baseColor += texCoord0.z * vec4(26.0/255.0, 99/255.0, 141/255.0, 1.0);
+
     baseColor += texCoord0.x * textureTriplanar(u_texture0, v_worldSpacePosition.xyz, normalVector, 10.0);
     baseColor += texCoord0.y * textureTriplanar(u_texture1, v_worldSpacePosition.xyz, normalVector, 10.0);
     baseColor += texCoord0.z * textureTriplanar(u_texture2, v_worldSpacePosition.xyz, normalVector, 10.0);
