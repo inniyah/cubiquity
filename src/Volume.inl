@@ -469,7 +469,7 @@ void Volume<VoxelType>::recalculateMaterials(SurfaceMesh<PositionMaterialNormal<
 	for(int ct = 0; ct < vertices.size(); ct++)
 	{
 		const Vector3DFloat& vertexPos = vertices[ct].getPosition() + meshOffset;
-		VoxelType value = volume->getInterpolatedValue(vertexPos);
+		VoxelType value = getInterpolatedValue(volume, vertexPos);
 
 		// It seems that sometimes the vertices can fall in an empty cell. The reason for this
 		// isn't clear but it might be inaccuraceies in the lower LOD mesh. It also might only 
@@ -484,4 +484,37 @@ void Volume<VoxelType>::recalculateMaterials(SurfaceMesh<PositionMaterialNormal<
 
 		vertices[ct].setMaterial(value);
 	}
+}
+
+template <typename VoxelType>
+VoxelType Volume<VoxelType>::getInterpolatedValue(RawVolume<VoxelType>* volume, const Vector3DFloat& position)
+{
+	RawVolume<VoxelType>::Sampler sampler(volume);
+
+	int32_t iLowerX = roundTowardsNegInf(position.getX());
+	int32_t iLowerY = roundTowardsNegInf(position.getY());
+	int32_t iLowerZ = roundTowardsNegInf(position.getZ());
+
+	float fOffsetX = position.getX() - iLowerX;
+	float fOffsetY = position.getY() - iLowerY;
+	float fOffsetZ = position.getZ() - iLowerZ;
+
+	/*int32_t iCeilX = iFloorX + 1;
+	int32_t iCeilY = iFloorY + 1;
+	int32_t iCeilZ = iFloorZ + 1;*/
+
+	sampler.setPosition(iLowerX, iLowerY, iLowerZ);
+
+	VoxelType v000 = sampler.peekVoxel0px0py0pz();
+	VoxelType v100 = sampler.peekVoxel1px0py0pz();
+	VoxelType v010 = sampler.peekVoxel0px1py0pz();
+	VoxelType v110 = sampler.peekVoxel1px1py0pz();
+	VoxelType v001 = sampler.peekVoxel0px0py1pz();
+	VoxelType v101 = sampler.peekVoxel1px0py1pz();
+	VoxelType v011 = sampler.peekVoxel0px1py1pz();
+	VoxelType v111 = sampler.peekVoxel1px1py1pz();
+
+	VoxelType result = trilerp(v000, v100, v010, v110, v001, v101, v011, v111, fOffsetX, fOffsetY, fOffsetZ);
+
+	return result;
 }
