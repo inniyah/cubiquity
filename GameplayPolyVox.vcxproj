@@ -203,6 +203,7 @@
   <ItemGroup>
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\ArraySizes.cpp" />
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\AStarPathfinder.cpp" />
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\ErrorHandling.cpp" />
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\MarchingCubesTables.cpp" />
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\RandomUnitVectors.cpp" />
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\RandomVectors.cpp" />
@@ -232,6 +233,7 @@
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.h" />
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\AStarPathfinderImpl.h" />
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Block.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ErrorHandling.h" />
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\MarchingCubesTables.h" />
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\RandomUnitVectors.h" />
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\RandomVectors.h" />

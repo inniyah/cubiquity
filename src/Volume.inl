@@ -319,7 +319,7 @@ void Volume<VoxelType>::updateMeshes()
 					{
 						GameplayIsQuadNeeded<VoxelType> isQuadNeeded;
 						SurfaceMesh<PositionMaterial<VoxelType> > colouredCubicMesh;
-						CubicSurfaceExtractor< RawVolume<VoxelType>, GameplayIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, lod0Region, &colouredCubicMesh, true, isQuadNeeded);
+						CubicSurfaceExtractor< RawVolume<VoxelType>, GameplayIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, lod0Region, &colouredCubicMesh, WrapModes::Border, VoxelType(0), true, isQuadNeeded);
 						surfaceExtractor.execute();
 
 						if(colouredCubicMesh.getNoOfIndices() > 0)
@@ -330,9 +330,8 @@ void Volume<VoxelType>::updateMeshes()
 					else if(getType() == VolumeTypes::SmoothTerrain)
 					{
 						GameplayMarchingCubesController<VoxelType> controller;
-						controller.setWrapMode(WrapModes::Clamp);
 						SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > > lod0Mesh;
-						MarchingCubesSurfaceExtractor< RawVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor(mVolData, lod0Region, &lod0Mesh, controller);
+						MarchingCubesSurfaceExtractor< RawVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor(mVolData, lod0Region, &lod0Mesh, WrapModes::Clamp, VoxelType(0), controller);
 						surfaceExtractor.execute();
 
 						if(lod0Mesh.getNoOfIndices() > 0)
@@ -373,7 +372,7 @@ void Volume<VoxelType>::updateMeshes()
 						//lod1MeshRegion.shiftLowerCorner(Vector3DInt32(-1,-1,-1));
 
 						SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > > lod1Mesh;
-						MarchingCubesSurfaceExtractor< RawVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor2(&lod1Volume, lod1MeshRegion, &lod1Mesh, controller);
+						MarchingCubesSurfaceExtractor< RawVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor2(&lod1Volume, lod1MeshRegion, &lod1Mesh, WrapModes::Clamp, VoxelType(0), controller);
 						surfaceExtractor2.execute();
 
 						//lod1Mesh.translateVertices(Vector3DFloat(-1.0f, -1.0f, -1.0f));
@@ -406,7 +405,7 @@ void Volume<VoxelType>::updateMeshes()
 						//lod2MeshRegion.shiftLowerCorner(Vector3DInt32(-1,-1,-1));
 
 						SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > > lod2Mesh;
-						MarchingCubesSurfaceExtractor< RawVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor3(&lod2Volume, lod2MeshRegion, &lod2Mesh, controller);
+						MarchingCubesSurfaceExtractor< RawVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor3(&lod2Volume, lod2MeshRegion, &lod2Mesh, WrapModes::Clamp, VoxelType(0), controller);
 						surfaceExtractor3.execute();
 
 						//lod2Mesh.translateVertices(Vector3DFloat(-1.0f, -1.0f, -1.0f));

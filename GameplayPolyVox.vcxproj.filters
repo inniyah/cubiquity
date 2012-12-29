@@ -237,6 +237,9 @@
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Utility.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ErrorHandling.h">
+      <Filter>PolyVox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -271,6 +274,9 @@
       <Filter>PolyVox</Filter>
     </ClCompile>
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\Utility.cpp">
+      <Filter>PolyVox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\ErrorHandling.cpp">
       <Filter>PolyVox</Filter>
     </ClCompile>
   </ItemGroup>
