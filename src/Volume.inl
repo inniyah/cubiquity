@@ -324,7 +324,7 @@ void Volume<VoxelType>::updateMeshes()
 
 						if(colouredCubicMesh.getNoOfIndices() > 0)
 						{
-							mVolumeRegions[x][y][z]->buildGraphicsMesh(colouredCubicMesh, 0);
+							mVolumeRegions[x][y][z]->buildGraphicsMesh(colouredCubicMesh/*, 0*/);
 						}
 					}
 					else if(getType() == VolumeTypes::SmoothTerrain)
@@ -336,7 +336,7 @@ void Volume<VoxelType>::updateMeshes()
 
 						if(lod0Mesh.getNoOfIndices() > 0)
 						{
-							mVolumeRegions[x][y][z]->buildGraphicsMesh(lod0Mesh, 0);
+							mVolumeRegions[x][y][z]->buildGraphicsMesh(lod0Mesh/*, 0*/);
 						}
 
 						// I'm having a lot of difficulty getting the lod levels to work properly. Say I have a region of 17x17x17 voxels
@@ -353,7 +353,7 @@ void Volume<VoxelType>::updateMeshes()
 						// Actually, I'm now concluding that the lower LOD volume data does need to overlap for better continuity. Otherwise 
 						// we're seeing cracks een between meshes of the same LOD level.
 
-						Region lod1VolumeRegion(lod0Region);	
+						/*Region lod1VolumeRegion(lod0Region);	
 						Vector3DInt32 lowerCorner = lod1VolumeRegion.getLowerCorner();
 						Vector3DInt32 upperCorner = lod1VolumeRegion.getUpperCorner();
 
@@ -416,7 +416,7 @@ void Volume<VoxelType>::updateMeshes()
 						if(lod1Mesh.getNoOfIndices() > 0)
 						{
 							mVolumeRegions[x][y][z]->buildGraphicsMesh(lod2Mesh, 2);
-						}
+						}*/
 					}
 
 					// FIXME - We shouldn't really set this here as it's not changing every time we update the mesh data.

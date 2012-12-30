@@ -9,38 +9,23 @@
 using namespace gameplay;
 using namespace PolyVox;
 
-void lodCleanupCallback(void* ptr)
-{
-	uint32_t* pLodLevel = static_cast<uint32_t*>(ptr);
-	if(pLodLevel)
-	{
-		delete pLodLevel;
-	}
-}
-
 VolumeRegion::VolumeRegion(PolyVox::Region region, Node* parentNode)
 	:mRegion(region)
 	,mIsMeshUpToDate(false)
 {
-	for(uint32_t lod = 0; lod < NoOfLodLevels; lod++)
-	{
-		std::stringstream ss;
-		ss << "VolumeRegionNode(" << mRegion.getLowerCorner().getX() << "," << mRegion.getLowerCorner().getY() << "," << mRegion.getLowerCorner().getZ() << "), LOD = " << lod;
-		mNode[lod] = Node::create(ss.str().c_str());
-		parentNode->addChild(mNode[lod]);
-		 mNode[lod]->setTranslation(mRegion.getLowerCorner().getX(), mRegion.getLowerCorner().getY(), mRegion.getLowerCorner().getZ());
-	}
+	std::stringstream ss;
+	ss << "VolumeRegionNode(" << mRegion.getLowerCorner().getX() << "," << mRegion.getLowerCorner().getY() << "," << mRegion.getLowerCorner().getZ() << ")";
+	mNode = Node::create(ss.str().c_str());
+	parentNode->addChild(mNode);
+	mNode->setTranslation(mRegion.getLowerCorner().getX(), mRegion.getLowerCorner().getY(), mRegion.getLowerCorner().getZ());
 }
 
 VolumeRegion::~VolumeRegion()
 {
-	for(uint32_t lod = 0; lod < NoOfLodLevels; lod++)
-	{
-		SAFE_RELEASE(mNode[lod]);
-	}
+	SAFE_RELEASE(mNode);
 }
 
-void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<Colour> >& polyVoxMesh, uint32_t lod)
+void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<Colour> >& polyVoxMesh)
 {
 	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
 	const std::vector<PositionMaterial<Colour> >& vecVertices = polyVoxMesh.getVertices();
@@ -88,21 +73,21 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
     Model* model = Model::create(mesh);
     SAFE_RELEASE(mesh);
 
-	mNode[lod]->setModel(model);
+	mNode->setModel(model);
 	SAFE_RELEASE(model);
 }
 
-void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<MultiMaterial4> >& polyVoxMesh, uint32_t lod)
+void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<MultiMaterial4> >& polyVoxMesh)
 {
 	GP_ERROR("This function should never be called!"); //See note in header
 }
 
-void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< Colour > >& polyVoxMesh, uint32_t lod)
+void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< Colour > >& polyVoxMesh)
 {
 	GP_ERROR("This function should never be called!"); //See note in header
 }
 
-void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& polyVoxMesh, uint32_t lod)
+void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& polyVoxMesh)
 {
 	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
 	const std::vector<PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& vecVertices = polyVoxMesh.getVertices();
@@ -162,11 +147,7 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
     Model* model = Model::create(mesh);
     SAFE_RELEASE(mesh);
 
-	uint32_t* pLod = new uint32_t;
-	*pLod = lod;
-
-	mNode[lod]->setUserPointer(pLod, lodCleanupCallback);
-	mNode[lod]->setModel(model);
+	mNode->setModel(model);
 	SAFE_RELEASE(model);
 
 	//Now set up the physics
@@ -189,16 +170,13 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 	//Putting the physics mesh on LOD 0.
 	PhysicsRigidBody::Parameters groundParams;
 	groundParams.mass = 0.0f;
-	mNode[0]->setCollisionObject(PhysicsCollisionObject::RIGID_BODY, PhysicsCollisionShape::custom(vertexData, polyVoxMesh.getVertices().size(), physicsIndices, vecIndices.size()), &groundParams);
+	mNode->setCollisionObject(PhysicsCollisionObject::RIGID_BODY, PhysicsCollisionShape::custom(vertexData, polyVoxMesh.getVertices().size(), physicsIndices, vecIndices.size()), &groundParams);
 }
 
 void VolumeRegion::setMaterial(const char* material)
 {
-	for(uint32_t lod = 0; lod < NoOfLodLevels; lod++)
+	if(mNode->getModel())
 	{
-		if(mNode[lod]->getModel())
-		{
-			mNode[lod]->getModel()->setMaterial(material);
-		}
+		mNode->getModel()->setMaterial(material);
 	}
 }

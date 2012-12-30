@@ -374,7 +374,7 @@ bool MeshGame::drawScene(Node* node)
 		return true;
 	}
 
-	uint32_t* pLodLevel = static_cast<uint32_t*>(node->getUserPointer());
+	/*uint32_t* pLodLevel = static_cast<uint32_t*>(node->getUserPointer());
 	if(pLodLevel)
 	{
 		float distance = (_cameraNode->getTranslationWorld() - node->getTranslationWorld()).length();
@@ -390,7 +390,7 @@ bool MeshGame::drawScene(Node* node)
 		}
 		if(*pLodLevel != desiredLod)
 			return true;
-	}
+	}*/
 
     Model* model = node->getModel();
     if (model)
