@@ -233,6 +233,8 @@
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.h" />
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\AStarPathfinderImpl.h" />
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Block.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\CompilerCapabilities.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Config.h" />
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ErrorHandling.h" />
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\MarchingCubesTables.h" />
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\RandomUnitVectors.h" />

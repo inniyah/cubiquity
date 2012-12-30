@@ -240,6 +240,12 @@
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ErrorHandling.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\CompilerCapabilities.h">
+      <Filter>PolyVox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Config.h">
+      <Filter>PolyVox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">

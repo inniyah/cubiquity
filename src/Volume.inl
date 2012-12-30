@@ -489,7 +489,7 @@ void Volume<VoxelType>::recalculateMaterials(SurfaceMesh<PositionMaterialNormal<
 template <typename VoxelType>
 VoxelType Volume<VoxelType>::getInterpolatedValue(RawVolume<VoxelType>* volume, const Vector3DFloat& position)
 {
-	RawVolume<VoxelType>::Sampler sampler(volume);
+	typename RawVolume<VoxelType>::Sampler sampler(volume);
 
 	int32_t iLowerX = roundTowardsNegInf(position.getX());
 	int32_t iLowerY = roundTowardsNegInf(position.getY());
