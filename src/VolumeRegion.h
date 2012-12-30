@@ -20,7 +20,7 @@ class Volume;
 class VolumeRegion
 {
 public:	
-	VolumeRegion(PolyVox::Region region, gameplay::Node* parentNode);
+	VolumeRegion(PolyVox::Region region, VolumeRegion* parentRegion, uint32_t lodLevel);
 	~VolumeRegion();
 
 	// Builds the graphics mesh for cubic terrain (Colour material type and PositionMaterial vertex type)
@@ -38,6 +38,7 @@ public:
 	PolyVox::Region mRegion;
 	gameplay::Node* mNode;
 	bool mIsMeshUpToDate;
+	uint32_t mLodLevel;
 };
 
 #endif //VOLUME_REGION_H_

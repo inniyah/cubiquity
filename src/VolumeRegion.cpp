@@ -9,15 +9,23 @@
 using namespace gameplay;
 using namespace PolyVox;
 
-VolumeRegion::VolumeRegion(PolyVox::Region region, Node* parentNode)
+VolumeRegion::VolumeRegion(PolyVox::Region region, VolumeRegion* parentRegion, uint32_t lodLevel)
 	:mRegion(region)
 	,mIsMeshUpToDate(false)
+	,mLodLevel(lodLevel)
 {
 	std::stringstream ss;
 	ss << "VolumeRegionNode(" << mRegion.getLowerCorner().getX() << "," << mRegion.getLowerCorner().getY() << "," << mRegion.getLowerCorner().getZ() << ")";
 	mNode = Node::create(ss.str().c_str());
-	parentNode->addChild(mNode);
-	mNode->setTranslation(mRegion.getLowerCorner().getX(), mRegion.getLowerCorner().getY(), mRegion.getLowerCorner().getZ());
+	if(parentRegion)
+	{
+		parentRegion->mNode->addChild(mNode);
+
+		Vector3DInt32 translation = mRegion.getLowerCorner() - parentRegion->mRegion.getLowerCorner();
+
+		mNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
+	}
+	mNode->setUserPointer(this);
 }
 
 VolumeRegion::~VolumeRegion()

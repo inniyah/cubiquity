@@ -29,6 +29,8 @@ public:
 	gameplay::Node* getRootNode();
 	VolumeType getType(void) const;
 
+	void buildVolumeRegionTree(VolumeRegion* parent);
+
 	VoxelType getVoxelAt(int x, int y, int z);
 	void setVoxelAt(int x, int y, int z, VoxelType value);
 
@@ -37,6 +39,7 @@ public:
 	void loadData(const char* filename);
 	void saveData(const char* filename);
 	void updateMeshes();
+	void updateMesh(VolumeRegion* volReg);
 
 	void recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >* mesh, const PolyVox::Vector3DFloat& meshOffset, PolyVox::RawVolume<VoxelType>* volume);
 	VoxelType getInterpolatedValue(PolyVox::RawVolume<VoxelType>* volume, const PolyVox::Vector3DFloat& position);
@@ -50,6 +53,7 @@ protected:
 
 public:
 	PolyVox::RawVolume<VoxelType>* mVolData;
+	VolumeRegion* mRootVolumeRegion;
 	gameplay::Node* mRootNode;
 	//VolumeRegion* mVolumeRegion;
 	PolyVox::Array<3, VolumeRegion*> mVolumeRegions;
