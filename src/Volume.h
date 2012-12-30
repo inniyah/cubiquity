@@ -55,8 +55,6 @@ public:
 	PolyVox::RawVolume<VoxelType>* mVolData;
 	VolumeRegion* mRootVolumeRegion;
 	gameplay::Node* mRootNode;
-	//VolumeRegion* mVolumeRegion;
-	PolyVox::Array<3, VolumeRegion*> mVolumeRegions;
 	std::string mMaterialPath;
 
 	unsigned int mRegionWidth;

@@ -35,10 +35,15 @@ public:
 
 	void setMaterial(const char* material); //Should be const material - fix gameplay
 
+	void invalidateMeshForPoint(int32_t x, int32_t y, int32_t z);
+
 	PolyVox::Region mRegion;
 	gameplay::Node* mNode;
 	bool mIsMeshUpToDate;
 	uint32_t mLodLevel;
+
+	VolumeRegion* parent;
+	VolumeRegion* children[2][2][2];
 };
 
 #endif //VOLUME_REGION_H_

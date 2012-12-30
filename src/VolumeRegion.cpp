@@ -13,7 +13,19 @@ VolumeRegion::VolumeRegion(PolyVox::Region region, VolumeRegion* parentRegion, u
 	:mRegion(region)
 	,mIsMeshUpToDate(false)
 	,mLodLevel(lodLevel)
+	,parent(parentRegion)
 {
+	for(int z = 0; z < 2; z++)
+	{
+		for(int y = 0; y < 2; y++)
+		{
+			for(int x = 0; x < 2; x++)
+			{
+				children[x][y][z] = 0;
+			}
+		}
+	}
+
 	std::stringstream ss;
 	ss << "VolumeRegionNode(" << mRegion.getLowerCorner().getX() << "," << mRegion.getLowerCorner().getY() << "," << mRegion.getLowerCorner().getZ() << ")";
 	mNode = Node::create(ss.str().c_str());
@@ -186,5 +198,28 @@ void VolumeRegion::setMaterial(const char* material)
 	if(mNode->getModel())
 	{
 		mNode->getModel()->setMaterial(material);
+	}
+}
+
+void VolumeRegion::invalidateMeshForPoint(int32_t x, int32_t y, int32_t z)
+{
+	if(mRegion.containsPoint(x, y, z, -1)) //FIXME - Think if we really need this border.
+	{
+		mIsMeshUpToDate = false;
+
+		for(int iz = 0; iz < 2; iz++)
+		{
+			for(int iy = 0; iy < 2; iy++)
+			{
+				for(int ix = 0; ix < 2; ix++)
+				{
+					VolumeRegion* child = children[ix][iy][iz];
+					if(child)
+					{
+						child->invalidateMeshForPoint(x, y, z);
+					}
+				}
+			}
+		}
 	}
 }
