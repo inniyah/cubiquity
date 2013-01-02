@@ -94,31 +94,10 @@ form particleEditor
             size = 150, 50
             position = 0, 140
             orientation = HORIZONTAL
-            min = 50.0
-            max = 300.0
-            value = 100.0
-            step = 1.0
-            consumeInputEvents = false
-        }
-        
-        label titleLod2Start
-        {
-            style = title
-            size = 150, 30
-            position = 0, 170
-            text = Lod 2 Start
-        }
-        
-        slider Lod2StartSlider
-        {
-            style = noBorder
-            size = 150, 50
-            position = 0, 200
-            orientation = HORIZONTAL
-            min = 50.0
-            max = 300.0
-            value = 100.0
-            step = 1.0
+            min = 0.0
+            max = 5.0
+            value = 1.0
+            step = 0.1
             consumeInputEvents = false
         }
     }

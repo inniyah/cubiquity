@@ -66,7 +66,6 @@ void MeshGame::initialize()
 	mMat3Button = (Button*)mForm->getControl("Mat3Button");
 
 	mLod1StartSlider = (Slider*)mForm->getControl("Lod1StartSlider");
-	mLod2StartSlider = (Slider*)mForm->getControl("Lod2StartSlider");
 	mBrushSizeSlider = (Slider*)mForm->getControl("BrushSizeSlider");
 	mBrushIntensitySlider = (Slider*)mForm->getControl("BrushIntensitySlider");
 	mSmoothBiasSlider = (Slider*)mForm->getControl("SmoothBiasSlider");
@@ -404,10 +403,12 @@ bool MeshGame::drawScene(Node* node)
 
 		float distance = (_cameraNode->getTranslationWorld() - gRegCentre).length();
 
-		if((lodLevel == 2) && (distance < mLod2StartSlider->getValue()))
-			return true;
+		Vector3DInt32 diagonal = volReg->mRegion.getUpperCorner() - volReg->mRegion.getLowerCorner();
+		float diagonalLength = diagonal.length(); // A measure of our regions size
 
-		if((lodLevel == 1) && (distance < mLod1StartSlider->getValue()))
+		float projectedSize = diagonalLength / distance;
+
+		if(projectedSize > mLod1StartSlider->getValue())
 			return true;
 
 		Model* model = node->getModel();
