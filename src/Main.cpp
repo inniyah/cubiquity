@@ -3,6 +3,8 @@
 #include "ColouredCubesVolume.h"
 #include "SmoothTerrainVolume.h"
 
+#include "VolumeRegion.h" //HACK!
+
 #include <algorithm>
 
 using namespace PolyVox;
@@ -391,6 +393,32 @@ bool MeshGame::drawScene(Node* node)
 		if(*pLodLevel != desiredLod)
 			return true;
 	}*/
+
+	VolumeRegion* volReg = static_cast<VolumeRegion*>(node->getUserPointer());
+	if(volReg)
+	{
+		uint32_t lodLevel = volReg->mLodLevel;
+		Vector3DInt32 regionCentre = volReg->mRegion.getLowerCorner() + (volReg->mRegion.getDimensionsInCells() / 2);
+
+		Vector3 gRegCentre(regionCentre.getX(), regionCentre.getY(), regionCentre.getZ());
+
+		float distance = (_cameraNode->getTranslationWorld() - gRegCentre).length();
+
+		if((lodLevel == 2) && (distance < mLod2StartSlider->getValue()))
+			return true;
+
+		if((lodLevel == 1) && (distance < mLod1StartSlider->getValue()))
+			return true;
+
+		Model* model = node->getModel();
+		if (model)
+		{
+			model->getMaterial()->getParameter("u_lightColor")->setValue(_light->getColor());
+			model->getMaterial()->getParameter("u_lightDirection")->setValue(_lightNode->getForwardVectorWorld());
+			model->draw(mWireframeCheckBox->isChecked());
+		}
+		return false; //This is the lod level we are drawing so no need to go any lower.
+	}
 
     Model* model = node->getModel();
     if (model)

@@ -336,7 +336,7 @@ void Volume<VoxelType>::updateMeshes()
 template <typename VoxelType>
 void Volume<VoxelType>::updateMesh(VolumeRegion* volReg)
 {
-	if((volReg->mIsMeshUpToDate == false) && (volReg->mLodLevel == 0)) //Lod test shouldn't be here.
+	if(volReg->mIsMeshUpToDate == false) //Lod test shouldn't be here.
 	{
 		Region lod0Region = volReg->mRegion;
 
@@ -355,15 +355,80 @@ void Volume<VoxelType>::updateMesh(VolumeRegion* volReg)
 		}
 		else if(getType() == VolumeTypes::SmoothTerrain)
 		{
-			GameplayMarchingCubesController<VoxelType> controller;
-			SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > > lod0Mesh;
-			MarchingCubesSurfaceExtractor< RawVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor(mVolData, lod0Region, &lod0Mesh, WrapModes::Clamp, VoxelType(0), controller);
-			surfaceExtractor.execute();
-
-			if(lod0Mesh.getNoOfIndices() > 0)
+			if(volReg->mLodLevel == 0)
 			{
-				volReg->buildGraphicsMesh(lod0Mesh/*, 0*/);
+				GameplayMarchingCubesController<VoxelType> controller;
+				SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > > mesh;
+				MarchingCubesSurfaceExtractor< RawVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor(mVolData, lod0Region, &mesh, WrapModes::Clamp, VoxelType(0), controller);
+				surfaceExtractor.execute();
+
+				if(mesh.getNoOfIndices() > 0)
+				{
+					volReg->buildGraphicsMesh(mesh/*, 0*/);
+				}
 			}
+
+			if(volReg->mLodLevel == 1)
+			{
+				Region lod1Region = lod0Region;
+				Vector3DInt32 lowerCorner = lod1Region.getLowerCorner();
+				Vector3DInt32 upperCorner = lod1Region.getUpperCorner();
+
+				upperCorner = upperCorner - lowerCorner;
+				upperCorner = upperCorner / 2;
+				upperCorner = upperCorner + lowerCorner;
+				lod1Region.setUpperCorner(upperCorner);
+
+				RawVolume<VoxelType> resampledVolume(lod1Region);
+				//lod1Volume.m_bClampInsteadOfBorder = true; //We're extracting right to the edge of our small volume, so this keeps the normals correct(ish)
+				VolumeResampler< RawVolume<VoxelType>, RawVolume<VoxelType> > volumeResampler(mVolData, lod0Region, &resampledVolume, lod1Region);
+				volumeResampler.execute();
+
+				GameplayMarchingCubesController<VoxelType> controller;
+				SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > > mesh;
+				MarchingCubesSurfaceExtractor< RawVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor(&resampledVolume, lod1Region, &mesh, WrapModes::Clamp, VoxelType(0), controller);
+				surfaceExtractor.execute();
+
+				mesh.scaleVertices(2.0f);
+
+				recalculateMaterials(&mesh, static_cast<Vector3DFloat>(lod1Region.getLowerCorner()), mVolData);
+
+				if(mesh.getNoOfIndices() > 0)
+				{
+					volReg->buildGraphicsMesh(mesh/*, 0*/);
+				}
+			}
+
+			if(volReg->mLodLevel == 2)
+			{
+				Region lod2Region = lod0Region;
+				Vector3DInt32 lowerCorner = lod2Region.getLowerCorner();
+				Vector3DInt32 upperCorner = lod2Region.getUpperCorner();
+
+				upperCorner = upperCorner - lowerCorner;
+				upperCorner = upperCorner / 4;
+				upperCorner = upperCorner + lowerCorner;
+				lod2Region.setUpperCorner(upperCorner);
+
+				RawVolume<VoxelType> resampledVolume(lod2Region);
+				//lod1Volume.m_bClampInsteadOfBorder = true; //We're extracting right to the edge of our small volume, so this keeps the normals correct(ish)
+				VolumeResampler< RawVolume<VoxelType>, RawVolume<VoxelType> > volumeResampler(mVolData, lod0Region, &resampledVolume, lod2Region);
+				volumeResampler.execute();
+
+				GameplayMarchingCubesController<VoxelType> controller;
+				SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > > mesh;
+				MarchingCubesSurfaceExtractor< RawVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor(&resampledVolume, lod2Region, &mesh, WrapModes::Clamp, VoxelType(0), controller);
+				surfaceExtractor.execute();
+
+				mesh.scaleVertices(4.0f);
+
+				recalculateMaterials(&mesh, static_cast<Vector3DFloat>(lod2Region.getLowerCorner()), mVolData);
+
+				if(mesh.getNoOfIndices() > 0)
+				{
+					volReg->buildGraphicsMesh(mesh/*, 0*/);
+				}
+			}			
 
 			// I'm having a lot of difficulty getting the lod levels to work properly. Say I have a region of 17x17x17 voxels
 			// at the highest lod... that 16x16x16 cells. I currently downsample this to 9x9x9 voxels (8x8x8 cells) and then
