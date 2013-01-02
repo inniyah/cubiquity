@@ -45,7 +45,7 @@ public:
 	VoxelType getInterpolatedValue(PolyVox::RawVolume<VoxelType>* volume, const PolyVox::Vector3DFloat& position);
 
 protected:
-	Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth);
+	Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth, unsigned int baseNodeSize = 32);
 	~Volume();
 	Volume& operator=(const Volume&);
 
@@ -57,9 +57,11 @@ public:
 	gameplay::Node* mRootNode;
 	std::string mMaterialPath;
 
-	unsigned int mRegionWidth;
-	unsigned int mRegionHeight;
-	unsigned int mRegionDepth;
+	const unsigned int mRegionWidth;
+	const unsigned int mRegionHeight;
+	const unsigned int mRegionDepth;
+
+	const unsigned int mBaseNodeSize;
 };
 
 #include "Volume.inl"

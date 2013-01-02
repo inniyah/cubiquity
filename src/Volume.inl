@@ -57,6 +57,7 @@ public:
 	Vector3DFloat mLastPos;
 };
 
+
 // Note: This function is not implemented in a very efficient manner and it rather slow.
 // A better implementation should make use of the 'peek' functions to sample the voxel data,
 // but this will require careful handling of the cases when the ray is outside the volume.
@@ -114,7 +115,7 @@ RaycastResult smoothRaycastWithDirection(VolumeType* volData, const Vector3DFloa
 }
 
 template <typename VoxelType>
-Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)
+Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth, unsigned int baseNodeSize)
 	:mVolData(0)
 	,mRootNode(0)
 	,mRootVolumeRegion(0)
@@ -122,24 +123,52 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 	,mRegionWidth(regionWidth)
 	,mRegionHeight(regionHeight)
 	,mRegionDepth(regionDepth)
+	,mBaseNodeSize(baseNodeSize)
 {
-	int volumeWidth = (upperX - lowerX) + 1;
-	int volumeHeight = (upperY - lowerY) + 1;
-	int volumeDepth = (upperZ - lowerZ) + 1;
-	GP_ASSERT(volumeWidth > 0);
-	GP_ASSERT(volumeHeight > 0);
-	GP_ASSERT(volumeDepth > 0);
-	GP_ASSERT(volumeWidth % regionWidth == 0);
-	GP_ASSERT(volumeHeight % regionHeight == 0);
-	GP_ASSERT(volumeDepth % regionDepth == 0);
+	Region volumeRegion(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
+
+	GP_ASSERT(volumeRegion.getWidthInVoxels() > 0);
+	GP_ASSERT(volumeRegion.getHeightInVoxels() > 0);
+	GP_ASSERT(volumeRegion.getDepthInVoxels() > 0);
+	GP_ASSERT(volumeRegion.getWidthInVoxels() % regionWidth == 0);
+	GP_ASSERT(volumeRegion.getHeightInVoxels() % regionHeight == 0);
+	GP_ASSERT(volumeRegion.getDepthInVoxels() % regionDepth == 0);
+	
+	mVolData = new RawVolume<VoxelType>(volumeRegion);
 
 	//mRootNode = Node::create();
-	mRootVolumeRegion = new VolumeRegion(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), 0, 2); //HACK - Hardcoded '2'!
-	mVolData = new RawVolume<VoxelType>(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ));
 
-	unsigned int volumeWidthInRegions = volumeWidth / regionWidth;
-	unsigned int volumeHeightInRegions = volumeHeight / regionHeight;
-	unsigned int volumeDepthInRegions = volumeDepth / regionDepth;
+	GP_ASSERT(isPowerOf2(mBaseNodeSize));
+
+	uint32_t largestVolumeDimensionInVoxels = std::max(volumeRegion.getWidthInVoxels(), std::max(volumeRegion.getHeightInVoxels(), volumeRegion.getDepthInVoxels()));
+
+	uint32_t octreeTargetSizeInVoxels = upperPowerOfTwo(largestVolumeDimensionInVoxels);
+
+	uint32_t widthIncrease = octreeTargetSizeInVoxels - volumeRegion.getWidthInVoxels();
+	uint32_t heightIncrease = octreeTargetSizeInVoxels - volumeRegion.getHeightInVoxels();
+	uint32_t depthIncrease = octreeTargetSizeInVoxels - volumeRegion.getDepthInVoxels();
+	
+	if(widthIncrease % 2 == 1)
+	{
+		upperX++;
+		widthIncrease--;
+	}
+
+	if(heightIncrease % 2 == 1)
+	{
+		upperY++;
+		heightIncrease--;
+	}
+	if(depthIncrease % 2 == 1)
+	{
+		upperZ++;
+		depthIncrease--;
+	}
+
+	Region octreeRegion(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
+	octreeRegion.grow(widthIncrease / 2, heightIncrease / 2, depthIncrease / 2);
+
+	mRootVolumeRegion = new VolumeRegion(octreeRegion, 0, 2); //HACK - Hardcoded '2'!
 
 	buildVolumeRegionTree(mRootVolumeRegion);
 
@@ -197,7 +226,10 @@ Volume<VoxelType>::~Volume()
 template <typename VoxelType>
 void Volume<VoxelType>::buildVolumeRegionTree(VolumeRegion* parent)
 {
-	if(parent->mLodLevel > 0)
+	GP_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getHeightInVoxels());
+	GP_ASSERT(parent->mRegion.getHeightInVoxels() == parent->mRegion.getDepthInVoxels());
+
+	if(parent->mRegion.getWidthInVoxels() > mBaseNodeSize)
 	{
 		Vector3DInt32 baseLowerCorner = parent->mRegion.getLowerCorner();
 		int32_t width = parent->mRegion.getWidthInVoxels() / 2;
@@ -218,12 +250,6 @@ void Volume<VoxelType>::buildVolumeRegionTree(VolumeRegion* parent)
 				}
 			}
 		}
-	}
-	else
-	{
-		int arrayPosX = parent->mRegion.getLowerX() / 32; //HACK - hardcoded value!
-		int arrayPosY = parent->mRegion.getLowerY() / 32; //HACK - hardcoded value!
-		int arrayPosZ = parent->mRegion.getLowerZ() / 32; //HACK - hardcoded value!
 	}
 }
 
