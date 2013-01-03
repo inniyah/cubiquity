@@ -3,7 +3,7 @@
 #include "ColouredCubesVolume.h"
 #include "SmoothTerrainVolume.h"
 
-#include "VolumeRegion.h" //HACK!
+#include "OctreeNode.h" //HACK!
 
 #include <algorithm>
 
@@ -222,7 +222,7 @@ void MeshGame::update(float elapsedTime)
 
 	mVolume->update();
 
-	mVolume->mRootVolumeRegion->clearWantedForRendering();
+	mVolume->mRootOctreeNode->clearWantedForRendering();
 
 	// Update UI.
     mForm->update(elapsedTime);
@@ -395,7 +395,7 @@ bool MeshGame::drawScene(Node* node)
 			return true;
 	}*/
 
-	VolumeRegion* volReg = static_cast<VolumeRegion*>(node->getUserPointer());
+	OctreeNode* volReg = static_cast<OctreeNode*>(node->getUserPointer());
 	if(volReg)
 	{
 				

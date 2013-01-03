@@ -17,11 +17,11 @@
 template <typename VoxelType>
 class Volume;
 
-class VolumeRegion
+class OctreeNode
 {
 public:	
-	VolumeRegion(PolyVox::Region region, VolumeRegion* parentRegion);
-	~VolumeRegion();
+	OctreeNode(PolyVox::Region region, OctreeNode* parentRegion);
+	~OctreeNode();
 
 	// Builds the graphics mesh for cubic terrain (Colour material type and PositionMaterial vertex type)
 	void buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<Colour> >& polyVoxMesh);
@@ -49,8 +49,8 @@ public:
 	gameplay::Node* mNode;
 	bool mIsMeshUpToDate;
 
-	VolumeRegion* parent;
-	VolumeRegion* children[2][2][2];
+	OctreeNode* parent;
+	OctreeNode* children[2][2][2];
 
 	bool mWantedForRendering;
 };

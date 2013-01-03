@@ -1,4 +1,4 @@
-#include "VolumeRegion.h"
+#include "OctreeNode.h"
 
 #include "Volume.h"
 
@@ -9,7 +9,7 @@
 using namespace gameplay;
 using namespace PolyVox;
 
-VolumeRegion::VolumeRegion(PolyVox::Region region, VolumeRegion* parentRegion)
+OctreeNode::OctreeNode(PolyVox::Region region, OctreeNode* parentRegion)
 	:mRegion(region)
 	,mIsMeshUpToDate(false)
 	,parent(parentRegion)
@@ -27,7 +27,7 @@ VolumeRegion::VolumeRegion(PolyVox::Region region, VolumeRegion* parentRegion)
 	}
 
 	std::stringstream ss;
-	ss << "VolumeRegionNode(" << mRegion.getLowerCorner().getX() << "," << mRegion.getLowerCorner().getY() << "," << mRegion.getLowerCorner().getZ() << ")";
+	ss << "OctreeNodeNode(" << mRegion.getLowerCorner().getX() << "," << mRegion.getLowerCorner().getY() << "," << mRegion.getLowerCorner().getZ() << ")";
 	mNode = Node::create(ss.str().c_str());
 	if(parentRegion)
 	{
@@ -40,12 +40,12 @@ VolumeRegion::VolumeRegion(PolyVox::Region region, VolumeRegion* parentRegion)
 	mNode->setUserPointer(this);
 }
 
-VolumeRegion::~VolumeRegion()
+OctreeNode::~OctreeNode()
 {
 	SAFE_RELEASE(mNode);
 }
 
-void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<Colour> >& polyVoxMesh)
+void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<Colour> >& polyVoxMesh)
 {
 	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
 	const std::vector<PositionMaterial<Colour> >& vecVertices = polyVoxMesh.getVertices();
@@ -97,17 +97,17 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 	SAFE_RELEASE(model);
 }
 
-void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<MultiMaterial4> >& polyVoxMesh)
+void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<MultiMaterial4> >& polyVoxMesh)
 {
 	GP_ERROR("This function should never be called!"); //See note in header
 }
 
-void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< Colour > >& polyVoxMesh)
+void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< Colour > >& polyVoxMesh)
 {
 	GP_ERROR("This function should never be called!"); //See note in header
 }
 
-void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& polyVoxMesh)
+void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& polyVoxMesh)
 {
 	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
 	const std::vector<PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& vecVertices = polyVoxMesh.getVertices();
@@ -193,7 +193,7 @@ void VolumeRegion::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::Positio
 	mNode->setCollisionObject(PhysicsCollisionObject::RIGID_BODY, PhysicsCollisionShape::custom(vertexData, polyVoxMesh.getVertices().size(), physicsIndices, vecIndices.size()), &groundParams);
 }
 
-void VolumeRegion::setMaterial(const char* material)
+void OctreeNode::setMaterial(const char* material)
 {
 	if(mNode->getModel())
 	{
@@ -201,7 +201,7 @@ void VolumeRegion::setMaterial(const char* material)
 	}
 }
 
-void VolumeRegion::invalidateMeshForPoint(int32_t x, int32_t y, int32_t z)
+void OctreeNode::invalidateMeshForPoint(int32_t x, int32_t y, int32_t z)
 {
 	if(mRegion.containsPoint(x, y, z, -1)) //FIXME - Think if we really need this border.
 	{
@@ -213,7 +213,7 @@ void VolumeRegion::invalidateMeshForPoint(int32_t x, int32_t y, int32_t z)
 			{
 				for(int ix = 0; ix < 2; ix++)
 				{
-					VolumeRegion* child = children[ix][iy][iz];
+					OctreeNode* child = children[ix][iy][iz];
 					if(child)
 					{
 						child->invalidateMeshForPoint(x, y, z);
@@ -224,7 +224,7 @@ void VolumeRegion::invalidateMeshForPoint(int32_t x, int32_t y, int32_t z)
 	}
 }
 
-uint32_t VolumeRegion::depth(void)
+uint32_t OctreeNode::depth(void)
 {
 	if(parent)
 	{
@@ -236,7 +236,7 @@ uint32_t VolumeRegion::depth(void)
 	}
 }
 
-bool VolumeRegion::hasAnyChildren(void)
+bool OctreeNode::hasAnyChildren(void)
 {
 	for(int z = 0; z < 2; z++)
 	{
@@ -255,7 +255,7 @@ bool VolumeRegion::hasAnyChildren(void)
 	return false;
 }
 
-bool VolumeRegion::allChildrenUpToDate(void)
+bool OctreeNode::allChildrenUpToDate(void)
 {
 	for(int z = 0; z < 2; z++)
 	{
@@ -277,7 +277,7 @@ bool VolumeRegion::allChildrenUpToDate(void)
 	return true;
 }
 
-void VolumeRegion::clearWantedForRendering(void)
+void OctreeNode::clearWantedForRendering(void)
 {
 	mWantedForRendering = false;
 
@@ -287,7 +287,7 @@ void VolumeRegion::clearWantedForRendering(void)
 		{
 			for(int ix = 0; ix < 2; ix++)
 			{
-				VolumeRegion* child = children[ix][iy][iz];
+				OctreeNode* child = children[ix][iy][iz];
 				if(child)
 				{
 					child->clearWantedForRendering();

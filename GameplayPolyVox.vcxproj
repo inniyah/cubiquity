@@ -214,8 +214,8 @@
     <ClCompile Include="src\Colour.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\MultiMaterial.cpp" />
+    <ClCompile Include="src\OctreeNode.cpp" />
     <ClCompile Include="src\SmoothTerrainVolume.cpp" />
-    <ClCompile Include="src\VolumeRegion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\AmbientOcclusionCalculator.h" />
@@ -266,9 +266,9 @@
     <ClInclude Include="src\gameplaymarchingcubescontroller.h" />
     <ClInclude Include="src\Main.h" />
     <ClInclude Include="src\multimaterial.h" />
+    <ClInclude Include="src\OctreeNode.h" />
     <ClInclude Include="src\SmoothTerrainVolume.h" />
     <ClInclude Include="src\Volume.h" />
-    <ClInclude Include="src\VolumeRegion.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

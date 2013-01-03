@@ -116,7 +116,6 @@
     <ClInclude Include="src\ColouredCubesVolume.h" />
     <ClInclude Include="src\SmoothTerrainVolume.h" />
     <ClInclude Include="src\Volume.h" />
-    <ClInclude Include="src\VolumeRegion.h" />
     <ClInclude Include="src\gameplayisquadneeded.h" />
     <ClInclude Include="src\gameplaymarchingcubescontroller.h" />
     <ClInclude Include="src\multimaterial.h" />
@@ -246,6 +245,9 @@
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Config.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
+    <ClInclude Include="src\OctreeNode.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -253,7 +255,6 @@
     </ClCompile>
     <ClCompile Include="src\Colour.cpp" />
     <ClCompile Include="src\MultiMaterial.cpp" />
-    <ClCompile Include="src\VolumeRegion.cpp" />
     <ClCompile Include="src\SmoothTerrainVolume.cpp" />
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\ArraySizes.cpp">
       <Filter>PolyVox</Filter>
@@ -284,6 +285,9 @@
     </ClCompile>
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\ErrorHandling.cpp">
       <Filter>PolyVox</Filter>
+    </ClCompile>
+    <ClCompile Include="src\OctreeNode.cpp">
+      <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

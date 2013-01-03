@@ -118,7 +118,7 @@ template <typename VoxelType>
 Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth, unsigned int baseNodeSize)
 	:mVolData(0)
 	,mRootNode(0)
-	,mRootVolumeRegion(0)
+	,mRootOctreeNode(0)
 	,mType(type)
 	,mRegionWidth(regionWidth)
 	,mRegionHeight(regionHeight)
@@ -168,9 +168,9 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 	Region octreeRegion(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
 	octreeRegion.grow(widthIncrease / 2, heightIncrease / 2, depthIncrease / 2);
 
-	mRootVolumeRegion = new VolumeRegion(octreeRegion, 0);
+	mRootOctreeNode = new OctreeNode(octreeRegion, 0);
 
-	buildVolumeRegionTree(mRootVolumeRegion);
+	buildOctreeNodeTree(mRootOctreeNode);
 
 	/*for(int z = 0; z < volumeDepthInRegions; z++)
 	{
@@ -211,7 +211,7 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 					if(z < (volumeDepthInRegions - 1)) regUpperZ--;
 				}
 
-				mVolumeRegions[x][y][z] = new VolumeRegion(Region(regLowerX, regLowerY, regLowerZ, regUpperX, regUpperY, regUpperZ), mRootNode);
+				mOctreeNodes[x][y][z] = new OctreeNode(Region(regLowerX, regLowerY, regLowerZ, regUpperX, regUpperY, regUpperZ), mRootNode);
 			}
 		}
 	}*/
@@ -224,7 +224,7 @@ Volume<VoxelType>::~Volume()
 }
 
 template <typename VoxelType>
-void Volume<VoxelType>::buildVolumeRegionTree(VolumeRegion* parent)
+void Volume<VoxelType>::buildOctreeNodeTree(OctreeNode* parent)
 {
 	GP_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getHeightInVoxels());
 	GP_ASSERT(parent->mRegion.getHeightInVoxels() == parent->mRegion.getDepthInVoxels());
@@ -244,9 +244,9 @@ void Volume<VoxelType>::buildVolumeRegionTree(VolumeRegion* parent)
 				for(int x = 0; x < 2; x++)
 				{
 					Vector3DInt32 offset (x*width, y*height, z*depth);
-					VolumeRegion* volReg = new VolumeRegion(Region(baseLowerCorner + offset, baseUpperCorner + offset), parent);
+					OctreeNode* volReg = new OctreeNode(Region(baseLowerCorner + offset, baseUpperCorner + offset), parent);
 					parent->children[x][y][z] = volReg;
-					buildVolumeRegionTree(volReg);
+					buildOctreeNodeTree(volReg);
 				}
 			}
 		}
@@ -257,7 +257,7 @@ template <typename VoxelType>
 Node* Volume<VoxelType>::getRootNode()
 {
 	//return mRootNode;
-	return mRootVolumeRegion->mNode;
+	return mRootOctreeNode->mNode;
 }
 
 template <typename VoxelType>
@@ -280,7 +280,7 @@ void Volume<VoxelType>::setVoxelAt(int x, int y, int z, VoxelType value)
 	int regionX = x / mRegionWidth;
 	int regionY = y / mRegionHeight;
 	int regionZ = z / mRegionDepth;
-	mRootVolumeRegion->invalidateMeshForPoint(x, y, z);
+	mRootOctreeNode->invalidateMeshForPoint(x, y, z);
 }
 
 template <typename VoxelType>
@@ -356,11 +356,11 @@ void Volume<VoxelType>::saveData(const char* filename)
 template <typename VoxelType>
 void Volume<VoxelType>::update()
 {
-	updateMesh(mRootVolumeRegion);
+	updateMesh(mRootOctreeNode);
 }
 
 template <typename VoxelType>
-void Volume<VoxelType>::updateMesh(VolumeRegion* volReg)
+void Volume<VoxelType>::updateMesh(OctreeNode* volReg)
 {
 	if((volReg->mIsMeshUpToDate == false) && (volReg->mWantedForRendering))
 	{
@@ -423,7 +423,7 @@ void Volume<VoxelType>::updateMesh(VolumeRegion* volReg)
 		{
 			for(int x = 0; x < 2; x++)
 			{
-				VolumeRegion* child = volReg->children[x][y][z];
+				OctreeNode* child = volReg->children[x][y][z];
 				if(child)
 				{
 					updateMesh(child);

@@ -1,7 +1,7 @@
 #ifndef VOLUME_H_
 #define VOLUME_H_
 
-#include "VolumeRegion.h"
+#include "OctreeNode.h"
 
 #include "Node.h"
 #include "Ref.h"
@@ -29,7 +29,7 @@ public:
 	gameplay::Node* getRootNode();
 	VolumeType getType(void) const;
 
-	void buildVolumeRegionTree(VolumeRegion* parent);
+	void buildOctreeNodeTree(OctreeNode* parent);
 
 	VoxelType getVoxelAt(int x, int y, int z);
 	void setVoxelAt(int x, int y, int z, VoxelType value);
@@ -40,7 +40,7 @@ public:
 	void saveData(const char* filename);
 
 	void update();
-	void updateMesh(VolumeRegion* volReg);
+	void updateMesh(OctreeNode* volReg);
 
 	void recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >* mesh, const PolyVox::Vector3DFloat& meshOffset, PolyVox::RawVolume<VoxelType>* volume);
 	VoxelType getInterpolatedValue(PolyVox::RawVolume<VoxelType>* volume, const PolyVox::Vector3DFloat& position);
@@ -56,7 +56,7 @@ protected:
 
 public:
 	PolyVox::RawVolume<VoxelType>* mVolData;
-	VolumeRegion* mRootVolumeRegion;
+	OctreeNode* mRootOctreeNode;
 	gameplay::Node* mRootNode;
 	std::string mMaterialPath;
 
