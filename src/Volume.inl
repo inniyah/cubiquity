@@ -354,7 +354,7 @@ void Volume<VoxelType>::saveData(const char* filename)
 }
 
 template <typename VoxelType>
-void Volume<VoxelType>::updateMeshes()
+void Volume<VoxelType>::update()
 {
 	updateMesh(mRootVolumeRegion);
 }

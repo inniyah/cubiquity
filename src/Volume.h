@@ -38,7 +38,8 @@ public:
 
 	void loadData(const char* filename);
 	void saveData(const char* filename);
-	void updateMeshes();
+
+	void update();
 	void updateMesh(VolumeRegion* volReg);
 
 	void recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >* mesh, const PolyVox::Vector3DFloat& meshOffset, PolyVox::RawVolume<VoxelType>* volume);
