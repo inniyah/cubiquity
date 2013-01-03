@@ -37,6 +37,10 @@ public:
 
 	void invalidateMeshForPoint(int32_t x, int32_t y, int32_t z);
 
+	bool hasAnyChildren(void);
+
+	bool allChildrenUpToDate(void);
+
 	uint32_t depth(void);
 
 	PolyVox::Region mRegion;

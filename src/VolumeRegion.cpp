@@ -234,3 +234,44 @@ uint32_t VolumeRegion::depth(void)
 		return 0;
 	}
 }
+
+bool VolumeRegion::hasAnyChildren(void)
+{
+	for(int z = 0; z < 2; z++)
+	{
+		for(int y = 0; y < 2; y++)
+		{
+			for(int x = 0; x < 2; x++)
+			{
+				if(children[x][y][z] != 0)
+				{
+					return true;
+				}
+			}
+		}
+	}
+
+	return false;
+}
+
+bool VolumeRegion::allChildrenUpToDate(void)
+{
+	for(int z = 0; z < 2; z++)
+	{
+		for(int y = 0; y < 2; y++)
+		{
+			for(int x = 0; x < 2; x++)
+			{
+				if(children[x][y][z] != 0)
+				{
+					if(children[x][y][z]->mIsMeshUpToDate == false)
+					{
+						return false;
+					}
+				}
+			}
+		}
+	}
+
+	return true;
+}

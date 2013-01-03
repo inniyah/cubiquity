@@ -396,19 +396,22 @@ bool MeshGame::drawScene(Node* node)
 	VolumeRegion* volReg = static_cast<VolumeRegion*>(node->getUserPointer());
 	if(volReg)
 	{
-		Vector3DInt32 regionCentre = volReg->mRegion.getCentre();
+		if(volReg->hasAnyChildren())
+		{
+			Vector3DInt32 regionCentre = volReg->mRegion.getCentre();
 
-		Vector3 gRegCentre(regionCentre.getX(), regionCentre.getY(), regionCentre.getZ());
+			Vector3 gRegCentre(regionCentre.getX(), regionCentre.getY(), regionCentre.getZ());
 
-		float distance = (_cameraNode->getTranslationWorld() - gRegCentre).length();
+			float distance = (_cameraNode->getTranslationWorld() - gRegCentre).length();
 
-		Vector3DInt32 diagonal = volReg->mRegion.getUpperCorner() - volReg->mRegion.getLowerCorner();
-		float diagonalLength = diagonal.length(); // A measure of our regions size
+			Vector3DInt32 diagonal = volReg->mRegion.getUpperCorner() - volReg->mRegion.getLowerCorner();
+			float diagonalLength = diagonal.length(); // A measure of our regions size
 
-		float projectedSize = diagonalLength / distance;
+			float projectedSize = diagonalLength / distance;
 
-		if(projectedSize > mLod1StartSlider->getValue())
-			return true;
+			if(projectedSize > mLod1StartSlider->getValue())
+				return true;
+		}
 
 		Model* model = node->getModel();
 		if (model)
