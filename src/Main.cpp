@@ -396,7 +396,6 @@ bool MeshGame::drawScene(Node* node)
 	VolumeRegion* volReg = static_cast<VolumeRegion*>(node->getUserPointer());
 	if(volReg)
 	{
-		uint32_t lodLevel = volReg->mLodLevel;
 		Vector3DInt32 regionCentre = volReg->mRegion.getCentre();
 
 		Vector3 gRegCentre(regionCentre.getX(), regionCentre.getY(), regionCentre.getZ());

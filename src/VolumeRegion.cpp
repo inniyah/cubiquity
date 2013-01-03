@@ -9,10 +9,9 @@
 using namespace gameplay;
 using namespace PolyVox;
 
-VolumeRegion::VolumeRegion(PolyVox::Region region, VolumeRegion* parentRegion, uint32_t lodLevel)
+VolumeRegion::VolumeRegion(PolyVox::Region region, VolumeRegion* parentRegion)
 	:mRegion(region)
 	,mIsMeshUpToDate(false)
-	,mLodLevel(lodLevel)
 	,parent(parentRegion)
 {
 	for(int z = 0; z < 2; z++)
@@ -221,5 +220,17 @@ void VolumeRegion::invalidateMeshForPoint(int32_t x, int32_t y, int32_t z)
 				}
 			}
 		}
+	}
+}
+
+uint32_t VolumeRegion::depth(void)
+{
+	if(parent)
+	{
+		return parent->depth() + 1;
+	}
+	else
+	{
+		return 0;
 	}
 }

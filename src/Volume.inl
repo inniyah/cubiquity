@@ -168,7 +168,7 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 	Region octreeRegion(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
 	octreeRegion.grow(widthIncrease / 2, heightIncrease / 2, depthIncrease / 2);
 
-	mRootVolumeRegion = new VolumeRegion(octreeRegion, 0, 2); //HACK - Hardcoded '2'!
+	mRootVolumeRegion = new VolumeRegion(octreeRegion, 0);
 
 	buildVolumeRegionTree(mRootVolumeRegion);
 
@@ -244,7 +244,7 @@ void Volume<VoxelType>::buildVolumeRegionTree(VolumeRegion* parent)
 				for(int x = 0; x < 2; x++)
 				{
 					Vector3DInt32 offset (x*width, y*height, z*depth);
-					VolumeRegion* volReg = new VolumeRegion(Region(baseLowerCorner + offset, baseUpperCorner + offset), parent, parent->mLodLevel - 1);
+					VolumeRegion* volReg = new VolumeRegion(Region(baseLowerCorner + offset, baseUpperCorner + offset), parent);
 					parent->children[x][y][z] = volReg;
 					buildVolumeRegionTree(volReg);
 				}
@@ -381,7 +381,7 @@ void Volume<VoxelType>::updateMesh(VolumeRegion* volReg)
 		}
 		else if(getType() == VolumeTypes::SmoothTerrain)
 		{
-			if(volReg->mLodLevel == 0)
+			if(volReg->depth() == 0)
 			{
 				GameplayMarchingCubesController<VoxelType> controller;
 				SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > > mesh;
@@ -394,7 +394,7 @@ void Volume<VoxelType>::updateMesh(VolumeRegion* volReg)
 				}
 			}
 
-			if(volReg->mLodLevel == 1)
+			if(volReg->depth() == 1)
 			{
 				Region lod1Region = lod0Region;
 				Vector3DInt32 lowerCorner = lod1Region.getLowerCorner();
@@ -425,7 +425,7 @@ void Volume<VoxelType>::updateMesh(VolumeRegion* volReg)
 				}
 			}
 
-			if(volReg->mLodLevel == 2)
+			if(volReg->depth() == 2)
 			{
 				Region lod2Region = lod0Region;
 				Vector3DInt32 lowerCorner = lod2Region.getLowerCorner();
