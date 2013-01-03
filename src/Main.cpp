@@ -396,6 +396,12 @@ bool MeshGame::drawScene(Node* node)
 	VolumeRegion* volReg = static_cast<VolumeRegion*>(node->getUserPointer());
 	if(volReg)
 	{
+		if(volReg->mIsMeshUpToDate == false)
+		{
+			// We have no choice but to go lower and hope there are children with up to date meshes.
+			return true;
+		}
+
 		if(volReg->hasAnyChildren())
 		{
 			Vector3DInt32 regionCentre = volReg->mRegion.getCentre();
