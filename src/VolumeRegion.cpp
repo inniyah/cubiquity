@@ -13,6 +13,7 @@ VolumeRegion::VolumeRegion(PolyVox::Region region, VolumeRegion* parentRegion)
 	:mRegion(region)
 	,mIsMeshUpToDate(false)
 	,parent(parentRegion)
+	,mWantedForRendering(false)
 {
 	for(int z = 0; z < 2; z++)
 	{
@@ -274,4 +275,24 @@ bool VolumeRegion::allChildrenUpToDate(void)
 	}
 
 	return true;
+}
+
+void VolumeRegion::clearWantedForRendering(void)
+{
+	mWantedForRendering = false;
+
+	for(int iz = 0; iz < 2; iz++)
+	{
+		for(int iy = 0; iy < 2; iy++)
+		{
+			for(int ix = 0; ix < 2; ix++)
+			{
+				VolumeRegion* child = children[ix][iy][iz];
+				if(child)
+				{
+					child->clearWantedForRendering();
+				}
+			}
+		}
+	}
 }

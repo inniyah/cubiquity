@@ -37,6 +37,8 @@ public:
 
 	void invalidateMeshForPoint(int32_t x, int32_t y, int32_t z);
 
+	void clearWantedForRendering(void);
+
 	bool hasAnyChildren(void);
 
 	bool allChildrenUpToDate(void);
@@ -49,6 +51,8 @@ public:
 
 	VolumeRegion* parent;
 	VolumeRegion* children[2][2][2];
+
+	bool mWantedForRendering;
 };
 
 #endif //VOLUME_REGION_H_

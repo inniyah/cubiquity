@@ -222,6 +222,8 @@ void MeshGame::update(float elapsedTime)
 
 	mVolume->updateMeshes();
 
+	mVolume->mRootVolumeRegion->clearWantedForRendering();
+
 	// Update UI.
     mForm->update(elapsedTime);
 }
@@ -396,28 +398,41 @@ bool MeshGame::drawScene(Node* node)
 	VolumeRegion* volReg = static_cast<VolumeRegion*>(node->getUserPointer());
 	if(volReg)
 	{
-		if(volReg->mIsMeshUpToDate == false)
+				
+		Vector3DInt32 regionCentre = volReg->mRegion.getCentre();
+
+		Vector3 gRegCentre(regionCentre.getX(), regionCentre.getY(), regionCentre.getZ());
+
+		float distance = (_cameraNode->getTranslationWorld() - gRegCentre).length();
+
+		Vector3DInt32 diagonal = volReg->mRegion.getUpperCorner() - volReg->mRegion.getLowerCorner();
+		float diagonalLength = diagonal.length(); // A measure of our regions size
+
+		float projectedSize = diagonalLength / distance;
+
+		if(projectedSize > mLod1StartSlider->getValue())
 		{
-			// We have no choice but to go lower and hope there are children with up to date meshes.
-			return true;
-		}
-
-		if(volReg->hasAnyChildren())
-		{
-			Vector3DInt32 regionCentre = volReg->mRegion.getCentre();
-
-			Vector3 gRegCentre(regionCentre.getX(), regionCentre.getY(), regionCentre.getZ());
-
-			float distance = (_cameraNode->getTranslationWorld() - gRegCentre).length();
-
-			Vector3DInt32 diagonal = volReg->mRegion.getUpperCorner() - volReg->mRegion.getLowerCorner();
-			float diagonalLength = diagonal.length(); // A measure of our regions size
-
-			float projectedSize = diagonalLength / distance;
-
-			if(projectedSize > mLod1StartSlider->getValue())
+			//We want to render the children
+			if(volReg->hasAnyChildren())
+			{
 				return true;
+			}
+			else
+			{
+				//We want to render this node...
+				volReg->mWantedForRendering = true;
+				
+				// But maybe we can't.
+				if(volReg->mIsMeshUpToDate == false)
+				{
+					// We have no choice but to go lower and hope there are children with up to date meshes.
+					return true;
+				}
+			}
 		}
+
+		//We want to render this node...
+		volReg->mWantedForRendering = true;
 
 		Model* model = node->getModel();
 		if (model)

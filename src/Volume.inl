@@ -362,7 +362,7 @@ void Volume<VoxelType>::updateMeshes()
 template <typename VoxelType>
 void Volume<VoxelType>::updateMesh(VolumeRegion* volReg)
 {
-	if(volReg->mIsMeshUpToDate == false) //Lod test shouldn't be here.
+	if((volReg->mIsMeshUpToDate == false) && (volReg->mWantedForRendering))
 	{
 		Region lod0Region = volReg->mRegion;
 
