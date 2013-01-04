@@ -220,7 +220,7 @@ void MeshGame::update(float elapsedTime)
 	
 	_cameraNode->translate(_cameraNode->getForwardVector() * -mCameraDistance);
 
-	mVolume->update();
+	mVolume->performUpdate();
 
 	mVolume->mRootOctreeNode->clearWantedForRendering();
 

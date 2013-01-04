@@ -3,6 +3,8 @@
 
 #include "SmoothTerrainVolume.h"
 
+#include "gameplay.h"
+
 class GameplaySmoothTerrainVolume : public SmoothTerrainVolume
 {
 public:
@@ -12,9 +14,15 @@ public:
 		return volume;
 	}
 
+	void performUpdate(void);
+
 protected:
 	GameplaySmoothTerrainVolume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth);
 	virtual ~GameplaySmoothTerrainVolume();
+
+	void syncNode(const OctreeNode* octreeNode, gameplay::Node* gameplayNode);
+
+	gameplay::Node* mRootGameplayNode;
 };
 
 #endif //GAMEPLAYSMOOTHTERRAINVOLUME_H_
