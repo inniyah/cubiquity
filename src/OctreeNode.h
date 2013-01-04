@@ -1,5 +1,5 @@
-#ifndef VOLUME_REGION_H_
-#define VOLUME_REGION_H_
+#ifndef OCTREE_NODE_H_
+#define OCTREE_NODE_H_
 
 #include "Node.h"
 #include "Ref.h"
@@ -63,4 +63,4 @@ public:
 	bool mWantedForRendering;
 };
 
-#endif //VOLUME_REGION_H_
+#endif //OCTREE_NODE_H_

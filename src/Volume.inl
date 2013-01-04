@@ -11,6 +11,10 @@ using namespace PolyVox;
 #include "GameplayMarchingCubesController.h"
 #include "GameplayIsQuadNeeded.h"
 
+#include "Main.h" //Naughty, but we can temporarily use the define for cubic vs smooth terrain.
+
+#include "CubiquityUtility.h"
+
 template <typename VoxelType>
 class RaycastTestFunctor
 {
@@ -370,10 +374,14 @@ void Volume<VoxelType>::updateMesh(OctreeNode* volReg)
 		//Extract the surface
 		if(getType() == VolumeTypes::ColouredCubes)
 		{
-			GameplayIsQuadNeeded<VoxelType> isQuadNeeded;
+			//GameplayIsQuadNeeded<VoxelType> isQuadNeeded;
 			SurfaceMesh<PositionMaterial<VoxelType> > colouredCubicMesh;
-			CubicSurfaceExtractor< RawVolume<VoxelType>, GameplayIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, lod0Region, &colouredCubicMesh, WrapModes::Border, VoxelType(0), true, isQuadNeeded);
-			surfaceExtractor.execute();
+			//CubicSurfaceExtractor< RawVolume<VoxelType>, GameplayIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, lod0Region, &colouredCubicMesh, WrapModes::Border, VoxelType(0), true, isQuadNeeded);
+			//surfaceExtractor.execute();
+
+			uint32_t downScaleFactor = 0x0001 << (2 - volReg->depth()); //HACK - hardcoded '2'.
+
+			generateCubicMesh(lod0Region, downScaleFactor, &colouredCubicMesh);
 
 			if(colouredCubicMesh.getNoOfIndices() > 0)
 			{
@@ -458,6 +466,7 @@ bool Volume<VoxelType>::raycast(Ray startAndDirection, float length, Vector3& re
 template <typename VoxelType>
 void Volume<VoxelType>::recalculateMaterials(SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >* mesh, const Vector3DFloat& meshOffset,  RawVolume<VoxelType>* volume)
 {
+#ifdef TERRAIN_SMOOTH
 	std::vector< PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >& vertices = mesh->getRawVertexData();
 	for(int ct = 0; ct < vertices.size(); ct++)
 	{
@@ -477,6 +486,7 @@ void Volume<VoxelType>::recalculateMaterials(SurfaceMesh<PositionMaterialNormal<
 
 		vertices[ct].setMaterial(value);
 	}
+#endif
 }
 
 template <typename VoxelType>
@@ -539,6 +549,41 @@ void Volume<VoxelType>::generateSmoothMesh(const PolyVox::Region& region, uint32
 		volumeResampler.execute();
 
 		MarchingCubesSurfaceExtractor< RawVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor(&resampledVolume, lod2Region, resultMesh, WrapModes::Clamp, VoxelType(0), controller);
+		surfaceExtractor.execute();
+
+		resultMesh->scaleVertices(downSampleFactor);
+	}
+}
+
+template <typename VoxelType>
+void Volume<VoxelType>::generateCubicMesh(const PolyVox::Region& region, uint32_t downSampleFactor, PolyVox::SurfaceMesh<PolyVox::PositionMaterial<VoxelType> >* resultMesh)
+{
+	GameplayIsQuadNeeded<VoxelType> isQuadNeeded;
+
+	if(downSampleFactor == 1)
+	{
+		SurfaceMesh<PositionMaterial<VoxelType> > colouredCubicMesh;
+		CubicSurfaceExtractor< RawVolume<VoxelType>, GameplayIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, region, resultMesh, WrapModes::Border, VoxelType(0), true, isQuadNeeded);
+		surfaceExtractor.execute();
+	}
+	else
+	{
+		Region lod2Region = region;
+		Vector3DInt32 lowerCorner = lod2Region.getLowerCorner();
+		Vector3DInt32 upperCorner = lod2Region.getUpperCorner();
+
+		upperCorner = upperCorner - lowerCorner;
+		upperCorner = upperCorner / static_cast<int32_t>(downSampleFactor);
+		upperCorner = upperCorner + lowerCorner;
+		lod2Region.setUpperCorner(upperCorner);
+
+		RawVolume<VoxelType> resampledVolume(lod2Region);
+		//VolumeResampler< RawVolume<VoxelType>, RawVolume<VoxelType> > volumeResampler(mVolData, region, &resampledVolume, lod2Region);
+		rescaleCubicVolume(mVolData, region, &resampledVolume, lod2Region);
+		//volumeResampler.execute();
+
+		SurfaceMesh<PositionMaterial<VoxelType> > colouredCubicMesh;
+		CubicSurfaceExtractor< RawVolume<VoxelType>, GameplayIsQuadNeeded<VoxelType> > surfaceExtractor(&resampledVolume, lod2Region, resultMesh, WrapModes::Border, VoxelType(0), true, isQuadNeeded);
 		surfaceExtractor.execute();
 
 		resultMesh->scaleVertices(downSampleFactor);

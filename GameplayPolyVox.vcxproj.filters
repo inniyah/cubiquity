@@ -251,6 +251,9 @@
     <ClInclude Include="src\GameplaySmoothTerrainVolume.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\CubiquityUtility.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -293,6 +296,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\GameplaySmoothTerrainVolume.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\CubiquityUtility.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
