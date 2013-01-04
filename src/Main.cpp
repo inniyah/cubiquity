@@ -423,7 +423,7 @@ bool MeshGame::drawScene(Node* node)
 				volReg->mWantedForRendering = true;
 				
 				// But maybe we can't.
-				if(volReg->mIsMeshUpToDate == false)
+				if(volReg->isMeshUpToDate() == false)
 				{
 					// We have no choice but to go lower and hope there are children with up to date meshes.
 					return true;

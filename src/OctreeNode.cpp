@@ -11,9 +11,11 @@ using namespace PolyVox;
 
 OctreeNode::OctreeNode(PolyVox::Region region, OctreeNode* parentRegion)
 	:mRegion(region)
-	,mIsMeshUpToDate(false)
+	//,mIsMeshUpToDate(false)
 	,parent(parentRegion)
 	,mWantedForRendering(false)
+	,mMeshLastUpdated(0)
+	,mDataLastModified(1) //Is this ok?
 {
 	for(int z = 0; z < 2; z++)
 	{
@@ -201,11 +203,12 @@ void OctreeNode::setMaterial(const char* material)
 	}
 }
 
-void OctreeNode::invalidateMeshForPoint(int32_t x, int32_t y, int32_t z)
+void OctreeNode::markDataAsModified(int32_t x, int32_t y, int32_t z, uint32_t newTimeStamp)
 {
 	if(mRegion.containsPoint(x, y, z, -1)) //FIXME - Think if we really need this border.
 	{
-		mIsMeshUpToDate = false;
+		//mIsMeshUpToDate = false;
+		mDataLastModified = newTimeStamp;
 
 		for(int iz = 0; iz < 2; iz++)
 		{
@@ -216,7 +219,7 @@ void OctreeNode::invalidateMeshForPoint(int32_t x, int32_t y, int32_t z)
 					OctreeNode* child = children[ix][iy][iz];
 					if(child)
 					{
-						child->invalidateMeshForPoint(x, y, z);
+						child->markDataAsModified(x, y, z, newTimeStamp);
 					}
 				}
 			}
@@ -265,7 +268,7 @@ bool OctreeNode::allChildrenUpToDate(void)
 			{
 				if(children[x][y][z] != 0)
 				{
-					if(children[x][y][z]->mIsMeshUpToDate == false)
+					if(children[x][y][z]->isMeshUpToDate() == false)
 					{
 						return false;
 					}
@@ -295,4 +298,14 @@ void OctreeNode::clearWantedForRendering(void)
 			}
 		}
 	}
+}
+
+bool OctreeNode::isMeshUpToDate(void)
+{
+	return mMeshLastUpdated > mDataLastModified;
+}
+
+void OctreeNode::setMeshLastUpdated(uint32_t newTimeStamp)
+{
+	mMeshLastUpdated = newTimeStamp;
 }

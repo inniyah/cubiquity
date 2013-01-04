@@ -124,6 +124,7 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 	,mRegionHeight(regionHeight)
 	,mRegionDepth(regionDepth)
 	,mBaseNodeSize(baseNodeSize)
+	,mTime(0)
 {
 	Region volumeRegion(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
 
@@ -280,7 +281,7 @@ void Volume<VoxelType>::setVoxelAt(int x, int y, int z, VoxelType value)
 	int regionX = x / mRegionWidth;
 	int regionY = y / mRegionHeight;
 	int regionZ = z / mRegionDepth;
-	mRootOctreeNode->invalidateMeshForPoint(x, y, z);
+	mRootOctreeNode->markDataAsModified(x, y, z, getTime());
 }
 
 template <typename VoxelType>
@@ -362,7 +363,7 @@ void Volume<VoxelType>::update()
 template <typename VoxelType>
 void Volume<VoxelType>::updateMesh(OctreeNode* volReg)
 {
-	if((volReg->mIsMeshUpToDate == false) && (volReg->mWantedForRendering))
+	if((volReg->isMeshUpToDate() == false) && (volReg->mWantedForRendering))
 	{
 		Region lod0Region = volReg->mRegion;
 
@@ -414,7 +415,7 @@ void Volume<VoxelType>::updateMesh(OctreeNode* volReg)
 			break;
 		}
 
-		volReg->mIsMeshUpToDate = true;
+		volReg->setMeshLastUpdated(getTime());
 	}
 
 	for(int z = 0; z < 2; z++)

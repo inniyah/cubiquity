@@ -35,7 +35,7 @@ public:
 
 	void setMaterial(const char* material); //Should be const material - fix gameplay
 
-	void invalidateMeshForPoint(int32_t x, int32_t y, int32_t z);
+	void markDataAsModified(int32_t x, int32_t y, int32_t z, uint32_t newTimeStamp);
 
 	void clearWantedForRendering(void);
 
@@ -43,11 +43,17 @@ public:
 
 	bool allChildrenUpToDate(void);
 
+	bool isMeshUpToDate(void);
+
+	void setMeshLastUpdated(uint32_t newTimeStamp);
+
 	uint32_t depth(void);
 
 	PolyVox::Region mRegion;
 	gameplay::Node* mNode;
-	bool mIsMeshUpToDate;
+	//bool mIsMeshUpToDate;
+	uint32_t mMeshLastUpdated;
+	uint32_t mDataLastModified;
 
 	OctreeNode* parent;
 	OctreeNode* children[2][2][2];

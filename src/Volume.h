@@ -47,6 +47,11 @@ public:
 
 	void generateSmoothMesh(const PolyVox::Region& region, uint32_t downSampleFactor, PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >* resultMesh);
 
+	uint32_t getTime(void)
+	{
+		return ++mTime;
+	}
+
 protected:
 	Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth, unsigned int baseNodeSize = 32);
 	~Volume();
@@ -65,6 +70,8 @@ public:
 	const unsigned int mRegionDepth;
 
 	const unsigned int mBaseNodeSize;
+
+	uint32_t mTime;
 };
 
 #include "Volume.inl"
