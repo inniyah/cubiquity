@@ -25,11 +25,11 @@ void rescaleCubicVolume(RawVolume<Colour>* pVolSrc, const Region& regSrc, RawVol
 				uint32_t totalBlue = 0;
 				uint32_t totalExposedFaces = 0;
 
-				for(uint32_t childZ = 0; childZ < 2; childZ++)
+				for(int32_t childZ = -1; childZ < 3; childZ++)
 				{
-					for(uint32_t childY = 0; childY < 2; childY++)
+					for(int32_t childY = -1; childY < 3; childY++)
 					{
-						for(uint32_t childX = 0; childX < 2; childX++)
+						for(int32_t childX = -1; childX < 3; childX++)
 						{
 							srcSampler.setPosition(srcPos + Vector3DInt32(childX, childY, childZ));
 
@@ -59,7 +59,7 @@ void rescaleCubicVolume(RawVolume<Colour>* pVolSrc, const Region& regSrc, RawVol
 
 				if(totalExposedFaces == 0) totalExposedFaces++; //Avoid div by zero
 
-				if(noOfSolidVoxels == 8)
+				if(noOfSolidVoxels > 32)
 				{
 					Colour colour;
 					colour.setColour(totalRed / totalExposedFaces, totalGreen / totalExposedFaces, totalBlue / totalExposedFaces, 15);
