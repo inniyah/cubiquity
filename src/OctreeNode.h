@@ -49,6 +49,8 @@ public:
 
 	uint32_t depth(void);
 
+	gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< GameplayMarchingCubesController< MultiMaterial4 >::MaterialType > >& polyVoxMesh);
+
 	PolyVox::Region mRegion;
 	gameplay::Node* mNode;
 	//bool mIsMeshUpToDate;

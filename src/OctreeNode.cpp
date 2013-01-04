@@ -111,76 +111,22 @@ void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::Position
 
 void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& polyVoxMesh)
 {
-	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
-	const std::vector<PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& vecVertices = polyVoxMesh.getVertices();
-	const float* pVerticesConst = reinterpret_cast<const float*>(&vecVertices[0]);
-	float* pVertices = const_cast<float*>(pVerticesConst);
-
-	VertexFormat::Element elements[] =
-    {
-        VertexFormat::Element(VertexFormat::POSITION, 4),
-		VertexFormat::Element(VertexFormat::TEXCOORD0, 4),
-		VertexFormat::Element(VertexFormat::NORMAL, 3)
-    };
-
-	//Create the vertex data in the expected format
-	float* vertexData = new float[polyVoxMesh.getVertices().size() * 11]; //11 float per vertex
-	float* ptr = vertexData;
-	for(int i = 0; i < vecVertices.size(); i++)
-	{
-		*ptr = vecVertices[i].getPosition().getX(); ptr++;
-		*ptr = vecVertices[i].getPosition().getY(); ptr++;
-		*ptr = vecVertices[i].getPosition().getZ(); ptr++;
-		*ptr = 1.0;  ptr++;
-
-		// Material values range from 0 - getMaxMaterialValue() for each voxel. At the position
-		// of the isosurface materials are not at their full intensity (they are at roughly half
-		// because that's where the theshold is). We need to normalise the values to thier full range.
-		Vector<4, float> matAsVec = vecVertices[i].getMaterial();
-		matAsVec.normalise();
-
-		*ptr = matAsVec.getElement(0); ptr++;
-		*ptr = matAsVec.getElement(1); ptr++;
-		*ptr = matAsVec.getElement(2); ptr++;
-		*ptr = matAsVec.getElement(3); ptr++;
-		
-		*ptr = vecVertices[i].getNormal().getX(); ptr++;
-		*ptr = vecVertices[i].getNormal().getY(); ptr++;
-		*ptr = vecVertices[i].getNormal().getZ(); ptr++;
-	}
-
-    Mesh* mesh = Mesh::createMesh(VertexFormat(elements, 3), polyVoxMesh.getVertices().size(), false);
-    /*if (mesh == NULL)
-    {
-        return NULL;
-    }*/
-    mesh->setPrimitiveType(Mesh::TRIANGLES);
-    mesh->setVertexData(vertexData, 0, polyVoxMesh.getVertices().size());
-	mesh->setBoundingBox(BoundingBox(Vector3(0,0,0), Vector3(16, 16, 16)));
-	delete[] vertexData;
-
-	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
-	const std::vector<unsigned int>& vecIndices = polyVoxMesh.getIndices();
-	const void* pIndicesConst = &vecIndices[0];
-	void* pIndices = const_cast<void*>(pIndicesConst);
-	MeshPart* meshPart = mesh->addPart(Mesh::TRIANGLES, Mesh::INDEX32, polyVoxMesh.getNoOfIndices());
-	meshPart->setIndexData(pIndices, 0, vecIndices.size());
-
-    Model* model = Model::create(mesh);
-    SAFE_RELEASE(mesh);
-
+	Model* model = buildModelFromPolyVoxMesh(polyVoxMesh);
 	mNode->setModel(model);
 	SAFE_RELEASE(model);
 
 	//Now set up the physics
-	vertexData = new float[polyVoxMesh.getVertices().size() * 3];
+	const std::vector<PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& vecVertices = polyVoxMesh.getVertices();
+	const std::vector<unsigned int>& vecIndices = polyVoxMesh.getIndices();
+	float* vertexData = new float[polyVoxMesh.getVertices().size() * 3];
+
 	unsigned int* physicsIndices = new unsigned int [vecIndices.size()];
 	for(int ct = 0; ct < vecIndices.size(); ct++)
 	{
 		physicsIndices[ct] = vecIndices[ct];
 	}
 
-	ptr = vertexData;
+	float* ptr = vertexData;
 	for(int i = 0; i < vecVertices.size(); i++)
 	{
 		// Position stored in x,y,z components.
@@ -308,4 +254,67 @@ bool OctreeNode::isMeshUpToDate(void)
 void OctreeNode::setMeshLastUpdated(uint32_t newTimeStamp)
 {
 	mMeshLastUpdated = newTimeStamp;
+}
+
+gameplay::Model* OctreeNode::buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< GameplayMarchingCubesController< MultiMaterial4 >::MaterialType > >& polyVoxMesh)
+{
+	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
+	const std::vector<PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& vecVertices = polyVoxMesh.getVertices();
+	const float* pVerticesConst = reinterpret_cast<const float*>(&vecVertices[0]);
+	float* pVertices = const_cast<float*>(pVerticesConst);
+
+	VertexFormat::Element elements[] =
+    {
+        VertexFormat::Element(VertexFormat::POSITION, 4),
+		VertexFormat::Element(VertexFormat::TEXCOORD0, 4),
+		VertexFormat::Element(VertexFormat::NORMAL, 3)
+    };
+
+	//Create the vertex data in the expected format
+	float* vertexData = new float[polyVoxMesh.getVertices().size() * 11]; //11 float per vertex
+	float* ptr = vertexData;
+	for(int i = 0; i < vecVertices.size(); i++)
+	{
+		*ptr = vecVertices[i].getPosition().getX(); ptr++;
+		*ptr = vecVertices[i].getPosition().getY(); ptr++;
+		*ptr = vecVertices[i].getPosition().getZ(); ptr++;
+		*ptr = 1.0;  ptr++;
+
+		// Material values range from 0 - getMaxMaterialValue() for each voxel. At the position
+		// of the isosurface materials are not at their full intensity (they are at roughly half
+		// because that's where the theshold is). We need to normalise the values to thier full range.
+		Vector<4, float> matAsVec = vecVertices[i].getMaterial();
+		matAsVec.normalise();
+
+		*ptr = matAsVec.getElement(0); ptr++;
+		*ptr = matAsVec.getElement(1); ptr++;
+		*ptr = matAsVec.getElement(2); ptr++;
+		*ptr = matAsVec.getElement(3); ptr++;
+		
+		*ptr = vecVertices[i].getNormal().getX(); ptr++;
+		*ptr = vecVertices[i].getNormal().getY(); ptr++;
+		*ptr = vecVertices[i].getNormal().getZ(); ptr++;
+	}
+
+    Mesh* mesh = Mesh::createMesh(VertexFormat(elements, 3), polyVoxMesh.getVertices().size(), false);
+    /*if (mesh == NULL)
+    {
+        return NULL;
+    }*/
+    mesh->setPrimitiveType(Mesh::TRIANGLES);
+    mesh->setVertexData(vertexData, 0, polyVoxMesh.getVertices().size());
+	mesh->setBoundingBox(BoundingBox(Vector3(0,0,0), Vector3(16, 16, 16)));
+	delete[] vertexData;
+
+	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
+	const std::vector<unsigned int>& vecIndices = polyVoxMesh.getIndices();
+	const void* pIndicesConst = &vecIndices[0];
+	void* pIndices = const_cast<void*>(pIndicesConst);
+	MeshPart* meshPart = mesh->addPart(Mesh::TRIANGLES, Mesh::INDEX32, polyVoxMesh.getNoOfIndices());
+	meshPart->setIndexData(pIndices, 0, vecIndices.size());
+
+    Model* model = Model::create(mesh);
+    SAFE_RELEASE(mesh);
+
+	return model;
 }
