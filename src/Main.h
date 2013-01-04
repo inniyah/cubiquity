@@ -10,7 +10,7 @@
 using namespace gameplay;
 
 class ColouredCubesVolume;
-class SmoothTerrainVolume;
+class GameplaySmoothTerrainVolume;
 
 #define TERRAIN_SMOOTH
 //#define TERRAIN_CUBIC
@@ -93,7 +93,7 @@ private:
 	uint32_t mSelectedMaterial;
 
 #ifdef TERRAIN_SMOOTH
-	SmoothTerrainVolume* mVolume;
+	GameplaySmoothTerrainVolume* mVolume;
 #endif
 
 #ifdef TERRAIN_CUBIC

@@ -1,7 +1,7 @@
 #include "Main.h"
 
 #include "ColouredCubesVolume.h"
-#include "SmoothTerrainVolume.h"
+#include "GameplaySmoothTerrainVolume.h"
 
 #include "OctreeNode.h" //HACK!
 
@@ -136,7 +136,7 @@ void MeshGame::initialize()
 
 	// Create the volume and add it to the scene.
 #ifdef TERRAIN_SMOOTH
-	mVolume = SmoothTerrainVolume::create(VolumeTypes::SmoothTerrain, 0, 0, 0, 127, 127, 127, 32, 32, 32); //HACK - height is wrong.
+	mVolume = GameplaySmoothTerrainVolume::create(VolumeTypes::SmoothTerrain, 0, 0, 0, 127, 127, 127, 32, 32, 32); //HACK - height is wrong.
 #endif
 #ifdef TERRAIN_CUBIC
 	mVolume = ColouredCubesVolume::create(VolumeTypes::ColouredCubes, 0, 0, 0, 127, 127, 127, 32, 32, 32); //HACK - height is wrong.

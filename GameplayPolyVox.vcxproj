@@ -212,6 +212,7 @@
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Region.cpp" />
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\VertexTypes.cpp" />
     <ClCompile Include="src\Colour.cpp" />
+    <ClCompile Include="src\GameplaySmoothTerrainVolume.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\MultiMaterial.cpp" />
     <ClCompile Include="src\OctreeNode.cpp" />
@@ -264,6 +265,7 @@
     <ClInclude Include="src\ColouredCubesVolume.h" />
     <ClInclude Include="src\gameplayisquadneeded.h" />
     <ClInclude Include="src\gameplaymarchingcubescontroller.h" />
+    <ClInclude Include="src\GameplaySmoothTerrainVolume.h" />
     <ClInclude Include="src\Main.h" />
     <ClInclude Include="src\multimaterial.h" />
     <ClInclude Include="src\OctreeNode.h" />

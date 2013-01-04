@@ -248,6 +248,9 @@
     <ClInclude Include="src\OctreeNode.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\GameplaySmoothTerrainVolume.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -287,6 +290,9 @@
       <Filter>PolyVox</Filter>
     </ClCompile>
     <ClCompile Include="src\OctreeNode.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameplaySmoothTerrainVolume.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
