@@ -22,10 +22,12 @@ namespace VolumeTypes
 }
 typedef VolumeTypes::VolumeType VolumeType;
 
-template <typename VoxelType>
+template <typename _VoxelType>
 class Volume : public gameplay::Ref
 {
 public:
+	typedef _VoxelType VoxelType;
+
 	VolumeType getType(void) const;
 
 	void buildOctreeNodeTree(OctreeNode* parent);
@@ -34,9 +36,6 @@ public:
 	void setVoxelAt(int x, int y, int z, VoxelType value);
 
 	bool raycast(gameplay::Ray ray, float distance, gameplay::Vector3& result);
-
-	void loadData(const char* filename);
-	void saveData(const char* filename);
 
 	void update();
 	void updateMesh(OctreeNode* volReg);

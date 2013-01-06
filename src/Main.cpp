@@ -5,6 +5,8 @@
 
 #include "OctreeNode.h" //HACK!
 
+#include "VolumeSerialisation.h"
+
 #include <algorithm>
 
 using namespace PolyVox;
@@ -146,20 +148,20 @@ void MeshGame::initialize()
 #ifdef WIN32
 	if(mVolume->getType() == VolumeTypes::SmoothTerrain)
 	{
-		mVolume->loadData("res/level2MultiMaterial8Bit.vol");
+		loadData("res/level2MultiMaterial8Bit.vol", mVolume);
 	}
 	else
 	{
-		mVolume->loadData("res/level2.vol");
+		loadData("res/level2.vol", mVolume);
 	}
 #else
 	if(mVolume->getType() == VolumeTypes::SmoothTerrain)
 	{
-		mVolume->loadData("/sdcard/external_sd/level2MultiMaterial8Bit.vol");
+		loadData("/sdcard/external_sd/level2MultiMaterial8Bit.vol", mVolume);
 	}
 	else
 	{
-		mVolume->loadData("/sdcard/external_sd/level2.vol");
+		loadData("/sdcard/external_sd/level2.vol", mVolume);
 	}
 #endif
 	

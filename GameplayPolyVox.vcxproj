@@ -275,6 +275,7 @@
     <ClInclude Include="src\SmoothTerrainVolume.h" />
     <ClInclude Include="src\CubiquityUtility.h" />
     <ClInclude Include="src\Volume.h" />
+    <ClInclude Include="src\VolumeSerialisation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
