@@ -375,33 +375,33 @@ void Volume<VoxelType>::updateMesh(OctreeNode* volReg)
 		if(getType() == VolumeTypes::ColouredCubes)
 		{
 			//GameplayIsQuadNeeded<VoxelType> isQuadNeeded;
-			SurfaceMesh<PositionMaterial<VoxelType> > colouredCubicMesh;
+			SurfaceMesh<PositionMaterial<VoxelType> >* colouredCubicMesh = new SurfaceMesh<PositionMaterial<VoxelType> >;
 			//CubicSurfaceExtractor< RawVolume<VoxelType>, GameplayIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, lod0Region, &colouredCubicMesh, WrapModes::Border, VoxelType(0), true, isQuadNeeded);
 			//surfaceExtractor.execute();
 
 			uint32_t downScaleFactor = 0x0001 << (2 - volReg->depth()); //HACK - hardcoded '2'.
 
-			generateCubicMesh(lod0Region, downScaleFactor, &colouredCubicMesh);
+			generateCubicMesh(lod0Region, downScaleFactor, colouredCubicMesh);
 
-			if(colouredCubicMesh.getNoOfIndices() > 0)
+			if(colouredCubicMesh->getNoOfIndices() > 0)
 			{
 				volReg->buildGraphicsMesh(colouredCubicMesh/*, 0*/);
 			}
 		}
 		else if(getType() == VolumeTypes::SmoothTerrain)
 		{
-			SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > > mesh;
+			SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >* mesh = new SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >;
 
 			uint32_t downScaleFactor = 0x0001 << (2 - volReg->depth()); //HACK - hardcoded '2'.
 
-			generateSmoothMesh(lod0Region, downScaleFactor, &mesh);
+			generateSmoothMesh(lod0Region, downScaleFactor, mesh);
 
 			if(downScaleFactor > 1)
 			{
-				recalculateMaterials(&mesh, static_cast<Vector3DFloat>(lod0Region.getLowerCorner()), mVolData);
+				recalculateMaterials(mesh, static_cast<Vector3DFloat>(lod0Region.getLowerCorner()), mVolData);
 			}
 
-			if(mesh.getNoOfIndices() > 0)
+			if(mesh->getNoOfIndices() > 0)
 			{
 				volReg->buildGraphicsMesh(mesh/*, 0*/);
 			}

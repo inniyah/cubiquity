@@ -16,6 +16,7 @@ OctreeNode::OctreeNode(PolyVox::Region region, OctreeNode* parentRegion)
 	,mWantedForRendering(false)
 	,mMeshLastUpdated(0)
 	,mDataLastModified(1) //Is this ok?
+	,mPolyVoxMesh(0)
 {
 	for(int z = 0; z < 2; z++)
 	{
@@ -47,10 +48,10 @@ OctreeNode::~OctreeNode()
 	SAFE_RELEASE(mNode);
 }
 
-void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<Colour> >& polyVoxMesh)
+void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<Colour> >* polyVoxMesh)
 {
 	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
-	const std::vector<PositionMaterial<Colour> >& vecVertices = polyVoxMesh.getVertices();
+	const std::vector<PositionMaterial<Colour> >& vecVertices = polyVoxMesh->getVertices();
 	const float* pVerticesConst = reinterpret_cast<const float*>(&vecVertices[0]);
 	float* pVertices = const_cast<float*>(pVerticesConst);
 
@@ -60,7 +61,7 @@ void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionM
     };
 
 	//Create the vertex data in the expected format
-	float* vertexData = new float[polyVoxMesh.getVertices().size() * 4]; //4 float per vertex
+	float* vertexData = new float[polyVoxMesh->getVertices().size() * 4]; //4 float per vertex
 	float* ptr = vertexData;
 	for(int i = 0; i < vecVertices.size(); i++)
 	{
@@ -75,21 +76,21 @@ void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionM
 		*ptr = static_cast<float>(colourAsUint); ptr++;
 	}
 
-    Mesh* mesh = Mesh::createMesh(VertexFormat(elements, 1), polyVoxMesh.getVertices().size(), false);
+    Mesh* mesh = Mesh::createMesh(VertexFormat(elements, 1), polyVoxMesh->getVertices().size(), false);
     /*if (mesh == NULL)
     {
         return NULL;
     }*/
     mesh->setPrimitiveType(Mesh::TRIANGLES);
-    mesh->setVertexData(vertexData, 0, polyVoxMesh.getVertices().size());
+    mesh->setVertexData(vertexData, 0, polyVoxMesh->getVertices().size());
 	mesh->setBoundingBox(BoundingBox(Vector3(0,0,0), Vector3(16, 16, 16)));
 	delete[] vertexData;
 
 	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
-	const std::vector<unsigned int>& vecIndices = polyVoxMesh.getIndices();
+	const std::vector<unsigned int>& vecIndices = polyVoxMesh->getIndices();
 	const void* pIndicesConst = &vecIndices[0];
 	void* pIndices = const_cast<void*>(pIndicesConst);
-	MeshPart* meshPart = mesh->addPart(Mesh::TRIANGLES, Mesh::INDEX32, polyVoxMesh.getNoOfIndices());
+	MeshPart* meshPart = mesh->addPart(Mesh::TRIANGLES, Mesh::INDEX32, polyVoxMesh->getNoOfIndices());
 	meshPart->setIndexData(pIndices, 0, vecIndices.size());
 
     Model* model = Model::create(mesh);
@@ -99,46 +100,30 @@ void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionM
 	SAFE_RELEASE(model);
 }
 
-void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<MultiMaterial4> >& polyVoxMesh)
+void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<MultiMaterial4> >* polyVoxMesh)
 {
 	GP_ERROR("This function should never be called!"); //See note in header
 }
 
-void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< Colour > >& polyVoxMesh)
+void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< Colour > >* polyVoxMesh)
 {
 	GP_ERROR("This function should never be called!"); //See note in header
 }
 
-void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& polyVoxMesh)
+void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >* polyVoxMesh)
 {
+	mPolyVoxMesh = polyVoxMesh;
+
 	Model* model = buildModelFromPolyVoxMesh(polyVoxMesh);
 	mNode->setModel(model);
 	SAFE_RELEASE(model);
 
-	//Now set up the physics
-	const std::vector<PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& vecVertices = polyVoxMesh.getVertices();
-	const std::vector<unsigned int>& vecIndices = polyVoxMesh.getIndices();
-	float* vertexData = new float[polyVoxMesh.getVertices().size() * 3];
-
-	unsigned int* physicsIndices = new unsigned int [vecIndices.size()];
-	for(int ct = 0; ct < vecIndices.size(); ct++)
-	{
-		physicsIndices[ct] = vecIndices[ct];
-	}
-
-	float* ptr = vertexData;
-	for(int i = 0; i < vecVertices.size(); i++)
-	{
-		// Position stored in x,y,z components.
-		*ptr = vecVertices[i].getPosition().getX(); ptr++;
-		*ptr = vecVertices[i].getPosition().getY(); ptr++;
-		*ptr = vecVertices[i].getPosition().getZ(); ptr++;
-	}
+	PhysicsCollisionShape::Definition physDef = buildCollisionObjectFromPolyVoxMesh(polyVoxMesh);
 
 	//Putting the physics mesh on LOD 0.
 	PhysicsRigidBody::Parameters groundParams;
 	groundParams.mass = 0.0f;
-	mNode->setCollisionObject(PhysicsCollisionObject::RIGID_BODY, PhysicsCollisionShape::custom(vertexData, polyVoxMesh.getVertices().size(), physicsIndices, vecIndices.size()), &groundParams);
+	mNode->setCollisionObject(PhysicsCollisionObject::RIGID_BODY, physDef, &groundParams);
 }
 
 void OctreeNode::setMaterial(const char* material)
@@ -256,10 +241,10 @@ void OctreeNode::setMeshLastUpdated(uint32_t newTimeStamp)
 	mMeshLastUpdated = newTimeStamp;
 }
 
-gameplay::Model* OctreeNode::buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< GameplayMarchingCubesController< MultiMaterial4 >::MaterialType > >& polyVoxMesh)
+gameplay::Model* OctreeNode::buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< GameplayMarchingCubesController< MultiMaterial4 >::MaterialType > >* polyVoxMesh)
 {
 	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
-	const std::vector<PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& vecVertices = polyVoxMesh.getVertices();
+	const std::vector<PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& vecVertices = polyVoxMesh->getVertices();
 	const float* pVerticesConst = reinterpret_cast<const float*>(&vecVertices[0]);
 	float* pVertices = const_cast<float*>(pVerticesConst);
 
@@ -271,7 +256,7 @@ gameplay::Model* OctreeNode::buildModelFromPolyVoxMesh(const PolyVox::SurfaceMes
     };
 
 	//Create the vertex data in the expected format
-	float* vertexData = new float[polyVoxMesh.getVertices().size() * 11]; //11 float per vertex
+	float* vertexData = new float[polyVoxMesh->getVertices().size() * 11]; //11 float per vertex
 	float* ptr = vertexData;
 	for(int i = 0; i < vecVertices.size(); i++)
 	{
@@ -296,25 +281,50 @@ gameplay::Model* OctreeNode::buildModelFromPolyVoxMesh(const PolyVox::SurfaceMes
 		*ptr = vecVertices[i].getNormal().getZ(); ptr++;
 	}
 
-    Mesh* mesh = Mesh::createMesh(VertexFormat(elements, 3), polyVoxMesh.getVertices().size(), false);
+    Mesh* mesh = Mesh::createMesh(VertexFormat(elements, 3), polyVoxMesh->getVertices().size(), false);
     /*if (mesh == NULL)
     {
         return NULL;
     }*/
     mesh->setPrimitiveType(Mesh::TRIANGLES);
-    mesh->setVertexData(vertexData, 0, polyVoxMesh.getVertices().size());
+    mesh->setVertexData(vertexData, 0, polyVoxMesh->getVertices().size());
 	mesh->setBoundingBox(BoundingBox(Vector3(0,0,0), Vector3(16, 16, 16)));
 	delete[] vertexData;
 
 	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
-	const std::vector<unsigned int>& vecIndices = polyVoxMesh.getIndices();
+	const std::vector<unsigned int>& vecIndices = polyVoxMesh->getIndices();
 	const void* pIndicesConst = &vecIndices[0];
 	void* pIndices = const_cast<void*>(pIndicesConst);
-	MeshPart* meshPart = mesh->addPart(Mesh::TRIANGLES, Mesh::INDEX32, polyVoxMesh.getNoOfIndices());
+	MeshPart* meshPart = mesh->addPart(Mesh::TRIANGLES, Mesh::INDEX32, polyVoxMesh->getNoOfIndices());
 	meshPart->setIndexData(pIndices, 0, vecIndices.size());
 
     Model* model = Model::create(mesh);
     SAFE_RELEASE(mesh);
 
 	return model;
+}
+
+PhysicsCollisionShape::Definition OctreeNode::buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< GameplayMarchingCubesController< MultiMaterial4 >::MaterialType > >* polyVoxMesh)
+{
+	//Now set up the physics
+	const std::vector<PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& vecVertices = polyVoxMesh->getVertices();
+	const std::vector<unsigned int>& vecIndices = polyVoxMesh->getIndices();
+	float* vertexData = new float[polyVoxMesh->getVertices().size() * 3];
+
+	unsigned int* physicsIndices = new unsigned int [vecIndices.size()];
+	for(int ct = 0; ct < vecIndices.size(); ct++)
+	{
+		physicsIndices[ct] = vecIndices[ct];
+	}
+
+	float* ptr = vertexData;
+	for(int i = 0; i < vecVertices.size(); i++)
+	{
+		// Position stored in x,y,z components.
+		*ptr = vecVertices[i].getPosition().getX(); ptr++;
+		*ptr = vecVertices[i].getPosition().getY(); ptr++;
+		*ptr = vecVertices[i].getPosition().getZ(); ptr++;
+	}
+
+	return PhysicsCollisionShape::custom(vertexData, polyVoxMesh->getVertices().size(), physicsIndices, vecIndices.size());
 }
