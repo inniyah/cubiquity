@@ -300,7 +300,7 @@ void Volume<VoxelType>::updateMesh(OctreeNode* volReg)
 			//CubicSurfaceExtractor< RawVolume<VoxelType>, GameplayIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, lod0Region, &colouredCubicMesh, WrapModes::Border, VoxelType(0), true, isQuadNeeded);
 			//surfaceExtractor.execute();
 
-			uint32_t downScaleFactor = 0x0001 << (2 - volReg->depth()); //HACK - hardcoded '2'.
+			uint32_t downScaleFactor = 0x0001 << (volReg->subtreeHeight() - 1);
 
 			generateCubicMesh(lod0Region, downScaleFactor, colouredCubicMesh);
 
@@ -313,7 +313,7 @@ void Volume<VoxelType>::updateMesh(OctreeNode* volReg)
 		{
 			SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >* mesh = new SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >;
 
-			uint32_t downScaleFactor = 0x0001 << (2 - volReg->depth()); //HACK - hardcoded '2'.
+			uint32_t downScaleFactor = 0x0001 << (volReg->subtreeHeight() - 1);
 
 			generateSmoothMesh(lod0Region, downScaleFactor, mesh);
 

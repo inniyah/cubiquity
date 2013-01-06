@@ -92,6 +92,27 @@ uint32_t OctreeNode::depth(void)
 	}
 }
 
+uint32_t OctreeNode::subtreeHeight(void)
+{
+	uint32_t maxChildHeight = 0;
+	for(int iz = 0; iz < 2; iz++)
+	{
+		for(int iy = 0; iy < 2; iy++)
+		{
+			for(int ix = 0; ix < 2; ix++)
+			{
+				OctreeNode* child = children[ix][iy][iz];
+				if(child)
+				{
+					maxChildHeight = std::max(maxChildHeight, child->subtreeHeight());
+				}
+			}
+		}
+	}
+
+	return maxChildHeight + 1;
+}
+
 bool OctreeNode::hasAnyChildren(void)
 {
 	for(int z = 0; z < 2; z++)

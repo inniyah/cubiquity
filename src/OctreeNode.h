@@ -47,6 +47,8 @@ public:
 
 	uint32_t depth(void);
 
+	uint32_t subtreeHeight(void);
+
 	PolyVox::Region mRegion;
 	uint32_t mMeshLastUpdated;
 	uint32_t mDataLastModified;
