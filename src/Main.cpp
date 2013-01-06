@@ -1,6 +1,6 @@
 #include "Main.h"
 
-#include "ColouredCubesVolume.h"
+#include "GameplayColouredCubesVolume.h"
 #include "GameplaySmoothTerrainVolume.h"
 
 #include "OctreeNode.h" //HACK!
@@ -139,7 +139,7 @@ void MeshGame::initialize()
 	mVolume = GameplaySmoothTerrainVolume::create(VolumeTypes::SmoothTerrain, 0, 0, 0, 127, 127, 127, 32, 32, 32); //HACK - height is wrong.
 #endif
 #ifdef TERRAIN_CUBIC
-	mVolume = ColouredCubesVolume::create(VolumeTypes::ColouredCubes, 0, 0, 0, 127, 127, 127, 32, 32, 32); //HACK - height is wrong.
+	mVolume = GameplayColouredCubesVolume::create(VolumeTypes::ColouredCubes, 0, 0, 0, 127, 127, 127, 32, 32, 32); //HACK - height is wrong.
 #endif
 
 	//Rather dirty hack until I figure out how to package volume data with gameplay
@@ -163,8 +163,11 @@ void MeshGame::initialize()
 	}
 #endif
 	
-	_polyVoxNode = mVolume->getRootNode();
-	_scene->addNode(mVolume->getRootNode());
+	//_polyVoxNode = mVolume->getRootNode();
+	//_scene->addNode(mVolume->getRootNode());
+	
+	_polyVoxNode = mVolume->mRootGameplayNode;
+	_scene->addNode(mVolume->mRootGameplayNode);
 }
 
 void MeshGame::finalize()
@@ -220,7 +223,7 @@ void MeshGame::update(float elapsedTime)
 	
 	_cameraNode->translate(_cameraNode->getForwardVector() * -mCameraDistance);
 
-	mVolume->update();
+	mVolume->performUpdate();
 
 	mVolume->mRootOctreeNode->clearWantedForRendering();
 

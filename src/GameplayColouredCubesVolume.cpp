@@ -1,17 +1,17 @@
-#include "GameplaySmoothTerrainVolume.h"
+#include "GameplayColouredCubesVolume.h"
 
-GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)
-	:SmoothTerrainVolume(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth)
+GameplayColouredCubesVolume::GameplayColouredCubesVolume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)
+	:ColouredCubesVolume(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth)
 	,mRootGameplayNode(0)
 {
 	mRootGameplayNode = Node::create("RootGameplayNode");
 }
 
-GameplaySmoothTerrainVolume::~GameplaySmoothTerrainVolume()
+GameplayColouredCubesVolume::~GameplayColouredCubesVolume()
 {
 }
 
-void GameplaySmoothTerrainVolume::performUpdate(void)
+void GameplayColouredCubesVolume::performUpdate(void)
 {
 	update();
 
@@ -23,7 +23,7 @@ void GameplaySmoothTerrainVolume::performUpdate(void)
 	}
 }
 
-void GameplaySmoothTerrainVolume::syncNode(OctreeNode* octreeNode, gameplay::Node* gameplayNode)
+void GameplayColouredCubesVolume::syncNode(OctreeNode* octreeNode, gameplay::Node* gameplayNode)
 {
 	octreeNode->mGameEngineNode = gameplayNode;
 	gameplayNode->setUserPointer(octreeNode);

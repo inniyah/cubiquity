@@ -467,7 +467,7 @@ template <typename VoxelType>
 void Volume<VoxelType>::recalculateMaterials(SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >* mesh, const Vector3DFloat& meshOffset,  RawVolume<VoxelType>* volume)
 {
 #ifdef TERRAIN_SMOOTH
-	std::vector< PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >& vertices = mesh->getRawVertexData();
+	/*std::vector< PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >& vertices = mesh->getRawVertexData();
 	for(int ct = 0; ct < vertices.size(); ct++)
 	{
 		const Vector3DFloat& vertexPos = vertices[ct].getPosition() + meshOffset;
@@ -485,7 +485,7 @@ void Volume<VoxelType>::recalculateMaterials(SurfaceMesh<PositionMaterialNormal<
 		}
 
 		vertices[ct].setMaterial(value);
-	}
+	}*/
 #endif
 }
 
@@ -560,12 +560,12 @@ void Volume<VoxelType>::generateCubicMesh(const PolyVox::Region& region, uint32_
 {
 	GameplayIsQuadNeeded<VoxelType> isQuadNeeded;
 
-	if(downSampleFactor == 1)
-	{
+	/*if(downSampleFactor != 2) //HACK
+	{*/
 		SurfaceMesh<PositionMaterial<VoxelType> > colouredCubicMesh;
 		CubicSurfaceExtractor< RawVolume<VoxelType>, GameplayIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, region, resultMesh, WrapModes::Border, VoxelType(0), true, isQuadNeeded);
 		surfaceExtractor.execute();
-	}
+	/*}
 	else
 	{
 		Region lod2Region = region;
@@ -587,5 +587,5 @@ void Volume<VoxelType>::generateCubicMesh(const PolyVox::Region& region, uint32_
 		surfaceExtractor.execute();
 
 		resultMesh->scaleVertices(downSampleFactor);
-	}
+	}*/
 }

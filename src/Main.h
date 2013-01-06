@@ -9,7 +9,7 @@
 
 using namespace gameplay;
 
-class ColouredCubesVolume;
+class GameplayColouredCubesVolume;
 class GameplaySmoothTerrainVolume;
 
 #define TERRAIN_SMOOTH
@@ -97,7 +97,7 @@ private:
 #endif
 
 #ifdef TERRAIN_CUBIC
-	ColouredCubesVolume* mVolume;
+	GameplayColouredCubesVolume* mVolume;
 #endif
 };
 

@@ -16,11 +16,11 @@ public:
 
 	void performUpdate(void);
 
-protected:
+public:
 	GameplaySmoothTerrainVolume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth);
 	virtual ~GameplaySmoothTerrainVolume();
 
-	void syncNode(const OctreeNode* octreeNode, gameplay::Node* gameplayNode);
+	void syncNode(OctreeNode* octreeNode, gameplay::Node* gameplayNode);
 
 	gameplay::Node* mRootGameplayNode;
 };

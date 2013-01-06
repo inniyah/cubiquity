@@ -254,6 +254,9 @@
     <ClInclude Include="src\CubiquityUtility.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\GameplayColouredCubesVolume.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -299,6 +302,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\CubiquityUtility.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameplayColouredCubesVolume.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
