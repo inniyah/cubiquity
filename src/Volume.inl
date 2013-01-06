@@ -121,7 +121,6 @@ RaycastResult smoothRaycastWithDirection(VolumeType* volData, const Vector3DFloa
 template <typename VoxelType>
 Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth, unsigned int baseNodeSize)
 	:mVolData(0)
-	,mRootNode(0)
 	,mRootOctreeNode(0)
 	,mType(type)
 	,mRegionWidth(regionWidth)
@@ -225,7 +224,6 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 template <typename VoxelType>
 Volume<VoxelType>::~Volume()
 {
-	SAFE_RELEASE(mRootNode);
 }
 
 template <typename VoxelType>

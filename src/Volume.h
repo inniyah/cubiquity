@@ -25,8 +25,7 @@ typedef VolumeTypes::VolumeType VolumeType;
 template <typename VoxelType>
 class Volume : public gameplay::Ref
 {
-public:	
-	gameplay::Node* getRootNode();
+public:
 	VolumeType getType(void) const;
 
 	void buildOctreeNodeTree(OctreeNode* parent);
@@ -64,7 +63,6 @@ protected:
 public:
 	PolyVox::RawVolume<VoxelType>* mVolData;
 	OctreeNode* mRootOctreeNode;
-	gameplay::Node* mRootNode;
 	std::string mMaterialPath;
 
 	const unsigned int mRegionWidth;
