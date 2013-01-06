@@ -163,9 +163,6 @@ void MeshGame::initialize()
 	}
 #endif
 	
-	//_polyVoxNode = mVolume->getRootNode();
-	//_scene->addNode(mVolume->getRootNode());
-	
 	_polyVoxNode = mVolume->mRootGameplayNode;
 	_scene->addNode(mVolume->mRootGameplayNode);
 }

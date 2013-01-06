@@ -259,13 +259,6 @@ void Volume<VoxelType>::buildOctreeNodeTree(OctreeNode* parent)
 }
 
 template <typename VoxelType>
-Node* Volume<VoxelType>::getRootNode()
-{
-	//return mRootNode;
-	return mRootOctreeNode->mNode;
-}
-
-template <typename VoxelType>
 VolumeType Volume<VoxelType>::getType(void) const
 {
 	return mType;
@@ -408,21 +401,6 @@ void Volume<VoxelType>::updateMesh(OctreeNode* volReg)
 
 		}
 
-		// FIXME - We shouldn't really set this here as it's not changing every time we update the mesh data.
-		// But before deciding on a material handling strategy let's see what options we come up with for texturing smooth terrain.
-		switch(getType())
-		{
-			case VolumeTypes::ColouredCubes:
-				volReg->setMaterial("res/PolyVox.material");
-				break;
-			case VolumeTypes::SmoothTerrain:
-				volReg->setMaterial("res/SmoothTerrain.material");
-				break;
-			default:
-				//Add fallback material here
-			break;
-		}
-
 		volReg->setMeshLastUpdated(getTime());
 	}
 
@@ -560,12 +538,12 @@ void Volume<VoxelType>::generateCubicMesh(const PolyVox::Region& region, uint32_
 {
 	GameplayIsQuadNeeded<VoxelType> isQuadNeeded;
 
-	/*if(downSampleFactor != 2) //HACK
-	{*/
+	if(downSampleFactor != 2) //HACK
+	{
 		SurfaceMesh<PositionMaterial<VoxelType> > colouredCubicMesh;
 		CubicSurfaceExtractor< RawVolume<VoxelType>, GameplayIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, region, resultMesh, WrapModes::Border, VoxelType(0), true, isQuadNeeded);
 		surfaceExtractor.execute();
-	/*}
+	}
 	else
 	{
 		Region lod2Region = region;
@@ -587,5 +565,5 @@ void Volume<VoxelType>::generateCubicMesh(const PolyVox::Region& region, uint32_
 		surfaceExtractor.execute();
 
 		resultMesh->scaleVertices(downSampleFactor);
-	}*/
+	}
 }

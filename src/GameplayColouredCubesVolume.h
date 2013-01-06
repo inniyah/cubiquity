@@ -22,6 +22,8 @@ public:
 
 	void syncNode(OctreeNode* octreeNode, gameplay::Node* gameplayNode);
 
+	gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterial<Colour> >* polyVoxMesh);
+
 	gameplay::Node* mRootGameplayNode;
 };
 

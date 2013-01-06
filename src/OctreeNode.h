@@ -33,8 +33,6 @@ public:
 	void buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<MultiMaterial4> >* polyVoxMesh);
 	void buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< Colour > >* polyVoxMesh);
 
-	void setMaterial(const char* material); //Should be const material - fix gameplay
-
 	void markDataAsModified(int32_t x, int32_t y, int32_t z, uint32_t newTimeStamp);
 
 	void clearWantedForRendering(void);
@@ -49,14 +47,7 @@ public:
 
 	uint32_t depth(void);
 
-	gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< GameplayMarchingCubesController< MultiMaterial4 >::MaterialType > >* polyVoxMesh);
-	gameplay::PhysicsCollisionShape::Definition buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< GameplayMarchingCubesController< MultiMaterial4 >::MaterialType > >* polyVoxMesh);
-
-	gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterial<Colour> >* polyVoxMesh);
-
 	PolyVox::Region mRegion;
-	gameplay::Node* mNode;
-	//bool mIsMeshUpToDate;
 	uint32_t mMeshLastUpdated;
 	uint32_t mDataLastModified;
 
