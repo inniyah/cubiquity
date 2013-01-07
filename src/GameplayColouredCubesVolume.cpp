@@ -1,10 +1,12 @@
 #include "GameplayColouredCubesVolume.h"
 
+#include "ExtraNodeData.h"
+
 GameplayColouredCubesVolume::GameplayColouredCubesVolume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)
 	:ColouredCubesVolume(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth)
 	,mRootGameplayNode(0)
 {
-	mRootGameplayNode = Node::create("RootGameplayNode");
+	mRootGameplayNode = createNodeWithExtraData("RootGameplayNode");
 }
 
 GameplayColouredCubesVolume::~GameplayColouredCubesVolume()
@@ -26,7 +28,8 @@ void GameplayColouredCubesVolume::performUpdate(void)
 void GameplayColouredCubesVolume::syncNode(OctreeNode* octreeNode, gameplay::Node* gameplayNode)
 {
 	octreeNode->mGameEngineNode = gameplayNode;
-	gameplayNode->setUserPointer(octreeNode);
+	ExtraNodeData* extraNodeData = static_cast<ExtraNodeData*>(gameplayNode->getUserPointer());
+	extraNodeData->mOctreeNode = octreeNode;
 
 	if(octreeNode->parent)
 	{
@@ -53,7 +56,7 @@ void GameplayColouredCubesVolume::syncNode(OctreeNode* octreeNode, gameplay::Nod
 					Node* childNode = reinterpret_cast<Node*>(octreeNode->children[ix][iy][iz]->mGameEngineNode);
 					if(childNode == 0)
 					{
-						childNode = Node::create("ChildGameplayNode");
+						childNode = createNodeWithExtraData("ChildGameplayNode");
 
 						gameplayNode->addChild(childNode);
 					}

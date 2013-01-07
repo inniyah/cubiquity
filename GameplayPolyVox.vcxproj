@@ -77,6 +77,7 @@
       <AdditionalIncludeDirectories>../gameplay/external-deps/lua/include;../gameplay/external-deps/bullet/include;../gameplay/gameplay/src;../gameplay/external-deps/openal/include/AL;../gameplay/external-deps/oggvorbis/include;../gameplay/external-deps/libpng/include;../gameplay/external-deps/zlib/include;../gameplay/external-deps/glew/include;../polyvox/library/PolyVoxCore/include</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -212,6 +213,7 @@
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Region.cpp" />
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\VertexTypes.cpp" />
     <ClCompile Include="src\Colour.cpp" />
+    <ClCompile Include="src\ExtraNodeData.cpp" />
     <ClCompile Include="src\GameplayColouredCubesVolume.cpp" />
     <ClCompile Include="src\GameplaySmoothTerrainVolume.cpp" />
     <ClCompile Include="src\Main.cpp" />
@@ -265,6 +267,7 @@
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.h" />
     <ClInclude Include="src\Colour.h" />
     <ClInclude Include="src\ColouredCubesVolume.h" />
+    <ClInclude Include="src\ExtraNodeData.h" />
     <ClInclude Include="src\GameplayColouredCubesVolume.h" />
     <ClInclude Include="src\gameplayisquadneeded.h" />
     <ClInclude Include="src\gameplaymarchingcubescontroller.h" />
