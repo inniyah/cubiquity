@@ -37,12 +37,17 @@ void GameplayColouredCubesVolume::syncNode(OctreeNode* octreeNode, gameplay::Nod
 		gameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
 	}
 
-	if((octreeNode->mCubicPolyVoxMesh) && (gameplayNode->getModel() == 0))
+	if(extraNodeData->mTimeStamp < octreeNode->mDataLastModified)
 	{
-		Model* model = buildModelFromPolyVoxMesh(octreeNode->mCubicPolyVoxMesh);
-		model->setMaterial("res/PolyVox.material");
-		gameplayNode->setModel(model);
-		SAFE_RELEASE(model);
+		if(octreeNode->mCubicPolyVoxMesh)
+		{
+			Model* model = buildModelFromPolyVoxMesh(octreeNode->mCubicPolyVoxMesh);
+			model->setMaterial("res/PolyVox.material");
+			gameplayNode->setModel(model);
+			SAFE_RELEASE(model);
+		}
+
+		extraNodeData->mTimeStamp = getTime();
 	}
 
 	for(int iz = 0; iz < 2; iz++)

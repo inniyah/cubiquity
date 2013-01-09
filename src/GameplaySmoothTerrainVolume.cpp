@@ -37,22 +37,27 @@ void GameplaySmoothTerrainVolume::syncNode(OctreeNode* octreeNode, gameplay::Nod
 		gameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
 	}
 
-	if((octreeNode->mSmoothPolyVoxMesh) && (gameplayNode->getModel() == 0))
+	if(extraNodeData->mTimeStamp < octreeNode->mDataLastModified)
 	{
-		Model* model = buildModelFromPolyVoxMesh(octreeNode->mSmoothPolyVoxMesh);
-		model->setMaterial("res/SmoothTerrain.material");
-		gameplayNode->setModel(model);
-		SAFE_RELEASE(model);
-
-		//There is a weird bug, whereby if we use the LOD 0 for physics it resets the node positions somehow. So we use LOD 1 here.
-		if(octreeNode->depth() == 1)
+		if(octreeNode->mSmoothPolyVoxMesh)
 		{
-			PhysicsCollisionShape::Definition physDef = buildCollisionObjectFromPolyVoxMesh(octreeNode->mSmoothPolyVoxMesh);
+			Model* model = buildModelFromPolyVoxMesh(octreeNode->mSmoothPolyVoxMesh);
+			model->setMaterial("res/SmoothTerrain.material");
+			gameplayNode->setModel(model);
+			SAFE_RELEASE(model);
 
-			PhysicsRigidBody::Parameters groundParams;
-			groundParams.mass = 0.0f;
-			gameplayNode->setCollisionObject(PhysicsCollisionObject::RIGID_BODY, physDef, &groundParams);
-		}
+			//There is a weird bug, whereby if we use the LOD 0 for physics it resets the node positions somehow. So we use LOD 1 here.
+			if(octreeNode->depth() == 1)
+			{
+				PhysicsCollisionShape::Definition physDef = buildCollisionObjectFromPolyVoxMesh(octreeNode->mSmoothPolyVoxMesh);
+
+				PhysicsRigidBody::Parameters groundParams;
+				groundParams.mass = 0.0f;
+				gameplayNode->setCollisionObject(PhysicsCollisionObject::RIGID_BODY, physDef, &groundParams);
+			}
+		}	
+
+		extraNodeData->mTimeStamp = getTime();
 	}
 
 	for(int iz = 0; iz < 2; iz++)
