@@ -223,9 +223,12 @@ void MeshGame::update(float elapsedTime)
 	
 	_cameraNode->translate(_cameraNode->getForwardVector() * -mCameraDistance);
 
-	mVolume->performUpdate();
-
 	mVolume->mRootOctreeNode->clearWantedForRendering();
+	Vector3 viewPos = _cameraNode->getTranslationWorld();
+	Vector3DFloat v3dViewPos(viewPos.x, viewPos.y, viewPos.z);
+	mVolume->mRootOctreeNode->determineWantedForRendering(v3dViewPos, mLod1StartSlider->getValue());
+
+	mVolume->performUpdate();
 
 	// Update UI.
     mForm->update(elapsedTime);
@@ -380,74 +383,16 @@ bool MeshGame::drawScene(Node* node)
 		return true;
 	}
 
-	/*uint32_t* pLodLevel = static_cast<uint32_t*>(node->getUserPointer());
-	if(pLodLevel)
-	{
-		float distance = (_cameraNode->getTranslationWorld() - node->getTranslationWorld()).length();
-
-		uint32_t desiredLod = 0;
-		if(distance > mLod1StartSlider->getValue())
-		{
-			desiredLod = 1;
-		}
-		if(distance > mLod2StartSlider->getValue())
-		{
-			desiredLod = 2;
-		}
-		if(*pLodLevel != desiredLod)
-			return true;
-	}*/
-
 	ExtraNodeData* extraNodeData = static_cast<ExtraNodeData*>(node->getUserPointer());
 	if(extraNodeData)
 	{
 		OctreeNode* volReg = extraNodeData->mOctreeNode;
 		if(volReg)
 		{
-				
-			Vector3DInt32 regionCentre = volReg->mRegion.getCentre();
-
-			Vector3 gRegCentre(regionCentre.getX(), regionCentre.getY(), regionCentre.getZ());
-
-			float distance = (_cameraNode->getTranslationWorld() - gRegCentre).length();
-
-			Vector3DInt32 diagonal = volReg->mRegion.getUpperCorner() - volReg->mRegion.getLowerCorner();
-			float diagonalLength = diagonal.length(); // A measure of our regions size
-
-			float projectedSize = diagonalLength / distance;
-
-			if(projectedSize > mLod1StartSlider->getValue())
+			if(!volReg->mWantedForRendering)
 			{
-				//We want to render the children
-				if(volReg->hasAnyChildren())
-				{
-					return true;
-				}
-				else
-				{
-					//We want to render this node...
-					volReg->mWantedForRendering = true;
-				
-					// But maybe we can't.
-					if(volReg->isMeshUpToDate() == false)
-					{
-						// We have no choice but to go lower and hope there are children with up to date meshes.
-						return true;
-					}
-				}
+				return true;
 			}
-
-			//We want to render this node...
-			volReg->mWantedForRendering = true;
-
-			Model* model = node->getModel();
-			if (model)
-			{
-				model->getMaterial()->getParameter("u_lightColor")->setValue(_light->getColor());
-				model->getMaterial()->getParameter("u_lightDirection")->setValue(_lightNode->getForwardVectorWorld());
-				model->draw(mWireframeCheckBox->isChecked());
-			}
-			return false; //This is the lod level we are drawing so no need to go any lower.
 		}
 	}
 

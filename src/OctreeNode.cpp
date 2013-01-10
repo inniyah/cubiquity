@@ -174,6 +174,47 @@ void OctreeNode::clearWantedForRendering(void)
 	}
 }
 
+void OctreeNode::determineWantedForRendering(const PolyVox::Vector3DFloat& viewPosition, float threshold)
+{
+	Vector3DFloat regionCentre = static_cast<Vector3DFloat>(mRegion.getCentre());
+
+	float distance = (viewPosition - regionCentre).length();
+
+	Vector3DInt32 diagonal = mRegion.getUpperCorner() - mRegion.getLowerCorner();
+	float diagonalLength = diagonal.length(); // A measure of our regions size
+
+	float projectedSize = diagonalLength / distance;
+
+	if(projectedSize > threshold)
+	{
+		if(hasAnyChildren())
+		{
+			for(int iz = 0; iz < 2; iz++)
+			{
+				for(int iy = 0; iy < 2; iy++)
+				{
+					for(int ix = 0; ix < 2; ix++)
+					{
+						OctreeNode* child = children[ix][iy][iz];
+						if(child)
+						{
+							child->determineWantedForRendering(viewPosition, threshold);
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			mWantedForRendering = true;
+		}
+	}
+	else
+	{
+		mWantedForRendering = true;
+	}
+}
+
 bool OctreeNode::isMeshUpToDate(void)
 {
 	return mMeshLastUpdated > mDataLastModified;

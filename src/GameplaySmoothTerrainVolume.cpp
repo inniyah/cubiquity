@@ -65,12 +65,6 @@ void GameplaySmoothTerrainVolume::syncNode(OctreeNode* octreeNode, gameplay::Nod
 	ExtraNodeData* extraNodeData = static_cast<ExtraNodeData*>(gameplayNode->getUserPointer());
 	extraNodeData->mOctreeNode = octreeNode;
 
-	if(octreeNode->parent)
-	{
-		Vector3DInt32 translation = octreeNode->mRegion.getLowerCorner() - octreeNode->parent->mRegion.getLowerCorner();
-		gameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
-	}
-
 	if(extraNodeData->mTimeStamp < octreeNode->mDataLastModified)
 	{
 		if(octreeNode->mSmoothPolyVoxMesh)
