@@ -7,6 +7,8 @@ GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(VolumeType type, int lo
 	,mRootGameplayNode(0)
 {
 	mRootGameplayNode = createNodeWithExtraData("RootGameplayNode");
+
+	buildNode(mRootOctreeNode, mRootGameplayNode);
 }
 
 GameplaySmoothTerrainVolume::~GameplaySmoothTerrainVolume()
@@ -25,9 +27,41 @@ void GameplaySmoothTerrainVolume::performUpdate(void)
 	}
 }
 
-void GameplaySmoothTerrainVolume::syncNode(OctreeNode* octreeNode, gameplay::Node* gameplayNode)
+void GameplaySmoothTerrainVolume::buildNode(OctreeNode* octreeNode, gameplay::Node* gameplayNode)
 {
 	octreeNode->mGameEngineNode = gameplayNode;
+
+	if(octreeNode->parent)
+	{
+		Vector3DInt32 translation = octreeNode->mRegion.getLowerCorner() - octreeNode->parent->mRegion.getLowerCorner();
+		gameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
+	}
+
+	for(int iz = 0; iz < 2; iz++)
+	{
+		for(int iy = 0; iy < 2; iy++)
+		{
+			for(int ix = 0; ix < 2; ix++)
+			{
+				if(octreeNode->children[ix][iy][iz] != 0)
+				{
+					Node* childNode = reinterpret_cast<Node*>(octreeNode->children[ix][iy][iz]->mGameEngineNode);
+					if(childNode == 0)
+					{
+						childNode = createNodeWithExtraData("ChildGameplayNode");
+
+						gameplayNode->addChild(childNode);
+					}
+
+					buildNode(octreeNode->children[ix][iy][iz], childNode);
+				}
+			}
+		}
+	}
+}
+
+void GameplaySmoothTerrainVolume::syncNode(OctreeNode* octreeNode, gameplay::Node* gameplayNode)
+{
 	ExtraNodeData* extraNodeData = static_cast<ExtraNodeData*>(gameplayNode->getUserPointer());
 	extraNodeData->mOctreeNode = octreeNode;
 
@@ -69,12 +103,7 @@ void GameplaySmoothTerrainVolume::syncNode(OctreeNode* octreeNode, gameplay::Nod
 				if(octreeNode->children[ix][iy][iz] != 0)
 				{
 					Node* childNode = reinterpret_cast<Node*>(octreeNode->children[ix][iy][iz]->mGameEngineNode);
-					if(childNode == 0)
-					{
-						childNode = createNodeWithExtraData("ChildGameplayNode");
-
-						gameplayNode->addChild(childNode);
-					}
+					GP_ASSERT(childNode);
 
 					syncNode(octreeNode->children[ix][iy][iz], childNode);
 				}
