@@ -23,7 +23,6 @@ protected:
 	virtual ~GameplaySmoothTerrainVolume();
 
 public:
-	void buildNode(OctreeNode* octreeNode, gameplay::Node* gameplayNode);
 	void syncNode(OctreeNode* octreeNode, gameplay::Node* gameplayNode);
 
 	gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< GameplayMarchingCubesController< MultiMaterial4 >::MaterialType > >* polyVoxMesh);
