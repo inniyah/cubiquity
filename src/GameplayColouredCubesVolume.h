@@ -5,7 +5,9 @@
 
 #include "gameplay.h"
 
-class GameplayColouredCubesVolume : public ColouredCubesVolume
+#include "GameplayVolume.h"
+
+class GameplayColouredCubesVolume : public GameplayVolume<ColouredCubesVolume>
 {
 public:
 	static GameplayColouredCubesVolume* create(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)

@@ -147,22 +147,22 @@ void MeshGame::initialize()
 
 	//Rather dirty hack until I figure out how to package volume data with gameplay
 #ifdef WIN32
-	if(mVolume->getType() == VolumeTypes::SmoothTerrain)
+	if(mVolume->mVolume->getType() == VolumeTypes::SmoothTerrain)
 	{
-		loadData("res/level2MultiMaterial8Bit.vol", mVolume);
+		loadData("res/level2MultiMaterial8Bit.vol", mVolume->mVolume);
 	}
 	else
 	{
-		loadData("res/level2.vol", mVolume);
+		loadData("res/level2.vol", mVolume->mVolume);
 	}
 #else
-	if(mVolume->getType() == VolumeTypes::SmoothTerrain)
+	if(mVolume->mVolume->getType() == VolumeTypes::SmoothTerrain)
 	{
-		loadData("/sdcard/external_sd/level2MultiMaterial8Bit.vol", mVolume);
+		loadData("/sdcard/external_sd/level2MultiMaterial8Bit.vol", mVolume->mVolume);
 	}
 	else
 	{
-		loadData("/sdcard/external_sd/level2.vol", mVolume);
+		loadData("/sdcard/external_sd/level2.vol", mVolume->mVolume);
 	}
 #endif
 	
@@ -174,7 +174,7 @@ void MeshGame::finalize()
 {
     SAFE_RELEASE(_font);
     SAFE_RELEASE(_scene);
-	SAFE_RELEASE(mVolume);
+	//SAFE_RELEASE(mVolume);
 }
 
 void MeshGame::update(float elapsedTime)
@@ -192,26 +192,26 @@ void MeshGame::update(float elapsedTime)
 		ray.setDirection(dir);
 
 		Vector3 intersection;
-		if(mVolume->raycast(ray, 200.0f, intersection))
+		if(mVolume->mVolume->raycast(ray, 200.0f, intersection))
 		{
 			mSphereNode->setTranslation(intersection);
 		}		
 
 		if(mPaintButton->isSelected())
 		{
-			mVolume->applyPaint(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
+			mVolume->mVolume->applyPaint(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
 		}
 		if(mSmoothButton->isSelected())
 		{
-			mVolume->smooth(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue(), mSmoothBiasSlider->getValue());
+			mVolume->mVolume->smooth(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue(), mSmoothBiasSlider->getValue());
 		}
 		if(mAddButton->isSelected())
 		{
-			mVolume->addMaterial(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
+			mVolume->mVolume->addMaterial(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
 		}
 		if(mSubtractButton->isSelected())
 		{
-			mVolume->subtractMaterial(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
+			mVolume->mVolume->subtractMaterial(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
 		}
 	}
 #endif

@@ -3,12 +3,14 @@
 #include "ExtraNodeData.h"
 
 GameplayColouredCubesVolume::GameplayColouredCubesVolume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)
-	:ColouredCubesVolume(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth)
-	,mRootGameplayNode(0)
+	//:ColouredCubesVolume(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth)
+	:mRootGameplayNode(0)
 {
+	mVolume = ColouredCubesVolume::create(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth);
+
 	mRootGameplayNode = createNodeWithExtraData("RootGameplayNode");
 
-	buildNode(mRootOctreeNode, mRootGameplayNode);
+	buildNode(mVolume->mRootOctreeNode, mRootGameplayNode);
 }
 
 GameplayColouredCubesVolume::~GameplayColouredCubesVolume()
@@ -18,13 +20,13 @@ GameplayColouredCubesVolume::~GameplayColouredCubesVolume()
 void GameplayColouredCubesVolume::performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold)
 {
 	Vector3DFloat v3dViewPosition(viewPosition.x, viewPosition.y, viewPosition.z);
-	update(v3dViewPosition, lodThreshold);
+	mVolume->update(v3dViewPosition, lodThreshold);
 
 	//Now ensure the gameplay node tree matches the one in the volume.
 
-	if(mRootOctreeNode != 0)
+	if(mVolume->mRootOctreeNode != 0)
 	{
-		syncNode(mRootOctreeNode, mRootGameplayNode);
+		syncNode(mVolume->mRootOctreeNode, mRootGameplayNode);
 	}
 }
 
@@ -76,7 +78,7 @@ void GameplayColouredCubesVolume::syncNode(OctreeNode* octreeNode, gameplay::Nod
 			SAFE_RELEASE(model);
 		}
 
-		extraNodeData->mTimeStamp = getTime();
+		extraNodeData->mTimeStamp = mVolume->getTime();
 	}
 
 	for(int iz = 0; iz < 2; iz++)

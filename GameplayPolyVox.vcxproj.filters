@@ -263,6 +263,9 @@
     <ClInclude Include="src\ExtraNodeData.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\GameplayVolume.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">

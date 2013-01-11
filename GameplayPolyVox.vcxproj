@@ -272,6 +272,7 @@
     <ClInclude Include="src\gameplayisquadneeded.h" />
     <ClInclude Include="src\gameplaymarchingcubescontroller.h" />
     <ClInclude Include="src\GameplaySmoothTerrainVolume.h" />
+    <ClInclude Include="src\GameplayVolume.h" />
     <ClInclude Include="src\Main.h" />
     <ClInclude Include="src\multimaterial.h" />
     <ClInclude Include="src\OctreeNode.h" />

@@ -5,7 +5,9 @@
 
 #include "gameplay.h"
 
-class GameplaySmoothTerrainVolume : public SmoothTerrainVolume
+#include "GameplayVolume.h"
+
+class GameplaySmoothTerrainVolume : public GameplayVolume<SmoothTerrainVolume>
 {
 public:
 	static GameplaySmoothTerrainVolume* create(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)
