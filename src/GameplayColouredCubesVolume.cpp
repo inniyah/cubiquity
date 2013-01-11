@@ -6,7 +6,7 @@ GameplayColouredCubesVolume::GameplayColouredCubesVolume(VolumeType type, int lo
 	//:ColouredCubesVolume(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth)
 	:mRootGameplayNode(0)
 {
-	mVolume = ColouredCubesVolume::create(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth);
+	mVolume = new ColouredCubesVolume(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth);
 
 	mRootGameplayNode = createNodeWithExtraData("RootGameplayNode");
 

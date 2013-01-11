@@ -6,7 +6,7 @@ GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(VolumeType type, int lo
 	//:SmoothTerrainVolume(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth)
 	:mRootGameplayNode(0)
 {
-	mVolume = SmoothTerrainVolume::create(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth);
+	mVolume = new SmoothTerrainVolume(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth);
 
 	mRootGameplayNode = createNodeWithExtraData("RootGameplayNode");
 

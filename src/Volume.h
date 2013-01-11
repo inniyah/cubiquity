@@ -23,9 +23,12 @@ namespace VolumeTypes
 typedef VolumeTypes::VolumeType VolumeType;
 
 template <typename _VoxelType>
-class Volume : public gameplay::Ref
+class Volume
 {
 public:
+	Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth, unsigned int baseNodeSize = 16);
+	~Volume();
+
 	typedef _VoxelType VoxelType;
 
 	VolumeType getType(void) const;
@@ -53,8 +56,6 @@ public:
 	}
 
 protected:
-	Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth, unsigned int baseNodeSize = 16);
-	~Volume();
 	Volume& operator=(const Volume&);
 
 	VolumeType mType;
