@@ -223,12 +223,8 @@ void MeshGame::update(float elapsedTime)
 	
 	_cameraNode->translate(_cameraNode->getForwardVector() * -mCameraDistance);
 
-	mVolume->mRootOctreeNode->clearWantedForRendering();
 	Vector3 viewPos = _cameraNode->getTranslationWorld();
-	Vector3DFloat v3dViewPos(viewPos.x, viewPos.y, viewPos.z);
-	mVolume->mRootOctreeNode->determineWantedForRendering(v3dViewPos, mLod1StartSlider->getValue());
-
-	mVolume->performUpdate();
+	mVolume->performUpdate(viewPos, mLod1StartSlider->getValue());
 
 	// Update UI.
     mForm->update(elapsedTime);

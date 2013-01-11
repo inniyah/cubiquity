@@ -37,7 +37,7 @@ public:
 
 	bool raycast(gameplay::Ray ray, float distance, gameplay::Vector3& result);
 
-	void update();
+	void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
 	void updateMesh(OctreeNode* volReg);
 
 	void recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >* mesh, const PolyVox::Vector3DFloat& meshOffset, PolyVox::RawVolume<VoxelType>* volume);

@@ -14,7 +14,7 @@ public:
 		return volume;
 	}
 
-	void performUpdate(void);
+	void performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold);
 
 public:
 	GameplayColouredCubesVolume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth);

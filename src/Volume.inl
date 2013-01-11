@@ -280,8 +280,11 @@ void Volume<VoxelType>::setVoxelAt(int x, int y, int z, VoxelType value)
 }
 
 template <typename VoxelType>
-void Volume<VoxelType>::update()
+void Volume<VoxelType>::update(const Vector3DFloat& viewPosition, float lodThreshold)
 {
+	mRootOctreeNode->clearWantedForRendering();
+	mRootOctreeNode->determineWantedForRendering(viewPosition, lodThreshold);
+
 	updateMesh(mRootOctreeNode);
 }
 

@@ -15,9 +15,10 @@ GameplayColouredCubesVolume::~GameplayColouredCubesVolume()
 {
 }
 
-void GameplayColouredCubesVolume::performUpdate(void)
+void GameplayColouredCubesVolume::performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold)
 {
-	update();
+	Vector3DFloat v3dViewPosition(viewPosition.x, viewPosition.y, viewPosition.z);
+	update(v3dViewPosition, lodThreshold);
 
 	//Now ensure the gameplay node tree matches the one in the volume.
 
