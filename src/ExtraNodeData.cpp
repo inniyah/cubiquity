@@ -10,7 +10,8 @@ gameplay::Node* createNodeWithExtraData(const char* id)
 	return node;
 }
 
-void deleteExtraNodeData(void* extraNodeData)
+void deleteExtraNodeData(void* ptr)
 {
+	ExtraNodeData* extraNodeData = reinterpret_cast<ExtraNodeData*>(ptr);
 	delete extraNodeData;
 }

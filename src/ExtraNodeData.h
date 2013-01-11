@@ -20,6 +20,6 @@ public:
 
 gameplay::Node* createNodeWithExtraData(const char* id = NULL); //NULL rather than '0' because that's what gameplay uses.
 
-void deleteExtraNodeData(void* extraNodeData);
+void deleteExtraNodeData(void* ptr);
 
 #endif //CUBIQUITY_EXTRANODEDATA_H_

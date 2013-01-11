@@ -5,6 +5,8 @@
 
 #include "Volume.h"
 
+#include "ExtraNodeData.h"
+
 template <typename _VolumeType>
 class GameplayVolume : public gameplay::Ref
 {
