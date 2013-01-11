@@ -18,9 +18,11 @@ public:
 
 	void performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold);
 
-public:
+protected:
 	GameplayColouredCubesVolume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth);
 	virtual ~GameplayColouredCubesVolume();
+
+public:
 
 	void buildNode(OctreeNode* octreeNode, gameplay::Node* gameplayNode);
 	void syncNode(OctreeNode* octreeNode, gameplay::Node* gameplayNode);

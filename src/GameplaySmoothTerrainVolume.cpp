@@ -3,11 +3,9 @@
 #include "ExtraNodeData.h"
 
 GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)
-	//:SmoothTerrainVolume(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth)
-	:mRootGameplayNode(0)
+	:GameplayVolume<SmoothTerrainVolume>(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth)
+	,mRootGameplayNode(0)
 {
-	mVolume = new SmoothTerrainVolume(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth);
-
 	mRootGameplayNode = createNodeWithExtraData("RootGameplayNode");
 
 	buildNode(mVolume->mRootOctreeNode, mRootGameplayNode);

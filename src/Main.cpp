@@ -174,7 +174,7 @@ void MeshGame::finalize()
 {
     SAFE_RELEASE(_font);
     SAFE_RELEASE(_scene);
-	//SAFE_RELEASE(mVolume);
+	SAFE_RELEASE(mVolume);
 }
 
 void MeshGame::update(float elapsedTime)

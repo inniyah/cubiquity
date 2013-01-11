@@ -3,11 +3,9 @@
 #include "ExtraNodeData.h"
 
 GameplayColouredCubesVolume::GameplayColouredCubesVolume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)
-	//:ColouredCubesVolume(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth)
-	:mRootGameplayNode(0)
+	:GameplayVolume<ColouredCubesVolume>(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth)
+	,mRootGameplayNode(0)
 {
-	mVolume = new ColouredCubesVolume(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth);
-
 	mRootGameplayNode = createNodeWithExtraData("RootGameplayNode");
 
 	buildNode(mVolume->mRootOctreeNode, mRootGameplayNode);
