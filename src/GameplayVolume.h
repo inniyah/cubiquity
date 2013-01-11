@@ -13,10 +13,6 @@ protected:
 		:mRootGameplayNode(0)
 	{
 		mVolume = new _VolumeType(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth);
-
-		mRootGameplayNode = createNodeWithExtraData("RootGameplayNode");
-
-		buildNode(mVolume->mRootOctreeNode, mRootGameplayNode);
 	}
 
 	~GameplayVolume()
