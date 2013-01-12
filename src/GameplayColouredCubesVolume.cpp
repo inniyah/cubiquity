@@ -37,7 +37,7 @@ void GameplayColouredCubesVolume::syncNode(OctreeNode* octreeNode, gameplay::Nod
 	ExtraNodeData* extraNodeData = static_cast<ExtraNodeData*>(gameplayNode->getUserPointer());
 	extraNodeData->mOctreeNode = octreeNode;
 
-	if(extraNodeData->mTimeStamp < octreeNode->mDataLastModified)
+	if(extraNodeData->mTimeStamp < octreeNode->mMeshLastUpdated)
 	{
 		if(octreeNode->mCubicPolyVoxMesh)
 		{

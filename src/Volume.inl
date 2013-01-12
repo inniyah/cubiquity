@@ -181,7 +181,7 @@ void Volume<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float
 template <typename VoxelType>
 void Volume<VoxelType>::updateMesh(OctreeNode* volReg)
 {
-	if((volReg->isMeshUpToDate() == false) /*&& (volReg->mWantedForRendering)*/)
+	if((volReg->isMeshUpToDate() == false) && (volReg->mWantedForRendering))
 	{
 		PolyVox::Region lod0Region = volReg->mRegion;
 
