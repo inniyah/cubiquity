@@ -113,8 +113,6 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\Colour.h" />
-    <ClInclude Include="src\ColouredCubesVolume.h" />
-    <ClInclude Include="src\SmoothTerrainVolume.h" />
     <ClInclude Include="src\Volume.h" />
     <ClInclude Include="src\multimaterial.h" />
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\AmbientOcclusionCalculator.h">
@@ -282,6 +280,12 @@
     <ClInclude Include="src\GameplaySmoothTerrainVolumeEditor.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\ColouredCubesVolume.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SmoothTerrainVolume.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -289,7 +293,6 @@
     </ClCompile>
     <ClCompile Include="src\Colour.cpp" />
     <ClCompile Include="src\MultiMaterial.cpp" />
-    <ClCompile Include="src\SmoothTerrainVolume.cpp" />
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\ArraySizes.cpp">
       <Filter>PolyVox</Filter>
     </ClCompile>
@@ -342,6 +345,12 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\GameplaySmoothTerrainVolumeEditor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ColouredCubesVolume.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SmoothTerrainVolume.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

@@ -213,6 +213,7 @@
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Region.cpp" />
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\VertexTypes.cpp" />
     <ClCompile Include="src\Colour.cpp" />
+    <ClCompile Include="src\ColouredCubesVolume.cpp" />
     <ClCompile Include="src\ExtraNodeData.cpp" />
     <ClCompile Include="src\GameplayColouredCubesVolume.cpp" />
     <ClCompile Include="src\GameplayRaycasting.cpp" />
@@ -221,8 +222,8 @@
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\MultiMaterial.cpp" />
     <ClCompile Include="src\OctreeNode.cpp" />
-    <ClCompile Include="src\SmoothTerrainVolume.cpp" />
     <ClCompile Include="src\CubiquityUtility.cpp" />
+    <ClCompile Include="src\SmoothTerrainVolume.cpp" />
     <ClCompile Include="src\SmoothTerrainVolumeEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -282,8 +283,8 @@
     <ClInclude Include="src\MultiMaterialMarchingCubesController.h" />
     <ClInclude Include="src\OctreeNode.h" />
     <ClInclude Include="src\Raycasting.h" />
-    <ClInclude Include="src\SmoothTerrainVolume.h" />
     <ClInclude Include="src\CubiquityUtility.h" />
+    <ClInclude Include="src\SmoothTerrainVolume.h" />
     <ClInclude Include="src\SmoothTerrainVolumeEditor.h" />
     <ClInclude Include="src\Volume.h" />
     <ClInclude Include="src\VolumeSerialisation.h" />

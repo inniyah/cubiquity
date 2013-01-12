@@ -14,6 +14,8 @@ public:
 		:Volume<MultiMaterial4>(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth)
 	{
 	}
+
+	void updateMeshImpl(OctreeNode* volReg);
 };
 
 #endif //SMOOTHTERRAINVOLUME_H_

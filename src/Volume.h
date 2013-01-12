@@ -37,6 +37,7 @@ public:
 
 	void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
 	void updateMesh(OctreeNode* volReg);
+	virtual void updateMeshImpl(OctreeNode* volReg) = 0;
 
 	void recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > >* mesh, const PolyVox::Vector3DFloat& meshOffset, PolyVox::RawVolume<VoxelType>* volume);
 	VoxelType getInterpolatedValue(PolyVox::RawVolume<VoxelType>* volume, const PolyVox::Vector3DFloat& position);

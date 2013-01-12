@@ -1,11 +1,6 @@
-#include "SmoothTerrainVolume.h"
+#include "ColouredCubesVolume.h"
 
-#include <algorithm>
-
-using namespace std;
-using namespace PolyVox;
-
-void SmoothTerrainVolume::updateMeshImpl(OctreeNode* volReg)
+void ColouredCubesVolume::updateMeshImpl(OctreeNode* volReg)
 {
 	PolyVox::Region lod0Region = volReg->mRegion;
 
