@@ -39,9 +39,6 @@ public:
 	void updateMesh(OctreeNode* volReg);
 	virtual void updateMeshImpl(OctreeNode* volReg) = 0;
 
-	void generateSmoothMesh(const PolyVox::Region& region, uint32_t downSampleFactor, PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > >* resultMesh);
-	void generateCubicMesh(const PolyVox::Region& region, uint32_t downSampleFactor, PolyVox::SurfaceMesh<PolyVox::PositionMaterial<VoxelType> >* resultMesh);
-
 	uint32_t getTime(void)
 	{
 		POLYVOX_ASSERT(mTime < std::numeric_limits<uint32_t>::max(), "Time stamp is wrapping around.");

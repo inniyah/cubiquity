@@ -27,6 +27,38 @@ void SmoothTerrainVolume::updateMeshImpl(OctreeNode* volReg)
 	}
 }
 
+void SmoothTerrainVolume::generateSmoothMesh(const PolyVox::Region& region, uint32_t downSampleFactor, PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > >* resultMesh)
+{
+	MultiMaterialMarchingCubesController<VoxelType> controller;
+	if(downSampleFactor == 1)
+	{
+		//SurfaceMesh<PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > > mesh;
+		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::RawVolume<VoxelType>, MultiMaterialMarchingCubesController<VoxelType> > surfaceExtractor(mVolData, region, resultMesh, PolyVox::WrapModes::Clamp, VoxelType(0), controller);
+		surfaceExtractor.execute();
+	}
+	else
+	{
+		PolyVox::Region lod2Region = region;
+		PolyVox::Vector3DInt32 lowerCorner = lod2Region.getLowerCorner();
+		PolyVox::Vector3DInt32 upperCorner = lod2Region.getUpperCorner();
+
+		upperCorner = upperCorner - lowerCorner;
+		upperCorner = upperCorner / static_cast<int32_t>(downSampleFactor);
+		upperCorner = upperCorner + lowerCorner;
+		lod2Region.setUpperCorner(upperCorner);
+
+		PolyVox::RawVolume<VoxelType> resampledVolume(lod2Region);
+		//lod1Volume.m_bClampInsteadOfBorder = true; //We're extracting right to the edge of our small volume, so this keeps the normals correct(ish)
+		PolyVox::VolumeResampler< PolyVox::RawVolume<VoxelType>, PolyVox::RawVolume<VoxelType> > volumeResampler(mVolData, region, &resampledVolume, lod2Region);
+		volumeResampler.execute();
+
+		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::RawVolume<VoxelType>, MultiMaterialMarchingCubesController<VoxelType> > surfaceExtractor(&resampledVolume, lod2Region, resultMesh, PolyVox::WrapModes::Clamp, VoxelType(0), controller);
+		surfaceExtractor.execute();
+
+		resultMesh->scaleVertices(downSampleFactor);
+	}
+}
+
 void SmoothTerrainVolume::recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType > >* mesh, const PolyVox::Vector3DFloat& meshOffset,  PolyVox::RawVolume<MultiMaterial4>* volume)
 {
 	std::vector< PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > >& vertices = mesh->getRawVertexData();
