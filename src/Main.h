@@ -3,6 +3,8 @@
 
 #include "MultiMaterial.h"
 
+#include "SmoothTerrainVolumeEditor.h"
+
 #include "gameplay.h"
 
 #include <bitset>
@@ -91,6 +93,8 @@ private:
 	CheckBox* mWireframeCheckBox;
 
 	uint32_t mSelectedMaterial;
+
+	SmoothTerrainVolumeEditor* mVolumeEditor;
 
 #ifdef TERRAIN_SMOOTH
 	GameplaySmoothTerrainVolume* mVolume;

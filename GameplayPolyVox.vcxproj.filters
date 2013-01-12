@@ -266,6 +266,9 @@
     <ClInclude Include="src\GameplayVolume.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\SmoothTerrainVolumeEditor.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -317,6 +320,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\ExtraNodeData.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SmoothTerrainVolumeEditor.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

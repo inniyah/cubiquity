@@ -11,7 +11,7 @@ using namespace PolyVox;
 #include "GameplayMarchingCubesController.h"
 #include "GameplayIsQuadNeeded.h"
 
-#include "Main.h" //Naughty, but we can temporarily use the define for cubic vs smooth terrain.
+//#include "Main.h" //Naughty, but we can temporarily use the define for cubic vs smooth terrain.
 
 #include "CubiquityUtility.h"
 

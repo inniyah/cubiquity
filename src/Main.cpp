@@ -140,9 +140,11 @@ void MeshGame::initialize()
 	// Create the volume and add it to the scene.
 #ifdef TERRAIN_SMOOTH
 	mVolume = GameplaySmoothTerrainVolume::create(VolumeTypes::SmoothTerrain, 0, 0, 0, 127, 127, 127, 32, 32, 32); //HACK - height is wrong.
+	mVolumeEditor = new SmoothTerrainVolumeEditor(mVolume->mVolume);
 #endif
 #ifdef TERRAIN_CUBIC
 	mVolume = GameplayColouredCubesVolume::create(VolumeTypes::ColouredCubes, 0, 0, 0, 127, 127, 127, 32, 32, 32); //HACK - height is wrong.
+	mVolumeEditor = 0;
 #endif
 
 	//Rather dirty hack until I figure out how to package volume data with gameplay
@@ -159,6 +161,7 @@ void MeshGame::initialize()
 	if(mVolume->mVolume->getType() == VolumeTypes::SmoothTerrain)
 	{
 		loadData("/sdcard/external_sd/level2MultiMaterial8Bit.vol", mVolume->mVolume);
+		mVolumeEditor = new SmoothTerrainVolumeEditor(mVolume->mVolume);
 	}
 	else
 	{
@@ -199,19 +202,19 @@ void MeshGame::update(float elapsedTime)
 
 		if(mPaintButton->isSelected())
 		{
-			mVolume->mVolume->applyPaint(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
+			mVolumeEditor->applyPaint(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
 		}
 		if(mSmoothButton->isSelected())
 		{
-			mVolume->mVolume->smooth(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue(), mSmoothBiasSlider->getValue());
+			mVolumeEditor->smooth(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue(), mSmoothBiasSlider->getValue());
 		}
 		if(mAddButton->isSelected())
 		{
-			mVolume->mVolume->addMaterial(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
+			mVolumeEditor->addMaterial(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
 		}
 		if(mSubtractButton->isSelected())
 		{
-			mVolume->mVolume->subtractMaterial(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
+			mVolumeEditor->subtractMaterial(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
 		}
 	}
 #endif

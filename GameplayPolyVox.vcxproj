@@ -221,6 +221,7 @@
     <ClCompile Include="src\OctreeNode.cpp" />
     <ClCompile Include="src\SmoothTerrainVolume.cpp" />
     <ClCompile Include="src\CubiquityUtility.cpp" />
+    <ClCompile Include="src\SmoothTerrainVolumeEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\AmbientOcclusionCalculator.h" />
@@ -278,6 +279,7 @@
     <ClInclude Include="src\OctreeNode.h" />
     <ClInclude Include="src\SmoothTerrainVolume.h" />
     <ClInclude Include="src\CubiquityUtility.h" />
+    <ClInclude Include="src\SmoothTerrainVolumeEditor.h" />
     <ClInclude Include="src\Volume.h" />
     <ClInclude Include="src\VolumeSerialisation.h" />
   </ItemGroup>
