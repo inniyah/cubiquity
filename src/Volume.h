@@ -3,9 +3,6 @@
 
 #include "OctreeNode.h"
 
-#include "Node.h"
-#include "Ref.h"
-
 #include "PolyVoxCore/Array.h"
 #include "PolyVoxCore/Material.h"
 #include "PolyVoxCore/RawVolume.h"

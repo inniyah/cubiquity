@@ -35,7 +35,7 @@ private:
 	void subtractFromMaterial(uint8_t amountToAdd, MultiMaterial4& material);
 	void edit(const gameplay::Vector3& centre, float radius, uint32_t materialToUse, EditAction editAction, float timeElapsedInSeconds, float amount, float smoothBias);
 
-	RawVolume<MultiMaterial4>* mSmoothingVolume;
+	PolyVox::RawVolume<MultiMaterial4>* mSmoothingVolume;
 };
 
 #endif //SMOOTHTERRAINVOLUMEEDITOR_H_

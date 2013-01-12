@@ -161,7 +161,6 @@ void MeshGame::initialize()
 	if(mVolume->mVolume->getType() == VolumeTypes::SmoothTerrain)
 	{
 		loadData("/sdcard/external_sd/level2MultiMaterial8Bit.vol", mVolume->mVolume);
-		mVolumeEditor = new SmoothTerrainVolumeEditor(mVolume->mVolume);
 	}
 	else
 	{

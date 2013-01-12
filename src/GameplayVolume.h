@@ -37,7 +37,7 @@ void GameplayVolume<_VolumeType>::buildNode(OctreeNode* octreeNode, gameplay::No
 
 	if(octreeNode->parent)
 	{
-		Vector3DInt32 translation = octreeNode->mRegion.getLowerCorner() - octreeNode->parent->mRegion.getLowerCorner();
+		PolyVox::Vector3DInt32 translation = octreeNode->mRegion.getLowerCorner() - octreeNode->parent->mRegion.getLowerCorner();
 		gameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
 	}
 

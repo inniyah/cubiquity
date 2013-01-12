@@ -1,12 +1,11 @@
 #include "MeshPart.h"
 
-using namespace gameplay;
-using namespace PolyVox;
-
 #include "PolyVoxCore/LowPassFilter.h"
 #include "PolyVoxCore/MaterialDensityPair.h"
 #include "PolyVoxCore/Raycast.h"
 #include "PolyVoxCore/VolumeResampler.h"
+
+#include "PolyVoxCore/Impl/Utility.h" //Should we include from Impl.
 
 #include "GameplayMarchingCubesController.h"
 #include "GameplayIsQuadNeeded.h"
@@ -14,6 +13,8 @@ using namespace PolyVox;
 //#include "Main.h" //Naughty, but we can temporarily use the define for cubic vs smooth terrain.
 
 #include "CubiquityUtility.h"
+
+using namespace gameplay;
 
 template <typename VoxelType>
 class RaycastTestFunctor
@@ -23,7 +24,7 @@ public:
 	{
 	}
 
-	bool operator()(Vector3DFloat pos, const VoxelType& voxel)
+	bool operator()(PolyVox::Vector3DFloat pos, const VoxelType& voxel)
 	{
 	}
 };
@@ -36,13 +37,13 @@ public:
 	{
 	}
 
-	bool operator()(Vector3DFloat pos, const MultiMaterial4& voxel)
+	bool operator()(PolyVox::Vector3DFloat pos, const MultiMaterial4& voxel)
 	{
 		mLastPos = pos;
 		return voxel.getSumOfMaterials() <= MultiMaterial4::getMaxMaterialValue() / 2;
 	}
 
-	Vector3DFloat mLastPos;
+	PolyVox::Vector3DFloat mLastPos;
 };
 
 template <>
@@ -53,12 +54,12 @@ public:
 	{
 	}
 
-	bool operator()(Vector3DFloat pos, const Colour& voxel)
+	bool operator()(PolyVox::Vector3DFloat pos, const Colour& voxel)
 	{
 		return false;
 	}
 
-	Vector3DFloat mLastPos;
+	PolyVox::Vector3DFloat mLastPos;
 };
 
 
@@ -70,12 +71,12 @@ public:
 // Also, should we handle computing the exact intersection point? Repeatedly bisect the last
 // two points, of perform interpolation between them? Maybe user code could perform such interpolation?
 template<typename VolumeType, typename Callback>
-RaycastResult smoothRaycastWithDirection(VolumeType* volData, const Vector3DFloat& v3dStart, const Vector3DFloat& v3dDirectionAndLength, Callback& callback, float fStepSize = 1.0f)
+PolyVox::RaycastResult smoothRaycastWithDirection(VolumeType* volData, const PolyVox::Vector3DFloat& v3dStart, const PolyVox::Vector3DFloat& v3dDirectionAndLength, Callback& callback, float fStepSize = 1.0f)
 {		
 	int mMaxNoOfSteps = v3dDirectionAndLength.length() / fStepSize;
 
-	Vector3DFloat v3dPos = v3dStart;
-	const Vector3DFloat v3dStep =  v3dDirectionAndLength / static_cast<float>(mMaxNoOfSteps);
+	PolyVox::Vector3DFloat v3dPos = v3dStart;
+	const PolyVox::Vector3DFloat v3dStep =  v3dDirectionAndLength / static_cast<float>(mMaxNoOfSteps);
 
 	for(uint32_t ct = 0; ct < mMaxNoOfSteps; ct++)
 	{
@@ -105,17 +106,17 @@ RaycastResult smoothRaycastWithDirection(VolumeType* volData, const Vector3DFloa
 		const typename VolumeType::VoxelType& voxel110 = volData->getVoxelAt(iX + 1, iY + 1, iZ);
 		const typename VolumeType::VoxelType& voxel111 = volData->getVoxelAt(iX + 1, iY + 1, iZ + 1);
 
-		typename VolumeType::VoxelType tInterpolatedValue = trilerp(voxel000,voxel100,voxel010,voxel110,voxel001,voxel101,voxel011,voxel111,fInterpX,fInterpY,fInterpZ);
+		typename VolumeType::VoxelType tInterpolatedValue = PolyVox::trilerp(voxel000,voxel100,voxel010,voxel110,voxel001,voxel101,voxel011,voxel111,fInterpX,fInterpY,fInterpZ);
 		
 		if(!callback(v3dPos, tInterpolatedValue))
 		{
-			return RaycastResults::Interupted;
+			return PolyVox::RaycastResults::Interupted;
 		}
 
 		v3dPos += v3dStep;
 	}
 
-	return RaycastResults::Completed;
+	return PolyVox::RaycastResults::Completed;
 }
 
 template <typename VoxelType>
@@ -129,7 +130,7 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 	,mBaseNodeSize(baseNodeSize)
 	,mTime(0)
 {
-	Region volumeRegion(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
+	PolyVox::Region volumeRegion(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
 
 	GP_ASSERT(volumeRegion.getWidthInVoxels() > 0);
 	GP_ASSERT(volumeRegion.getHeightInVoxels() > 0);
@@ -138,15 +139,15 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 	GP_ASSERT(volumeRegion.getHeightInVoxels() % regionHeight == 0);
 	GP_ASSERT(volumeRegion.getDepthInVoxels() % regionDepth == 0);
 	
-	mVolData = new RawVolume<VoxelType>(volumeRegion);
+	mVolData = new PolyVox::RawVolume<VoxelType>(volumeRegion);
 
 	//mRootNode = Node::create();
 
-	GP_ASSERT(isPowerOf2(mBaseNodeSize));
+	GP_ASSERT(PolyVox::isPowerOf2(mBaseNodeSize));
 
 	uint32_t largestVolumeDimensionInVoxels = std::max(volumeRegion.getWidthInVoxels(), std::max(volumeRegion.getHeightInVoxels(), volumeRegion.getDepthInVoxels()));
 
-	uint32_t octreeTargetSizeInVoxels = upperPowerOfTwo(largestVolumeDimensionInVoxels);
+	uint32_t octreeTargetSizeInVoxels = PolyVox::upperPowerOfTwo(largestVolumeDimensionInVoxels);
 
 	uint32_t widthIncrease = octreeTargetSizeInVoxels - volumeRegion.getWidthInVoxels();
 	uint32_t heightIncrease = octreeTargetSizeInVoxels - volumeRegion.getHeightInVoxels();
@@ -169,7 +170,7 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 		depthIncrease--;
 	}
 
-	Region octreeRegion(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
+	PolyVox::Region octreeRegion(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
 	octreeRegion.grow(widthIncrease / 2, heightIncrease / 2, depthIncrease / 2);
 
 	mRootOctreeNode = new OctreeNode(octreeRegion, 0);
@@ -234,11 +235,11 @@ void Volume<VoxelType>::buildOctreeNodeTree(OctreeNode* parent)
 
 	if(parent->mRegion.getWidthInVoxels() > mBaseNodeSize)
 	{
-		Vector3DInt32 baseLowerCorner = parent->mRegion.getLowerCorner();
+		PolyVox::Vector3DInt32 baseLowerCorner = parent->mRegion.getLowerCorner();
 		int32_t width = parent->mRegion.getWidthInVoxels() / 2;
 		int32_t height = parent->mRegion.getHeightInVoxels() / 2;
 		int32_t depth = parent->mRegion.getDepthInVoxels() / 2;
-		Vector3DInt32 baseUpperCorner = baseLowerCorner + Vector3DInt32(width-1, height-1, depth-1);
+		PolyVox::Vector3DInt32 baseUpperCorner = baseLowerCorner + PolyVox::Vector3DInt32(width-1, height-1, depth-1);
 
 		for(int z = 0; z < 2; z++)
 		{
@@ -246,8 +247,8 @@ void Volume<VoxelType>::buildOctreeNodeTree(OctreeNode* parent)
 			{
 				for(int x = 0; x < 2; x++)
 				{
-					Vector3DInt32 offset (x*width, y*height, z*depth);
-					OctreeNode* volReg = new OctreeNode(Region(baseLowerCorner + offset, baseUpperCorner + offset), parent);
+					PolyVox::Vector3DInt32 offset (x*width, y*height, z*depth);
+					OctreeNode* volReg = new OctreeNode(PolyVox::Region(baseLowerCorner + offset, baseUpperCorner + offset), parent);
 					parent->children[x][y][z] = volReg;
 					buildOctreeNodeTree(volReg);
 				}
@@ -280,7 +281,7 @@ void Volume<VoxelType>::setVoxelAt(int x, int y, int z, VoxelType value)
 }
 
 template <typename VoxelType>
-void Volume<VoxelType>::update(const Vector3DFloat& viewPosition, float lodThreshold)
+void Volume<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
 {
 	mRootOctreeNode->clearWantedForRendering();
 	mRootOctreeNode->determineWantedForRendering(viewPosition, lodThreshold);
@@ -293,13 +294,13 @@ void Volume<VoxelType>::updateMesh(OctreeNode* volReg)
 {
 	if((volReg->isMeshUpToDate() == false) /*&& (volReg->mWantedForRendering)*/)
 	{
-		Region lod0Region = volReg->mRegion;
+		PolyVox::Region lod0Region = volReg->mRegion;
 
 		//Extract the surface
 		if(getType() == VolumeTypes::ColouredCubes)
 		{
 			//GameplayIsQuadNeeded<VoxelType> isQuadNeeded;
-			SurfaceMesh<PositionMaterial<VoxelType> >* colouredCubicMesh = new SurfaceMesh<PositionMaterial<VoxelType> >;
+			PolyVox::SurfaceMesh<PolyVox::PositionMaterial<VoxelType> >* colouredCubicMesh = new PolyVox::SurfaceMesh<PolyVox::PositionMaterial<VoxelType> >;
 			//CubicSurfaceExtractor< RawVolume<VoxelType>, GameplayIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, lod0Region, &colouredCubicMesh, WrapModes::Border, VoxelType(0), true, isQuadNeeded);
 			//surfaceExtractor.execute();
 
@@ -314,7 +315,7 @@ void Volume<VoxelType>::updateMesh(OctreeNode* volReg)
 		}
 		else if(getType() == VolumeTypes::SmoothTerrain)
 		{
-			SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >* mesh = new SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >;
+			PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >* mesh = new PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >;
 
 			uint32_t downScaleFactor = 0x0001 << (volReg->subtreeHeight() - 1);
 
@@ -322,7 +323,7 @@ void Volume<VoxelType>::updateMesh(OctreeNode* volReg)
 
 			if(downScaleFactor > 1)
 			{
-				recalculateMaterials(mesh, static_cast<Vector3DFloat>(lod0Region.getLowerCorner()), mVolData);
+				recalculateMaterials(mesh, static_cast<PolyVox::Vector3DFloat>(lod0Region.getLowerCorner()), mVolData);
 			}
 
 			if(mesh->getNoOfIndices() > 0)
@@ -356,13 +357,13 @@ bool Volume<VoxelType>::raycast(Ray startAndDirection, float length, Vector3& re
 {
 	if(getType() == VolumeTypes::SmoothTerrain)
 	{
-		Vector3DFloat v3dStart(startAndDirection.getOrigin().x, startAndDirection.getOrigin().y, startAndDirection.getOrigin().z);
-		Vector3DFloat v3dDirection(startAndDirection.getDirection().x, startAndDirection.getDirection().y, startAndDirection.getDirection().z);
+		PolyVox::Vector3DFloat v3dStart(startAndDirection.getOrigin().x, startAndDirection.getOrigin().y, startAndDirection.getOrigin().z);
+		PolyVox::Vector3DFloat v3dDirection(startAndDirection.getDirection().x, startAndDirection.getDirection().y, startAndDirection.getDirection().z);
 		v3dDirection *= length;
 
 		RaycastTestFunctor<VoxelType> raycastTestFunctor;
-		RaycastResult myResult = smoothRaycastWithDirection(mVolData, v3dStart, v3dDirection, raycastTestFunctor, 0.5f);
-		if(myResult == RaycastResults::Interupted)
+		PolyVox::RaycastResult myResult = smoothRaycastWithDirection(mVolData, v3dStart, v3dDirection, raycastTestFunctor, 0.5f);
+		if(myResult == PolyVox::RaycastResults::Interupted)
 		{
 			result = Vector3(raycastTestFunctor.mLastPos.getX(), raycastTestFunctor.mLastPos.getY(), raycastTestFunctor.mLastPos.getZ());
 			return true;
@@ -373,7 +374,7 @@ bool Volume<VoxelType>::raycast(Ray startAndDirection, float length, Vector3& re
 }
 
 template <typename VoxelType>
-void Volume<VoxelType>::recalculateMaterials(SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >* mesh, const Vector3DFloat& meshOffset,  RawVolume<VoxelType>* volume)
+void Volume<VoxelType>::recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >* mesh, const PolyVox::Vector3DFloat& meshOffset,  PolyVox::RawVolume<VoxelType>* volume)
 {
 #ifdef TERRAIN_SMOOTH
 	/*std::vector< PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > >& vertices = mesh->getRawVertexData();
@@ -399,13 +400,13 @@ void Volume<VoxelType>::recalculateMaterials(SurfaceMesh<PositionMaterialNormal<
 }
 
 template <typename VoxelType>
-VoxelType Volume<VoxelType>::getInterpolatedValue(RawVolume<VoxelType>* volume, const Vector3DFloat& position)
+VoxelType Volume<VoxelType>::getInterpolatedValue(PolyVox::RawVolume<VoxelType>* volume, const PolyVox::Vector3DFloat& position)
 {
-	typename RawVolume<VoxelType>::Sampler sampler(volume);
+	typename PolyVox::RawVolume<VoxelType>::Sampler sampler(volume);
 
-	int32_t iLowerX = roundTowardsNegInf(position.getX());
-	int32_t iLowerY = roundTowardsNegInf(position.getY());
-	int32_t iLowerZ = roundTowardsNegInf(position.getZ());
+	int32_t iLowerX = PolyVox::roundTowardsNegInf(position.getX());
+	int32_t iLowerY = PolyVox::roundTowardsNegInf(position.getY());
+	int32_t iLowerZ = PolyVox::roundTowardsNegInf(position.getZ());
 
 	float fOffsetX = position.getX() - iLowerX;
 	float fOffsetY = position.getY() - iLowerY;
@@ -438,26 +439,26 @@ void Volume<VoxelType>::generateSmoothMesh(const PolyVox::Region& region, uint32
 	if(downSampleFactor == 1)
 	{
 		//SurfaceMesh<PositionMaterialNormal< typename GameplayMarchingCubesController<VoxelType>::MaterialType > > mesh;
-		MarchingCubesSurfaceExtractor< RawVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor(mVolData, region, resultMesh, WrapModes::Clamp, VoxelType(0), controller);
+		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::RawVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor(mVolData, region, resultMesh, PolyVox::WrapModes::Clamp, VoxelType(0), controller);
 		surfaceExtractor.execute();
 	}
 	else
 	{
-		Region lod2Region = region;
-		Vector3DInt32 lowerCorner = lod2Region.getLowerCorner();
-		Vector3DInt32 upperCorner = lod2Region.getUpperCorner();
+		PolyVox::Region lod2Region = region;
+		PolyVox::Vector3DInt32 lowerCorner = lod2Region.getLowerCorner();
+		PolyVox::Vector3DInt32 upperCorner = lod2Region.getUpperCorner();
 
 		upperCorner = upperCorner - lowerCorner;
 		upperCorner = upperCorner / static_cast<int32_t>(downSampleFactor);
 		upperCorner = upperCorner + lowerCorner;
 		lod2Region.setUpperCorner(upperCorner);
 
-		RawVolume<VoxelType> resampledVolume(lod2Region);
+		PolyVox::RawVolume<VoxelType> resampledVolume(lod2Region);
 		//lod1Volume.m_bClampInsteadOfBorder = true; //We're extracting right to the edge of our small volume, so this keeps the normals correct(ish)
-		VolumeResampler< RawVolume<VoxelType>, RawVolume<VoxelType> > volumeResampler(mVolData, region, &resampledVolume, lod2Region);
+		PolyVox::VolumeResampler< PolyVox::RawVolume<VoxelType>, PolyVox::RawVolume<VoxelType> > volumeResampler(mVolData, region, &resampledVolume, lod2Region);
 		volumeResampler.execute();
 
-		MarchingCubesSurfaceExtractor< RawVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor(&resampledVolume, lod2Region, resultMesh, WrapModes::Clamp, VoxelType(0), controller);
+		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::RawVolume<VoxelType>, GameplayMarchingCubesController<VoxelType> > surfaceExtractor(&resampledVolume, lod2Region, resultMesh, PolyVox::WrapModes::Clamp, VoxelType(0), controller);
 		surfaceExtractor.execute();
 
 		resultMesh->scaleVertices(downSampleFactor);
@@ -471,28 +472,28 @@ void Volume<VoxelType>::generateCubicMesh(const PolyVox::Region& region, uint32_
 
 	if(downSampleFactor != 2) //HACK
 	{
-		SurfaceMesh<PositionMaterial<VoxelType> > colouredCubicMesh;
-		CubicSurfaceExtractor< RawVolume<VoxelType>, GameplayIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, region, resultMesh, WrapModes::Border, VoxelType(0), true, isQuadNeeded);
+		PolyVox::SurfaceMesh<PolyVox::PositionMaterial<VoxelType> > colouredCubicMesh;
+		PolyVox::CubicSurfaceExtractor< PolyVox::RawVolume<VoxelType>, GameplayIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, region, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), true, isQuadNeeded);
 		surfaceExtractor.execute();
 	}
 	else
 	{
-		Region lod2Region = region;
-		Vector3DInt32 lowerCorner = lod2Region.getLowerCorner();
-		Vector3DInt32 upperCorner = lod2Region.getUpperCorner();
+		PolyVox::Region lod2Region = region;
+		PolyVox::Vector3DInt32 lowerCorner = lod2Region.getLowerCorner();
+		PolyVox::Vector3DInt32 upperCorner = lod2Region.getUpperCorner();
 
 		upperCorner = upperCorner - lowerCorner;
 		upperCorner = upperCorner / static_cast<int32_t>(downSampleFactor);
 		upperCorner = upperCorner + lowerCorner;
 		lod2Region.setUpperCorner(upperCorner);
 
-		RawVolume<VoxelType> resampledVolume(lod2Region);
+		PolyVox::RawVolume<VoxelType> resampledVolume(lod2Region);
 		//VolumeResampler< RawVolume<VoxelType>, RawVolume<VoxelType> > volumeResampler(mVolData, region, &resampledVolume, lod2Region);
 		rescaleCubicVolume(mVolData, region, &resampledVolume, lod2Region);
 		//volumeResampler.execute();
 
-		SurfaceMesh<PositionMaterial<VoxelType> > colouredCubicMesh;
-		CubicSurfaceExtractor< RawVolume<VoxelType>, GameplayIsQuadNeeded<VoxelType> > surfaceExtractor(&resampledVolume, lod2Region, resultMesh, WrapModes::Border, VoxelType(0), true, isQuadNeeded);
+		PolyVox::SurfaceMesh<PolyVox::PositionMaterial<VoxelType> > colouredCubicMesh;
+		PolyVox::CubicSurfaceExtractor< PolyVox::RawVolume<VoxelType>, GameplayIsQuadNeeded<VoxelType> > surfaceExtractor(&resampledVolume, lod2Region, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), true, isQuadNeeded);
 		surfaceExtractor.execute();
 
 		resultMesh->scaleVertices(downSampleFactor);

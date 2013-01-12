@@ -58,7 +58,7 @@ void SmoothTerrainVolumeEditor::edit(const gameplay::Vector3& centre, float radi
 	lastY = std::min(lastY,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getY());
 	lastZ = std::min(lastZ,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getZ());
 
-	Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
+	PolyVox::Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
 
 	// Do the smoothing once, before we start iterating over all the voxels.
 	// At a per-voxel level we only need to do the interpolation.
@@ -67,7 +67,7 @@ void SmoothTerrainVolumeEditor::edit(const gameplay::Vector3& centre, float radi
 		// Make sure our temporary target exists, and create it if not.
 		if(!mSmoothingVolume)
 		{
-			mSmoothingVolume = new RawVolume<MultiMaterial4>(region);
+			mSmoothingVolume = new PolyVox::RawVolume<MultiMaterial4>(region);
 		}
 		else
 		{
@@ -75,12 +75,12 @@ void SmoothTerrainVolumeEditor::edit(const gameplay::Vector3& centre, float radi
 			if(mSmoothingVolume->getEnclosingRegion() != region)
 			{
 				delete mSmoothingVolume;
-				mSmoothingVolume = new RawVolume<MultiMaterial4>(region);
+				mSmoothingVolume = new PolyVox::RawVolume<MultiMaterial4>(region);
 			}
 		}
 
 		// We might not need to do this at float precision, it should be tested again.
-		LowPassFilter< RawVolume<MultiMaterial4>, RawVolume<MultiMaterial4>, Vector<4, float> > lowPassFilter(mVolume->mVolData, region, mSmoothingVolume, region, 3);
+		PolyVox::LowPassFilter< PolyVox::RawVolume<MultiMaterial4>, PolyVox::RawVolume<MultiMaterial4>, PolyVox::Vector<4, float> > lowPassFilter(mVolume->mVolData, region, mSmoothingVolume, region, 3);
 		lowPassFilter.execute();
 	}
 
