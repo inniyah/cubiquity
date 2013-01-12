@@ -3,7 +3,7 @@
 
 #include "MultiMaterial.h"
 
-#include "SmoothTerrainVolumeEditor.h"
+#include "GameplaySmoothTerrainVolumeEditor.h"
 
 #include "gameplay.h"
 
@@ -94,7 +94,7 @@ private:
 
 	uint32_t mSelectedMaterial;
 
-	SmoothTerrainVolumeEditor* mVolumeEditor;
+	GameplaySmoothTerrainVolumeEditor* mVolumeEditor;
 
 #ifdef TERRAIN_SMOOTH
 	GameplaySmoothTerrainVolume* mVolume;

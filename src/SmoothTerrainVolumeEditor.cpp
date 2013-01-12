@@ -1,8 +1,6 @@
 #include "SmoothTerrainVolumeEditor.h"
 
-#include "gameplay.h"
-
-using namespace gameplay;
+using namespace PolyVox;
 
 SmoothTerrainVolumeEditor::SmoothTerrainVolumeEditor(SmoothTerrainVolume* volume)
 	:mVolume(volume)
@@ -19,37 +17,15 @@ SmoothTerrainVolumeEditor::~SmoothTerrainVolumeEditor()
 	}
 }
 
-void SmoothTerrainVolumeEditor::applyPaint(const gameplay::Vector3& centre, float radius, uint32_t materialToPaintWith, float timeElapsedInSeconds, float amount)
+void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float radius, uint32_t materialToUse, EditAction editAction, float timeElapsedInSeconds, float amount, float smoothBias)
 {
-	edit(centre, radius, materialToPaintWith, EditActions::Paint, timeElapsedInSeconds,amount, 0.0f);
-}
+	int firstX = static_cast<int>(std::floor(centre.getX() - radius));
+	int firstY = static_cast<int>(std::floor(centre.getY() - radius));
+	int firstZ = static_cast<int>(std::floor(centre.getZ() - radius));
 
-void SmoothTerrainVolumeEditor::smooth(const gameplay::Vector3& centre, float radius, float timeElapsedInSeconds, float amount, float smoothBias)
-{
-	// '0' is a dummy as the smooth operations smooths *all* materials
-	edit(centre, radius, 0, EditActions::Smooth, timeElapsedInSeconds, amount, smoothBias);
-}
-
-void SmoothTerrainVolumeEditor::addMaterial(const gameplay::Vector3& centre, float radius, uint32_t materialToAdd, float timeElapsedInSeconds, float amount)
-{
-	edit(centre, radius, materialToAdd, EditActions::Add, timeElapsedInSeconds, amount, 0.0f);
-}
-
-void SmoothTerrainVolumeEditor::subtractMaterial(const gameplay::Vector3& centre, float radius, float timeElapsedInSeconds, float amount)
-{
-	// '0' is a dummy as the subtract operations reduces *all* materials
-	edit(centre, radius, 0, EditActions::Subtract, timeElapsedInSeconds, amount, 0.0f);
-}
-
-void SmoothTerrainVolumeEditor::edit(const gameplay::Vector3& centre, float radius, uint32_t materialToUse, EditAction editAction, float timeElapsedInSeconds, float amount, float smoothBias)
-{
-	int firstX = static_cast<int>(std::floor(centre.x - radius));
-	int firstY = static_cast<int>(std::floor(centre.y - radius));
-	int firstZ = static_cast<int>(std::floor(centre.z - radius));
-
-	int lastX = static_cast<int>(std::ceil(centre.x + radius));
-	int lastY = static_cast<int>(std::ceil(centre.y + radius));
-	int lastZ = static_cast<int>(std::ceil(centre.z + radius));
+	int lastX = static_cast<int>(std::ceil(centre.getX() + radius));
+	int lastY = static_cast<int>(std::ceil(centre.getY() + radius));
+	int lastZ = static_cast<int>(std::ceil(centre.getZ() + radius));
 
 	float radiusSquared = radius * radius;
 
@@ -94,9 +70,9 @@ void SmoothTerrainVolumeEditor::edit(const gameplay::Vector3& centre, float radi
 		{
 			for(int x = firstX; x <= lastX; ++x)
 			{
-				if((centre - Vector3(x,y,z)).lengthSquared() <= radiusSquared)
+				if((centre - Vector3DFloat(x,y,z)).lengthSquared() <= radiusSquared)
 				{
-					float falloff = falloff = (centre - Vector3(x,y,z)).length() / radius;
+					float falloff = falloff = (centre - Vector3DFloat(x,y,z)).length() / radius;
 					falloff = min(max(falloff, 0.0f), 1.0f);
 					falloff = 1.0f - falloff;
 

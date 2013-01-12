@@ -10,14 +10,8 @@ public:
 	~SmoothTerrainVolumeEditor();
 
 	SmoothTerrainVolume* mVolume;
-	
 
-	void applyPaint(const gameplay::Vector3& centre, float radius, uint32_t materialToPaintWith, float timeElapsedInSeconds, float amount);
-	void smooth(const gameplay::Vector3& centre, float radius, float timeElapsedInSeconds, float amount, float smoothBias);
-	void addMaterial(const gameplay::Vector3& centre, float radius, uint32_t materialToAdd, float timeElapsedInSeconds, float amount);
-	void subtractMaterial(const gameplay::Vector3& centre, float radius, float timeElapsedInSeconds, float amount);
-
-private:
+protected:
 	class EditActions
 	{
 	public:
@@ -33,7 +27,7 @@ private:
 
 	void addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4& material);
 	void subtractFromMaterial(uint8_t amountToAdd, MultiMaterial4& material);
-	void edit(const gameplay::Vector3& centre, float radius, uint32_t materialToUse, EditAction editAction, float timeElapsedInSeconds, float amount, float smoothBias);
+	void edit(const PolyVox::Vector3DFloat& centre, float radius, uint32_t materialToUse, EditAction editAction, float timeElapsedInSeconds, float amount, float smoothBias);
 
 	PolyVox::RawVolume<MultiMaterial4>* mSmoothingVolume;
 };

@@ -217,6 +217,7 @@
     <ClCompile Include="src\GameplayColouredCubesVolume.cpp" />
     <ClCompile Include="src\GameplayRaycasting.cpp" />
     <ClCompile Include="src\GameplaySmoothTerrainVolume.cpp" />
+    <ClCompile Include="src\GameplaySmoothTerrainVolumeEditor.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\MultiMaterial.cpp" />
     <ClCompile Include="src\OctreeNode.cpp" />
@@ -274,6 +275,7 @@
     <ClInclude Include="src\GameplayColouredCubesVolume.h" />
     <ClInclude Include="src\GameplayRaycasting.h" />
     <ClInclude Include="src\GameplaySmoothTerrainVolume.h" />
+    <ClInclude Include="src\GameplaySmoothTerrainVolumeEditor.h" />
     <ClInclude Include="src\GameplayVolume.h" />
     <ClInclude Include="src\Main.h" />
     <ClInclude Include="src\multimaterial.h" />

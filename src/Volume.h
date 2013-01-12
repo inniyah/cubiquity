@@ -58,7 +58,6 @@ protected:
 public:
 	PolyVox::RawVolume<VoxelType>* mVolData;
 	OctreeNode* mRootOctreeNode;
-	std::string mMaterialPath;
 
 	const unsigned int mRegionWidth;
 	const unsigned int mRegionHeight;

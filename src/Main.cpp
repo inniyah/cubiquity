@@ -141,7 +141,7 @@ void MeshGame::initialize()
 	// Create the volume and add it to the scene.
 #ifdef TERRAIN_SMOOTH
 	mVolume = GameplaySmoothTerrainVolume::create(VolumeTypes::SmoothTerrain, 0, 0, 0, 127, 127, 127, 32, 32, 32); //HACK - height is wrong.
-	mVolumeEditor = new SmoothTerrainVolumeEditor(mVolume->mVolume);
+	mVolumeEditor = new GameplaySmoothTerrainVolumeEditor(mVolume);
 #endif
 #ifdef TERRAIN_CUBIC
 	mVolume = GameplayColouredCubesVolume::create(VolumeTypes::ColouredCubes, 0, 0, 0, 127, 127, 127, 32, 32, 32); //HACK - height is wrong.

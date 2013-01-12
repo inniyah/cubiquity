@@ -1,18 +1,14 @@
-#include "MeshPart.h"
-
 #include "PolyVoxCore/LowPassFilter.h"
 #include "PolyVoxCore/MaterialDensityPair.h"
 #include "PolyVoxCore/Raycast.h"
 #include "PolyVoxCore/VolumeResampler.h"
 
-#include "PolyVoxCore/Impl/Utility.h" //Should we include from Impl.
+#include "PolyVoxCore/Impl/Utility.h" //Should we include from Impl?
 
 #include "MultiMaterialMarchingCubesController.h"
 #include "ColouredCubesIsQuadNeeded.h"
 
 #include "Raycasting.h"
-
-//#include "Main.h" //Naughty, but we can temporarily use the define for cubic vs smooth terrain.
 
 #include "CubiquityUtility.h"
 
@@ -170,10 +166,6 @@ template <typename VoxelType>
 void Volume<VoxelType>::setVoxelAt(int x, int y, int z, VoxelType value)
 {
 	mVolData->setVoxelAt(x, y, z, value);
-
-	int regionX = x / mRegionWidth;
-	int regionY = y / mRegionHeight;
-	int regionZ = z / mRegionDepth;
 	mRootOctreeNode->markDataAsModified(x, y, z, getTime());
 }
 

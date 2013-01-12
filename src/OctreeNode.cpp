@@ -6,7 +6,6 @@
 
 #include <sstream>
 
-using namespace gameplay;
 using namespace PolyVox;
 
 OctreeNode::OctreeNode(PolyVox::Region region, OctreeNode* parentRegion)
