@@ -49,7 +49,7 @@ void GameplayVolume<_VolumeType>::buildNode(OctreeNode* octreeNode, gameplay::No
 			{
 				if(octreeNode->children[ix][iy][iz] != 0)
 				{
-					Node* childNode = reinterpret_cast<Node*>(octreeNode->children[ix][iy][iz]->mGameEngineNode);
+					gameplay::Node* childNode = reinterpret_cast<gameplay::Node*>(octreeNode->children[ix][iy][iz]->mGameEngineNode);
 					if(childNode == 0)
 					{
 						childNode = createNodeWithExtraData("ChildGameplayNode");

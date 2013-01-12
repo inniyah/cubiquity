@@ -3,6 +3,7 @@
 #include "ExtraNodeData.h"
 #include "GameplayColouredCubesVolume.h"
 #include "GameplaySmoothTerrainVolume.h"
+#include "GameplayRaycasting.h"
 
 #include "OctreeNode.h" //HACK!
 
@@ -194,7 +195,7 @@ void MeshGame::update(float elapsedTime)
 		ray.setDirection(dir);
 
 		Vector3 intersection;
-		if(mVolume->mVolume->raycast(ray, 200.0f, intersection))
+		if(raycast(mVolume->mVolume, ray, 200.0f, intersection))
 		{
 			mSphereNode->setTranslation(intersection);
 		}		

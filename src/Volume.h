@@ -35,8 +35,6 @@ public:
 	VoxelType getVoxelAt(int x, int y, int z);
 	void setVoxelAt(int x, int y, int z, VoxelType value);
 
-	bool raycast(gameplay::Ray ray, float distance, gameplay::Vector3& result);
-
 	void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
 	void updateMesh(OctreeNode* volReg);
 

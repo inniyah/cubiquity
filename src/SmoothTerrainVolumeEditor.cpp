@@ -1,5 +1,9 @@
 #include "SmoothTerrainVolumeEditor.h"
 
+#include "gameplay.h"
+
+using namespace gameplay;
+
 SmoothTerrainVolumeEditor::SmoothTerrainVolumeEditor(SmoothTerrainVolume* volume)
 	:mVolume(volume)
 	,mSmoothingVolume(0)

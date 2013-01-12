@@ -2,6 +2,9 @@
 
 #include "ExtraNodeData.h"
 
+#include "gameplay.h"
+
+using namespace gameplay;
 using namespace PolyVox;
 
 GameplayColouredCubesVolume::GameplayColouredCubesVolume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)

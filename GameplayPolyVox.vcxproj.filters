@@ -269,6 +269,12 @@
     <ClInclude Include="src\SmoothTerrainVolumeEditor.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\Raycasting.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GameplayRaycasting.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -323,6 +329,9 @@
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\SmoothTerrainVolumeEditor.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GameplayRaycasting.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>

@@ -215,6 +215,7 @@
     <ClCompile Include="src\Colour.cpp" />
     <ClCompile Include="src\ExtraNodeData.cpp" />
     <ClCompile Include="src\GameplayColouredCubesVolume.cpp" />
+    <ClCompile Include="src\GameplayRaycasting.cpp" />
     <ClCompile Include="src\GameplaySmoothTerrainVolume.cpp" />
     <ClCompile Include="src\Main.cpp" />
     <ClCompile Include="src\MultiMaterial.cpp" />
@@ -272,11 +273,13 @@
     <ClInclude Include="src\GameplayColouredCubesVolume.h" />
     <ClInclude Include="src\gameplayisquadneeded.h" />
     <ClInclude Include="src\gameplaymarchingcubescontroller.h" />
+    <ClInclude Include="src\GameplayRaycasting.h" />
     <ClInclude Include="src\GameplaySmoothTerrainVolume.h" />
     <ClInclude Include="src\GameplayVolume.h" />
     <ClInclude Include="src\Main.h" />
     <ClInclude Include="src\multimaterial.h" />
     <ClInclude Include="src\OctreeNode.h" />
+    <ClInclude Include="src\Raycasting.h" />
     <ClInclude Include="src\SmoothTerrainVolume.h" />
     <ClInclude Include="src\CubiquityUtility.h" />
     <ClInclude Include="src\SmoothTerrainVolumeEditor.h" />
