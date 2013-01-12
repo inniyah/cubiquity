@@ -78,10 +78,10 @@ void GameplaySmoothTerrainVolume::syncNode(OctreeNode* octreeNode, gameplay::Nod
 	}
 }
 
-gameplay::Model* GameplaySmoothTerrainVolume::buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< GameplayMarchingCubesController< MultiMaterial4 >::MaterialType > >* polyVoxMesh)
+gameplay::Model* GameplaySmoothTerrainVolume::buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType > >* polyVoxMesh)
 {
 	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
-	const std::vector<PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& vecVertices = polyVoxMesh->getVertices();
+	const std::vector<PositionMaterialNormal<MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType> >& vecVertices = polyVoxMesh->getVertices();
 	const float* pVerticesConst = reinterpret_cast<const float*>(&vecVertices[0]);
 	float* pVertices = const_cast<float*>(pVerticesConst);
 
@@ -141,10 +141,10 @@ gameplay::Model* GameplaySmoothTerrainVolume::buildModelFromPolyVoxMesh(const Po
 	return model;
 }
 
-PhysicsCollisionShape::Definition GameplaySmoothTerrainVolume::buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< GameplayMarchingCubesController< MultiMaterial4 >::MaterialType > >* polyVoxMesh)
+PhysicsCollisionShape::Definition GameplaySmoothTerrainVolume::buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType > >* polyVoxMesh)
 {
 	//Now set up the physics
-	const std::vector<PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >& vecVertices = polyVoxMesh->getVertices();
+	const std::vector<PositionMaterialNormal<MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType> >& vecVertices = polyVoxMesh->getVertices();
 	const std::vector<unsigned int>& vecIndices = polyVoxMesh->getIndices();
 	float* vertexData = new float[polyVoxMesh->getVertices().size() * 3];
 

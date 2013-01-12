@@ -1,5 +1,5 @@
-#ifndef __GameplayMarchingCubesController_H__
-#define __GameplayMarchingCubesController_H__
+#ifndef __MultiMaterialMarchingCubesController_H__
+#define __MultiMaterialMarchingCubesController_H__
 
 #include <cassert>
 #include <limits>
@@ -11,13 +11,13 @@
 #include "PolyVoxCore/Vector.h"
 
 template<typename VoxelType>
-class GameplayMarchingCubesController
+class MultiMaterialMarchingCubesController
 {
 public:
 	typedef VoxelType DensityType;
 	typedef float MaterialType;
 
-	GameplayMarchingCubesController(void)
+	MultiMaterialMarchingCubesController(void)
 	{
 		m_tThreshold = ((std::numeric_limits<DensityType>::min)() + (std::numeric_limits<DensityType>::max)()) / 2;
 	}
@@ -42,13 +42,13 @@ private:
 };
 
 template <>
-class GameplayMarchingCubesController< MultiMaterial4 >
+class MultiMaterialMarchingCubesController< MultiMaterial4 >
 {
 public:
 	typedef uint8_t DensityType;
 	typedef MultiMaterial4 MaterialType;
 
-	GameplayMarchingCubesController(void)
+	MultiMaterialMarchingCubesController(void)
 	{
 		// Default to a threshold value halfway between the min and max possible values.
 		m_tThreshold = MultiMaterial4::getMaxMaterialValue() / 2;
@@ -111,7 +111,7 @@ private:
 
 // We never use the marching cubes surface extractor with Material16 so this is just a dummy specialisation.
 template<>
-class GameplayMarchingCubesController< Colour >
+class MultiMaterialMarchingCubesController< Colour >
 {
 public:
 	typedef float DensityType;
@@ -162,4 +162,4 @@ public:
 	}
 };
 
-#endif //__GameplayMarchingCubesController_H__
+#endif //__MultiMaterialMarchingCubesController_H__

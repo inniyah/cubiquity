@@ -1,10 +1,10 @@
-#ifndef __GameplayIsQuadNeeded_H__
-#define __GameplayIsQuadNeeded_H__
+#ifndef __ColouredCubesIsQuadNeeded_H__
+#define __ColouredCubesIsQuadNeeded_H__
 
 #include <cassert>
 
 template<typename VoxelType>
-class GameplayIsQuadNeeded
+class ColouredCubesIsQuadNeeded
 {
 public:
 	bool operator()(VoxelType back, VoxelType front, float& materialToUse)
@@ -22,7 +22,7 @@ public:
 };
 
 template<>
-class GameplayIsQuadNeeded< Colour >
+class ColouredCubesIsQuadNeeded< Colour >
 {
 public:
 	bool operator()(Colour back, Colour front, Colour& materialToUse)
@@ -41,7 +41,7 @@ public:
 
 // We never use the cubic surface extractor with MultiMaterial so this is just a dummy specialisation.
 template<>
-class GameplayIsQuadNeeded< MultiMaterial4 >
+class ColouredCubesIsQuadNeeded< MultiMaterial4 >
 {
 public:
 	bool operator()(MultiMaterial4 back, MultiMaterial4 front, MultiMaterial4& materialToUse)
@@ -51,4 +51,4 @@ public:
 	}
 };
 
-#endif //__GameplayIsQuadNeeded_H__
+#endif //__ColouredCubesIsQuadNeeded_H__

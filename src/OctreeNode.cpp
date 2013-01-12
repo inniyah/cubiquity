@@ -51,7 +51,7 @@ void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::Position
 	GP_ERROR("This function should never be called!"); //See note in header
 }
 
-void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal<GameplayMarchingCubesController< MultiMaterial4 >::MaterialType> >* polyVoxMesh)
+void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal<MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType> >* polyVoxMesh)
 {
 	mSmoothPolyVoxMesh = polyVoxMesh;
 }
