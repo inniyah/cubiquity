@@ -9,11 +9,11 @@ SmoothTerrainVolume::SmoothTerrainVolume(VolumeType type, int lowerX, int lowerY
 	:Volume<MultiMaterial4>(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth)
 {
 	PolyVox::Region regionToCover(mVolData->getEnclosingRegion());
-	if(getType() == VolumeTypes::SmoothTerrain)
+	/*if(getType() == VolumeTypes::SmoothTerrain)
 	{
 		regionToCover.shiftLowerCorner(-1, -1, -1);
 		regionToCover.shiftUpperCorner(1, 1, 1);
-	}
+	}*/
 
 	GP_ASSERT(PolyVox::isPowerOf2(mBaseNodeSize));
 
@@ -61,7 +61,7 @@ void SmoothTerrainVolume::buildOctreeNodeTree(OctreeNode* parent, const PolyVox:
 		int32_t width = parent->mRegion.getWidthInVoxels() / 2;
 		int32_t height = parent->mRegion.getHeightInVoxels() / 2;
 		int32_t depth = parent->mRegion.getDepthInVoxels() / 2;
-		PolyVox::Vector3DInt32 baseUpperCorner = baseLowerCorner + PolyVox::Vector3DInt32(width-1, height-1, depth-1);
+		PolyVox::Vector3DInt32 baseUpperCorner = baseLowerCorner + PolyVox::Vector3DInt32(width, height, depth);
 
 		for(int z = 0; z < 2; z++)
 		{
@@ -71,11 +71,13 @@ void SmoothTerrainVolume::buildOctreeNodeTree(OctreeNode* parent, const PolyVox:
 				{
 					PolyVox::Vector3DInt32 offset (x*width, y*height, z*depth);
 					PolyVox::Region childRegion(baseLowerCorner + offset, baseUpperCorner + offset);
+					PolyVox::Region croppedChild = childRegion;
+					croppedChild.cropTo(parent->mRegion);
 					if(intersects(childRegion, regionToCover))
 					{
 						OctreeNode* volReg = new OctreeNode(childRegion, parent);
 						parent->children[x][y][z] = volReg;
-						buildOctreeNodeTree(volReg, regionToCover);
+						buildOctreeNodeTree(volReg, childRegion);
 					}
 				}
 			}
