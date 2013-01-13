@@ -33,7 +33,7 @@ void SmoothTerrainVolume::generateSmoothMesh(const PolyVox::Region& region, uint
 	if(downSampleFactor == 1)
 	{
 		//SurfaceMesh<PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > > mesh;
-		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::RawVolume<VoxelType>, MultiMaterialMarchingCubesController<VoxelType> > surfaceExtractor(mVolData, region, resultMesh, PolyVox::WrapModes::Clamp, VoxelType(0), controller);
+		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::RawVolume<VoxelType>, MultiMaterialMarchingCubesController<VoxelType> > surfaceExtractor(mVolData, region, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), controller);
 		surfaceExtractor.execute();
 	}
 	else
@@ -52,7 +52,7 @@ void SmoothTerrainVolume::generateSmoothMesh(const PolyVox::Region& region, uint
 		PolyVox::VolumeResampler< PolyVox::RawVolume<VoxelType>, PolyVox::RawVolume<VoxelType> > volumeResampler(mVolData, region, &resampledVolume, lod2Region);
 		volumeResampler.execute();
 
-		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::RawVolume<VoxelType>, MultiMaterialMarchingCubesController<VoxelType> > surfaceExtractor(&resampledVolume, lod2Region, resultMesh, PolyVox::WrapModes::Clamp, VoxelType(0), controller);
+		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::RawVolume<VoxelType>, MultiMaterialMarchingCubesController<VoxelType> > surfaceExtractor(&resampledVolume, lod2Region, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), controller);
 		surfaceExtractor.execute();
 
 		resultMesh->scaleVertices(downSampleFactor);
