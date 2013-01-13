@@ -17,7 +17,7 @@ void loadData(const char* filename, VolumeType* volume)
 	//This three-level for loop iterates over every voxel in the volume
 	for (int z = 0; z < volume->mVolData->getWidth(); z++)
 	{
-		for (int y = 0; y < 32; y++)  //HACK - hardcoded value!!!
+		for (int y = 0; y < volume->mVolData->getHeight(); y++)
 		{
 			for (int x = 0; x < volume->mVolData->getDepth(); x++)
 			{

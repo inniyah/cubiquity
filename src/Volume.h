@@ -30,7 +30,7 @@ public:
 
 	VolumeType getType(void) const;
 
-	void buildOctreeNodeTree(OctreeNode* parent);
+	void buildOctreeNodeTree(OctreeNode* parent, const PolyVox::Region& regionToCover);
 
 	VoxelType getVoxelAt(int x, int y, int z);
 	void setVoxelAt(int x, int y, int z, VoxelType value);

@@ -25,12 +25,12 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 {
 	PolyVox::Region volumeRegion(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
 
-	GP_ASSERT(volumeRegion.getWidthInVoxels() > 0);
-	GP_ASSERT(volumeRegion.getHeightInVoxels() > 0);
-	GP_ASSERT(volumeRegion.getDepthInVoxels() > 0);
-	GP_ASSERT(volumeRegion.getWidthInVoxels() % regionWidth == 0);
-	GP_ASSERT(volumeRegion.getHeightInVoxels() % regionHeight == 0);
-	GP_ASSERT(volumeRegion.getDepthInVoxels() % regionDepth == 0);
+	POLYVOX_ASSERT(volumeRegion.getWidthInVoxels() > 0, "All volume dimensions must be greater than zero");
+	POLYVOX_ASSERT(volumeRegion.getHeightInVoxels() > 0, "All volume dimensions must be greater than zero");
+	POLYVOX_ASSERT(volumeRegion.getDepthInVoxels() > 0, "All volume dimensions must be greater than zero");
+	POLYVOX_ASSERT(volumeRegion.getWidthInVoxels() % regionWidth == 0, "Volume dimensions must be a multiple of the corresponding region dimension.");
+	POLYVOX_ASSERT(volumeRegion.getHeightInVoxels() % regionHeight == 0, "Volume dimensions must be a multiple of the corresponding region dimension.");
+	POLYVOX_ASSERT(volumeRegion.getDepthInVoxels() % regionDepth == 0, "Volume dimensions must be a multiple of the corresponding region dimension.");
 	
 	mVolData = new PolyVox::RawVolume<VoxelType>(volumeRegion);
 
@@ -68,7 +68,7 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 
 	mRootOctreeNode = new OctreeNode(octreeRegion, 0);
 
-	buildOctreeNodeTree(mRootOctreeNode);
+	buildOctreeNodeTree(mRootOctreeNode, mVolData->getEnclosingRegion());
 
 	/*for(int z = 0; z < volumeDepthInRegions; z++)
 	{
@@ -121,10 +121,10 @@ Volume<VoxelType>::~Volume()
 }
 
 template <typename VoxelType>
-void Volume<VoxelType>::buildOctreeNodeTree(OctreeNode* parent)
+void Volume<VoxelType>::buildOctreeNodeTree(OctreeNode* parent, const PolyVox::Region& regionToCover)
 {
-	GP_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getHeightInVoxels());
-	GP_ASSERT(parent->mRegion.getHeightInVoxels() == parent->mRegion.getDepthInVoxels());
+	POLYVOX_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getHeightInVoxels(), "Region must be cubic");
+	POLYVOX_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getDepthInVoxels(), "Region must be cubic");
 
 	if(parent->mRegion.getWidthInVoxels() > mBaseNodeSize)
 	{
@@ -141,9 +141,13 @@ void Volume<VoxelType>::buildOctreeNodeTree(OctreeNode* parent)
 				for(int x = 0; x < 2; x++)
 				{
 					PolyVox::Vector3DInt32 offset (x*width, y*height, z*depth);
-					OctreeNode* volReg = new OctreeNode(PolyVox::Region(baseLowerCorner + offset, baseUpperCorner + offset), parent);
-					parent->children[x][y][z] = volReg;
-					buildOctreeNodeTree(volReg);
+					PolyVox::Region childRegion(baseLowerCorner + offset, baseUpperCorner + offset);
+					if(intersects(childRegion, regionToCover))
+					{
+						OctreeNode* volReg = new OctreeNode(childRegion, parent);
+						parent->children[x][y][z] = volReg;
+						buildOctreeNodeTree(volReg, regionToCover);
+					}
 				}
 			}
 		}
