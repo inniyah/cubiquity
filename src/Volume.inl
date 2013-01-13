@@ -36,40 +36,6 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 
 	//mRootNode = Node::create();
 
-	GP_ASSERT(PolyVox::isPowerOf2(mBaseNodeSize));
-
-	uint32_t largestVolumeDimensionInVoxels = std::max(volumeRegion.getWidthInVoxels(), std::max(volumeRegion.getHeightInVoxels(), volumeRegion.getDepthInVoxels()));
-
-	uint32_t octreeTargetSizeInVoxels = PolyVox::upperPowerOfTwo(largestVolumeDimensionInVoxels);
-
-	uint32_t widthIncrease = octreeTargetSizeInVoxels - volumeRegion.getWidthInVoxels();
-	uint32_t heightIncrease = octreeTargetSizeInVoxels - volumeRegion.getHeightInVoxels();
-	uint32_t depthIncrease = octreeTargetSizeInVoxels - volumeRegion.getDepthInVoxels();
-	
-	if(widthIncrease % 2 == 1)
-	{
-		upperX++;
-		widthIncrease--;
-	}
-
-	if(heightIncrease % 2 == 1)
-	{
-		upperY++;
-		heightIncrease--;
-	}
-	if(depthIncrease % 2 == 1)
-	{
-		upperZ++;
-		depthIncrease--;
-	}
-
-	PolyVox::Region octreeRegion(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
-	octreeRegion.grow(widthIncrease / 2, heightIncrease / 2, depthIncrease / 2);
-
-	mRootOctreeNode = new OctreeNode(octreeRegion, 0);
-
-	buildOctreeNodeTree(mRootOctreeNode, mVolData->getEnclosingRegion());
-
 	/*for(int z = 0; z < volumeDepthInRegions; z++)
 	{
 		for(int y = 0; y < volumeHeightInRegions; y++)
@@ -118,40 +84,6 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 template <typename VoxelType>
 Volume<VoxelType>::~Volume()
 {
-}
-
-template <typename VoxelType>
-void Volume<VoxelType>::buildOctreeNodeTree(OctreeNode* parent, const PolyVox::Region& regionToCover)
-{
-	POLYVOX_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getHeightInVoxels(), "Region must be cubic");
-	POLYVOX_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getDepthInVoxels(), "Region must be cubic");
-
-	if(parent->mRegion.getWidthInVoxels() > mBaseNodeSize)
-	{
-		PolyVox::Vector3DInt32 baseLowerCorner = parent->mRegion.getLowerCorner();
-		int32_t width = parent->mRegion.getWidthInVoxels() / 2;
-		int32_t height = parent->mRegion.getHeightInVoxels() / 2;
-		int32_t depth = parent->mRegion.getDepthInVoxels() / 2;
-		PolyVox::Vector3DInt32 baseUpperCorner = baseLowerCorner + PolyVox::Vector3DInt32(width-1, height-1, depth-1);
-
-		for(int z = 0; z < 2; z++)
-		{
-			for(int y = 0; y < 2; y++)
-			{
-				for(int x = 0; x < 2; x++)
-				{
-					PolyVox::Vector3DInt32 offset (x*width, y*height, z*depth);
-					PolyVox::Region childRegion(baseLowerCorner + offset, baseUpperCorner + offset);
-					if(intersects(childRegion, regionToCover))
-					{
-						OctreeNode* volReg = new OctreeNode(childRegion, parent);
-						parent->children[x][y][z] = volReg;
-						buildOctreeNodeTree(volReg, regionToCover);
-					}
-				}
-			}
-		}
-	}
 }
 
 template <typename VoxelType>

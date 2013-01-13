@@ -5,6 +5,84 @@
 using namespace std;
 using namespace PolyVox;
 
+SmoothTerrainVolume::SmoothTerrainVolume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth)
+	:Volume<MultiMaterial4>(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth)
+{
+	PolyVox::Region regionToCover(mVolData->getEnclosingRegion());
+	if(getType() == VolumeTypes::SmoothTerrain)
+	{
+		regionToCover.shiftLowerCorner(-1, -1, -1);
+		regionToCover.shiftUpperCorner(1, 1, 1);
+	}
+
+	GP_ASSERT(PolyVox::isPowerOf2(mBaseNodeSize));
+
+	uint32_t largestVolumeDimensionInVoxels = std::max(regionToCover.getWidthInVoxels(), std::max(regionToCover.getHeightInVoxels(), regionToCover.getDepthInVoxels()));
+
+	uint32_t octreeTargetSizeInVoxels = PolyVox::upperPowerOfTwo(largestVolumeDimensionInVoxels);
+
+	uint32_t widthIncrease = octreeTargetSizeInVoxels - regionToCover.getWidthInVoxels();
+	uint32_t heightIncrease = octreeTargetSizeInVoxels - regionToCover.getHeightInVoxels();
+	uint32_t depthIncrease = octreeTargetSizeInVoxels - regionToCover.getDepthInVoxels();
+	
+	if(widthIncrease % 2 == 1)
+	{
+		upperX++;
+		widthIncrease--;
+	}
+
+	if(heightIncrease % 2 == 1)
+	{
+		upperY++;
+		heightIncrease--;
+	}
+	if(depthIncrease % 2 == 1)
+	{
+		upperZ++;
+		depthIncrease--;
+	}
+
+	PolyVox::Region octreeRegion(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
+	octreeRegion.grow(widthIncrease / 2, heightIncrease / 2, depthIncrease / 2);
+
+	mRootOctreeNode = new OctreeNode(octreeRegion, 0);
+
+	buildOctreeNodeTree(mRootOctreeNode, regionToCover);
+	}
+
+void SmoothTerrainVolume::buildOctreeNodeTree(OctreeNode* parent, const PolyVox::Region& regionToCover)
+{
+	POLYVOX_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getHeightInVoxels(), "Region must be cubic");
+	POLYVOX_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getDepthInVoxels(), "Region must be cubic");
+
+	if(parent->mRegion.getWidthInVoxels() > mBaseNodeSize)
+	{
+		PolyVox::Vector3DInt32 baseLowerCorner = parent->mRegion.getLowerCorner();
+		int32_t width = parent->mRegion.getWidthInVoxels() / 2;
+		int32_t height = parent->mRegion.getHeightInVoxels() / 2;
+		int32_t depth = parent->mRegion.getDepthInVoxels() / 2;
+		PolyVox::Vector3DInt32 baseUpperCorner = baseLowerCorner + PolyVox::Vector3DInt32(width-1, height-1, depth-1);
+
+		for(int z = 0; z < 2; z++)
+		{
+			for(int y = 0; y < 2; y++)
+			{
+				for(int x = 0; x < 2; x++)
+				{
+					PolyVox::Vector3DInt32 offset (x*width, y*height, z*depth);
+					PolyVox::Region childRegion(baseLowerCorner + offset, baseUpperCorner + offset);
+					if(intersects(childRegion, regionToCover))
+					{
+						OctreeNode* volReg = new OctreeNode(childRegion, parent);
+						parent->children[x][y][z] = volReg;
+						buildOctreeNodeTree(volReg, regionToCover);
+					}
+				}
+			}
+		}
+	}
+}
+
 void SmoothTerrainVolume::updateMeshImpl(OctreeNode* volReg)
 {
 	PolyVox::Region lod0Region = volReg->mRegion;
