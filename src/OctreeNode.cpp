@@ -184,7 +184,7 @@ void OctreeNode::determineWantedForRendering(const PolyVox::Vector3DFloat& viewP
 
 	float projectedSize = diagonalLength / distance;
 
-	if(projectedSize > threshold)
+	if((projectedSize > threshold) || (subtreeHeight() > 2)) //subtree height check prevents building LODs for node near the root.
 	{
 		if(hasAnyChildren())
 		{
