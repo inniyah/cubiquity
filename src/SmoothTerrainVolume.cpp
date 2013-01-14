@@ -9,11 +9,11 @@ SmoothTerrainVolume::SmoothTerrainVolume(VolumeType type, int lowerX, int lowerY
 	:Volume<MultiMaterial4>(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth)
 {
 	PolyVox::Region regionToCover(mVolData->getEnclosingRegion());
-	/*if(getType() == VolumeTypes::SmoothTerrain)
+	if(getType() == VolumeTypes::SmoothTerrain)
 	{
 		regionToCover.shiftLowerCorner(-1, -1, -1);
 		regionToCover.shiftUpperCorner(1, 1, 1);
-	}*/
+	}
 
 	GP_ASSERT(PolyVox::isPowerOf2(mBaseNodeSize));
 
@@ -118,21 +118,26 @@ void SmoothTerrainVolume::generateSmoothMesh(const PolyVox::Region& region, uint
 	}
 	else
 	{
-		PolyVox::Region lod2Region = region;
-		PolyVox::Vector3DInt32 lowerCorner = lod2Region.getLowerCorner();
-		PolyVox::Vector3DInt32 upperCorner = lod2Region.getUpperCorner();
+		PolyVox::Region highRegion = region;
+		highRegion.grow(2, 2, 2);
+
+		PolyVox::Region lowRegion = highRegion;
+		PolyVox::Vector3DInt32 lowerCorner = lowRegion.getLowerCorner();
+		PolyVox::Vector3DInt32 upperCorner = lowRegion.getUpperCorner();
 
 		upperCorner = upperCorner - lowerCorner;
 		upperCorner = upperCorner / static_cast<int32_t>(downSampleFactor);
 		upperCorner = upperCorner + lowerCorner;
-		lod2Region.setUpperCorner(upperCorner);
+		lowRegion.setUpperCorner(upperCorner);
 
-		PolyVox::RawVolume<VoxelType> resampledVolume(lod2Region);
+		PolyVox::RawVolume<VoxelType> resampledVolume(lowRegion);
 		//lod1Volume.m_bClampInsteadOfBorder = true; //We're extracting right to the edge of our small volume, so this keeps the normals correct(ish)
-		PolyVox::VolumeResampler< PolyVox::RawVolume<VoxelType>, PolyVox::RawVolume<VoxelType> > volumeResampler(mVolData, region, &resampledVolume, lod2Region);
+		PolyVox::VolumeResampler< PolyVox::RawVolume<VoxelType>, PolyVox::RawVolume<VoxelType> > volumeResampler(mVolData, highRegion, &resampledVolume, lowRegion);
 		volumeResampler.execute();
 
-		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::RawVolume<VoxelType>, MultiMaterialMarchingCubesController<VoxelType> > surfaceExtractor(&resampledVolume, lod2Region, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), controller);
+		lowRegion.shrink(1, 1, 1);
+
+		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::RawVolume<VoxelType>, MultiMaterialMarchingCubesController<VoxelType> > surfaceExtractor(&resampledVolume, lowRegion, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), controller);
 		surfaceExtractor.execute();
 
 		resultMesh->scaleVertices(downSampleFactor);
