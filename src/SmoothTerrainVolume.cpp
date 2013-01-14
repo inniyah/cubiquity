@@ -9,11 +9,11 @@ SmoothTerrainVolume::SmoothTerrainVolume(VolumeType type, int lowerX, int lowerY
 	:Volume<MultiMaterial4>(type, lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth)
 {
 	PolyVox::Region regionToCover(mVolData->getEnclosingRegion());
-	/*if(getType() == VolumeTypes::SmoothTerrain)
+	if(getType() == VolumeTypes::SmoothTerrain)
 	{
 		regionToCover.shiftLowerCorner(-1, -1, -1);
 		regionToCover.shiftUpperCorner(1, 1, 1);
-	}*/
+	}
 
 	GP_ASSERT(PolyVox::isPowerOf2(mBaseNodeSize));
 
@@ -24,25 +24,26 @@ SmoothTerrainVolume::SmoothTerrainVolume(VolumeType type, int lowerX, int lowerY
 	uint32_t widthIncrease = octreeTargetSizeInVoxels - regionToCover.getWidthInVoxels();
 	uint32_t heightIncrease = octreeTargetSizeInVoxels - regionToCover.getHeightInVoxels();
 	uint32_t depthIncrease = octreeTargetSizeInVoxels - regionToCover.getDepthInVoxels();
+
+	PolyVox::Region octreeRegion(regionToCover);
 	
 	if(widthIncrease % 2 == 1)
 	{
-		upperX++;
+		octreeRegion.setUpperX(octreeRegion.getUpperX() + 1);
 		widthIncrease--;
 	}
 
 	if(heightIncrease % 2 == 1)
 	{
-		upperY++;
+		octreeRegion.setUpperY(octreeRegion.getUpperY() + 1);
 		heightIncrease--;
 	}
 	if(depthIncrease % 2 == 1)
 	{
-		upperZ++;
+		octreeRegion.setUpperZ(octreeRegion.getUpperZ() + 1);
 		depthIncrease--;
 	}
 
-	PolyVox::Region octreeRegion(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
 	octreeRegion.grow(widthIncrease / 2, heightIncrease / 2, depthIncrease / 2);
 
 	mRootOctreeNode = new OctreeNode(octreeRegion, 0);
