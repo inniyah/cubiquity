@@ -46,10 +46,6 @@ public:
 
 	void setMeshLastUpdated(uint32_t newTimeStamp);
 
-	uint32_t depth(void);
-
-	uint32_t subtreeHeight(void);
-
 	PolyVox::Region mRegion;
 	uint32_t mMeshLastUpdated;
 	uint32_t mDataLastModified;
@@ -63,6 +59,8 @@ public:
 	const PolyVox::SurfaceMesh< PolyVox::PositionMaterial<Colour> >* mCubicPolyVoxMesh;
 
 	void* mGameEngineNode;
+
+	uint8_t mLodLevel; // Zero for leaf nodes.
 };
 
 #endif //OCTREE_NODE_H_

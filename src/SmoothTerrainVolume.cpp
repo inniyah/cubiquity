@@ -21,6 +21,8 @@ SmoothTerrainVolume::SmoothTerrainVolume(VolumeType type, int lowerX, int lowerY
 
 	uint32_t octreeTargetSizeInVoxels = PolyVox::upperPowerOfTwo(largestVolumeDimensionInVoxels) + 1;
 
+	uint8_t noOfLodLevels = logBase2((octreeTargetSizeInVoxels - 1) / mBaseNodeSize) + 1;
+
 	uint32_t widthIncrease = octreeTargetSizeInVoxels - regionToCover.getWidthInVoxels();
 	uint32_t heightIncrease = octreeTargetSizeInVoxels - regionToCover.getHeightInVoxels();
 	uint32_t depthIncrease = octreeTargetSizeInVoxels - regionToCover.getDepthInVoxels();
@@ -47,6 +49,7 @@ SmoothTerrainVolume::SmoothTerrainVolume(VolumeType type, int lowerX, int lowerY
 	octreeRegion.grow(widthIncrease / 2, heightIncrease / 2, depthIncrease / 2);
 
 	mRootOctreeNode = new OctreeNode(octreeRegion, 0);
+	mRootOctreeNode->mLodLevel = noOfLodLevels - 1;
 
 	buildOctreeNodeTree(mRootOctreeNode, regionToCover);
 	}
@@ -93,7 +96,7 @@ void SmoothTerrainVolume::updateMeshImpl(OctreeNode* volReg)
 	//Extract the surface
 	PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > >* mesh = new PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > >;
 
-	uint32_t downScaleFactor = 0x0001 << (volReg->subtreeHeight() - 1);
+	uint32_t downScaleFactor = 0x0001 << volReg->mLodLevel;
 
 	generateSmoothMesh(lod0Region, downScaleFactor, mesh);
 
@@ -120,7 +123,7 @@ void SmoothTerrainVolume::generateSmoothMesh(const PolyVox::Region& region, uint
 	else
 	{
 		PolyVox::Region highRegion = region;
-		highRegion.grow(2, 2, 2);
+		highRegion.grow(downSampleFactor, downSampleFactor, downSampleFactor);
 
 		PolyVox::Region lowRegion = highRegion;
 		PolyVox::Vector3DInt32 lowerCorner = lowRegion.getLowerCorner();

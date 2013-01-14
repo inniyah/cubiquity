@@ -47,7 +47,7 @@ void GameplaySmoothTerrainVolume::syncNode(OctreeNode* octreeNode, gameplay::Nod
 			SAFE_RELEASE(model);
 
 			//There is a weird bug, whereby if we use the LOD 0 for physics it resets the node positions somehow. So we use LOD 1 here.
-			if(octreeNode->depth() == 1)
+			if(octreeNode->mLodLevel == 1)
 			{
 				PhysicsCollisionShape::Definition physDef = buildCollisionObjectFromPolyVoxMesh(octreeNode->mSmoothPolyVoxMesh);
 

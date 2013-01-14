@@ -18,6 +18,7 @@ OctreeNode::OctreeNode(PolyVox::Region region, OctreeNode* parentRegion)
 	,mSmoothPolyVoxMesh(0)
 	,mCubicPolyVoxMesh(0)
 	,mGameEngineNode(0)
+	,mLodLevel(0)
 {
 	for(int z = 0; z < 2; z++)
 	{
@@ -28,6 +29,12 @@ OctreeNode::OctreeNode(PolyVox::Region region, OctreeNode* parentRegion)
 				children[x][y][z] = 0;
 			}
 		}
+	}
+
+	if(parent)
+	{
+		POLYVOX_ASSERT(parent->mLodLevel < 100, "LOD level has gone below zero and wrapped around.");
+		mLodLevel = parent->mLodLevel-1;
 	}
 }
 
@@ -77,39 +84,6 @@ void OctreeNode::markDataAsModified(int32_t x, int32_t y, int32_t z, uint32_t ne
 			}
 		}
 	}
-}
-
-uint32_t OctreeNode::depth(void)
-{
-	if(parent)
-	{
-		return parent->depth() + 1;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-uint32_t OctreeNode::subtreeHeight(void)
-{
-	uint32_t maxChildHeight = 0;
-	for(int iz = 0; iz < 2; iz++)
-	{
-		for(int iy = 0; iy < 2; iy++)
-		{
-			for(int ix = 0; ix < 2; ix++)
-			{
-				OctreeNode* child = children[ix][iy][iz];
-				if(child)
-				{
-					maxChildHeight = std::max(maxChildHeight, child->subtreeHeight());
-				}
-			}
-		}
-	}
-
-	return maxChildHeight + 1;
 }
 
 bool OctreeNode::hasAnyChildren(void)
@@ -184,7 +158,7 @@ void OctreeNode::determineWantedForRendering(const PolyVox::Vector3DFloat& viewP
 
 	float projectedSize = diagonalLength / distance;
 
-	if((projectedSize > threshold) || (subtreeHeight() > 2)) //subtree height check prevents building LODs for node near the root.
+	if((projectedSize > threshold) || (mLodLevel > 1)) //subtree height check prevents building LODs for node near the root.
 	{
 		if(hasAnyChildren())
 		{

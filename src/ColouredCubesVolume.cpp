@@ -92,6 +92,8 @@ ColouredCubesVolume::ColouredCubesVolume(VolumeType type, int lowerX, int lowerY
 
 	uint32_t octreeTargetSizeInVoxels = PolyVox::upperPowerOfTwo(largestVolumeDimensionInVoxels);
 
+	uint8_t noOfLodLevels = logBase2(octreeTargetSizeInVoxels / mBaseNodeSize) + 1;
+
 	uint32_t widthIncrease = octreeTargetSizeInVoxels - regionToCover.getWidthInVoxels();
 	uint32_t heightIncrease = octreeTargetSizeInVoxels - regionToCover.getHeightInVoxels();
 	uint32_t depthIncrease = octreeTargetSizeInVoxels - regionToCover.getDepthInVoxels();
@@ -117,6 +119,7 @@ ColouredCubesVolume::ColouredCubesVolume(VolumeType type, int lowerX, int lowerY
 	octreeRegion.grow(widthIncrease / 2, heightIncrease / 2, depthIncrease / 2);
 
 	mRootOctreeNode = new OctreeNode(octreeRegion, 0);
+	mRootOctreeNode->mLodLevel = noOfLodLevels - 1;
 
 	buildOctreeNodeTree(mRootOctreeNode, regionToCover);
 }
@@ -164,7 +167,7 @@ void ColouredCubesVolume::updateMeshImpl(OctreeNode* volReg)
 	//CubicSurfaceExtractor< RawVolume<VoxelType>, ColouredCubesIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, lod0Region, &colouredCubicMesh, WrapModes::Border, VoxelType(0), true, isQuadNeeded);
 	//surfaceExtractor.execute();
 
-	uint32_t downScaleFactor = 0x0001 << (volReg->subtreeHeight() - 1);
+	uint32_t downScaleFactor = 0x0001 << volReg->mLodLevel;
 
 	generateCubicMesh(lod0Region, downScaleFactor, colouredCubicMesh);
 

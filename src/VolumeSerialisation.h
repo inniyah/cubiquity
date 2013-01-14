@@ -32,6 +32,13 @@ void loadData(const char* filename, VolumeType* volume)
 				//Write the voxel value into the volume
 				volume->setVoxelAt(x, y, z, value);
 
+				/*if(y < 8)
+				{
+					MultiMaterial4 mat;
+					mat.setMaterial(0, 255);
+					volume->setVoxelAt(x, y, z, mat);
+				}*/
+
 			}
 		}
 	}
