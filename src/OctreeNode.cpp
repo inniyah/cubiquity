@@ -149,18 +149,22 @@ void OctreeNode::clearWantedForRendering(void)
 
 void OctreeNode::determineWantedForRendering(const PolyVox::Vector3DFloat& viewPosition, float threshold)
 {
-	Vector3DFloat regionCentre = static_cast<Vector3DFloat>(mRegion.getCentre());
-
-	float distance = (viewPosition - regionCentre).length();
-
-	Vector3DInt32 diagonal = mRegion.getUpperCorner() - mRegion.getLowerCorner();
-	float diagonalLength = diagonal.length(); // A measure of our regions size
-
-	float projectedSize = diagonalLength / distance;
-
-	if((projectedSize > threshold) || (mLodLevel > 1)) //subtree height check prevents building LODs for node near the root.
+	if(mLodLevel == 0)
 	{
-		if(hasAnyChildren())
+		mWantedForRendering = true;
+	}
+	else
+	{
+		Vector3DFloat regionCentre = static_cast<Vector3DFloat>(mRegion.getCentre());
+
+		float distance = (viewPosition - regionCentre).length();
+
+		Vector3DInt32 diagonal = mRegion.getUpperCorner() - mRegion.getLowerCorner();
+		float diagonalLength = diagonal.length(); // A measure of our regions size
+
+		float projectedSize = diagonalLength / distance;
+
+		if((projectedSize > threshold) || (mLodLevel > 2)) //subtree height check prevents building LODs for node near the root.
 		{
 			for(int iz = 0; iz < 2; iz++)
 			{
@@ -181,10 +185,6 @@ void OctreeNode::determineWantedForRendering(const PolyVox::Vector3DFloat& viewP
 		{
 			mWantedForRendering = true;
 		}
-	}
-	else
-	{
-		mWantedForRendering = true;
 	}
 }
 
