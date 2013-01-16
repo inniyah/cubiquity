@@ -82,6 +82,50 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 }
 
 template <typename VoxelType>
+void Volume<VoxelType>::buildOctreeNodeTree(OctreeNode* parent, const PolyVox::Region& regionToCover, bool boundCells)
+{
+	POLYVOX_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getHeightInVoxels(), "Region must be cubic");
+	POLYVOX_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getDepthInVoxels(), "Region must be cubic");
+
+	//We know that width/height/depth are all the same.
+	int32_t parentSize = boundCells ? parent->mRegion.getWidthInCells() : parent->mRegion.getWidthInVoxels();
+
+	if(parentSize > mBaseNodeSize)
+	{
+		PolyVox::Vector3DInt32 baseLowerCorner = parent->mRegion.getLowerCorner();
+		int32_t childSize = boundCells ? parent->mRegion.getWidthInCells() / 2 : parent->mRegion.getWidthInVoxels() / 2;
+
+		PolyVox::Vector3DInt32 baseUpperCorner;
+		if(boundCells)
+		{
+			baseUpperCorner = baseLowerCorner + PolyVox::Vector3DInt32(childSize, childSize, childSize);
+		}
+		else
+		{
+			baseUpperCorner = baseLowerCorner + PolyVox::Vector3DInt32(childSize-1, childSize-1, childSize-1);
+		}
+
+		for(int z = 0; z < 2; z++)
+		{
+			for(int y = 0; y < 2; y++)
+			{
+				for(int x = 0; x < 2; x++)
+				{
+					PolyVox::Vector3DInt32 offset (x*childSize, y*childSize, z*childSize);
+					PolyVox::Region childRegion(baseLowerCorner + offset, baseUpperCorner + offset);
+					if(intersects(childRegion, regionToCover))
+					{
+						OctreeNode* volReg = new OctreeNode(childRegion, parent);
+						parent->children[x][y][z] = volReg;
+						buildOctreeNodeTree(volReg, regionToCover, boundCells);
+					}
+				}
+			}
+		}
+	}
+}
+
+template <typename VoxelType>
 Volume<VoxelType>::~Volume()
 {
 }

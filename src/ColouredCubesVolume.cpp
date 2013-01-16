@@ -121,10 +121,10 @@ ColouredCubesVolume::ColouredCubesVolume(VolumeType type, int lowerX, int lowerY
 	mRootOctreeNode = new OctreeNode(octreeRegion, 0);
 	mRootOctreeNode->mLodLevel = noOfLodLevels - 1;
 
-	buildOctreeNodeTree(mRootOctreeNode, regionToCover);
+	buildOctreeNodeTree(mRootOctreeNode, regionToCover, false);
 }
 
-void ColouredCubesVolume::buildOctreeNodeTree(OctreeNode* parent, const PolyVox::Region& regionToCover)
+/*void ColouredCubesVolume::buildOctreeNodeTree(OctreeNode* parent, const PolyVox::Region& regionToCover)
 {
 	POLYVOX_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getHeightInVoxels(), "Region must be cubic");
 	POLYVOX_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getDepthInVoxels(), "Region must be cubic");
@@ -155,7 +155,7 @@ void ColouredCubesVolume::buildOctreeNodeTree(OctreeNode* parent, const PolyVox:
 			}
 		}
 	}
-}
+}*/
 
 void ColouredCubesVolume::updateMeshImpl(OctreeNode* volReg)
 {

@@ -51,10 +51,10 @@ SmoothTerrainVolume::SmoothTerrainVolume(VolumeType type, int lowerX, int lowerY
 	mRootOctreeNode = new OctreeNode(octreeRegion, 0);
 	mRootOctreeNode->mLodLevel = noOfLodLevels - 1;
 
-	buildOctreeNodeTree(mRootOctreeNode, regionToCover);
+	buildOctreeNodeTree(mRootOctreeNode, regionToCover, true);
 	}
 
-void SmoothTerrainVolume::buildOctreeNodeTree(OctreeNode* parent, const PolyVox::Region& regionToCover)
+/*void SmoothTerrainVolume::buildOctreeNodeTree(OctreeNode* parent, const PolyVox::Region& regionToCover)
 {
 	POLYVOX_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getHeightInVoxels(), "Region must be cubic");
 	POLYVOX_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getDepthInVoxels(), "Region must be cubic");
@@ -75,8 +75,6 @@ void SmoothTerrainVolume::buildOctreeNodeTree(OctreeNode* parent, const PolyVox:
 				{
 					PolyVox::Vector3DInt32 offset (x*width, y*height, z*depth);
 					PolyVox::Region childRegion(baseLowerCorner + offset, baseUpperCorner + offset);
-					//PolyVox::Region croppedChild = childRegion;
-					//croppedChild.cropTo(parent->mRegion);
 					if(intersects(childRegion, regionToCover))
 					{
 						OctreeNode* volReg = new OctreeNode(childRegion, parent);
@@ -87,7 +85,7 @@ void SmoothTerrainVolume::buildOctreeNodeTree(OctreeNode* parent, const PolyVox:
 			}
 		}
 	}
-}
+}*/
 
 void SmoothTerrainVolume::updateMeshImpl(OctreeNode* volReg)
 {
