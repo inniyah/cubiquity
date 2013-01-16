@@ -81,7 +81,7 @@ void SmoothTerrainVolume::buildOctreeNodeTree(OctreeNode* parent, const PolyVox:
 					{
 						OctreeNode* volReg = new OctreeNode(childRegion, parent);
 						parent->children[x][y][z] = volReg;
-						buildOctreeNodeTree(volReg, childRegion);
+						buildOctreeNodeTree(volReg, regionToCover);
 					}
 				}
 			}
