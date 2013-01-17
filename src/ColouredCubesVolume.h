@@ -11,7 +11,7 @@ void rescaleCubicVolume(PolyVox::RawVolume<Colour>* pVolSrc, const PolyVox::Regi
 class ColouredCubesVolume : public Volume<Colour>
 {
 public:
-	ColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int baseNodeSize);
+	ColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
 
 	void updateMeshImpl(OctreeNode* volReg);
 

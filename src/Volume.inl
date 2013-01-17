@@ -13,10 +13,9 @@
 #include "CubiquityUtility.h"
 
 template <typename VoxelType>
-Volume<VoxelType>::Volume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize)
+Volume<VoxelType>::Volume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize)
 	:mVolData(0)
 	,mRootOctreeNode(0)
-	,mRegionWidth(regionWidth)
 	,mBaseNodeSize(baseNodeSize)
 	,mTime(0)
 {
@@ -25,7 +24,6 @@ Volume<VoxelType>::Volume(int lowerX, int lowerY, int lowerZ, int upperX, int up
 	POLYVOX_ASSERT(volumeRegion.getWidthInVoxels() > 0, "All volume dimensions must be greater than zero");
 	POLYVOX_ASSERT(volumeRegion.getHeightInVoxels() > 0, "All volume dimensions must be greater than zero");
 	POLYVOX_ASSERT(volumeRegion.getDepthInVoxels() > 0, "All volume dimensions must be greater than zero");
-	POLYVOX_ASSERT(volumeRegion.getWidthInVoxels() % regionWidth == 0, "Volume dimensions must be a multiple of the corresponding region dimension.");
 	
 	mVolData = new PolyVox::RawVolume<VoxelType>(volumeRegion);
 

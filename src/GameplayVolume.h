@@ -11,10 +11,10 @@ template <typename _VolumeType>
 class GameplayVolume : public gameplay::Ref
 {
 protected:
-	GameplayVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int baseNodeSize)
+	GameplayVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
 		:mRootGameplayNode(0)
 	{
-		mVolume = new _VolumeType(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, baseNodeSize);
+		mVolume = new _VolumeType(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize);
 	}
 
 	~GameplayVolume()

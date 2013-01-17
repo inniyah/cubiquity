@@ -10,7 +10,7 @@ class SmoothTerrainVolume : public Volume<MultiMaterial4>
 {
 
 public:
-	SmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int baseNodeSize);
+	SmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
 
 	void updateMeshImpl(OctreeNode* volReg);
 
