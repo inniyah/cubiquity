@@ -34,51 +34,58 @@ Volume<VoxelType>::Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, i
 	
 	mVolData = new PolyVox::RawVolume<VoxelType>(volumeRegion);
 
-	//mRootNode = Node::create();
-
-	/*for(int z = 0; z < volumeDepthInRegions; z++)
+	PolyVox::Region regionToCover(mVolData->getEnclosingRegion());
+	if(getType() == VolumeTypes::SmoothTerrain)
 	{
-		for(int y = 0; y < volumeHeightInRegions; y++)
-		{
-			for(int x = 0; x < volumeWidthInRegions; x++)
-			{
-				// Set up the regions so they exactly touch and neighbouring regions share
-				// voxels on thier faces. This is what we need for the Marching Cubes surface
-				int regLowerX = lowerX + x * regionWidth;
-				int regLowerY = lowerY + y * regionHeight;
-				int regLowerZ = lowerZ + z * regionDepth;
-				int regUpperX = regLowerX + regionWidth;
-				int regUpperY = regLowerY + regionHeight;
-				int regUpperZ = regLowerZ + regionDepth;
+		regionToCover.shiftLowerCorner(-1, -1, -1);
+		regionToCover.shiftUpperCorner(1, 1, 1);
+	}
 
-				// The above actually causes the the regions to extend outside the upper range of
-				// the volume. For the Marching cubes this is fine as it ensures the volume will
-				// get closed, so we want to mimic this behaviour on the lower edges too.
-				if(getType() == VolumeTypes::SmoothTerrain)
-				{
-					//We only need to subtract 1 for highest LOD, but subtract 4 to allow 3 LOD levels.
-					//if(x == 0) regLowerX -= 4;
-					//if(y == 0) regLowerY -= 4;
-					//if(z == 0) regLowerZ -= 4;
-				}
+	GP_ASSERT(PolyVox::isPowerOf2(mBaseNodeSize));
 
-				// This wasn't necessary for the coloured cubes because this surface extractor already
-				// peeks outside the region in the negative direction. But we do need to add a gap between
-				// the regions for the cubic surface extractor as in this case voxels should not be shared
-				// between regions (see the cubic surface extractor docs for a diagram). However, we skip
-				// this for the upper extremes as we do want to preserve the property of the regions
-				// extending outside the volumes (to close off the mesh).
-				if(getType() == VolumeTypes::ColouredCubes)
-				{
-					if(x < (volumeWidthInRegions - 1)) regUpperX--;
-					if(y < (volumeHeightInRegions - 1)) regUpperY--;
-					if(z < (volumeDepthInRegions - 1)) regUpperZ--;
-				}
+	uint32_t largestVolumeDimension = std::max(regionToCover.getWidthInVoxels(), std::max(regionToCover.getHeightInVoxels(), regionToCover.getDepthInVoxels()));
+	if(getType() == VolumeTypes::SmoothTerrain)
+	{
+		largestVolumeDimension--;
+	}
 
-				mOctreeNodes[x][y][z] = new OctreeNode(Region(regLowerX, regLowerY, regLowerZ, regUpperX, regUpperY, regUpperZ), mRootNode);
-			}
-		}
-	}*/
+	uint32_t octreeTargetSize = PolyVox::upperPowerOfTwo(largestVolumeDimension);
+
+	uint8_t noOfLodLevels = logBase2((octreeTargetSize) / mBaseNodeSize) + 1;
+
+	uint32_t regionToCoverWidth = VolumeTypes::SmoothTerrain ? regionToCover.getWidthInCells() : regionToCover.getWidthInVoxels();
+	uint32_t regionToCoverHeight = VolumeTypes::SmoothTerrain ? regionToCover.getHeightInCells() : regionToCover.getHeightInVoxels();
+	uint32_t regionToCoverDepth = VolumeTypes::SmoothTerrain ? regionToCover.getDepthInCells() : regionToCover.getDepthInVoxels();
+
+	uint32_t widthIncrease = octreeTargetSize - regionToCoverWidth;
+	uint32_t heightIncrease = octreeTargetSize - regionToCoverHeight;
+	uint32_t depthIncrease = octreeTargetSize - regionToCoverDepth;
+
+	PolyVox::Region octreeRegion(regionToCover);
+	
+	if(widthIncrease % 2 == 1)
+	{
+		octreeRegion.setUpperX(octreeRegion.getUpperX() + 1);
+		widthIncrease--;
+	}
+
+	if(heightIncrease % 2 == 1)
+	{
+		octreeRegion.setUpperY(octreeRegion.getUpperY() + 1);
+		heightIncrease--;
+	}
+	if(depthIncrease % 2 == 1)
+	{
+		octreeRegion.setUpperZ(octreeRegion.getUpperZ() + 1);
+		depthIncrease--;
+	}
+
+	octreeRegion.grow(widthIncrease / 2, heightIncrease / 2, depthIncrease / 2);
+
+	mRootOctreeNode = new OctreeNode(octreeRegion, 0);
+	mRootOctreeNode->mLodLevel = noOfLodLevels - 1;
+
+	buildOctreeNodeTree(mRootOctreeNode, regionToCover, getType() == VolumeTypes::SmoothTerrain);
 }
 
 template <typename VoxelType>
