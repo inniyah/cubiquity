@@ -7,8 +7,8 @@
 using namespace gameplay;
 using namespace PolyVox;
 
-GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth, unsigned int baseNodeSize)
-	:GameplayVolume<SmoothTerrainVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth, baseNodeSize)
+GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int baseNodeSize)
+	:GameplayVolume<SmoothTerrainVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, baseNodeSize)
 {
 	mRootGameplayNode = createNodeWithExtraData("RootGameplayNode");
 

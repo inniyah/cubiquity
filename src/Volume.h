@@ -25,7 +25,7 @@ class Volume
 public:
 	typedef _VoxelType VoxelType;
 
-	Volume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize);
+	Volume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize);
 	~Volume();
 
 	void buildOctreeNodeTree(OctreeNode* parent, const PolyVox::Region& regionToCover, OctreeConstructionMode octreeConstructionMode);
@@ -52,8 +52,6 @@ public:
 	OctreeNode* mRootOctreeNode;
 
 	const unsigned int mRegionWidth;
-	const unsigned int mRegionHeight;
-	const unsigned int mRegionDepth;
 
 	const unsigned int mBaseNodeSize;
 

@@ -76,8 +76,8 @@ void rescaleCubicVolume(RawVolume<Colour>* pVolSrc, const Region& regSrc, RawVol
 	}
 }
 
-ColouredCubesVolume::ColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth, unsigned int baseNodeSize)
-	:Volume<Colour>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth, OctreeConstructionModes::BoundVoxels, baseNodeSize)
+ColouredCubesVolume::ColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int baseNodeSize)
+	:Volume<Colour>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, OctreeConstructionModes::BoundVoxels, baseNodeSize)
 {
 }
 

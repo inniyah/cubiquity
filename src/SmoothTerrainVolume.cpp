@@ -5,8 +5,8 @@
 using namespace std;
 using namespace PolyVox;
 
-SmoothTerrainVolume::SmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth, unsigned int baseNodeSize)
-	:Volume<MultiMaterial4>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, regionHeight, regionDepth, OctreeConstructionModes::BoundCells, baseNodeSize)
+SmoothTerrainVolume::SmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int baseNodeSize)
+	:Volume<MultiMaterial4>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, regionWidth, OctreeConstructionModes::BoundCells, baseNodeSize)
 {
 }
 
