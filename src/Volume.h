@@ -9,15 +9,15 @@
 #include "PolyVoxCore/CubicSurfaceExtractor.h"
 #include "PolyVoxCore/MarchingCubesSurfaceExtractor.h"
 
-namespace VolumeTypes
+namespace OctreeConstructionModes
 {
-	enum VolumeType
+	enum OctreeConstructionMode
 	{
-		ColouredCubes = 0,
-		SmoothTerrain = 1
+		BoundVoxels = 0,
+		BoundCells = 1
 	};
 }
-typedef VolumeTypes::VolumeType VolumeType;
+typedef OctreeConstructionModes::OctreeConstructionMode OctreeConstructionMode;
 
 template <typename _VoxelType>
 class Volume
@@ -25,12 +25,11 @@ class Volume
 public:
 	typedef _VoxelType VoxelType;
 
-	Volume(VolumeType type, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth, unsigned int baseNodeSize = 16);
+	Volume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int regionWidth, unsigned int regionHeight, unsigned int regionDepth, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize);
 	~Volume();
 
-	void buildOctreeNodeTree(OctreeNode* parent, const PolyVox::Region& regionToCover, bool boundCells);
+	void buildOctreeNodeTree(OctreeNode* parent, const PolyVox::Region& regionToCover, OctreeConstructionMode octreeConstructionMode);
 
-	VolumeType getType(void) const;
 
 	VoxelType getVoxelAt(int x, int y, int z);
 	void setVoxelAt(int x, int y, int z, VoxelType value);
@@ -47,8 +46,6 @@ public:
 
 protected:
 	Volume& operator=(const Volume&);
-
-	VolumeType mType;
 
 public:
 	PolyVox::RawVolume<VoxelType>* mVolData;

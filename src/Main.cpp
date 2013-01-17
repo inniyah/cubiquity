@@ -140,33 +140,27 @@ void MeshGame::initialize()
 
 	// Create the volume and add it to the scene.
 #ifdef TERRAIN_SMOOTH
-	mVolume = GameplaySmoothTerrainVolume::create(VolumeTypes::SmoothTerrain, 0, 0, 0, 127, 31, 127, 32, 32, 32);
+	mVolume = GameplaySmoothTerrainVolume::create(0, 0, 0, 127, 31, 127, 32, 32, 32, 16);
 	mVolumeEditor = new GameplaySmoothTerrainVolumeEditor(mVolume);
 #endif
 #ifdef TERRAIN_CUBIC
-	mVolume = GameplayColouredCubesVolume::create(VolumeTypes::ColouredCubes, 0, 0, 0, 127, 31, 127, 32, 32, 32);
+	mVolume = GameplayColouredCubesVolume::create(0, 0, 0, 127, 31, 127, 32, 32, 32, 16);
 	mVolumeEditor = 0;
 #endif
 
 	//Rather dirty hack until I figure out how to package volume data with gameplay
 #ifdef WIN32
-	if(mVolume->mVolume->getType() == VolumeTypes::SmoothTerrain)
-	{
+#ifdef TERRAIN_SMOOTH
 		loadData("res/level2MultiMaterial8Bit.vol", mVolume->mVolume);
-	}
-	else
-	{
-		loadData("res/level2.vol", mVolume->mVolume);
-	}
 #else
-	if(mVolume->mVolume->getType() == VolumeTypes::SmoothTerrain)
-	{
+		loadData("res/level2.vol", mVolume->mVolume);
+#endif
+#else
+#ifdef TERRAIN_SMOOTH
 		loadData("/sdcard/external_sd/level2MultiMaterial8Bit.vol", mVolume->mVolume);
-	}
-	else
-	{
+#else
 		loadData("/sdcard/external_sd/level2.vol", mVolume->mVolume);
-	}
+#endif
 #endif
 	
 	_polyVoxNode = mVolume->mRootGameplayNode;
