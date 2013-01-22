@@ -188,7 +188,7 @@ void MeshGame::update(float elapsedTime)
 		ray.setDirection(dir);
 
 		Vector3 intersection;
-		if(raycast(mVolume->getVolume(), ray, 200.0f, intersection))
+		if(GameplayRaycasting::gameplayRaycast(mVolume, ray, 200.0f, intersection))
 		{
 			mSphereNode->setTranslation(intersection);
 		}		

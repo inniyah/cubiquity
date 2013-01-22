@@ -327,6 +327,9 @@
     <ClInclude Include="Bridges\gameplay\Lua\lua_Global.h">
       <Filter>Bridge\Lua</Filter>
     </ClInclude>
+    <ClInclude Include="Bridges\gameplay\Lua\lua_GameplayRaycasting.h">
+      <Filter>Bridge\Lua</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -414,6 +417,9 @@
       <Filter>Bridge\Lua</Filter>
     </ClCompile>
     <ClCompile Include="Bridges\gameplay\Lua\lua_Global.cpp">
+      <Filter>Bridge\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="Bridges\gameplay\Lua\lua_GameplayRaycasting.cpp">
       <Filter>Bridge\Lua</Filter>
     </ClCompile>
   </ItemGroup>

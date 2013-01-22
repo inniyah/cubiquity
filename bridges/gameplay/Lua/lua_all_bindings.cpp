@@ -7,6 +7,7 @@ namespace Cubiquity
 void lua_RegisterAllBindings()
 {
     luaRegister_GameplayColouredCubesVolume();
+    luaRegister_GameplayRaycasting();
     luaRegister_GameplaySmoothTerrainVolume();
     luaRegister_GameplaySmoothTerrainVolumeEditor();
     luaRegister_GameplayVolumeSerialisation();
