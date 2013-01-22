@@ -8,6 +8,9 @@
     <Filter Include="PolyVox">
       <UniqueIdentifier>{d6362c29-8fb8-40ac-bd59-cd053c203e16}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{0cd98a03-6eaa-4812-a31d-79918187b597}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="game.config" />
@@ -28,7 +31,6 @@
     <None Include="res\colored.vert">
       <Filter>res</Filter>
     </None>
-    <None Include="src\volume.inl" />
     <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\AmbientOcclusionCalculator.inl">
       <Filter>PolyVox</Filter>
     </None>
@@ -107,14 +109,14 @@
     <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\SubArray.inl">
       <Filter>PolyVox</Filter>
     </None>
+    <None Include="Core\Volume.inl">
+      <Filter>Core</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\Colour.h" />
-    <ClInclude Include="src\Volume.h" />
-    <ClInclude Include="src\multimaterial.h" />
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\AmbientOcclusionCalculator.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
@@ -241,19 +243,10 @@
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Config.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
-    <ClInclude Include="src\OctreeNode.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\GameplaySmoothTerrainVolume.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\CubiquityUtility.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\GameplayColouredCubesVolume.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\VolumeSerialisation.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\ExtraNodeData.h">
@@ -262,37 +255,53 @@
     <ClInclude Include="src\GameplayVolume.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\SmoothTerrainVolumeEditor.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Raycasting.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="src\GameplayRaycasting.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ColouredCubesIsQuadNeeded.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MultiMaterialMarchingCubesController.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\GameplaySmoothTerrainVolumeEditor.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\ColouredCubesVolume.h">
-      <Filter>src</Filter>
+    <ClInclude Include="Core\Colour.h">
+      <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\SmoothTerrainVolume.h">
-      <Filter>src</Filter>
+    <ClInclude Include="Core\ColouredCubesIsQuadNeeded.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\ColouredCubesVolume.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\CubiquityUtility.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\MultiMaterial.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\MultiMaterialMarchingCubesController.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\OctreeNode.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Raycasting.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\SmoothTerrainVolume.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\SmoothTerrainVolumeEditor.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\Volume.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Core\VolumeSerialisation.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\Colour.cpp" />
-    <ClCompile Include="src\MultiMaterial.cpp" />
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\ArraySizes.cpp">
       <Filter>PolyVox</Filter>
     </ClCompile>
@@ -323,13 +332,7 @@
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\ErrorHandling.cpp">
       <Filter>PolyVox</Filter>
     </ClCompile>
-    <ClCompile Include="src\OctreeNode.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\GameplaySmoothTerrainVolume.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CubiquityUtility.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\GameplayColouredCubesVolume.cpp">
@@ -338,20 +341,32 @@
     <ClCompile Include="src\ExtraNodeData.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\SmoothTerrainVolumeEditor.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="src\GameplayRaycasting.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\GameplaySmoothTerrainVolumeEditor.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\ColouredCubesVolume.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="Core\Colour.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\SmoothTerrainVolume.cpp">
-      <Filter>src</Filter>
+    <ClCompile Include="Core\ColouredCubesVolume.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\CubiquityUtility.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\MultiMaterial.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\OctreeNode.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\SmoothTerrainVolume.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Core\SmoothTerrainVolumeEditor.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

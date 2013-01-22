@@ -74,7 +74,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../gameplay/external-deps/lua/include;../gameplay/external-deps/bullet/include;../gameplay/gameplay/src;../gameplay/external-deps/openal/include/AL;../gameplay/external-deps/oggvorbis/include;../gameplay/external-deps/libpng/include;../gameplay/external-deps/zlib/include;../gameplay/external-deps/glew/include;../polyvox/library/PolyVoxCore/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../gameplay/external-deps/lua/include;../gameplay/external-deps/bullet/include;../gameplay/gameplay/src;../gameplay/external-deps/openal/include/AL;../gameplay/external-deps/oggvorbis/include;../gameplay/external-deps/libpng/include;../gameplay/external-deps/zlib/include;../gameplay/external-deps/glew/include;../polyvox/library/PolyVoxCore/include;./Core</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -105,7 +105,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;GAMEPLAY_MEM_LEAK_DETECTION;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../gameplay/external-deps/lua/include;../gameplay/external-deps/bullet/include;../gameplay/gameplay/src;../gameplay/external-deps/openal/include/AL;../gameplay/external-deps/oggvorbis/include;../gameplay/external-deps/libpng/include;../gameplay/external-deps/zlib/include;../gameplay/external-deps/glew/include;../polyvox/library/PolyVoxCore/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../gameplay/external-deps/lua/include;../gameplay/external-deps/bullet/include;../gameplay/gameplay/src;../gameplay/external-deps/openal/include/AL;../gameplay/external-deps/oggvorbis/include;../gameplay/external-deps/libpng/include;../gameplay/external-deps/zlib/include;../gameplay/external-deps/glew/include;../polyvox/library/PolyVoxCore/include;./Core</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <ShowIncludes>false</ShowIncludes>
       <PreprocessToFile>false</PreprocessToFile>
@@ -139,7 +139,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../gameplay/external-deps/lua/include;../gameplay/external-deps/bullet/include;../gameplay/gameplay/src;../gameplay/external-deps/openal/include/AL;../gameplay/external-deps/oggvorbis/include;../gameplay/external-deps/libpng/include;../gameplay/external-deps/zlib/include;../gameplay/external-deps/glew/include;../polyvox/library/PolyVoxCore/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../gameplay/external-deps/lua/include;../gameplay/external-deps/bullet/include;../gameplay/gameplay/src;../gameplay/external-deps/openal/include/AL;../gameplay/external-deps/oggvorbis/include;../gameplay/external-deps/libpng/include;../gameplay/external-deps/zlib/include;../gameplay/external-deps/glew/include;../polyvox/library/PolyVoxCore/include;./Core</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -192,6 +192,7 @@
     <None Include="bar-descriptor.xml">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Core\Volume.inl" />
     <None Include="game.config" />
     <None Include="icon.png" />
     <None Include="res\box.dae" />
@@ -199,7 +200,6 @@
     <None Include="res\box.material" />
     <None Include="res\colored.frag" />
     <None Include="res\colored.vert" />
-    <None Include="src\volume.inl" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\ArraySizes.cpp" />
@@ -212,19 +212,19 @@
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Log.cpp" />
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Region.cpp" />
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\VertexTypes.cpp" />
-    <ClCompile Include="src\Colour.cpp" />
-    <ClCompile Include="src\ColouredCubesVolume.cpp" />
+    <ClCompile Include="Core\Colour.cpp" />
+    <ClCompile Include="Core\ColouredCubesVolume.cpp" />
+    <ClCompile Include="Core\CubiquityUtility.cpp" />
+    <ClCompile Include="Core\MultiMaterial.cpp" />
+    <ClCompile Include="Core\OctreeNode.cpp" />
+    <ClCompile Include="Core\SmoothTerrainVolume.cpp" />
+    <ClCompile Include="Core\SmoothTerrainVolumeEditor.cpp" />
     <ClCompile Include="src\ExtraNodeData.cpp" />
     <ClCompile Include="src\GameplayColouredCubesVolume.cpp" />
     <ClCompile Include="src\GameplayRaycasting.cpp" />
     <ClCompile Include="src\GameplaySmoothTerrainVolume.cpp" />
     <ClCompile Include="src\GameplaySmoothTerrainVolumeEditor.cpp" />
     <ClCompile Include="src\Main.cpp" />
-    <ClCompile Include="src\MultiMaterial.cpp" />
-    <ClCompile Include="src\OctreeNode.cpp" />
-    <ClCompile Include="src\CubiquityUtility.cpp" />
-    <ClCompile Include="src\SmoothTerrainVolume.cpp" />
-    <ClCompile Include="src\SmoothTerrainVolumeEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\AmbientOcclusionCalculator.h" />
@@ -269,9 +269,18 @@
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VertexTypes.h" />
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VolumeResampler.h" />
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.h" />
-    <ClInclude Include="src\Colour.h" />
-    <ClInclude Include="src\ColouredCubesIsQuadNeeded.h" />
-    <ClInclude Include="src\ColouredCubesVolume.h" />
+    <ClInclude Include="Core\Colour.h" />
+    <ClInclude Include="Core\ColouredCubesIsQuadNeeded.h" />
+    <ClInclude Include="Core\ColouredCubesVolume.h" />
+    <ClInclude Include="Core\CubiquityUtility.h" />
+    <ClInclude Include="Core\MultiMaterial.h" />
+    <ClInclude Include="Core\MultiMaterialMarchingCubesController.h" />
+    <ClInclude Include="Core\OctreeNode.h" />
+    <ClInclude Include="Core\Raycasting.h" />
+    <ClInclude Include="Core\SmoothTerrainVolume.h" />
+    <ClInclude Include="Core\SmoothTerrainVolumeEditor.h" />
+    <ClInclude Include="Core\Volume.h" />
+    <ClInclude Include="Core\VolumeSerialisation.h" />
     <ClInclude Include="src\ExtraNodeData.h" />
     <ClInclude Include="src\GameplayColouredCubesVolume.h" />
     <ClInclude Include="src\GameplayRaycasting.h" />
@@ -279,15 +288,6 @@
     <ClInclude Include="src\GameplaySmoothTerrainVolumeEditor.h" />
     <ClInclude Include="src\GameplayVolume.h" />
     <ClInclude Include="src\Main.h" />
-    <ClInclude Include="src\multimaterial.h" />
-    <ClInclude Include="src\MultiMaterialMarchingCubesController.h" />
-    <ClInclude Include="src\OctreeNode.h" />
-    <ClInclude Include="src\Raycasting.h" />
-    <ClInclude Include="src\CubiquityUtility.h" />
-    <ClInclude Include="src\SmoothTerrainVolume.h" />
-    <ClInclude Include="src\SmoothTerrainVolumeEditor.h" />
-    <ClInclude Include="src\Volume.h" />
-    <ClInclude Include="src\VolumeSerialisation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
