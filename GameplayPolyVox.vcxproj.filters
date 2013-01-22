@@ -11,6 +11,9 @@
     <Filter Include="Core">
       <UniqueIdentifier>{0cd98a03-6eaa-4812-a31d-79918187b597}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Bridge">
+      <UniqueIdentifier>{4d0cb1d9-4f92-420f-8bad-30f468f83e38}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="game.config" />
@@ -243,24 +246,6 @@
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Config.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
-    <ClInclude Include="src\GameplaySmoothTerrainVolume.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GameplayColouredCubesVolume.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ExtraNodeData.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GameplayVolume.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GameplayRaycasting.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GameplaySmoothTerrainVolumeEditor.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="Core\Colour.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -297,6 +282,24 @@
     <ClInclude Include="Core\VolumeSerialisation.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Bridges\gameplay\ExtraNodeData.h">
+      <Filter>Bridge</Filter>
+    </ClInclude>
+    <ClInclude Include="Bridges\gameplay\GameplayColouredCubesVolume.h">
+      <Filter>Bridge</Filter>
+    </ClInclude>
+    <ClInclude Include="Bridges\gameplay\GameplayRaycasting.h">
+      <Filter>Bridge</Filter>
+    </ClInclude>
+    <ClInclude Include="Bridges\gameplay\GameplaySmoothTerrainVolume.h">
+      <Filter>Bridge</Filter>
+    </ClInclude>
+    <ClInclude Include="Bridges\gameplay\GameplaySmoothTerrainVolumeEditor.h">
+      <Filter>Bridge</Filter>
+    </ClInclude>
+    <ClInclude Include="Bridges\gameplay\GameplayVolume.h">
+      <Filter>Bridge</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -332,21 +335,6 @@
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\ErrorHandling.cpp">
       <Filter>PolyVox</Filter>
     </ClCompile>
-    <ClCompile Include="src\GameplaySmoothTerrainVolume.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GameplayColouredCubesVolume.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ExtraNodeData.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GameplayRaycasting.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GameplaySmoothTerrainVolumeEditor.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="Core\Colour.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -367,6 +355,21 @@
     </ClCompile>
     <ClCompile Include="Core\SmoothTerrainVolumeEditor.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Bridges\gameplay\ExtraNodeData.cpp">
+      <Filter>Bridge</Filter>
+    </ClCompile>
+    <ClCompile Include="Bridges\gameplay\GameplayColouredCubesVolume.cpp">
+      <Filter>Bridge</Filter>
+    </ClCompile>
+    <ClCompile Include="Bridges\gameplay\GameplayRaycasting.cpp">
+      <Filter>Bridge</Filter>
+    </ClCompile>
+    <ClCompile Include="Bridges\gameplay\GameplaySmoothTerrainVolume.cpp">
+      <Filter>Bridge</Filter>
+    </ClCompile>
+    <ClCompile Include="Bridges\gameplay\GameplaySmoothTerrainVolumeEditor.cpp">
+      <Filter>Bridge</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
