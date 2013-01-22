@@ -9,6 +9,7 @@ void lua_RegisterAllBindings()
     luaRegister_GameplayColouredCubesVolume();
     luaRegister_GameplaySmoothTerrainVolume();
     luaRegister_GameplaySmoothTerrainVolumeEditor();
+    luaRegister_GameplayVolumeSerialisation();
     luaRegister_lua_Global();
 }
 

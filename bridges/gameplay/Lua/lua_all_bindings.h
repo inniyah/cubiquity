@@ -4,6 +4,7 @@
 #include "lua_GameplayColouredCubesVolume.h"
 #include "lua_GameplaySmoothTerrainVolume.h"
 #include "lua_GameplaySmoothTerrainVolumeEditor.h"
+#include "lua_GameplayVolumeSerialisation.h"
 #include "lua_Global.h"
 
 namespace Cubiquity

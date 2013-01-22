@@ -6,7 +6,6 @@ namespace Cubiquity
 {
 
 // Lua bindings for global functions.
-int lua__loadData(lua_State* state);
 int lua__raycast(lua_State* state);
 
 void luaRegister_lua_Global();

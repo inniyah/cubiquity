@@ -321,6 +321,9 @@
     <ClInclude Include="Bridges\gameplay\Lua\lua_GameplaySmoothTerrainVolumeEditor.h">
       <Filter>Bridge\Lua</Filter>
     </ClInclude>
+    <ClInclude Include="Bridges\gameplay\Lua\lua_GameplayVolumeSerialisation.h">
+      <Filter>Bridge\Lua</Filter>
+    </ClInclude>
     <ClInclude Include="Bridges\gameplay\Lua\lua_Global.h">
       <Filter>Bridge\Lua</Filter>
     </ClInclude>
@@ -405,6 +408,9 @@
       <Filter>Bridge\Lua</Filter>
     </ClCompile>
     <ClCompile Include="Bridges\gameplay\Lua\lua_GameplaySmoothTerrainVolumeEditor.cpp">
+      <Filter>Bridge\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="Bridges\gameplay\Lua\lua_GameplayVolumeSerialisation.cpp">
       <Filter>Bridge\Lua</Filter>
     </ClCompile>
     <ClCompile Include="Bridges\gameplay\Lua\lua_Global.cpp">
