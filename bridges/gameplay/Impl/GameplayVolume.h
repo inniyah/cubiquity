@@ -10,6 +10,18 @@
 template <typename _VolumeType>
 class GameplayVolume : public gameplay::Ref
 {
+public:
+	gameplay::Node* getRootNode(void)
+	{
+		return mRootGameplayNode;
+	}
+
+	//Not sure I like exposing this one... should make some functions/classes friends instead?
+	_VolumeType* getVolume(void)
+	{
+		return mVolume;
+	}
+
 protected:
 	GameplayVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
 		:mRootGameplayNode(0)
@@ -21,12 +33,11 @@ protected:
 	{
 	}
 
+protected:
+
 	void buildNode(OctreeNode* octreeNode, gameplay::Node* gameplayNode);
 
-public:
-
 	_VolumeType* mVolume;
-
 	gameplay::Node* mRootGameplayNode;
 };
 

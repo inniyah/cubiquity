@@ -22,7 +22,7 @@ protected:
 	GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
 	virtual ~GameplaySmoothTerrainVolume();
 
-public:
+private:
 	void syncNode(OctreeNode* octreeNode, gameplay::Node* gameplayNode);
 
 	gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType > >* polyVoxMesh);

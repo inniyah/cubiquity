@@ -303,6 +303,9 @@
     <ClInclude Include="Bridges\gameplay\Impl\GameplayVolume.h">
       <Filter>Bridge\Impl</Filter>
     </ClInclude>
+    <ClInclude Include="Bridges\gameplay\GameplayVolumeSerialisation.h">
+      <Filter>Bridge</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">

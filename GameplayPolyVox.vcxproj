@@ -273,6 +273,7 @@
     <ClInclude Include="Bridges\gameplay\GameplayRaycasting.h" />
     <ClInclude Include="Bridges\gameplay\GameplaySmoothTerrainVolume.h" />
     <ClInclude Include="Bridges\gameplay\GameplaySmoothTerrainVolumeEditor.h" />
+    <ClInclude Include="Bridges\gameplay\GameplayVolumeSerialisation.h" />
     <ClInclude Include="Bridges\gameplay\Impl\ExtraNodeData.h" />
     <ClInclude Include="Bridges\gameplay\Impl\GameplayVolume.h" />
     <ClInclude Include="Core\Colour.h" />

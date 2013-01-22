@@ -6,7 +6,7 @@
 
 #include "OctreeNode.h" //HACK!
 
-#include "VolumeSerialisation.h"
+#include "GameplayVolumeSerialisation.h"
 
 #include <algorithm>
 
@@ -150,20 +150,20 @@ void MeshGame::initialize()
 	//Rather dirty hack until I figure out how to package volume data with gameplay
 #ifdef WIN32
 #ifdef TERRAIN_SMOOTH
-		loadData("res/level2MultiMaterial8Bit.vol", mVolume->mVolume);
+		loadData("res/level2MultiMaterial8Bit.vol", mVolume);
 #else
-		loadData("res/level2.vol", mVolume->mVolume);
+		loadData("res/level2.vol", mVolume);
 #endif
 #else
 #ifdef TERRAIN_SMOOTH
-		loadData("/sdcard/external_sd/level2MultiMaterial8Bit.vol", mVolume->mVolume);
+		loadData("/sdcard/external_sd/level2MultiMaterial8Bit.vol", mVolume);
 #else
-		loadData("/sdcard/external_sd/level2.vol", mVolume->mVolume);
+		loadData("/sdcard/external_sd/level2.vol", mVolume);
 #endif
 #endif
 	
-	_polyVoxNode = mVolume->mRootGameplayNode;
-	_scene->addNode(mVolume->mRootGameplayNode);
+	_polyVoxNode = mVolume->getRootNode();
+	_scene->addNode(mVolume->getRootNode());
 }
 
 void MeshGame::finalize()
@@ -188,7 +188,7 @@ void MeshGame::update(float elapsedTime)
 		ray.setDirection(dir);
 
 		Vector3 intersection;
-		if(raycast(mVolume->mVolume, ray, 200.0f, intersection))
+		if(raycast(mVolume->getVolume(), ray, 200.0f, intersection))
 		{
 			mSphereNode->setTranslation(intersection);
 		}		
