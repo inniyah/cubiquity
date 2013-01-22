@@ -5,7 +5,7 @@
 
 #include "gameplay.h"
 
-#include "GameplayVolume.h"
+#include "Impl/GameplayVolume.h"
 
 class GameplaySmoothTerrainVolume : public GameplayVolume<SmoothTerrainVolume>
 {

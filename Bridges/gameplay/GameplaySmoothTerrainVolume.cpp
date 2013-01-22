@@ -1,7 +1,5 @@
 #include "GameplaySmoothTerrainVolume.h"
 
-#include "ExtraNodeData.h"
-
 #include "gameplay.h"
 
 using namespace gameplay;

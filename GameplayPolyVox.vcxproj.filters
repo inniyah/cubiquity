@@ -14,6 +14,9 @@
     <Filter Include="Bridge">
       <UniqueIdentifier>{4d0cb1d9-4f92-420f-8bad-30f468f83e38}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Bridge\Impl">
+      <UniqueIdentifier>{9031d208-9d52-4e7d-97d7-e73653d69961}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="game.config" />
@@ -282,9 +285,6 @@
     <ClInclude Include="Core\VolumeSerialisation.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Bridges\gameplay\ExtraNodeData.h">
-      <Filter>Bridge</Filter>
-    </ClInclude>
     <ClInclude Include="Bridges\gameplay\GameplayColouredCubesVolume.h">
       <Filter>Bridge</Filter>
     </ClInclude>
@@ -297,8 +297,11 @@
     <ClInclude Include="Bridges\gameplay\GameplaySmoothTerrainVolumeEditor.h">
       <Filter>Bridge</Filter>
     </ClInclude>
-    <ClInclude Include="Bridges\gameplay\GameplayVolume.h">
-      <Filter>Bridge</Filter>
+    <ClInclude Include="Bridges\gameplay\Impl\ExtraNodeData.h">
+      <Filter>Bridge\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="Bridges\gameplay\Impl\GameplayVolume.h">
+      <Filter>Bridge\Impl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -356,9 +359,6 @@
     <ClCompile Include="Core\SmoothTerrainVolumeEditor.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="Bridges\gameplay\ExtraNodeData.cpp">
-      <Filter>Bridge</Filter>
-    </ClCompile>
     <ClCompile Include="Bridges\gameplay\GameplayColouredCubesVolume.cpp">
       <Filter>Bridge</Filter>
     </ClCompile>
@@ -370,6 +370,9 @@
     </ClCompile>
     <ClCompile Include="Bridges\gameplay\GameplaySmoothTerrainVolumeEditor.cpp">
       <Filter>Bridge</Filter>
+    </ClCompile>
+    <ClCompile Include="Bridges\gameplay\Impl\ExtraNodeData.cpp">
+      <Filter>Bridge\Impl</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

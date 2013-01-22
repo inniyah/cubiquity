@@ -212,11 +212,11 @@
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Log.cpp" />
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Region.cpp" />
     <ClCompile Include="..\polyvox\library\PolyVoxCore\source\VertexTypes.cpp" />
-    <ClCompile Include="Bridges\gameplay\ExtraNodeData.cpp" />
     <ClCompile Include="Bridges\gameplay\GameplayColouredCubesVolume.cpp" />
     <ClCompile Include="Bridges\gameplay\GameplayRaycasting.cpp" />
     <ClCompile Include="Bridges\gameplay\GameplaySmoothTerrainVolume.cpp" />
     <ClCompile Include="Bridges\gameplay\GameplaySmoothTerrainVolumeEditor.cpp" />
+    <ClCompile Include="Bridges\gameplay\Impl\ExtraNodeData.cpp" />
     <ClCompile Include="Core\Colour.cpp" />
     <ClCompile Include="Core\ColouredCubesVolume.cpp" />
     <ClCompile Include="Core\CubiquityUtility.cpp" />
@@ -269,12 +269,12 @@
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VertexTypes.h" />
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VolumeResampler.h" />
     <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.h" />
-    <ClInclude Include="Bridges\gameplay\ExtraNodeData.h" />
     <ClInclude Include="Bridges\gameplay\GameplayColouredCubesVolume.h" />
     <ClInclude Include="Bridges\gameplay\GameplayRaycasting.h" />
     <ClInclude Include="Bridges\gameplay\GameplaySmoothTerrainVolume.h" />
     <ClInclude Include="Bridges\gameplay\GameplaySmoothTerrainVolumeEditor.h" />
-    <ClInclude Include="Bridges\gameplay\GameplayVolume.h" />
+    <ClInclude Include="Bridges\gameplay\Impl\ExtraNodeData.h" />
+    <ClInclude Include="Bridges\gameplay\Impl\GameplayVolume.h" />
     <ClInclude Include="Core\Colour.h" />
     <ClInclude Include="Core\ColouredCubesIsQuadNeeded.h" />
     <ClInclude Include="Core\ColouredCubesVolume.h" />
