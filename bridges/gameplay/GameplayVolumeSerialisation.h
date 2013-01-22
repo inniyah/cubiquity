@@ -6,14 +6,18 @@
 #include "GameplayColouredCubesVolume.h"
 #include "GameplaySmoothTerrainVolume.h"
 
-void loadData(const char* filename, GameplayColouredCubesVolume* volume)
+class GameplayVolumeSerialisation
 {
-	loadData(filename, volume->getVolume());
-}
+public:
+	static void gameplayLoadData(const char* filename, GameplayColouredCubesVolume* volume)
+	{
+		loadData(filename, volume->getVolume());
+	}
 
-void loadData(const char* filename, GameplaySmoothTerrainVolume* volume)
-{
-	loadData(filename, volume->getVolume());
-}
+	static void gameplayLoadData(const char* filename, GameplaySmoothTerrainVolume* volume)
+	{
+		loadData(filename, volume->getVolume());
+	}
+};
 
 #endif //GAMEPLAYVOLUMESERIALISATION_H_

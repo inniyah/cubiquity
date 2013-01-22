@@ -150,15 +150,15 @@ void MeshGame::initialize()
 	//Rather dirty hack until I figure out how to package volume data with gameplay
 #ifdef WIN32
 #ifdef TERRAIN_SMOOTH
-		loadData("res/level2MultiMaterial8Bit.vol", mVolume);
+		GameplayVolumeSerialisation::gameplayLoadData("res/level2MultiMaterial8Bit.vol", mVolume);
 #else
-		loadData("res/level2.vol", mVolume);
+		GameplayVolumeSerialisation::gameplayLoadData("res/level2.vol", mVolume);
 #endif
 #else
 #ifdef TERRAIN_SMOOTH
-		loadData("/sdcard/external_sd/level2MultiMaterial8Bit.vol", mVolume);
+		GameplayVolumeSerialisation::gameplayLoadData("/sdcard/external_sd/level2MultiMaterial8Bit.vol", mVolume);
 #else
-		loadData("/sdcard/external_sd/level2.vol", mVolume);
+		GameplayVolumeSerialisation::gameplayLoadData("/sdcard/external_sd/level2.vol", mVolume);
 #endif
 #endif
 	
