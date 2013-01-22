@@ -17,6 +17,9 @@
     <Filter Include="Bridge\Impl">
       <UniqueIdentifier>{9031d208-9d52-4e7d-97d7-e73653d69961}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Bridge\Lua">
+      <UniqueIdentifier>{39ffd5fe-0650-4223-bf2d-5bc94837a92b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="game.config" />
@@ -306,6 +309,21 @@
     <ClInclude Include="Bridges\gameplay\GameplayVolumeSerialisation.h">
       <Filter>Bridge</Filter>
     </ClInclude>
+    <ClInclude Include="Bridges\gameplay\Lua\lua_all_bindings.h">
+      <Filter>Bridge\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Bridges\gameplay\Lua\lua_GameplayColouredCubesVolume.h">
+      <Filter>Bridge\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Bridges\gameplay\Lua\lua_GameplaySmoothTerrainVolume.h">
+      <Filter>Bridge\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Bridges\gameplay\Lua\lua_GameplaySmoothTerrainVolumeEditor.h">
+      <Filter>Bridge\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="Bridges\gameplay\Lua\lua_Global.h">
+      <Filter>Bridge\Lua</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -376,6 +394,21 @@
     </ClCompile>
     <ClCompile Include="Bridges\gameplay\Impl\ExtraNodeData.cpp">
       <Filter>Bridge\Impl</Filter>
+    </ClCompile>
+    <ClCompile Include="Bridges\gameplay\Lua\lua_all_bindings.cpp">
+      <Filter>Bridge\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="Bridges\gameplay\Lua\lua_GameplayColouredCubesVolume.cpp">
+      <Filter>Bridge\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="Bridges\gameplay\Lua\lua_GameplaySmoothTerrainVolume.cpp">
+      <Filter>Bridge\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="Bridges\gameplay\Lua\lua_GameplaySmoothTerrainVolumeEditor.cpp">
+      <Filter>Bridge\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="Bridges\gameplay\Lua\lua_Global.cpp">
+      <Filter>Bridge\Lua</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

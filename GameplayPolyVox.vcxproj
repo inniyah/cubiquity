@@ -74,7 +74,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>../gameplay/external-deps/lua/include;../gameplay/external-deps/bullet/include;../gameplay/gameplay/src;../gameplay/external-deps/openal/include/AL;../gameplay/external-deps/oggvorbis/include;../gameplay/external-deps/libpng/include;../gameplay/external-deps/zlib/include;../gameplay/external-deps/glew/include;../polyvox/library/PolyVoxCore/include;./Core;./Bridges/gameplay</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../gameplay/external-deps/lua/include;../gameplay/external-deps/bullet/include;../gameplay/gameplay/src;../gameplay/gameplay/src/lua;../gameplay/external-deps/openal/include/AL;../gameplay/external-deps/oggvorbis/include;../gameplay/external-deps/libpng/include;../gameplay/external-deps/zlib/include;../gameplay/external-deps/glew/include;../polyvox/library/PolyVoxCore/include;./Core;./Bridges/gameplay</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
@@ -217,6 +217,11 @@
     <ClCompile Include="Bridges\gameplay\GameplaySmoothTerrainVolume.cpp" />
     <ClCompile Include="Bridges\gameplay\GameplaySmoothTerrainVolumeEditor.cpp" />
     <ClCompile Include="Bridges\gameplay\Impl\ExtraNodeData.cpp" />
+    <ClCompile Include="Bridges\gameplay\Lua\lua_all_bindings.cpp" />
+    <ClCompile Include="Bridges\gameplay\Lua\lua_GameplayColouredCubesVolume.cpp" />
+    <ClCompile Include="Bridges\gameplay\Lua\lua_GameplaySmoothTerrainVolume.cpp" />
+    <ClCompile Include="Bridges\gameplay\Lua\lua_GameplaySmoothTerrainVolumeEditor.cpp" />
+    <ClCompile Include="Bridges\gameplay\Lua\lua_Global.cpp" />
     <ClCompile Include="Core\Colour.cpp" />
     <ClCompile Include="Core\ColouredCubesVolume.cpp" />
     <ClCompile Include="Core\CubiquityUtility.cpp" />
@@ -276,6 +281,11 @@
     <ClInclude Include="Bridges\gameplay\GameplayVolumeSerialisation.h" />
     <ClInclude Include="Bridges\gameplay\Impl\ExtraNodeData.h" />
     <ClInclude Include="Bridges\gameplay\Impl\GameplayVolume.h" />
+    <ClInclude Include="Bridges\gameplay\Lua\lua_all_bindings.h" />
+    <ClInclude Include="Bridges\gameplay\Lua\lua_GameplayColouredCubesVolume.h" />
+    <ClInclude Include="Bridges\gameplay\Lua\lua_GameplaySmoothTerrainVolume.h" />
+    <ClInclude Include="Bridges\gameplay\Lua\lua_GameplaySmoothTerrainVolumeEditor.h" />
+    <ClInclude Include="Bridges\gameplay\Lua\lua_Global.h" />
     <ClInclude Include="Core\Colour.h" />
     <ClInclude Include="Core\ColouredCubesIsQuadNeeded.h" />
     <ClInclude Include="Core\ColouredCubesVolume.h" />
