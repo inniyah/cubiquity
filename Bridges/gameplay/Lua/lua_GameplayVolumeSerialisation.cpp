@@ -1,7 +1,9 @@
 #include "Base.h"
 #include "ScriptController.h"
 #include "lua_GameplayVolumeSerialisation.h"
-#include ""
+#include "GameplayVolumeSerialisation.h"
+
+using namespace gameplay;
 
 namespace Cubiquity
 {
