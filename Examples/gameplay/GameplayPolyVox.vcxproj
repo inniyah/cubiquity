@@ -1,0 +1,310 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="DebugMem|Win32">
+      <Configuration>DebugMem</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>GameplayPolyVox</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugMem|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='DebugMem|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(Configuration)\</OutDir>
+    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
+    <CustomBuildBeforeTargets>
+    </CustomBuildBeforeTargets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugMem|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(Configuration)\</OutDir>
+    <ExecutablePath>$(ExecutablePath)</ExecutablePath>
+    <CustomBuildBeforeTargets />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(Configuration)\</OutDir>
+    <CustomBuildBeforeTargets>
+    </CustomBuildBeforeTargets>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../gameplay/external-deps/lua/include;../gameplay/external-deps/bullet/include;../gameplay/gameplay/src;../gameplay/gameplay/src/lua;../gameplay/external-deps/openal/include/AL;../gameplay/external-deps/oggvorbis/include;../gameplay/external-deps/libpng/include;../gameplay/external-deps/zlib/include;../gameplay/external-deps/glew/include;../polyvox/library/PolyVoxCore/include;./Core;./Bridges/gameplay</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>lua.lib;OpenAL32.lib;OpenGL32.lib;GLU32.lib;glew32.lib;libpng14.lib;zlib.lib;gameplay.lib;libogg.lib;libvorbis.lib;libvorbisfile.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../gameplay/external-deps/lua/lib/windows/x86;../gameplay/external-deps/bullet/lib/windows/x86;../gameplay/external-deps/openal/lib/windows/x86;../gameplay/external-deps/oggvorbis/lib/windows/x86;../gameplay/external-deps/glew/lib/windows/x86;../gameplay/external-deps/libpng/lib/windows/x86;../gameplay/external-deps/zlib/lib/windows/x86;../gameplay/gameplay/windows/x86/$(Configuration)</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='DebugMem|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;GAMEPLAY_MEM_LEAK_DETECTION;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../gameplay/external-deps/lua/include;../gameplay/external-deps/bullet/include;../gameplay/gameplay/src;../gameplay/external-deps/openal/include/AL;../gameplay/external-deps/oggvorbis/include;../gameplay/external-deps/libpng/include;../gameplay/external-deps/zlib/include;../gameplay/external-deps/glew/include;../polyvox/library/PolyVoxCore/include;./Core;./Bridges/gameplay</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <ShowIncludes>false</ShowIncludes>
+      <PreprocessToFile>false</PreprocessToFile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>lua.lib;OpenAL32.lib;OpenGL32.lib;GLU32.lib;glew32.lib;libpng14.lib;zlib.lib;gameplay.lib;libogg.lib;libvorbis.lib;libvorbisfile.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../gameplay/external-deps/lua/lib/windows;../gameplay/external-deps/bullet/lib/windows;../gameplay/external-deps/openal/lib/windows;../gameplay/external-deps/oggvorbis/lib/windows;../gameplay/external-deps/glew/lib/windows;../gameplay/external-deps/libpng/lib/windows;../gameplay/external-deps/zlib/lib/windows;../gameplay/gameplay/$(Configuration)</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>../gameplay/external-deps/lua/include;../gameplay/external-deps/bullet/include;../gameplay/gameplay/src;../gameplay/external-deps/openal/include/AL;../gameplay/external-deps/oggvorbis/include;../gameplay/external-deps/libpng/include;../gameplay/external-deps/zlib/include;../gameplay/external-deps/glew/include;../polyvox/library/PolyVoxCore/include;./Core;./Bridges/gameplay</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>lua.lib;OpenAL32.lib;OpenGL32.lib;GLU32.lib;glew32.lib;libpng14.lib;zlib.lib;gameplay.lib;BulletDynamics.lib;BulletCollision.lib;LinearMath.lib;libogg.lib;libvorbis.lib;libvorbisfile.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../gameplay/external-deps/lua/lib/windows/x86;../gameplay/external-deps/bullet/lib/windows/x86;../gameplay/external-deps/openal/lib/windows/x86;../gameplay/external-deps/oggvorbis/lib/windows/x86;../gameplay/external-deps/glew/lib/windows/x86;../gameplay/external-deps/libpng/lib/windows/x86;../gameplay/external-deps/zlib/lib/windows/x86;../gameplay/gameplay/windows/x86/$(Configuration)</AdditionalLibraryDirectories>
+    </Link>
+    <PostBuildEvent>
+      <Command>
+      </Command>
+    </PostBuildEvent>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+      <Outputs>
+      </Outputs>
+    </CustomBuildStep>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\AmbientOcclusionCalculator.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Array.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\AStarPathfinder.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\BaseVolume.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\BaseVolumeSampler.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\CubicSurfaceExtractor.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\CubicSurfaceExtractorWithNormals.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\GradientEstimators.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Block.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\SubArray.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\IteratorController.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\LargeVolume.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\LargeVolumeSampler.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\LowPassFilter.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\MarchingCubesSurfaceExtractor.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\RawVolume.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\RawVolumeSampler.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Raycast.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\SimpleVolume.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\SimpleVolumeBlock.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\SimpleVolumeSampler.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\SurfaceMesh.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Vector.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VolumeResampler.inl" />
+    <None Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.inl" />
+    <None Include="bar-descriptor.xml">
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="Core\Volume.inl" />
+    <None Include="game.config" />
+    <None Include="icon.png" />
+    <None Include="res\box.dae" />
+    <None Include="res\box.gpb" />
+    <None Include="res\box.material" />
+    <None Include="res\colored.frag" />
+    <None Include="res\colored.vert" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\ArraySizes.cpp" />
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\AStarPathfinder.cpp" />
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\ErrorHandling.cpp" />
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\MarchingCubesTables.cpp" />
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\RandomUnitVectors.cpp" />
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\RandomVectors.cpp" />
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Impl\Utility.cpp" />
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Log.cpp" />
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\Region.cpp" />
+    <ClCompile Include="..\polyvox\library\PolyVoxCore\source\VertexTypes.cpp" />
+    <ClCompile Include="Bridges\gameplay\GameplayColouredCubesVolume.cpp" />
+    <ClCompile Include="Bridges\gameplay\GameplayRaycasting.cpp" />
+    <ClCompile Include="Bridges\gameplay\GameplaySmoothTerrainVolume.cpp" />
+    <ClCompile Include="Bridges\gameplay\GameplaySmoothTerrainVolumeEditor.cpp" />
+    <ClCompile Include="Bridges\gameplay\Impl\ExtraNodeData.cpp" />
+    <ClCompile Include="Bridges\gameplay\Lua\lua_all_bindings.cpp" />
+    <ClCompile Include="Bridges\gameplay\Lua\lua_GameplayColouredCubesVolume.cpp" />
+    <ClCompile Include="Bridges\gameplay\Lua\lua_GameplayRaycasting.cpp" />
+    <ClCompile Include="Bridges\gameplay\Lua\lua_GameplaySmoothTerrainVolume.cpp" />
+    <ClCompile Include="Bridges\gameplay\Lua\lua_GameplaySmoothTerrainVolumeEditor.cpp" />
+    <ClCompile Include="Bridges\gameplay\Lua\lua_GameplayVolumeSerialisation.cpp" />
+    <ClCompile Include="Bridges\gameplay\Lua\lua_Global.cpp" />
+    <ClCompile Include="Core\Colour.cpp" />
+    <ClCompile Include="Core\ColouredCubesVolume.cpp" />
+    <ClCompile Include="Core\CubiquityUtility.cpp" />
+    <ClCompile Include="Core\MultiMaterial.cpp" />
+    <ClCompile Include="Core\OctreeNode.cpp" />
+    <ClCompile Include="Core\SmoothTerrainVolume.cpp" />
+    <ClCompile Include="Core\SmoothTerrainVolumeEditor.cpp" />
+    <ClCompile Include="src\Main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\AmbientOcclusionCalculator.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Array.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\ArraySizes.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\AStarPathfinder.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\BaseVolume.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\ConstVolumeProxy.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\CubicSurfaceExtractor.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\CubicSurfaceExtractorWithNormals.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\DefaultIsQuadNeeded.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\DefaultMarchingCubesController.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Density.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\GradientEstimators.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\AStarPathfinderImpl.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Block.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\CompilerCapabilities.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Config.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ErrorHandling.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\MarchingCubesTables.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\RandomUnitVectors.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\RandomVectors.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\SubArray.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\TypeDef.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Utility.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Interpolation.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\IteratorController.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\LargeVolume.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Log.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\LowPassFilter.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\MarchingCubesSurfaceExtractor.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Material.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\MaterialDensityPair.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\PolyVoxForwardDeclarations.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\RawVolume.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Raycast.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Region.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\SimpleVolume.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\SurfaceMesh.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Vector.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VertexTypes.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VolumeResampler.h" />
+    <ClInclude Include="..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.h" />
+    <ClInclude Include="Bridges\gameplay\GameplayColouredCubesVolume.h" />
+    <ClInclude Include="Bridges\gameplay\GameplayRaycasting.h" />
+    <ClInclude Include="Bridges\gameplay\GameplaySmoothTerrainVolume.h" />
+    <ClInclude Include="Bridges\gameplay\GameplaySmoothTerrainVolumeEditor.h" />
+    <ClInclude Include="Bridges\gameplay\GameplayVolumeSerialisation.h" />
+    <ClInclude Include="Bridges\gameplay\Impl\ExtraNodeData.h" />
+    <ClInclude Include="Bridges\gameplay\Impl\GameplayVolume.h" />
+    <ClInclude Include="Bridges\gameplay\Lua\lua_all_bindings.h" />
+    <ClInclude Include="Bridges\gameplay\Lua\lua_GameplayColouredCubesVolume.h" />
+    <ClInclude Include="Bridges\gameplay\Lua\lua_GameplayRaycasting.h" />
+    <ClInclude Include="Bridges\gameplay\Lua\lua_GameplaySmoothTerrainVolume.h" />
+    <ClInclude Include="Bridges\gameplay\Lua\lua_GameplaySmoothTerrainVolumeEditor.h" />
+    <ClInclude Include="Bridges\gameplay\Lua\lua_GameplayVolumeSerialisation.h" />
+    <ClInclude Include="Bridges\gameplay\Lua\lua_Global.h" />
+    <ClInclude Include="Core\Colour.h" />
+    <ClInclude Include="Core\ColouredCubesIsQuadNeeded.h" />
+    <ClInclude Include="Core\ColouredCubesVolume.h" />
+    <ClInclude Include="Core\CubiquityUtility.h" />
+    <ClInclude Include="Core\MultiMaterial.h" />
+    <ClInclude Include="Core\MultiMaterialMarchingCubesController.h" />
+    <ClInclude Include="Core\OctreeNode.h" />
+    <ClInclude Include="Core\Raycasting.h" />
+    <ClInclude Include="Core\SmoothTerrainVolume.h" />
+    <ClInclude Include="Core\SmoothTerrainVolumeEditor.h" />
+    <ClInclude Include="Core\Volume.h" />
+    <ClInclude Include="Core\VolumeSerialisation.h" />
+    <ClInclude Include="src\Main.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
