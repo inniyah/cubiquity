@@ -4,8 +4,14 @@ function initialize()
     -- Display splash screen for at least 1 second.
     ScreenDisplayer.start("drawSplash", 1000)
 
+	wPressed = false
+	sPressed = false
+	aPressed = false
+	dPressed = false
+
     _touched = false
     _touchX = 0
+	_touchY = 0
 
 	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, 127, 31, 127, 32, 32)
 
@@ -45,6 +51,26 @@ function initialize()
 end
 
 function update(elapsedTime)
+	local forwardVector = _cameraNode:getForwardVector()
+	local rightVector = _cameraNode:getRightVector()
+
+	local speed = 0.1
+	local distance = elapsedTime * speed
+
+	if(wPressed) then
+		forwardVector:scale(distance)
+		_cameraNode:translate(forwardVector)
+	elseif(sPressed) then
+		forwardVector:scale(-distance)
+		_cameraNode:translate(forwardVector)
+	elseif(aPressed) then
+		rightVector:scale(-distance)
+		_cameraNode:translate(rightVector)
+	elseif(dPressed) then
+		rightVector:scale(distance)
+		_cameraNode:translate(rightVector)
+	end
+
 	local viewPos = Vector3.new(0, 0, 100);
 	_colouredCubesVolume:performUpdate(viewPos, 50)
 end
@@ -92,7 +118,26 @@ function keyEvent(evt, key)
     if evt == Keyboard.KEY_PRESS then
         if key == Keyboard.KEY_ESCAPE then
             Game.getInstance():exit()
+		elseif key == Keyboard.KEY_W then
+			wPressed = true;
+		elseif key == Keyboard.KEY_A then
+			aPressed = true;
+		elseif key == Keyboard.KEY_S then
+			sPressed = true;
+		elseif key == Keyboard.KEY_D then
+			dPressed = true;
         end
+	elseif evt == Keyboard.KEY_RELEASE then
+		if key == Keyboard.KEY_W then
+			wPressed = false;
+		elseif key == Keyboard.KEY_A then
+			aPressed = false;
+		elseif key == Keyboard.KEY_S then
+			sPressed = false;
+		elseif key == Keyboard.KEY_D then
+			dPressed = false;
+        end
+
     end
 end
 
@@ -101,12 +146,17 @@ function touchEvent(evt, x, y, contactIndex)
         _touchTime = Game.getAbsoluteTime()
         _touched = true
         _touchX = x
+		_touchY = y
     elseif evt == Touch.TOUCH_RELEASE then
         _touched = false
         _touchX = 0
+		_touchY = 0
     elseif evt == Touch.TOUCH_MOVE then
         local deltaX = x - _touchX
+		local deltaY = y - _touchY
         _touchX = x
-        _modelNode:rotateY(math.rad(deltaX * 0.5))
+		_touchY = y
+        _cameraNode:rotateY(math.rad(deltaX * -0.5))
+		_cameraNode:rotateX(math.rad(deltaY * -0.5))
     end    
 end
