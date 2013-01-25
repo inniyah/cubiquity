@@ -1,7 +1,7 @@
 #ifndef LUA_GAMEPLAYSMOOTHTERRAINVOLUMEEDITOR_H_
 #define LUA_GAMEPLAYSMOOTHTERRAINVOLUMEEDITOR_H_
 
-namespace Cubiquity
+namespace gameplay
 {
 
 // Lua bindings for GameplaySmoothTerrainVolumeEditor.

@@ -30,10 +30,6 @@ function initialize()
     local game = Game.getInstance()
     _scene:getActiveCamera():setAspectRatio(game:getWidth() / game:getHeight())
 
-
-    -- Load the AI script
-    dofile("res/ai.lua")
-
     ScreenDisplayer.finish()
 end
 
@@ -51,7 +47,7 @@ function render(elapsedTime)
     _scene:visit("drawScene")
 
     -- Draw the fps.
-    local buffer = string.format("%u\n%s", Game.getInstance():getFrameRate(), _stateMachine:getActiveState():getId())
+    local buffer = string.format("%u", Game.getInstance():getFrameRate())
     _font:start()
     _font:drawText(buffer, 5, 1, textColor, _font:getSize())
     _font:finish()
@@ -95,11 +91,6 @@ function touchEvent(evt, x, y, contactIndex)
     elseif evt == Touch.TOUCH_RELEASE then
         _touched = false
         _touchX = 0
-
-        -- Basic emulation of tap to change state
-        if (Game.getAbsoluteTime() - _touchTime) < 200 then
-            toggleState()
-        end
     elseif evt == Touch.TOUCH_MOVE then
         local deltaX = x - _touchX
         _touchX = x

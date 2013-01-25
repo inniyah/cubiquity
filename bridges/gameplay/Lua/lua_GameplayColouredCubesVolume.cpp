@@ -2,10 +2,9 @@
 #include "ScriptController.h"
 #include "lua_GameplayColouredCubesVolume.h"
 #include "GameplayColouredCubesVolume.h"
+#include "gameplay.h"
 
-using namespace gameplay;
-
-namespace Cubiquity
+namespace gameplay
 {
 
 void luaRegister_GameplayColouredCubesVolume()
@@ -126,7 +125,7 @@ int lua_GameplayColouredCubesVolume_static_create(lua_State* state)
                 {
                     ScriptUtil::LuaObject* object = (ScriptUtil::LuaObject*)lua_newuserdata(state, sizeof(ScriptUtil::LuaObject));
                     object->instance = returnPtr;
-                    object->owns = false;
+                    object->owns = true;
                     luaL_getmetatable(state, "GameplayColouredCubesVolume");
                     lua_setmetatable(state, -2);
                 }

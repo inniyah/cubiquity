@@ -1,7 +1,7 @@
 #ifndef LUA_GAMEPLAYCOLOUREDCUBESVOLUME_H_
 #define LUA_GAMEPLAYCOLOUREDCUBESVOLUME_H_
 
-namespace Cubiquity
+namespace gameplay
 {
 
 // Lua bindings for GameplayColouredCubesVolume.
