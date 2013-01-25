@@ -11,6 +11,8 @@ void luaRegister_GameplayColouredCubesVolume()
 {
     const luaL_Reg lua_members[] = 
     {
+        {"getRootNodeForLua", lua_GameplayColouredCubesVolume_getRootNodeForLua},
+        {"getVolumeForLua", lua_GameplayColouredCubesVolume_getVolumeForLua},
         {"performUpdate", lua_GameplayColouredCubesVolume_performUpdate},
         {NULL, NULL}
     };
@@ -29,6 +31,92 @@ static GameplayColouredCubesVolume* getInstance(lua_State* state)
     void* userdata = luaL_checkudata(state, 1, "GameplayColouredCubesVolume");
     luaL_argcheck(state, userdata != NULL, 1, "'GameplayColouredCubesVolume' expected.");
     return (GameplayColouredCubesVolume*)((ScriptUtil::LuaObject*)userdata)->instance;
+}
+
+int lua_GameplayColouredCubesVolume_getRootNodeForLua(lua_State* state)
+{
+    // Get the number of parameters.
+    int paramCount = lua_gettop(state);
+
+    // Attempt to match the parameters to a valid binding.
+    switch (paramCount)
+    {
+        case 2:
+        {
+            if ((lua_type(state, 1) == LUA_TUSERDATA) &&
+                lua_type(state, 2) == LUA_TNUMBER)
+            {
+                // Get parameter 1 off the stack.
+                int param1 = (int)luaL_checkint(state, 2);
+
+                GameplayColouredCubesVolume* instance = getInstance(state);
+                void* returnPtr = (void*)instance->getRootNodeForLua(param1);
+                if (returnPtr)
+                {
+                    ScriptUtil::LuaObject* object = (ScriptUtil::LuaObject*)lua_newuserdata(state, sizeof(ScriptUtil::LuaObject));
+                    object->instance = returnPtr;
+                    object->owns = false;
+                    luaL_getmetatable(state, "Node");
+                    lua_setmetatable(state, -2);
+                }
+                else
+                {
+                    lua_pushnil(state);
+                }
+
+                return 1;
+            }
+
+            lua_pushstring(state, "lua_GameplayColouredCubesVolume_getRootNodeForLua - Failed to match the given parameters to a valid function signature.");
+            lua_error(state);
+            break;
+        }
+        default:
+        {
+            lua_pushstring(state, "Invalid number of parameters (expected 2).");
+            lua_error(state);
+            break;
+        }
+    }
+    return 0;
+}
+
+int lua_GameplayColouredCubesVolume_getVolumeForLua(lua_State* state)
+{
+    // Get the number of parameters.
+    int paramCount = lua_gettop(state);
+
+    // Attempt to match the parameters to a valid binding.
+    switch (paramCount)
+    {
+        case 2:
+        {
+            if ((lua_type(state, 1) == LUA_TUSERDATA) &&
+                lua_type(state, 2) == LUA_TNUMBER)
+            {
+                // Get parameter 1 off the stack.
+                int param1 = (int)luaL_checkint(state, 2);
+
+                GameplayColouredCubesVolume* instance = getInstance(state);
+                ColouredCubesVolume* result = instance->getVolumeForLua(param1);
+
+                // Push the return value onto the stack.
+                lua_pushlightuserdata(state, result);
+                return 1;
+            }
+
+            lua_pushstring(state, "lua_GameplayColouredCubesVolume_getVolumeForLua - Failed to match the given parameters to a valid function signature.");
+            lua_error(state);
+            break;
+        }
+        default:
+        {
+            lua_pushstring(state, "Invalid number of parameters (expected 2).");
+            lua_error(state);
+            break;
+        }
+    }
+    return 0;
 }
 
 int lua_GameplayColouredCubesVolume_performUpdate(lua_State* state)

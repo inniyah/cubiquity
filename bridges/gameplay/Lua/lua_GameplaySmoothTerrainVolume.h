@@ -5,6 +5,8 @@ namespace gameplay
 {
 
 // Lua bindings for GameplaySmoothTerrainVolume.
+int lua_GameplaySmoothTerrainVolume_getRootNodeForLua(lua_State* state);
+int lua_GameplaySmoothTerrainVolume_getVolumeForLua(lua_State* state);
 int lua_GameplaySmoothTerrainVolume_performUpdate(lua_State* state);
 int lua_GameplaySmoothTerrainVolume_static_create(lua_State* state);
 

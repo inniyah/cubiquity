@@ -38,7 +38,8 @@ function initialize()
     _scene:getActiveCamera():setAspectRatio(game:getWidth() / game:getHeight())
 	_cameraNode:setTranslation(0.0, 0.0, 100.0)
 
-	-- _scene:addNode(_colouredCubesVolume:getRootNode())
+	local dummyValue = 42
+	_scene:addNode(_colouredCubesVolume:getRootNodeForLua(dummyValue))
 
     ScreenDisplayer.finish()
 end

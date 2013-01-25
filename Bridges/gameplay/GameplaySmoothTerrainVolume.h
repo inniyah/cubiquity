@@ -24,6 +24,19 @@ public:
 		return volume;
 	}
 
+	// Ugly hack, as luagen can't see the base class implementation of this function (probably it can't handle templated base classes)
+	gameplay::Node* getRootNodeForLua(int dummyParamForLuagen)
+	{
+		return GameplayVolume<SmoothTerrainVolume>::getRootNode();
+	}
+
+	// Ugly hack, as luagen can't see the base class implementation of this function (probably it can't handle templated base classes)
+	//Not sure I like exposing this one... should make some functions/classes friends instead?
+	SmoothTerrainVolume* getVolumeForLua(int dummyParamForLuagen)
+	{
+		return GameplayVolume<SmoothTerrainVolume>::getVolume();
+	}
+
 	void performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold);
 
 protected:
