@@ -1,0 +1,66 @@
+material SmoothTerrain
+{
+    technique
+    {
+        pass
+        {
+            // shaders
+            vertexShader = res/SmoothTerrain.vert
+            fragmentShader = res/SmoothTerrain.frag
+            
+            // uniforms
+            u_worldMatrix = WORLD_MATRIX
+            u_viewProjectionMatrix = VIEW_PROJECTION_MATRIX
+            
+            u_ambientColor = 0.25, 0.25, 0.25
+            
+            // samplers
+            sampler u_texture0
+            {
+                path = res/Rock.png
+                mipmap = true
+                wrapS = REPEAT
+                wrapT = REPEAT
+                minFilter = NEAREST_MIPMAP_LINEAR
+                magFilter = LINEAR
+            }
+            
+            sampler u_texture1
+            {
+                path = res/Grass.png
+                mipmap = true
+                wrapS = REPEAT
+                wrapT = REPEAT
+                minFilter = NEAREST_MIPMAP_LINEAR
+                magFilter = LINEAR
+            }
+            
+            sampler u_texture2
+            {
+                path = res/Water.png
+                mipmap = true
+                wrapS = REPEAT
+                wrapT = REPEAT
+                minFilter = NEAREST_MIPMAP_LINEAR
+                magFilter = LINEAR
+            }
+            
+            sampler u_texture3
+            {
+                path = res/SandDiffuseMap.png
+                mipmap = true
+                wrapS = REPEAT
+                wrapT = REPEAT
+                minFilter = NEAREST_MIPMAP_LINEAR
+                magFilter = LINEAR
+            }
+
+            // render state
+            renderState
+            {
+                cullFace = true
+                depthTest = true
+            }
+        }
+    }
+}

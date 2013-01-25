@@ -7,6 +7,10 @@ function initialize()
     _touched = false
     _touchX = 0
 
+	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, 127, 31, 127, 32, 32)
+
+	GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
+
     -- Load font
     _font = Font.create("res/arial40.gpb")
 
@@ -28,12 +32,20 @@ function initialize()
 
     -- Update the aspect ratio for our scene's camera to match the current device resolution
     local game = Game.getInstance()
+
+	_cameraNode = _scene:addNode();
+	_cameraNode:setCamera(_scene:getActiveCamera())
     _scene:getActiveCamera():setAspectRatio(game:getWidth() / game:getHeight())
+	_cameraNode:setTranslation(0.0, 0.0, 100.0)
+
+	-- _scene:addNode(_colouredCubesVolume:getRootNode())
 
     ScreenDisplayer.finish()
 end
 
 function update(elapsedTime)
+	local viewPos = Vector3.new(0, 0, 100);
+	_colouredCubesVolume:performUpdate(viewPos, 50)
 end
 
 -- Avoid allocating new objects every frame.
