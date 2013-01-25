@@ -37,6 +37,7 @@ public:
 
 	void clearWantedForRendering(void);
 	void determineWantedForRendering(const PolyVox::Vector3DFloat& viewPosition, float threshold);
+	void determineWhetherToRender(void);
 
 	bool hasAnyChildren(void);
 
@@ -54,6 +55,7 @@ public:
 	OctreeNode* children[2][2][2];
 
 	bool mWantedForRendering;
+	bool mRenderThisNode;
 
 	const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType > >* mSmoothPolyVoxMesh;
 	const PolyVox::SurfaceMesh< PolyVox::PositionMaterial<Colour> >* mCubicPolyVoxMesh;

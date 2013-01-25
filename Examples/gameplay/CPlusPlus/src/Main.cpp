@@ -4,8 +4,6 @@
 #include "GameplaySmoothTerrainVolume.h"
 #include "GameplayRaycasting.h"
 
-#include "OctreeNode.h" //HACK!
-
 #include "GameplayVolumeSerialisation.h"
 
 #include <algorithm>
@@ -375,16 +373,12 @@ bool MeshGame::drawScene(Node* node)
 		return true;
 	}
 
-	ExtraNodeData* extraNodeData = static_cast<ExtraNodeData*>(node->getUserPointer());
-	if(extraNodeData)
+	const char* nodeTag = node->getTag("RenderThisNode");
+	if(nodeTag != NULL)
 	{
-		OctreeNode* volReg = extraNodeData->mOctreeNode;
-		if(volReg)
+		if(strcmp(nodeTag, "f") == 0)
 		{
-			if(!volReg->mWantedForRendering)
-			{
-				return true;
-			}
+			return true;
 		}
 	}
 

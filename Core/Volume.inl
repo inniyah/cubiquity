@@ -150,6 +150,8 @@ void Volume<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float
 	mRootOctreeNode->determineWantedForRendering(viewPosition, lodThreshold);
 
 	updateMesh(mRootOctreeNode);
+
+	mRootOctreeNode->determineWhetherToRender();
 }
 
 template <typename VoxelType>

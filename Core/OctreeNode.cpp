@@ -13,6 +13,7 @@ OctreeNode::OctreeNode(PolyVox::Region region, OctreeNode* parentRegion)
 	//,mIsMeshUpToDate(false)
 	,parent(parentRegion)
 	,mWantedForRendering(false)
+	,mRenderThisNode(false)
 	,mMeshLastUpdated(0)
 	,mDataLastModified(1) //Is this ok?
 	,mSmoothPolyVoxMesh(0)
@@ -184,6 +185,27 @@ void OctreeNode::determineWantedForRendering(const PolyVox::Vector3DFloat& viewP
 		else
 		{
 			mWantedForRendering = true;
+		}
+	}
+}
+
+void OctreeNode::determineWhetherToRender(void)
+{
+	//At some point we should handle the issue that we might want to render but the mesh might not be ready.
+	mRenderThisNode = mWantedForRendering;
+
+	for(int iz = 0; iz < 2; iz++)
+	{
+		for(int iy = 0; iy < 2; iy++)
+		{
+			for(int ix = 0; ix < 2; ix++)
+			{
+				OctreeNode* child = children[ix][iy][iz];
+				if(child)
+				{
+					child->determineWhetherToRender();
+				}
+			}
 		}
 	}
 }
