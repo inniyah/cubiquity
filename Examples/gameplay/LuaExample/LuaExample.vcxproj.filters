@@ -7,7 +7,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-	<None Include="game.config" />
+    <None Include="game.config" />
     <None Include="icon.png" />
     <None Include="bar-descriptor.xml" />
     <None Include="res\box.dae">
@@ -23,6 +23,9 @@
       <Filter>res</Filter>
     </None>
     <None Include="res\colored.vert">
+      <Filter>res</Filter>
+    </None>
+    <None Include="res\game.lua">
       <Filter>res</Filter>
     </None>
   </ItemGroup>
