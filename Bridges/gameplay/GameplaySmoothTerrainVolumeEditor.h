@@ -6,6 +6,9 @@
 
 #include "gameplay.h"
 
+/**
+ * Just a dummy comment for now, so that gameplay-luagen will wrap this class.
+ */
 class GameplaySmoothTerrainVolumeEditor : public SmoothTerrainVolumeEditor
 {
 public:

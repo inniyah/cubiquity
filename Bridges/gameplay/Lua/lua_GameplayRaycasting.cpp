@@ -3,9 +3,7 @@
 #include "lua_GameplayRaycasting.h"
 #include "GameplayRaycasting.h"
 
-using namespace gameplay;
-
-namespace Cubiquity
+namespace gameplay
 {
 
 void luaRegister_GameplayRaycasting()

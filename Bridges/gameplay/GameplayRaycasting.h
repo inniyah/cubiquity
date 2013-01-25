@@ -3,8 +3,10 @@
 
 #include "GameplaySmoothTerrainVolume.h"
 
-// These functions are wrapped in a class because that seems
-// to be required for luagen to create bingings for them.
+/**
+ * These functions are wrapped in a class because that seems
+ * to be required for luagen to create bingings for them.
+ */
 class GameplayRaycasting
 {
 public:

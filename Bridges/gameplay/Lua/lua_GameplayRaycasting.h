@@ -1,7 +1,7 @@
 #ifndef LUA_GAMEPLAYRAYCASTING_H_
 #define LUA_GAMEPLAYRAYCASTING_H_
 
-namespace Cubiquity
+namespace gameplay
 {
 
 // Lua bindings for GameplayRaycasting.

@@ -3,9 +3,7 @@
 #include "lua_GameplayVolumeSerialisation.h"
 #include "GameplayVolumeSerialisation.h"
 
-using namespace gameplay;
-
-namespace Cubiquity
+namespace gameplay
 {
 
 void luaRegister_GameplayVolumeSerialisation()

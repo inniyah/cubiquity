@@ -7,9 +7,17 @@
 
 #include "Impl/GameplayVolume.h"
 
+/**
+ * A volume containing coloured cubes.
+ */
 class GameplayColouredCubesVolume : public GameplayVolume<ColouredCubesVolume>
 {
 public:
+	/**
+     * Creates a new GameplayColouredCubesVolume.
+	 *
+     * @script{create}
+     */
 	static GameplayColouredCubesVolume* create(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
 	{
 		GameplayColouredCubesVolume* volume = new GameplayColouredCubesVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize);

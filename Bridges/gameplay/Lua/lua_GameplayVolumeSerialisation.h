@@ -1,7 +1,7 @@
 #ifndef LUA_GAMEPLAYVOLUMESERIALISATION_H_
 #define LUA_GAMEPLAYVOLUMESERIALISATION_H_
 
-namespace Cubiquity
+namespace gameplay
 {
 
 // Lua bindings for GameplayVolumeSerialisation.

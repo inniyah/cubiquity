@@ -7,9 +7,17 @@
 
 #include "Impl/GameplayVolume.h"
 
+/**
+ * A volume containing smooth terrain.
+ */
 class GameplaySmoothTerrainVolume : public GameplayVolume<SmoothTerrainVolume>
 {
 public:
+	/**
+     * Creates a new GameplaySmoothTerrainVolume.
+	 *
+     * @script{create}
+     */
 	static GameplaySmoothTerrainVolume* create(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
 	{
 		GameplaySmoothTerrainVolume* volume = new GameplaySmoothTerrainVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize);
