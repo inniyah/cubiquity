@@ -30,8 +30,14 @@ function initialize()
     -- Bind the material to the model
     _modelNode:getModel():setMaterial("res/box.material")
 
-    -- Find the light node
-    local lightNode = _scene:findNode("directionalLight1")
+    -- Create the light node
+	local lightDirection = Vector3.new(0.75, 0.75, 0.75)
+	_light = Light.createDirectional(lightDirection)
+	lightNode = Node.create()
+	lightNode:setLight(_light)
+	lightNode:setTranslation(0.0, 100.0, 0.0)
+	lightNode:rotateX(-1.57) -- Point light down
+	_scene:addNode(lightNode)
 
     -- Bind the light node's direction into the box material.
     _modelNode:getModel():getMaterial():getParameter("u_lightDirection"):bindValue(lightNode, "&Node::getForwardVectorView")
@@ -79,8 +85,6 @@ end
 textColor = Vector4.new(0, 0.5, 1, 1)
 
 function render(elapsedTime)
-	print("In render function")
-
     -- Clear the color and depth buffers.
     Game.getInstance():clear(Game.CLEAR_COLOR_DEPTH, Vector4.zero(), 1.0, 0)
 
@@ -100,22 +104,19 @@ function finalize()
 end
 
 function drawScene(node)
-	print(node:getId())
-
-    local model = node:getModel()
-
+	-- Skip note if the flag is set to false.
 	local nodeTag = tostring(node:getTag("RenderThisNode"))
-
 	if(nodeTag == "f") then
-		print("    Skipping Node")
 	 	return true
-	else
-		print("    Rendering node")
 	end
 
+	local model = node:getModel()
     if model then
+		model:getMaterial():getParameter("u_lightColor"):setValue(_light:getColor());
+		model:getMaterial():getParameter("u_lightDirection"):setValue(lightNode:getForwardVectorWorld());
         model:draw()
     end
+
     return true
 end
 
