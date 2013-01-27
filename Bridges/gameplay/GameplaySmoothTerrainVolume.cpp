@@ -58,6 +58,15 @@ void GameplaySmoothTerrainVolume::syncNode(OctreeNode* octreeNode, gameplay::Nod
 		extraNodeData->mTimeStamp = mVolume->getTime();
 	}
 
+	if(octreeNode->mRenderThisNode)
+	{
+		gameplayNode->setTag("RenderThisNode", "t");
+	}
+	else
+	{
+		gameplayNode->setTag("RenderThisNode", "f");
+	}
+
 	for(int iz = 0; iz < 2; iz++)
 	{
 		for(int iy = 0; iy < 2; iy++)
