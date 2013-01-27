@@ -18,11 +18,9 @@ void SmoothTerrainVolume::updateMeshImpl(OctreeNode* volReg)
 	//Extract the surface
 	PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > >* mesh = new PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > >;
 
-	uint32_t downScaleFactor = 0x0001 << volReg->mLodLevel;
+	generateSmoothMesh(lod0Region, volReg->mLodLevel, mesh);
 
-	generateSmoothMesh(lod0Region, downScaleFactor, mesh);
-
-	if(downScaleFactor > 1)
+	if(volReg->mLodLevel > 0)
 	{
 		recalculateMaterials(mesh, static_cast<PolyVox::Vector3DFloat>(lod0Region.getLowerCorner()), mVolData);
 	}
@@ -33,10 +31,11 @@ void SmoothTerrainVolume::updateMeshImpl(OctreeNode* volReg)
 	}
 }
 
-void SmoothTerrainVolume::generateSmoothMesh(const PolyVox::Region& region, uint32_t downSampleFactor, PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > >* resultMesh)
+void SmoothTerrainVolume::generateSmoothMesh(const PolyVox::Region& region, uint32_t lodLevel, PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > >* resultMesh)
 {
 	MultiMaterialMarchingCubesController<VoxelType> controller;
-	if(downSampleFactor == 1)
+
+	if(lodLevel == 0)
 	{
 		//SurfaceMesh<PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > > mesh;
 		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::RawVolume<VoxelType>, MultiMaterialMarchingCubesController<VoxelType> > surfaceExtractor(mVolData, region, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), controller);
@@ -44,6 +43,11 @@ void SmoothTerrainVolume::generateSmoothMesh(const PolyVox::Region& region, uint
 	}
 	else
 	{
+		int crackHidingFactor = 0; //This should probably be configurable?
+		controller.setThreshold(controller.getThreshold() + (lodLevel * crackHidingFactor));
+
+		uint32_t downSampleFactor = 0x0001 << lodLevel;
+
 		PolyVox::Region highRegion = region;
 		highRegion.grow(downSampleFactor, downSampleFactor, downSampleFactor);
 
