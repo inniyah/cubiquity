@@ -71,14 +71,16 @@ function update(elapsedTime)
 		_cameraNode:translate(rightVector)
 	end
 
-	local viewPos = Vector3.new(0, 0, 100);
-	_colouredCubesVolume:performUpdate(viewPos, 50)
+	local viewPos = _cameraNode:getTranslationWorld()
+	_colouredCubesVolume:performUpdate(viewPos, 1.0)
 end
 
 -- Avoid allocating new objects every frame.
 textColor = Vector4.new(0, 0.5, 1, 1)
 
 function render(elapsedTime)
+	print("In render function")
+
     -- Clear the color and depth buffers.
     Game.getInstance():clear(Game.CLEAR_COLOR_DEPTH, Vector4.zero(), 1.0, 0)
 
@@ -98,7 +100,19 @@ function finalize()
 end
 
 function drawScene(node)
+	print(node:getId())
+
     local model = node:getModel()
+
+	local nodeTag = tostring(node:getTag("RenderThisNode"))
+
+	if(nodeTag == "f") then
+		print("    Skipping Node")
+	 	return true
+	else
+		print("    Rendering node")
+	end
+
     if model then
         model:draw()
     end

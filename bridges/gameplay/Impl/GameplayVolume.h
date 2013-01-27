@@ -7,6 +7,8 @@
 
 #include "Impl/ExtraNodeData.h"
 
+#include <sstream>
+
 template <typename _VolumeType>
 class GameplayVolume : public gameplay::Ref
 {
@@ -46,6 +48,10 @@ void GameplayVolume<_VolumeType>::buildNode(OctreeNode* octreeNode, gameplay::No
 {
 	octreeNode->mGameEngineNode = gameplayNode;
 
+	std::stringstream ss;
+	ss << "LOD = " << int(octreeNode->mLodLevel) << ", Region = (" << octreeNode->mRegion.getLowerX() << "," << octreeNode->mRegion.getLowerY() << "," << octreeNode->mRegion.getLowerZ() << ") to (" << octreeNode->mRegion.getUpperX() << "," << octreeNode->mRegion.getUpperY() << "," << octreeNode->mRegion.getUpperZ() << ")";
+	gameplayNode->setId(ss.str().c_str());
+
 	if(octreeNode->parent)
 	{
 		PolyVox::Vector3DInt32 translation = octreeNode->mRegion.getLowerCorner() - octreeNode->parent->mRegion.getLowerCorner();
@@ -67,8 +73,8 @@ void GameplayVolume<_VolumeType>::buildNode(OctreeNode* octreeNode, gameplay::No
 				{
 					gameplay::Node* childNode = reinterpret_cast<gameplay::Node*>(octreeNode->children[ix][iy][iz]->mGameEngineNode);
 					if(childNode == 0)
-					{
-						childNode = createNodeWithExtraData("ChildGameplayNode");
+					{		
+						childNode = createNodeWithExtraData();
 
 						gameplayNode->addChild(childNode);
 					}
