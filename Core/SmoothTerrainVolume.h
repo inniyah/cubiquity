@@ -18,6 +18,8 @@ public:
 
 	void recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType > >* mesh, const PolyVox::Vector3DFloat& meshOffset, PolyVox::RawVolume<MultiMaterial4>* volume);
 	MultiMaterial4 getInterpolatedValue(PolyVox::RawVolume<MultiMaterial4>* volume, const PolyVox::Vector3DFloat& position);
+
+	void resampleVolume(uint32_t factor, PolyVox::RawVolume<MultiMaterial4>* srcVolume, const PolyVox::Region& srcRegion, PolyVox::RawVolume<MultiMaterial4>* dstVolume, const PolyVox::Region& dstRegion);
 };
 
 #endif //SMOOTHTERRAINVOLUME_H_

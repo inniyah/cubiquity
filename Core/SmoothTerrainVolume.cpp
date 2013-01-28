@@ -43,10 +43,10 @@ void SmoothTerrainVolume::generateSmoothMesh(const PolyVox::Region& region, uint
 	}
 	else
 	{
-		int crackHidingFactor = 0; //This should probably be configurable?
-		controller.setThreshold(controller.getThreshold() + (lodLevel * crackHidingFactor));
-
 		uint32_t downSampleFactor = 0x0001 << lodLevel;
+
+		int crackHidingFactor = 5; //This should probably be configurable?
+		controller.setThreshold(controller.getThreshold() + (downSampleFactor * crackHidingFactor));
 
 		PolyVox::Region highRegion = region;
 		highRegion.grow(downSampleFactor, downSampleFactor, downSampleFactor);
@@ -62,8 +62,10 @@ void SmoothTerrainVolume::generateSmoothMesh(const PolyVox::Region& region, uint
 
 		PolyVox::RawVolume<VoxelType> resampledVolume(lowRegion);
 		//lod1Volume.m_bClampInsteadOfBorder = true; //We're extracting right to the edge of our small volume, so this keeps the normals correct(ish)
-		PolyVox::VolumeResampler< PolyVox::RawVolume<VoxelType>, PolyVox::RawVolume<VoxelType> > volumeResampler(mVolData, highRegion, &resampledVolume, lowRegion);
-		volumeResampler.execute();
+		//PolyVox::VolumeResampler< PolyVox::RawVolume<VoxelType>, PolyVox::RawVolume<VoxelType> > volumeResampler(mVolData, highRegion, &resampledVolume, lowRegion);
+		//volumeResampler.execute();
+
+		resampleVolume(downSampleFactor, mVolData, highRegion, &resampledVolume, lowRegion);
 
 		lowRegion.shrink(1, 1, 1);
 
@@ -127,4 +129,27 @@ MultiMaterial4 SmoothTerrainVolume::getInterpolatedValue(PolyVox::RawVolume<Mult
 	VoxelType result = trilerp(v000, v100, v010, v110, v001, v101, v011, v111, fOffsetX, fOffsetY, fOffsetZ);
 
 	return result;
+}
+
+void SmoothTerrainVolume::resampleVolume(uint32_t factor, RawVolume<MultiMaterial4>* srcVolume, const Region& srcRegion, RawVolume<MultiMaterial4>* dstVolume, const Region& dstRegion)
+{
+	POLYVOX_ASSERT(srcRegion.getWidthInCells() == dstRegion.getWidthInCells() * factor, "Destination volume must be half the size of source volume");
+	POLYVOX_ASSERT(srcRegion.getHeightInCells() == dstRegion.getHeightInCells() * factor, "Destination volume must be half the size of source volume");
+	POLYVOX_ASSERT(srcRegion.getDepthInCells() == dstRegion.getDepthInCells() * factor, "Destination volume must be half the size of source volume");
+
+	for(int32_t dz = dstRegion.getLowerCorner().getZ(); dz <= dstRegion.getUpperCorner().getZ(); dz++)
+	{
+		for(int32_t dy = dstRegion.getLowerCorner().getY(); dy <= dstRegion.getUpperCorner().getY(); dy++)
+		{
+			for(int32_t dx = dstRegion.getLowerCorner().getX(); dx <= dstRegion.getUpperCorner().getX(); dx++)
+			{
+				int32_t sx = (dx - dstRegion.getLowerCorner().getX()) * factor + srcRegion.getLowerCorner().getX();
+				int32_t sy = (dy - dstRegion.getLowerCorner().getY()) * factor + srcRegion.getLowerCorner().getY();
+				int32_t sz = (dz - dstRegion.getLowerCorner().getZ()) * factor + srcRegion.getLowerCorner().getZ();
+
+				const MultiMaterial4& srcVoxel = srcVolume->getVoxelWithWrapping(sx,sy,sz);
+				dstVolume->setVoxelAt(dx,dy,dz,srcVoxel);
+			}
+		}
+	}
 }
