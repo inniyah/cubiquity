@@ -17,6 +17,10 @@ void rescaleCubicVolume(RawVolume<Colour>* pVolSrc, const Region& regSrc, RawVol
 				Vector3DInt32 srcPos = regSrc.getLowerCorner() + (Vector3DInt32(x, y, z) * 2);
 				Vector3DInt32 dstPos = regDst.getLowerCorner() + Vector3DInt32(x, y, z);
 				RawVolume<Colour>::Sampler srcSampler(pVolSrc);
+
+				Colour purple;
+				purple.setColour(16, 16, 0, 16);
+				srcSampler.setWrapMode(WrapModes::Border);
 				//srcSampler.setPosition(srcPos);
 
 				uint32_t noOfSolidVoxels = 0;
@@ -25,11 +29,11 @@ void rescaleCubicVolume(RawVolume<Colour>* pVolSrc, const Region& regSrc, RawVol
 				uint32_t totalBlue = 0;
 				uint32_t totalExposedFaces = 0;
 
-				for(int32_t childZ = -1; childZ < 3; childZ++)
+				for(int32_t childZ = 0; childZ < 2; childZ++)
 				{
-					for(int32_t childY = -1; childY < 3; childY++)
+					for(int32_t childY = 0; childY < 2; childY++)
 					{
-						for(int32_t childX = -1; childX < 3; childX++)
+						for(int32_t childX = 0; childX < 2; childX++)
 						{
 							srcSampler.setPosition(srcPos + Vector3DInt32(childX, childY, childZ));
 
@@ -59,7 +63,7 @@ void rescaleCubicVolume(RawVolume<Colour>* pVolSrc, const Region& regSrc, RawVol
 
 				if(totalExposedFaces == 0) totalExposedFaces++; //Avoid div by zero
 
-				if(noOfSolidVoxels > 32)
+				if(noOfSolidVoxels > 3)
 				{
 					Colour colour;
 					colour.setColour(totalRed / totalExposedFaces, totalGreen / totalExposedFaces, totalBlue / totalExposedFaces, 15);
@@ -113,24 +117,37 @@ void ColouredCubesVolume::generateCubicMesh(const PolyVox::Region& region, uint3
 	}
 	else
 	{
-		PolyVox::Region lod2Region = region;
-		PolyVox::Vector3DInt32 lowerCorner = lod2Region.getLowerCorner();
-		PolyVox::Vector3DInt32 upperCorner = lod2Region.getUpperCorner();
+		
+		PolyVox::Region srcRegion = region;
+
+		srcRegion.grow(2);
+
+		PolyVox::Vector3DInt32 lowerCorner = srcRegion.getLowerCorner();
+		PolyVox::Vector3DInt32 upperCorner = srcRegion.getUpperCorner();
 
 		upperCorner = upperCorner - lowerCorner;
 		upperCorner = upperCorner / static_cast<int32_t>(downSampleFactor);
 		upperCorner = upperCorner + lowerCorner;
-		lod2Region.setUpperCorner(upperCorner);
 
-		PolyVox::RawVolume<VoxelType> resampledVolume(lod2Region);
+		PolyVox::Region dstRegion(lowerCorner, upperCorner);
+
+		PolyVox::RawVolume<VoxelType> resampledVolume(dstRegion);
 		//VolumeResampler< RawVolume<VoxelType>, RawVolume<VoxelType> > volumeResampler(mVolData, region, &resampledVolume, lod2Region);
-		rescaleCubicVolume(mVolData, region, &resampledVolume, lod2Region);
+		rescaleCubicVolume(mVolData, srcRegion, &resampledVolume, dstRegion);
 		//volumeResampler.execute();
 
+		dstRegion.shrink(1);
+
+		//dstRegion.shiftLowerCorner(-1, -1, -1);
+
+		Colour purple;
+		purple.setColour(16, 16, 0, 16);
+
 		PolyVox::SurfaceMesh<PolyVox::PositionMaterial<VoxelType> > colouredCubicMesh;
-		PolyVox::CubicSurfaceExtractor< PolyVox::RawVolume<VoxelType>, ColouredCubesIsQuadNeeded<VoxelType> > surfaceExtractor(&resampledVolume, lod2Region, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), true, isQuadNeeded);
+		PolyVox::CubicSurfaceExtractor< PolyVox::RawVolume<VoxelType>, ColouredCubesIsQuadNeeded<VoxelType> > surfaceExtractor(&resampledVolume, dstRegion, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), true, isQuadNeeded);
 		surfaceExtractor.execute();
 
 		resultMesh->scaleVertices(downSampleFactor);
+		resultMesh->translateVertices(Vector3DFloat(0.5f, 0.5f, 0.5f));
 	}
 }
