@@ -1,6 +1,8 @@
 #ifndef CUBIQUITYRAYCASTING_H_
 #define CUBIQUITYRAYCASTING_H_
 
+#include "PolyVoxCore/Raycast.h"
+
 template <typename VoxelType>
 class RaycastTestFunctor
 {
@@ -45,6 +47,23 @@ public:
 	}
 
 	PolyVox::Vector3DFloat mLastPos;
+};
+
+class ColouredCubesRaycastTestFunctor
+{
+public:
+	ColouredCubesRaycastTestFunctor()
+	{
+	}
+
+	bool operator()(const PolyVox::RawVolume<Colour>::Sampler& sampler)
+	{
+		mLastPos = sampler.getPosition();
+
+		return sampler.getVoxel().getAlpha() == 0;
+	}
+
+	PolyVox::Vector3DInt32 mLastPos;
 };
 
 

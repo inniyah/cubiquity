@@ -1,6 +1,7 @@
 #ifndef GAMEPLAYRAYCASTING_H_
 #define GAMEPLAYRAYCASTING_H_
 
+#include "GameplayColouredCubesVolume.h"
 #include "GameplaySmoothTerrainVolume.h"
 
 /**
@@ -10,7 +11,7 @@
 class GameplayRaycasting
 {
 public:
-
+	static bool gameplayRaycast(GameplayColouredCubesVolume* volume, gameplay::Ray ray, float distance, gameplay::Vector3& result);
 	static bool gameplayRaycast(GameplaySmoothTerrainVolume* volume, gameplay::Ray ray, float distance, gameplay::Vector3& result);
 };
 
