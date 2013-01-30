@@ -158,13 +158,13 @@ void ColouredCubesVolume::generateCubicMesh(const PolyVox::Region& region, uint3
 {
 	ColouredCubesIsQuadNeeded<VoxelType> isQuadNeeded;
 
-	if(downSampleFactor != 2) //HACK
+	if(downSampleFactor == 1) 
 	{
 		PolyVox::SurfaceMesh<PolyVox::PositionMaterial<VoxelType> > colouredCubicMesh;
 		PolyVox::CubicSurfaceExtractor< PolyVox::RawVolume<VoxelType>, ColouredCubesIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, region, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), true, isQuadNeeded);
 		surfaceExtractor.execute();
 	}
-	else
+	else if(downSampleFactor == 2)
 	{
 		
 		PolyVox::Region srcRegion = region;
@@ -189,11 +189,51 @@ void ColouredCubesVolume::generateCubicMesh(const PolyVox::Region& region, uint3
 
 		//dstRegion.shiftLowerCorner(-1, -1, -1);
 
-		Colour purple;
-		purple.setColour(16, 16, 0, 16);
-
 		PolyVox::SurfaceMesh<PolyVox::PositionMaterial<VoxelType> > colouredCubicMesh;
 		PolyVox::CubicSurfaceExtractor< PolyVox::RawVolume<VoxelType>, ColouredCubesIsQuadNeeded<VoxelType> > surfaceExtractor(&resampledVolume, dstRegion, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), true, isQuadNeeded);
+		surfaceExtractor.execute();
+
+		resultMesh->scaleVertices(downSampleFactor);
+		resultMesh->translateVertices(Vector3DFloat(0.5f, 0.5f, 0.5f));
+	}
+	else if(downSampleFactor == 4)
+	{
+		PolyVox::Region srcRegion = region;
+
+		srcRegion.grow(4);
+
+		PolyVox::Vector3DInt32 lowerCorner = srcRegion.getLowerCorner();
+		PolyVox::Vector3DInt32 upperCorner = srcRegion.getUpperCorner();
+
+		upperCorner = upperCorner - lowerCorner;
+		upperCorner = upperCorner / static_cast<int32_t>(2);
+		upperCorner = upperCorner + lowerCorner;
+
+		PolyVox::Region dstRegion(lowerCorner, upperCorner);
+
+		PolyVox::RawVolume<VoxelType> resampledVolume(dstRegion);
+		rescaleCubicVolume(mVolData, srcRegion, &resampledVolume, dstRegion);
+
+
+
+		lowerCorner = dstRegion.getLowerCorner();
+		upperCorner = dstRegion.getUpperCorner();
+
+		upperCorner = upperCorner - lowerCorner;
+		upperCorner = upperCorner / static_cast<int32_t>(2);
+		upperCorner = upperCorner + lowerCorner;
+
+		PolyVox::Region dstRegion2(lowerCorner, upperCorner);
+
+		PolyVox::RawVolume<VoxelType> resampledVolume2(dstRegion2);
+		rescaleCubicVolume(&resampledVolume, dstRegion, &resampledVolume2, dstRegion2);
+
+		dstRegion2.shrink(1);
+
+		//dstRegion.shiftLowerCorner(-1, -1, -1);
+
+		PolyVox::SurfaceMesh<PolyVox::PositionMaterial<VoxelType> > colouredCubicMesh;
+		PolyVox::CubicSurfaceExtractor< PolyVox::RawVolume<VoxelType>, ColouredCubesIsQuadNeeded<VoxelType> > surfaceExtractor(&resampledVolume2, dstRegion2, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), true, isQuadNeeded);
 		surfaceExtractor.execute();
 
 		resultMesh->scaleVertices(downSampleFactor);
