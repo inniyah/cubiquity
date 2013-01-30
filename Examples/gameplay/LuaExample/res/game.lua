@@ -29,6 +29,7 @@ function initialize()
 
     -- Get the box node
     _modelNode = _scene:findNode("box")
+	_modelNode:scale(10, 10, 10)
 
     -- Bind the material to the model
     _modelNode:getModel():setMaterial("res/box.material")
@@ -89,6 +90,21 @@ function update(elapsedTime)
 
 	local viewPos = _cameraPositionNode:getTranslationWorld()
 	_colouredCubesVolume:performUpdate(viewPos, 0.5)
+
+	if(_colouredCubesVolume) then
+		print("Doing raycast")
+		ray = Ray.new();
+		_cameraNode:getCamera():pickRay(Game.getInstance():getViewport(), _touchX, _touchY, ray);
+
+		dir = ray:getDirection()
+		dir:scale(200.0)
+		ray:setDirection(dir)
+
+		intersection = Vector3.new()
+		if(GameplayRaycasting.gameplayRaycast(_colouredCubesVolume, ray, 200.0, intersection)) then
+			_modelNode:setTranslation(intersection)
+		end
+	end
 end
 
 -- Avoid allocating new objects every frame.

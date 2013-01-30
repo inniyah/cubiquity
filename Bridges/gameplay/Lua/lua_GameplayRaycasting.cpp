@@ -114,48 +114,79 @@ int lua_GameplayRaycasting_static_gameplayRaycast(lua_State* state)
     {
         case 4:
         {
-            if ((lua_type(state, 1) == LUA_TUSERDATA || lua_type(state, 1) == LUA_TTABLE || lua_type(state, 1) == LUA_TNIL) &&
-                (lua_type(state, 2) == LUA_TUSERDATA || lua_type(state, 2) == LUA_TNIL) &&
-                lua_type(state, 3) == LUA_TNUMBER &&
-                (lua_type(state, 4) == LUA_TUSERDATA || lua_type(state, 4) == LUA_TNIL))
+            do
             {
-                // Get parameter 1 off the stack.
-                bool param1Valid;
-                ScriptUtil::LuaArray<GameplaySmoothTerrainVolume> param1 = ScriptUtil::getObjectPointer<GameplaySmoothTerrainVolume>(1, "GameplaySmoothTerrainVolume", false, &param1Valid);
-                if (!param1Valid)
+                if ((lua_type(state, 1) == LUA_TUSERDATA || lua_type(state, 1) == LUA_TTABLE || lua_type(state, 1) == LUA_TNIL) &&
+                    (lua_type(state, 2) == LUA_TUSERDATA || lua_type(state, 2) == LUA_TNIL) &&
+                    lua_type(state, 3) == LUA_TNUMBER &&
+                    (lua_type(state, 4) == LUA_TUSERDATA || lua_type(state, 4) == LUA_TNIL))
                 {
-                    lua_pushstring(state, "Failed to convert parameter 1 to type 'GameplaySmoothTerrainVolume'.");
-                    lua_error(state);
-                }
+                    // Get parameter 1 off the stack.
+                    bool param1Valid;
+                    ScriptUtil::LuaArray<GameplayColouredCubesVolume> param1 = ScriptUtil::getObjectPointer<GameplayColouredCubesVolume>(1, "GameplayColouredCubesVolume", false, &param1Valid);
+                    if (!param1Valid)
+                        break;
 
-                // Get parameter 2 off the stack.
-                bool param2Valid;
-                ScriptUtil::LuaArray<Ray> param2 = ScriptUtil::getObjectPointer<Ray>(2, "Ray", true, &param2Valid);
-                if (!param2Valid)
+                    // Get parameter 2 off the stack.
+                    bool param2Valid;
+                    ScriptUtil::LuaArray<Ray> param2 = ScriptUtil::getObjectPointer<Ray>(2, "Ray", true, &param2Valid);
+                    if (!param2Valid)
+                        break;
+
+                    // Get parameter 3 off the stack.
+                    float param3 = (float)luaL_checknumber(state, 3);
+
+                    // Get parameter 4 off the stack.
+                    bool param4Valid;
+                    ScriptUtil::LuaArray<Vector3> param4 = ScriptUtil::getObjectPointer<Vector3>(4, "Vector3", true, &param4Valid);
+                    if (!param4Valid)
+                        break;
+
+                    bool result = GameplayRaycasting::gameplayRaycast(param1, *param2, param3, *param4);
+
+                    // Push the return value onto the stack.
+                    lua_pushboolean(state, result);
+
+                    return 1;
+                }
+            } while (0);
+
+            do
+            {
+                if ((lua_type(state, 1) == LUA_TUSERDATA || lua_type(state, 1) == LUA_TTABLE || lua_type(state, 1) == LUA_TNIL) &&
+                    (lua_type(state, 2) == LUA_TUSERDATA || lua_type(state, 2) == LUA_TNIL) &&
+                    lua_type(state, 3) == LUA_TNUMBER &&
+                    (lua_type(state, 4) == LUA_TUSERDATA || lua_type(state, 4) == LUA_TNIL))
                 {
-                    lua_pushstring(state, "Failed to convert parameter 2 to type 'Ray'.");
-                    lua_error(state);
+                    // Get parameter 1 off the stack.
+                    bool param1Valid;
+                    ScriptUtil::LuaArray<GameplaySmoothTerrainVolume> param1 = ScriptUtil::getObjectPointer<GameplaySmoothTerrainVolume>(1, "GameplaySmoothTerrainVolume", false, &param1Valid);
+                    if (!param1Valid)
+                        break;
+
+                    // Get parameter 2 off the stack.
+                    bool param2Valid;
+                    ScriptUtil::LuaArray<Ray> param2 = ScriptUtil::getObjectPointer<Ray>(2, "Ray", true, &param2Valid);
+                    if (!param2Valid)
+                        break;
+
+                    // Get parameter 3 off the stack.
+                    float param3 = (float)luaL_checknumber(state, 3);
+
+                    // Get parameter 4 off the stack.
+                    bool param4Valid;
+                    ScriptUtil::LuaArray<Vector3> param4 = ScriptUtil::getObjectPointer<Vector3>(4, "Vector3", true, &param4Valid);
+                    if (!param4Valid)
+                        break;
+
+                    bool result = GameplayRaycasting::gameplayRaycast(param1, *param2, param3, *param4);
+
+                    // Push the return value onto the stack.
+                    lua_pushboolean(state, result);
+
+                    return 1;
                 }
-
-                // Get parameter 3 off the stack.
-                float param3 = (float)luaL_checknumber(state, 3);
-
-                // Get parameter 4 off the stack.
-                bool param4Valid;
-                ScriptUtil::LuaArray<Vector3> param4 = ScriptUtil::getObjectPointer<Vector3>(4, "Vector3", true, &param4Valid);
-                if (!param4Valid)
-                {
-                    lua_pushstring(state, "Failed to convert parameter 4 to type 'Vector3'.");
-                    lua_error(state);
-                }
-
-                bool result = GameplayRaycasting::gameplayRaycast(param1, *param2, param3, *param4);
-
-                // Push the return value onto the stack.
-                lua_pushboolean(state, result);
-
-                return 1;
-            }
+            } while (0);
 
             lua_pushstring(state, "lua_GameplayRaycasting_static_gameplayRaycast - Failed to match the given parameters to a valid function signature.");
             lua_error(state);
