@@ -11,6 +11,8 @@ void rescaleCubicVolume(RawVolume<Colour>* pVolSrc, const Region& regSrc, RawVol
 	RawVolume<Colour>::Sampler srcSampler(pVolSrc);
 	RawVolume<Colour>::Sampler dstSampler(pVolDst);
 
+	// First of all we iterate over all destination voxels and compute their colour as the
+	// average of the colours of the eight corresponding voxels in the higher resolution version.
 	for(uint32_t z = 0; z < regDst.getDepthInVoxels(); z++)
 	{
 		for(uint32_t y = 0; y < regDst.getHeightInVoxels(); y++)
@@ -45,6 +47,8 @@ void rescaleCubicVolume(RawVolume<Colour>* pVolSrc, const Region& regSrc, RawVol
 					}
 				}
 
+				// We only make a voxel solid if the eight corresponding voxels are also all solid. This
+				// means that higher LOD meshes actually shrink away which ensures cracks aren't visible.
 				if(noOfSolidVoxels > 7)
 				{
 					Colour colour;
@@ -61,6 +65,12 @@ void rescaleCubicVolume(RawVolume<Colour>* pVolSrc, const Region& regSrc, RawVol
 		}
 	}
 
+	// At this point the results are usable, but we have a problem with thin structures disappearing.
+	// For example, if we have a solid blue sphere with a one voxel thick layer of red voxels on it,
+	// then we don't care that the shape changes then the red voxels are lost but we do care that the
+	// colour changes, as this is very noticable. Our solution is o process again only those voxels
+	// which lie on a material-air boundary, and to recompute their colour using a larger naighbourhood
+	// while also accounting for how visible the child voxels are.
 	for(uint32_t z = 0; z < regDst.getDepthInVoxels(); z++)
 	{
 		for(uint32_t y = 0; y < regDst.getHeightInVoxels(); y++)
@@ -71,8 +81,10 @@ void rescaleCubicVolume(RawVolume<Colour>* pVolSrc, const Region& regSrc, RawVol
 
 				dstSampler.setPosition(dstPos);
 
+				//Skip empty voxels
 				if(dstSampler.getVoxel().getAlpha() > 0)
 				{
+					//Only process voxels on a material-air boundary.
 					if((dstSampler.peekVoxel0px0py1nz().getAlpha() == 0) ||
 					   (dstSampler.peekVoxel0px0py1pz().getAlpha() == 0) || 
 					   (dstSampler.peekVoxel0px1ny0pz().getAlpha() == 0) ||
@@ -87,6 +99,7 @@ void rescaleCubicVolume(RawVolume<Colour>* pVolSrc, const Region& regSrc, RawVol
 						uint32_t totalBlue = 0;
 						uint32_t totalExposedFaces = 0;
 
+						// Look ate the 64 (4x4x4) children
 						for(int32_t childZ = -1; childZ < 3; childZ++)
 						{
 							for(int32_t childY = -1; childY < 3; childY++)
@@ -99,6 +112,8 @@ void rescaleCubicVolume(RawVolume<Colour>* pVolSrc, const Region& regSrc, RawVol
 
 									if(child.getAlpha () > 0)
 									{
+										// For each small voxel, count the exposed faces and use this
+										// to determine the importance of the colour contribution.
 										uint32_t exposedFaces = 0;
 										if(srcSampler.peekVoxel0px0py1nz().getAlpha() == 0) exposedFaces++;
 										if(srcSampler.peekVoxel0px0py1pz().getAlpha() == 0) exposedFaces++;
@@ -117,6 +132,7 @@ void rescaleCubicVolume(RawVolume<Colour>* pVolSrc, const Region& regSrc, RawVol
 							}
 						}
 
+						// Avoid divide by zero if there were no exposed faces.
 						if(totalExposedFaces == 0) totalExposedFaces++;
 
 						Colour colour;
@@ -237,6 +253,6 @@ void ColouredCubesVolume::generateCubicMesh(const PolyVox::Region& region, uint3
 		surfaceExtractor.execute();
 
 		resultMesh->scaleVertices(downSampleFactor);
-		resultMesh->translateVertices(Vector3DFloat(0.5f, 0.5f, 0.5f));
+		resultMesh->translateVertices(Vector3DFloat(1.5f, 1.5f, 1.5f));
 	}
 }
