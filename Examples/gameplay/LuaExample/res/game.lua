@@ -2,7 +2,7 @@
 
 function initialize()
     -- Display splash screen for at least 1 second.
-    ScreenDisplayer.start("drawSplash", 1000)
+    -- ScreenDisplayer.start("drawSplash", 1000)
 
 	wPressed = false
 	sPressed = false
@@ -13,7 +13,10 @@ function initialize()
     _touchX = 0
 	_touchY = 0
 
-	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, 127, 31, 127, 32, 32)
+	cameraPitch = 0.0
+	cameraYaw = 0.0
+
+	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, 127, 31, 127, 32, 16)
 
 	GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
 
@@ -45,40 +48,47 @@ function initialize()
     -- Update the aspect ratio for our scene's camera to match the current device resolution
     local game = Game.getInstance()
 
-	_cameraNode = _scene:addNode();
+	--Camera model based on http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Creating+a+simple+first-person+camera+system
+	_cameraPositionNode = _scene:addNode()
+	_cameraYawNode = Node.create()
+	_cameraPositionNode:addChild(_cameraYawNode)
+	_cameraPitchNode = Node.create()
+	_cameraYawNode:addChild(_cameraPitchNode)
+	_cameraNode = Node.create()
+	_cameraPitchNode:addChild(_cameraNode)
 	_cameraNode:setCamera(_scene:getActiveCamera())
     _scene:getActiveCamera():setAspectRatio(game:getWidth() / game:getHeight())
-	_cameraNode:setTranslation(0.0, 0.0, 100.0)
+	_cameraPositionNode:setTranslation(0.0, 0.0, 100.0)
 
 	local dummyValue = 42
 	_scene:addNode(_colouredCubesVolume:getRootNodeForLua(dummyValue))
 
-    ScreenDisplayer.finish()
+    -- ScreenDisplayer.finish()
 end
 
 function update(elapsedTime)
-	local forwardVector = _cameraNode:getForwardVector()
-	local rightVector = _cameraNode:getRightVector()
+	local forwardVector = _cameraNode:getForwardVectorWorld()
+	local rightVector = _cameraNode:getRightVectorWorld()
 
 	local speed = 0.1
 	local distance = elapsedTime * speed
 
 	if(wPressed) then
 		forwardVector:scale(distance)
-		_cameraNode:translate(forwardVector)
+		_cameraPositionNode:translate(forwardVector)
 	elseif(sPressed) then
 		forwardVector:scale(-distance)
-		_cameraNode:translate(forwardVector)
+		_cameraPositionNode:translate(forwardVector)
 	elseif(aPressed) then
 		rightVector:scale(-distance)
-		_cameraNode:translate(rightVector)
+		_cameraPositionNode:translate(rightVector)
 	elseif(dPressed) then
 		rightVector:scale(distance)
-		_cameraNode:translate(rightVector)
+		_cameraPositionNode:translate(rightVector)
 	end
 
-	local viewPos = _cameraNode:getTranslationWorld()
-	_colouredCubesVolume:performUpdate(viewPos, 1.0)
+	local viewPos = _cameraPositionNode:getTranslationWorld()
+	_colouredCubesVolume:performUpdate(viewPos, 0.5)
 end
 
 -- Avoid allocating new objects every frame.
@@ -171,7 +181,7 @@ function touchEvent(evt, x, y, contactIndex)
 		local deltaY = y - _touchY
         _touchX = x
 		_touchY = y
-        _cameraNode:rotateY(math.rad(deltaX * -0.5))
-		_cameraNode:rotateX(math.rad(deltaY * -0.5))
+         _cameraYawNode:rotateY(math.rad(deltaX * -0.5))
+		 _cameraPitchNode:rotateX(math.rad(deltaY * -0.5))
     end    
 end
