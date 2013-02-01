@@ -131,6 +131,7 @@
       <AdditionalIncludeDirectories>../../../../GamePlay/external-deps/lua/include;../../../../GamePlay/external-deps/bullet/include;../../../../GamePlay/gameplay/src;../../../../GamePlay/external-deps/openal/include/AL;../../../../GamePlay/external-deps/oggvorbis/include;../../../../GamePlay/external-deps/libpng/include;../../../../GamePlay/external-deps/zlib/include;../../../../GamePlay/external-deps/glew/include;C:\code\polyvox\library\PolyVoxCore\include;C:\code\cubiquity\Core;C:\code\cubiquity\Bridges\gameplay;C:\code\GamePlay\gameplay\src\lua</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
