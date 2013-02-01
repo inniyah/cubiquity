@@ -1,5 +1,5 @@
-#ifndef Main_H_
-#define Main_H_
+#ifndef MAIN_H_
+#define MAIN_H_
 
 #include "gameplay.h"
 
@@ -7,6 +7,8 @@ using namespace gameplay;
 
 /**
  * Main game class.
+ *
+ * This game has all the implementation code done in lua.
  */
 class Main: public Game
 {
@@ -16,16 +18,6 @@ public:
      * Constructor.
      */
     Main();
-
-    /**
-     * @see Game::keyEvent
-     */
-	void keyEvent(Keyboard::KeyEvent evt, int key);
-	
-    /**
-     * @see Game::touchEvent
-     */
-    void touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int contactIndex);
 
 protected:
 
@@ -48,15 +40,7 @@ protected:
      * @see Game::render
      */
     void render(float elapsedTime);
-
-private:
-
-    /**
-     * Draws the scene each frame.
-     */
-    bool drawScene(Node* node);
-
-    Scene* _scene;
 };
 
-#endif
+
+#endif //MAIN_H_
