@@ -75,7 +75,7 @@ LOCAL_PATH := $(SAMPLE_PATH)
 include $(CLEAR_VARS)
 
 LOCAL_MODULE    := CPlusPlus
-LOCAL_SRC_FILES := ../../gameplay/gameplay/src/gameplay-main-android.cpp ../../polyvox/library/polyvoxcore/source/ArraySizes.cpp Colour.cpp ColouredCubesVolume.cpp CubiquityUtility.cpp ExtraNodeData.cpp GameplayColouredCubesVolume.cpp GameplayRaycasting.cpp GameplaySmoothTerrainVolume.cpp GameplaySmoothTerrainVolumeEditor.cpp Main.cpp MultiMaterial.cpp ../../polyvox/library/polyvoxcore/source/Impl/RandomVectors.cpp SmoothTerrainVolume.cpp SmoothTerrainVolumeEditor.cpp ../../polyvox/library/polyvoxcore/source/VertexTypes.cpp ../../polyvox/library/polyvoxcore/source/Log.cpp ../../polyvox/library/polyvoxcore/source/Impl/ErrorHandling.cpp ../../polyvox/library/polyvoxcore/source/Impl/MarchingCubesTables.cpp ../../polyvox/library/polyvoxcore/source/Impl/RandomUnitVectors.cpp ../../polyvox/library/polyvoxcore/source/Region.cpp ../../polyvox/library/polyvoxcore/source/Impl/Utility.cpp OctreeNode.cpp
+LOCAL_SRC_FILES := ../../../../../GamePlay/gameplay/src/gameplay-main-android.cpp Main.cpp
 
 LOCAL_LDLIBS    := -llog -landroid -lEGL -lGLESv2 -lOpenSLES
 LOCAL_CFLAGS    := -D__ANDROID__ -Wno-psabi -I"../../../../../GamePlay/external-deps/lua/include" -I"../../../../../GamePlay/external-deps/bullet/include" -I"../../../../../GamePlay/external-deps/libpng/include" -I"../../../../../GamePlay/external-deps/oggvorbis/include" -I"../../../../../GamePlay/external-deps/openal/include" -I"../../../../../GamePlay/gameplay/src"

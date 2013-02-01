@@ -9,11 +9,11 @@
 
     <!-- A universally unique application identifier. Must be unique across all BlackBerry Tablet OS applications.
          Using a reverse DNS-style name as the id is recommended. (Eg. com.example.ExampleApplication.) Required. -->
-    <id>com.volumesoffun.gameplaypolyvox</id>
+    <id>com.volumesoffun.cplusplus</id>
 
     <!-- The name that is displayed in the BlackBerry Tablet OS application installer. 
          May have multiple values for each language. See samples or xsd schema file. Optional. -->
-    <name>Gameplay-PolyVox Test</name>
+    <name>CPlusPlus Example</name>
 
     <!-- A string value of the format <0-999>.<0-999>.<0-999> that represents application version which can be used to check for application upgrade. 
          Values can also be 1-part or 2-part. It is not necessary to have a 3-part value.
@@ -24,20 +24,14 @@
          <versionNumber> element.  Must be an integer from 0 to 2^16-1 -->
     <buildId>1</buildId>
 
-    <!-- A string value (such as "v1", "2.5", or "Alpha 1") that represents the version of the application, as it should be shown to users. Optional. -->
-    <!-- <versionLabel></versionLabel> -->
-
     <!-- Description, displayed in the BlackBerry Tablet OS application installer.
          May have multiple values for each language. See samples or xsd schema file. Optional. -->
-    <description>Another test combining Gameplay and PolyVox</description>
-    
-    <!-- Copyright information. Optional. -->
-    <!-- <copyright></copyright> -->
+    <description>An example of using Cubiquity from Gameplay3D through C++.</description>
 
-    <!--  Name of author which is used for signing. Must match the developer name of your development certificate. -->
+    <!-- Name of author which is used for signing. Must match the developer name of your development certificate. -->
     <author>David Williams</author>
 
-    <!--  Unique author ID assigned by signing authority. Required if using debug tokens. -->
+    <!-- Unique author ID assigned by signing authority. Required if using debug tokens. -->
     <!-- <authorId>gYAAgPkLP1tZlyYP1wiMaRFFNMw</authorId> -->
 
     <initialWindow>
@@ -47,7 +41,7 @@
         <transparent>false</transparent>
     </initialWindow>
 
-    <!--  The category where the application appears. Either core.games or core.media. -->
+    <!-- The category where the application appears. Either core.games or core.media. -->
     <category>core.games</category>
 
     <asset path="icon.png">icon.png</asset>
@@ -55,45 +49,45 @@
 
     <configuration id="com.qnx.qcc.configuration.exe.debug.242437683" name="Device-Debug">
        <platformArchitecture>armle-v7</platformArchitecture>
-       <asset path="Device-Debug/GameplayPolyVox" entry="true" type="Qnx/Elf">GameplayPolyVox</asset>
+       <asset path="Device-Debug/CPlusPlus" entry="true" type="Qnx/Elf">CPlusPlus</asset>
     </configuration>
     <configuration id="com.qnx.qcc.configuration.exe.release.693953760" name="Device-Release">
        <platformArchitecture>armle-v7</platformArchitecture>
-       <asset path="Device-Release/GameplayPolyVox" entry="true" type="Qnx/Elf">GameplayPolyVox</asset>
+       <asset path="Device-Release/CPlusPlus" entry="true" type="Qnx/Elf">CPlusPlus</asset>
     </configuration>
     <configuration id="com.qnx.qcc.configuration.exe.profile.1278883794" name="Device-Profile">
        <platformArchitecture>armle-v7</platformArchitecture>
-       <asset path="Device-Profile/GameplayPolyVox" entry="true" type="Qnx/Elf">GameplayPolyVox</asset>
+       <asset path="Device-Profile/CPlusPlus" entry="true" type="Qnx/Elf">CPlusPlus</asset>
     </configuration>
     <configuration id="com.qnx.qcc.configuration.exe.profile.coverage.357266346" name="Device-Coverage">
        <platformArchitecture>armle-v7</platformArchitecture>
-       <asset path="Device-Coverage/GameplayPolyVox" entry="true" type="Qnx/Elf">GameplayPolyVox</asset>
+       <asset path="Device-Coverage/CPlusPlus" entry="true" type="Qnx/Elf">CPlusPlus</asset>
     </configuration>
     <configuration id="com.qnx.qcc.configuration.exe.debug.882133523" name="Simulator">
         <platformArchitecture>x86</platformArchitecture>
-       <asset path="Simulator/GameplayPolyVox" entry="true" type="Qnx/Elf">GameplayPolyVox</asset>
+       <asset path="Simulator/CPlusPlus" entry="true" type="Qnx/Elf">CPlusPlus</asset>
     </configuration>
     <configuration id="com.qnx.qcc.configuration.exe.profile.400335078" name="Simulator-Profile">
        <platformArchitecture>x86</platformArchitecture> 
-       <asset path="Simulator-Profile/GameplayPolyVox" entry="true" type="Qnx/Elf">GameplayPolyVox</asset>
+       <asset path="Simulator-Profile/CPlusPlus" entry="true" type="Qnx/Elf">CPlusPlus</asset>
     </configuration>
     <configuration id="com.qnx.qcc.configuration.exe.profile.coverage.48235134" name="Simulator-Coverage">
        <platformArchitecture>x86</platformArchitecture>
-       <asset path="Simulator-Coverage/GameplayPolyVox" entry="true" type="Qnx/Elf">GameplayPolyVox</asset>
+       <asset path="Simulator-Coverage/CPlusPlus" entry="true" type="Qnx/Elf">CPlusPlus</asset>
     </configuration>
 
-    <!--  The icon for the application, which should be 86x86. -->
+    <!-- The icon for the application, which should be 150x150. -->
     <icon>
         <image>icon.png</image>
     </icon>
 
-    <!--  The splash screen that will appear when your application is launching. Should be 1024x600. -->
+    <!-- The splash screen that will appear when your application is launching. Should be 1280x768. -->
     <!-- <splashscreen></splashscreen> -->
 
     <!-- Request permission to execute native code.  Required for native applications. -->
     <action system="true">run_native</action>
 
-    <!--  The permissions requested by your application. -->
+    <!-- The permissions requested by your application. -->
     <!--  <action>access_shared</action> -->
     <!--  <action>record_audio</action> -->
     <!--  <action>read_geolocation</action> -->
