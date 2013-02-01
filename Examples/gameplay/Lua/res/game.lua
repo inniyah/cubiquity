@@ -9,7 +9,8 @@ function initialize()
 	aPressed = false
 	dPressed = false
 
-    _touched = false
+    leftMousePressed = false
+	rightMousePressed = false
     _touchX = 0
 	_touchY = 0
 
@@ -92,7 +93,6 @@ function update(elapsedTime)
 	_colouredCubesVolume:performUpdate(viewPos, 0.5)
 
 	if(_colouredCubesVolume) then
-		print("Doing raycast")
 		ray = Ray.new();
 		_cameraNode:getCamera():pickRay(Game.getInstance():getViewport(), _touchX, _touchY, ray);
 
@@ -182,22 +182,24 @@ function keyEvent(evt, key)
     end
 end
 
-function touchEvent(evt, x, y, contactIndex)
-    if evt == Touch.TOUCH_PRESS then
-        _touchTime = Game.getAbsoluteTime()
-        _touched = true
-        _touchX = x
-		_touchY = y
-    elseif evt == Touch.TOUCH_RELEASE then
-        _touched = false
-        _touchX = 0
-		_touchY = 0
-    elseif evt == Touch.TOUCH_MOVE then
+function mouseEvent(evt, x, y, wheelDelta)
+    if evt == Mouse.MOUSE_PRESS_LEFT_BUTTON then
+        leftMousePressed = true
+    elseif evt == Mouse.MOUSE_RELEASE_LEFT_BUTTON then
+        leftMousePressed = false
+	elseif evt == Mouse.MOUSE_PRESS_RIGHT_BUTTON then
+        rightMousePressed = true
+    elseif evt == Mouse.MOUSE_RELEASE_RIGHT_BUTTON then
+        rightMousePressed = false
+    elseif evt == Mouse.MOUSE_MOVE  then
         local deltaX = x - _touchX
 		local deltaY = y - _touchY
         _touchX = x
 		_touchY = y
-         _cameraYawNode:rotateY(math.rad(deltaX * -0.5))
-		 _cameraPitchNode:rotateX(math.rad(deltaY * -0.5))
-    end    
+		if(rightMousePressed) then
+			_cameraYawNode:rotateY(math.rad(deltaX * -0.5))
+			_cameraPitchNode:rotateX(math.rad(deltaY * -0.5))
+		end
+    end  
+	return true;  
 end
