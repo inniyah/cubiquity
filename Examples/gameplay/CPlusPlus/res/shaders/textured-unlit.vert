@@ -1,6 +1,9 @@
-// Inputs
+// Attributes
 attribute vec4 a_position;									// Vertex Position							(x, y, z, w)
-attribute vec2 a_texCoord;									// Vertex Texture Coordinate				(u, v)
+attribute vec2 a_texCoord0;									// Vertex Texture Coordinate				(u, v)
+#if defined(TEXCOORD1)
+attribute vec2 a_texCoord1;                                 // Second tex coord for multi-texturing
+#endif
 #if defined(SKINNING)
 attribute vec4 a_blendWeights;								// Vertex blend weight, up to 4				(0, 1, 2, 3) 
 attribute vec4 a_blendIndices;								// Vertex blend index int u_matrixPalette	(0, 1, 2, 3)
@@ -18,17 +21,20 @@ uniform vec2 u_textureRepeat;								// Texture repeat for tiling
 uniform vec2 u_textureOffset;								// Texture offset
 #endif
 
-// Outputs
-varying vec2 v_texCoord;									// Texture Coordinate
-
-// Vertex attribute accessors
-#if defined(SKINNING)
-#include "lib/attributes-skinning.vert"
-#else
-#include "lib/attributes.vert" 
+// Varyings
+varying vec2 v_texCoord0;									// Texture Coordinate
+#if defined(TEXCOORD1)
+varying vec2 v_texCoord1;                                   // Second tex coord for multi-texturing
 #endif
 
-// Vertex Program
+// Skinning 
+#if defined(SKINNING)
+#include "skinning.vert"
+#else
+#include "skinning-none.vert" 
+#endif
+
+
 void main()
 {
     // Get the vertex position
@@ -38,11 +44,14 @@ void main()
     gl_Position = u_worldViewProjectionMatrix * position;
 
     // Texture transformation.
-    v_texCoord = a_texCoord;
+    v_texCoord0 = a_texCoord0;
+    #if defined(TEXCOORD1)
+    v_texCoord1 = a_texCoord1;
+    #endif
     #if defined(TEXTURE_REPEAT)
-    v_texCoord *= u_textureRepeat;
+    v_texCoord0 *= u_textureRepeat;
     #endif
     #if defined(TEXTURE_OFFSET)
-    v_texCoord += u_textureOffset;
+    v_texCoord0 += u_textureOffset;
     #endif
 }
