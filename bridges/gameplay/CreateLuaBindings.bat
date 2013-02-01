@@ -1,2 +1,2 @@
 doxygen GameplayBridge.doxyfile
-..\..\..\GamePlay\bin\windows\gameplay-luagen.exe ./xml ./lua/ gameplay
+..\..\..\GamePlay\bin\windows\gameplay-luagen.exe ./xml/ ./lua/ gameplay

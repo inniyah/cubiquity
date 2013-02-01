@@ -120,7 +120,7 @@ int lua_GameplayVolumeSerialisation_static_gameplayLoadData(lua_State* state)
                     (lua_type(state, 2) == LUA_TUSERDATA || lua_type(state, 2) == LUA_TTABLE || lua_type(state, 2) == LUA_TNIL))
                 {
                     // Get parameter 1 off the stack.
-                    ScriptUtil::LuaArray<const char> param1 = ScriptUtil::getString(1, false);
+                    const char* param1 = ScriptUtil::getString(1, false);
 
                     // Get parameter 2 off the stack.
                     bool param2Valid;
@@ -140,7 +140,7 @@ int lua_GameplayVolumeSerialisation_static_gameplayLoadData(lua_State* state)
                     (lua_type(state, 2) == LUA_TUSERDATA || lua_type(state, 2) == LUA_TTABLE || lua_type(state, 2) == LUA_TNIL))
                 {
                     // Get parameter 1 off the stack.
-                    ScriptUtil::LuaArray<const char> param1 = ScriptUtil::getString(1, false);
+                    const char* param1 = ScriptUtil::getString(1, false);
 
                     // Get parameter 2 off the stack.
                     bool param2Valid;
