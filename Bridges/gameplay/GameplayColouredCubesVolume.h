@@ -38,7 +38,8 @@ public:
 	}
 
 	gameplay::Vector4 getVoxel(int x, int y, int z);
-	void setVoxel(int x, int y, int z, const gameplay::Vector4& colour);
+	void setVoxel(int x, int y, int z, const gameplay::Vector4& colour, bool markAsModified = true);
+	void markRegionAsModified(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ);
 
 	void performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold);
 

@@ -32,7 +32,8 @@ public:
 
 
 	VoxelType getVoxelAt(int x, int y, int z);
-	void setVoxelAt(int x, int y, int z, VoxelType value);
+	void setVoxelAt(int x, int y, int z, VoxelType value, bool markAsModified = true);
+	void markRegionAsModified(const PolyVox::Region& region);
 
 	void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
 	void updateMesh(OctreeNode* volReg);

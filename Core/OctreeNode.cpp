@@ -85,6 +85,30 @@ void OctreeNode::markDataAsModified(int32_t x, int32_t y, int32_t z, uint32_t ne
 	}
 }
 
+void OctreeNode::markDataAsModified(const Region& region, uint32_t newTimeStamp)
+{
+	if(intersects(mRegion, region))
+	{
+		//mIsMeshUpToDate = false;
+		mDataLastModified = newTimeStamp;
+
+		for(int iz = 0; iz < 2; iz++)
+		{
+			for(int iy = 0; iy < 2; iy++)
+			{
+				for(int ix = 0; ix < 2; ix++)
+				{
+					OctreeNode* child = children[ix][iy][iz];
+					if(child)
+					{
+						child->markDataAsModified(region, newTimeStamp);
+					}
+				}
+			}
+		}
+	}
+}
+
 bool OctreeNode::hasAnyChildren(void)
 {
 	for(int z = 0; z < 2; z++)
@@ -163,7 +187,7 @@ void OctreeNode::determineWantedForRendering(const PolyVox::Vector3DFloat& viewP
 
 		float projectedSize = diagonalLength / distance;
 
-		if((projectedSize > threshold) || (mLodLevel > 0)) //subtree height check prevents building LODs for node near the root.
+		if((projectedSize > threshold) || (mLodLevel > 2)) //subtree height check prevents building LODs for node near the root.
 		{
 			for(int iz = 0; iz < 2; iz++)
 			{

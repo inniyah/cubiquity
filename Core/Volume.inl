@@ -137,10 +137,19 @@ VoxelType Volume<VoxelType>::getVoxelAt(int x, int y, int z)
 }
 
 template <typename VoxelType>
-void Volume<VoxelType>::setVoxelAt(int x, int y, int z, VoxelType value)
+void Volume<VoxelType>::setVoxelAt(int x, int y, int z, VoxelType value, bool markAsModified)
 {
 	mVolData->setVoxelAt(x, y, z, value);
-	mRootOctreeNode->markDataAsModified(x, y, z, getTime());
+	if(markAsModified)
+	{
+		mRootOctreeNode->markDataAsModified(x, y, z, getTime());
+	}
+}
+
+template <typename VoxelType>
+void Volume<VoxelType>::markRegionAsModified(const PolyVox::Region& region)
+{
+	mRootOctreeNode->markDataAsModified(region, getTime());
 }
 
 template <typename VoxelType>

@@ -30,7 +30,7 @@ void loadData(const char* filename, VolumeType* volume)
 				}
 
 				//Write the voxel value into the volume
-				volume->setVoxelAt(x, y, z, value);
+				volume->setVoxelAt(x, y, z, value, false); //Don't mark as dirty - we'll do that at the end.
 
 				/*if(y < 8)
 				{
@@ -44,6 +44,8 @@ void loadData(const char* filename, VolumeType* volume)
 	}
 
 	fclose(inputFile);
+
+	volume->markRegionAsModified(volume->mVolData->getEnclosingRegion());
 }
 
 template <typename VolumeType>

@@ -31,6 +31,7 @@ public:
 	void buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< Colour > >* polyVoxMesh);
 
 	void markDataAsModified(int32_t x, int32_t y, int32_t z, uint32_t newTimeStamp);
+	void markDataAsModified(const PolyVox::Region& region, uint32_t newTimeStamp);
 
 	void clearWantedForRendering(void);
 	void determineWantedForRendering(const PolyVox::Vector3DFloat& viewPosition, float threshold);

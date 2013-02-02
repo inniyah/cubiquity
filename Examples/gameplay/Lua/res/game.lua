@@ -13,15 +13,16 @@ function fillSphere(x, y, z, size, colour, paintOnly)
 					if paintOnly then
 						local currentColour = _colouredCubesVolume:getVoxel(iX, iY, iZ)
 						if currentColour:z() > 0.001 then
-							_colouredCubesVolume:setVoxel(iX, iY, iZ, colour)
+							_colouredCubesVolume:setVoxel(iX, iY, iZ, colour, false)
 						end
 					else
-						_colouredCubesVolume:setVoxel(iX, iY, iZ, colour)
+						_colouredCubesVolume:setVoxel(iX, iY, iZ, colour, false)
 					end
 				end
 			end
 		end
 	end
+	_colouredCubesVolume:markRegionAsModified(x-size, y-size, z-size, x+size, y+size, z+size)
 end
 
 function initialize()
@@ -38,9 +39,11 @@ function initialize()
     _touchX = 0
 	_touchY = 0
 
-	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, 127, 31, 127, 32, 16)
+	--_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, 127, 31, 127, 32, 16)
+	--GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
 
-	GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
+	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, 255, 255, 255, 32, 32)
+	GameplayVolumeSerialisation.gameplayLoadData("res/output.vol", _colouredCubesVolume)
 
     -- Load font
     _font = Font.create("res/arial40.gpb")
@@ -64,7 +67,7 @@ function initialize()
 	_scene:addNode(_modelNode)
 
     -- Create the light node
-	local lightDirection = Vector3.new(0.75, 0.75, 0.75)
+	local lightDirection = Vector3.new(0.01, 0.01, 0.01)
 	_light = Light.createDirectional(lightDirection)
 	lightNode = Node.create()
 	lightNode:setLight(_light)
@@ -87,7 +90,7 @@ function initialize()
 	_cameraNode = Node.create()
 	_cameraPitchNode:addChild(_cameraNode)
 
-	local camera = Camera.createPerspective(60.0, 1.0, 0.1, 1000.0)
+	local camera = Camera.createPerspective(60.0, 1.0, 0.5, 2000.0)
 	camera:setAspectRatio(game:getWidth() / game:getHeight())
 	_cameraNode:setCamera(camera)
 	_scene:setActiveCamera(camera)
@@ -139,7 +142,7 @@ function update(elapsedTime)
 		if(leftMousePressed) then
 			--_colouredCubesVolume:setVoxel(intersection:x(), intersection:y(), intersection:z(), 0.99, 0.0, 0.0)
 			local colour = Vector4.new(0.99, 0.0, 0.0, 1.0)
-			fillSphere(intersection:x(), intersection:y(), intersection:z(), _modelNode:getScaleX(), colour, false)
+			fillSphere(intersection:x(), intersection:y(), intersection:z(), _modelNode:getScaleX(), colour, true)
 		end
 	end
 
