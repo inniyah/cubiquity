@@ -1,5 +1,18 @@
 -- This lua script file represents a lua implementation translation of sample00-mesh with a box instead of a duck.
 
+function fillSphere(x, y, z, size, colour, paintOnly)
+	for iZ=z-size, z+size do
+		for iY=y-size, y+size do
+			for iX=x-size, x+size do
+				local currentColour = _colouredCubesVolume:getVoxel(iX, iY, iZ)
+				if currentColour:z() > 0.001 then
+					_colouredCubesVolume:setVoxel(iX, iY, iZ, colour)
+				end
+			end
+		end
+	end
+end
+
 function initialize()
     -- Display splash screen for at least 1 second.
     -- ScreenDisplayer.start("drawSplash", 1000)
@@ -115,7 +128,9 @@ function update(elapsedTime)
 		end
 
 		if(leftMousePressed) then
-			_colouredCubesVolume:setVoxel(intersection:x(), intersection:y(), intersection:z(), 0.99, 0.0, 0.0)
+			--_colouredCubesVolume:setVoxel(intersection:x(), intersection:y(), intersection:z(), 0.99, 0.0, 0.0)
+			local colour = Vector4.new(0.99, 0.0, 0.0, 1.0)
+			fillSphere(intersection:x(), intersection:y(), intersection:z(), 5, colour, false)
 		end
 	end
 
@@ -223,18 +238,20 @@ function mouseEvent(evt, x, y, wheelDelta)
 		end
     end
 
-	local perTickScale = 1.1
-	local invPerClickScale = 1.0 / perTickScale
+	-- If the wheelDelta is positive then enlarge the brush a bit for each tick
+	local perTickScale = 1.1	
 	for i=1, wheelDelta do
 		_modelNode:scale(perTickScale, perTickScale, perTickScale)
 	end
 
+	-- If the wheelDelta is positive then shrink the brush a bit for each tick
+	local invPerClickScale = 1.0 / perTickScale
 	for i=-1, wheelDelta, -1 do
+		-- Prevent the brush from being shrunk to nothing.
 		if math.min(math.min(_modelNode:getScaleX(), _modelNode:getScaleY()), _modelNode:getScaleZ()) > 0.1 then
 			_modelNode:scale(invPerClickScale, invPerClickScale, invPerClickScale)
 		end
 	end
-	--end
 
 	return true;  
 end

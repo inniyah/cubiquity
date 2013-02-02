@@ -52,6 +52,26 @@ public:
 		return m_uAlpha;
 	}
 
+	float getRedAsFloat(void)
+	{
+		return m_uRed / 15.0f;
+	}
+
+	float getGreenAsFloat(void)
+	{
+		return m_uGreen / 15.0f;
+	}
+
+	float getBlueAsFloat(void)
+	{
+		return m_uBlue / 15.0f;
+	}
+
+	float getAlphaAsFloat(void)
+	{
+		return m_uAlpha / 15.0f;
+	}
+
 	void setColour(uint16_t red, uint16_t green, uint16_t blue, uint16_t alpha)
 	{
 		m_uRed = red;

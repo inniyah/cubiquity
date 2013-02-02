@@ -37,7 +37,8 @@ public:
 		return GameplayVolume<ColouredCubesVolume>::getVolume();
 	}
 
-	void setVoxel(int x, int y, int z, float red, float green, float blue);
+	gameplay::Vector4 getVoxel(int x, int y, int z);
+	void setVoxel(int x, int y, int z, const gameplay::Vector4& colour);
 
 	void performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold);
 

@@ -126,7 +126,14 @@ gameplay::Model* GameplayColouredCubesVolume::buildModelFromPolyVoxMesh(const Po
 	return model;
 }
 
-void GameplayColouredCubesVolume::setVoxel(int x, int y, int z, float red, float green, float blue)
+gameplay::Vector4 GameplayColouredCubesVolume::getVoxel(int x, int y, int z)
 {
-	mVolume->setVoxelAt(x, y, z, Colour(red, green, blue));
+	Colour colour = mVolume->getVoxelAt(x, y, z);
+	gameplay::Vector4 result(colour.getRedAsFloat(), colour.getGreenAsFloat(), colour.getBlueAsFloat(), colour.getAlphaAsFloat());
+	return result;
+}
+
+void GameplayColouredCubesVolume::setVoxel(int x, int y, int z, const gameplay::Vector4& colour)
+{
+	mVolume->setVoxelAt(x, y, z, Colour(colour.x, colour.y, colour.z, colour.w));
 }
