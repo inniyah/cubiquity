@@ -1,12 +1,19 @@
 -- This lua script file represents a lua implementation translation of sample00-mesh with a box instead of a duck.
 
 function fillSphere(x, y, z, size, colour, paintOnly)
+	local sizeSquared = size * size;
 	for iZ=z-size, z+size do
 		for iY=y-size, y+size do
 			for iX=x-size, x+size do
-				local currentColour = _colouredCubesVolume:getVoxel(iX, iY, iZ)
-				if currentColour:z() > 0.001 then
-					_colouredCubesVolume:setVoxel(iX, iY, iZ, colour)
+				local xDist = x - iX
+				local yDist = y - iY
+				local zDist = z - iZ
+				local distSquared = xDist * xDist + yDist * yDist + zDist * zDist;
+				if distSquared < sizeSquared then
+					local currentColour = _colouredCubesVolume:getVoxel(iX, iY, iZ)
+					if currentColour:z() > 0.001 then
+						_colouredCubesVolume:setVoxel(iX, iY, iZ, colour)
+					end
 				end
 			end
 		end
@@ -112,7 +119,7 @@ function update(elapsedTime)
 	end
 
 	local viewPos = _cameraPositionNode:getTranslationWorld()
-	_colouredCubesVolume:performUpdate(viewPos, 0.5)
+	_colouredCubesVolume:performUpdate(viewPos, 0.25)
 
 	if(_colouredCubesVolume) then
 		ray = Ray.new();
@@ -130,7 +137,7 @@ function update(elapsedTime)
 		if(leftMousePressed) then
 			--_colouredCubesVolume:setVoxel(intersection:x(), intersection:y(), intersection:z(), 0.99, 0.0, 0.0)
 			local colour = Vector4.new(0.99, 0.0, 0.0, 1.0)
-			fillSphere(intersection:x(), intersection:y(), intersection:z(), 5, colour, false)
+			fillSphere(intersection:x(), intersection:y(), intersection:z(), _modelNode:getScaleX(), colour, false)
 		end
 	end
 
