@@ -11,7 +11,7 @@ int main(int argc, char** argv)
 {
 	int imageWidth, imageHeight, n;
 	uint32_t imageRange = 256;
-	unsigned char *heightData = stbi_load("inputSmall.png", &imageWidth, &imageHeight, &n, 0);
+	unsigned char *heightData = stbi_load("input.png", &imageWidth, &imageHeight, &n, 0);
 
 	int colourImageWidth, colourImageHeight, colourN;
 	unsigned char *colourData = stbi_load("colour.png", &colourImageWidth, &colourImageHeight, &colourN, 0);
@@ -22,7 +22,7 @@ int main(int argc, char** argv)
 		cout << x << endl;
 		for(uint32_t y = 0; y < imageHeight; y++)
 		{
-			unsigned char heightmapValue = *(heightData + (y * imageWidth + x));
+			unsigned char heightmapValue = *(heightData + (y * imageWidth + x) * n);
 			unsigned char* colourmapValue = colourData + (y * imageWidth + x) * colourN;
 			unsigned char red = *colourmapValue;
 			unsigned char green = *(colourmapValue + 1);
