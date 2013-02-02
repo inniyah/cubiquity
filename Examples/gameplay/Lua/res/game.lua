@@ -104,7 +104,13 @@ function update(elapsedTime)
 		if(GameplayRaycasting.gameplayRaycast(_colouredCubesVolume, ray, 200.0, intersection)) then
 			_modelNode:setTranslation(intersection)
 		end
+
+		if(leftMousePressed) then
+			_colouredCubesVolume:setVoxel(intersection:x(), intersection:y(), intersection:z(), 0.99, 0.0, 0.0)
+		end
 	end
+
+
 end
 
 -- Avoid allocating new objects every frame.
