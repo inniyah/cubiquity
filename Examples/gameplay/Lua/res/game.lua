@@ -10,8 +10,12 @@ function fillSphere(x, y, z, size, colour, paintOnly)
 				local zDist = z - iZ
 				local distSquared = xDist * xDist + yDist * yDist + zDist * zDist;
 				if distSquared < sizeSquared then
-					local currentColour = _colouredCubesVolume:getVoxel(iX, iY, iZ)
-					if currentColour:z() > 0.001 then
+					if paintOnly then
+						local currentColour = _colouredCubesVolume:getVoxel(iX, iY, iZ)
+						if currentColour:z() > 0.001 then
+							_colouredCubesVolume:setVoxel(iX, iY, iZ, colour)
+						end
+					else
 						_colouredCubesVolume:setVoxel(iX, iY, iZ, colour)
 					end
 				end
@@ -34,9 +38,6 @@ function initialize()
     _touchX = 0
 	_touchY = 0
 
-	cameraPitch = 0.0
-	cameraYaw = 0.0
-
 	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, 127, 31, 127, 32, 16)
 
 	GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
@@ -45,16 +46,14 @@ function initialize()
     _font = Font.create("res/arial40.gpb")
 
     -- Load mesh/scene from file
-    local bundle = Bundle.create("res/box.gpb")
-    _scene = bundle:loadScene()
+    --local bundle = Bundle.create("res/box.gpb")
+    --_scene = bundle:loadScene()
 
-    -- Get the box node
-    --_modelNode = _scene:findNode("box")
-	--_modelNode:scale(10, 10, 10)
+	_scene = Scene.create()
 
-    -- Bind the material to the model
-    --_modelNode:getModel():setMaterial("res/box.material")
+	
 
+    -- Create the paint brush
 	local meshBundle = Bundle.create("res/Icosphere3.gpb")
 	local mesh = meshBundle:loadMesh("Sphere_001")
 	local model = Model.create(mesh)
@@ -87,8 +86,11 @@ function initialize()
 	_cameraYawNode:addChild(_cameraPitchNode)
 	_cameraNode = Node.create()
 	_cameraPitchNode:addChild(_cameraNode)
-	_cameraNode:setCamera(_scene:getActiveCamera())
-    _scene:getActiveCamera():setAspectRatio(game:getWidth() / game:getHeight())
+
+	local camera = Camera.createPerspective(60.0, 1.0, 0.1, 1000.0)
+	camera:setAspectRatio(game:getWidth() / game:getHeight())
+	_cameraNode:setCamera(camera)
+	_scene:setActiveCamera(camera)
 	_cameraPositionNode:setTranslation(0.0, 0.0, 100.0)
 
 	local dummyValue = 42
