@@ -29,11 +29,20 @@ function initialize()
     _scene = bundle:loadScene()
 
     -- Get the box node
-    _modelNode = _scene:findNode("box")
-	_modelNode:scale(10, 10, 10)
+    --_modelNode = _scene:findNode("box")
+	--_modelNode:scale(10, 10, 10)
 
     -- Bind the material to the model
-    _modelNode:getModel():setMaterial("res/box.material")
+    --_modelNode:getModel():setMaterial("res/box.material")
+
+	local meshBundle = Bundle.create("res/Icosphere3.gpb")
+	local mesh = meshBundle:loadMesh("Sphere_001")
+	local model = Model.create(mesh)
+	model:setMaterial("res/Icosphere3.material")
+
+	_modelNode = Node.create()
+	_modelNode:setModel(model)
+	_scene:addNode(_modelNode)
 
     -- Create the light node
 	local lightDirection = Vector3.new(0.75, 0.75, 0.75)
@@ -144,8 +153,14 @@ function drawScene(node)
 
 	local model = node:getModel()
     if model then
-		model:getMaterial():getParameter("u_lightColor"):setValue(_light:getColor());
-		model:getMaterial():getParameter("u_lightDirection"):setValue(lightNode:getForwardVectorWorld());
+		if (model:getMaterial()) then
+			if (model:getMaterial():getParameter("u_lightColor")) then
+				model:getMaterial():getParameter("u_lightColor"):setValue(_light:getColor());
+			end
+			if (model:getMaterial():getParameter("u_lightDirection")) then
+				model:getMaterial():getParameter("u_lightDirection"):setValue(lightNode:getForwardVectorWorld());
+			end
+		end
         model:draw()
     end
 
@@ -206,6 +221,20 @@ function mouseEvent(evt, x, y, wheelDelta)
 			_cameraYawNode:rotateY(math.rad(deltaX * -0.5))
 			_cameraPitchNode:rotateX(math.rad(deltaY * -0.5))
 		end
-    end  
+    end
+
+	local perTickScale = 1.1
+	local invPerClickScale = 1.0 / perTickScale
+	for i=1, wheelDelta do
+		_modelNode:scale(perTickScale, perTickScale, perTickScale)
+	end
+
+	for i=-1, wheelDelta, -1 do
+		if math.min(math.min(_modelNode:getScaleX(), _modelNode:getScaleY()), _modelNode:getScaleZ()) > 0.1 then
+			_modelNode:scale(invPerClickScale, invPerClickScale, invPerClickScale)
+		end
+	end
+	--end
+
 	return true;  
 end
