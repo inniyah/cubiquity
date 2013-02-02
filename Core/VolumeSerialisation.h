@@ -52,12 +52,12 @@ void saveData(const char* filename, VolumeType* volume)
 	FILE* outputFile = fopen(filename, "wb");
 	if(!outputFile)
 	{
-		GP_ERROR("Failed to open volume file");
+		POLYVOX_ASSERT(false, "Failed to open volume file");
 	}
 
-	uint16_t width = volume->getWidth();
-	uint16_t height = volume->getHeight();
-	uint16_t depth = volume->getDepth();
+	uint16_t width = volume->mVolData->getWidth();
+	uint16_t height = volume->mVolData->getHeight();
+	uint16_t depth = volume->mVolData->getDepth();
 	fwrite(&width, sizeof(uint16_t), 1, outputFile);
 	fwrite(&height, sizeof(uint16_t), 1, outputFile);
 	fwrite(&depth, sizeof(uint16_t), 1, outputFile);

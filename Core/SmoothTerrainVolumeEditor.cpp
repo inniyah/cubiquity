@@ -73,7 +73,7 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 				if((centre - Vector3DFloat(x,y,z)).lengthSquared() <= radiusSquared)
 				{
 					float falloff = falloff = (centre - Vector3DFloat(x,y,z)).length() / radius;
-					falloff = min(max(falloff, 0.0f), 1.0f);
+					falloff = (std::min)((std::max)(falloff, 0.0f), 1.0f);
 					falloff = 1.0f - falloff;
 
 					// Falloff will be one for most of the sphere and will
@@ -155,10 +155,10 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 							// properly, but this seems to cause material to grow too much.
 							// Instead we add a user-supplied bias value.
 							float bias = smoothBias;
-							interpMat.setMaterial(0, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp0 + bias))));
-							interpMat.setMaterial(1, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp1 + bias))));
-							interpMat.setMaterial(2, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp2 + bias))));
-							interpMat.setMaterial(3, max<uint32_t>(0, min(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp3 + bias))));
+							interpMat.setMaterial(0, (std::max<uint32_t>)(0, (std::min)(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp0 + bias))));
+							interpMat.setMaterial(1, (std::max<uint32_t>)(0, (std::min)(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp1 + bias))));
+							interpMat.setMaterial(2, (std::max<uint32_t>)(0, (std::min)(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp2 + bias))));
+							interpMat.setMaterial(3, (std::max<uint32_t>)(0, (std::min)(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp3 + bias))));
 
 							mVolume->setVoxelAt(x,y,z, interpMat);
 

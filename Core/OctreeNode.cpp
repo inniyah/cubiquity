@@ -2,8 +2,6 @@
 
 #include "Volume.h"
 
-#include "MeshPart.h"
-
 #include <sstream>
 
 using namespace PolyVox;
@@ -50,12 +48,12 @@ void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionM
 
 void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<MultiMaterial4> >* polyVoxMesh)
 {
-	GP_ERROR("This function should never be called!"); //See note in header
+	POLYVOX_ASSERT(false, "This function should never be called!"); //See note in header
 }
 
 void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< Colour > >* polyVoxMesh)
 {
-	GP_ERROR("This function should never be called!"); //See note in header
+	POLYVOX_ASSERT(false, "This function should never be called!"); //See note in header
 }
 
 void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal<MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType> >* polyVoxMesh)
@@ -165,7 +163,7 @@ void OctreeNode::determineWantedForRendering(const PolyVox::Vector3DFloat& viewP
 
 		float projectedSize = diagonalLength / distance;
 
-		if((projectedSize > threshold) || (mLodLevel > 2)) //subtree height check prevents building LODs for node near the root.
+		if((projectedSize > threshold) || (mLodLevel > 0)) //subtree height check prevents building LODs for node near the root.
 		{
 			for(int iz = 0; iz < 2; iz++)
 			{

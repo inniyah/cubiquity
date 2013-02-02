@@ -1,9 +1,6 @@
 #ifndef OCTREE_NODE_H_
 #define OCTREE_NODE_H_
 
-#include "Node.h"
-#include "Ref.h"
-
 #include "Colour.h"
 
 #include "MultiMaterialMarchingCubesController.h"

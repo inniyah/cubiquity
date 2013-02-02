@@ -34,7 +34,7 @@ Volume<VoxelType>::Volume(int lowerX, int lowerY, int lowerZ, int upperX, int up
 		regionToCover.shiftUpperCorner(1, 1, 1);
 	}
 
-	GP_ASSERT(PolyVox::isPowerOf2(mBaseNodeSize));
+	POLYVOX_ASSERT(PolyVox::isPowerOf2(mBaseNodeSize), "Node size mus be a power of two");
 
 	uint32_t largestVolumeDimension = std::max(regionToCover.getWidthInVoxels(), std::max(regionToCover.getHeightInVoxels(), regionToCover.getDepthInVoxels()));
 	if(octreeConstructionMode == OctreeConstructionModes::BoundCells)
