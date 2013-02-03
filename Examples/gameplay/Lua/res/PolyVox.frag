@@ -12,32 +12,8 @@ uniform vec3 u_lightDirection;       	        // Light direction
 uniform sampler2D u_texture0;
 
 // Inputs
-varying vec4 v_modelSpacePosition;
+varying vec4 v_worldSpacePosition;
 varying vec4 v_colour;
-
-// Computes a noise value based on a voxel position (x,y,z) and a strength value (packed into w).
-// Currently suggested to operate on model space positions because maybe banding occurs for the larger
-// world space positions? If we have to change this then maybe modf the positions to keep them small.
-/*float positionBasedNoise(vec4 positionAndStrength)
-{
-    //'floor' is more widely supported than 'round'. Offset consists of:
-    //  - A small integer to push us away from the origin (prevent divide by zero)
-    //  - 0.5 to perform the rounding
-    //  - A tiny offset to prevent sparkes as faces are exactly on rounding boundary.
-    vec3 roundedPos = floor(positionAndStrength.xyz + vec3(7.501));
-    
-    float noise = texture2D(u_texture0, vec2(roundedPos.x + roundedPos.y * roundedPos.z, 0.5));
-    
-    //Large number is arbitrary, but smaller number lead to banding.
-    //float noise = 1000000.0 / dot(roundedPos, roundedPos);
-    //noise = fract(noise);
-    
-    //Scale the noise
-    float halfNoiseStrength = positionAndStrength.w * 0.5;
-    noise = -halfNoiseStrength + positionAndStrength.w * noise; //http://www.opengl.org/wiki/GLSL_Optimizations#Get_MAD
-    
-    return noise;
-}*/
 
 void main()
 {
@@ -46,25 +22,20 @@ void main()
 
     // Normalize the vectors.
     vec3 lightDirection = normalize(u_lightDirection);
-    vec3 normalVector = normalize(cross(dFdx(v_modelSpacePosition.xyz), dFdy(v_modelSpacePosition.xyz)));
+    vec3 normalVector = normalize(cross(dFdx(v_worldSpacePosition.xyz), dFdy(v_worldSpacePosition.xyz)));
     
-    // Compute noise. All colour channels get the same value. Use model
-    // space position, or perhaps banding occurs for larger terrains?
-    const float textureSize = 16.0;
-    //const float textureHeight = textureWigth * textureWigth;
+    // Compute noise. Ideally we would pull a noise value from a 3D texture based on the position of the voxel,
+    // but gameplay only seems to support 2D textures at the moment. Therefore we store the texture 'slices'
+    // above each other to give a texture which is x pixels wide and y=x*x pixels high.
+    const float noiseTextureBaseSize = 16.0; //Size of our 3D texture, actually the width of our 2D replacement.
     const float noiseStrength = 0.05;
-    vec3 noiseSamplePosition = v_modelSpacePosition.xyz - (normalVector * 0.5);
-    //'floor' is more widely supported than 'round'.
-    vec3 roundedPos = floor(noiseSamplePosition + vec3(0.5));
-    vec2 textureSmaplePos = vec2(roundedPos.x, roundedPos.y + roundedPos.z * textureSize);
-    textureSmaplePos = textureSmaplePos / vec2(textureSize, textureSize * textureSize);
-    //vec3 threeDTextureSamplePos = (roundedPos / textureSize) + vec3(0.5, 0.5, 0.5);
-    //vec3 noise = vec3(positionBasedNoise(vec4(noiseSamplePosition, noiseStrength)));
-    //float noiseTextureCoord = roundedPos.x * roundedPos.y * roundedPos.z;
-    //noiseTextureCoord /= 256.0;
-    vec3 noise = texture2D(u_texture0, textureSmaplePos).rgb;
-    noise = noise * 2.0 - 1.0;
-    noise *= noiseStrength;
+    vec3 voxelCentre = v_worldSpacePosition.xyz - (normalVector * 0.5); // Back along normal takes us towards center of voxel.
+    voxelCentre = floor(voxelCentre + vec3(0.5)); // 'floor' is more widely supported than 'round'.
+    vec2 noiseTextureSmaplePos = vec2(voxelCentre.x, voxelCentre.y + voxelCentre.z * noiseTextureBaseSize);
+    noiseTextureSmaplePos = noiseTextureSmaplePos / vec2(noiseTextureBaseSize, noiseTextureBaseSize * noiseTextureBaseSize);
+    vec3 noise = texture2D(u_texture0, noiseTextureSmaplePos).rgb; // Sample the texture.
+    noise = noise * 2.0 - 1.0; // Adjust range to be -1.0 to +1.0
+    noise *= noiseStrength; // Scale to desired strength.
 
     // Ambient
     vec3 ambientColor = baseColor.rgb * u_ambientColor;

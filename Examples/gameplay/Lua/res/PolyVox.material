@@ -9,7 +9,8 @@ material PolyVox
             fragmentShader = res/PolyVox.frag
             
             // uniforms
-            u_worldViewProjectionMatrix = WORLD_VIEW_PROJECTION_MATRIX
+            u_worldMatrix = WORLD_MATRIX
+            u_viewProjectionMatrix = VIEW_PROJECTION_MATRIX
             //u_inverseTransposeWorldViewMatrix = INVERSE_TRANSPOSE_WORLD_VIEW_MATRIX
             u_ambientColor = 1.0, 1.0, 1.0
             //u_diffuseColor = 1.0, 1.0, 1.0, 1.0
