@@ -13,6 +13,17 @@ material PolyVox
             //u_inverseTransposeWorldViewMatrix = INVERSE_TRANSPOSE_WORLD_VIEW_MATRIX
             u_ambientColor = 1.0, 1.0, 1.0
             //u_diffuseColor = 1.0, 1.0, 1.0, 1.0
+            
+            // samplers
+            sampler u_texture0
+            {
+                path = res/noise.png
+                mipmap = false
+                wrapS = REPEAT
+                wrapT = REPEAT
+                minFilter = NEAREST
+                magFilter = NEAREST
+            }
 
             // render state
             renderState

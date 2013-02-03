@@ -9,6 +9,7 @@ uniform vec4 u_diffuseColor;                    // Diffuse color
 uniform vec3 u_ambientColor;                    // Ambient color
 uniform vec3 u_lightColor;                      // Light color
 uniform vec3 u_lightDirection;       	        // Light direction
+uniform sampler2D u_texture0;
 
 // Inputs
 varying vec4 v_modelSpacePosition;
@@ -17,7 +18,7 @@ varying vec4 v_colour;
 // Computes a noise value based on a voxel position (x,y,z) and a strength value (packed into w).
 // Currently suggested to operate on model space positions because maybe banding occurs for the larger
 // world space positions? If we have to change this then maybe modf the positions to keep them small.
-float positionBasedNoise(vec4 positionAndStrength)
+/*float positionBasedNoise(vec4 positionAndStrength)
 {
     //'floor' is more widely supported than 'round'. Offset consists of:
     //  - A small integer to push us away from the origin (prevent divide by zero)
@@ -25,16 +26,18 @@ float positionBasedNoise(vec4 positionAndStrength)
     //  - A tiny offset to prevent sparkes as faces are exactly on rounding boundary.
     vec3 roundedPos = floor(positionAndStrength.xyz + vec3(7.501));
     
+    float noise = texture2D(u_texture0, vec2(roundedPos.x + roundedPos.y * roundedPos.z, 0.5));
+    
     //Large number is arbitrary, but smaller number lead to banding.
-    float noise = 1000000.0 / dot(roundedPos, roundedPos);
-    noise = fract(noise);
+    //float noise = 1000000.0 / dot(roundedPos, roundedPos);
+    //noise = fract(noise);
     
     //Scale the noise
     float halfNoiseStrength = positionAndStrength.w * 0.5;
     noise = -halfNoiseStrength + positionAndStrength.w * noise; //http://www.opengl.org/wiki/GLSL_Optimizations#Get_MAD
     
     return noise;
-}
+}*/
 
 void main()
 {
@@ -47,8 +50,21 @@ void main()
     
     // Compute noise. All colour channels get the same value. Use model
     // space position, or perhaps banding occurs for larger terrains?
-    const float noiseStrength = 0.10;
-    vec3 noise = vec3(positionBasedNoise(vec4(v_modelSpacePosition.xyz, noiseStrength)));
+    const float textureSize = 16.0;
+    //const float textureHeight = textureWigth * textureWigth;
+    const float noiseStrength = 0.05;
+    vec3 noiseSamplePosition = v_modelSpacePosition.xyz - (normalVector * 0.5);
+    //'floor' is more widely supported than 'round'.
+    vec3 roundedPos = floor(noiseSamplePosition + vec3(0.5));
+    vec2 textureSmaplePos = vec2(roundedPos.x, roundedPos.y + roundedPos.z * textureSize);
+    textureSmaplePos = textureSmaplePos / vec2(textureSize, textureSize * textureSize);
+    //vec3 threeDTextureSamplePos = (roundedPos / textureSize) + vec3(0.5, 0.5, 0.5);
+    //vec3 noise = vec3(positionBasedNoise(vec4(noiseSamplePosition, noiseStrength)));
+    //float noiseTextureCoord = roundedPos.x * roundedPos.y * roundedPos.z;
+    //noiseTextureCoord /= 256.0;
+    vec3 noise = texture2D(u_texture0, textureSmaplePos).rgb;
+    noise = noise * 2.0 - 1.0;
+    noise *= noiseStrength;
 
     // Ambient
     vec3 ambientColor = baseColor.rgb * u_ambientColor;
