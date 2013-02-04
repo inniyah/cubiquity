@@ -12,7 +12,7 @@ function fillSphere(x, y, z, size, colour, paintOnly)
 				if distSquared < sizeSquared then
 					if paintOnly then
 						local currentColour = _colouredCubesVolume:getVoxel(iX, iY, iZ)
-						if currentColour:z() > 0.001 then
+						if currentColour:w() > 0.001 then
 							_colouredCubesVolume:setVoxel(iX, iY, iZ, colour, false)
 						end
 					else
@@ -42,8 +42,8 @@ function initialize()
 	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, 127, 31, 127, 32, 16)
 	GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
 
-	--_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, 255, 255, 255, 32, 32)
-	--GameplayVolumeSerialisation.gameplayLoadData("res/output.vol", _colouredCubesVolume)
+	--_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, 511, 255, 511, 32, 32)
+	--GameplayVolumeSerialisation.gameplayLoadData("res/Mountain.vol", _colouredCubesVolume)
 
     -- Load font
     _font = Font.create("res/arial40.gpb")
@@ -135,7 +135,7 @@ function update(elapsedTime)
 		ray:setDirection(dir)
 
 		intersection = Vector3.new()
-		if(GameplayRaycasting.gameplayRaycast(_colouredCubesVolume, ray, 200.0, intersection)) then
+		if(GameplayRaycasting.gameplayRaycast(_colouredCubesVolume, ray, 500.0, intersection)) then
 			_modelNode:setTranslation(intersection)
 		end
 
