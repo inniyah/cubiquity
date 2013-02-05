@@ -28,7 +28,7 @@ void main()
     // but gameplay only seems to support 2D textures at the moment. Therefore we store the texture 'slices'
     // above each other to give a texture which is x pixels wide and y=x*x pixels high.
     const float noiseTextureBaseSize = 16.0; //Size of our 3D texture, actually the width of our 2D replacement.
-    const float noiseStrength = 0.05;
+    const float noiseStrength = 0.04;
     vec3 voxelCentre = v_worldSpacePosition.xyz - (normalVector * 0.5); // Back along normal takes us towards center of voxel.
     voxelCentre = floor(voxelCentre + vec3(0.5)); // 'floor' is more widely supported than 'round'.
     vec2 noiseTextureSmaplePos = vec2(voxelCentre.x, voxelCentre.y + voxelCentre.z * noiseTextureBaseSize);
