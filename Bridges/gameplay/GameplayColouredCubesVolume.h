@@ -4,6 +4,7 @@
 #include "ColouredCubesVolume.h"
 
 #include "gameplay.h"
+#include "Slider.h"
 
 #include "Impl/GameplayVolume.h"
 
@@ -35,6 +36,14 @@ public:
 	ColouredCubesVolume* getVolumeForLua(int dummyParamForLuagen)
 	{
 		return GameplayVolume<ColouredCubesVolume>::getVolume();
+	}
+
+	// Hack for this: http://gameplay3d.org/forums/viewtopic.php?f=3&t=372
+	static gameplay::Slider* castControlToSliderHack(gameplay::Control* control)
+	{
+		gameplay::Slider* slider = dynamic_cast<gameplay::Slider*>(control);
+		POLYVOX_ASSERT(slider, "Not a slider!");
+		return slider;
 	}
 
 	gameplay::Vector4 getVoxel(int x, int y, int z);

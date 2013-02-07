@@ -39,11 +39,11 @@ function initialize()
     _touchX = 0
 	_touchY = 0
 
-	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, 127, 31, 127, 32, 16)
-	GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
+	--_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, 127, 31, 127, 32, 16)
+	--GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
 
-	--_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, 511, 255, 511, 32, 32)
-	--GameplayVolumeSerialisation.gameplayLoadData("res/Mountain.vol", _colouredCubesVolume)
+	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, 511, 255, 511, 32, 32)
+	GameplayVolumeSerialisation.gameplayLoadData("res/Mountain.vol", _colouredCubesVolume)
 
     -- Load font
     _font = Font.create("res/arial40.gpb")
@@ -99,10 +99,18 @@ function initialize()
 	local dummyValue = 42
 	_scene:addNode(_colouredCubesVolume:getRootNodeForLua(dummyValue))
 
+	form = Form.create("res/editor.form")
+	form:setConsumeInputEvents(false)
+	local control = form:getControl("LodSlider")
+	lodSlider = GameplayColouredCubesVolume.castControlToSliderHack(control)
+
     -- ScreenDisplayer.finish()
 end
 
 function update(elapsedTime)
+	--Update the gui
+	form:update(elapsedTime)
+
 	local forwardVector = _cameraNode:getForwardVectorWorld()
 	local rightVector = _cameraNode:getRightVectorWorld()
 
@@ -123,8 +131,9 @@ function update(elapsedTime)
 		_cameraPositionNode:translate(rightVector)
 	end
 
+	local lodLevel = lodSlider:getValue()
 	local viewPos = _cameraPositionNode:getTranslationWorld()
-	_colouredCubesVolume:performUpdate(viewPos, 0.25)
+	_colouredCubesVolume:performUpdate(viewPos, lodLevel)
 
 	if(_colouredCubesVolume) then
 		ray = Ray.new();
@@ -145,8 +154,6 @@ function update(elapsedTime)
 			fillSphere(intersection:x(), intersection:y(), intersection:z(), _modelNode:getScaleX(), colour, true)
 		end
 	end
-
-
 end
 
 -- Avoid allocating new objects every frame.
@@ -164,6 +171,8 @@ function render(elapsedTime)
     _font:start()
     _font:drawText(buffer, 5, 1, textColor, _font:getSize())
     _font:finish()
+
+	form:draw()
 end
 
 function finalize()

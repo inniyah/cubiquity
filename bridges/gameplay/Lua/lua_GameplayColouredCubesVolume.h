@@ -11,6 +11,7 @@ int lua_GameplayColouredCubesVolume_getVoxel(lua_State* state);
 int lua_GameplayColouredCubesVolume_markRegionAsModified(lua_State* state);
 int lua_GameplayColouredCubesVolume_performUpdate(lua_State* state);
 int lua_GameplayColouredCubesVolume_setVoxel(lua_State* state);
+int lua_GameplayColouredCubesVolume_static_castControlToSliderHack(lua_State* state);
 int lua_GameplayColouredCubesVolume_static_create(lua_State* state);
 
 void luaRegister_GameplayColouredCubesVolume();
