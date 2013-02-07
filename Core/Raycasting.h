@@ -56,7 +56,7 @@ public:
 	{
 	}
 
-	bool operator()(const PolyVox::RawVolume<Colour>::Sampler& sampler)
+	bool operator()(const PolyVox::SimpleVolume<Colour>::Sampler& sampler)
 	{
 		mLastPos = sampler.getPosition();
 

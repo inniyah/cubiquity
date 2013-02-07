@@ -25,7 +25,7 @@ Volume<VoxelType>::Volume(int lowerX, int lowerY, int lowerZ, int upperX, int up
 	POLYVOX_ASSERT(volumeRegion.getHeightInVoxels() > 0, "All volume dimensions must be greater than zero");
 	POLYVOX_ASSERT(volumeRegion.getDepthInVoxels() > 0, "All volume dimensions must be greater than zero");
 	
-	mVolData = new PolyVox::RawVolume<VoxelType>(volumeRegion);
+	mVolData = new PolyVox::SimpleVolume<VoxelType>(volumeRegion);
 
 	PolyVox::Region regionToCover(mVolData->getEnclosingRegion());
 	if(octreeConstructionMode == OctreeConstructionModes::BoundCells)

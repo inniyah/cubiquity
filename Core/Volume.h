@@ -6,6 +6,7 @@
 #include "PolyVoxCore/Array.h"
 #include "PolyVoxCore/Material.h"
 #include "PolyVoxCore/RawVolume.h"
+#include "PolyVoxCore/SimpleVolume.h"
 #include "PolyVoxCore/CubicSurfaceExtractor.h"
 #include "PolyVoxCore/MarchingCubesSurfaceExtractor.h"
 
@@ -49,7 +50,7 @@ protected:
 	Volume& operator=(const Volume&);
 
 public:
-	PolyVox::RawVolume<VoxelType>* mVolData;
+	PolyVox::SimpleVolume<VoxelType>* mVolData;
 	OctreeNode* mRootOctreeNode;
 
 	const unsigned int mBaseNodeSize;

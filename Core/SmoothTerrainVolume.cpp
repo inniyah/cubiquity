@@ -38,7 +38,7 @@ void SmoothTerrainVolume::generateSmoothMesh(const PolyVox::Region& region, uint
 	if(lodLevel == 0)
 	{
 		//SurfaceMesh<PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > > mesh;
-		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::RawVolume<VoxelType>, MultiMaterialMarchingCubesController<VoxelType> > surfaceExtractor(mVolData, region, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), controller);
+		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::SimpleVolume<VoxelType>, MultiMaterialMarchingCubesController<VoxelType> > surfaceExtractor(mVolData, region, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), controller);
 		surfaceExtractor.execute();
 	}
 	else
@@ -61,9 +61,6 @@ void SmoothTerrainVolume::generateSmoothMesh(const PolyVox::Region& region, uint
 		lowRegion.setUpperCorner(upperCorner);
 
 		PolyVox::RawVolume<VoxelType> resampledVolume(lowRegion);
-		//lod1Volume.m_bClampInsteadOfBorder = true; //We're extracting right to the edge of our small volume, so this keeps the normals correct(ish)
-		//PolyVox::VolumeResampler< PolyVox::RawVolume<VoxelType>, PolyVox::RawVolume<VoxelType> > volumeResampler(mVolData, highRegion, &resampledVolume, lowRegion);
-		//volumeResampler.execute();
 
 		resampleVolume(downSampleFactor, mVolData, highRegion, &resampledVolume, lowRegion);
 
@@ -76,7 +73,7 @@ void SmoothTerrainVolume::generateSmoothMesh(const PolyVox::Region& region, uint
 	}
 }
 
-void SmoothTerrainVolume::recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType > >* mesh, const PolyVox::Vector3DFloat& meshOffset,  PolyVox::RawVolume<MultiMaterial4>* volume)
+void SmoothTerrainVolume::recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType > >* mesh, const PolyVox::Vector3DFloat& meshOffset,  PolyVox::SimpleVolume<MultiMaterial4>* volume)
 {
 	std::vector< PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > >& vertices = mesh->getRawVertexData();
 	for(int ct = 0; ct < vertices.size(); ct++)
@@ -99,9 +96,9 @@ void SmoothTerrainVolume::recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::Pos
 	}
 }
 
-MultiMaterial4 SmoothTerrainVolume::getInterpolatedValue(PolyVox::RawVolume<MultiMaterial4>* volume, const PolyVox::Vector3DFloat& position)
+MultiMaterial4 SmoothTerrainVolume::getInterpolatedValue(PolyVox::SimpleVolume<MultiMaterial4>* volume, const PolyVox::Vector3DFloat& position)
 {
-	PolyVox::RawVolume<MultiMaterial4>::Sampler sampler(volume);
+	PolyVox::SimpleVolume<MultiMaterial4>::Sampler sampler(volume);
 
 	int32_t iLowerX = PolyVox::roundTowardsNegInf(position.getX());
 	int32_t iLowerY = PolyVox::roundTowardsNegInf(position.getY());

@@ -60,7 +60,7 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 		}
 
 		// We might not need to do this at float precision, it should be tested again.
-		PolyVox::LowPassFilter< PolyVox::RawVolume<MultiMaterial4>, PolyVox::RawVolume<MultiMaterial4>, PolyVox::Vector<4, float> > lowPassFilter(mVolume->mVolData, region, mSmoothingVolume, region, 3);
+		PolyVox::LowPassFilter< PolyVox::SimpleVolume<MultiMaterial4>, PolyVox::RawVolume<MultiMaterial4>, PolyVox::Vector<4, float> > lowPassFilter(mVolume->mVolData, region, mSmoothingVolume, region, 3);
 		lowPassFilter.execute();
 	}
 

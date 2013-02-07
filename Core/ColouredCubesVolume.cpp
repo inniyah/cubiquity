@@ -12,10 +12,7 @@ void ColouredCubesVolume::updateMeshImpl(OctreeNode* volReg)
 	PolyVox::Region lod0Region = volReg->mRegion;
 
 	//Extract the surface
-	//ColouredCubesIsQuadNeeded<VoxelType> isQuadNeeded;
 	PolyVox::SurfaceMesh<PolyVox::PositionMaterial<VoxelType> >* colouredCubicMesh = new PolyVox::SurfaceMesh<PolyVox::PositionMaterial<VoxelType> >;
-	//CubicSurfaceExtractor< RawVolume<VoxelType>, ColouredCubesIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, lod0Region, &colouredCubicMesh, WrapModes::Border, VoxelType(0), true, isQuadNeeded);
-	//surfaceExtractor.execute();
 
 	uint32_t downScaleFactor = 0x0001 << volReg->mLodLevel;
 
@@ -34,7 +31,7 @@ void ColouredCubesVolume::generateCubicMesh(const PolyVox::Region& region, uint3
 	if(downSampleFactor == 1) 
 	{
 		PolyVox::SurfaceMesh<PolyVox::PositionMaterial<VoxelType> > colouredCubicMesh;
-		PolyVox::CubicSurfaceExtractor< PolyVox::RawVolume<VoxelType>, ColouredCubesIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, region, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), true, isQuadNeeded);
+		PolyVox::CubicSurfaceExtractor< PolyVox::SimpleVolume<VoxelType>, ColouredCubesIsQuadNeeded<VoxelType> > surfaceExtractor(mVolData, region, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), true, isQuadNeeded);
 		surfaceExtractor.execute();
 	}
 	else if(downSampleFactor == 2)
@@ -54,9 +51,7 @@ void ColouredCubesVolume::generateCubicMesh(const PolyVox::Region& region, uint3
 		PolyVox::Region dstRegion(lowerCorner, upperCorner);
 
 		PolyVox::RawVolume<VoxelType> resampledVolume(dstRegion);
-		//VolumeResampler< RawVolume<VoxelType>, RawVolume<VoxelType> > volumeResampler(mVolData, region, &resampledVolume, lod2Region);
 		rescaleCubicVolume(mVolData, srcRegion, &resampledVolume, dstRegion);
-		//volumeResampler.execute();
 
 		dstRegion.shrink(1);
 
