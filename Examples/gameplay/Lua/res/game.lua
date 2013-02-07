@@ -39,11 +39,11 @@ function initialize()
     _touchX = 0
 	_touchY = 0
 
-	--_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, 127, 31, 127, 32, 16)
-	--GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
+	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, 127, 31, 127, 32, 16)
+	GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
 
-	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, 511, 255, 511, 32, 32)
-	GameplayVolumeSerialisation.gameplayLoadData("res/Mountain.vol", _colouredCubesVolume)
+	--_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, 511, 255, 511, 32, 32)
+	--GameplayVolumeSerialisation.gameplayLoadData("res/Mountain.vol", _colouredCubesVolume)
 
     -- Load font
     _font = Font.create("res/arial40.gpb")
