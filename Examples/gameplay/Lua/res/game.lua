@@ -104,6 +104,13 @@ function initialize()
 	local control = form:getControl("LodSlider")
 	lodSlider = GameplayColouredCubesVolume.castControlToSliderHack(control)
 
+	control = form:getControl("RedSlider")
+	redSlider = GameplayColouredCubesVolume.castControlToSliderHack(control)
+	control = form:getControl("GreenSlider")
+	greenSlider = GameplayColouredCubesVolume.castControlToSliderHack(control)
+	control = form:getControl("BlueSlider")
+	blueSlider = GameplayColouredCubesVolume.castControlToSliderHack(control)
+
     -- ScreenDisplayer.finish()
 end
 
@@ -150,7 +157,7 @@ function update(elapsedTime)
 
 		if(leftMousePressed) then
 			--_colouredCubesVolume:setVoxel(intersection:x(), intersection:y(), intersection:z(), 0.99, 0.0, 0.0)
-			local colour = Vector4.new(0.99, 0.0, 0.0, 1.0)
+			local colour = Vector4.new(redSlider:getValue(), greenSlider:getValue(), blueSlider:getValue(), 1.0)
 			fillSphere(intersection:x(), intersection:y(), intersection:z(), _modelNode:getScaleX(), colour, true)
 		end
 	end
