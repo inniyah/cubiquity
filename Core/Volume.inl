@@ -28,13 +28,17 @@ Volume<VoxelType>::Volume(int lowerX, int lowerY, int lowerZ, int upperX, int up
 	mVolData = new PolyVox::SimpleVolume<VoxelType>(volumeRegion);
 
 	PolyVox::Region regionToCover(mVolData->getEnclosingRegion());
-	if(octreeConstructionMode == OctreeConstructionModes::BoundCells)
+	if(octreeConstructionMode == OctreeConstructionModes::BoundVoxels)
+	{
+		regionToCover.shiftUpperCorner(1, 1, 1);
+	}
+	else if(octreeConstructionMode == OctreeConstructionModes::BoundCells)
 	{
 		regionToCover.shiftLowerCorner(-1, -1, -1);
 		regionToCover.shiftUpperCorner(1, 1, 1);
 	}
 
-	POLYVOX_ASSERT(PolyVox::isPowerOf2(mBaseNodeSize), "Node size mus be a power of two");
+	POLYVOX_ASSERT(PolyVox::isPowerOf2(mBaseNodeSize), "Node size must be a power of two");
 
 	uint32_t largestVolumeDimension = std::max(regionToCover.getWidthInVoxels(), std::max(regionToCover.getHeightInVoxels(), regionToCover.getDepthInVoxels()));
 	if(octreeConstructionMode == OctreeConstructionModes::BoundCells)
