@@ -8,7 +8,7 @@ form particleEditor
     {
         style = basic
         layout = LAYOUT_VERTICAL
-        position = 0, 0
+        position = 0, 50
         size = 160, 100
 
         label LodLabel
@@ -38,64 +38,64 @@ form particleEditor
         style = particleProps
         alignment = ALIGN_TOP_RIGHT
         width = 210
-        autoHeight = true
+        height = 300
         layout = LAYOUT_VERTICAL
         scroll = SCROLL_VERTICAL
         scrollBarsAutoHide = false
         
-        label titleBrushSize
+        label titleRed
         {
             style = title
             size = 150, 30
-            text = Brush Size
+            text = Red
         }
         
-        slider BrushSizeSlider
+        slider RedSlider
         {
             style = noBorder
             size = 150, 50
             orientation = HORIZONTAL
-            min = 1
-            max = 10
-            value = 5
-            step = 1
-            consumeInputEvents = false
-        }
-        
-        label titleBrushIntensity
-        {
-            style = title
-            size = 150, 30
-            text = Brush Intensity
-        }
-        
-        slider BrushIntensitySlider
-        {
-            style = noBorder
-            size = 150, 50
-            orientation = HORIZONTAL
-            min = 0.01
-            max = 1.0
-            value = 0.5
+            min = 0
+            max = 1
+            value = 1
             step = 0.01
             consumeInputEvents = false
         }
         
-        label titleSmoothBias
+        label titleGreen
         {
             style = title
             size = 150, 30
-            text = Smooth Bias
+            text = Green
         }
         
-        slider SmoothBiasSlider
+        slider GreenSlider
         {
             style = noBorder
             size = 150, 50
             orientation = HORIZONTAL
-            min = -0.25
-            max = 0.75
-            value = 0.25
+            min = 0
+            max = 1
+            value = 0
+            step = 0.01
+            consumeInputEvents = false
+        }
+        
+        label titleBlue
+        {
+            style = title
+            size = 150, 30
+            text = Blue
+        }
+        
+        slider BlueSlider
+        {
+            style = noBorder
+            size = 150, 50
+            orientation = HORIZONTAL
+            min = 0
+            max = 1
+            value = 0
             step = 0.01
             consumeInputEvents = false
         }
