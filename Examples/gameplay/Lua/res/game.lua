@@ -39,11 +39,18 @@ function initialize()
     _touchX = 0
 	_touchY = 0
 
-	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, 127, 31, 127, 32, 16)
-	GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
+	--local volumeWidth = 128
+	--local volumeHeight = 32
+	--local volumeDepth = 128
 
-	--_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, 511, 255, 511, 64, 64)
-	--GameplayVolumeSerialisation.gameplayLoadData("res/Mountain.vol", _colouredCubesVolume)
+	local volumeWidth = 510
+	local volumeHeight = 254
+	local volumeDepth = 510
+
+	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, 64, 32)
+
+	--GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
+	GameplayVolumeSerialisation.gameplayLoadData("res/Mountain.vol", _colouredCubesVolume)
 
     -- Load font
     _font = Font.create("res/arial40.gpb")
@@ -94,7 +101,8 @@ function initialize()
 	camera:setAspectRatio(game:getWidth() / game:getHeight())
 	_cameraNode:setCamera(camera)
 	_scene:setActiveCamera(camera)
-	_cameraPositionNode:setTranslation(0.0, 0.0, 100.0)
+	_cameraPositionNode:setTranslation(volumeWidth / 2, volumeHeight * 1.5, volumeDepth * 1.2)
+	_cameraPitchNode:rotateX(-0.9)
 
 	local dummyValue = 42
 	_scene:addNode(_colouredCubesVolume:getRootNodeForLua(dummyValue))
