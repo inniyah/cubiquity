@@ -119,6 +119,20 @@ function initialize()
 	control = form:getControl("BlueSlider")
 	blueSlider = GameplayColouredCubesVolume.castControlToSliderHack(control)
 
+	--This is a bit of a hack - forcing the LOD levels to be precached.
+	local viewPos = _cameraPositionNode:getTranslationWorld()
+	_colouredCubesVolume:performUpdate(viewPos, 0.0)
+	_colouredCubesVolume:performUpdate(viewPos, 0.1)
+	_colouredCubesVolume:performUpdate(viewPos, 0.2)
+	_colouredCubesVolume:performUpdate(viewPos, 0.3)
+	_colouredCubesVolume:performUpdate(viewPos, 0.4)
+	_colouredCubesVolume:performUpdate(viewPos, 0.5)
+	_colouredCubesVolume:performUpdate(viewPos, 0.6)
+	_colouredCubesVolume:performUpdate(viewPos, 0.7)
+	_colouredCubesVolume:performUpdate(viewPos, 0.8)
+	_colouredCubesVolume:performUpdate(viewPos, 0.9)
+	_colouredCubesVolume:performUpdate(viewPos, 1.0)
+
     -- ScreenDisplayer.finish()
 end
 
