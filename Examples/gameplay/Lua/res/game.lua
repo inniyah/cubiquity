@@ -39,18 +39,18 @@ function initialize()
     _touchX = 0
 	_touchY = 0
 
-	--local volumeWidth = 128
-	--local volumeHeight = 32
-	--local volumeDepth = 128
+	local volumeWidth = 128
+	local volumeHeight = 32
+	local volumeDepth = 128
 
-	local volumeWidth = 510
-	local volumeHeight = 254
-	local volumeDepth = 510
+	--local volumeWidth = 510
+	--local volumeHeight = 254
+	--local volumeDepth = 510
 
 	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, 64, 32)
 
-	--GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
-	GameplayVolumeSerialisation.gameplayLoadData("res/Mountain.vol", _colouredCubesVolume)
+	GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
+	--GameplayVolumeSerialisation.gameplayLoadData("res/Mountain.vol", _colouredCubesVolume)
 
     -- Load font
     _font = Font.create("res/arial40.gpb")
@@ -109,15 +109,25 @@ function initialize()
 
 	form = Form.create("res/editor.form")
 	form:setConsumeInputEvents(false)
-	local control = form:getControl("LodSlider")
-	lodSlider = GameplayColouredCubesVolume.castControlToSliderHack(control)
+	lodSlider = form:getControl("LodSlider")
+	if lodSlider ~= nil then
+		convert(lodSlider, "Slider")
+	end
 
-	control = form:getControl("RedSlider")
-	redSlider = GameplayColouredCubesVolume.castControlToSliderHack(control)
-	control = form:getControl("GreenSlider")
-	greenSlider = GameplayColouredCubesVolume.castControlToSliderHack(control)
-	control = form:getControl("BlueSlider")
-	blueSlider = GameplayColouredCubesVolume.castControlToSliderHack(control)
+	redSlider = form:getControl("RedSlider")
+	if redSlider ~= nil then
+		convert(redSlider, "Slider")
+	end
+
+	greenSlider = form:getControl("GreenSlider")
+	if greenSlider ~= nil then
+		convert(greenSlider, "Slider")
+	end
+
+	blueSlider = form:getControl("BlueSlider")
+	if blueSlider ~= nil then
+		convert(blueSlider, "Slider")
+	end
 
 	--This is a bit of a hack - forcing the LOD levels to be precached.
 	local viewPos = _cameraPositionNode:getTranslationWorld()
