@@ -29,6 +29,8 @@ function initialize()
     -- Display splash screen for at least 1 second.
     -- ScreenDisplayer.start("drawSplash", 1000)
 
+	local game = Game.getInstance()
+
 	wPressed = false
 	sPressed = false
 	aPressed = false
@@ -47,10 +49,15 @@ function initialize()
 	--local volumeHeight = 254
 	--local volumeDepth = 510
 
-	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, 64, 32)
+	--_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, 64, 32)
 
-	GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
+	--GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
 	--GameplayVolumeSerialisation.gameplayLoadData("res/Mountain.vol", _colouredCubesVolume)
+
+	
+
+	game:getScriptController():loadScript("res/VxlSerialisation.lua")
+	_colouredCubesVolume = importVxl()
 
     -- Load font
     _font = Font.create("res/arial40.gpb")
@@ -84,9 +91,6 @@ function initialize()
 
     -- Bind the light node's direction into the box material.
     _modelNode:getModel():getMaterial():getParameter("u_lightDirection"):bindValue(lightNode, "&Node::getForwardVectorView")
-
-    -- Update the aspect ratio for our scene's camera to match the current device resolution
-    local game = Game.getInstance()
 
 	--Camera model based on http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Creating+a+simple+first-person+camera+system
 	_cameraPositionNode = _scene:addNode()
