@@ -348,8 +348,9 @@
     <None Include="res\box.material" />
     <None Include="res\colored.frag" />
     <None Include="res\colored.vert" />
-    <None Include="res\vxl.lua" />
     <None Include="TestScripts\game.lua" />
+    <None Include="VxlEditor\Main.lua" />
+    <None Include="VxlEditor\VxlSerialisation.lua" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\..\polyvox\library\PolyVoxCore\source\ArraySizes.cpp" />

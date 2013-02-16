@@ -49,10 +49,15 @@ function initialize()
 	--local volumeHeight = 254
 	--local volumeDepth = 510
 
-	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, 64, 32)
+	--_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, 64, 32)
 
-	GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
+	--GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
 	--GameplayVolumeSerialisation.gameplayLoadData("res/Mountain.vol", _colouredCubesVolume)
+
+	
+
+	game:getScriptController():loadScript("res/VxlSerialisation.lua")
+	_colouredCubesVolume = importVxl()
 
     -- Load font
     _font = Font.create("res/arial40.gpb")
