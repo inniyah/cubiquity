@@ -39,24 +39,9 @@ function initialize()
     leftMousePressed = false
 	rightMousePressed = false
     _touchX = 0
-	_touchY = 0
+	_touchY = 0	
 
-	local volumeWidth = 128
-	local volumeHeight = 32
-	local volumeDepth = 128
-
-	--local volumeWidth = 510
-	--local volumeHeight = 254
-	--local volumeDepth = 510
-
-	--_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, 64, 32)
-
-	--GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
-	--GameplayVolumeSerialisation.gameplayLoadData("res/Mountain.vol", _colouredCubesVolume)
-
-	
-
-	game:getScriptController():loadScript("res/VxlSerialisation.lua")
+	game:getScriptController():loadScript("VxlEditor/VxlSerialisation.lua")
 	_colouredCubesVolume = importVxl()
 
     -- Load font
@@ -133,20 +118,6 @@ function initialize()
 		convert(blueSlider, "Slider")
 	end
 
-	--This is a bit of a hack - forcing the LOD levels to be precached.
-	local viewPos = _cameraPositionNode:getTranslationWorld()
-	_colouredCubesVolume:performUpdate(viewPos, 0.0)
-	_colouredCubesVolume:performUpdate(viewPos, 0.1)
-	_colouredCubesVolume:performUpdate(viewPos, 0.2)
-	_colouredCubesVolume:performUpdate(viewPos, 0.3)
-	_colouredCubesVolume:performUpdate(viewPos, 0.4)
-	_colouredCubesVolume:performUpdate(viewPos, 0.5)
-	_colouredCubesVolume:performUpdate(viewPos, 0.6)
-	_colouredCubesVolume:performUpdate(viewPos, 0.7)
-	_colouredCubesVolume:performUpdate(viewPos, 0.8)
-	_colouredCubesVolume:performUpdate(viewPos, 0.9)
-	_colouredCubesVolume:performUpdate(viewPos, 1.0)
-
     -- ScreenDisplayer.finish()
 end
 
@@ -174,7 +145,7 @@ function update(elapsedTime)
 		_cameraPositionNode:translate(rightVector)
 	end
 
-	local lodLevel = lodSlider:getValue()
+	local lodLevel = 0.0
 	local viewPos = _cameraPositionNode:getTranslationWorld()
 	_colouredCubesVolume:performUpdate(viewPos, lodLevel)
 
