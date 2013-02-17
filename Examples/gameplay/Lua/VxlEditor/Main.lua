@@ -41,8 +41,13 @@ function initialize()
     _touchX = 0
 	_touchY = 0	
 
-	game:getScriptController():loadScript("VxlEditor/VxlSerialisation.lua")
-	_colouredCubesVolume = importVxl()
+	--game:getScriptController():loadScript("VxlEditor/VxlSerialisation.lua")
+	--_colouredCubesVolume = importVxl()
+
+	--volumeWidth = 512
+	--volumeHeight = 64
+	--volumeDepth = 512
+	_colouredCubesVolume = GameplayColouredCubesVolume.importVxl("dfsf")
 
     -- Load font
     _font = Font.create("res/arial40.gpb")
@@ -90,8 +95,9 @@ function initialize()
 	camera:setAspectRatio(game:getWidth() / game:getHeight())
 	_cameraNode:setCamera(camera)
 	_scene:setActiveCamera(camera)
-	_cameraPositionNode:setTranslation(volumeWidth / 2, volumeHeight * 1.5, volumeDepth * 1.2)
-	_cameraPitchNode:rotateX(-0.9)
+	_cameraPositionNode:setTranslation(0, 0, 300)
+	--_cameraPositionNode:setTranslation(volumeWidth / 2, volumeHeight * 1.5, volumeDepth * 1.2)
+	--_cameraPitchNode:rotateX(-0.0)
 
 	local dummyValue = 42
 	_scene:addNode(_colouredCubesVolume:getRootNodeForLua(dummyValue))

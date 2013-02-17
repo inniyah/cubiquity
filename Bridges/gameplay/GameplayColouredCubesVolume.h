@@ -38,6 +38,13 @@ public:
 		return GameplayVolume<ColouredCubesVolume>::getVolume();
 	}
 
+	//FIXME - This doesn't belong here but currently there is no .cpp file for volume serialisation.
+	// Probably it doesn't belong inside Cubiquity at all.
+	/**
+     * @script{create}
+     */
+	static GameplayColouredCubesVolume* importVxl(const char* filename);
+
 	gameplay::Vector4 getVoxel(int x, int y, int z);
 	void setVoxel(int x, int y, int z, const gameplay::Vector4& colour, bool markAsModified = true);
 	void markRegionAsModified(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ);
