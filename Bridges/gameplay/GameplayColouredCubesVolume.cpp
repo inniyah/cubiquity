@@ -147,7 +147,7 @@ void GameplayColouredCubesVolume::markRegionAsModified(int lowerX, int lowerY, i
 
 GameplayColouredCubesVolume* GameplayColouredCubesVolume::importVxl(const char* filename)
 {
-	GameplayColouredCubesVolume* result = create(0, 0, 0, 511, 511, 63, 64, 64);
+	GameplayColouredCubesVolume* result = create(0, 0, 0, 511, 63, 511, 64, 64);
 	/*for(int z = 0; z < 64; z++)
 	{
 		for(int y = 0; y < 128; y++)
@@ -159,7 +159,7 @@ GameplayColouredCubesVolume* GameplayColouredCubesVolume::importVxl(const char* 
 		}
 	}*/
 
-	FILE* inputFile = fopen("VxlEditor\\PLANECRASHDISASTER.vxl", "rb");
+	FILE* inputFile = fopen("VxlEditor\\ToLoad.vxl", "rb");
 	POLYVOX_ASSERT(inputFile, "Failed to open input file!");
 
 	// Determine input file's size.
@@ -221,7 +221,7 @@ GameplayColouredCubesVolume* GameplayColouredCubesVolume::importVxl(const char* 
 				blue = data[i + 4 + colorI * 4];
 				// Do something with these colors
 				//makeVoxelColorful(x, y, zz, red, green, blue);
-				result->setVoxel(x, y, zz, Vector4(red / 255.0f, green / 255.0f, blue / 255.0f, 1.0), false);
+				result->setVoxel(x, zz, y, Vector4(red / 255.0f, green / 255.0f, blue / 255.0f, 1.0), false);
 				zz++;
 				colorI++;
 			}
@@ -233,7 +233,7 @@ GameplayColouredCubesVolume* GameplayColouredCubesVolume::importVxl(const char* 
 		for (j = 0; j < runlength; j++)
 		{
 			//makeVoxelSolid(x, y, zz);
-			result->setVoxel(x, y, zz, Vector4(1.0, 0.0, 1.0, 1.0), false);
+			result->setVoxel(x, zz, y, Vector4(1.0, 0.0, 1.0, 1.0), false);
 			zz++;
 		}
 		if (N == 0)
