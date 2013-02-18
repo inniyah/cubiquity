@@ -12,7 +12,7 @@ function importVxl()
 
 	local colour = Vector4.new(1.0, 0.0, 1.0, 1.0)
 
-	local inputFile = io.open("VxlEditor\\ToLoad.vxl", "rb")
+	local inputFile = io.open("res\\capitol.vxl", "rb")
 	if(inputFile) then
 		print("File opened")
 	else

@@ -20,12 +20,6 @@
     <Filter Include="PolyVox">
       <UniqueIdentifier>{31b8ddd1-563c-4203-b4f9-50193a5a8a5d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="TestScripts">
-      <UniqueIdentifier>{32ca623d-6b41-44f2-8749-43e84edc7429}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="VxlEditor">
-      <UniqueIdentifier>{017af419-6a16-4fc3-8de4-60c9737fcaed}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="game.config" />
@@ -127,14 +121,11 @@
     <None Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.inl">
       <Filter>PolyVox</Filter>
     </None>
-    <None Include="TestScripts\game.lua">
-      <Filter>TestScripts</Filter>
+    <None Include="res\game.lua">
+      <Filter>res</Filter>
     </None>
-    <None Include="VxlEditor\Main.lua">
-      <Filter>VxlEditor</Filter>
-    </None>
-    <None Include="VxlEditor\VxlSerialisation.lua">
-      <Filter>VxlEditor</Filter>
+    <None Include="res\VxlSerialisation.lua">
+      <Filter>res</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
