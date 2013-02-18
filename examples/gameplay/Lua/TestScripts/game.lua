@@ -54,7 +54,7 @@ function initialize()
 	--GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
 	--GameplayVolumeSerialisation.gameplayLoadData("res/Mountain.vol", _colouredCubesVolume)
 
-	game:getScriptController():loadScript("VxlEditor/VxlSerialisation.lua")
+	game:getScriptController():loadScript("res/VxlSerialisation.lua")
 	_colouredCubesVolume = importVxl();
 
     -- Load font
