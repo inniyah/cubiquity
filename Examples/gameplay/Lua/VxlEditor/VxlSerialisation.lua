@@ -1,22 +1,16 @@
+--Based on code here: http://www.volumesoffun.com/phpBB3/viewtopic.php?p=3680#p3680
+
 function importVxl()
-	volumeWidth = 512
-	volumeHeight = 64
-	volumeDepth = 512
+	mapSize = 512
+	mapHeight = 64
+
+	volumeWidth = mapSize
+	volumeHeight = mapHeight
+	volumeDepth = mapSize
 
 	result = GameplayColouredCubesVolume.create(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, 64, 64)
 
-	local colour = Vector4.new(0.9, 0.9, 0.9, 1.0)
-	--local empty = Vector4.new(0.0, 0.0, 0.0, 0.0)
-	--for iZ=0, volumeWidth - 1 do
-	--	for iY=0, 1 do
-	--		for iX=0, volumeDepth - 1 do
-	--			result:setVoxel(iX, iY, iZ, colour, false)
-	--		end
-	--	end
-	--end
-	result:markRegionAsModified(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1)
-
-
+	local colour = Vector4.new(1.0, 0.0, 1.0, 1.0)
 
 	local inputFile = io.open("VxlEditor\\ToLoad.vxl", "rb")
 	if(inputFile) then
@@ -31,7 +25,6 @@ function importVxl()
 	x = 0
 	y = 0
 	columnI = 0
-	mapSize = 512
 	columnCount = mapSize * mapSize
 	while columnI < columnCount do
 		N = data:byte(i)
@@ -63,12 +56,17 @@ function importVxl()
 				red = data:byte(i + 6 + colorI * 4)
 				green = data:byte(i + 5 + colorI * 4)
 				blue = data:byte(i + 4 + colorI * 4)
-				-- Do something with these colors
-				-- makeVoxelColorful(x, y, zz, red, green, blue);
-				--local myColour = Vector4.new(red / 255.0, green / 255.0, blue / 255.0, 1.0)
-				result:setVoxel(x, zz-1, y, colour, false)
-				zz = zz + 1
-				colorI = colorI + 1
+
+				if (blue) then
+					-- Do something with these colors
+					colour:set(red / 255.0, green / 255.0, blue / 255.0, 1.0);
+
+					-- Rather ugly - Switch y and z and reverse 'up' to match our coordinate system
+					-- Offset of '-1' in zz-1 is a bit strange?
+					result:setVoxel(x, (mapHeight-1) - (zz-1), y, colour, false)
+					zz = zz + 1
+					colorI = colorI + 1
+				end
 			end
 		end
 
@@ -77,8 +75,9 @@ function importVxl()
 		zz = E + 1
 		runlength = M - Z - zz
 		for j = 0, runlength do
-			--makeVoxelSolid(x, y, zz);
-			result:setVoxel(x, zz-1, y, colour, false)
+			-- Rather ugly - Switch y and z and reverse 'up' to match our coordinate system
+			-- Offset of '-1' in zz-1 is a bit strange?
+			result:setVoxel(x, (mapHeight-1) - (zz-1), y, colour, false)
 			zz = zz + 1
 		end
 		if (N == 0) then
@@ -96,6 +95,8 @@ function importVxl()
 			i = i + (N * 4)
 		end
 	end
+
+	result:markRegionAsModified(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1)
 
 	return result
 end
