@@ -140,6 +140,11 @@ void GameplayColouredCubesVolume::setVoxel(int x, int y, int z, const gameplay::
 	mVolume->setVoxelAt(x, y, z, Colour(colour.x, colour.y, colour.z, colour.w), markAsModified);
 }
 
+void GameplayColouredCubesVolume::setVoxel(int x, int y, int z, float red, float green, float blue, float alpha, bool markAsModified)
+{
+	mVolume->setVoxelAt(x, y, z, Colour(red, green, blue, alpha), markAsModified);
+}
+
 void GameplayColouredCubesVolume::markRegionAsModified(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ)
 {
 	mVolume->markRegionAsModified(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ));

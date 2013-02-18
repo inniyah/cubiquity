@@ -291,35 +291,35 @@ int lua_GameplayColouredCubesVolume_setVoxel(lua_State* state)
     {
         case 5:
         {
-            if ((lua_type(state, 1) == LUA_TUSERDATA) &&
-                lua_type(state, 2) == LUA_TNUMBER &&
-                lua_type(state, 3) == LUA_TNUMBER &&
-                lua_type(state, 4) == LUA_TNUMBER &&
-                (lua_type(state, 5) == LUA_TUSERDATA || lua_type(state, 5) == LUA_TNIL))
+            do
             {
-                // Get parameter 1 off the stack.
-                int param1 = (int)luaL_checkint(state, 2);
-
-                // Get parameter 2 off the stack.
-                int param2 = (int)luaL_checkint(state, 3);
-
-                // Get parameter 3 off the stack.
-                int param3 = (int)luaL_checkint(state, 4);
-
-                // Get parameter 4 off the stack.
-                bool param4Valid;
-                ScriptUtil::LuaArray<Vector4> param4 = ScriptUtil::getObjectPointer<Vector4>(5, "Vector4", true, &param4Valid);
-                if (!param4Valid)
+                if ((lua_type(state, 1) == LUA_TUSERDATA) &&
+                    lua_type(state, 2) == LUA_TNUMBER &&
+                    lua_type(state, 3) == LUA_TNUMBER &&
+                    lua_type(state, 4) == LUA_TNUMBER &&
+                    (lua_type(state, 5) == LUA_TUSERDATA || lua_type(state, 5) == LUA_TNIL))
                 {
-                    lua_pushstring(state, "Failed to convert parameter 4 to type 'Vector4'.");
-                    lua_error(state);
-                }
+                    // Get parameter 1 off the stack.
+                    int param1 = (int)luaL_checkint(state, 2);
 
-                GameplayColouredCubesVolume* instance = getInstance(state);
-                instance->setVoxel(param1, param2, param3, *param4);
-                
-                return 0;
-            }
+                    // Get parameter 2 off the stack.
+                    int param2 = (int)luaL_checkint(state, 3);
+
+                    // Get parameter 3 off the stack.
+                    int param3 = (int)luaL_checkint(state, 4);
+
+                    // Get parameter 4 off the stack.
+                    bool param4Valid;
+                    ScriptUtil::LuaArray<Vector4> param4 = ScriptUtil::getObjectPointer<Vector4>(5, "Vector4", true, &param4Valid);
+                    if (!param4Valid)
+                        break;
+
+                    GameplayColouredCubesVolume* instance = getInstance(state);
+                    instance->setVoxel(param1, param2, param3, *param4);
+                    
+                    return 0;
+                }
+            } while (0);
 
             lua_pushstring(state, "lua_GameplayColouredCubesVolume_setVoxel - Failed to match the given parameters to a valid function signature.");
             lua_error(state);
@@ -327,39 +327,133 @@ int lua_GameplayColouredCubesVolume_setVoxel(lua_State* state)
         }
         case 6:
         {
-            if ((lua_type(state, 1) == LUA_TUSERDATA) &&
-                lua_type(state, 2) == LUA_TNUMBER &&
-                lua_type(state, 3) == LUA_TNUMBER &&
-                lua_type(state, 4) == LUA_TNUMBER &&
-                (lua_type(state, 5) == LUA_TUSERDATA || lua_type(state, 5) == LUA_TNIL) &&
-                lua_type(state, 6) == LUA_TBOOLEAN)
+            do
             {
-                // Get parameter 1 off the stack.
-                int param1 = (int)luaL_checkint(state, 2);
-
-                // Get parameter 2 off the stack.
-                int param2 = (int)luaL_checkint(state, 3);
-
-                // Get parameter 3 off the stack.
-                int param3 = (int)luaL_checkint(state, 4);
-
-                // Get parameter 4 off the stack.
-                bool param4Valid;
-                ScriptUtil::LuaArray<Vector4> param4 = ScriptUtil::getObjectPointer<Vector4>(5, "Vector4", true, &param4Valid);
-                if (!param4Valid)
+                if ((lua_type(state, 1) == LUA_TUSERDATA) &&
+                    lua_type(state, 2) == LUA_TNUMBER &&
+                    lua_type(state, 3) == LUA_TNUMBER &&
+                    lua_type(state, 4) == LUA_TNUMBER &&
+                    (lua_type(state, 5) == LUA_TUSERDATA || lua_type(state, 5) == LUA_TNIL) &&
+                    lua_type(state, 6) == LUA_TBOOLEAN)
                 {
-                    lua_pushstring(state, "Failed to convert parameter 4 to type 'Vector4'.");
-                    lua_error(state);
+                    // Get parameter 1 off the stack.
+                    int param1 = (int)luaL_checkint(state, 2);
+
+                    // Get parameter 2 off the stack.
+                    int param2 = (int)luaL_checkint(state, 3);
+
+                    // Get parameter 3 off the stack.
+                    int param3 = (int)luaL_checkint(state, 4);
+
+                    // Get parameter 4 off the stack.
+                    bool param4Valid;
+                    ScriptUtil::LuaArray<Vector4> param4 = ScriptUtil::getObjectPointer<Vector4>(5, "Vector4", true, &param4Valid);
+                    if (!param4Valid)
+                        break;
+
+                    // Get parameter 5 off the stack.
+                    bool param5 = ScriptUtil::luaCheckBool(state, 6);
+
+                    GameplayColouredCubesVolume* instance = getInstance(state);
+                    instance->setVoxel(param1, param2, param3, *param4, param5);
+                    
+                    return 0;
                 }
+            } while (0);
 
-                // Get parameter 5 off the stack.
-                bool param5 = ScriptUtil::luaCheckBool(state, 6);
+            lua_pushstring(state, "lua_GameplayColouredCubesVolume_setVoxel - Failed to match the given parameters to a valid function signature.");
+            lua_error(state);
+            break;
+        }
+        case 8:
+        {
+            do
+            {
+                if ((lua_type(state, 1) == LUA_TUSERDATA) &&
+                    lua_type(state, 2) == LUA_TNUMBER &&
+                    lua_type(state, 3) == LUA_TNUMBER &&
+                    lua_type(state, 4) == LUA_TNUMBER &&
+                    lua_type(state, 5) == LUA_TNUMBER &&
+                    lua_type(state, 6) == LUA_TNUMBER &&
+                    lua_type(state, 7) == LUA_TNUMBER &&
+                    lua_type(state, 8) == LUA_TNUMBER)
+                {
+                    // Get parameter 1 off the stack.
+                    int param1 = (int)luaL_checkint(state, 2);
 
-                GameplayColouredCubesVolume* instance = getInstance(state);
-                instance->setVoxel(param1, param2, param3, *param4, param5);
-                
-                return 0;
-            }
+                    // Get parameter 2 off the stack.
+                    int param2 = (int)luaL_checkint(state, 3);
+
+                    // Get parameter 3 off the stack.
+                    int param3 = (int)luaL_checkint(state, 4);
+
+                    // Get parameter 4 off the stack.
+                    float param4 = (float)luaL_checknumber(state, 5);
+
+                    // Get parameter 5 off the stack.
+                    float param5 = (float)luaL_checknumber(state, 6);
+
+                    // Get parameter 6 off the stack.
+                    float param6 = (float)luaL_checknumber(state, 7);
+
+                    // Get parameter 7 off the stack.
+                    float param7 = (float)luaL_checknumber(state, 8);
+
+                    GameplayColouredCubesVolume* instance = getInstance(state);
+                    instance->setVoxel(param1, param2, param3, param4, param5, param6, param7);
+                    
+                    return 0;
+                }
+            } while (0);
+
+            lua_pushstring(state, "lua_GameplayColouredCubesVolume_setVoxel - Failed to match the given parameters to a valid function signature.");
+            lua_error(state);
+            break;
+        }
+        case 9:
+        {
+            do
+            {
+                if ((lua_type(state, 1) == LUA_TUSERDATA) &&
+                    lua_type(state, 2) == LUA_TNUMBER &&
+                    lua_type(state, 3) == LUA_TNUMBER &&
+                    lua_type(state, 4) == LUA_TNUMBER &&
+                    lua_type(state, 5) == LUA_TNUMBER &&
+                    lua_type(state, 6) == LUA_TNUMBER &&
+                    lua_type(state, 7) == LUA_TNUMBER &&
+                    lua_type(state, 8) == LUA_TNUMBER &&
+                    lua_type(state, 9) == LUA_TBOOLEAN)
+                {
+                    // Get parameter 1 off the stack.
+                    int param1 = (int)luaL_checkint(state, 2);
+
+                    // Get parameter 2 off the stack.
+                    int param2 = (int)luaL_checkint(state, 3);
+
+                    // Get parameter 3 off the stack.
+                    int param3 = (int)luaL_checkint(state, 4);
+
+                    // Get parameter 4 off the stack.
+                    float param4 = (float)luaL_checknumber(state, 5);
+
+                    // Get parameter 5 off the stack.
+                    float param5 = (float)luaL_checknumber(state, 6);
+
+                    // Get parameter 6 off the stack.
+                    float param6 = (float)luaL_checknumber(state, 7);
+
+                    // Get parameter 7 off the stack.
+                    float param7 = (float)luaL_checknumber(state, 8);
+
+                    // Get parameter 8 off the stack.
+                    bool param8 = ScriptUtil::luaCheckBool(state, 9);
+
+                    GameplayColouredCubesVolume* instance = getInstance(state);
+                    instance->setVoxel(param1, param2, param3, param4, param5, param6, param7, param8);
+                    
+                    return 0;
+                }
+            } while (0);
 
             lua_pushstring(state, "lua_GameplayColouredCubesVolume_setVoxel - Failed to match the given parameters to a valid function signature.");
             lua_error(state);
@@ -367,7 +461,7 @@ int lua_GameplayColouredCubesVolume_setVoxel(lua_State* state)
         }
         default:
         {
-            lua_pushstring(state, "Invalid number of parameters (expected 5 or 6).");
+            lua_pushstring(state, "Invalid number of parameters (expected 5, 6, 8 or 9).");
             lua_error(state);
             break;
         }
