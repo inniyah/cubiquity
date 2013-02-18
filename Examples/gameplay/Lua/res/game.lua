@@ -41,18 +41,17 @@ function initialize()
     _touchX = 0
 	_touchY = 0
 
-	--local volumeWidth = 128
-	--local volumeHeight = 32
-	--local volumeDepth = 128
+	--[[local volumeWidth = 128
+	local volumeHeight = 32
+	local volumeDepth = 128
+	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, 64, 32)
+	GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)]]
 
-	--local volumeWidth = 510
-	--local volumeHeight = 254
-	--local volumeDepth = 510
-
-	--_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, 64, 32)
-
-	--GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
-	--GameplayVolumeSerialisation.gameplayLoadData("res/Mountain.vol", _colouredCubesVolume)
+	--[[local volumeWidth = 510
+	local volumeHeight = 254
+	local volumeDepth = 510
+	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, 64, 32)
+	GameplayVolumeSerialisation.gameplayLoadData("res/Mountain.vol", _colouredCubesVolume)]]
 
 	game:getScriptController():loadScript("res/VxlSerialisation.lua")
 	_colouredCubesVolume = importVxl();
@@ -79,12 +78,12 @@ function initialize()
 	_scene:addNode(_modelNode)
 
     -- Create the light node
-	local lightDirection = Vector3.new(0.01, 0.01, 0.01)
+	local lightDirection = Vector3.new(0.7, 0.7, 0.7)
 	_light = Light.createDirectional(lightDirection)
 	lightNode = Node.create()
 	lightNode:setLight(_light)
-	lightNode:setTranslation(0.0, 100.0, 0.0)
-	lightNode:rotateX(-1.57) -- Point light down
+	--lightNode:setTranslation(0.0, 100.0, 0.0)
+	--lightNode:rotateX(-1.57) -- Point light down
 	_scene:addNode(lightNode)
 
     -- Bind the light node's direction into the box material.
@@ -130,6 +129,16 @@ function initialize()
 	blueSlider = form:getControl("BlueSlider")
 	if blueSlider ~= nil then
 		convert(blueSlider, "Slider")
+	end
+
+	lightSlider = form:getControl("LightSlider")
+	if lightSlider ~= nil then
+		convert(lightSlider, "Slider")
+	end
+
+	light2Slider = form:getControl("Light2Slider")
+	if light2Slider ~= nil then
+		convert(light2Slider, "Slider")
 	end
 
     -- ScreenDisplayer.finish()
@@ -182,6 +191,10 @@ function update(elapsedTime)
 			fillSphere(intersection:x(), intersection:y(), intersection:z(), _modelNode:getScaleX(), colour, true)
 		end
 	end
+
+	lightNode:setIdentity()
+	lightNode:rotateX(-1.57 + lightSlider:getValue()) -- Point light down
+	lightNode:rotateY(light2Slider:getValue())
 end
 
 -- Avoid allocating new objects every frame.

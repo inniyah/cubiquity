@@ -38,7 +38,7 @@ form particleEditor
         style = particleProps
         alignment = ALIGN_TOP_RIGHT
         width = 210
-        height = 300
+        height = 500
         layout = LAYOUT_VERTICAL
         scroll = SCROLL_VERTICAL
         scrollBarsAutoHide = false
@@ -94,6 +94,44 @@ form particleEditor
             size = 150, 50
             orientation = HORIZONTAL
             min = 0
+            max = 1
+            value = 0
+            step = 0.01
+            consumeInputEvents = false
+        }
+        
+        label titleLight
+        {
+            style = title
+            size = 150, 30
+            text = Light
+        }
+        
+        slider LightSlider
+        {
+            style = noBorder
+            size = 150, 50
+            orientation = HORIZONTAL
+            min = -1
+            max = 1
+            value = 0
+            step = 0.01
+            consumeInputEvents = false
+        }
+        
+        label titleLight2
+        {
+            style = title
+            size = 150, 30
+            text = Light2
+        }
+        
+        slider Light2Slider
+        {
+            style = noBorder
+            size = 150, 50
+            orientation = HORIZONTAL
+            min = -1
             max = 1
             value = 0
             step = 0.01

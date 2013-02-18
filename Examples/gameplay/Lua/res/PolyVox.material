@@ -12,7 +12,7 @@ material PolyVox
             u_worldMatrix = WORLD_MATRIX
             u_viewProjectionMatrix = VIEW_PROJECTION_MATRIX
             //u_inverseTransposeWorldViewMatrix = INVERSE_TRANSPOSE_WORLD_VIEW_MATRIX
-            u_ambientColor = 1.0, 1.0, 1.0
+            u_ambientColor = 0.3, 0.3, 0.3
             //u_diffuseColor = 1.0, 1.0, 1.0, 1.0
             
             // samplers
