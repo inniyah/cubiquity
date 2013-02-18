@@ -41,18 +41,21 @@ function initialize()
     _touchX = 0
 	_touchY = 0
 
-	local volumeWidth = 128
-	local volumeHeight = 32
-	local volumeDepth = 128
+	--local volumeWidth = 128
+	--local volumeHeight = 32
+	--local volumeDepth = 128
 
 	--local volumeWidth = 510
 	--local volumeHeight = 254
 	--local volumeDepth = 510
 
-	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, 64, 32)
+	--_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, 64, 32)
 
-	GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
+	--GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
 	--GameplayVolumeSerialisation.gameplayLoadData("res/Mountain.vol", _colouredCubesVolume)
+
+	game:getScriptController():loadScript("VxlEditor/VxlSerialisation.lua")
+	_colouredCubesVolume = importVxl();
 
     -- Load font
     _font = Font.create("res/arial40.gpb")
@@ -100,8 +103,9 @@ function initialize()
 	camera:setAspectRatio(game:getWidth() / game:getHeight())
 	_cameraNode:setCamera(camera)
 	_scene:setActiveCamera(camera)
-	_cameraPositionNode:setTranslation(volumeWidth / 2, volumeHeight * 1.5, volumeDepth * 1.2)
-	_cameraPitchNode:rotateX(-0.9)
+	_cameraPositionNode:setTranslation(0, 30, 300)
+	--_cameraPositionNode:setTranslation(volumeWidth / 2, volumeHeight * 1.5, volumeDepth * 1.2)
+	--_cameraPitchNode:rotateX(-0.0)
 
 	local dummyValue = 42
 	_scene:addNode(_colouredCubesVolume:getRootNodeForLua(dummyValue))
@@ -127,20 +131,6 @@ function initialize()
 	if blueSlider ~= nil then
 		convert(blueSlider, "Slider")
 	end
-
-	--This is a bit of a hack - forcing the LOD levels to be precached.
-	local viewPos = _cameraPositionNode:getTranslationWorld()
-	_colouredCubesVolume:performUpdate(viewPos, 0.0)
-	_colouredCubesVolume:performUpdate(viewPos, 0.1)
-	_colouredCubesVolume:performUpdate(viewPos, 0.2)
-	_colouredCubesVolume:performUpdate(viewPos, 0.3)
-	_colouredCubesVolume:performUpdate(viewPos, 0.4)
-	_colouredCubesVolume:performUpdate(viewPos, 0.5)
-	_colouredCubesVolume:performUpdate(viewPos, 0.6)
-	_colouredCubesVolume:performUpdate(viewPos, 0.7)
-	_colouredCubesVolume:performUpdate(viewPos, 0.8)
-	_colouredCubesVolume:performUpdate(viewPos, 0.9)
-	_colouredCubesVolume:performUpdate(viewPos, 1.0)
 
     -- ScreenDisplayer.finish()
 end
@@ -169,7 +159,7 @@ function update(elapsedTime)
 		_cameraPositionNode:translate(rightVector)
 	end
 
-	local lodLevel = lodSlider:getValue()
+	local lodLevel = 0.0
 	local viewPos = _cameraPositionNode:getTranslationWorld()
 	_colouredCubesVolume:performUpdate(viewPos, lodLevel)
 
