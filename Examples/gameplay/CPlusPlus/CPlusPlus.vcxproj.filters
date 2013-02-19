@@ -118,6 +118,9 @@
     <None Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.inl">
       <Filter>PolyVox</Filter>
     </None>
+    <None Include="..\..\..\Core\CubicSurfaceExtractionTask.inl">
+      <Filter>Core</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h">
@@ -306,6 +309,9 @@
     <ClInclude Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Core\CubicSurfaceExtractionTask.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -327,9 +333,6 @@
       <Filter>Bridge</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Core\Colour.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Core\ColouredCubesVolume.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Core\CubiquityUtility.cpp">
@@ -376,6 +379,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\polyvox\library\PolyVoxCore\source\VertexTypes.cpp">
       <Filter>PolyVox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Core\ColouredCubesVolume.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
