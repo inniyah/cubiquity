@@ -15,6 +15,7 @@ ColouredCubicSurfaceExtractionTask::ColouredCubicSurfaceExtractionTask(OctreeNod
 
 ColouredCubicSurfaceExtractionTask::~ColouredCubicSurfaceExtractionTask()
 {
+	//Should delete mesh here?
 }
 
 void ColouredCubicSurfaceExtractionTask::process(void)

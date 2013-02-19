@@ -16,8 +16,6 @@ public:
 
 	void updateMeshImpl(OctreeNode* volReg);
 
-	//void generateCubicMesh(const PolyVox::Region& region, uint32_t downSampleFactor, PolyVox::SurfaceMesh<PolyVox::PositionMaterial<VoxelType> >* resultMesh);
-
 	std::list<ColouredCubicSurfaceExtractionTask> mCubicSurfaceExtractionTasks;
 };
 
