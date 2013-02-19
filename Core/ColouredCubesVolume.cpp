@@ -1,6 +1,6 @@
 #include "ColouredCubesVolume.h"
 
-#include "CubicSurfaceExtractionTask.h"
+#include "ColouredCubicSurfaceExtractionTask.h"
 
 using namespace PolyVox;
 
@@ -11,22 +11,18 @@ ColouredCubesVolume::ColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int
 
 void ColouredCubesVolume::updateMeshImpl(OctreeNode* volReg)
 {
-	PolyVox::Region lod0Region = volReg->mRegion;
+	ColouredCubicSurfaceExtractionTask task(volReg, mVolData);
+	task.process();
 
-	//Extract the surface
-	PolyVox::SurfaceMesh<PolyVox::PositionMaterial<VoxelType> >* colouredCubicMesh = new PolyVox::SurfaceMesh<PolyVox::PositionMaterial<VoxelType> >;
+	//generateCubicMesh(lod0Region, downScaleFactor, colouredCubicMesh);
 
-	uint32_t downScaleFactor = 0x0001 << volReg->mLodLevel;
-
-	generateCubicMesh(lod0Region, downScaleFactor, colouredCubicMesh);
-
-	if(colouredCubicMesh->getNoOfIndices() > 0)
+	if(task.mColouredCubicMesh->getNoOfIndices() > 0)
 	{
-		volReg->buildGraphicsMesh(colouredCubicMesh/*, 0*/);
+		volReg->buildGraphicsMesh(task.mColouredCubicMesh/*, 0*/);
 	}
 }
 
-void ColouredCubesVolume::generateCubicMesh(const PolyVox::Region& region, uint32_t downSampleFactor, PolyVox::SurfaceMesh<PolyVox::PositionMaterial<VoxelType> >* resultMesh)
+/*void ColouredCubesVolume::generateCubicMesh(const PolyVox::Region& region, uint32_t downSampleFactor, PolyVox::SurfaceMesh<PolyVox::PositionMaterial<VoxelType> >* resultMesh)
 {
 	ColouredCubesIsQuadNeeded<VoxelType> isQuadNeeded;
 
@@ -103,4 +99,4 @@ void ColouredCubesVolume::generateCubicMesh(const PolyVox::Region& region, uint3
 		CubicSurfaceExtractionTask< PolyVox::RawVolume<VoxelType>, ColouredCubesIsQuadNeeded<VoxelType> > surfaceExtractionTask(&resampledVolume2, dstRegion2, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), true, isQuadNeeded, downSampleFactor);
 		surfaceExtractionTask.process();
 	}
-}
+}*/

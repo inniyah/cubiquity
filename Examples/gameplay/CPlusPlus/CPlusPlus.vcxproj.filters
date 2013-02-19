@@ -118,9 +118,6 @@
     <None Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.inl">
       <Filter>PolyVox</Filter>
     </None>
-    <None Include="..\..\..\Core\CubicSurfaceExtractionTask.inl">
-      <Filter>Core</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h">
@@ -309,7 +306,7 @@
     <ClInclude Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Core\CubicSurfaceExtractionTask.h">
+    <ClInclude Include="..\..\..\Core\ColouredCubicSurfaceExtractionTask.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
@@ -381,6 +378,9 @@
       <Filter>PolyVox</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Core\ColouredCubesVolume.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Core\ColouredCubicSurfaceExtractionTask.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
