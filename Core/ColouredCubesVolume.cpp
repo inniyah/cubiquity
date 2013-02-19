@@ -33,7 +33,7 @@ void ColouredCubesVolume::generateCubicMesh(const PolyVox::Region& region, uint3
 	if(downSampleFactor == 1) 
 	{
 		PolyVox::SurfaceMesh<PolyVox::PositionMaterial<VoxelType> > colouredCubicMesh;
-		CubicSurfaceExtractionTask< PolyVox::SimpleVolume<VoxelType>, ColouredCubesIsQuadNeeded<VoxelType> > surfaceExtractionTask(mVolData, region, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), true, isQuadNeeded);
+		CubicSurfaceExtractionTask< PolyVox::SimpleVolume<VoxelType>, ColouredCubesIsQuadNeeded<VoxelType> > surfaceExtractionTask(mVolData, region, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), true, isQuadNeeded, downSampleFactor);
 		surfaceExtractionTask.process();
 	}
 	else if(downSampleFactor == 2)
@@ -60,11 +60,8 @@ void ColouredCubesVolume::generateCubicMesh(const PolyVox::Region& region, uint3
 		//dstRegion.shiftLowerCorner(-1, -1, -1);
 
 		PolyVox::SurfaceMesh<PolyVox::PositionMaterial<VoxelType> > colouredCubicMesh;
-		CubicSurfaceExtractionTask< PolyVox::RawVolume<VoxelType>, ColouredCubesIsQuadNeeded<VoxelType> > surfaceExtractionTask(&resampledVolume, dstRegion, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), true, isQuadNeeded);
+		CubicSurfaceExtractionTask< PolyVox::RawVolume<VoxelType>, ColouredCubesIsQuadNeeded<VoxelType> > surfaceExtractionTask(&resampledVolume, dstRegion, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), true, isQuadNeeded, downSampleFactor);
 		surfaceExtractionTask.process();
-
-		resultMesh->scaleVertices(downSampleFactor);
-		resultMesh->translateVertices(Vector3DFloat(0.5f, 0.5f, 0.5f));
 	}
 	else if(downSampleFactor == 4)
 	{
@@ -103,10 +100,7 @@ void ColouredCubesVolume::generateCubicMesh(const PolyVox::Region& region, uint3
 		//dstRegion.shiftLowerCorner(-1, -1, -1);
 
 		PolyVox::SurfaceMesh<PolyVox::PositionMaterial<VoxelType> > colouredCubicMesh;
-		CubicSurfaceExtractionTask< PolyVox::RawVolume<VoxelType>, ColouredCubesIsQuadNeeded<VoxelType> > surfaceExtractionTask(&resampledVolume2, dstRegion2, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), true, isQuadNeeded);
+		CubicSurfaceExtractionTask< PolyVox::RawVolume<VoxelType>, ColouredCubesIsQuadNeeded<VoxelType> > surfaceExtractionTask(&resampledVolume2, dstRegion2, resultMesh, PolyVox::WrapModes::Border, VoxelType(0), true, isQuadNeeded, downSampleFactor);
 		surfaceExtractionTask.process();
-
-		resultMesh->scaleVertices(downSampleFactor);
-		resultMesh->translateVertices(Vector3DFloat(1.5f, 1.5f, 1.5f));
 	}
 }

@@ -9,7 +9,7 @@ template<typename VolumeType, typename IsQuadNeeded>
 class CubicSurfaceExtractionTask
 {
 public:
-	CubicSurfaceExtractionTask(VolumeType* volData, PolyVox::Region region, PolyVox::SurfaceMesh<PolyVox::PositionMaterial<typename VolumeType::VoxelType> >* result, PolyVox::WrapMode eWrapMode = PolyVox::WrapModes::Border, typename VolumeType::VoxelType tBorderValue = VolumeType::VoxelType(0), bool bMergeQuads = true, IsQuadNeeded isQuadNeeded = IsQuadNeeded());
+	CubicSurfaceExtractionTask(VolumeType* volData, PolyVox::Region region, PolyVox::SurfaceMesh<PolyVox::PositionMaterial<typename VolumeType::VoxelType> >* result, PolyVox::WrapMode eWrapMode = PolyVox::WrapModes::Border, typename VolumeType::VoxelType tBorderValue = VolumeType::VoxelType(0), bool bMergeQuads = true, IsQuadNeeded isQuadNeeded = IsQuadNeeded(), uint32_t downSampleFactor = 1);
 	~CubicSurfaceExtractionTask();
 
 	void process(void);
@@ -24,6 +24,7 @@ public:
 	typename VolumeType::VoxelType mBorderValue;
 	bool mMergeQuads;
 	IsQuadNeeded mIsQuadNeeded;
+	uint32_t mDownSampleFactor;
 };
 
 #include "CubicSurfaceExtractionTask.inl"
