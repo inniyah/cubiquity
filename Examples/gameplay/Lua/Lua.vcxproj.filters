@@ -127,6 +127,9 @@
     <None Include="res\VxlSerialisation.lua">
       <Filter>res</Filter>
     </None>
+    <None Include="..\..\..\Core\TaskProcessor.inl">
+      <Filter>Core</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h">
@@ -336,6 +339,12 @@
     <ClInclude Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Core\ColouredCubicSurfaceExtractionTask.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Core\TaskProcessor.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -427,6 +436,9 @@
     </ClCompile>
     <ClCompile Include="..\..\..\..\polyvox\library\PolyVoxCore\source\VertexTypes.cpp">
       <Filter>PolyVox</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Core\ColouredCubicSurfaceExtractionTask.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -13,14 +13,13 @@ void ColouredCubesVolume::update(const PolyVox::Vector3DFloat& viewPosition, flo
 {
 	Volume<Colour>::update(viewPosition, lodThreshold);
 
-	if(mPendingCubicSurfaceExtractionTasks.size())
+	mPendingCubicSurfaceExtractionTasks.processOneTask();
+
+	if(mPendingCubicSurfaceExtractionTasks.hasAnyFinishedTasks())
 	{
-		ColouredCubicSurfaceExtractionTask task = mPendingCubicSurfaceExtractionTasks.front();
-		mPendingCubicSurfaceExtractionTasks.pop_front();
+		ColouredCubicSurfaceExtractionTask task = mPendingCubicSurfaceExtractionTasks.removeFirstFinishedTask();
 
-		task.process();
-
-		if(task.mColouredCubicMesh->getNoOfIndices() > 0)
+		if(task.mColouredCubicMesh->getNoOfIndices() > 0) //But if the new mesh is empty we should still delete any old mesh?
 		{
 			task.mOctreeNode->buildGraphicsMesh(task.mColouredCubicMesh);
 		}
@@ -34,7 +33,7 @@ void ColouredCubesVolume::updateMeshImpl(OctreeNode* volReg)
 {
 	ColouredCubicSurfaceExtractionTask task(volReg, mVolData);
 
-	mPendingCubicSurfaceExtractionTasks.push_back(task);
+	mPendingCubicSurfaceExtractionTasks.addTask(task);
 	/*task.process();
 
 	if(task.mColouredCubicMesh->getNoOfIndices() > 0)

@@ -337,6 +337,7 @@
     <None Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Vector.inl" />
     <None Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VolumeResampler.inl" />
     <None Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.inl" />
+    <None Include="..\..\..\Core\TaskProcessor.inl" />
     <None Include="..\..\..\Core\Volume.inl" />
     <None Include="bar-descriptor.xml">
       <SubType>Designer</SubType>
@@ -376,6 +377,7 @@
     <ClCompile Include="..\..\..\Bridges\gameplay\Lua\lua_Global.cpp" />
     <ClCompile Include="..\..\..\Core\Colour.cpp" />
     <ClCompile Include="..\..\..\Core\ColouredCubesVolume.cpp" />
+    <ClCompile Include="..\..\..\Core\ColouredCubicSurfaceExtractionTask.cpp" />
     <ClCompile Include="..\..\..\Core\CubiquityUtility.cpp" />
     <ClCompile Include="..\..\..\Core\MultiMaterial.cpp" />
     <ClCompile Include="..\..\..\Core\OctreeNode.cpp" />
@@ -443,6 +445,7 @@
     <ClInclude Include="..\..\..\Core\Colour.h" />
     <ClInclude Include="..\..\..\Core\ColouredCubesIsQuadNeeded.h" />
     <ClInclude Include="..\..\..\Core\ColouredCubesVolume.h" />
+    <ClInclude Include="..\..\..\Core\ColouredCubicSurfaceExtractionTask.h" />
     <ClInclude Include="..\..\..\Core\CubiquityUtility.h" />
     <ClInclude Include="..\..\..\Core\MultiMaterial.h" />
     <ClInclude Include="..\..\..\Core\MultiMaterialMarchingCubesController.h" />
@@ -450,6 +453,7 @@
     <ClInclude Include="..\..\..\Core\Raycasting.h" />
     <ClInclude Include="..\..\..\Core\SmoothTerrainVolume.h" />
     <ClInclude Include="..\..\..\Core\SmoothTerrainVolumeEditor.h" />
+    <ClInclude Include="..\..\..\Core\TaskProcessor.h" />
     <ClInclude Include="..\..\..\Core\Volume.h" />
     <ClInclude Include="..\..\..\Core\VolumeSerialisation.h" />
     <ClInclude Include="src\Main.h" />

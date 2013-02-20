@@ -2,12 +2,11 @@
 #define COLOUREDCUBESVOLUME_H_
 
 #include "ColouredCubicSurfaceExtractionTask.h"
+#include "TaskProcessor.h"
 #include "Volume.h"
 
 #include "Colour.h"
 #include "PolyVoxCore/Material.h"
-
-#include <list>
 
 class ColouredCubesVolume : public Volume<Colour>
 {
@@ -17,8 +16,8 @@ public:
 	virtual void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
 	void updateMeshImpl(OctreeNode* volReg);
 
-	std::list<ColouredCubicSurfaceExtractionTask> mPendingCubicSurfaceExtractionTasks;
-	std::list<ColouredCubicSurfaceExtractionTask> mFinishedCubicSurfaceExtractionTasks;
+	TaskProcessor<ColouredCubicSurfaceExtractionTask> mPendingCubicSurfaceExtractionTasks;
+	TaskProcessor<ColouredCubicSurfaceExtractionTask> mFinishedCubicSurfaceExtractionTasks;
 };
 
 #endif //COLOUREDCUBESVOLUME_H_

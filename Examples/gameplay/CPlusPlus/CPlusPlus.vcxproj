@@ -337,6 +337,7 @@
     <None Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Vector.inl" />
     <None Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VolumeResampler.inl" />
     <None Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.inl" />
+    <None Include="..\..\..\Core\TaskProcessor.inl" />
     <None Include="..\..\..\Core\Volume.inl" />
     <None Include="bar-descriptor.xml">
       <SubType>Designer</SubType>
@@ -436,6 +437,7 @@
     <ClInclude Include="..\..\..\Core\Raycasting.h" />
     <ClInclude Include="..\..\..\Core\SmoothTerrainVolume.h" />
     <ClInclude Include="..\..\..\Core\SmoothTerrainVolumeEditor.h" />
+    <ClInclude Include="..\..\..\Core\TaskProcessor.h" />
     <ClInclude Include="..\..\..\Core\Volume.h" />
     <ClInclude Include="..\..\..\Core\VolumeSerialisation.h" />
     <ClInclude Include="src\Main.h" />
