@@ -3,7 +3,7 @@
 using namespace PolyVox;
 
 SmoothTerrainVolumeEditor::SmoothTerrainVolumeEditor(SmoothTerrainVolume* volume)
-	:mVolume(volume)
+	:mSmoothTerrainVolume(volume)
 	,mSmoothingVolume(0)
 {
 }
@@ -30,13 +30,13 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 	float radiusSquared = radius * radius;
 
 	//Check bounds.
-	firstX = std::max(firstX,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getX());
-	firstY = std::max(firstY,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getY());
-	firstZ = std::max(firstZ,mVolume->mVolData->getEnclosingRegion().getLowerCorner().getZ());
+	firstX = std::max(firstX,mSmoothTerrainVolume->mVolData->getEnclosingRegion().getLowerCorner().getX());
+	firstY = std::max(firstY,mSmoothTerrainVolume->mVolData->getEnclosingRegion().getLowerCorner().getY());
+	firstZ = std::max(firstZ,mSmoothTerrainVolume->mVolData->getEnclosingRegion().getLowerCorner().getZ());
 
-	lastX = std::min(lastX,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getX());
-	lastY = std::min(lastY,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getY());
-	lastZ = std::min(lastZ,mVolume->mVolData->getEnclosingRegion().getUpperCorner().getZ());
+	lastX = std::min(lastX,mSmoothTerrainVolume->mVolData->getEnclosingRegion().getUpperCorner().getX());
+	lastY = std::min(lastY,mSmoothTerrainVolume->mVolData->getEnclosingRegion().getUpperCorner().getY());
+	lastZ = std::min(lastZ,mSmoothTerrainVolume->mVolData->getEnclosingRegion().getUpperCorner().getZ());
 
 	PolyVox::Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
 
@@ -60,7 +60,7 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 		}
 
 		// We might not need to do this at float precision, it should be tested again.
-		PolyVox::LowPassFilter< PolyVox::SimpleVolume<MultiMaterial4>, PolyVox::RawVolume<MultiMaterial4>, PolyVox::Vector<4, float> > lowPassFilter(mVolume->mVolData, region, mSmoothingVolume, region, 3);
+		PolyVox::LowPassFilter< PolyVox::SimpleVolume<MultiMaterial4>, PolyVox::RawVolume<MultiMaterial4>, PolyVox::Vector<4, float> > lowPassFilter(mSmoothTerrainVolume->mVolData, region, mSmoothingVolume, region, 3);
 		lowPassFilter.execute();
 	}
 
@@ -101,7 +101,7 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 					{
 					case EditActions::Add:
 						{		
-							MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);	
+							MultiMaterial4 originalMat = mSmoothTerrainVolume->getVoxelAt(x, y, z);	
 							uint32_t sumOfMaterials = originalMat.getSumOfMaterials();
 							if(sumOfMaterials + uToAddOrSubtract <= originalMat.getMaxMaterialValue())
 							{
@@ -111,27 +111,27 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 							{
 								addToMaterial(materialToUse, uToAddOrSubtract, originalMat);
 							}
-							mVolume->setVoxelAt(x,y,z, originalMat);
+							mSmoothTerrainVolume->setVoxelAt(x,y,z, originalMat);
 							break;
 						}
 					case EditActions::Subtract:
 						{
-							MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);	
+							MultiMaterial4 originalMat = mSmoothTerrainVolume->getVoxelAt(x, y, z);	
 							uint32_t sumOfMaterials = originalMat.getSumOfMaterials();
 							subtractFromMaterial(uToAddOrSubtract, originalMat);
-							mVolume->setVoxelAt(x,y,z, originalMat);
+							mSmoothTerrainVolume->setVoxelAt(x,y,z, originalMat);
 							break;
 						}
 					case EditActions::Paint:
 						{						
-							MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);	
+							MultiMaterial4 originalMat = mSmoothTerrainVolume->getVoxelAt(x, y, z);	
 							addToMaterial(materialToUse, uToAddOrSubtract, originalMat);
-							mVolume->setVoxelAt(x,y,z, originalMat);
+							mSmoothTerrainVolume->setVoxelAt(x,y,z, originalMat);
 							break;
 						}
 					case EditActions::Smooth:
 						{		
-							MultiMaterial4 originalMat = mVolume->getVoxelAt(x, y, z);
+							MultiMaterial4 originalMat = mSmoothTerrainVolume->getVoxelAt(x, y, z);
 							MultiMaterial4 smoothedMat = mSmoothingVolume->getVoxelAt(x, y, z);
 
 							//FIXME - expose linear interpolation as well as trilinear interpolation from PolyVox?
@@ -160,7 +160,7 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 							interpMat.setMaterial(2, (std::max<uint32_t>)(0, (std::min)(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp2 + bias))));
 							interpMat.setMaterial(3, (std::max<uint32_t>)(0, (std::min)(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp3 + bias))));
 
-							mVolume->setVoxelAt(x,y,z, interpMat);
+							mSmoothTerrainVolume->setVoxelAt(x,y,z, interpMat);
 
 							break;
 						}

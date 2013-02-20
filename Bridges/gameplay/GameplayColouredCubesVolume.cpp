@@ -12,11 +12,11 @@ GameplayColouredCubesVolume::GameplayColouredCubesVolume(int lowerX, int lowerY,
 	,mColouredCubicSurfaceExtractionTaskProcessor(0)
 {
 	mColouredCubicSurfaceExtractionTaskProcessor = new TaskProcessor<ColouredCubicSurfaceExtractionTask>;
-	mVolume->mColouredCubicSurfaceExtractionTaskProcessor = mColouredCubicSurfaceExtractionTaskProcessor;
+	mCubiquityVolume->mColouredCubicSurfaceExtractionTaskProcessor = mColouredCubicSurfaceExtractionTaskProcessor;
 
 	mRootGameplayNode = createNodeWithExtraData("RootGameplayNode");
 
-	buildNode(mVolume->mRootOctreeNode, mRootGameplayNode);
+	buildNode(mCubiquityVolume->mRootOctreeNode, mRootGameplayNode);
 }
 
 GameplayColouredCubesVolume::~GameplayColouredCubesVolume()
@@ -27,13 +27,13 @@ GameplayColouredCubesVolume::~GameplayColouredCubesVolume()
 void GameplayColouredCubesVolume::performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold)
 {
 	Vector3DFloat v3dViewPosition(viewPosition.x, viewPosition.y, viewPosition.z);
-	mVolume->update(v3dViewPosition, lodThreshold);
+	mCubiquityVolume->update(v3dViewPosition, lodThreshold);
 
 	//Now ensure the gameplay node tree matches the one in the volume.
 
-	if(mVolume->mRootOctreeNode != 0)
+	if(mCubiquityVolume->mRootOctreeNode != 0)
 	{
-		syncNode(mVolume->mRootOctreeNode, mRootGameplayNode);
+		syncNode(mCubiquityVolume->mRootOctreeNode, mRootGameplayNode);
 	}
 }
 
@@ -52,7 +52,7 @@ void GameplayColouredCubesVolume::syncNode(OctreeNode* octreeNode, gameplay::Nod
 			SAFE_RELEASE(model);
 		}
 
-		extraNodeData->mTimeStamp = mVolume->getTime();
+		extraNodeData->mTimeStamp = mCubiquityVolume->getTime();
 	}
 
 	if(octreeNode->mRenderThisNode)
@@ -135,24 +135,24 @@ gameplay::Model* GameplayColouredCubesVolume::buildModelFromPolyVoxMesh(const Po
 
 gameplay::Vector4 GameplayColouredCubesVolume::getVoxel(int x, int y, int z)
 {
-	Colour colour = mVolume->getVoxelAt(x, y, z);
+	Colour colour = mCubiquityVolume->getVoxelAt(x, y, z);
 	gameplay::Vector4 result(colour.getRedAsFloat(), colour.getGreenAsFloat(), colour.getBlueAsFloat(), colour.getAlphaAsFloat());
 	return result;
 }
 
 void GameplayColouredCubesVolume::setVoxel(int x, int y, int z, const gameplay::Vector4& colour, bool markAsModified)
 {
-	mVolume->setVoxelAt(x, y, z, Colour(colour.x, colour.y, colour.z, colour.w), markAsModified);
+	mCubiquityVolume->setVoxelAt(x, y, z, Colour(colour.x, colour.y, colour.z, colour.w), markAsModified);
 }
 
 void GameplayColouredCubesVolume::setVoxel(int x, int y, int z, float red, float green, float blue, float alpha, bool markAsModified)
 {
-	mVolume->setVoxelAt(x, y, z, Colour(red, green, blue, alpha), markAsModified);
+	mCubiquityVolume->setVoxelAt(x, y, z, Colour(red, green, blue, alpha), markAsModified);
 }
 
 void GameplayColouredCubesVolume::markRegionAsModified(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ)
 {
-	mVolume->markRegionAsModified(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ));
+	mCubiquityVolume->markRegionAsModified(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ));
 }
 
 GameplayColouredCubesVolume* GameplayColouredCubesVolume::importVxl(const char* filename)

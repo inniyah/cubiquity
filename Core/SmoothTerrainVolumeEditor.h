@@ -9,7 +9,7 @@ public:
 	SmoothTerrainVolumeEditor(SmoothTerrainVolume* volume);
 	~SmoothTerrainVolumeEditor();
 
-	SmoothTerrainVolume* mVolume;
+	SmoothTerrainVolume* mSmoothTerrainVolume;
 
 protected:
 	class EditActions

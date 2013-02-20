@@ -21,14 +21,14 @@ public:
 	//Not sure I like exposing this one... should make some functions/classes friends instead?
 	_VolumeType* getVolume(void)
 	{
-		return mVolume;
+		return mCubiquityVolume;
 	}
 
 protected:
 	GameplayVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
 		:mRootGameplayNode(0)
 	{
-		mVolume = new _VolumeType(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize);
+		mCubiquityVolume = new _VolumeType(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize);
 	}
 
 	~GameplayVolume()
@@ -39,7 +39,7 @@ protected:
 
 	void buildNode(OctreeNode* octreeNode, gameplay::Node* gameplayNode);
 
-	_VolumeType* mVolume;
+	_VolumeType* mCubiquityVolume;
 	gameplay::Node* mRootGameplayNode;
 };
 
