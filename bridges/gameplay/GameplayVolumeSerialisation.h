@@ -15,12 +15,12 @@ class GameplayVolumeSerialisation
 public:
 	static void gameplayLoadData(const char* filename, GameplayColouredCubesVolume* volume)
 	{
-		loadData(filename, volume->getVolume());
+		loadData(filename, volume->getCubiquityVolume());
 	}
 
 	static void gameplayLoadData(const char* filename, GameplaySmoothTerrainVolume* volume)
 	{
-		loadData(filename, volume->getVolume());
+		loadData(filename, volume->getCubiquityVolume());
 	}
 };
 

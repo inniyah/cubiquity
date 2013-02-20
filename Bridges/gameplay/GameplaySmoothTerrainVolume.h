@@ -34,7 +34,7 @@ public:
 	//Not sure I like exposing this one... should make some functions/classes friends instead?
 	SmoothTerrainVolume* getVolumeForLua(int dummyParamForLuagen)
 	{
-		return GameplayVolume<SmoothTerrainVolume>::getVolume();
+		return GameplayVolume<SmoothTerrainVolume>::getCubiquityVolume();
 	}
 
 	void performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold);

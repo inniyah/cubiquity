@@ -35,7 +35,7 @@ public:
 	//Not sure I like exposing this one... should make some functions/classes friends instead?
 	ColouredCubesVolume* getVolumeForLua(int dummyParamForLuagen)
 	{
-		return GameplayVolume<ColouredCubesVolume>::getVolume();
+		return GameplayVolume<ColouredCubesVolume>::getCubiquityVolume();
 	}
 
 	//FIXME - This doesn't belong here but currently there is no .cpp file for volume serialisation.

@@ -19,7 +19,7 @@ public:
 	}
 
 	//Not sure I like exposing this one... should make some functions/classes friends instead?
-	_VolumeType* getVolume(void)
+	_VolumeType* getCubiquityVolume(void)
 	{
 		return mCubiquityVolume;
 	}

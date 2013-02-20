@@ -1,7 +1,7 @@
 #include "GameplaySmoothTerrainVolumeEditor.h"
 
 GameplaySmoothTerrainVolumeEditor::GameplaySmoothTerrainVolumeEditor(GameplaySmoothTerrainVolume* volume)
-	:SmoothTerrainVolumeEditor(volume->getVolume())
+	:SmoothTerrainVolumeEditor(volume->getCubiquityVolume())
 {
 }
 
