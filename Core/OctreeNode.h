@@ -48,6 +48,7 @@ public:
 	PolyVox::Region mRegion;
 	uint32_t mMeshLastUpdated;
 	uint32_t mDataLastModified;
+	bool mIsSceduledForUpdate;
 
 	OctreeNode* parent;
 	OctreeNode* children[2][2][2];

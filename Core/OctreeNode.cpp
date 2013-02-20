@@ -14,6 +14,7 @@ OctreeNode::OctreeNode(PolyVox::Region region, OctreeNode* parentRegion)
 	,mRenderThisNode(false)
 	,mMeshLastUpdated(0)
 	,mDataLastModified(1) //Is this ok?
+	,mIsSceduledForUpdate(false)
 	,mSmoothPolyVoxMesh(0)
 	,mCubicPolyVoxMesh(0)
 	,mGameEngineNode(0)

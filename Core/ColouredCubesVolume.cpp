@@ -9,13 +9,39 @@ ColouredCubesVolume::ColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int
 {
 }
 
+void ColouredCubesVolume::update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
+{
+	Volume<Colour>::update(viewPosition, lodThreshold);
+
+	if(mPendingCubicSurfaceExtractionTasks.size())
+	{
+		ColouredCubicSurfaceExtractionTask task = mPendingCubicSurfaceExtractionTasks.front();
+		mPendingCubicSurfaceExtractionTasks.pop_front();
+
+		task.process();
+
+		if(task.mColouredCubicMesh->getNoOfIndices() > 0)
+		{
+			task.mOctreeNode->buildGraphicsMesh(task.mColouredCubicMesh);
+		}
+
+		task.mOctreeNode->setMeshLastUpdated(getTime());
+		task.mOctreeNode->mIsSceduledForUpdate = false;
+	}
+}
+
 void ColouredCubesVolume::updateMeshImpl(OctreeNode* volReg)
 {
 	ColouredCubicSurfaceExtractionTask task(volReg, mVolData);
-	task.process();
+
+	mPendingCubicSurfaceExtractionTasks.push_back(task);
+	/*task.process();
 
 	if(task.mColouredCubicMesh->getNoOfIndices() > 0)
 	{
-		volReg->buildGraphicsMesh(task.mColouredCubicMesh/*, 0*/);
+		volReg->buildGraphicsMesh(task.mColouredCubicMesh);
 	}
+
+	volReg->setMeshLastUpdated(getTime());
+	volReg->mIsSceduledForUpdate = false;*/
 }

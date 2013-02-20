@@ -14,9 +14,11 @@ class ColouredCubesVolume : public Volume<Colour>
 public:
 	ColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
 
+	virtual void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
 	void updateMeshImpl(OctreeNode* volReg);
 
-	std::list<ColouredCubicSurfaceExtractionTask> mCubicSurfaceExtractionTasks;
+	std::list<ColouredCubicSurfaceExtractionTask> mPendingCubicSurfaceExtractionTasks;
+	std::list<ColouredCubicSurfaceExtractionTask> mFinishedCubicSurfaceExtractionTasks;
 };
 
 #endif //COLOUREDCUBESVOLUME_H_
