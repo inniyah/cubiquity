@@ -6,6 +6,7 @@ using namespace PolyVox;
 
 ColouredCubesVolume::ColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
 	:Volume<Colour>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, OctreeConstructionModes::BoundVoxels, baseNodeSize)
+	,mColouredCubicSurfaceExtractionTaskProcessor(0)
 {
 }
 
@@ -13,11 +14,11 @@ void ColouredCubesVolume::update(const PolyVox::Vector3DFloat& viewPosition, flo
 {
 	Volume<Colour>::update(viewPosition, lodThreshold);
 
-	mPendingCubicSurfaceExtractionTasks.processOneTask();
+	mColouredCubicSurfaceExtractionTaskProcessor->processOneTask();
 
-	if(mPendingCubicSurfaceExtractionTasks.hasAnyFinishedTasks())
+	if(mColouredCubicSurfaceExtractionTaskProcessor->hasAnyFinishedTasks())
 	{
-		ColouredCubicSurfaceExtractionTask task = mPendingCubicSurfaceExtractionTasks.removeFirstFinishedTask();
+		ColouredCubicSurfaceExtractionTask task = mColouredCubicSurfaceExtractionTaskProcessor->removeFirstFinishedTask();
 
 		if(task.mColouredCubicMesh->getNoOfIndices() > 0) //But if the new mesh is empty we should still delete any old mesh?
 		{
@@ -33,7 +34,7 @@ void ColouredCubesVolume::updateMeshImpl(OctreeNode* volReg)
 {
 	ColouredCubicSurfaceExtractionTask task(volReg, mVolData);
 
-	mPendingCubicSurfaceExtractionTasks.addTask(task);
+	mColouredCubicSurfaceExtractionTaskProcessor->addTask(task);
 	/*task.process();
 
 	if(task.mColouredCubicMesh->getNoOfIndices() > 0)

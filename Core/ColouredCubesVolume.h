@@ -16,8 +16,9 @@ public:
 	virtual void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
 	void updateMeshImpl(OctreeNode* volReg);
 
-	TaskProcessor<ColouredCubicSurfaceExtractionTask> mPendingCubicSurfaceExtractionTasks;
-	TaskProcessor<ColouredCubicSurfaceExtractionTask> mFinishedCubicSurfaceExtractionTasks;
+public:
+	//This task processor must be created and set by out engine-specific derived class.
+	TaskProcessor<ColouredCubicSurfaceExtractionTask>* mColouredCubicSurfaceExtractionTaskProcessor;
 };
 
 #endif //COLOUREDCUBESVOLUME_H_
