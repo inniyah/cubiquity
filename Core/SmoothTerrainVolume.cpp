@@ -11,23 +11,23 @@ SmoothTerrainVolume::SmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int
 }
 
 
-void SmoothTerrainVolume::updateMeshImpl(OctreeNode* volReg)
+void SmoothTerrainVolume::updateMeshImpl(OctreeNode* octreeNode)
 {
-	PolyVox::Region lod0Region = volReg->mRegion;
+	PolyVox::Region lod0Region = octreeNode->mRegion;
 
 	//Extract the surface
 	PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > >* mesh = new PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > >;
 
-	generateSmoothMesh(lod0Region, volReg->mLodLevel, mesh);
+	generateSmoothMesh(lod0Region, octreeNode->mLodLevel, mesh);
 
-	if(volReg->mLodLevel > 0)
+	if(octreeNode->mLodLevel > 0)
 	{
 		recalculateMaterials(mesh, static_cast<PolyVox::Vector3DFloat>(lod0Region.getLowerCorner()), mVolData);
 	}
 
 	if(mesh->getNoOfIndices() > 0)
 	{
-		volReg->buildGraphicsMesh(mesh/*, 0*/);
+		octreeNode->buildGraphicsMesh(mesh/*, 0*/);
 	}
 }
 

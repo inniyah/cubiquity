@@ -36,7 +36,7 @@ class SmoothTerrainVolume : public Volume<MultiMaterial4>
 public:
 	SmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
 
-	void updateMeshImpl(OctreeNode* volReg);
+	void updateMeshImpl(OctreeNode* octreeNode);
 
 	void generateSmoothMesh(const PolyVox::Region& region, uint32_t lodLevel, PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > >* resultMesh);
 

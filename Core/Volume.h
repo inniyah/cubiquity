@@ -37,8 +37,8 @@ public:
 	void markRegionAsModified(const PolyVox::Region& region);
 
 	virtual void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
-	void updateMesh(OctreeNode* volReg);
-	virtual void updateMeshImpl(OctreeNode* volReg) = 0;
+	void updateMesh(OctreeNode* octreeNode);
+	virtual void updateMeshImpl(OctreeNode* octreeNode) = 0;
 
 	uint32_t getTime(void)
 	{

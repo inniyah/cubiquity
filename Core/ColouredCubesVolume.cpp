@@ -30,18 +30,18 @@ void ColouredCubesVolume::update(const PolyVox::Vector3DFloat& viewPosition, flo
 	}
 }
 
-void ColouredCubesVolume::updateMeshImpl(OctreeNode* volReg)
+void ColouredCubesVolume::updateMeshImpl(OctreeNode* octreeNode)
 {
-	ColouredCubicSurfaceExtractionTask task(volReg, mVolData);
+	ColouredCubicSurfaceExtractionTask task(octreeNode, mVolData);
 
 	mColouredCubicSurfaceExtractionTaskProcessor->addTask(task);
 	/*task.process();
 
 	if(task.mColouredCubicMesh->getNoOfIndices() > 0)
 	{
-		volReg->buildGraphicsMesh(task.mColouredCubicMesh);
+		octreeNode->buildGraphicsMesh(task.mColouredCubicMesh);
 	}
 
-	volReg->setMeshLastUpdated(getTime());
-	volReg->mIsSceduledForUpdate = false;*/
+	octreeNode->setMeshLastUpdated(getTime());
+	octreeNode->mIsSceduledForUpdate = false;*/
 }

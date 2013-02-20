@@ -119,9 +119,9 @@ void Volume<VoxelType>::buildOctreeNodeTree(OctreeNode* parent, const PolyVox::R
 					PolyVox::Region childRegion(baseLowerCorner + offset, baseUpperCorner + offset);
 					if(intersects(childRegion, regionToCover))
 					{
-						OctreeNode* volReg = new OctreeNode(childRegion, parent);
-						parent->children[x][y][z] = volReg;
-						buildOctreeNodeTree(volReg, regionToCover, octreeConstructionMode);
+						OctreeNode* octreeNode = new OctreeNode(childRegion, parent);
+						parent->children[x][y][z] = octreeNode;
+						buildOctreeNodeTree(octreeNode, regionToCover, octreeConstructionMode);
 					}
 				}
 			}
@@ -168,16 +168,16 @@ void Volume<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float
 }
 
 template <typename VoxelType>
-void Volume<VoxelType>::updateMesh(OctreeNode* volReg)
+void Volume<VoxelType>::updateMesh(OctreeNode* octreeNode)
 {
-	if((volReg->isMeshUpToDate() == false) && (volReg->mIsSceduledForUpdate == false) && (volReg->mWantedForRendering))
+	if((octreeNode->isMeshUpToDate() == false) && (octreeNode->mIsSceduledForUpdate == false) && (octreeNode->mWantedForRendering))
 	{
-		volReg->mIsSceduledForUpdate = true;
-		updateMeshImpl(volReg);
+		octreeNode->mIsSceduledForUpdate = true;
+		updateMeshImpl(octreeNode);
 
-		//volReg->mLastSceduledForUpdate = getTime();
+		//octreeNode->mLastSceduledForUpdate = getTime();
 
-		//volReg->setMeshLastUpdated(getTime());
+		//octreeNode->setMeshLastUpdated(getTime());
 	}
 
 	for(int z = 0; z < 2; z++)
@@ -186,7 +186,7 @@ void Volume<VoxelType>::updateMesh(OctreeNode* volReg)
 		{
 			for(int x = 0; x < 2; x++)
 			{
-				OctreeNode* child = volReg->children[x][y][z];
+				OctreeNode* child = octreeNode->children[x][y][z];
 				if(child)
 				{
 					updateMesh(child);
