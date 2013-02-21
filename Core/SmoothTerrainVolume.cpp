@@ -10,10 +10,38 @@ SmoothTerrainVolume::SmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int
 {
 }
 
+void SmoothTerrainVolume::update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
+{
+	Volume<typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType>::update(viewPosition, lodThreshold);
+
+	mSmoothSurfaceExtractionTaskProcessor->processOneTask();
+
+	if(mSmoothSurfaceExtractionTaskProcessor->hasAnyFinishedTasks())
+	{
+		SmoothSurfaceExtractionTask task = mSmoothSurfaceExtractionTaskProcessor->removeFirstFinishedTask();
+
+		if(task.mOctreeNode->mLodLevel > 0)
+		{
+			recalculateMaterials(task.mSmoothMesh, static_cast<PolyVox::Vector3DFloat>(task.mOctreeNode->mRegion.getLowerCorner()), mVolData);
+		}
+
+		if(task.mSmoothMesh->getNoOfIndices() > 0) //But if the new mesh is empty we should still delete any old mesh?
+		{
+			task.mOctreeNode->buildGraphicsMesh(task.mSmoothMesh);
+		}
+
+		task.mOctreeNode->setMeshLastUpdated(getTime());
+		task.mOctreeNode->mIsSceduledForUpdate = false;
+	}
+}
 
 void SmoothTerrainVolume::updateMeshImpl(OctreeNode* octreeNode)
 {
-	PolyVox::Region lod0Region = octreeNode->mRegion;
+	SmoothSurfaceExtractionTask task(octreeNode, mVolData);
+
+	mSmoothSurfaceExtractionTaskProcessor->addTask(task);
+
+	/*PolyVox::Region lod0Region = octreeNode->mRegion;
 
 	//Extract the surface
 	PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > >* mesh = new PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > >;
@@ -27,14 +55,14 @@ void SmoothTerrainVolume::updateMeshImpl(OctreeNode* octreeNode)
 
 	if(mesh->getNoOfIndices() > 0)
 	{
-		octreeNode->buildGraphicsMesh(mesh/*, 0*/);
+		octreeNode->buildGraphicsMesh(mesh);
 	}
 
 	octreeNode->setMeshLastUpdated(getTime());
-	octreeNode->mIsSceduledForUpdate = false;
+	octreeNode->mIsSceduledForUpdate = false;*/
 }
 
-void SmoothTerrainVolume::generateSmoothMesh(const PolyVox::Region& region, uint32_t lodLevel, PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > >* resultMesh)
+/*void SmoothTerrainVolume::generateSmoothMesh(const PolyVox::Region& region, uint32_t lodLevel, PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > >* resultMesh)
 {
 	MultiMaterialMarchingCubesController<VoxelType> controller;
 
@@ -74,7 +102,7 @@ void SmoothTerrainVolume::generateSmoothMesh(const PolyVox::Region& region, uint
 
 		resultMesh->scaleVertices(downSampleFactor);
 	}
-}
+}*/
 
 void SmoothTerrainVolume::recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType > >* mesh, const PolyVox::Vector3DFloat& meshOffset,  PolyVox::SimpleVolume<MultiMaterial4>* volume)
 {

@@ -2,6 +2,7 @@
 #define GAMEPLAYSMOOTHTERRAINVOLUME_H_
 
 #include "SmoothTerrainVolume.h"
+#include "SmoothSurfaceExtractionTask.h"
 
 #include "gameplay.h"
 
@@ -48,6 +49,8 @@ private:
 
 	gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType > >* polyVoxMesh);
 	gameplay::PhysicsCollisionShape::Definition buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType > >* polyVoxMesh);
+
+	TaskProcessor<SmoothSurfaceExtractionTask>* mSmoothSurfaceExtractionTaskProcessor;
 };
 
 #endif //GAMEPLAYSMOOTHTERRAINVOLUME_H_
