@@ -1,8 +1,6 @@
 #ifndef CUBIQUITY_TASKPROCESSOR_H_
 #define CUBIQUITY_TASKPROCESSOR_H_
 
-#include <list>
-
 template <typename TaskType>
 class TaskProcessor
 {
@@ -10,15 +8,10 @@ public:
 	TaskProcessor();
 	virtual ~TaskProcessor();
 
-	void addTask(TaskType task);
+	virtual void addTask(TaskType task) = 0;
 
-	bool hasAnyFinishedTasks(void);
-	TaskType removeFirstFinishedTask(void);
-
-	virtual void processOneTask(void)/* = 0*/;
-
-	std::list<TaskType> mPendingTasks;
-	std::list<TaskType> mFinishedTasks;
+	virtual bool hasAnyFinishedTasks(void) = 0;
+	virtual TaskType removeFirstFinishedTask(void) = 0;
 };
 
 #include "TaskProcessor.inl"

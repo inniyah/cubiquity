@@ -1,5 +1,7 @@
 #include "GameplayColouredCubesVolume.h"
 
+#include "MainThreadTaskProcessor.h"
+
 #include "gameplay.h"
 
 #include <stdio.h> //TEMPORARY!
@@ -11,7 +13,7 @@ GameplayColouredCubesVolume::GameplayColouredCubesVolume(int lowerX, int lowerY,
 	:GameplayVolume<ColouredCubesVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize)
 	,mColouredCubicSurfaceExtractionTaskProcessor(0)
 {
-	mColouredCubicSurfaceExtractionTaskProcessor = new TaskProcessor<ColouredCubicSurfaceExtractionTask>;
+	mColouredCubicSurfaceExtractionTaskProcessor = new MainThreadTaskProcessor<ColouredCubicSurfaceExtractionTask>;
 	mCubiquityVolume->mColouredCubicSurfaceExtractionTaskProcessor = mColouredCubicSurfaceExtractionTaskProcessor;
 
 	mRootGameplayNode = createNodeWithExtraData("RootGameplayNode");
@@ -26,6 +28,8 @@ GameplayColouredCubesVolume::~GameplayColouredCubesVolume()
 
 void GameplayColouredCubesVolume::performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold)
 {
+	mColouredCubicSurfaceExtractionTaskProcessor->processOneTask();
+
 	Vector3DFloat v3dViewPosition(viewPosition.x, viewPosition.y, viewPosition.z);
 	mCubiquityVolume->update(v3dViewPosition, lodThreshold);
 

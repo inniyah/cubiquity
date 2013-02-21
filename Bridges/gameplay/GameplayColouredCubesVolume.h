@@ -2,6 +2,7 @@
 #define GAMEPLAYCOLOUREDCUBESVOLUME_H_
 
 #include "ColouredCubesVolume.h"
+#include "MainThreadTaskProcessor.h"
 
 #include "gameplay.h"
 #include "Slider.h"
@@ -61,7 +62,7 @@ private:
 
 	gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterial<Colour> >* polyVoxMesh);
 
-	TaskProcessor<ColouredCubicSurfaceExtractionTask>* mColouredCubicSurfaceExtractionTaskProcessor;
+	MainThreadTaskProcessor<ColouredCubicSurfaceExtractionTask>* mColouredCubicSurfaceExtractionTaskProcessor;
 };
 
 #endif //GAMEPLAYCOLOUREDCUBESVOLUME_H_

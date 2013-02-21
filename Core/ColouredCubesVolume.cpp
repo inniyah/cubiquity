@@ -14,8 +14,6 @@ void ColouredCubesVolume::update(const PolyVox::Vector3DFloat& viewPosition, flo
 {
 	Volume<Colour>::update(viewPosition, lodThreshold);
 
-	mColouredCubicSurfaceExtractionTaskProcessor->processOneTask();
-
 	if(mColouredCubicSurfaceExtractionTaskProcessor->hasAnyFinishedTasks())
 	{
 		ColouredCubicSurfaceExtractionTask task = mColouredCubicSurfaceExtractionTaskProcessor->removeFirstFinishedTask();

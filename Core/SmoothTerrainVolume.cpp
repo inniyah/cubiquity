@@ -14,8 +14,6 @@ void SmoothTerrainVolume::update(const PolyVox::Vector3DFloat& viewPosition, flo
 {
 	Volume<typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType>::update(viewPosition, lodThreshold);
 
-	mSmoothSurfaceExtractionTaskProcessor->processOneTask();
-
 	if(mSmoothSurfaceExtractionTaskProcessor->hasAnyFinishedTasks())
 	{
 		SmoothSurfaceExtractionTask task = mSmoothSurfaceExtractionTaskProcessor->removeFirstFinishedTask();

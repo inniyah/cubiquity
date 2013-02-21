@@ -337,6 +337,7 @@
     <None Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Vector.inl" />
     <None Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VolumeResampler.inl" />
     <None Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.inl" />
+    <None Include="..\..\..\Core\MainThreadTaskProcessor.inl" />
     <None Include="..\..\..\Core\TaskProcessor.inl" />
     <None Include="..\..\..\Core\Volume.inl" />
     <None Include="bar-descriptor.xml">
@@ -432,6 +433,7 @@
     <ClInclude Include="..\..\..\Core\ColouredCubesVolume.h" />
     <ClInclude Include="..\..\..\Core\ColouredCubicSurfaceExtractionTask.h" />
     <ClInclude Include="..\..\..\Core\CubiquityUtility.h" />
+    <ClInclude Include="..\..\..\Core\MainThreadTaskProcessor.h" />
     <ClInclude Include="..\..\..\Core\MultiMaterial.h" />
     <ClInclude Include="..\..\..\Core\MultiMaterialMarchingCubesController.h" />
     <ClInclude Include="..\..\..\Core\OctreeNode.h" />

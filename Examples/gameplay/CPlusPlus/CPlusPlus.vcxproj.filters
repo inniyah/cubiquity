@@ -121,6 +121,9 @@
     <None Include="..\..\..\Core\TaskProcessor.inl">
       <Filter>Core</Filter>
     </None>
+    <None Include="..\..\..\Core\MainThreadTaskProcessor.inl">
+      <Filter>Core</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h">
@@ -316,6 +319,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Core\SmoothSurfaceExtractionTask.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Core\MainThreadTaskProcessor.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
