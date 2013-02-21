@@ -372,6 +372,7 @@
     <ClCompile Include="..\..\..\Core\CubiquityUtility.cpp" />
     <ClCompile Include="..\..\..\Core\MultiMaterial.cpp" />
     <ClCompile Include="..\..\..\Core\OctreeNode.cpp" />
+    <ClCompile Include="..\..\..\Core\SmoothSurfaceExtractionTask.cpp" />
     <ClCompile Include="..\..\..\Core\SmoothTerrainVolume.cpp" />
     <ClCompile Include="..\..\..\Core\SmoothTerrainVolumeEditor.cpp" />
     <ClCompile Include="src\Main.cpp" />
@@ -435,6 +436,7 @@
     <ClInclude Include="..\..\..\Core\MultiMaterialMarchingCubesController.h" />
     <ClInclude Include="..\..\..\Core\OctreeNode.h" />
     <ClInclude Include="..\..\..\Core\Raycasting.h" />
+    <ClInclude Include="..\..\..\Core\SmoothSurfaceExtractionTask.h" />
     <ClInclude Include="..\..\..\Core\SmoothTerrainVolume.h" />
     <ClInclude Include="..\..\..\Core\SmoothTerrainVolumeEditor.h" />
     <ClInclude Include="..\..\..\Core\TaskProcessor.h" />

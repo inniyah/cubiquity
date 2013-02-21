@@ -315,6 +315,9 @@
     <ClInclude Include="..\..\..\Core\TaskProcessor.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Core\SmoothSurfaceExtractionTask.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -387,6 +390,9 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Core\ColouredCubicSurfaceExtractionTask.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Core\SmoothSurfaceExtractionTask.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
