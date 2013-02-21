@@ -33,13 +33,4 @@ void ColouredCubesVolume::updateMeshImpl(OctreeNode* octreeNode)
 	ColouredCubicSurfaceExtractionTask task(octreeNode, mVolData);
 
 	mColouredCubicSurfaceExtractionTaskProcessor->addTask(task);
-	/*task.process();
-
-	if(task.mColouredCubicMesh->getNoOfIndices() > 0)
-	{
-		octreeNode->buildGraphicsMesh(task.mColouredCubicMesh);
-	}
-
-	octreeNode->setMeshLastUpdated(getTime());
-	octreeNode->mIsSceduledForUpdate = false;*/
 }
