@@ -67,6 +67,8 @@ void SmoothSurfaceExtractionTask::generateSmoothMesh(const PolyVox::Region& regi
 		surfaceExtractor.execute();
 
 		resultMesh->scaleVertices(downSampleFactor);
+
+		//recalculateMaterials(resultMesh, static_cast<PolyVox::Vector3DFloat>(mOctreeNode->mRegion.getLowerCorner()), mVolData);
 	}
 }
 
