@@ -29,6 +29,9 @@ void SmoothTerrainVolume::updateMeshImpl(OctreeNode* octreeNode)
 	{
 		octreeNode->buildGraphicsMesh(mesh/*, 0*/);
 	}
+
+	octreeNode->setMeshLastUpdated(getTime());
+	octreeNode->mIsSceduledForUpdate = false;
 }
 
 void SmoothTerrainVolume::generateSmoothMesh(const PolyVox::Region& region, uint32_t lodLevel, PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > >* resultMesh)
