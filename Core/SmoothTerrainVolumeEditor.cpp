@@ -30,13 +30,13 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 	float radiusSquared = radius * radius;
 
 	//Check bounds.
-	firstX = std::max(firstX,mSmoothTerrainVolume->mVolData->getEnclosingRegion().getLowerCorner().getX());
-	firstY = std::max(firstY,mSmoothTerrainVolume->mVolData->getEnclosingRegion().getLowerCorner().getY());
-	firstZ = std::max(firstZ,mSmoothTerrainVolume->mVolData->getEnclosingRegion().getLowerCorner().getZ());
+	firstX = std::max(firstX,mSmoothTerrainVolume->mPolyVoxVolume->getEnclosingRegion().getLowerCorner().getX());
+	firstY = std::max(firstY,mSmoothTerrainVolume->mPolyVoxVolume->getEnclosingRegion().getLowerCorner().getY());
+	firstZ = std::max(firstZ,mSmoothTerrainVolume->mPolyVoxVolume->getEnclosingRegion().getLowerCorner().getZ());
 
-	lastX = std::min(lastX,mSmoothTerrainVolume->mVolData->getEnclosingRegion().getUpperCorner().getX());
-	lastY = std::min(lastY,mSmoothTerrainVolume->mVolData->getEnclosingRegion().getUpperCorner().getY());
-	lastZ = std::min(lastZ,mSmoothTerrainVolume->mVolData->getEnclosingRegion().getUpperCorner().getZ());
+	lastX = std::min(lastX,mSmoothTerrainVolume->mPolyVoxVolume->getEnclosingRegion().getUpperCorner().getX());
+	lastY = std::min(lastY,mSmoothTerrainVolume->mPolyVoxVolume->getEnclosingRegion().getUpperCorner().getY());
+	lastZ = std::min(lastZ,mSmoothTerrainVolume->mPolyVoxVolume->getEnclosingRegion().getUpperCorner().getZ());
 
 	PolyVox::Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
 
@@ -60,7 +60,7 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 		}
 
 		// We might not need to do this at float precision, it should be tested again.
-		PolyVox::LowPassFilter< PolyVox::SimpleVolume<MultiMaterial4>, PolyVox::RawVolume<MultiMaterial4>, PolyVox::Vector<4, float> > lowPassFilter(mSmoothTerrainVolume->mVolData, region, mSmoothingVolume, region, 3);
+		PolyVox::LowPassFilter< PolyVox::SimpleVolume<MultiMaterial4>, PolyVox::RawVolume<MultiMaterial4>, PolyVox::Vector<4, float> > lowPassFilter(mSmoothTerrainVolume->mPolyVoxVolume, region, mSmoothingVolume, region, 3);
 		lowPassFilter.execute();
 	}
 

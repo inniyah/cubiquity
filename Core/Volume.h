@@ -50,7 +50,7 @@ protected:
 	Volume& operator=(const Volume&);
 
 public:
-	PolyVox::SimpleVolume<VoxelType>* mVolData;
+	PolyVox::SimpleVolume<VoxelType>* mPolyVoxVolume;
 	OctreeNode* mRootOctreeNode;
 
 	const unsigned int mBaseNodeSize;

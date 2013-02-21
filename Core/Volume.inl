@@ -14,7 +14,7 @@
 
 template <typename VoxelType>
 Volume<VoxelType>::Volume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize)
-	:mVolData(0)
+	:mPolyVoxVolume(0)
 	,mRootOctreeNode(0)
 	,mBaseNodeSize(baseNodeSize)
 	,mTime(0)
@@ -25,9 +25,9 @@ Volume<VoxelType>::Volume(int lowerX, int lowerY, int lowerZ, int upperX, int up
 	POLYVOX_ASSERT(volumeRegion.getHeightInVoxels() > 0, "All volume dimensions must be greater than zero");
 	POLYVOX_ASSERT(volumeRegion.getDepthInVoxels() > 0, "All volume dimensions must be greater than zero");
 	
-	mVolData = new PolyVox::SimpleVolume<VoxelType>(volumeRegion);
+	mPolyVoxVolume = new PolyVox::SimpleVolume<VoxelType>(volumeRegion);
 
-	PolyVox::Region regionToCover(mVolData->getEnclosingRegion());
+	PolyVox::Region regionToCover(mPolyVoxVolume->getEnclosingRegion());
 	if(octreeConstructionMode == OctreeConstructionModes::BoundVoxels)
 	{
 		regionToCover.shiftUpperCorner(1, 1, 1);
@@ -137,13 +137,13 @@ Volume<VoxelType>::~Volume()
 template <typename VoxelType>
 VoxelType Volume<VoxelType>::getVoxelAt(int x, int y, int z)
 {
-	return mVolData->getVoxelAt(x, y, z);
+	return mPolyVoxVolume->getVoxelAt(x, y, z);
 }
 
 template <typename VoxelType>
 void Volume<VoxelType>::setVoxelAt(int x, int y, int z, VoxelType value, bool markAsModified)
 {
-	mVolData->setVoxelAt(x, y, z, value);
+	mPolyVoxVolume->setVoxelAt(x, y, z, value);
 	if(markAsModified)
 	{
 		mRootOctreeNode->markDataAsModified(x, y, z, getTime());

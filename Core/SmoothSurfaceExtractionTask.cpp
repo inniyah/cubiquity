@@ -8,9 +8,9 @@
 
 using namespace PolyVox;
 
-SmoothSurfaceExtractionTask::SmoothSurfaceExtractionTask(OctreeNode* octreeNode, PolyVox::SimpleVolume<typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType>* volData)
+SmoothSurfaceExtractionTask::SmoothSurfaceExtractionTask(OctreeNode* octreeNode, PolyVox::SimpleVolume<typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType>* polyVoxVolume)
 	:mOctreeNode(octreeNode)
-	,mVolData(volData)
+	,mPolyVoxVolume(polyVoxVolume)
 	,mSmoothMesh(0)
 {
 }
@@ -35,7 +35,7 @@ void SmoothSurfaceExtractionTask::generateSmoothMesh(const PolyVox::Region& regi
 	if(lodLevel == 0)
 	{
 		//SurfaceMesh<PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > > mesh;
-		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::SimpleVolume<MultiMaterial4>, MultiMaterialMarchingCubesController<MultiMaterial4> > surfaceExtractor(mVolData, region, resultMesh, PolyVox::WrapModes::Border, MultiMaterial4(0), controller);
+		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::SimpleVolume<MultiMaterial4>, MultiMaterialMarchingCubesController<MultiMaterial4> > surfaceExtractor(mPolyVoxVolume, region, resultMesh, PolyVox::WrapModes::Border, MultiMaterial4(0), controller);
 		surfaceExtractor.execute();
 	}
 	else
@@ -59,7 +59,7 @@ void SmoothSurfaceExtractionTask::generateSmoothMesh(const PolyVox::Region& regi
 
 		PolyVox::RawVolume<MultiMaterial4> resampledVolume(lowRegion);
 
-		resampleVolume(downSampleFactor, mVolData, highRegion, &resampledVolume, lowRegion);
+		resampleVolume(downSampleFactor, mPolyVoxVolume, highRegion, &resampledVolume, lowRegion);
 
 		lowRegion.shrink(1, 1, 1);
 
@@ -68,7 +68,7 @@ void SmoothSurfaceExtractionTask::generateSmoothMesh(const PolyVox::Region& regi
 
 		resultMesh->scaleVertices(downSampleFactor);
 
-		//recalculateMaterials(resultMesh, static_cast<PolyVox::Vector3DFloat>(mOctreeNode->mRegion.getLowerCorner()), mVolData);
+		recalculateMaterials(resultMesh, static_cast<PolyVox::Vector3DFloat>(mOctreeNode->mRegion.getLowerCorner()), mPolyVoxVolume);
 	}
 }
 

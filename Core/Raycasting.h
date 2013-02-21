@@ -75,7 +75,7 @@ public:
 // Also, should we handle computing the exact intersection point? Repeatedly bisect the last
 // two points, of perform interpolation between them? Maybe user code could perform such interpolation?
 template<typename VolumeType, typename Callback>
-PolyVox::RaycastResult smoothRaycastWithDirection(VolumeType* volData, const PolyVox::Vector3DFloat& v3dStart, const PolyVox::Vector3DFloat& v3dDirectionAndLength, Callback& callback, float fStepSize = 1.0f)
+PolyVox::RaycastResult smoothRaycastWithDirection(VolumeType* polyVoxVolume, const PolyVox::Vector3DFloat& v3dStart, const PolyVox::Vector3DFloat& v3dDirectionAndLength, Callback& callback, float fStepSize = 1.0f)
 {		
 	int mMaxNoOfSteps = v3dDirectionAndLength.length() / fStepSize;
 
@@ -101,14 +101,14 @@ PolyVox::RaycastResult smoothRaycastWithDirection(VolumeType* volData, const Pol
 		int32_t iY = static_cast<int32_t>(fFloorY > 0.0f ? fFloorY + 0.5f : fFloorY - 0.5f); 
 		int32_t iZ = static_cast<int32_t>(fFloorZ > 0.0f ? fFloorZ + 0.5f : fFloorZ - 0.5f);
 
-		const typename VolumeType::VoxelType& voxel000 = volData->getVoxelAt(iX, iY, iZ);
-		const typename VolumeType::VoxelType& voxel001 = volData->getVoxelAt(iX, iY, iZ + 1);
-		const typename VolumeType::VoxelType& voxel010 = volData->getVoxelAt(iX, iY + 1, iZ);
-		const typename VolumeType::VoxelType& voxel011 = volData->getVoxelAt(iX, iY + 1, iZ + 1);
-		const typename VolumeType::VoxelType& voxel100 = volData->getVoxelAt(iX + 1, iY, iZ);
-		const typename VolumeType::VoxelType& voxel101 = volData->getVoxelAt(iX + 1, iY, iZ + 1);
-		const typename VolumeType::VoxelType& voxel110 = volData->getVoxelAt(iX + 1, iY + 1, iZ);
-		const typename VolumeType::VoxelType& voxel111 = volData->getVoxelAt(iX + 1, iY + 1, iZ + 1);
+		const typename VolumeType::VoxelType& voxel000 = polyVoxVolume->getVoxelAt(iX, iY, iZ);
+		const typename VolumeType::VoxelType& voxel001 = polyVoxVolume->getVoxelAt(iX, iY, iZ + 1);
+		const typename VolumeType::VoxelType& voxel010 = polyVoxVolume->getVoxelAt(iX, iY + 1, iZ);
+		const typename VolumeType::VoxelType& voxel011 = polyVoxVolume->getVoxelAt(iX, iY + 1, iZ + 1);
+		const typename VolumeType::VoxelType& voxel100 = polyVoxVolume->getVoxelAt(iX + 1, iY, iZ);
+		const typename VolumeType::VoxelType& voxel101 = polyVoxVolume->getVoxelAt(iX + 1, iY, iZ + 1);
+		const typename VolumeType::VoxelType& voxel110 = polyVoxVolume->getVoxelAt(iX + 1, iY + 1, iZ);
+		const typename VolumeType::VoxelType& voxel111 = polyVoxVolume->getVoxelAt(iX + 1, iY + 1, iZ + 1);
 
 		typename VolumeType::VoxelType tInterpolatedValue = PolyVox::trilerp(voxel000,voxel100,voxel010,voxel110,voxel001,voxel101,voxel011,voxel111,fInterpX,fInterpY,fInterpZ);
 		

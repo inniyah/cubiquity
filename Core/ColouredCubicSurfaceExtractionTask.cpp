@@ -6,9 +6,9 @@
 
 using namespace PolyVox;
 
-ColouredCubicSurfaceExtractionTask::ColouredCubicSurfaceExtractionTask(OctreeNode* octreeNode, PolyVox::SimpleVolume<Colour>* volData)
+ColouredCubicSurfaceExtractionTask::ColouredCubicSurfaceExtractionTask(OctreeNode* octreeNode, PolyVox::SimpleVolume<Colour>* polyVoxVolume)
 	:mOctreeNode(octreeNode)
-	,mVolData(volData)
+	,mPolyVoxVolume(polyVoxVolume)
 	,mColouredCubicMesh(0)
 {
 }
@@ -31,7 +31,7 @@ void ColouredCubicSurfaceExtractionTask::process(void)
 
 	if(downScaleFactor == 1) 
 	{
-		PolyVox::CubicSurfaceExtractor< PolyVox::SimpleVolume<Colour>, ColouredCubesIsQuadNeeded<Colour> > surfaceExtractor(mVolData, mOctreeNode->mRegion, mColouredCubicMesh, PolyVox::WrapModes::Border, Colour(0), true, isQuadNeeded);
+		PolyVox::CubicSurfaceExtractor< PolyVox::SimpleVolume<Colour>, ColouredCubesIsQuadNeeded<Colour> > surfaceExtractor(mPolyVoxVolume, mOctreeNode->mRegion, mColouredCubicMesh, PolyVox::WrapModes::Border, Colour(0), true, isQuadNeeded);
 		surfaceExtractor.execute();
 	}
 	else if(downScaleFactor == 2)
@@ -51,7 +51,7 @@ void ColouredCubicSurfaceExtractionTask::process(void)
 		PolyVox::Region dstRegion(lowerCorner, upperCorner);
 
 		PolyVox::RawVolume<Colour> resampledVolume(dstRegion);
-		rescaleCubicVolume(mVolData, srcRegion, &resampledVolume, dstRegion);
+		rescaleCubicVolume(mPolyVoxVolume, srcRegion, &resampledVolume, dstRegion);
 
 		dstRegion.shrink(1);
 		
@@ -79,7 +79,7 @@ void ColouredCubicSurfaceExtractionTask::process(void)
 		PolyVox::Region dstRegion(lowerCorner, upperCorner);
 
 		PolyVox::RawVolume<Colour> resampledVolume(dstRegion);
-		rescaleCubicVolume(mVolData, srcRegion, &resampledVolume, dstRegion);
+		rescaleCubicVolume(mPolyVoxVolume, srcRegion, &resampledVolume, dstRegion);
 
 
 

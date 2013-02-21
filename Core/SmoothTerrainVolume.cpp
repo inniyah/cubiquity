@@ -30,7 +30,7 @@ void SmoothTerrainVolume::update(const PolyVox::Vector3DFloat& viewPosition, flo
 
 void SmoothTerrainVolume::updateMeshImpl(OctreeNode* octreeNode)
 {
-	SmoothSurfaceExtractionTask task(octreeNode, mVolData);
+	SmoothSurfaceExtractionTask task(octreeNode, mPolyVoxVolume);
 
 	mSmoothSurfaceExtractionTaskProcessor->addTask(task);
 }

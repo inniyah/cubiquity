@@ -9,7 +9,7 @@ bool GameplayRaycasting::gameplayRaycast(GameplayColouredCubesVolume* volume, ga
 	v3dDirection *= length;
 
 	ColouredCubesRaycastTestFunctor raycastTestFunctor;
-	PolyVox::RaycastResult myResult = PolyVox::raycastWithDirection(volume->getCubiquityVolume()->mVolData, v3dStart, v3dDirection, raycastTestFunctor);
+	PolyVox::RaycastResult myResult = PolyVox::raycastWithDirection(volume->getCubiquityVolume()->mPolyVoxVolume, v3dStart, v3dDirection, raycastTestFunctor);
 	if(myResult == PolyVox::RaycastResults::Interupted)
 	{
 		result = gameplay::Vector3(raycastTestFunctor.mLastPos.getX(), raycastTestFunctor.mLastPos.getY(), raycastTestFunctor.mLastPos.getZ());
@@ -26,7 +26,7 @@ bool GameplayRaycasting::gameplayRaycast(GameplaySmoothTerrainVolume* volume, ga
 	v3dDirection *= length;
 
 	RaycastTestFunctor<MultiMaterial4> raycastTestFunctor;
-	PolyVox::RaycastResult myResult = smoothRaycastWithDirection(volume->getCubiquityVolume()->mVolData, v3dStart, v3dDirection, raycastTestFunctor, 0.5f);
+	PolyVox::RaycastResult myResult = smoothRaycastWithDirection(volume->getCubiquityVolume()->mPolyVoxVolume, v3dStart, v3dDirection, raycastTestFunctor, 0.5f);
 	if(myResult == PolyVox::RaycastResults::Interupted)
 	{
 		result = gameplay::Vector3(raycastTestFunctor.mLastPos.getX(), raycastTestFunctor.mLastPos.getY(), raycastTestFunctor.mLastPos.getZ());

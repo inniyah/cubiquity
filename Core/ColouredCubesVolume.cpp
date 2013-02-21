@@ -30,7 +30,7 @@ void ColouredCubesVolume::update(const PolyVox::Vector3DFloat& viewPosition, flo
 
 void ColouredCubesVolume::updateMeshImpl(OctreeNode* octreeNode)
 {
-	ColouredCubicSurfaceExtractionTask task(octreeNode, mVolData);
+	ColouredCubicSurfaceExtractionTask task(octreeNode, mPolyVoxVolume);
 
 	mColouredCubicSurfaceExtractionTaskProcessor->addTask(task);
 }
