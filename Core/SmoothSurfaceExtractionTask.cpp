@@ -66,7 +66,7 @@ void SmoothSurfaceExtractionTask::generateSmoothMesh(const PolyVox::Region& regi
 		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::RawVolume<MultiMaterial4>, MultiMaterialMarchingCubesController<MultiMaterial4> > surfaceExtractor(&resampledVolume, lowRegion, resultMesh, PolyVox::WrapModes::Border, MultiMaterial4(0), controller);
 		surfaceExtractor.execute();
 
-		resultMesh->scaleVertices(downSampleFactor);
+		resultMesh->scaleVertices(static_cast<float>(downSampleFactor));
 
 		recalculateMaterials(resultMesh, static_cast<PolyVox::Vector3DFloat>(mOctreeNode->mRegion.getLowerCorner()), mPolyVoxVolume);
 	}
@@ -75,7 +75,7 @@ void SmoothSurfaceExtractionTask::generateSmoothMesh(const PolyVox::Region& regi
 void recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType > >* mesh, const PolyVox::Vector3DFloat& meshOffset,  PolyVox::SimpleVolume<MultiMaterial4>* volume)
 {
 	std::vector< PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType > >& vertices = mesh->getRawVertexData();
-	for(int ct = 0; ct < vertices.size(); ct++)
+	for(uint32_t ct = 0; ct < vertices.size(); ct++)
 	{
 		const Vector3DFloat& vertexPos = vertices[ct].getPosition() + meshOffset;
 		MultiMaterial4 value = getInterpolatedValue(volume, vertexPos);

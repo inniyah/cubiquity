@@ -60,7 +60,7 @@ void ColouredCubicSurfaceExtractionTask::process(void)
 		PolyVox::CubicSurfaceExtractor< PolyVox::RawVolume<Colour>, ColouredCubesIsQuadNeeded<Colour> > surfaceExtractor(&resampledVolume, dstRegion, mColouredCubicMesh, PolyVox::WrapModes::Border, Colour(0), true, isQuadNeeded);
 		surfaceExtractor.execute();
 
-		mColouredCubicMesh->scaleVertices(downScaleFactor);
+		mColouredCubicMesh->scaleVertices(static_cast<float>(downScaleFactor));
 		mColouredCubicMesh->translateVertices(Vector3DFloat(0.5f, 0.5f, 0.5f));
 	}
 	else if(downScaleFactor == 4)
@@ -102,7 +102,7 @@ void ColouredCubicSurfaceExtractionTask::process(void)
 		PolyVox::CubicSurfaceExtractor< PolyVox::RawVolume<Colour>, ColouredCubesIsQuadNeeded<Colour> > surfaceExtractor(&resampledVolume2, dstRegion2, mColouredCubicMesh, PolyVox::WrapModes::Border, Colour(0), true, isQuadNeeded);
 		surfaceExtractor.execute();
 
-		mColouredCubicMesh->scaleVertices(downScaleFactor);
+		mColouredCubicMesh->scaleVertices(static_cast<float>(downScaleFactor));
 		mColouredCubicMesh->translateVertices(Vector3DFloat(1.5f, 1.5f, 1.5f));
 	}
 }

@@ -33,11 +33,11 @@ void rescaleCubicVolume(SrcVolumeType* pVolSrc, const PolyVox::Region& regSrc, D
 
 	// First of all we iterate over all destination voxels and compute their colour as the
 	// average of the colours of the eight corresponding voxels in the higher resolution version.
-	for(uint32_t z = 0; z < regDst.getDepthInVoxels(); z++)
+	for(int32_t z = 0; z < regDst.getDepthInVoxels(); z++)
 	{
-		for(uint32_t y = 0; y < regDst.getHeightInVoxels(); y++)
+		for(int32_t y = 0; y < regDst.getHeightInVoxels(); y++)
 		{
-			for(uint32_t x = 0; x < regDst.getWidthInVoxels(); x++)
+			for(int32_t x = 0; x < regDst.getWidthInVoxels(); x++)
 			{
 				Vector3DInt32 srcPos = regSrc.getLowerCorner() + (Vector3DInt32(x, y, z) * 2);
 				Vector3DInt32 dstPos = regDst.getLowerCorner() + Vector3DInt32(x, y, z);
@@ -91,11 +91,11 @@ void rescaleCubicVolume(SrcVolumeType* pVolSrc, const PolyVox::Region& regSrc, D
 	// colour changes, as this is very noticable. Our solution is o process again only those voxels
 	// which lie on a material-air boundary, and to recompute their colour using a larger naighbourhood
 	// while also accounting for how visible the child voxels are.
-	for(uint32_t z = 0; z < regDst.getDepthInVoxels(); z++)
+	for(int32_t z = 0; z < regDst.getDepthInVoxels(); z++)
 	{
-		for(uint32_t y = 0; y < regDst.getHeightInVoxels(); y++)
+		for(int32_t y = 0; y < regDst.getHeightInVoxels(); y++)
 		{
-			for(uint32_t x = 0; x < regDst.getWidthInVoxels(); x++)
+			for(int32_t x = 0; x < regDst.getWidthInVoxels(); x++)
 			{
 				Vector3DInt32 dstPos = regDst.getLowerCorner() + Vector3DInt32(x, y, z);
 

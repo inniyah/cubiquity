@@ -109,7 +109,7 @@ gameplay::Model* GameplaySmoothTerrainVolume::buildModelFromPolyVoxMesh(const Po
 	//Create the vertex data in the expected format
 	float* vertexData = new float[polyVoxMesh->getVertices().size() * 11]; //11 float per vertex
 	float* ptr = vertexData;
-	for(int i = 0; i < vecVertices.size(); i++)
+	for(uint32_t i = 0; i < vecVertices.size(); i++)
 	{
 		*ptr = vecVertices[i].getPosition().getX(); ptr++;
 		*ptr = vecVertices[i].getPosition().getY(); ptr++;
@@ -163,13 +163,13 @@ PhysicsCollisionShape::Definition GameplaySmoothTerrainVolume::buildCollisionObj
 	float* vertexData = new float[polyVoxMesh->getVertices().size() * 3];
 
 	unsigned int* physicsIndices = new unsigned int [vecIndices.size()];
-	for(int ct = 0; ct < vecIndices.size(); ct++)
+	for(uint32_t ct = 0; ct < vecIndices.size(); ct++)
 	{
 		physicsIndices[ct] = vecIndices[ct];
 	}
 
 	float* ptr = vertexData;
-	for(int i = 0; i < vecVertices.size(); i++)
+	for(uint32_t i = 0; i < vecVertices.size(); i++)
 	{
 		// Position stored in x,y,z components.
 		*ptr = vecVertices[i].getPosition().getX(); ptr++;

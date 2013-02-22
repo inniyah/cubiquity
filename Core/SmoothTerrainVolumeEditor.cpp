@@ -70,9 +70,10 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 		{
 			for(int x = firstX; x <= lastX; ++x)
 			{
-				if((centre - Vector3DFloat(x,y,z)).lengthSquared() <= radiusSquared)
+				Vector3DFloat currentPos(static_cast<float>(x), static_cast<float>(y), static_cast<float>(z));
+				if((centre - currentPos).lengthSquared() <= radiusSquared)
 				{
-					float falloff = falloff = (centre - Vector3DFloat(x,y,z)).length() / radius;
+					float falloff = falloff = (centre - currentPos).length() / radius;
 					falloff = (std::min)((std::max)(falloff, 0.0f), 1.0f);
 					falloff = 1.0f - falloff;
 

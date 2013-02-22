@@ -102,7 +102,7 @@ gameplay::Model* GameplayColouredCubesVolume::buildModelFromPolyVoxMesh(const Po
 	//Create the vertex data in the expected format
 	float* vertexData = new float[polyVoxMesh->getVertices().size() * 4]; //4 float per vertex
 	float* ptr = vertexData;
-	for(int i = 0; i < vecVertices.size(); i++)
+	for(uint32_t i = 0; i < vecVertices.size(); i++)
 	{
 		// Position stored in x,y,z components.
 		*ptr = vecVertices[i].getPosition().getX(); ptr++;

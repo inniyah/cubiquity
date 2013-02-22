@@ -165,7 +165,7 @@ public:
 	uint32_t getSumOfMaterials(void) const
 	{
 		uint32_t sum = 0;
-		for(int ct = 0; ct < getNoOfMaterials(); ct++)
+		for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
 		{
 			sum += getMaterial(ct);
 		}

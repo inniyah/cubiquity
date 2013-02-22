@@ -92,15 +92,15 @@ void Volume<VoxelType>::buildOctreeNodeTree(OctreeNode* parent, const PolyVox::R
 	POLYVOX_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getDepthInVoxels(), "Region must be cubic");
 
 	//We know that width/height/depth are all the same.
-	int32_t parentSize = (octreeConstructionMode == OctreeConstructionMode::BoundCells) ? parent->mRegion.getWidthInCells() : parent->mRegion.getWidthInVoxels();
+	uint32_t parentSize = static_cast<uint32_t>((octreeConstructionMode == OctreeConstructionModes::BoundCells) ? parent->mRegion.getWidthInCells() : parent->mRegion.getWidthInVoxels());
 
 	if(parentSize > mBaseNodeSize)
 	{
 		PolyVox::Vector3DInt32 baseLowerCorner = parent->mRegion.getLowerCorner();
-		int32_t childSize = (octreeConstructionMode == OctreeConstructionMode::BoundCells) ? parent->mRegion.getWidthInCells() / 2 : parent->mRegion.getWidthInVoxels() / 2;
+		int32_t childSize = (octreeConstructionMode == OctreeConstructionModes::BoundCells) ? parent->mRegion.getWidthInCells() / 2 : parent->mRegion.getWidthInVoxels() / 2;
 
 		PolyVox::Vector3DInt32 baseUpperCorner;
-		if(octreeConstructionMode == OctreeConstructionMode::BoundCells)
+		if(octreeConstructionMode == OctreeConstructionModes::BoundCells)
 		{
 			baseUpperCorner = baseLowerCorner + PolyVox::Vector3DInt32(childSize, childSize, childSize);
 		}

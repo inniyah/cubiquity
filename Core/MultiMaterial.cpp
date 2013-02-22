@@ -14,9 +14,20 @@ namespace PolyVox
 
 		MultiMaterial4 tInterpolatedValue;
 
-		for(int ct = 0; ct < MultiMaterial4::getNoOfMaterials(); ct++)
+		for(uint32_t ct = 0; ct < MultiMaterial4::getNoOfMaterials(); ct++)
 		{
-			tInterpolatedValue.setMaterial(ct, static_cast<uint8_t>(trilerp<float>(v000.getMaterial(ct), v100.getMaterial(ct), v010.getMaterial(ct), v110.getMaterial(ct), v001.getMaterial(ct), v101.getMaterial(ct), v011.getMaterial(ct), v111.getMaterial(ct), x, y, z)));
+			tInterpolatedValue.setMaterial(ct, static_cast<uint8_t>(trilerp<float>
+			(
+				static_cast<float>(v000.getMaterial(ct)),
+				static_cast<float>(v100.getMaterial(ct)),
+				static_cast<float>(v010.getMaterial(ct)),
+				static_cast<float>(v110.getMaterial(ct)),
+				static_cast<float>(v001.getMaterial(ct)),
+				static_cast<float>(v101.getMaterial(ct)),
+				static_cast<float>(v011.getMaterial(ct)),
+				static_cast<float>(v111.getMaterial(ct)),
+				x, y, z
+			)));
 		}
 
 		return tInterpolatedValue;

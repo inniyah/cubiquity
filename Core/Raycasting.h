@@ -77,7 +77,8 @@ public:
 template<typename VolumeType, typename Callback>
 PolyVox::RaycastResult smoothRaycastWithDirection(VolumeType* polyVoxVolume, const PolyVox::Vector3DFloat& v3dStart, const PolyVox::Vector3DFloat& v3dDirectionAndLength, Callback& callback, float fStepSize = 1.0f)
 {		
-	int mMaxNoOfSteps = v3dDirectionAndLength.length() / fStepSize;
+	POLYVOX_ASSERT(fStepSize > 0.0f, "Raycast step size must be greater than zero");
+	uint32_t mMaxNoOfSteps = static_cast<uint32_t>(v3dDirectionAndLength.length() / fStepSize);
 
 	PolyVox::Vector3DFloat v3dPos = v3dStart;
 	const PolyVox::Vector3DFloat v3dStep =  v3dDirectionAndLength / static_cast<float>(mMaxNoOfSteps);
