@@ -18,7 +18,6 @@ Volume<VoxelType>::Volume(int lowerX, int lowerY, int lowerZ, int upperX, int up
 	:mPolyVoxVolume(0)
 	,mRootOctreeNode(0)
 	,mBaseNodeSize(baseNodeSize)
-	,mTime(0)
 {
 	PolyVox::Region volumeRegion(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
 

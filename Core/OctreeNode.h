@@ -1,6 +1,7 @@
 #ifndef OCTREE_NODE_H_
 #define OCTREE_NODE_H_
 
+#include "Clock.h"
 #include "Colour.h"
 
 #include "MultiMaterialMarchingCubesController.h"
@@ -30,8 +31,8 @@ public:
 	void buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<MultiMaterial4> >* polyVoxMesh);
 	void buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< Colour > >* polyVoxMesh);
 
-	void markDataAsModified(int32_t x, int32_t y, int32_t z, uint32_t newTimeStamp);
-	void markDataAsModified(const PolyVox::Region& region, uint32_t newTimeStamp);
+	void markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp);
+	void markDataAsModified(const PolyVox::Region& region, Timestamp newTimeStamp);
 
 	void clearWantedForRendering(void);
 	void determineWantedForRendering(const PolyVox::Vector3DFloat& viewPosition, float threshold);
@@ -43,7 +44,7 @@ public:
 
 	bool isMeshUpToDate(void);
 
-	void setMeshLastUpdated(uint32_t newTimeStamp);
+	void setMeshLastUpdated(Timestamp newTimeStamp);
 
 	PolyVox::Region mRegion;
 	uint32_t mMeshLastUpdated;

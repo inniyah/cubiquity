@@ -14,7 +14,7 @@ public:
 	{
 	}
 
-	uint32_t mTimeStamp;
+	Timestamp mTimeStamp;
 	OctreeNode* mOctreeNode;
 };
 

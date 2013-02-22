@@ -48,8 +48,6 @@ public:
 	OctreeNode* mRootOctreeNode;
 
 	const unsigned int mBaseNodeSize;
-
-	uint32_t mTime;
 };
 
 #include "Volume.inl"

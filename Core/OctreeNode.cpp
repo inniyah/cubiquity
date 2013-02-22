@@ -62,7 +62,7 @@ void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionM
 	mSmoothPolyVoxMesh = polyVoxMesh;
 }
 
-void OctreeNode::markDataAsModified(int32_t x, int32_t y, int32_t z, uint32_t newTimeStamp)
+void OctreeNode::markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp)
 {
 	if(mRegion.containsPoint(x, y, z, -1)) //FIXME - Think if we really need this border.
 	{
@@ -86,7 +86,7 @@ void OctreeNode::markDataAsModified(int32_t x, int32_t y, int32_t z, uint32_t ne
 	}
 }
 
-void OctreeNode::markDataAsModified(const Region& region, uint32_t newTimeStamp)
+void OctreeNode::markDataAsModified(const Region& region, Timestamp newTimeStamp)
 {
 	if(intersects(mRegion, region))
 	{
@@ -238,7 +238,7 @@ bool OctreeNode::isMeshUpToDate(void)
 	return mMeshLastUpdated > mDataLastModified;
 }
 
-void OctreeNode::setMeshLastUpdated(uint32_t newTimeStamp)
+void OctreeNode::setMeshLastUpdated(Timestamp newTimeStamp)
 {
 	mMeshLastUpdated = newTimeStamp;
 }
