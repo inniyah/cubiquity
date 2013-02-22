@@ -40,12 +40,6 @@ public:
 	void updateMesh(OctreeNode* octreeNode);
 	virtual void updateMeshImpl(OctreeNode* octreeNode) = 0;
 
-	uint32_t getTime(void)
-	{
-		POLYVOX_ASSERT(mTime < std::numeric_limits<uint32_t>::max(), "Time stamp is wrapping around.");
-		return ++mTime;
-	}
-
 protected:
 	Volume& operator=(const Volume&);
 

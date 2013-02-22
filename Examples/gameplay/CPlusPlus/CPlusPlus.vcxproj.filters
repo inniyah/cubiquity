@@ -324,6 +324,9 @@
     <ClInclude Include="..\..\..\Core\MainThreadTaskProcessor.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Core\Clock.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -399,6 +402,9 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Core\SmoothSurfaceExtractionTask.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Core\Clock.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>

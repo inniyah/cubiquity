@@ -5,6 +5,7 @@
 
 #include "PolyVoxCore/Impl/Utility.h" //Should we include from Impl?
 
+#include "Clock.h"
 #include "MultiMaterialMarchingCubesController.h"
 #include "ColouredCubesIsQuadNeeded.h"
 
@@ -146,14 +147,14 @@ void Volume<VoxelType>::setVoxelAt(int x, int y, int z, VoxelType value, bool ma
 	mPolyVoxVolume->setVoxelAt(x, y, z, value);
 	if(markAsModified)
 	{
-		mRootOctreeNode->markDataAsModified(x, y, z, getTime());
+		mRootOctreeNode->markDataAsModified(x, y, z, Clock::getTimestamp());
 	}
 }
 
 template <typename VoxelType>
 void Volume<VoxelType>::markRegionAsModified(const PolyVox::Region& region)
 {
-	mRootOctreeNode->markDataAsModified(region, getTime());
+	mRootOctreeNode->markDataAsModified(region, Clock::getTimestamp());
 }
 
 template <typename VoxelType>
@@ -174,10 +175,6 @@ void Volume<VoxelType>::updateMesh(OctreeNode* octreeNode)
 	{
 		octreeNode->mIsSceduledForUpdate = true;
 		updateMeshImpl(octreeNode);
-
-		//octreeNode->mLastSceduledForUpdate = getTime();
-
-		//octreeNode->setMeshLastUpdated(getTime());
 	}
 
 	for(int z = 0; z < 2; z++)

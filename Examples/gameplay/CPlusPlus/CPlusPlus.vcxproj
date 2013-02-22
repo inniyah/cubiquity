@@ -367,6 +367,7 @@
     <ClCompile Include="..\..\..\Bridges\gameplay\GameplaySmoothTerrainVolume.cpp" />
     <ClCompile Include="..\..\..\Bridges\gameplay\GameplaySmoothTerrainVolumeEditor.cpp" />
     <ClCompile Include="..\..\..\Bridges\gameplay\Impl\ExtraNodeData.cpp" />
+    <ClCompile Include="..\..\..\Core\Clock.cpp" />
     <ClCompile Include="..\..\..\Core\Colour.cpp" />
     <ClCompile Include="..\..\..\Core\ColouredCubesVolume.cpp" />
     <ClCompile Include="..\..\..\Core\ColouredCubicSurfaceExtractionTask.cpp" />
@@ -428,6 +429,7 @@
     <ClInclude Include="..\..\..\Bridges\gameplay\GameplayVolumeSerialisation.h" />
     <ClInclude Include="..\..\..\Bridges\gameplay\Impl\ExtraNodeData.h" />
     <ClInclude Include="..\..\..\Bridges\gameplay\Impl\GameplayVolume.h" />
+    <ClInclude Include="..\..\..\Core\Clock.h" />
     <ClInclude Include="..\..\..\Core\Colour.h" />
     <ClInclude Include="..\..\..\Core\ColouredCubesIsQuadNeeded.h" />
     <ClInclude Include="..\..\..\Core\ColouredCubesVolume.h" />

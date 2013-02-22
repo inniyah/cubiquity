@@ -1,5 +1,7 @@
 #include "GameplaySmoothTerrainVolume.h"
 
+#include "Clock.h"
+
 #include "gameplay.h"
 
 using namespace gameplay;
@@ -60,7 +62,7 @@ void GameplaySmoothTerrainVolume::syncNode(OctreeNode* octreeNode, gameplay::Nod
 			}
 		}	
 
-		extraNodeData->mTimeStamp = mCubiquityVolume->getTime();
+		extraNodeData->mTimeStamp = Clock::getTimestamp();
 	}
 
 	if(octreeNode->mRenderThisNode)

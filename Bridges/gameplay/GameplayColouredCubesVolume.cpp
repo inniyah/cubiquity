@@ -1,5 +1,6 @@
 #include "GameplayColouredCubesVolume.h"
 
+#include "Clock.h"
 #include "MainThreadTaskProcessor.h"
 
 #include "gameplay.h"
@@ -56,7 +57,7 @@ void GameplayColouredCubesVolume::syncNode(OctreeNode* octreeNode, gameplay::Nod
 			SAFE_RELEASE(model);
 		}
 
-		extraNodeData->mTimeStamp = mCubiquityVolume->getTime();
+		extraNodeData->mTimeStamp = Clock::getTimestamp();
 	}
 
 	if(octreeNode->mRenderThisNode)

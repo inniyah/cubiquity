@@ -1,5 +1,6 @@
 #include "ColouredCubesVolume.h"
 
+#include "Clock.h"
 #include "ColouredCubicSurfaceExtractionTask.h"
 
 using namespace PolyVox;
@@ -23,7 +24,7 @@ void ColouredCubesVolume::update(const PolyVox::Vector3DFloat& viewPosition, flo
 			task.mOctreeNode->buildGraphicsMesh(task.mColouredCubicMesh);
 		}
 
-		task.mOctreeNode->setMeshLastUpdated(getTime());
+		task.mOctreeNode->setMeshLastUpdated(Clock::getTimestamp());
 		task.mOctreeNode->mIsSceduledForUpdate = false;
 	}
 }

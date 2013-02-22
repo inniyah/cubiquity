@@ -1,5 +1,7 @@
 #include "SmoothTerrainVolume.h"
 
+#include "Clock.h"
+
 #include <algorithm>
 
 using namespace std;
@@ -23,7 +25,7 @@ void SmoothTerrainVolume::update(const PolyVox::Vector3DFloat& viewPosition, flo
 			task.mOctreeNode->buildGraphicsMesh(task.mSmoothMesh);
 		}
 
-		task.mOctreeNode->setMeshLastUpdated(getTime());
+		task.mOctreeNode->setMeshLastUpdated(Clock::getTimestamp());
 		task.mOctreeNode->mIsSceduledForUpdate = false;
 	}
 }
