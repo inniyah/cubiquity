@@ -6,7 +6,7 @@
 
 using namespace PolyVox;
 
-ColouredCubicSurfaceExtractionTask::ColouredCubicSurfaceExtractionTask(OctreeNode* octreeNode, PolyVox::SimpleVolume<Colour>* polyVoxVolume)
+ColouredCubicSurfaceExtractionTask::ColouredCubicSurfaceExtractionTask(OctreeNode< VoxelTraits<Colour> >* octreeNode, PolyVox::SimpleVolume<Colour>* polyVoxVolume)
 	:mOctreeNode(octreeNode)
 	,mPolyVoxVolume(polyVoxVolume)
 	,mColouredCubicMesh(0)

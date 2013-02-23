@@ -37,14 +37,14 @@ protected:
 
 protected:
 
-	void buildNode(OctreeNode* octreeNode, gameplay::Node* gameplayNode);
+	//void buildNode(OctreeNode< VoxelTraits< _VolumeType::_VoxelType > >* octreeNode, gameplay::Node* gameplayNode);
 
 	_VolumeType* mCubiquityVolume;
 	gameplay::Node* mRootGameplayNode;
 };
 
-template <typename _VolumeType>
-void GameplayVolume<_VolumeType>::buildNode(OctreeNode* octreeNode, gameplay::Node* gameplayNode)
+/*template <typename _VolumeType>
+void GameplayVolume<_VolumeType>::buildNode(OctreeNode< VoxelTraits< _VolumeType::_VoxelType > >* octreeNode, gameplay::Node* gameplayNode)
 {
 	octreeNode->mGameEngineNode = gameplayNode;
 
@@ -84,6 +84,6 @@ void GameplayVolume<_VolumeType>::buildNode(OctreeNode* octreeNode, gameplay::No
 			}
 		}
 	}
-}
+}*/
 
 #endif //GAMEPLAYVOLUME_H_

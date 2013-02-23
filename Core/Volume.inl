@@ -79,14 +79,14 @@ Volume<VoxelType>::Volume(int lowerX, int lowerY, int lowerZ, int upperX, int up
 
 	octreeRegion.grow(widthIncrease / 2, heightIncrease / 2, depthIncrease / 2);
 
-	mRootOctreeNode = new OctreeNode(octreeRegion, 0);
+	mRootOctreeNode = new OctreeNode< VoxelTraits<VoxelType> >(octreeRegion, 0);
 	mRootOctreeNode->mLodLevel = noOfLodLevels - 1;
 
 	buildOctreeNodeTree(mRootOctreeNode, regionToCover, octreeConstructionMode);
 }
 
 template <typename VoxelType>
-void Volume<VoxelType>::buildOctreeNodeTree(OctreeNode* parent, const PolyVox::Region& regionToCover, OctreeConstructionMode octreeConstructionMode)
+void Volume<VoxelType>::buildOctreeNodeTree(OctreeNode< VoxelTraits<VoxelType> >* parent, const PolyVox::Region& regionToCover, OctreeConstructionMode octreeConstructionMode)
 {
 	POLYVOX_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getHeightInVoxels(), "Region must be cubic");
 	POLYVOX_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getDepthInVoxels(), "Region must be cubic");
@@ -119,7 +119,7 @@ void Volume<VoxelType>::buildOctreeNodeTree(OctreeNode* parent, const PolyVox::R
 					PolyVox::Region childRegion(baseLowerCorner + offset, baseUpperCorner + offset);
 					if(intersects(childRegion, regionToCover))
 					{
-						OctreeNode* octreeNode = new OctreeNode(childRegion, parent);
+						OctreeNode< VoxelTraits<VoxelType> >* octreeNode = new OctreeNode< VoxelTraits<VoxelType> >(childRegion, parent);
 						parent->children[x][y][z] = octreeNode;
 						buildOctreeNodeTree(octreeNode, regionToCover, octreeConstructionMode);
 					}
@@ -168,7 +168,7 @@ void Volume<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float
 }
 
 template <typename VoxelType>
-void Volume<VoxelType>::updateMesh(OctreeNode* octreeNode)
+void Volume<VoxelType>::updateMesh(OctreeNode< VoxelTraits<VoxelType> >* octreeNode)
 {
 	if((octreeNode->isMeshUpToDate() == false) && (octreeNode->isSceduledForUpdate() == false) && (octreeNode->mWantedForRendering))
 	{
@@ -183,7 +183,7 @@ void Volume<VoxelType>::updateMesh(OctreeNode* octreeNode)
 		{
 			for(int x = 0; x < 2; x++)
 			{
-				OctreeNode* child = octreeNode->children[x][y][z];
+				OctreeNode< VoxelTraits<VoxelType> >* child = octreeNode->children[x][y][z];
 				if(child)
 				{
 					updateMesh(child);

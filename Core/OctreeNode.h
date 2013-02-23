@@ -15,6 +15,24 @@
 template <typename VoxelType>
 class Volume;
 
+template<typename Type>
+class VoxelTraits;
+
+template<>
+class VoxelTraits<Colour>
+{
+public:
+	typedef PolyVox::PositionMaterial<Colour> VertexType;
+};
+
+template<>
+class VoxelTraits<MultiMaterial4>
+{
+public:
+	typedef PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType > VertexType;
+};
+
+template <typename VertexType>
 class OctreeNode
 {
 public:	
@@ -65,5 +83,7 @@ public:
 
 	uint8_t mLodLevel; // Zero for leaf nodes.
 };
+
+#include "OctreeNode.inl"
 
 #endif //OCTREE_NODE_H_

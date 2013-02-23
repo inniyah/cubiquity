@@ -1,14 +1,12 @@
-#include "OctreeNode.h"
-
 #include "Volume.h"
 
 #include <sstream>
 
 using namespace PolyVox;
 
-OctreeNode::OctreeNode(PolyVox::Region region, OctreeNode* parentRegion)
+template <typename VertexType>
+OctreeNode<VertexType>::OctreeNode(PolyVox::Region region, OctreeNode* parentRegion)
 	:mRegion(region)
-	//,mIsMeshUpToDate(false)
 	,parent(parentRegion)
 	,mWantedForRendering(false)
 	,mRenderThisNode(false)
@@ -38,31 +36,37 @@ OctreeNode::OctreeNode(PolyVox::Region region, OctreeNode* parentRegion)
 	}
 }
 
-OctreeNode::~OctreeNode()
+template <typename VertexType>
+OctreeNode<VertexType>::~OctreeNode()
 {
 }
 
-void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<Colour> >* polyVoxMesh)
+template <typename VertexType>
+void OctreeNode<VertexType>::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<Colour> >* polyVoxMesh)
 {
 	mCubicPolyVoxMesh = polyVoxMesh;
 }
 
-void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<MultiMaterial4> >* polyVoxMesh)
+template <typename VertexType>
+void OctreeNode<VertexType>::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<MultiMaterial4> >* polyVoxMesh)
 {
 	POLYVOX_ASSERT(false, "This function should never be called!"); //See note in header
 }
 
-void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< Colour > >* polyVoxMesh)
+template <typename VertexType>
+void OctreeNode<VertexType>::buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< Colour > >* polyVoxMesh)
 {
 	POLYVOX_ASSERT(false, "This function should never be called!"); //See note in header
 }
 
-void OctreeNode::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal<MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType> >* polyVoxMesh)
+template <typename VertexType>
+void OctreeNode<VertexType>::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal<MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType> >* polyVoxMesh)
 {
 	mSmoothPolyVoxMesh = polyVoxMesh;
 }
 
-void OctreeNode::markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp)
+template <typename VertexType>
+void OctreeNode<VertexType>::markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp)
 {
 	if(mRegion.containsPoint(x, y, z, -1)) //FIXME - Think if we really need this border.
 	{
@@ -86,7 +90,8 @@ void OctreeNode::markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp n
 	}
 }
 
-void OctreeNode::markDataAsModified(const Region& region, Timestamp newTimeStamp)
+template <typename VertexType>
+void OctreeNode<VertexType>::markDataAsModified(const Region& region, Timestamp newTimeStamp)
 {
 	if(intersects(mRegion, region))
 	{
@@ -110,7 +115,8 @@ void OctreeNode::markDataAsModified(const Region& region, Timestamp newTimeStamp
 	}
 }
 
-bool OctreeNode::hasAnyChildren(void)
+template <typename VertexType>
+bool OctreeNode<VertexType>::hasAnyChildren(void)
 {
 	for(int z = 0; z < 2; z++)
 	{
@@ -129,7 +135,8 @@ bool OctreeNode::hasAnyChildren(void)
 	return false;
 }
 
-bool OctreeNode::allChildrenUpToDate(void)
+template <typename VertexType>
+bool OctreeNode<VertexType>::allChildrenUpToDate(void)
 {
 	for(int z = 0; z < 2; z++)
 	{
@@ -151,7 +158,8 @@ bool OctreeNode::allChildrenUpToDate(void)
 	return true;
 }
 
-void OctreeNode::clearWantedForRendering(void)
+template <typename VertexType>
+void OctreeNode<VertexType>::clearWantedForRendering(void)
 {
 	mWantedForRendering = false;
 
@@ -171,7 +179,8 @@ void OctreeNode::clearWantedForRendering(void)
 	}
 }
 
-void OctreeNode::determineWantedForRendering(const PolyVox::Vector3DFloat& viewPosition, float threshold)
+template <typename VertexType>
+void OctreeNode<VertexType>::determineWantedForRendering(const PolyVox::Vector3DFloat& viewPosition, float threshold)
 {
 	if(mLodLevel == 0)
 	{
@@ -212,7 +221,8 @@ void OctreeNode::determineWantedForRendering(const PolyVox::Vector3DFloat& viewP
 	}
 }
 
-void OctreeNode::determineWhetherToRender(void)
+template <typename VertexType>
+void OctreeNode<VertexType>::determineWhetherToRender(void)
 {
 	//At some point we should handle the issue that we might want to render but the mesh might not be ready.
 	mRenderThisNode = mWantedForRendering;
@@ -233,18 +243,21 @@ void OctreeNode::determineWhetherToRender(void)
 	}
 }
 
-bool OctreeNode::isMeshUpToDate(void)
+template <typename VertexType>
+bool OctreeNode<VertexType>::isMeshUpToDate(void)
 {
 	return mMeshLastUpdated > mDataLastModified;
 }
 
-bool OctreeNode::isSceduledForUpdate(void)
+template <typename VertexType>
+bool OctreeNode<VertexType>::isSceduledForUpdate(void)
 {
 	//We are sceduled for an update if being sceduled was the most recent thing that happened.
 	return (mLastSceduledForUpdate > mDataLastModified) && (mLastSceduledForUpdate > mMeshLastUpdated);
 }
 
-void OctreeNode::setMeshLastUpdated(Timestamp newTimeStamp)
+template <typename VertexType>
+void OctreeNode<VertexType>::setMeshLastUpdated(Timestamp newTimeStamp)
 {
 	mMeshLastUpdated = newTimeStamp;
 }

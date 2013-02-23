@@ -5,6 +5,7 @@
 
 #include "gameplay.h"
 
+template <typename VertexType>
 class ExtraNodeData
 {
 public:
@@ -15,11 +16,23 @@ public:
 	}
 
 	Timestamp mTimeStamp;
-	OctreeNode* mOctreeNode;
+	OctreeNode<VertexType>* mOctreeNode;
 };
 
-gameplay::Node* createNodeWithExtraData(const char* id = NULL); //NULL rather than '0' because that's what gameplay uses.
+template <typename VertexType>
+gameplay::Node* createNodeWithExtraData(const char* id = NULL) //NULL rather than '0' because that's what gameplay uses.
+{
+	gameplay::Node* node = Node::create(id);
+	ExtraNodeData<VertexType>* extraNodeData = new ExtraNodeData<VertexType>;
+	node->setUserPointer(extraNodeData, deleteExtraNodeData<VertexType>);
+	return node;
+}
 
-void deleteExtraNodeData(void* ptr);
+template <typename VertexType>
+void deleteExtraNodeData(void* ptr)
+{
+	ExtraNodeData<VertexType>* extraNodeData = reinterpret_cast<ExtraNodeData<VertexType>*>(ptr);
+	delete extraNodeData;
+}
 
 #endif //CUBIQUITY_EXTRANODEDATA_H_

@@ -10,7 +10,7 @@
 class SmoothSurfaceExtractionTask
 {
 public:
-	SmoothSurfaceExtractionTask(OctreeNode* octreeNode, PolyVox::SimpleVolume< typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType >* polyVoxVolume);
+	SmoothSurfaceExtractionTask(OctreeNode< VoxelTraits<MultiMaterial4> >* octreeNode, PolyVox::SimpleVolume< typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType >* polyVoxVolume);
 	~SmoothSurfaceExtractionTask();
 
 	void process(void);
@@ -18,7 +18,7 @@ public:
 	void generateSmoothMesh(const PolyVox::Region& region, uint32_t lodLevel, PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType > >* resultMesh);
 
 public:
-	OctreeNode* mOctreeNode;
+	OctreeNode< VoxelTraits<MultiMaterial4> >* mOctreeNode;
 	PolyVox::SimpleVolume<typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType>* mPolyVoxVolume;
 	PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType> >* mSmoothMesh;
 };

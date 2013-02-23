@@ -338,6 +338,7 @@
     <None Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VolumeResampler.inl" />
     <None Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.inl" />
     <None Include="..\..\..\Core\MainThreadTaskProcessor.inl" />
+    <None Include="..\..\..\Core\OctreeNode.inl" />
     <None Include="..\..\..\Core\TaskProcessor.inl" />
     <None Include="..\..\..\Core\Volume.inl" />
     <None Include="bar-descriptor.xml">
@@ -373,7 +374,6 @@
     <ClCompile Include="..\..\..\Core\ColouredCubicSurfaceExtractionTask.cpp" />
     <ClCompile Include="..\..\..\Core\CubiquityUtility.cpp" />
     <ClCompile Include="..\..\..\Core\MultiMaterial.cpp" />
-    <ClCompile Include="..\..\..\Core\OctreeNode.cpp" />
     <ClCompile Include="..\..\..\Core\SmoothSurfaceExtractionTask.cpp" />
     <ClCompile Include="..\..\..\Core\SmoothTerrainVolume.cpp" />
     <ClCompile Include="..\..\..\Core\SmoothTerrainVolumeEditor.cpp" />

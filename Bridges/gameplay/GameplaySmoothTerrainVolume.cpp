@@ -13,7 +13,7 @@ GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(int lowerX, int lowerY,
 	mSmoothSurfaceExtractionTaskProcessor = new MainThreadTaskProcessor<SmoothSurfaceExtractionTask>;
 	mCubiquityVolume->mSmoothSurfaceExtractionTaskProcessor = mSmoothSurfaceExtractionTaskProcessor;
 
-	mRootGameplayNode = createNodeWithExtraData("RootGameplayNode");
+	mRootGameplayNode = createNodeWithExtraData< VoxelTraits<MultiMaterial4> >("RootGameplayNode");
 
 	buildNode(mCubiquityVolume->mRootOctreeNode, mRootGameplayNode);
 }
@@ -37,9 +37,9 @@ void GameplaySmoothTerrainVolume::performUpdate(const gameplay::Vector3& viewPos
 	}
 }
 
-void GameplaySmoothTerrainVolume::syncNode(OctreeNode* octreeNode, gameplay::Node* gameplayNode)
+void GameplaySmoothTerrainVolume::syncNode(OctreeNode< VoxelTraits< MultiMaterial4 > >* octreeNode, gameplay::Node* gameplayNode)
 {
-	ExtraNodeData* extraNodeData = static_cast<ExtraNodeData*>(gameplayNode->getUserPointer());
+	ExtraNodeData< VoxelTraits< MultiMaterial4 > >* extraNodeData = static_cast<ExtraNodeData< VoxelTraits< MultiMaterial4 > >*>(gameplayNode->getUserPointer());
 	extraNodeData->mOctreeNode = octreeNode;
 
 	if(extraNodeData->mTimeStamp < octreeNode->mMeshLastUpdated)
@@ -178,4 +178,46 @@ PhysicsCollisionShape::Definition GameplaySmoothTerrainVolume::buildCollisionObj
 	}
 
 	return PhysicsCollisionShape::custom(vertexData, polyVoxMesh->getVertices().size(), physicsIndices, vecIndices.size());
+}
+
+void GameplaySmoothTerrainVolume::buildNode(OctreeNode< VoxelTraits< MultiMaterial4 > >* octreeNode, gameplay::Node* gameplayNode)
+{
+	octreeNode->mGameEngineNode = gameplayNode;
+
+	std::stringstream ss;
+	ss << "LOD = " << int(octreeNode->mLodLevel) << ", Region = (" << octreeNode->mRegion.getLowerX() << "," << octreeNode->mRegion.getLowerY() << "," << octreeNode->mRegion.getLowerZ() << ") to (" << octreeNode->mRegion.getUpperX() << "," << octreeNode->mRegion.getUpperY() << "," << octreeNode->mRegion.getUpperZ() << ")";
+	gameplayNode->setId(ss.str().c_str());
+
+	if(octreeNode->parent)
+	{
+		PolyVox::Vector3DInt32 translation = octreeNode->mRegion.getLowerCorner() - octreeNode->parent->mRegion.getLowerCorner();
+		gameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
+	}
+	else
+	{
+		PolyVox::Vector3DInt32 translation = octreeNode->mRegion.getLowerCorner();
+		gameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
+	}
+
+	for(int iz = 0; iz < 2; iz++)
+	{
+		for(int iy = 0; iy < 2; iy++)
+		{
+			for(int ix = 0; ix < 2; ix++)
+			{
+				if(octreeNode->children[ix][iy][iz] != 0)
+				{
+					gameplay::Node* childNode = reinterpret_cast<gameplay::Node*>(octreeNode->children[ix][iy][iz]->mGameEngineNode);
+					if(childNode == 0)
+					{		
+						childNode = createNodeWithExtraData< VoxelTraits<MultiMaterial4> >();
+
+						gameplayNode->addChild(childNode);
+					}
+
+					buildNode(octreeNode->children[ix][iy][iz], childNode);
+				}
+			}
+		}
+	}
 }

@@ -17,7 +17,7 @@ GameplayColouredCubesVolume::GameplayColouredCubesVolume(int lowerX, int lowerY,
 	mColouredCubicSurfaceExtractionTaskProcessor = new MainThreadTaskProcessor<ColouredCubicSurfaceExtractionTask>;
 	mCubiquityVolume->mColouredCubicSurfaceExtractionTaskProcessor = mColouredCubicSurfaceExtractionTaskProcessor;
 
-	mRootGameplayNode = createNodeWithExtraData("RootGameplayNode");
+	mRootGameplayNode = createNodeWithExtraData< VoxelTraits<Colour> >("RootGameplayNode");
 
 	buildNode(mCubiquityVolume->mRootOctreeNode, mRootGameplayNode);
 }
@@ -42,9 +42,9 @@ void GameplayColouredCubesVolume::performUpdate(const gameplay::Vector3& viewPos
 	}
 }
 
-void GameplayColouredCubesVolume::syncNode(OctreeNode* octreeNode, gameplay::Node* gameplayNode)
+void GameplayColouredCubesVolume::syncNode(OctreeNode< VoxelTraits< Colour > >* octreeNode, gameplay::Node* gameplayNode)
 {
-	ExtraNodeData* extraNodeData = static_cast<ExtraNodeData*>(gameplayNode->getUserPointer());
+	ExtraNodeData< VoxelTraits< Colour > >* extraNodeData = static_cast<ExtraNodeData< VoxelTraits< Colour > >*>(gameplayNode->getUserPointer());
 	extraNodeData->mOctreeNode = octreeNode;
 
 	if(extraNodeData->mTimeStamp < octreeNode->mMeshLastUpdated)
@@ -276,4 +276,46 @@ GameplayColouredCubesVolume* GameplayColouredCubesVolume::importVxl(const char* 
 	result->markRegionAsModified(0, 0, 0, 127, 127, 63);
 
 	return result;
+}
+
+void GameplayColouredCubesVolume::buildNode(OctreeNode< VoxelTraits< Colour > >* octreeNode, gameplay::Node* gameplayNode)
+{
+	octreeNode->mGameEngineNode = gameplayNode;
+
+	std::stringstream ss;
+	ss << "LOD = " << int(octreeNode->mLodLevel) << ", Region = (" << octreeNode->mRegion.getLowerX() << "," << octreeNode->mRegion.getLowerY() << "," << octreeNode->mRegion.getLowerZ() << ") to (" << octreeNode->mRegion.getUpperX() << "," << octreeNode->mRegion.getUpperY() << "," << octreeNode->mRegion.getUpperZ() << ")";
+	gameplayNode->setId(ss.str().c_str());
+
+	if(octreeNode->parent)
+	{
+		PolyVox::Vector3DInt32 translation = octreeNode->mRegion.getLowerCorner() - octreeNode->parent->mRegion.getLowerCorner();
+		gameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
+	}
+	else
+	{
+		PolyVox::Vector3DInt32 translation = octreeNode->mRegion.getLowerCorner();
+		gameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
+	}
+
+	for(int iz = 0; iz < 2; iz++)
+	{
+		for(int iy = 0; iy < 2; iy++)
+		{
+			for(int ix = 0; ix < 2; ix++)
+			{
+				if(octreeNode->children[ix][iy][iz] != 0)
+				{
+					gameplay::Node* childNode = reinterpret_cast<gameplay::Node*>(octreeNode->children[ix][iy][iz]->mGameEngineNode);
+					if(childNode == 0)
+					{		
+						childNode = createNodeWithExtraData< VoxelTraits< Colour > >();
+
+						gameplayNode->addChild(childNode);
+					}
+
+					buildNode(octreeNode->children[ix][iy][iz], childNode);
+				}
+			}
+		}
+	}
 }
