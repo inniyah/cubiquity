@@ -45,8 +45,6 @@ protected:
 	GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
 	virtual ~GameplaySmoothTerrainVolume();
 
-	void buildNode(OctreeNode< VoxelTraits< MultiMaterial4 > >* octreeNode, gameplay::Node* gameplayNode);
-
 private:
 	void syncNode(OctreeNode< VoxelTraits< MultiMaterial4 > >* octreeNode, gameplay::Node* gameplayNode);
 

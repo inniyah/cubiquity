@@ -57,8 +57,6 @@ protected:
 	GameplayColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
 	virtual ~GameplayColouredCubesVolume();
 
-	void buildNode(OctreeNode< VoxelTraits< Colour > >* octreeNode, gameplay::Node* gameplayNode);
-
 private:
 	void syncNode(OctreeNode< VoxelTraits< Colour > >* octreeNode, gameplay::Node* gameplayNode);
 
