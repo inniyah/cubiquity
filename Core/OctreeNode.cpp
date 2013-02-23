@@ -15,7 +15,6 @@ OctreeNode::OctreeNode(PolyVox::Region region, OctreeNode* parentRegion)
 	,mLastSceduledForUpdate(Clock::getTimestamp())
 	,mMeshLastUpdated(Clock::getTimestamp())	
 	,mDataLastModified(Clock::getTimestamp())
-	,mIsSceduledForUpdate(false)
 	,mSmoothPolyVoxMesh(0)
 	,mCubicPolyVoxMesh(0)
 	,mGameEngineNode(0)
@@ -241,6 +240,7 @@ bool OctreeNode::isMeshUpToDate(void)
 
 bool OctreeNode::isSceduledForUpdate(void)
 {
+	//We are sceduled for an update if being sceduled was the most recent thing that happened.
 	return (mLastSceduledForUpdate > mDataLastModified) && (mLastSceduledForUpdate > mMeshLastUpdated);
 }
 

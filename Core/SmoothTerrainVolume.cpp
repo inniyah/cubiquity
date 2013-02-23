@@ -26,7 +26,6 @@ void SmoothTerrainVolume::update(const PolyVox::Vector3DFloat& viewPosition, flo
 		}
 
 		task.mOctreeNode->setMeshLastUpdated(Clock::getTimestamp());
-		task.mOctreeNode->mIsSceduledForUpdate = false;
 	}
 }
 

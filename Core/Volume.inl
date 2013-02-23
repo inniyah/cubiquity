@@ -170,13 +170,9 @@ void Volume<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float
 template <typename VoxelType>
 void Volume<VoxelType>::updateMesh(OctreeNode* octreeNode)
 {
-	//POLYVOX_ASSERT(octreeNode->isSceduledForUpdate() == octreeNode->mIsSceduledForUpdate, "");
 	if((octreeNode->isMeshUpToDate() == false) && (octreeNode->isSceduledForUpdate() == false) && (octreeNode->mWantedForRendering))
 	{
 		octreeNode->mLastSceduledForUpdate = Clock::getTimestamp();
-		octreeNode->mIsSceduledForUpdate = true;
-
-		//POLYVOX_ASSERT(octreeNode->isSceduledForUpdate() == octreeNode->mIsSceduledForUpdate, "");
 
 		updateMeshImpl(octreeNode);
 	}

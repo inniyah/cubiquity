@@ -51,7 +51,6 @@ public:
 	Timestamp mDataLastModified;
 	Timestamp mMeshLastUpdated;
 	Timestamp mLastSceduledForUpdate;
-	bool mIsSceduledForUpdate;
 
 	OctreeNode* parent;
 	OctreeNode* children[2][2][2];
