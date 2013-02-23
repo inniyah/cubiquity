@@ -12,8 +12,9 @@ OctreeNode::OctreeNode(PolyVox::Region region, OctreeNode* parentRegion)
 	,parent(parentRegion)
 	,mWantedForRendering(false)
 	,mRenderThisNode(false)
-	,mMeshLastUpdated(0)
-	,mDataLastModified(1) //Is this ok?
+	,mLastSceduledForUpdate(Clock::getTimestamp())
+	,mMeshLastUpdated(Clock::getTimestamp())	
+	,mDataLastModified(Clock::getTimestamp())
 	,mIsSceduledForUpdate(false)
 	,mSmoothPolyVoxMesh(0)
 	,mCubicPolyVoxMesh(0)
@@ -236,6 +237,11 @@ void OctreeNode::determineWhetherToRender(void)
 bool OctreeNode::isMeshUpToDate(void)
 {
 	return mMeshLastUpdated > mDataLastModified;
+}
+
+bool OctreeNode::isSceduledForUpdate(void)
+{
+	return (mLastSceduledForUpdate > mDataLastModified) && (mLastSceduledForUpdate > mMeshLastUpdated);
 }
 
 void OctreeNode::setMeshLastUpdated(Timestamp newTimeStamp)

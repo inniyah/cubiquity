@@ -43,12 +43,14 @@ public:
 	bool allChildrenUpToDate(void);
 
 	bool isMeshUpToDate(void);
+	bool isSceduledForUpdate(void);
 
 	void setMeshLastUpdated(Timestamp newTimeStamp);
 
 	PolyVox::Region mRegion;
-	uint32_t mMeshLastUpdated;
-	uint32_t mDataLastModified;
+	Timestamp mDataLastModified;
+	Timestamp mMeshLastUpdated;
+	Timestamp mLastSceduledForUpdate;
 	bool mIsSceduledForUpdate;
 
 	OctreeNode* parent;
