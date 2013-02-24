@@ -1,7 +1,9 @@
 #include "ColouredCubesVolume.h"
 
 #include "Clock.h"
+#include "Colour.h"
 #include "ColouredCubicSurfaceExtractionTask.h"
+#include "TaskProcessor.h"
 
 using namespace PolyVox;
 

@@ -1,13 +1,8 @@
 #ifndef COLOUREDCUBESVOLUME_H_
 #define COLOUREDCUBESVOLUME_H_
 
-#include "ColouredCubicSurfaceExtractionTask.h"
 #include "CubiquityForwardDeclarations.h"
-#include "TaskProcessor.h"
 #include "Volume.h"
-
-#include "Colour.h"
-#include "PolyVoxCore/Material.h"
 
 class ColouredCubesVolume : public Volume<Colour>
 {

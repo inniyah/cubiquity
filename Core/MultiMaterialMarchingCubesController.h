@@ -4,6 +4,7 @@
 #include <cassert>
 #include <limits>
 
+#include "Colour.h"
 #include "MultiMaterial.h"
 
 #include "PolyVoxCore/BaseVolume.h"

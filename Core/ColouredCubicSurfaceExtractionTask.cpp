@@ -1,6 +1,8 @@
 #include "ColouredCubicSurfaceExtractionTask.h"
 
+#include "Colour.h"
 #include "ColouredCubesIsQuadNeeded.h"
+#include "OctreeNode.h"
 
 #include "PolyVoxCore/RawVolume.h"
 

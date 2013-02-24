@@ -1,6 +1,7 @@
 #include "GameplayColouredCubesVolume.h"
 
 #include "Clock.h"
+#include "ColouredCubicSurfaceExtractionTask.h"
 #include "MainThreadTaskProcessor.h"
 
 #include "gameplay.h"

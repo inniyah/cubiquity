@@ -1,8 +1,8 @@
 #ifndef CUBIQUITY_COLOUREDCUBICSURFACEEXTRACTIONTASK_H_
 #define CUBIQUITY_COLOUREDCUBICSURFACEEXTRACTIONTASK_H_
 
-#include "Colour.h"
-#include "OctreeNode.h"
+#include "CubiquityForwardDeclarations.h"
+#include "VoxelTraits.h"
 
 #include "PolyVoxCore/CubicSurfaceExtractor.h"
 #include "PolyVoxCore/SimpleVolume.h"
