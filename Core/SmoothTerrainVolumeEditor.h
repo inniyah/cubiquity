@@ -25,11 +25,11 @@ protected:
 	};
 	typedef EditActions::EditAction EditAction;
 
-	void addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4& material);
-	void subtractFromMaterial(uint8_t amountToAdd, MultiMaterial4& material);
+	void addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial& material);
+	void subtractFromMaterial(uint8_t amountToAdd, MultiMaterial& material);
 	void edit(const PolyVox::Vector3DFloat& centre, float radius, uint32_t materialToUse, EditAction editAction, float timeElapsedInSeconds, float amount, float smoothBias);
 
-	PolyVox::RawVolume<MultiMaterial4>* mSmoothingVolume;
+	PolyVox::RawVolume<MultiMaterial>* mSmoothingVolume;
 };
 
 #endif //SMOOTHTERRAINVOLUMEEDITOR_H_

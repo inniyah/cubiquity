@@ -34,7 +34,7 @@ void loadData(const char* filename, VolumeType* volume)
 
 				/*if(y < 8)
 				{
-					MultiMaterial4 mat;
+					MultiMaterial mat;
 					mat.setMaterial(0, 255);
 					volume->setVoxelAt(x, y, z, mat);
 				}*/

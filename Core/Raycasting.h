@@ -17,17 +17,17 @@ public:
 };
 
 template <>
-class RaycastTestFunctor<MultiMaterial4>
+class RaycastTestFunctor<MultiMaterial>
 {
 public:
 	RaycastTestFunctor()
 	{
 	}
 
-	bool operator()(PolyVox::Vector3DFloat pos, const MultiMaterial4& voxel)
+	bool operator()(PolyVox::Vector3DFloat pos, const MultiMaterial& voxel)
 	{
 		mLastPos = pos;
-		return voxel.getSumOfMaterials() <= MultiMaterial4::getMaxMaterialValue() / 2;
+		return voxel.getSumOfMaterials() <= MultiMaterial::getMaxMaterialValue() / 2;
 	}
 
 	PolyVox::Vector3DFloat mLastPos;

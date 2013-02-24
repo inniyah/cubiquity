@@ -10,21 +10,21 @@
 class SmoothSurfaceExtractionTask
 {
 public:
-	SmoothSurfaceExtractionTask(OctreeNode< typename VoxelTraits<MultiMaterial4>::VertexType >* octreeNode, PolyVox::SimpleVolume< typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType >* polyVoxVolume);
+	SmoothSurfaceExtractionTask(OctreeNode< typename VoxelTraits<MultiMaterial>::VertexType >* octreeNode, PolyVox::SimpleVolume< typename MultiMaterialMarchingCubesController<MultiMaterial>::MaterialType >* polyVoxVolume);
 	~SmoothSurfaceExtractionTask();
 
 	void process(void);
 
-	void generateSmoothMesh(const PolyVox::Region& region, uint32_t lodLevel, PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType > >* resultMesh);
+	void generateSmoothMesh(const PolyVox::Region& region, uint32_t lodLevel, PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial>::MaterialType > >* resultMesh);
 
 public:
-	OctreeNode< typename VoxelTraits<MultiMaterial4>::VertexType >* mOctreeNode;
-	PolyVox::SimpleVolume<typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType>* mPolyVoxVolume;
-	PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType> >* mSmoothMesh;
+	OctreeNode< typename VoxelTraits<MultiMaterial>::VertexType >* mOctreeNode;
+	PolyVox::SimpleVolume<typename MultiMaterialMarchingCubesController<MultiMaterial>::MaterialType>* mPolyVoxVolume;
+	PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial>::MaterialType> >* mSmoothMesh;
 };
 
-void recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType > >* mesh, const PolyVox::Vector3DFloat& meshOffset, PolyVox::SimpleVolume<MultiMaterial4>* volume);
-MultiMaterial4 getInterpolatedValue(PolyVox::SimpleVolume<MultiMaterial4>* volume, const PolyVox::Vector3DFloat& position);
+void recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial>::MaterialType > >* mesh, const PolyVox::Vector3DFloat& meshOffset, PolyVox::SimpleVolume<MultiMaterial>* volume);
+MultiMaterial getInterpolatedValue(PolyVox::SimpleVolume<MultiMaterial>* volume, const PolyVox::Vector3DFloat& position);
 
 template< typename SrcVolumeType, typename DstVolumeType>
 void resampleVolume(uint32_t factor, SrcVolumeType* srcVolume, const PolyVox::Region& srcRegion, DstVolumeType* dstVolume, const PolyVox::Region& dstRegion)
@@ -43,7 +43,7 @@ void resampleVolume(uint32_t factor, SrcVolumeType* srcVolume, const PolyVox::Re
 				int32_t sy = (dy - dstRegion.getLowerCorner().getY()) * factor + srcRegion.getLowerCorner().getY();
 				int32_t sz = (dz - dstRegion.getLowerCorner().getZ()) * factor + srcRegion.getLowerCorner().getZ();
 
-				const MultiMaterial4& srcVoxel = srcVolume->getVoxelWithWrapping(sx,sy,sz);
+				const MultiMaterial& srcVoxel = srcVolume->getVoxelWithWrapping(sx,sy,sz);
 				dstVolume->setVoxelAt(dx,dy,dz,srcVoxel);
 			}
 		}

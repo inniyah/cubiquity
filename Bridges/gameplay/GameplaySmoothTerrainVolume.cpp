@@ -13,7 +13,7 @@ GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(int lowerX, int lowerY,
 	mSmoothSurfaceExtractionTaskProcessor = new MainThreadTaskProcessor<SmoothSurfaceExtractionTask>;
 	mCubiquityVolume->mSmoothSurfaceExtractionTaskProcessor = mSmoothSurfaceExtractionTaskProcessor;
 
-	mRootGameplayNode = createNodeWithExtraData< typename VoxelTraits<MultiMaterial4>::VertexType >("RootGameplayNode");
+	mRootGameplayNode = createNodeWithExtraData< typename VoxelTraits<MultiMaterial>::VertexType >("RootGameplayNode");
 
 	buildNode(mCubiquityVolume->mRootOctreeNode, mRootGameplayNode);
 }
@@ -37,9 +37,9 @@ void GameplaySmoothTerrainVolume::performUpdate(const gameplay::Vector3& viewPos
 	}
 }
 
-void GameplaySmoothTerrainVolume::syncNode(OctreeNode< typename VoxelTraits< MultiMaterial4 >::VertexType >* octreeNode, gameplay::Node* gameplayNode)
+void GameplaySmoothTerrainVolume::syncNode(OctreeNode< typename VoxelTraits< MultiMaterial >::VertexType >* octreeNode, gameplay::Node* gameplayNode)
 {
-	ExtraNodeData< typename VoxelTraits< MultiMaterial4 >::VertexType >* extraNodeData = static_cast<ExtraNodeData< typename VoxelTraits< MultiMaterial4 >::VertexType >*>(gameplayNode->getUserPointer());
+	ExtraNodeData< typename VoxelTraits< MultiMaterial >::VertexType >* extraNodeData = static_cast<ExtraNodeData< typename VoxelTraits< MultiMaterial >::VertexType >*>(gameplayNode->getUserPointer());
 	extraNodeData->mOctreeNode = octreeNode;
 
 	if(extraNodeData->mTimeStamp < octreeNode->mMeshLastUpdated)
@@ -92,10 +92,10 @@ void GameplaySmoothTerrainVolume::syncNode(OctreeNode< typename VoxelTraits< Mul
 	}
 }
 
-gameplay::Model* GameplaySmoothTerrainVolume::buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType > >* polyVoxMesh)
+gameplay::Model* GameplaySmoothTerrainVolume::buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial >::MaterialType > >* polyVoxMesh)
 {
 	//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
-	const std::vector<PositionMaterialNormal<MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType> >& vecVertices = polyVoxMesh->getVertices();
+	const std::vector<PositionMaterialNormal<MultiMaterialMarchingCubesController< MultiMaterial >::MaterialType> >& vecVertices = polyVoxMesh->getVertices();
 	const float* pVerticesConst = reinterpret_cast<const float*>(&vecVertices[0]);
 	float* pVertices = const_cast<float*>(pVerticesConst);
 
@@ -155,10 +155,10 @@ gameplay::Model* GameplaySmoothTerrainVolume::buildModelFromPolyVoxMesh(const Po
 	return model;
 }
 
-PhysicsCollisionShape::Definition GameplaySmoothTerrainVolume::buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType > >* polyVoxMesh)
+PhysicsCollisionShape::Definition GameplaySmoothTerrainVolume::buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial >::MaterialType > >* polyVoxMesh)
 {
 	//Now set up the physics
-	const std::vector<PositionMaterialNormal<MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType> >& vecVertices = polyVoxMesh->getVertices();
+	const std::vector<PositionMaterialNormal<MultiMaterialMarchingCubesController< MultiMaterial >::MaterialType> >& vecVertices = polyVoxMesh->getVertices();
 	const std::vector<unsigned int>& vecIndices = polyVoxMesh->getIndices();
 	float* vertexData = new float[polyVoxMesh->getVertices().size() * 3];
 

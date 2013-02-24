@@ -4,17 +4,17 @@
 
 namespace PolyVox
 {
-	MultiMaterial4 trilerp(
-	const MultiMaterial4& v000,const MultiMaterial4& v100,const MultiMaterial4& v010,const MultiMaterial4& v110,
-	const MultiMaterial4& v001,const MultiMaterial4& v101,const MultiMaterial4& v011,const MultiMaterial4& v111,
+	MultiMaterial trilerp(
+	const MultiMaterial& v000,const MultiMaterial& v100,const MultiMaterial& v010,const MultiMaterial& v110,
+	const MultiMaterial& v001,const MultiMaterial& v101,const MultiMaterial& v011,const MultiMaterial& v111,
 	const float x, const float y, const float z)
 	{
 		assert((x >= 0.0f) && (y >= 0.0f) && (z >= 0.0f) && 
 			(x <= 1.0f) && (y <= 1.0f) && (z <= 1.0f));
 
-		MultiMaterial4 tInterpolatedValue;
+		MultiMaterial tInterpolatedValue;
 
-		for(uint32_t ct = 0; ct < MultiMaterial4::getNoOfMaterials(); ct++)
+		for(uint32_t ct = 0; ct < MultiMaterial::getNoOfMaterials(); ct++)
 		{
 			tInterpolatedValue.setMaterial(ct, static_cast<uint8_t>(trilerp<float>
 			(

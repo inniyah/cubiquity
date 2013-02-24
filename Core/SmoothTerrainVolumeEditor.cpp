@@ -47,7 +47,7 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 		// Make sure our temporary target exists, and create it if not.
 		if(!mSmoothingVolume)
 		{
-			mSmoothingVolume = new PolyVox::RawVolume<MultiMaterial4>(region);
+			mSmoothingVolume = new PolyVox::RawVolume<MultiMaterial>(region);
 		}
 		else
 		{
@@ -55,12 +55,12 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 			if(mSmoothingVolume->getEnclosingRegion() != region)
 			{
 				delete mSmoothingVolume;
-				mSmoothingVolume = new PolyVox::RawVolume<MultiMaterial4>(region);
+				mSmoothingVolume = new PolyVox::RawVolume<MultiMaterial>(region);
 			}
 		}
 
 		// We might not need to do this at float precision, it should be tested again.
-		PolyVox::LowPassFilter< PolyVox::SimpleVolume<MultiMaterial4>, PolyVox::RawVolume<MultiMaterial4>, PolyVox::Vector<4, float> > lowPassFilter(mSmoothTerrainVolume->mPolyVoxVolume, region, mSmoothingVolume, region, 3);
+		PolyVox::LowPassFilter< PolyVox::SimpleVolume<MultiMaterial>, PolyVox::RawVolume<MultiMaterial>, PolyVox::Vector<4, float> > lowPassFilter(mSmoothTerrainVolume->mPolyVoxVolume, region, mSmoothingVolume, region, 3);
 		lowPassFilter.execute();
 	}
 
@@ -82,7 +82,7 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 					falloff *= 0.3f;
 					falloff += 0.7f;
 
-					float amountToEditBy = falloff * timeElapsedInSeconds * amount * static_cast<float>(MultiMaterial4::getMaxMaterialValue());
+					float amountToEditBy = falloff * timeElapsedInSeconds * amount * static_cast<float>(MultiMaterial::getMaxMaterialValue());
 
 					// The logic for smoothing is rather different from adding/subtracting/painting
 					// so the 'amountToEditBy' doesn't apply in the same way. The multiplier below
@@ -102,7 +102,7 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 					{
 					case EditActions::Add:
 						{		
-							MultiMaterial4 originalMat = mSmoothTerrainVolume->getVoxelAt(x, y, z);	
+							MultiMaterial originalMat = mSmoothTerrainVolume->getVoxelAt(x, y, z);	
 							uint32_t sumOfMaterials = originalMat.getSumOfMaterials();
 							if(sumOfMaterials + uToAddOrSubtract <= originalMat.getMaxMaterialValue())
 							{
@@ -117,7 +117,7 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 						}
 					case EditActions::Subtract:
 						{
-							MultiMaterial4 originalMat = mSmoothTerrainVolume->getVoxelAt(x, y, z);	
+							MultiMaterial originalMat = mSmoothTerrainVolume->getVoxelAt(x, y, z);	
 							uint32_t sumOfMaterials = originalMat.getSumOfMaterials();
 							subtractFromMaterial(uToAddOrSubtract, originalMat);
 							mSmoothTerrainVolume->setVoxelAt(x,y,z, originalMat);
@@ -125,15 +125,15 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 						}
 					case EditActions::Paint:
 						{						
-							MultiMaterial4 originalMat = mSmoothTerrainVolume->getVoxelAt(x, y, z);	
+							MultiMaterial originalMat = mSmoothTerrainVolume->getVoxelAt(x, y, z);	
 							addToMaterial(materialToUse, uToAddOrSubtract, originalMat);
 							mSmoothTerrainVolume->setVoxelAt(x,y,z, originalMat);
 							break;
 						}
 					case EditActions::Smooth:
 						{		
-							MultiMaterial4 originalMat = mSmoothTerrainVolume->getVoxelAt(x, y, z);
-							MultiMaterial4 smoothedMat = mSmoothingVolume->getVoxelAt(x, y, z);
+							MultiMaterial originalMat = mSmoothTerrainVolume->getVoxelAt(x, y, z);
+							MultiMaterial smoothedMat = mSmoothingVolume->getVoxelAt(x, y, z);
 
 							//FIXME - expose linear interpolation as well as trilinear interpolation from PolyVox?
 							float orig0 = static_cast<float>(originalMat.getMaterial(0));
@@ -151,7 +151,7 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 							float interp2 = (smooth2 - orig2) * amountToEditBy + orig2;
 							float interp3 = (smooth3 - orig3) * amountToEditBy + orig3;
 
-							MultiMaterial4 interpMat;
+							MultiMaterial interpMat;
 							// In theory we should add 0.5f before casting to round
 							// properly, but this seems to cause material to grow too much.
 							// Instead we add a user-supplied bias value.
@@ -172,7 +172,7 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 	}
 }
 
-void SmoothTerrainVolumeEditor::subtractFromMaterial(uint8_t amountToAdd, MultiMaterial4& material)
+void SmoothTerrainVolumeEditor::subtractFromMaterial(uint8_t amountToAdd, MultiMaterial& material)
 {
 	uint32_t indexToRemoveFrom = 0; //FIXME - start somewhere random
 	uint32_t iterationWithNoRemovals = 0;
@@ -197,17 +197,17 @@ void SmoothTerrainVolumeEditor::subtractFromMaterial(uint8_t amountToAdd, MultiM
 			iterationWithNoRemovals++;
 		}*/
 
-		if(iterationWithNoRemovals == MultiMaterial4::getNoOfMaterials())
+		if(iterationWithNoRemovals == MultiMaterial::getNoOfMaterials())
 		{
 			break;
 		}
 
 		indexToRemoveFrom++;
-		indexToRemoveFrom %= MultiMaterial4::getNoOfMaterials();
+		indexToRemoveFrom %= MultiMaterial::getNoOfMaterials();
 	}
 }
 
-void SmoothTerrainVolumeEditor::addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial4& material)
+void SmoothTerrainVolumeEditor::addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial& material)
 {
 	uint32_t indexToRemoveFrom = 0; //FIXME - start somewhere random
 	uint32_t iterationWithNoRemovals = 0;
@@ -232,12 +232,12 @@ void SmoothTerrainVolumeEditor::addToMaterial(uint32_t index, uint8_t amountToAd
 			iterationWithNoRemovals++;
 		}
 
-		if(iterationWithNoRemovals == MultiMaterial4::getNoOfMaterials())
+		if(iterationWithNoRemovals == MultiMaterial::getNoOfMaterials())
 		{
 			break;
 		}
 
 		indexToRemoveFrom++;
-		indexToRemoveFrom %= MultiMaterial4::getNoOfMaterials();
+		indexToRemoveFrom %= MultiMaterial::getNoOfMaterials();
 	}
 }

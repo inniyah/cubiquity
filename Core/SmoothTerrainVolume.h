@@ -8,7 +8,7 @@
 
 #include "PolyVoxCore/MaterialDensityPair.h"
 
-class SmoothTerrainVolume : public Volume<MultiMaterial4>
+class SmoothTerrainVolume : public Volume<MultiMaterial>
 {
 
 public:

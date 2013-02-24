@@ -17,10 +17,10 @@ public:
 // These trait definition should probably be moved to the voxel classes, but at the moment I'm hitting a cyclic
 // dependancy with the headers. It might be easier to resolve once MultiMaerial is no longer templatised.
 template<>
-class VoxelTraits<MultiMaterial4>
+class VoxelTraits<MultiMaterial>
 {
 public:
-	typedef PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType > VertexType;
+	typedef PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial >::MaterialType > VertexType;
 };
 
 #endif //CUBIQUITY_VOXELTRAITS_H_

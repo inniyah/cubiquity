@@ -42,32 +42,32 @@ private:
 };
 
 template <>
-class MultiMaterialMarchingCubesController< MultiMaterial4 >
+class MultiMaterialMarchingCubesController< MultiMaterial >
 {
 public:
 	typedef uint8_t DensityType;
-	typedef MultiMaterial4 MaterialType;
+	typedef MultiMaterial MaterialType;
 
 	MultiMaterialMarchingCubesController(void)
 	{
 		// Default to a threshold value halfway between the min and max possible values.
-		m_tThreshold = MultiMaterial4::getMaxMaterialValue() / 2;
+		m_tThreshold = MultiMaterial::getMaxMaterialValue() / 2;
 	}
 
-	DensityType convertToDensity(MultiMaterial4 voxel)
+	DensityType convertToDensity(MultiMaterial voxel)
 	{
 		return voxel.getSumOfMaterials();
 	}
 
-	MaterialType convertToMaterial(MultiMaterial4 voxel)
+	MaterialType convertToMaterial(MultiMaterial voxel)
 	{
 		return voxel;
 	}
 
-	MaterialType blendMaterials(MultiMaterial4 a, MaterialType b, float weight)
+	MaterialType blendMaterials(MultiMaterial a, MaterialType b, float weight)
 	{
-		MultiMaterial4 result;
-		for(uint32_t ct = 0; ct < MultiMaterial4::getNoOfMaterials(); ct++)
+		MultiMaterial result;
+		for(uint32_t ct = 0; ct < MultiMaterial::getNoOfMaterials(); ct++)
 		{
 			float aFloat = static_cast<float>(a.getMaterial(ct));
 			float bFloat = static_cast<float>(b.getMaterial(ct));
@@ -77,7 +77,7 @@ public:
 		return result;
 	}
 
-	MultiMaterial4 getBorderValue(void)
+	MultiMaterial getBorderValue(void)
 	{
 		return m_tBorder;
 	}
@@ -97,7 +97,7 @@ public:
 		m_tThreshold = tThreshold;
 	}
 
-	void setWrapMode(PolyVox::WrapMode eWrapMode, MultiMaterial4 tBorder = MultiMaterial4(0))
+	void setWrapMode(PolyVox::WrapMode eWrapMode, MultiMaterial tBorder = MultiMaterial(0))
 	{
 		m_eWrapMode = eWrapMode;
 		m_tBorder = tBorder;
@@ -106,7 +106,7 @@ public:
 private:
 	DensityType m_tThreshold;
 	PolyVox::WrapMode m_eWrapMode;
-	MultiMaterial4 m_tBorder;
+	MultiMaterial m_tBorder;
 };
 
 // We never use the marching cubes surface extractor with Material16 so this is just a dummy specialisation.

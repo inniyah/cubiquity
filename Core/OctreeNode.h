@@ -51,7 +51,7 @@ public:
 	bool mWantedForRendering;
 	bool mRenderThisNode;
 
-	//const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType > >* mSmoothPolyVoxMesh;
+	//const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial >::MaterialType > >* mSmoothPolyVoxMesh;
 	//const PolyVox::SurfaceMesh< PolyVox::PositionMaterial<Colour> >* mCubicPolyVoxMesh;
 
 	const PolyVox::SurfaceMesh<VertexType>* mPolyVoxMesh;

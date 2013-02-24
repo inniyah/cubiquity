@@ -25,7 +25,7 @@ bool GameplayRaycasting::gameplayRaycast(GameplaySmoothTerrainVolume* volume, ga
 	PolyVox::Vector3DFloat v3dDirection(startAndDirection.getDirection().x, startAndDirection.getDirection().y, startAndDirection.getDirection().z);
 	v3dDirection *= length;
 
-	RaycastTestFunctor<MultiMaterial4> raycastTestFunctor;
+	RaycastTestFunctor<MultiMaterial> raycastTestFunctor;
 	PolyVox::RaycastResult myResult = smoothRaycastWithDirection(volume->getCubiquityVolume()->mPolyVoxVolume, v3dStart, v3dDirection, raycastTestFunctor, 0.5f);
 	if(myResult == PolyVox::RaycastResults::Interupted)
 	{

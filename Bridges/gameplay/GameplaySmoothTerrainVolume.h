@@ -46,10 +46,10 @@ protected:
 	virtual ~GameplaySmoothTerrainVolume();
 
 private:
-	void syncNode(OctreeNode< typename VoxelTraits< MultiMaterial4 >::VertexType >* octreeNode, gameplay::Node* gameplayNode);
+	void syncNode(OctreeNode< typename VoxelTraits< MultiMaterial >::VertexType >* octreeNode, gameplay::Node* gameplayNode);
 
-	gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType > >* polyVoxMesh);
-	gameplay::PhysicsCollisionShape::Definition buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType > >* polyVoxMesh);
+	gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial >::MaterialType > >* polyVoxMesh);
+	gameplay::PhysicsCollisionShape::Definition buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial >::MaterialType > >* polyVoxMesh);
 
 	MainThreadTaskProcessor<SmoothSurfaceExtractionTask>* mSmoothSurfaceExtractionTaskProcessor;
 };

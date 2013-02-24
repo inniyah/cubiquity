@@ -180,16 +180,14 @@ public:
 	StorageType mMaterials;
 };
 
-typedef MultiMaterial MultiMaterial4;
-
 // We overload the trilinear interpolation for the MultiMaterial type because it does not have enough precision.
 // The overloaded version converts the values to floats and interpolates those before converting back.
 // See also http://www.gotw.ca/publications/mill17.htm - Why Not Specialize Function Templates?
 namespace PolyVox
 {
-	MultiMaterial4 trilerp(
-		const MultiMaterial4& v000,const MultiMaterial4& v100,const MultiMaterial4& v010,const MultiMaterial4& v110,
-		const MultiMaterial4& v001,const MultiMaterial4& v101,const MultiMaterial4& v011,const MultiMaterial4& v111,
+	MultiMaterial trilerp(
+		const MultiMaterial& v000,const MultiMaterial& v100,const MultiMaterial& v010,const MultiMaterial& v110,
+		const MultiMaterial& v001,const MultiMaterial& v101,const MultiMaterial& v011,const MultiMaterial& v111,
 		const float x, const float y, const float z);
 }
 

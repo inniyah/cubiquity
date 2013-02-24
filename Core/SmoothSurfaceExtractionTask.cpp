@@ -8,7 +8,7 @@
 
 using namespace PolyVox;
 
-SmoothSurfaceExtractionTask::SmoothSurfaceExtractionTask(OctreeNode< typename VoxelTraits<MultiMaterial4>::VertexType >* octreeNode, PolyVox::SimpleVolume<typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType>* polyVoxVolume)
+SmoothSurfaceExtractionTask::SmoothSurfaceExtractionTask(OctreeNode< typename VoxelTraits<MultiMaterial>::VertexType >* octreeNode, PolyVox::SimpleVolume<typename MultiMaterialMarchingCubesController<MultiMaterial>::MaterialType>* polyVoxVolume)
 	:mOctreeNode(octreeNode)
 	,mPolyVoxVolume(polyVoxVolume)
 	,mSmoothMesh(0)
@@ -23,19 +23,19 @@ SmoothSurfaceExtractionTask::~SmoothSurfaceExtractionTask()
 void SmoothSurfaceExtractionTask::process(void)
 {
 	//Extract the surface
-	mSmoothMesh = new PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType > >;
+	mSmoothMesh = new PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial>::MaterialType > >;
 
 	generateSmoothMesh(mOctreeNode->mRegion, mOctreeNode->mLodLevel, mSmoothMesh);
 }
 
-void SmoothSurfaceExtractionTask::generateSmoothMesh(const PolyVox::Region& region, uint32_t lodLevel, PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType > >* resultMesh)
+void SmoothSurfaceExtractionTask::generateSmoothMesh(const PolyVox::Region& region, uint32_t lodLevel, PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial>::MaterialType > >* resultMesh)
 {
-	MultiMaterialMarchingCubesController<MultiMaterial4> controller;
+	MultiMaterialMarchingCubesController<MultiMaterial> controller;
 
 	if(lodLevel == 0)
 	{
 		//SurfaceMesh<PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > > mesh;
-		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::SimpleVolume<MultiMaterial4>, MultiMaterialMarchingCubesController<MultiMaterial4> > surfaceExtractor(mPolyVoxVolume, region, resultMesh, PolyVox::WrapModes::Border, MultiMaterial4(0), controller);
+		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::SimpleVolume<MultiMaterial>, MultiMaterialMarchingCubesController<MultiMaterial> > surfaceExtractor(mPolyVoxVolume, region, resultMesh, PolyVox::WrapModes::Border, MultiMaterial(0), controller);
 		surfaceExtractor.execute();
 	}
 	else
@@ -57,13 +57,13 @@ void SmoothSurfaceExtractionTask::generateSmoothMesh(const PolyVox::Region& regi
 		upperCorner = upperCorner + lowerCorner;
 		lowRegion.setUpperCorner(upperCorner);
 
-		PolyVox::RawVolume<MultiMaterial4> resampledVolume(lowRegion);
+		PolyVox::RawVolume<MultiMaterial> resampledVolume(lowRegion);
 
 		resampleVolume(downSampleFactor, mPolyVoxVolume, highRegion, &resampledVolume, lowRegion);
 
 		lowRegion.shrink(1, 1, 1);
 
-		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::RawVolume<MultiMaterial4>, MultiMaterialMarchingCubesController<MultiMaterial4> > surfaceExtractor(&resampledVolume, lowRegion, resultMesh, PolyVox::WrapModes::Border, MultiMaterial4(0), controller);
+		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::RawVolume<MultiMaterial>, MultiMaterialMarchingCubesController<MultiMaterial> > surfaceExtractor(&resampledVolume, lowRegion, resultMesh, PolyVox::WrapModes::Border, MultiMaterial(0), controller);
 		surfaceExtractor.execute();
 
 		resultMesh->scaleVertices(static_cast<float>(downSampleFactor));
@@ -72,13 +72,13 @@ void SmoothSurfaceExtractionTask::generateSmoothMesh(const PolyVox::Region& regi
 	}
 }
 
-void recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType > >* mesh, const PolyVox::Vector3DFloat& meshOffset,  PolyVox::SimpleVolume<MultiMaterial4>* volume)
+void recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial>::MaterialType > >* mesh, const PolyVox::Vector3DFloat& meshOffset,  PolyVox::SimpleVolume<MultiMaterial>* volume)
 {
-	std::vector< PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial4>::MaterialType > >& vertices = mesh->getRawVertexData();
+	std::vector< PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial>::MaterialType > >& vertices = mesh->getRawVertexData();
 	for(uint32_t ct = 0; ct < vertices.size(); ct++)
 	{
 		const Vector3DFloat& vertexPos = vertices[ct].getPosition() + meshOffset;
-		MultiMaterial4 value = getInterpolatedValue(volume, vertexPos);
+		MultiMaterial value = getInterpolatedValue(volume, vertexPos);
 
 		// It seems that sometimes the vertices can fall in an empty cell. The reason for this
 		// isn't clear but it might be inaccuraceies in the lower LOD mesh. It also might only 
@@ -87,7 +87,7 @@ void recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< 
 		Vector<4, float> matAsVec = value;
 		if(matAsVec.length() < 0.001f)
 		{
-			value = MultiMaterial4(0);
+			value = MultiMaterial(0);
 			value.setMaterial(0, 255);
 		}
 
@@ -96,9 +96,9 @@ void recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< 
 }
 
 
-MultiMaterial4 getInterpolatedValue(PolyVox::SimpleVolume<MultiMaterial4>* volume, const PolyVox::Vector3DFloat& position)
+MultiMaterial getInterpolatedValue(PolyVox::SimpleVolume<MultiMaterial>* volume, const PolyVox::Vector3DFloat& position)
 {
-	PolyVox::SimpleVolume<MultiMaterial4>::Sampler sampler(volume);
+	PolyVox::SimpleVolume<MultiMaterial>::Sampler sampler(volume);
 
 	int32_t iLowerX = PolyVox::roundTowardsNegInf(position.getX());
 	int32_t iLowerY = PolyVox::roundTowardsNegInf(position.getY());
@@ -114,16 +114,16 @@ MultiMaterial4 getInterpolatedValue(PolyVox::SimpleVolume<MultiMaterial4>* volum
 
 	sampler.setPosition(iLowerX, iLowerY, iLowerZ);
 
-	MultiMaterial4 v000 = sampler.peekVoxel0px0py0pz();
-	MultiMaterial4 v100 = sampler.peekVoxel1px0py0pz();
-	MultiMaterial4 v010 = sampler.peekVoxel0px1py0pz();
-	MultiMaterial4 v110 = sampler.peekVoxel1px1py0pz();
-	MultiMaterial4 v001 = sampler.peekVoxel0px0py1pz();
-	MultiMaterial4 v101 = sampler.peekVoxel1px0py1pz();
-	MultiMaterial4 v011 = sampler.peekVoxel0px1py1pz();
-	MultiMaterial4 v111 = sampler.peekVoxel1px1py1pz();
+	MultiMaterial v000 = sampler.peekVoxel0px0py0pz();
+	MultiMaterial v100 = sampler.peekVoxel1px0py0pz();
+	MultiMaterial v010 = sampler.peekVoxel0px1py0pz();
+	MultiMaterial v110 = sampler.peekVoxel1px1py0pz();
+	MultiMaterial v001 = sampler.peekVoxel0px0py1pz();
+	MultiMaterial v101 = sampler.peekVoxel1px0py1pz();
+	MultiMaterial v011 = sampler.peekVoxel0px1py1pz();
+	MultiMaterial v111 = sampler.peekVoxel1px1py1pz();
 
-	MultiMaterial4 result = trilerp(v000, v100, v010, v110, v001, v101, v011, v111, fOffsetX, fOffsetY, fOffsetZ);
+	MultiMaterial result = trilerp(v000, v100, v010, v110, v001, v101, v011, v111, fOffsetX, fOffsetY, fOffsetZ);
 
 	return result;
 }

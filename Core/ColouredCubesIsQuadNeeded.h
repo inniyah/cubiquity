@@ -41,10 +41,10 @@ public:
 
 // We never use the cubic surface extractor with MultiMaterial so this is just a dummy specialisation.
 template<>
-class ColouredCubesIsQuadNeeded< MultiMaterial4 >
+class ColouredCubesIsQuadNeeded< MultiMaterial >
 {
 public:
-	bool operator()(MultiMaterial4 back, MultiMaterial4 front, MultiMaterial4& materialToUse)
+	bool operator()(MultiMaterial back, MultiMaterial front, MultiMaterial& materialToUse)
 	{
 		assert(false);
 		return false;
