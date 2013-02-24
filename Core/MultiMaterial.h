@@ -3,6 +3,7 @@
 
 #include "PolyVoxCore/Impl/TypeDef.h"
 
+#include "PolyVoxCore/BaseVolume.h"
 #include "PolyVoxCore/Vector.h"
 
 #include <cassert>
@@ -178,6 +179,32 @@ public:
 
 public:
 	StorageType mMaterials;
+};
+
+class MultiMaterialMarchingCubesController
+{
+public:
+	typedef uint8_t DensityType;
+	typedef MultiMaterial MaterialType;
+
+	MultiMaterialMarchingCubesController(void);
+
+	DensityType convertToDensity(MultiMaterial voxel);
+	MaterialType convertToMaterial(MultiMaterial voxel);
+
+	MaterialType blendMaterials(MultiMaterial a, MaterialType b, float weight);
+
+	MultiMaterial getBorderValue(void);
+	DensityType getThreshold(void);
+	PolyVox::WrapMode getWrapMode(void);
+
+	void setThreshold(DensityType tThreshold);
+	void setWrapMode(PolyVox::WrapMode eWrapMode, MultiMaterial tBorder = MultiMaterial(0));
+
+private:
+	DensityType m_tThreshold;
+	PolyVox::WrapMode m_eWrapMode;
+	MultiMaterial m_tBorder;
 };
 
 // We overload the trilinear interpolation for the MultiMaterial type because it does not have enough precision.

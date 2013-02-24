@@ -17,7 +17,7 @@ SmoothTerrainVolume::SmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int
 
 void SmoothTerrainVolume::update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
 {
-	Volume<typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType>::update(viewPosition, lodThreshold);
+	Volume<typename MultiMaterialMarchingCubesController::MaterialType>::update(viewPosition, lodThreshold);
 
 	if(mSmoothSurfaceExtractionTaskProcessor->hasAnyFinishedTasks())
 	{

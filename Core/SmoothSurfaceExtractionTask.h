@@ -7,20 +7,20 @@
 class SmoothSurfaceExtractionTask
 {
 public:
-	SmoothSurfaceExtractionTask(OctreeNode< typename VoxelTraits<MultiMaterial>::VertexType >* octreeNode, PolyVox::SimpleVolume< typename MultiMaterialMarchingCubesController<MultiMaterial>::MaterialType >* polyVoxVolume);
+	SmoothSurfaceExtractionTask(OctreeNode< typename VoxelTraits<MultiMaterial>::VertexType >* octreeNode, PolyVox::SimpleVolume< typename MultiMaterialMarchingCubesController::MaterialType >* polyVoxVolume);
 	~SmoothSurfaceExtractionTask();
 
 	void process(void);
 
-	void generateSmoothMesh(const PolyVox::Region& region, uint32_t lodLevel, PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial>::MaterialType > >* resultMesh);
+	void generateSmoothMesh(const PolyVox::Region& region, uint32_t lodLevel, PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* resultMesh);
 
 public:
 	OctreeNode< typename VoxelTraits<MultiMaterial>::VertexType >* mOctreeNode;
-	PolyVox::SimpleVolume<typename MultiMaterialMarchingCubesController<MultiMaterial>::MaterialType>* mPolyVoxVolume;
-	PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial>::MaterialType> >* mSmoothMesh;
+	PolyVox::SimpleVolume<typename MultiMaterialMarchingCubesController::MaterialType>* mPolyVoxVolume;
+	PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType> >* mSmoothMesh;
 };
 
-void recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial>::MaterialType > >* mesh, const PolyVox::Vector3DFloat& meshOffset, PolyVox::SimpleVolume<MultiMaterial>* volume);
+void recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* mesh, const PolyVox::Vector3DFloat& meshOffset, PolyVox::SimpleVolume<MultiMaterial>* volume);
 MultiMaterial getInterpolatedValue(PolyVox::SimpleVolume<MultiMaterial>* volume, const PolyVox::Vector3DFloat& position);
 
 template< typename SrcVolumeType, typename DstVolumeType>

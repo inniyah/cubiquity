@@ -22,7 +22,7 @@ template<>
 class VoxelTraits<MultiMaterial>
 {
 public:
-	typedef PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial >::MaterialType > VertexType;
+	typedef PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController::MaterialType > VertexType;
 };
 
 #endif //CUBIQUITY_VOXELTRAITS_H_

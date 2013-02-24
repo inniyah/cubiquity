@@ -61,3 +61,62 @@ MultiMaterial operator/(const MultiMaterial& lhs, float rhs) throw()
 	resultMat /= rhs;
 	return resultMat;
 }
+
+
+
+
+
+MultiMaterialMarchingCubesController::MultiMaterialMarchingCubesController(void)
+{
+	// Default to a threshold value halfway between the min and max possible values.
+	m_tThreshold = MultiMaterial::getMaxMaterialValue() / 2;
+}
+
+MultiMaterialMarchingCubesController::DensityType MultiMaterialMarchingCubesController::convertToDensity(MultiMaterial voxel)
+{
+	return voxel.getSumOfMaterials();
+}
+
+MultiMaterialMarchingCubesController::MaterialType MultiMaterialMarchingCubesController::convertToMaterial(MultiMaterial voxel)
+{
+	return voxel;
+}
+
+MultiMaterialMarchingCubesController::MaterialType MultiMaterialMarchingCubesController::blendMaterials(MultiMaterial a, MaterialType b, float weight)
+{
+	MultiMaterial result;
+	for(uint32_t ct = 0; ct < MultiMaterial::getNoOfMaterials(); ct++)
+	{
+		float aFloat = static_cast<float>(a.getMaterial(ct));
+		float bFloat = static_cast<float>(b.getMaterial(ct));
+		float blended = (bFloat - aFloat) * weight + aFloat;
+		result.setMaterial(ct, static_cast<uint8_t>(blended));
+	}
+	return result;
+}
+
+MultiMaterial MultiMaterialMarchingCubesController::getBorderValue(void)
+{
+	return m_tBorder;
+}
+
+MultiMaterialMarchingCubesController::DensityType MultiMaterialMarchingCubesController::getThreshold(void)
+{			
+	return m_tThreshold;
+}
+
+PolyVox::WrapMode MultiMaterialMarchingCubesController::getWrapMode(void)
+{
+	return m_eWrapMode;
+}
+
+void MultiMaterialMarchingCubesController::setThreshold(DensityType tThreshold)
+{
+	m_tThreshold = tThreshold;
+}
+
+void MultiMaterialMarchingCubesController::setWrapMode(PolyVox::WrapMode eWrapMode, MultiMaterial tBorder)
+{
+	m_eWrapMode = eWrapMode;
+	m_tBorder = tBorder;
+}

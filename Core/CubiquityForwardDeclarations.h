@@ -19,7 +19,6 @@ class MainThreadTaskProcessor;
 
 class MultiMaterial;
 
-template<typename VoxelType>
 class MultiMaterialMarchingCubesController;
 
 template <typename VertexType>

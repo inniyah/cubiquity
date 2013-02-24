@@ -8,7 +8,7 @@
 
 using namespace PolyVox;
 
-SmoothSurfaceExtractionTask::SmoothSurfaceExtractionTask(OctreeNode< typename VoxelTraits<MultiMaterial>::VertexType >* octreeNode, PolyVox::SimpleVolume<typename MultiMaterialMarchingCubesController<MultiMaterial>::MaterialType>* polyVoxVolume)
+SmoothSurfaceExtractionTask::SmoothSurfaceExtractionTask(OctreeNode< typename VoxelTraits<MultiMaterial>::VertexType >* octreeNode, PolyVox::SimpleVolume<typename MultiMaterialMarchingCubesController::MaterialType>* polyVoxVolume)
 	:mOctreeNode(octreeNode)
 	,mPolyVoxVolume(polyVoxVolume)
 	,mSmoothMesh(0)
@@ -23,19 +23,19 @@ SmoothSurfaceExtractionTask::~SmoothSurfaceExtractionTask()
 void SmoothSurfaceExtractionTask::process(void)
 {
 	//Extract the surface
-	mSmoothMesh = new PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial>::MaterialType > >;
+	mSmoothMesh = new PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >;
 
 	generateSmoothMesh(mOctreeNode->mRegion, mOctreeNode->mLodLevel, mSmoothMesh);
 }
 
-void SmoothSurfaceExtractionTask::generateSmoothMesh(const PolyVox::Region& region, uint32_t lodLevel, PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial>::MaterialType > >* resultMesh)
+void SmoothSurfaceExtractionTask::generateSmoothMesh(const PolyVox::Region& region, uint32_t lodLevel, PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* resultMesh)
 {
-	MultiMaterialMarchingCubesController<MultiMaterial> controller;
+	MultiMaterialMarchingCubesController controller;
 
 	if(lodLevel == 0)
 	{
-		//SurfaceMesh<PositionMaterialNormal< typename MultiMaterialMarchingCubesController<VoxelType>::MaterialType > > mesh;
-		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::SimpleVolume<MultiMaterial>, MultiMaterialMarchingCubesController<MultiMaterial> > surfaceExtractor(mPolyVoxVolume, region, resultMesh, PolyVox::WrapModes::Border, MultiMaterial(0), controller);
+		//SurfaceMesh<PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > > mesh;
+		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::SimpleVolume<MultiMaterial>, MultiMaterialMarchingCubesController > surfaceExtractor(mPolyVoxVolume, region, resultMesh, PolyVox::WrapModes::Border, MultiMaterial(0), controller);
 		surfaceExtractor.execute();
 	}
 	else
@@ -63,7 +63,7 @@ void SmoothSurfaceExtractionTask::generateSmoothMesh(const PolyVox::Region& regi
 
 		lowRegion.shrink(1, 1, 1);
 
-		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::RawVolume<MultiMaterial>, MultiMaterialMarchingCubesController<MultiMaterial> > surfaceExtractor(&resampledVolume, lowRegion, resultMesh, PolyVox::WrapModes::Border, MultiMaterial(0), controller);
+		PolyVox::MarchingCubesSurfaceExtractor< PolyVox::RawVolume<MultiMaterial>, MultiMaterialMarchingCubesController > surfaceExtractor(&resampledVolume, lowRegion, resultMesh, PolyVox::WrapModes::Border, MultiMaterial(0), controller);
 		surfaceExtractor.execute();
 
 		resultMesh->scaleVertices(static_cast<float>(downSampleFactor));
@@ -72,9 +72,9 @@ void SmoothSurfaceExtractionTask::generateSmoothMesh(const PolyVox::Region& regi
 	}
 }
 
-void recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial>::MaterialType > >* mesh, const PolyVox::Vector3DFloat& meshOffset,  PolyVox::SimpleVolume<MultiMaterial>* volume)
+void recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* mesh, const PolyVox::Vector3DFloat& meshOffset,  PolyVox::SimpleVolume<MultiMaterial>* volume)
 {
-	std::vector< PositionMaterialNormal< typename MultiMaterialMarchingCubesController<MultiMaterial>::MaterialType > >& vertices = mesh->getRawVertexData();
+	std::vector< PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >& vertices = mesh->getRawVertexData();
 	for(uint32_t ct = 0; ct < vertices.size(); ct++)
 	{
 		const Vector3DFloat& vertexPos = vertices[ct].getPosition() + meshOffset;

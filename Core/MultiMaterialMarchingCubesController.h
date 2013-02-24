@@ -9,7 +9,7 @@
 
 #include "PolyVoxCore/BaseVolume.h"
 
-template<typename VoxelType>
+/*template<typename VoxelType>
 class MultiMaterialMarchingCubesController
 {
 public:
@@ -41,7 +41,7 @@ private:
 };
 
 template <>
-class MultiMaterialMarchingCubesController< MultiMaterial >
+classMultiMaterialMarchingCubesController
 {
 public:
 	typedef uint8_t DensityType;
@@ -159,6 +159,6 @@ public:
 	{
 		assert(false);
 	}
-};
+};*/
 
 #endif //__MultiMaterialMarchingCubesController_H__
