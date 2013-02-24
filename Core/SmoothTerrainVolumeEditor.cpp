@@ -1,5 +1,7 @@
 #include "SmoothTerrainVolumeEditor.h"
 
+#include "SmoothTerrainVolume.h"
+
 using namespace PolyVox;
 
 SmoothTerrainVolumeEditor::SmoothTerrainVolumeEditor(SmoothTerrainVolume* volume)

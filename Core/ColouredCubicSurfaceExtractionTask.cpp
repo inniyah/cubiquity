@@ -4,7 +4,9 @@
 #include "ColouredCubesIsQuadNeeded.h"
 #include "OctreeNode.h"
 
+#include "PolyVoxCore/CubicSurfaceExtractor.h"
 #include "PolyVoxCore/RawVolume.h"
+#include "PolyVoxCore/SimpleVolume.h"
 
 using namespace PolyVox;
 

@@ -2,17 +2,8 @@
 #define OCTREE_NODE_H_
 
 #include "Clock.h"
-#include "Colour.h"
 #include "CubiquityForwardDeclarations.h"
-#include "MultiMaterialMarchingCubesController.h"
-#include "MultiMaterial.h"
-
 #include "VoxelTraits.h"
-
-#include "PolyVoxCore/Material.h"
-#include "PolyVoxCore/MaterialDensityPair.h"
-#include "PolyVoxCore/Region.h"
-#include "PolyVoxCore/SurfaceMesh.h"
 
 template <typename VertexType>
 class OctreeNode

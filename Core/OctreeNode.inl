@@ -1,5 +1,8 @@
 #include "Volume.h"
 
+#include "PolyVoxCore/Region.h"
+#include "PolyVoxCore/SurfaceMesh.h"
+
 #include <sstream>
 
 using namespace PolyVox;

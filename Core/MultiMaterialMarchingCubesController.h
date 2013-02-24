@@ -8,8 +8,6 @@
 #include "MultiMaterial.h"
 
 #include "PolyVoxCore/BaseVolume.h"
-#include "PolyVoxCore/Material.h"
-#include "PolyVoxCore/Vector.h"
 
 template<typename VoxelType>
 class MultiMaterialMarchingCubesController

@@ -1,11 +1,8 @@
 #ifndef CUBIQUITY_SMOOTHSURFACEEXTRACTIONTASK_H_
 #define CUBIQUITY_SMOOTHSURFACEEXTRACTIONTASK_H_
 
-#include "MultiMaterial.h"
+#include "CubiquityForwardDeclarations.h"
 #include "OctreeNode.h"
-
-#include "PolyVoxCore/MarchingCubesSurfaceExtractor.h"
-#include "PolyVoxCore/SimpleVolume.h"
 
 class SmoothSurfaceExtractionTask
 {

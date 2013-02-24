@@ -1,6 +1,9 @@
 #include "SmoothTerrainVolume.h"
 
 #include "Clock.h"
+#include "MultiMaterial.h"
+#include "SmoothSurfaceExtractionTask.h"
+#include "TaskProcessor.h"
 
 #include <algorithm>
 

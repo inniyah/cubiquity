@@ -1,7 +1,7 @@
 #ifndef SMOOTHTERRAINVOLUMEEDITOR_H_
 #define SMOOTHTERRAINVOLUMEEDITOR_H_
 
-#include "SmoothTerrainVolume.h"
+#include "CubiquityForwardDeclarations.h"
 
 class SmoothTerrainVolumeEditor
 {

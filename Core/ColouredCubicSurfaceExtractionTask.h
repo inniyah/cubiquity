@@ -4,9 +4,6 @@
 #include "CubiquityForwardDeclarations.h"
 #include "VoxelTraits.h"
 
-#include "PolyVoxCore/CubicSurfaceExtractor.h"
-#include "PolyVoxCore/SimpleVolume.h"
-
 class ColouredCubicSurfaceExtractionTask
 {
 public:

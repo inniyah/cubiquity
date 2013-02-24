@@ -1,10 +1,10 @@
 #include "SmoothSurfaceExtractionTask.h"
 
-#include "ColouredCubesIsQuadNeeded.h"
+#include "MultiMaterial.h"
 
-#include "SmoothTerrainVolume.h" //Temporary
-
+#include "PolyVoxCore/MarchingCubesSurfaceExtractor.h"
 #include "PolyVoxCore/RawVolume.h"
+#include "PolyVoxCore/SimpleVolume.h"
 
 using namespace PolyVox;
 

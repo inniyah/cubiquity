@@ -1,12 +1,8 @@
 #ifndef SMOOTHTERRAINVOLUME_H_
 #define SMOOTHTERRAINVOLUME_H_
 
-#include "SmoothSurfaceExtractionTask.h"
-#include "TaskProcessor.h"
-#include "MultiMaterial.h"
+#include "CubiquityForwardDeclarations.h"
 #include "Volume.h"
-
-#include "PolyVoxCore/MaterialDensityPair.h"
 
 class SmoothTerrainVolume : public Volume<MultiMaterial>
 {
