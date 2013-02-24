@@ -7,7 +7,6 @@ class Clock;
 
 class Colour;
 
-template<typename VoxelType>
 class ColouredCubesIsQuadNeeded;
 
 class ColouredCubesVolume;

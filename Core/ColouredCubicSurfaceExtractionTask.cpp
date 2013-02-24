@@ -31,11 +31,11 @@ void ColouredCubicSurfaceExtractionTask::process(void)
 
 	uint32_t downScaleFactor = 0x0001 << mOctreeNode->mLodLevel;
 
-	ColouredCubesIsQuadNeeded<Colour> isQuadNeeded;
+	ColouredCubesIsQuadNeeded isQuadNeeded;
 
 	if(downScaleFactor == 1) 
 	{
-		PolyVox::CubicSurfaceExtractor< PolyVox::SimpleVolume<Colour>, ColouredCubesIsQuadNeeded<Colour> > surfaceExtractor(mPolyVoxVolume, mOctreeNode->mRegion, mColouredCubicMesh, PolyVox::WrapModes::Border, Colour(0), true, isQuadNeeded);
+		PolyVox::CubicSurfaceExtractor< PolyVox::SimpleVolume<Colour>, ColouredCubesIsQuadNeeded > surfaceExtractor(mPolyVoxVolume, mOctreeNode->mRegion, mColouredCubicMesh, PolyVox::WrapModes::Border, Colour(0), true, isQuadNeeded);
 		surfaceExtractor.execute();
 	}
 	else if(downScaleFactor == 2)
@@ -61,7 +61,7 @@ void ColouredCubicSurfaceExtractionTask::process(void)
 		
 		//dstRegion.shiftLowerCorner(-1, -1, -1);
 
-		PolyVox::CubicSurfaceExtractor< PolyVox::RawVolume<Colour>, ColouredCubesIsQuadNeeded<Colour> > surfaceExtractor(&resampledVolume, dstRegion, mColouredCubicMesh, PolyVox::WrapModes::Border, Colour(0), true, isQuadNeeded);
+		PolyVox::CubicSurfaceExtractor< PolyVox::RawVolume<Colour>, ColouredCubesIsQuadNeeded > surfaceExtractor(&resampledVolume, dstRegion, mColouredCubicMesh, PolyVox::WrapModes::Border, Colour(0), true, isQuadNeeded);
 		surfaceExtractor.execute();
 
 		mColouredCubicMesh->scaleVertices(static_cast<float>(downScaleFactor));
@@ -103,7 +103,7 @@ void ColouredCubicSurfaceExtractionTask::process(void)
 
 		//dstRegion.shiftLowerCorner(-1, -1, -1);
 
-		PolyVox::CubicSurfaceExtractor< PolyVox::RawVolume<Colour>, ColouredCubesIsQuadNeeded<Colour> > surfaceExtractor(&resampledVolume2, dstRegion2, mColouredCubicMesh, PolyVox::WrapModes::Border, Colour(0), true, isQuadNeeded);
+		PolyVox::CubicSurfaceExtractor< PolyVox::RawVolume<Colour>, ColouredCubesIsQuadNeeded > surfaceExtractor(&resampledVolume2, dstRegion2, mColouredCubicMesh, PolyVox::WrapModes::Border, Colour(0), true, isQuadNeeded);
 		surfaceExtractor.execute();
 
 		mColouredCubicMesh->scaleVertices(static_cast<float>(downScaleFactor));

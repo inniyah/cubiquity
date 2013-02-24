@@ -96,4 +96,21 @@ Colour operator-(const Colour& lhs, const Colour& rhs) throw();
 Colour operator*(const Colour& lhs, float rhs) throw();
 Colour operator/(const Colour& lhs, float rhs) throw();
 
+class ColouredCubesIsQuadNeeded
+{
+public:
+	bool operator()(Colour back, Colour front, Colour& materialToUse)
+	{
+		if((back.getAlpha() > 0) && (front.getAlpha() == 0))
+		{
+			materialToUse = back;
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+};
+
 #endif //__COLOUR_H__

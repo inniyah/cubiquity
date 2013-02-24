@@ -1,4 +1,4 @@
-#ifndef __ColouredCubesIsQuadNeeded_H__
+/*#ifndef __ColouredCubesIsQuadNeeded_H__
 #define __ColouredCubesIsQuadNeeded_H__
 
 #include <cassert>
@@ -22,7 +22,7 @@ public:
 };
 
 template<>
-class ColouredCubesIsQuadNeeded< Colour >
+class ColouredCubesIsQuadNeeded
 {
 public:
 	bool operator()(Colour back, Colour front, Colour& materialToUse)
@@ -51,4 +51,4 @@ public:
 	}
 };
 
-#endif //__ColouredCubesIsQuadNeeded_H__
+#endif //__ColouredCubesIsQuadNeeded_H__*/
