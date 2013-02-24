@@ -13,7 +13,7 @@ GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(int lowerX, int lowerY,
 	mSmoothSurfaceExtractionTaskProcessor = new MainThreadTaskProcessor<SmoothSurfaceExtractionTask>;
 	mCubiquityVolume->mSmoothSurfaceExtractionTaskProcessor = mSmoothSurfaceExtractionTaskProcessor;
 
-	mRootGameplayNode = createNodeWithExtraData< VoxelTraits<MultiMaterial4> >("RootGameplayNode");
+	mRootGameplayNode = createNodeWithExtraData< typename VoxelTraits<MultiMaterial4>::VertexType >("RootGameplayNode");
 
 	buildNode(mCubiquityVolume->mRootOctreeNode, mRootGameplayNode);
 }
@@ -37,9 +37,9 @@ void GameplaySmoothTerrainVolume::performUpdate(const gameplay::Vector3& viewPos
 	}
 }
 
-void GameplaySmoothTerrainVolume::syncNode(OctreeNode< VoxelTraits< MultiMaterial4 > >* octreeNode, gameplay::Node* gameplayNode)
+void GameplaySmoothTerrainVolume::syncNode(OctreeNode< typename VoxelTraits< MultiMaterial4 >::VertexType >* octreeNode, gameplay::Node* gameplayNode)
 {
-	ExtraNodeData< VoxelTraits< MultiMaterial4 > >* extraNodeData = static_cast<ExtraNodeData< VoxelTraits< MultiMaterial4 > >*>(gameplayNode->getUserPointer());
+	ExtraNodeData< typename VoxelTraits< MultiMaterial4 >::VertexType >* extraNodeData = static_cast<ExtraNodeData< typename VoxelTraits< MultiMaterial4 >::VertexType >*>(gameplayNode->getUserPointer());
 	extraNodeData->mOctreeNode = octreeNode;
 
 	if(extraNodeData->mTimeStamp < octreeNode->mMeshLastUpdated)

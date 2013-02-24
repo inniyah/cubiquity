@@ -17,7 +17,7 @@ GameplayColouredCubesVolume::GameplayColouredCubesVolume(int lowerX, int lowerY,
 	mColouredCubicSurfaceExtractionTaskProcessor = new MainThreadTaskProcessor<ColouredCubicSurfaceExtractionTask>;
 	mCubiquityVolume->mColouredCubicSurfaceExtractionTaskProcessor = mColouredCubicSurfaceExtractionTaskProcessor;
 
-	mRootGameplayNode = createNodeWithExtraData< VoxelTraits<Colour> >("RootGameplayNode");
+	mRootGameplayNode = createNodeWithExtraData< typename VoxelTraits<Colour>::VertexType >("RootGameplayNode");
 
 	buildNode(mCubiquityVolume->mRootOctreeNode, mRootGameplayNode);
 }
@@ -42,9 +42,9 @@ void GameplayColouredCubesVolume::performUpdate(const gameplay::Vector3& viewPos
 	}
 }
 
-void GameplayColouredCubesVolume::syncNode(OctreeNode< VoxelTraits< Colour > >* octreeNode, gameplay::Node* gameplayNode)
+void GameplayColouredCubesVolume::syncNode(OctreeNode< typename VoxelTraits< Colour >::VertexType >* octreeNode, gameplay::Node* gameplayNode)
 {
-	ExtraNodeData< VoxelTraits< Colour > >* extraNodeData = static_cast<ExtraNodeData< VoxelTraits< Colour > >*>(gameplayNode->getUserPointer());
+	ExtraNodeData< typename VoxelTraits< Colour >::VertexType >* extraNodeData = static_cast<ExtraNodeData< typename VoxelTraits< Colour >::VertexType >*>(gameplayNode->getUserPointer());
 	extraNodeData->mOctreeNode = octreeNode;
 
 	if(extraNodeData->mTimeStamp < octreeNode->mMeshLastUpdated)

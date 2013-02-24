@@ -29,7 +29,8 @@ template<>
 class VoxelTraits<MultiMaterial4>
 {
 public:
-	typedef PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType > VertexType;
+	//typedef PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType > VertexType;
+	typedef int VertexType;
 };
 
 template <typename VertexType>

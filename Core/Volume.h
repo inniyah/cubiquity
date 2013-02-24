@@ -29,7 +29,7 @@ public:
 	Volume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize);
 	~Volume();
 
-	void buildOctreeNodeTree(OctreeNode< VoxelTraits<VoxelType> >* parent, const PolyVox::Region& regionToCover, OctreeConstructionMode octreeConstructionMode);
+	void buildOctreeNodeTree(OctreeNode< typename VoxelTraits<VoxelType>::VertexType >* parent, const PolyVox::Region& regionToCover, OctreeConstructionMode octreeConstructionMode);
 
 
 	VoxelType getVoxelAt(int x, int y, int z);
@@ -37,15 +37,15 @@ public:
 	void markRegionAsModified(const PolyVox::Region& region);
 
 	virtual void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
-	void updateMesh(OctreeNode< VoxelTraits<VoxelType> >* octreeNode);
-	virtual void updateMeshImpl(OctreeNode< VoxelTraits<VoxelType> >* octreeNode) = 0;
+	void updateMesh(OctreeNode< typename VoxelTraits<VoxelType>::VertexType >* octreeNode);
+	virtual void updateMeshImpl(OctreeNode< typename VoxelTraits<VoxelType>::VertexType >* octreeNode) = 0;
 
 protected:
 	Volume& operator=(const Volume&);
 
 public:
 	PolyVox::SimpleVolume<VoxelType>* mPolyVoxVolume;
-	OctreeNode< VoxelTraits<VoxelType> >* mRootOctreeNode;
+	OctreeNode< typename VoxelTraits<VoxelType>::VertexType >* mRootOctreeNode;
 
 	const unsigned int mBaseNodeSize;
 };

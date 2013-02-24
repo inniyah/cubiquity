@@ -58,7 +58,7 @@ protected:
 	virtual ~GameplayColouredCubesVolume();
 
 private:
-	void syncNode(OctreeNode< VoxelTraits< Colour > >* octreeNode, gameplay::Node* gameplayNode);
+	void syncNode(OctreeNode< typename VoxelTraits< Colour >::VertexType >* octreeNode, gameplay::Node* gameplayNode);
 
 	gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterial<Colour> >* polyVoxMesh);
 
