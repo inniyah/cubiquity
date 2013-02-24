@@ -8,9 +8,13 @@
 #include <cassert>
 #include <limits>
 
-template <typename StorageType, uint32_t BitsPerMaterial, uint32_t NoOfMaterials>
 class MultiMaterial
 {
+private:
+	//These could be template parameters if this class needs to be templatised.
+	static const uint32_t NoOfMaterials = 4;
+	static const uint32_t BitsPerMaterial = 8;
+	typedef uint32_t StorageType;
 public:
 	MultiMaterial()
 	{
@@ -176,39 +180,7 @@ public:
 	StorageType mMaterials;
 };
 
-template <typename StorageType, uint32_t BitsPerMaterial, uint32_t NoOfMaterials>
-MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials> operator+(const MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials>& lhs, const MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials>& rhs) throw()
-{
-	MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials> resultMat = lhs;
-	resultMat += rhs;
-	return resultMat;
-}
-
-template <typename StorageType, uint32_t BitsPerMaterial, uint32_t NoOfMaterials>
-MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials> operator-(const MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials>& lhs, const MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials>& rhs) throw()
-{
-	MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials> resultMat = lhs;
-	resultMat -= rhs;
-	return resultMat;
-}
-
-template <typename StorageType, uint32_t BitsPerMaterial, uint32_t NoOfMaterials>
-MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials> operator*(const MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials>& lhs, float rhs) throw()
-{
-	MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials> resultMat = lhs;
-	resultMat *= rhs;
-	return resultMat;
-}
-
-template <typename StorageType, uint32_t BitsPerMaterial, uint32_t NoOfMaterials>
-MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials> operator/(const MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials>& lhs, float rhs) throw()
-{
-	MultiMaterial<StorageType, BitsPerMaterial, NoOfMaterials> resultMat = lhs;
-	resultMat /= rhs;
-	return resultMat;
-}
-
-typedef MultiMaterial<uint32_t, 8, 4> MultiMaterial4;
+typedef MultiMaterial MultiMaterial4;
 
 // We overload the trilinear interpolation for the MultiMaterial type because it does not have enough precision.
 // The overloaded version converts the values to floats and interpolates those before converting back.

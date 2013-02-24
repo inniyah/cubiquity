@@ -33,3 +33,31 @@ namespace PolyVox
 		return tInterpolatedValue;
 	}
 }
+
+MultiMaterial operator+(const MultiMaterial& lhs, const MultiMaterial& rhs) throw()
+{
+	MultiMaterial resultMat = lhs;
+	resultMat += rhs;
+	return resultMat;
+}
+
+MultiMaterial operator-(const MultiMaterial& lhs, const MultiMaterial& rhs) throw()
+{
+	MultiMaterial resultMat = lhs;
+	resultMat -= rhs;
+	return resultMat;
+}
+
+MultiMaterial operator*(const MultiMaterial& lhs, float rhs) throw()
+{
+	MultiMaterial resultMat = lhs;
+	resultMat *= rhs;
+	return resultMat;
+}
+
+MultiMaterial operator/(const MultiMaterial& lhs, float rhs) throw()
+{
+	MultiMaterial resultMat = lhs;
+	resultMat /= rhs;
+	return resultMat;
+}
