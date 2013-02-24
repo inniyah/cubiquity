@@ -337,6 +337,7 @@
     <None Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Vector.inl" />
     <None Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VolumeResampler.inl" />
     <None Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.inl" />
+    <None Include="..\..\..\Core\OctreeNode.inl" />
     <None Include="..\..\..\Core\TaskProcessor.inl" />
     <None Include="..\..\..\Core\Volume.inl" />
     <None Include="bar-descriptor.xml">
@@ -375,12 +376,13 @@
     <ClCompile Include="..\..\..\Bridges\gameplay\Lua\lua_GameplaySmoothTerrainVolumeEditor.cpp" />
     <ClCompile Include="..\..\..\Bridges\gameplay\Lua\lua_GameplayVolumeSerialisation.cpp" />
     <ClCompile Include="..\..\..\Bridges\gameplay\Lua\lua_Global.cpp" />
+    <ClCompile Include="..\..\..\Core\Clock.cpp" />
     <ClCompile Include="..\..\..\Core\Colour.cpp" />
     <ClCompile Include="..\..\..\Core\ColouredCubesVolume.cpp" />
     <ClCompile Include="..\..\..\Core\ColouredCubicSurfaceExtractionTask.cpp" />
     <ClCompile Include="..\..\..\Core\CubiquityUtility.cpp" />
     <ClCompile Include="..\..\..\Core\MultiMaterial.cpp" />
-    <ClCompile Include="..\..\..\Core\OctreeNode.cpp" />
+    <ClCompile Include="..\..\..\Core\SmoothSurfaceExtractionTask.cpp" />
     <ClCompile Include="..\..\..\Core\SmoothTerrainVolume.cpp" />
     <ClCompile Include="..\..\..\Core\SmoothTerrainVolumeEditor.cpp" />
     <ClCompile Include="src\Main.cpp" />
@@ -442,20 +444,24 @@
     <ClInclude Include="..\..\..\Bridges\gameplay\Lua\lua_GameplaySmoothTerrainVolumeEditor.h" />
     <ClInclude Include="..\..\..\Bridges\gameplay\Lua\lua_GameplayVolumeSerialisation.h" />
     <ClInclude Include="..\..\..\Bridges\gameplay\Lua\lua_Global.h" />
+    <ClInclude Include="..\..\..\Core\Clock.h" />
     <ClInclude Include="..\..\..\Core\Colour.h" />
     <ClInclude Include="..\..\..\Core\ColouredCubesIsQuadNeeded.h" />
     <ClInclude Include="..\..\..\Core\ColouredCubesVolume.h" />
     <ClInclude Include="..\..\..\Core\ColouredCubicSurfaceExtractionTask.h" />
+    <ClInclude Include="..\..\..\Core\CubiquityForwardDeclarations.h" />
     <ClInclude Include="..\..\..\Core\CubiquityUtility.h" />
     <ClInclude Include="..\..\..\Core\MultiMaterial.h" />
     <ClInclude Include="..\..\..\Core\MultiMaterialMarchingCubesController.h" />
     <ClInclude Include="..\..\..\Core\OctreeNode.h" />
     <ClInclude Include="..\..\..\Core\Raycasting.h" />
+    <ClInclude Include="..\..\..\Core\SmoothSurfaceExtractionTask.h" />
     <ClInclude Include="..\..\..\Core\SmoothTerrainVolume.h" />
     <ClInclude Include="..\..\..\Core\SmoothTerrainVolumeEditor.h" />
     <ClInclude Include="..\..\..\Core\TaskProcessor.h" />
     <ClInclude Include="..\..\..\Core\Volume.h" />
     <ClInclude Include="..\..\..\Core\VolumeSerialisation.h" />
+    <ClInclude Include="..\..\..\Core\VoxelTraits.h" />
     <ClInclude Include="src\Main.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

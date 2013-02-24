@@ -130,6 +130,9 @@
     <None Include="..\..\..\Core\TaskProcessor.inl">
       <Filter>Core</Filter>
     </None>
+    <None Include="..\..\..\Core\OctreeNode.inl">
+      <Filter>Core</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h">
@@ -345,6 +348,18 @@
     <ClInclude Include="..\..\..\Core\TaskProcessor.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Core\VoxelTraits.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Core\Clock.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Core\CubiquityForwardDeclarations.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Core\SmoothSurfaceExtractionTask.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -398,9 +413,6 @@
     <ClCompile Include="..\..\..\Core\MultiMaterial.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Core\OctreeNode.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Core\SmoothTerrainVolume.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -438,6 +450,12 @@
       <Filter>PolyVox</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Core\ColouredCubicSurfaceExtractionTask.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Core\Clock.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Core\SmoothSurfaceExtractionTask.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
