@@ -1,8 +1,8 @@
 #ifndef CUBIQUITY_COLOUREDCUBICSURFACEEXTRACTIONTASK_H_
 #define CUBIQUITY_COLOUREDCUBICSURFACEEXTRACTIONTASK_H_
 
+#include "Colour.h"
 #include "CubiquityForwardDeclarations.h"
-#include "VoxelTraits.h"
 
 class ColouredCubicSurfaceExtractionTask
 {

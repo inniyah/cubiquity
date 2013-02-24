@@ -372,7 +372,6 @@
     <ClCompile Include="..\..\..\Core\Colour.cpp" />
     <ClCompile Include="..\..\..\Core\ColouredCubesVolume.cpp" />
     <ClCompile Include="..\..\..\Core\ColouredCubicSurfaceExtractionTask.cpp" />
-    <ClCompile Include="..\..\..\Core\CubiquityUtility.cpp" />
     <ClCompile Include="..\..\..\Core\MultiMaterial.cpp" />
     <ClCompile Include="..\..\..\Core\SmoothSurfaceExtractionTask.cpp" />
     <ClCompile Include="..\..\..\Core\SmoothTerrainVolume.cpp" />
@@ -431,14 +430,11 @@
     <ClInclude Include="..\..\..\Bridges\gameplay\Impl\GameplayVolume.h" />
     <ClInclude Include="..\..\..\Core\Clock.h" />
     <ClInclude Include="..\..\..\Core\Colour.h" />
-    <ClInclude Include="..\..\..\Core\ColouredCubesIsQuadNeeded.h" />
     <ClInclude Include="..\..\..\Core\ColouredCubesVolume.h" />
     <ClInclude Include="..\..\..\Core\ColouredCubicSurfaceExtractionTask.h" />
     <ClInclude Include="..\..\..\Core\CubiquityForwardDeclarations.h" />
-    <ClInclude Include="..\..\..\Core\CubiquityUtility.h" />
     <ClInclude Include="..\..\..\Core\MainThreadTaskProcessor.h" />
     <ClInclude Include="..\..\..\Core\MultiMaterial.h" />
-    <ClInclude Include="..\..\..\Core\MultiMaterialMarchingCubesController.h" />
     <ClInclude Include="..\..\..\Core\OctreeNode.h" />
     <ClInclude Include="..\..\..\Core\Raycasting.h" />
     <ClInclude Include="..\..\..\Core\SmoothSurfaceExtractionTask.h" />

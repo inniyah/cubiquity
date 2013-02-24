@@ -1,6 +1,7 @@
 #ifndef COLOUREDCUBESVOLUME_H_
 #define COLOUREDCUBESVOLUME_H_
 
+#include "Colour.h"
 #include "CubiquityForwardDeclarations.h"
 #include "Volume.h"
 

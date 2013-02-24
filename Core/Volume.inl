@@ -6,12 +6,8 @@
 #include "PolyVoxCore/Impl/Utility.h" //Should we include from Impl?
 
 #include "Clock.h"
-#include "MultiMaterialMarchingCubesController.h"
-#include "ColouredCubesIsQuadNeeded.h"
 
 #include "Raycasting.h"
-
-#include "CubiquityUtility.h"
 
 template <typename VoxelType>
 Volume<VoxelType>::Volume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize)

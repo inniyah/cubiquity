@@ -156,19 +156,10 @@
     <ClInclude Include="..\..\..\Core\Colour.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Core\ColouredCubesIsQuadNeeded.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Core\ColouredCubesVolume.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Core\CubiquityUtility.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Core\MultiMaterial.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\Core\MultiMaterialMarchingCubesController.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Core\OctreeNode.h">
@@ -357,9 +348,6 @@
       <Filter>Bridge</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Core\Colour.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Core\CubiquityUtility.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Core\MultiMaterial.cpp">

@@ -1,6 +1,9 @@
 #ifndef CUBIQUITYRAYCASTING_H_
 #define CUBIQUITYRAYCASTING_H_
 
+#include "Colour.h"
+#include "MultiMaterial.h"
+
 #include "PolyVoxCore/Raycast.h"
 
 template <typename VoxelType>
