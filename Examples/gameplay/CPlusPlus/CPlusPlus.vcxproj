@@ -446,6 +446,7 @@
     <ClInclude Include="..\..\..\Core\TaskProcessor.h" />
     <ClInclude Include="..\..\..\Core\Volume.h" />
     <ClInclude Include="..\..\..\Core\VolumeSerialisation.h" />
+    <ClInclude Include="..\..\..\Core\VoxelTraits.h" />
     <ClInclude Include="src\Main.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

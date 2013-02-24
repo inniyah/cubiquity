@@ -7,6 +7,8 @@
 #include "MultiMaterialMarchingCubesController.h"
 #include "MultiMaterial.h"
 
+#include "VoxelTraits.h"
+
 #include "PolyVoxCore/Material.h"
 #include "PolyVoxCore/MaterialDensityPair.h"
 #include "PolyVoxCore/Region.h"
@@ -14,23 +16,6 @@
 
 template <typename VoxelType>
 class Volume;
-
-template<typename Type>
-class VoxelTraits;
-
-template<>
-class VoxelTraits<Colour>
-{
-public:
-	typedef PolyVox::PositionMaterial<Colour> VertexType;
-};
-
-template<>
-class VoxelTraits<MultiMaterial4>
-{
-public:
-	typedef PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType > VertexType;
-};
 
 template <typename VertexType>
 class OctreeNode
