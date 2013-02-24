@@ -22,7 +22,7 @@ void SmoothTerrainVolume::update(const PolyVox::Vector3DFloat& viewPosition, flo
 
 		if(task.mSmoothMesh->getNoOfIndices() > 0) //But if the new mesh is empty we should still delete any old mesh?
 		{
-			task.mOctreeNode->buildGraphicsMesh(task.mSmoothMesh);
+			task.mOctreeNode->mPolyVoxMesh = task.mSmoothMesh;
 		}
 
 		task.mOctreeNode->setMeshLastUpdated(Clock::getTimestamp());

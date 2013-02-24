@@ -44,9 +44,9 @@ void GameplaySmoothTerrainVolume::syncNode(OctreeNode< typename VoxelTraits< Mul
 
 	if(extraNodeData->mTimeStamp < octreeNode->mMeshLastUpdated)
 	{
-		if(octreeNode->mSmoothPolyVoxMesh)
+		if(octreeNode->mPolyVoxMesh)
 		{
-			Model* model = buildModelFromPolyVoxMesh(octreeNode->mSmoothPolyVoxMesh);
+			Model* model = buildModelFromPolyVoxMesh(octreeNode->mPolyVoxMesh);
 			model->setMaterial("res/SmoothTerrain.material");
 			gameplayNode->setModel(model);
 			SAFE_RELEASE(model);
@@ -54,7 +54,7 @@ void GameplaySmoothTerrainVolume::syncNode(OctreeNode< typename VoxelTraits< Mul
 			//There is a weird bug, whereby if we use the LOD 0 for physics it resets the node positions somehow. So we use LOD 1 here.
 			if(octreeNode->mLodLevel == 1)
 			{
-				PhysicsCollisionShape::Definition physDef = buildCollisionObjectFromPolyVoxMesh(octreeNode->mSmoothPolyVoxMesh);
+				PhysicsCollisionShape::Definition physDef = buildCollisionObjectFromPolyVoxMesh(octreeNode->mPolyVoxMesh);
 
 				PhysicsRigidBody::Parameters groundParams;
 				groundParams.mass = 0.0f;

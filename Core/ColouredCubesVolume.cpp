@@ -21,7 +21,7 @@ void ColouredCubesVolume::update(const PolyVox::Vector3DFloat& viewPosition, flo
 
 		if(task.mColouredCubicMesh->getNoOfIndices() > 0) //But if the new mesh is empty we should still delete any old mesh?
 		{
-			task.mOctreeNode->buildGraphicsMesh(task.mColouredCubicMesh);
+			task.mOctreeNode->mPolyVoxMesh = task.mColouredCubicMesh;
 		}
 
 		task.mOctreeNode->setMeshLastUpdated(Clock::getTimestamp());

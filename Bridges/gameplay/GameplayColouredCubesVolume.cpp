@@ -49,9 +49,9 @@ void GameplayColouredCubesVolume::syncNode(OctreeNode< typename VoxelTraits< Col
 
 	if(extraNodeData->mTimeStamp < octreeNode->mMeshLastUpdated)
 	{
-		if(octreeNode->mCubicPolyVoxMesh)
+		if(octreeNode->mPolyVoxMesh)
 		{
-			Model* model = buildModelFromPolyVoxMesh(octreeNode->mCubicPolyVoxMesh);
+			Model* model = buildModelFromPolyVoxMesh(octreeNode->mPolyVoxMesh);
 			model->setMaterial("res/PolyVox.material");
 			gameplayNode->setModel(model);
 			SAFE_RELEASE(model);

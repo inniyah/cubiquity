@@ -13,8 +13,7 @@ OctreeNode<VertexType>::OctreeNode(PolyVox::Region region, OctreeNode* parentReg
 	,mLastSceduledForUpdate(Clock::getTimestamp())
 	,mMeshLastUpdated(Clock::getTimestamp())	
 	,mDataLastModified(Clock::getTimestamp())
-	,mSmoothPolyVoxMesh(0)
-	,mCubicPolyVoxMesh(0)
+	,mPolyVoxMesh(0)
 	,mGameEngineNode(0)
 	,mLodLevel(0)
 {
@@ -39,30 +38,6 @@ OctreeNode<VertexType>::OctreeNode(PolyVox::Region region, OctreeNode* parentReg
 template <typename VertexType>
 OctreeNode<VertexType>::~OctreeNode()
 {
-}
-
-template <typename VertexType>
-void OctreeNode<VertexType>::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<Colour> >* polyVoxMesh)
-{
-	mCubicPolyVoxMesh = polyVoxMesh;
-}
-
-template <typename VertexType>
-void OctreeNode<VertexType>::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterial<MultiMaterial4> >* polyVoxMesh)
-{
-	POLYVOX_ASSERT(false, "This function should never be called!"); //See note in header
-}
-
-template <typename VertexType>
-void OctreeNode<VertexType>::buildGraphicsMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal< Colour > >* polyVoxMesh)
-{
-	POLYVOX_ASSERT(false, "This function should never be called!"); //See note in header
-}
-
-template <typename VertexType>
-void OctreeNode<VertexType>::buildGraphicsMesh(const PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal<MultiMaterialMarchingCubesController< MultiMaterial4 >::MaterialType> >* polyVoxMesh)
-{
-	mSmoothPolyVoxMesh = polyVoxMesh;
 }
 
 template <typename VertexType>
