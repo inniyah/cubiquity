@@ -2,6 +2,7 @@
 #define COLOUREDCUBESVOLUME_H_
 
 #include "ColouredCubicSurfaceExtractionTask.h"
+#include "CubiquityForwardDeclarations.h"
 #include "TaskProcessor.h"
 #include "Volume.h"
 

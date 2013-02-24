@@ -434,6 +434,7 @@
     <ClInclude Include="..\..\..\Core\ColouredCubesIsQuadNeeded.h" />
     <ClInclude Include="..\..\..\Core\ColouredCubesVolume.h" />
     <ClInclude Include="..\..\..\Core\ColouredCubicSurfaceExtractionTask.h" />
+    <ClInclude Include="..\..\..\Core\CubiquityForwardDeclarations.h" />
     <ClInclude Include="..\..\..\Core\CubiquityUtility.h" />
     <ClInclude Include="..\..\..\Core\MainThreadTaskProcessor.h" />
     <ClInclude Include="..\..\..\Core\MultiMaterial.h" />

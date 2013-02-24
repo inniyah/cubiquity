@@ -3,7 +3,7 @@
 
 #include "Clock.h"
 #include "Colour.h"
-
+#include "CubiquityForwardDeclarations.h"
 #include "MultiMaterialMarchingCubesController.h"
 #include "MultiMaterial.h"
 
@@ -13,9 +13,6 @@
 #include "PolyVoxCore/MaterialDensityPair.h"
 #include "PolyVoxCore/Region.h"
 #include "PolyVoxCore/SurfaceMesh.h"
-
-template <typename VoxelType>
-class Volume;
 
 template <typename VertexType>
 class OctreeNode
