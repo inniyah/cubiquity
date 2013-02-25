@@ -44,6 +44,15 @@ OctreeNode<VertexType>::~OctreeNode()
 }
 
 template <typename VertexType>
+void OctreeNode<VertexType>::update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
+{
+	clearWantedForRendering();
+	determineWantedForRendering(viewPosition, lodThreshold);
+
+	determineWhetherToRender();
+}
+
+template <typename VertexType>
 void OctreeNode<VertexType>::markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp)
 {
 	if(mRegion.containsPoint(x, y, z, -1)) //FIXME - Think if we really need this border.
@@ -158,7 +167,7 @@ void OctreeNode<VertexType>::clearWantedForRendering(void)
 }
 
 template <typename VertexType>
-void OctreeNode<VertexType>::determineWantedForRendering(const PolyVox::Vector3DFloat& viewPosition, float threshold)
+void OctreeNode<VertexType>::determineWantedForRendering(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
 {
 	if(mLodLevel == 0)
 	{
@@ -175,7 +184,7 @@ void OctreeNode<VertexType>::determineWantedForRendering(const PolyVox::Vector3D
 
 		float projectedSize = diagonalLength / distance;
 
-		if((projectedSize > threshold) || (mLodLevel > 2)) //subtree height check prevents building LODs for node near the root.
+		if((projectedSize > lodThreshold) || (mLodLevel > 2)) //subtree height check prevents building LODs for node near the root.
 		{
 			for(int iz = 0; iz < 2; iz++)
 			{
@@ -186,7 +195,7 @@ void OctreeNode<VertexType>::determineWantedForRendering(const PolyVox::Vector3D
 						OctreeNode* child = children[ix][iy][iz];
 						if(child)
 						{
-							child->determineWantedForRendering(viewPosition, threshold);
+							child->determineWantedForRendering(viewPosition, lodThreshold);
 						}
 					}
 				}

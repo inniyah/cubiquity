@@ -155,12 +155,9 @@ void Volume<VoxelType>::markRegionAsModified(const PolyVox::Region& region)
 template <typename VoxelType>
 void Volume<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
 {
-	mRootOctreeNode->clearWantedForRendering();
-	mRootOctreeNode->determineWantedForRendering(viewPosition, lodThreshold);
+	mRootOctreeNode->update(viewPosition, lodThreshold);
 
 	updateMesh(mRootOctreeNode);
-
-	mRootOctreeNode->determineWhetherToRender();
 }
 
 template <typename VoxelType>

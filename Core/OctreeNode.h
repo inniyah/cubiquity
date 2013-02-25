@@ -12,11 +12,13 @@ public:
 	OctreeNode(PolyVox::Region region, OctreeNode* parentRegion);
 	~OctreeNode();
 
+	void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
+
 	void markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp);
 	void markDataAsModified(const PolyVox::Region& region, Timestamp newTimeStamp);
 
 	void clearWantedForRendering(void);
-	void determineWantedForRendering(const PolyVox::Vector3DFloat& viewPosition, float threshold);
+	void determineWantedForRendering(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
 	void determineWhetherToRender(void);
 
 	bool hasAnyChildren(void);
@@ -38,9 +40,6 @@ public:
 
 	bool mWantedForRendering;
 	bool mRenderThisNode;
-
-	//const PolyVox::SurfaceMesh< PolyVox::PositionMaterialNormal<MultiMaterialMarchingCubesController::MaterialType > >* mSmoothPolyVoxMesh;
-	//const PolyVox::SurfaceMesh< PolyVox::PositionMaterial<Colour> >* mCubicPolyVoxMesh;
 
 	const PolyVox::SurfaceMesh<VertexType>* mPolyVoxMesh;
 
