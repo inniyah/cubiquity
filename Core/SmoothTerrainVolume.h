@@ -12,9 +12,6 @@ public:
 
 	virtual void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
 	void updateMeshImpl(OctreeNode< typename VoxelTraits<VoxelType>::VertexType >* octreeNode);
-
-	//This task processor must be created and set by out engine-specific derived class.
-	TaskProcessor<SmoothSurfaceExtractionTask>* mSmoothSurfaceExtractionTaskProcessor;
 };
 
 #endif //SMOOTHTERRAINVOLUME_H_

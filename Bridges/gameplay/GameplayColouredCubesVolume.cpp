@@ -16,7 +16,7 @@ GameplayColouredCubesVolume::GameplayColouredCubesVolume(int lowerX, int lowerY,
 	,mColouredCubicSurfaceExtractionTaskProcessor(0)
 {
 	mColouredCubicSurfaceExtractionTaskProcessor = new MainThreadTaskProcessor<ColouredCubicSurfaceExtractionTask>;
-	mCubiquityVolume->mColouredCubicSurfaceExtractionTaskProcessor = mColouredCubicSurfaceExtractionTaskProcessor;
+	mCubiquityVolume->mSurfaceExtractionTaskProcessor = mColouredCubicSurfaceExtractionTaskProcessor;
 
 	mRootGameplayNode = createNodeWithExtraData< typename VoxelTraits<Colour>::VertexType >("RootGameplayNode");
 

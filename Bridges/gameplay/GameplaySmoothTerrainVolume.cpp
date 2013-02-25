@@ -11,7 +11,7 @@ GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(int lowerX, int lowerY,
 	:GameplayVolume<SmoothTerrainVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize)
 {
 	mSmoothSurfaceExtractionTaskProcessor = new MainThreadTaskProcessor<SmoothSurfaceExtractionTask>;
-	mCubiquityVolume->mSmoothSurfaceExtractionTaskProcessor = mSmoothSurfaceExtractionTaskProcessor;
+	mCubiquityVolume->mSurfaceExtractionTaskProcessor = mSmoothSurfaceExtractionTaskProcessor;
 
 	mRootGameplayNode = createNodeWithExtraData< typename VoxelTraits<MultiMaterial>::VertexType >("RootGameplayNode");
 

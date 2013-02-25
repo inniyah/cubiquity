@@ -2,6 +2,7 @@
 #define VOLUME_H_
 
 #include "OctreeNode.h"
+#include "VoxelTraits.h"
 
 #include "PolyVoxCore/Array.h"
 #include "PolyVoxCore/Material.h"
@@ -48,6 +49,8 @@ public:
 	OctreeNode< typename VoxelTraits<VoxelType>::VertexType >* mRootOctreeNode;
 
 	const unsigned int mBaseNodeSize;
+
+	TaskProcessor< typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType >* mSurfaceExtractionTaskProcessor;
 };
 
 #include "Volume.inl"

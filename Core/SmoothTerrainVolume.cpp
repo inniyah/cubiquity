@@ -19,9 +19,9 @@ void SmoothTerrainVolume::update(const PolyVox::Vector3DFloat& viewPosition, flo
 {
 	Volume<typename MultiMaterialMarchingCubesController::MaterialType>::update(viewPosition, lodThreshold);
 
-	if(mSmoothSurfaceExtractionTaskProcessor->hasAnyFinishedTasks())
+	if(mSurfaceExtractionTaskProcessor->hasAnyFinishedTasks())
 	{
-		SmoothSurfaceExtractionTask task = mSmoothSurfaceExtractionTaskProcessor->removeFirstFinishedTask();
+		SmoothSurfaceExtractionTask task = mSurfaceExtractionTaskProcessor->removeFirstFinishedTask();
 
 		if(task.mSmoothMesh->getNoOfIndices() > 0) //But if the new mesh is empty we should still delete any old mesh?
 		{
@@ -36,5 +36,5 @@ void SmoothTerrainVolume::updateMeshImpl(OctreeNode< typename VoxelTraits<VoxelT
 {
 	SmoothSurfaceExtractionTask task(octreeNode, mPolyVoxVolume);
 
-	mSmoothSurfaceExtractionTaskProcessor->addTask(task);
+	mSurfaceExtractionTaskProcessor->addTask(task);
 }
