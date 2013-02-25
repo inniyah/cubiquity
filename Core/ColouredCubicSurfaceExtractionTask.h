@@ -3,6 +3,7 @@
 
 #include "Colour.h"
 #include "CubiquityForwardDeclarations.h"
+#include "VoxelTraits.h"
 
 class ColouredCubicSurfaceExtractionTask
 {

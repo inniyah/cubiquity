@@ -1,8 +1,6 @@
 #ifndef __COLOUR_H__
 #define __COLOUR_H__
 
-#include "VoxelTraits.h"
-
 #include "PolyVoxCore/Impl/TypeDef.h"
 #include "PolyVoxCore/VertexTypes.h"
 
@@ -114,13 +112,6 @@ public:
 			return false;
 		}
 	}
-};
-
-template<>
-class VoxelTraits<Colour>
-{
-public:
-	typedef PolyVox::PositionMaterial<Colour> VertexType;
 };
 
 #endif //__COLOUR_H__

@@ -1,8 +1,6 @@
 #ifndef __MultiMaterial_H__
 #define __MultiMaterial_H__
 
-#include "VoxelTraits.h"
-
 #include "PolyVoxCore/Impl/TypeDef.h"
 
 #include "PolyVoxCore/BaseVolume.h"
@@ -208,13 +206,6 @@ private:
 	DensityType m_tThreshold;
 	PolyVox::WrapMode m_eWrapMode;
 	MultiMaterial m_tBorder;
-};
-
-template<>
-class VoxelTraits<MultiMaterial>
-{
-public:
-	typedef PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController::MaterialType > VertexType;
 };
 
 // We overload the trilinear interpolation for the MultiMaterial type because it does not have enough precision.
