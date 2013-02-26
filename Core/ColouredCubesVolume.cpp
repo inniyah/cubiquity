@@ -29,7 +29,7 @@ void ColouredCubesVolume::update(const PolyVox::Vector3DFloat& viewPosition, flo
 	}
 }
 
-void ColouredCubesVolume::updateMeshImpl(OctreeNode< typename VoxelTraits<VoxelType>::VertexType >* octreeNode)
+void ColouredCubesVolume::updateMeshImpl(OctreeNode< VoxelType >* octreeNode)
 {
 	ColouredCubicSurfaceExtractionTask* task = new ColouredCubicSurfaceExtractionTask(octreeNode, mPolyVoxVolume);
 

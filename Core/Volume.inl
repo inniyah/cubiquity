@@ -76,14 +76,14 @@ Volume<VoxelType>::Volume(int lowerX, int lowerY, int lowerZ, int upperX, int up
 
 	octreeRegion.grow(widthIncrease / 2, heightIncrease / 2, depthIncrease / 2);
 
-	mRootOctreeNode = new OctreeNode< typename VoxelTraits<VoxelType>::VertexType >(octreeRegion, 0);
+	mRootOctreeNode = new OctreeNode< VoxelType >(octreeRegion, 0);
 	mRootOctreeNode->mLodLevel = noOfLodLevels - 1;
 
 	buildOctreeNodeTree(mRootOctreeNode, regionToCover, octreeConstructionMode);
 }
 
 template <typename VoxelType>
-void Volume<VoxelType>::buildOctreeNodeTree(OctreeNode< typename VoxelTraits<VoxelType>::VertexType >* parent, const PolyVox::Region& regionToCover, OctreeConstructionMode octreeConstructionMode)
+void Volume<VoxelType>::buildOctreeNodeTree(OctreeNode< VoxelType >* parent, const PolyVox::Region& regionToCover, OctreeConstructionMode octreeConstructionMode)
 {
 	POLYVOX_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getHeightInVoxels(), "Region must be cubic");
 	POLYVOX_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getDepthInVoxels(), "Region must be cubic");
@@ -116,7 +116,7 @@ void Volume<VoxelType>::buildOctreeNodeTree(OctreeNode< typename VoxelTraits<Vox
 					PolyVox::Region childRegion(baseLowerCorner + offset, baseUpperCorner + offset);
 					if(intersects(childRegion, regionToCover))
 					{
-						OctreeNode< typename VoxelTraits<VoxelType>::VertexType >* octreeNode = new OctreeNode< typename VoxelTraits<VoxelType>::VertexType >(childRegion, parent);
+						OctreeNode< VoxelType >* octreeNode = new OctreeNode< VoxelType >(childRegion, parent);
 						parent->children[x][y][z] = octreeNode;
 						buildOctreeNodeTree(octreeNode, regionToCover, octreeConstructionMode);
 					}
@@ -164,7 +164,7 @@ void Volume<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float
 }
 
 template <typename VoxelType>
-void Volume<VoxelType>::updateMesh(OctreeNode< typename VoxelTraits<VoxelType>::VertexType >* octreeNode)
+void Volume<VoxelType>::updateMesh(OctreeNode< VoxelType >* octreeNode)
 {
 	if((octreeNode->isMeshUpToDate() == false) && (octreeNode->isSceduledForUpdate() == false) && (octreeNode->mWantedForRendering))
 	{
@@ -179,7 +179,7 @@ void Volume<VoxelType>::updateMesh(OctreeNode< typename VoxelTraits<VoxelType>::
 		{
 			for(int x = 0; x < 2; x++)
 			{
-				OctreeNode< typename VoxelTraits<VoxelType>::VertexType >* child = octreeNode->children[x][y][z];
+				OctreeNode< VoxelType >* child = octreeNode->children[x][y][z];
 				if(child)
 				{
 					updateMesh(child);

@@ -8,7 +8,7 @@
 
 using namespace PolyVox;
 
-SmoothSurfaceExtractionTask::SmoothSurfaceExtractionTask(OctreeNode< typename VoxelTraits<MultiMaterial>::VertexType >* octreeNode, PolyVox::SimpleVolume<typename MultiMaterialMarchingCubesController::MaterialType>* polyVoxVolume)
+SmoothSurfaceExtractionTask::SmoothSurfaceExtractionTask(OctreeNode< MultiMaterial >* octreeNode, PolyVox::SimpleVolume<typename MultiMaterialMarchingCubesController::MaterialType>* polyVoxVolume)
 	:mOctreeNode(octreeNode)
 	,mPolyVoxVolume(polyVoxVolume)
 	,mSmoothMesh(0)

@@ -14,7 +14,7 @@ using namespace PolyVox;
 GameplayColouredCubesVolume::GameplayColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
 	:GameplayVolume<ColouredCubesVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize)
 {
-	mRootGameplayNode = createNodeWithExtraData< typename VoxelTraits<Colour>::VertexType >("RootGameplayNode");
+	mRootGameplayNode = createNodeWithExtraData< Colour >("RootGameplayNode");
 
 	buildNode(mCubiquityVolume->mRootOctreeNode, mRootGameplayNode);
 }
@@ -36,9 +36,9 @@ void GameplayColouredCubesVolume::performUpdate(const gameplay::Vector3& viewPos
 	}
 }
 
-void GameplayColouredCubesVolume::syncNode(OctreeNode< typename VoxelTraits< Colour >::VertexType >* octreeNode, gameplay::Node* gameplayNode)
+void GameplayColouredCubesVolume::syncNode(OctreeNode< Colour >* octreeNode, gameplay::Node* gameplayNode)
 {
-	ExtraNodeData< typename VoxelTraits< Colour >::VertexType >* extraNodeData = static_cast<ExtraNodeData< typename VoxelTraits< Colour >::VertexType >*>(gameplayNode->getUserPointer());
+	ExtraNodeData< Colour >* extraNodeData = static_cast<ExtraNodeData< Colour >*>(gameplayNode->getUserPointer());
 	extraNodeData->mOctreeNode = octreeNode;
 
 	if(extraNodeData->mTimeStamp < octreeNode->mMeshLastUpdated)

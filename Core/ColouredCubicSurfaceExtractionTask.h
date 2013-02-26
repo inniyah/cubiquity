@@ -9,13 +9,13 @@
 class ColouredCubicSurfaceExtractionTask : public Task
 {
 public:
-	ColouredCubicSurfaceExtractionTask(OctreeNode< typename VoxelTraits<Colour>::VertexType >* octreeNode, PolyVox::SimpleVolume<Colour>* polyVoxVolume);
+	ColouredCubicSurfaceExtractionTask(OctreeNode< Colour >* octreeNode, PolyVox::SimpleVolume<Colour>* polyVoxVolume);
 	~ColouredCubicSurfaceExtractionTask();
 
 	void process(void);
 
 public:
-	OctreeNode< VoxelTraits<Colour>::VertexType >* mOctreeNode;
+	OctreeNode< Colour >* mOctreeNode;
 	PolyVox::SimpleVolume<Colour>* mPolyVoxVolume;
 	PolyVox::SurfaceMesh<PolyVox::PositionMaterial<Colour> >* mColouredCubicMesh;
 };

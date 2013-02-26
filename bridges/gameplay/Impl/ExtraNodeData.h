@@ -5,7 +5,7 @@
 
 #include "gameplay.h"
 
-template <typename VertexType>
+template <typename VoxelType>
 class ExtraNodeData
 {
 public:
@@ -16,22 +16,22 @@ public:
 	}
 
 	Timestamp mTimeStamp;
-	OctreeNode<VertexType>* mOctreeNode;
+	OctreeNode<VoxelType>* mOctreeNode;
 };
 
-template <typename VertexType>
+template <typename VoxelType>
 gameplay::Node* createNodeWithExtraData(const char* id = NULL) //NULL rather than '0' because that's what gameplay uses.
 {
 	gameplay::Node* node = Node::create(id);
-	ExtraNodeData<VertexType>* extraNodeData = new ExtraNodeData<VertexType>;
-	node->setUserPointer(extraNodeData, deleteExtraNodeData<VertexType>);
+	ExtraNodeData<VoxelType>* extraNodeData = new ExtraNodeData<VoxelType>;
+	node->setUserPointer(extraNodeData, deleteExtraNodeData<VoxelType>);
 	return node;
 }
 
-template <typename VertexType>
+template <typename VoxelType>
 void deleteExtraNodeData(void* ptr)
 {
-	ExtraNodeData<VertexType>* extraNodeData = reinterpret_cast<ExtraNodeData<VertexType>*>(ptr);
+	ExtraNodeData<VoxelType>* extraNodeData = reinterpret_cast<ExtraNodeData<VoxelType>*>(ptr);
 	delete extraNodeData;
 }
 

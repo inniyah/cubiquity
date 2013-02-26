@@ -5,7 +5,7 @@
 #include "CubiquityForwardDeclarations.h"
 #include "VoxelTraits.h"
 
-template <typename VertexType>
+template <typename VoxelType>
 class OctreeNode
 {
 public:	
@@ -30,6 +30,8 @@ public:
 
 	void setMeshLastUpdated(Timestamp newTimeStamp);
 
+	void sceduleForUpdate(void);
+
 	PolyVox::Region mRegion;
 	Timestamp mDataLastModified;
 	Timestamp mMeshLastUpdated;
@@ -41,7 +43,7 @@ public:
 	bool mWantedForRendering;
 	bool mRenderThisNode;
 
-	const PolyVox::SurfaceMesh<VertexType>* mPolyVoxMesh;
+	const PolyVox::SurfaceMesh< typename VoxelTraits<VoxelType>::VertexType >* mPolyVoxMesh;
 
 	void* mGameEngineNode;
 

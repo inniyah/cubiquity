@@ -10,7 +10,7 @@ using namespace PolyVox;
 GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
 	:GameplayVolume<SmoothTerrainVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize)
 {
-	mRootGameplayNode = createNodeWithExtraData< typename VoxelTraits<MultiMaterial>::VertexType >("RootGameplayNode");
+	mRootGameplayNode = createNodeWithExtraData< MultiMaterial >("RootGameplayNode");
 
 	buildNode(mCubiquityVolume->mRootOctreeNode, mRootGameplayNode);
 }
@@ -32,9 +32,9 @@ void GameplaySmoothTerrainVolume::performUpdate(const gameplay::Vector3& viewPos
 	}
 }
 
-void GameplaySmoothTerrainVolume::syncNode(OctreeNode< typename VoxelTraits< MultiMaterial >::VertexType >* octreeNode, gameplay::Node* gameplayNode)
+void GameplaySmoothTerrainVolume::syncNode(OctreeNode< MultiMaterial >* octreeNode, gameplay::Node* gameplayNode)
 {
-	ExtraNodeData< typename VoxelTraits< MultiMaterial >::VertexType >* extraNodeData = static_cast<ExtraNodeData< typename VoxelTraits< MultiMaterial >::VertexType >*>(gameplayNode->getUserPointer());
+	ExtraNodeData< MultiMaterial >* extraNodeData = static_cast<ExtraNodeData<  MultiMaterial >*>(gameplayNode->getUserPointer());
 	extraNodeData->mOctreeNode = octreeNode;
 
 	if(extraNodeData->mTimeStamp < octreeNode->mMeshLastUpdated)

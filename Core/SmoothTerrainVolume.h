@@ -11,7 +11,7 @@ public:
 	SmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
 
 	virtual void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
-	void updateMeshImpl(OctreeNode< typename VoxelTraits<VoxelType>::VertexType >* octreeNode);
+	void updateMeshImpl(OctreeNode< VoxelType >* octreeNode);
 };
 
 #endif //SMOOTHTERRAINVOLUME_H_

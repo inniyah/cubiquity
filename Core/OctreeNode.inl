@@ -7,8 +7,8 @@
 
 using namespace PolyVox;
 
-template <typename VertexType>
-OctreeNode<VertexType>::OctreeNode(PolyVox::Region region, OctreeNode* parentRegion)
+template <typename VoxelType>
+OctreeNode<VoxelType>::OctreeNode(PolyVox::Region region, OctreeNode* parentRegion)
 	:mRegion(region)
 	,parent(parentRegion)
 	,mWantedForRendering(false)
@@ -38,13 +38,13 @@ OctreeNode<VertexType>::OctreeNode(PolyVox::Region region, OctreeNode* parentReg
 	}
 }
 
-template <typename VertexType>
-OctreeNode<VertexType>::~OctreeNode()
+template <typename VoxelType>
+OctreeNode<VoxelType>::~OctreeNode()
 {
 }
 
-template <typename VertexType>
-void OctreeNode<VertexType>::update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
+template <typename VoxelType>
+void OctreeNode<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
 {
 	clearWantedForRendering();
 	determineWantedForRendering(viewPosition, lodThreshold);
@@ -52,8 +52,8 @@ void OctreeNode<VertexType>::update(const PolyVox::Vector3DFloat& viewPosition, 
 	determineWhetherToRender();
 }
 
-template <typename VertexType>
-void OctreeNode<VertexType>::markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp)
+template <typename VoxelType>
+void OctreeNode<VoxelType>::markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp)
 {
 	if(mRegion.containsPoint(x, y, z, -1)) //FIXME - Think if we really need this border.
 	{
@@ -77,8 +77,8 @@ void OctreeNode<VertexType>::markDataAsModified(int32_t x, int32_t y, int32_t z,
 	}
 }
 
-template <typename VertexType>
-void OctreeNode<VertexType>::markDataAsModified(const Region& region, Timestamp newTimeStamp)
+template <typename VoxelType>
+void OctreeNode<VoxelType>::markDataAsModified(const Region& region, Timestamp newTimeStamp)
 {
 	if(intersects(mRegion, region))
 	{
@@ -102,8 +102,8 @@ void OctreeNode<VertexType>::markDataAsModified(const Region& region, Timestamp 
 	}
 }
 
-template <typename VertexType>
-bool OctreeNode<VertexType>::hasAnyChildren(void)
+template <typename VoxelType>
+bool OctreeNode<VoxelType>::hasAnyChildren(void)
 {
 	for(int z = 0; z < 2; z++)
 	{
@@ -122,8 +122,8 @@ bool OctreeNode<VertexType>::hasAnyChildren(void)
 	return false;
 }
 
-template <typename VertexType>
-bool OctreeNode<VertexType>::allChildrenUpToDate(void)
+template <typename VoxelType>
+bool OctreeNode<VoxelType>::allChildrenUpToDate(void)
 {
 	for(int z = 0; z < 2; z++)
 	{
@@ -145,8 +145,8 @@ bool OctreeNode<VertexType>::allChildrenUpToDate(void)
 	return true;
 }
 
-template <typename VertexType>
-void OctreeNode<VertexType>::clearWantedForRendering(void)
+template <typename VoxelType>
+void OctreeNode<VoxelType>::clearWantedForRendering(void)
 {
 	mWantedForRendering = false;
 
@@ -166,8 +166,8 @@ void OctreeNode<VertexType>::clearWantedForRendering(void)
 	}
 }
 
-template <typename VertexType>
-void OctreeNode<VertexType>::determineWantedForRendering(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
+template <typename VoxelType>
+void OctreeNode<VoxelType>::determineWantedForRendering(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
 {
 	if(mLodLevel == 0)
 	{
@@ -208,8 +208,8 @@ void OctreeNode<VertexType>::determineWantedForRendering(const PolyVox::Vector3D
 	}
 }
 
-template <typename VertexType>
-void OctreeNode<VertexType>::determineWhetherToRender(void)
+template <typename VoxelType>
+void OctreeNode<VoxelType>::determineWhetherToRender(void)
 {
 	//At some point we should handle the issue that we might want to render but the mesh might not be ready.
 	mRenderThisNode = mWantedForRendering;
@@ -230,21 +230,51 @@ void OctreeNode<VertexType>::determineWhetherToRender(void)
 	}
 }
 
-template <typename VertexType>
-bool OctreeNode<VertexType>::isMeshUpToDate(void)
+template <typename VoxelType>
+bool OctreeNode<VoxelType>::isMeshUpToDate(void)
 {
 	return mMeshLastUpdated > mDataLastModified;
 }
 
-template <typename VertexType>
-bool OctreeNode<VertexType>::isSceduledForUpdate(void)
+template <typename VoxelType>
+bool OctreeNode<VoxelType>::isSceduledForUpdate(void)
 {
 	//We are sceduled for an update if being sceduled was the most recent thing that happened.
 	return (mLastSceduledForUpdate > mDataLastModified) && (mLastSceduledForUpdate > mMeshLastUpdated);
 }
 
-template <typename VertexType>
-void OctreeNode<VertexType>::setMeshLastUpdated(Timestamp newTimeStamp)
+template <typename VoxelType>
+void OctreeNode<VoxelType>::setMeshLastUpdated(Timestamp newTimeStamp)
 {
 	mMeshLastUpdated = newTimeStamp;
+}
+
+template <typename VoxelType>
+void OctreeNode<VoxelType>::sceduleForUpdate(void)
+{
+	if((isMeshUpToDate() == false) && (isSceduledForUpdate() == false) && (mWantedForRendering))
+	{
+		octreeNode->mLastSceduledForUpdate = Clock::getTimestamp();
+
+		//VoxelTraits<* task = new SmoothSurfaceExtractionTask(octreeNode, mPolyVoxVolume);
+
+		//gMainThreadTaskProcessor.addTask(task);
+
+		//updateMeshImpl(octreeNode);
+	}
+
+	for(int iz = 0; iz < 2; iz++)
+	{
+		for(int iy = 0; iy < 2; iy++)
+		{
+			for(int ix = 0; ix < 2; ix++)
+			{
+				OctreeNode* child = children[ix][iy][iz];
+				if(child)
+				{
+					child->sceduleForUpdate();
+				}
+			}
+		}
+	}
 }
