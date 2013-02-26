@@ -76,7 +76,7 @@ Volume<VoxelType>::Volume(int lowerX, int lowerY, int lowerZ, int upperX, int up
 
 	octreeRegion.grow(widthIncrease / 2, heightIncrease / 2, depthIncrease / 2);
 
-	mRootOctreeNode = new OctreeNode< VoxelType >(octreeRegion, 0);
+	mRootOctreeNode = new OctreeNode< VoxelType >(octreeRegion, 0, this);
 	mRootOctreeNode->mLodLevel = noOfLodLevels - 1;
 
 	buildOctreeNodeTree(mRootOctreeNode, regionToCover, octreeConstructionMode);
@@ -116,7 +116,7 @@ void Volume<VoxelType>::buildOctreeNodeTree(OctreeNode< VoxelType >* parent, con
 					PolyVox::Region childRegion(baseLowerCorner + offset, baseUpperCorner + offset);
 					if(intersects(childRegion, regionToCover))
 					{
-						OctreeNode< VoxelType >* octreeNode = new OctreeNode< VoxelType >(childRegion, parent);
+						OctreeNode< VoxelType >* octreeNode = new OctreeNode< VoxelType >(childRegion, parent, this);
 						parent->children[x][y][z] = octreeNode;
 						buildOctreeNodeTree(octreeNode, regionToCover, octreeConstructionMode);
 					}
@@ -160,7 +160,7 @@ void Volume<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float
 
 	mRootOctreeNode->update(viewPosition, lodThreshold);
 
-	updateMesh(mRootOctreeNode);
+	//updateMesh(mRootOctreeNode);
 }
 
 template <typename VoxelType>

@@ -1,5 +1,8 @@
 #include "Volume.h"
 
+#include "ColouredCubicSurfaceExtractionTask.h"
+#include "SmoothSurfaceExtractionTask.h"
+
 #include "PolyVoxCore/Region.h"
 #include "PolyVoxCore/SurfaceMesh.h"
 
@@ -8,9 +11,10 @@
 using namespace PolyVox;
 
 template <typename VoxelType>
-OctreeNode<VoxelType>::OctreeNode(PolyVox::Region region, OctreeNode* parentRegion)
+OctreeNode<VoxelType>::OctreeNode(PolyVox::Region region, OctreeNode* parentRegion, Volume<VoxelType>* volume)
 	:mRegion(region)
 	,parent(parentRegion)
+	,mVolume(volume)
 	,mWantedForRendering(false)
 	,mRenderThisNode(false)
 	,mLastSceduledForUpdate(Clock::getTimestamp())
@@ -48,6 +52,8 @@ void OctreeNode<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, f
 {
 	clearWantedForRendering();
 	determineWantedForRendering(viewPosition, lodThreshold);
+
+	sceduleForUpdate();
 
 	determineWhetherToRender();
 }
@@ -254,11 +260,11 @@ void OctreeNode<VoxelType>::sceduleForUpdate(void)
 {
 	if((isMeshUpToDate() == false) && (isSceduledForUpdate() == false) && (mWantedForRendering))
 	{
-		octreeNode->mLastSceduledForUpdate = Clock::getTimestamp();
+		mLastSceduledForUpdate = Clock::getTimestamp();
 
-		//VoxelTraits<* task = new SmoothSurfaceExtractionTask(octreeNode, mPolyVoxVolume);
+		VoxelTraits<VoxelType>::SurfaceExtractionTaskType* task = new VoxelTraits<VoxelType>::SurfaceExtractionTaskType(this, mVolume->mPolyVoxVolume);
 
-		//gMainThreadTaskProcessor.addTask(task);
+		gMainThreadTaskProcessor.addTask(task);
 
 		//updateMeshImpl(octreeNode);
 	}
