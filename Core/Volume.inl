@@ -159,32 +159,4 @@ void Volume<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float
 	gMainThreadTaskProcessor.processOneTask(); //Doesn't really belong here
 
 	mRootOctreeNode->update(viewPosition, lodThreshold);
-
-	//updateMesh(mRootOctreeNode);
-}
-
-template <typename VoxelType>
-void Volume<VoxelType>::updateMesh(OctreeNode< VoxelType >* octreeNode)
-{
-	if((octreeNode->isMeshUpToDate() == false) && (octreeNode->isSceduledForUpdate() == false) && (octreeNode->mWantedForRendering))
-	{
-		octreeNode->mLastSceduledForUpdate = Clock::getTimestamp();
-
-		updateMeshImpl(octreeNode);
-	}
-
-	for(int z = 0; z < 2; z++)
-	{
-		for(int y = 0; y < 2; y++)
-		{
-			for(int x = 0; x < 2; x++)
-			{
-				OctreeNode< VoxelType >* child = octreeNode->children[x][y][z];
-				if(child)
-				{
-					updateMesh(child);
-				}
-			}
-		}
-	}
 }

@@ -15,8 +15,8 @@ using namespace gameplay;
 class GameplayColouredCubesVolume;
 class GameplaySmoothTerrainVolume;
 
-#define TERRAIN_SMOOTH
-//#define TERRAIN_CUBIC
+//#define TERRAIN_SMOOTH
+#define TERRAIN_CUBIC
 
 /**
  * Sample game for rendering a scene with a model/mesh.

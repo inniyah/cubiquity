@@ -28,10 +28,3 @@ void ColouredCubesVolume::update(const PolyVox::Vector3DFloat& viewPosition, flo
 		task->mOctreeNode->setMeshLastUpdated(Clock::getTimestamp());
 	}
 }
-
-void ColouredCubesVolume::updateMeshImpl(OctreeNode< VoxelType >* octreeNode)
-{
-	ColouredCubicSurfaceExtractionTask* task = new ColouredCubicSurfaceExtractionTask(octreeNode, mPolyVoxVolume);
-
-	gMainThreadTaskProcessor.addTask(task);
-}

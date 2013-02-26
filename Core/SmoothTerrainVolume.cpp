@@ -31,10 +31,3 @@ void SmoothTerrainVolume::update(const PolyVox::Vector3DFloat& viewPosition, flo
 		task->mOctreeNode->setMeshLastUpdated(Clock::getTimestamp());
 	}
 }
-
-void SmoothTerrainVolume::updateMeshImpl(OctreeNode< VoxelType >* octreeNode)
-{
-	SmoothSurfaceExtractionTask* task = new SmoothSurfaceExtractionTask(octreeNode, mPolyVoxVolume);
-
-	gMainThreadTaskProcessor.addTask(task);
-}

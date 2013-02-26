@@ -38,9 +38,6 @@ public:
 	void markRegionAsModified(const PolyVox::Region& region);
 
 	virtual void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
-	void updateMesh(OctreeNode< VoxelType >* octreeNode);
-	virtual void updateMeshImpl(OctreeNode< VoxelType >* octreeNode) = 0;
-
 protected:
 	Volume& operator=(const Volume&);
 
