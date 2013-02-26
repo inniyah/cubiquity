@@ -1,6 +1,7 @@
 #include "Volume.h"
 
 #include "ColouredCubicSurfaceExtractionTask.h"
+#include "Octree.h"
 #include "SmoothSurfaceExtractionTask.h"
 
 #include "PolyVoxCore/Region.h"
@@ -11,10 +12,10 @@
 using namespace PolyVox;
 
 template <typename VoxelType>
-OctreeNode<VoxelType>::OctreeNode(PolyVox::Region region, OctreeNode* parentRegion, Volume<VoxelType>* volume)
+OctreeNode<VoxelType>::OctreeNode(PolyVox::Region region, OctreeNode* parentRegion, Octree<VoxelType>* octree)
 	:mRegion(region)
 	,parent(parentRegion)
-	,mVolume(volume)
+	,mOctree(octree)
 	,mWantedForRendering(false)
 	,mRenderThisNode(false)
 	,mLastSceduledForUpdate(Clock::getTimestamp())
@@ -262,7 +263,7 @@ void OctreeNode<VoxelType>::sceduleForUpdate(void)
 	{
 		mLastSceduledForUpdate = Clock::getTimestamp();
 
-		VoxelTraits<VoxelType>::SurfaceExtractionTaskType* task = new VoxelTraits<VoxelType>::SurfaceExtractionTaskType(this, mVolume->mPolyVoxVolume);
+		VoxelTraits<VoxelType>::SurfaceExtractionTaskType* task = new VoxelTraits<VoxelType>::SurfaceExtractionTaskType(this, mOctree->mVolume->mPolyVoxVolume);
 
 		gMainThreadTaskProcessor.addTask(task);
 

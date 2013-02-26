@@ -1,7 +1,7 @@
 #ifndef VOLUME_H_
 #define VOLUME_H_
 
-#include "OctreeNode.h"
+#include "Octree.h"
 #include "VoxelTraits.h"
 
 #include "PolyVoxCore/Array.h"
@@ -11,16 +11,6 @@
 #include "PolyVoxCore/CubicSurfaceExtractor.h"
 #include "PolyVoxCore/MarchingCubesSurfaceExtractor.h"
 
-namespace OctreeConstructionModes
-{
-	enum OctreeConstructionMode
-	{
-		BoundVoxels = 0,
-		BoundCells = 1
-	};
-}
-typedef OctreeConstructionModes::OctreeConstructionMode OctreeConstructionMode;
-
 template <typename _VoxelType>
 class Volume
 {
@@ -29,8 +19,6 @@ public:
 
 	Volume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize);
 	~Volume();
-
-	void buildOctreeNodeTree(OctreeNode< VoxelType >* parent, const PolyVox::Region& regionToCover, OctreeConstructionMode octreeConstructionMode);
 
 
 	VoxelType getVoxelAt(int x, int y, int z);
@@ -43,9 +31,8 @@ protected:
 
 public:
 	PolyVox::SimpleVolume<VoxelType>* mPolyVoxVolume;
-	OctreeNode< VoxelType >* mRootOctreeNode;
-
-	const unsigned int mBaseNodeSize;
+	//OctreeNode< VoxelType >* mRootOctreeNode;
+	Octree<VoxelType>* mOctree;
 };
 
 #include "Volume.inl"

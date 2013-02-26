@@ -19,7 +19,10 @@ class MultiMaterial;
 
 class MultiMaterialMarchingCubesController;
 
-template <typename VertexType>
+template <typename VoxelType>
+class Octree;
+
+template <typename VoxelType>
 class OctreeNode;
 
 class SmoothSurfaceExtractionTask;

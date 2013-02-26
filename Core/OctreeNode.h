@@ -9,7 +9,7 @@ template <typename VoxelType>
 class OctreeNode
 {
 public:	
-	OctreeNode(PolyVox::Region region, OctreeNode* parentRegion, Volume<VoxelType>* volume);
+	OctreeNode(PolyVox::Region region, OctreeNode* parentRegion, Octree<VoxelType>* octree);
 	~OctreeNode();
 
 	void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
@@ -40,7 +40,7 @@ public:
 	OctreeNode* parent;
 	OctreeNode* children[2][2][2];
 
-	Volume<VoxelType>* mVolume;
+	Octree<VoxelType>* mOctree;
 
 	bool mWantedForRendering;
 	bool mRenderThisNode;

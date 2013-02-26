@@ -12,7 +12,7 @@ GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(int lowerX, int lowerY,
 {
 	mRootGameplayNode = createNodeWithExtraData< MultiMaterial >("RootGameplayNode");
 
-	buildNode(mCubiquityVolume->mRootOctreeNode, mRootGameplayNode);
+	buildNode(mCubiquityVolume->mOctree->mRootOctreeNode, mRootGameplayNode);
 }
 
 GameplaySmoothTerrainVolume::~GameplaySmoothTerrainVolume()
@@ -26,9 +26,9 @@ void GameplaySmoothTerrainVolume::performUpdate(const gameplay::Vector3& viewPos
 
 	//Now ensure the gameplay node tree matches the one in the volume.
 
-	if(mCubiquityVolume->mRootOctreeNode != 0)
+	if(mCubiquityVolume->mOctree->mRootOctreeNode != 0)
 	{
-		syncNode(mCubiquityVolume->mRootOctreeNode, mRootGameplayNode);
+		syncNode(mCubiquityVolume->mOctree->mRootOctreeNode, mRootGameplayNode);
 	}
 }
 
