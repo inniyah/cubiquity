@@ -3,7 +3,7 @@
 #include "Clock.h"
 #include "Colour.h"
 #include "ColouredCubicSurfaceExtractionTask.h"
-#include "TaskProcessor.h"
+#include "MainThreadTaskProcessor.h"
 
 using namespace PolyVox;
 
@@ -16,22 +16,22 @@ void ColouredCubesVolume::update(const PolyVox::Vector3DFloat& viewPosition, flo
 {
 	Volume<Colour>::update(viewPosition, lodThreshold);
 
-	if(mSurfaceExtractionTaskProcessor->hasAnyFinishedTasks())
+	if(gMainThreadTaskProcessor.hasAnyFinishedTasks())
 	{
-		ColouredCubicSurfaceExtractionTask task = mSurfaceExtractionTaskProcessor->removeFirstFinishedTask();
+		ColouredCubicSurfaceExtractionTask* task = dynamic_cast<ColouredCubicSurfaceExtractionTask*>(gMainThreadTaskProcessor.removeFirstFinishedTask());
 
-		if(task.mColouredCubicMesh->getNoOfIndices() > 0) //But if the new mesh is empty we should still delete any old mesh?
+		if(task->mColouredCubicMesh->getNoOfIndices() > 0) //But if the new mesh is empty we should still delete any old mesh?
 		{
-			task.mOctreeNode->mPolyVoxMesh = task.mColouredCubicMesh;
+			task->mOctreeNode->mPolyVoxMesh = task->mColouredCubicMesh;
 		}
 
-		task.mOctreeNode->setMeshLastUpdated(Clock::getTimestamp());
+		task->mOctreeNode->setMeshLastUpdated(Clock::getTimestamp());
 	}
 }
 
 void ColouredCubesVolume::updateMeshImpl(OctreeNode< typename VoxelTraits<VoxelType>::VertexType >* octreeNode)
 {
-	ColouredCubicSurfaceExtractionTask task(octreeNode, mPolyVoxVolume);
+	ColouredCubicSurfaceExtractionTask* task = new ColouredCubicSurfaceExtractionTask(octreeNode, mPolyVoxVolume);
 
-	mSurfaceExtractionTaskProcessor->addTask(task);
+	gMainThreadTaskProcessor.addTask(task);
 }

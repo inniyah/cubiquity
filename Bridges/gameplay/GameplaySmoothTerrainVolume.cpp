@@ -10,9 +10,6 @@ using namespace PolyVox;
 GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
 	:GameplayVolume<SmoothTerrainVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize)
 {
-	mSmoothSurfaceExtractionTaskProcessor = new MainThreadTaskProcessor<SmoothSurfaceExtractionTask>;
-	mCubiquityVolume->mSurfaceExtractionTaskProcessor = mSmoothSurfaceExtractionTaskProcessor;
-
 	mRootGameplayNode = createNodeWithExtraData< typename VoxelTraits<MultiMaterial>::VertexType >("RootGameplayNode");
 
 	buildNode(mCubiquityVolume->mRootOctreeNode, mRootGameplayNode);
@@ -24,8 +21,6 @@ GameplaySmoothTerrainVolume::~GameplaySmoothTerrainVolume()
 
 void GameplaySmoothTerrainVolume::performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold)
 {
-	mSmoothSurfaceExtractionTaskProcessor->processOneTask();
-
 	Vector3DFloat v3dViewPosition(viewPosition.x, viewPosition.y, viewPosition.z);
 	mCubiquityVolume->update(v3dViewPosition, lodThreshold);
 

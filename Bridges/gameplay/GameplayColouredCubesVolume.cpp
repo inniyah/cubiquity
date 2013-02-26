@@ -13,11 +13,7 @@ using namespace PolyVox;
 
 GameplayColouredCubesVolume::GameplayColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
 	:GameplayVolume<ColouredCubesVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize)
-	,mColouredCubicSurfaceExtractionTaskProcessor(0)
 {
-	mColouredCubicSurfaceExtractionTaskProcessor = new MainThreadTaskProcessor<ColouredCubicSurfaceExtractionTask>;
-	mCubiquityVolume->mSurfaceExtractionTaskProcessor = mColouredCubicSurfaceExtractionTaskProcessor;
-
 	mRootGameplayNode = createNodeWithExtraData< typename VoxelTraits<Colour>::VertexType >("RootGameplayNode");
 
 	buildNode(mCubiquityVolume->mRootOctreeNode, mRootGameplayNode);
@@ -25,13 +21,10 @@ GameplayColouredCubesVolume::GameplayColouredCubesVolume(int lowerX, int lowerY,
 
 GameplayColouredCubesVolume::~GameplayColouredCubesVolume()
 {
-	delete mColouredCubicSurfaceExtractionTaskProcessor;
 }
 
 void GameplayColouredCubesVolume::performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold)
 {
-	mColouredCubicSurfaceExtractionTaskProcessor->processOneTask();
-
 	Vector3DFloat v3dViewPosition(viewPosition.x, viewPosition.y, viewPosition.z);
 	mCubiquityVolume->update(v3dViewPosition, lodThreshold);
 

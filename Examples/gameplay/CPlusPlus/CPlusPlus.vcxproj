@@ -372,10 +372,12 @@
     <ClCompile Include="..\..\..\Core\Colour.cpp" />
     <ClCompile Include="..\..\..\Core\ColouredCubesVolume.cpp" />
     <ClCompile Include="..\..\..\Core\ColouredCubicSurfaceExtractionTask.cpp" />
+    <ClCompile Include="..\..\..\Core\MainThreadTaskProcessor.cpp" />
     <ClCompile Include="..\..\..\Core\MultiMaterial.cpp" />
     <ClCompile Include="..\..\..\Core\SmoothSurfaceExtractionTask.cpp" />
     <ClCompile Include="..\..\..\Core\SmoothTerrainVolume.cpp" />
     <ClCompile Include="..\..\..\Core\SmoothTerrainVolumeEditor.cpp" />
+    <ClCompile Include="..\..\..\Core\TaskProcessor.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -440,6 +442,7 @@
     <ClInclude Include="..\..\..\Core\SmoothSurfaceExtractionTask.h" />
     <ClInclude Include="..\..\..\Core\SmoothTerrainVolume.h" />
     <ClInclude Include="..\..\..\Core\SmoothTerrainVolumeEditor.h" />
+    <ClInclude Include="..\..\..\Core\Task.h" />
     <ClInclude Include="..\..\..\Core\TaskProcessor.h" />
     <ClInclude Include="..\..\..\Core\Volume.h" />
     <ClInclude Include="..\..\..\Core\VolumeSerialisation.h" />

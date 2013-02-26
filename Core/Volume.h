@@ -49,8 +49,6 @@ public:
 	OctreeNode< typename VoxelTraits<VoxelType>::VertexType >* mRootOctreeNode;
 
 	const unsigned int mBaseNodeSize;
-
-	TaskProcessor< typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType >* mSurfaceExtractionTaskProcessor;
 };
 
 #include "Volume.inl"

@@ -3,9 +3,10 @@
 
 #include "Colour.h"
 #include "CubiquityForwardDeclarations.h"
+#include "Task.h"
 #include "VoxelTraits.h"
 
-class ColouredCubicSurfaceExtractionTask
+class ColouredCubicSurfaceExtractionTask : public Task
 {
 public:
 	ColouredCubicSurfaceExtractionTask(OctreeNode< typename VoxelTraits<Colour>::VertexType >* octreeNode, PolyVox::SimpleVolume<Colour>* polyVoxVolume);

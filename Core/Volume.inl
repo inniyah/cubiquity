@@ -6,6 +6,7 @@
 #include "PolyVoxCore/Impl/Utility.h" //Should we include from Impl?
 
 #include "Clock.h"
+#include "MainThreadTaskProcessor.h"
 
 #include "Raycasting.h"
 
@@ -14,7 +15,6 @@ Volume<VoxelType>::Volume(int lowerX, int lowerY, int lowerZ, int upperX, int up
 	:mPolyVoxVolume(0)
 	,mRootOctreeNode(0)
 	,mBaseNodeSize(baseNodeSize)
-	,mSurfaceExtractionTaskProcessor(0)
 {
 	PolyVox::Region volumeRegion(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
 
@@ -156,6 +156,8 @@ void Volume<VoxelType>::markRegionAsModified(const PolyVox::Region& region)
 template <typename VoxelType>
 void Volume<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
 {
+	gMainThreadTaskProcessor.processOneTask(); //Doesn't really belong here
+
 	mRootOctreeNode->update(viewPosition, lodThreshold);
 
 	updateMesh(mRootOctreeNode);

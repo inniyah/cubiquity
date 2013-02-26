@@ -3,8 +3,9 @@
 
 #include "CubiquityForwardDeclarations.h"
 #include "OctreeNode.h"
+#include "Task.h"
 
-class SmoothSurfaceExtractionTask
+class SmoothSurfaceExtractionTask : public Task
 {
 public:
 	SmoothSurfaceExtractionTask(OctreeNode< typename VoxelTraits<MultiMaterial>::VertexType >* octreeNode, PolyVox::SimpleVolume< typename MultiMaterialMarchingCubesController::MaterialType >* polyVoxVolume);

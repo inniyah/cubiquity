@@ -13,7 +13,6 @@ class ColouredCubesVolume;
 
 class ColouredCubicSurfaceExtractionTask;
 
-template <typename TaskType>
 class MainThreadTaskProcessor;
 
 class MultiMaterial;
@@ -29,7 +28,6 @@ class SmoothTerrainVolume;
 
 class SmoothTerrainVolumeEditor;
 
-template <typename TaskType>
 class TaskProcessor;
 
 template <typename _VoxelType>

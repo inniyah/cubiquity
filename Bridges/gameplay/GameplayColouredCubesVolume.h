@@ -61,8 +61,6 @@ private:
 	void syncNode(OctreeNode< typename VoxelTraits< Colour >::VertexType >* octreeNode, gameplay::Node* gameplayNode);
 
 	gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterial<Colour> >* polyVoxMesh);
-
-	MainThreadTaskProcessor<ColouredCubicSurfaceExtractionTask>* mColouredCubicSurfaceExtractionTaskProcessor;
 };
 
 #endif //GAMEPLAYCOLOUREDCUBESVOLUME_H_

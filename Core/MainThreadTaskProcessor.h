@@ -5,24 +5,25 @@
 
 #include <list>
 
-template <typename TaskType>
-class MainThreadTaskProcessor : public TaskProcessor<TaskType>
+class MainThreadTaskProcessor : public TaskProcessor
 {
 public:
 	MainThreadTaskProcessor();
 	virtual ~MainThreadTaskProcessor();
 
-	void addTask(TaskType task);
+	void addTask(Task* task);
 
 	bool hasAnyFinishedTasks(void);
-	TaskType removeFirstFinishedTask(void);
+	Task* removeFirstFinishedTask(void);
 
 	virtual void processOneTask(void)/* = 0*/;
 
-	std::list<TaskType> mPendingTasks;
-	std::list<TaskType> mFinishedTasks;
+	std::list<Task*> mPendingTasks;
+	std::list<Task*> mFinishedTasks;
 };
 
-#include "MainThreadTaskProcessor.inl"
+extern MainThreadTaskProcessor gMainThreadTaskProcessor;
+
+//#include "MainThreadTaskProcessor.inl"
 
 #endif //CUBIQUITY_MAINTHREADTASKPROCESSOR_H_
