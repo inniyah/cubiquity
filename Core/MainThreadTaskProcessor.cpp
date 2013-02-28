@@ -40,3 +40,16 @@ void MainThreadTaskProcessor::processOneTask(void)
 		mFinishedTasks.push_back(task);
 	}
 }
+
+void MainThreadTaskProcessor::processAllTasks(void)
+{
+	while(mPendingTasks.size() > 0)
+	{
+		Task* task = mPendingTasks.front();
+		mPendingTasks.pop_front();
+
+		task->process();
+
+		mFinishedTasks.push_back(task);
+	}
+}

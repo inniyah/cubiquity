@@ -101,6 +101,22 @@ form particleEditor
             consumeInputEvents = false
         }
     }
+    
+    // Diagnostics
+    container diagnostics
+    {
+        style = basic
+        size = 160, 150
+        position = 0, 500
+        
+        label Tasks
+        {
+            style = title
+            size = 150, 30
+            position = 0, 0
+            text = Tasks:
+        }
+    }
 
     container tools
     {

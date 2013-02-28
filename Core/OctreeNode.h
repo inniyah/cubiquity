@@ -12,8 +12,6 @@ public:
 	OctreeNode(PolyVox::Region region, OctreeNode* parentRegion, Octree<VoxelType>* octree);
 	~OctreeNode();
 
-	void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
-
 	void markAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp);
 	void markAsModified(const PolyVox::Region& region, Timestamp newTimeStamp);
 
@@ -30,7 +28,7 @@ public:
 
 	void setMeshLastUpdated(Timestamp newTimeStamp);
 
-	void sceduleForUpdate(void);
+	void sceduleUpdateIfNeeded(void);
 
 	PolyVox::Region mRegion;
 	Timestamp mDataLastModified;

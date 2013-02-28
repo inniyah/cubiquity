@@ -93,6 +93,8 @@ private:
 
 	CheckBox* mWireframeCheckBox;
 
+	Label* mTasks;
+
 	uint32_t mSelectedMaterial;
 
 	GameplaySmoothTerrainVolumeEditor* mVolumeEditor;

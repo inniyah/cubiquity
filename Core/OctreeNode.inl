@@ -47,17 +47,6 @@ OctreeNode<VoxelType>::~OctreeNode()
 }
 
 template <typename VoxelType>
-void OctreeNode<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
-{
-	clearWantedForRendering();
-	determineWantedForRendering(viewPosition, lodThreshold);
-
-	sceduleForUpdate();
-
-	determineWhetherToRender();
-}
-
-template <typename VoxelType>
 void OctreeNode<VoxelType>::markAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp)
 {
 	if(mRegion.containsPoint(x, y, z, -1)) //FIXME - Think if we really need this border.
@@ -255,7 +244,7 @@ void OctreeNode<VoxelType>::setMeshLastUpdated(Timestamp newTimeStamp)
 }
 
 template <typename VoxelType>
-void OctreeNode<VoxelType>::sceduleForUpdate(void)
+void OctreeNode<VoxelType>::sceduleUpdateIfNeeded(void)
 {
 	if((isMeshUpToDate() == false) && (isSceduledForUpdate() == false) && (mWantedForRendering))
 	{
@@ -277,7 +266,7 @@ void OctreeNode<VoxelType>::sceduleForUpdate(void)
 				OctreeNode* child = children[ix][iy][iz];
 				if(child)
 				{
-					child->sceduleForUpdate();
+					child->sceduleUpdateIfNeeded();
 				}
 			}
 		}

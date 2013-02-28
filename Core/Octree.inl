@@ -68,9 +68,12 @@ Octree<VoxelType>::Octree(Volume<VoxelType>* volume, OctreeConstructionMode octr
 template <typename VoxelType>
 void Octree<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
 {
-	mRootOctreeNode->update(viewPosition, lodThreshold);
+	mRootOctreeNode->clearWantedForRendering();
+	mRootOctreeNode->determineWantedForRendering(viewPosition, lodThreshold);
 
-	if(gMainThreadTaskProcessor.hasAnyFinishedTasks())
+	mRootOctreeNode->sceduleUpdateIfNeeded();
+
+	while(gMainThreadTaskProcessor.hasAnyFinishedTasks())
 	{
 		VoxelTraits<VoxelType>::SurfaceExtractionTaskType* task = dynamic_cast<VoxelTraits<VoxelType>::SurfaceExtractionTaskType*>(gMainThreadTaskProcessor.removeFirstFinishedTask());
 
@@ -83,6 +86,8 @@ void Octree<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float
 
 		task->mOctreeNode->setMeshLastUpdated(Clock::getTimestamp());
 	}
+
+	mRootOctreeNode->determineWhetherToRender();
 }
 
 template <typename VoxelType>

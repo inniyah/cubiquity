@@ -6,7 +6,10 @@
 
 #include "GameplayVolumeSerialisation.h"
 
+#include "MainThreadTaskProcessor.h"
+
 #include <algorithm>
+#include <sstream>
 
 using namespace PolyVox;
 using namespace std;
@@ -72,6 +75,8 @@ void MeshGame::initialize()
 	mSmoothBiasSlider = (Slider*)mForm->getControl("SmoothBiasSlider");
 
 	mWireframeCheckBox = (CheckBox*)mForm->getControl("WireframeCheckBox");
+
+	mTasks = (Label*)mForm->getControl("Tasks");
 
 	mZoomInButton->addListener(this, Listener::PRESS);
 	mZoomOutButton->addListener(this, Listener::PRESS);
@@ -219,6 +224,10 @@ void MeshGame::update(float elapsedTime)
 
 	Vector3 viewPos = _cameraNode->getTranslationWorld();
 	mVolume->performUpdate(viewPos, mLod1StartSlider->getValue());
+
+	std::stringstream ss;
+	ss << "Tasks = " << gMainThreadTaskProcessor.mPendingTasks.size();
+	mTasks->setText(ss.str().c_str());
 
 	// Update UI.
     mForm->update(elapsedTime);
