@@ -45,7 +45,7 @@ void loadData(const char* filename, VolumeType* volume)
 
 	fclose(inputFile);
 
-	volume->markRegionAsModified(volume->mPolyVoxVolume->getEnclosingRegion());
+	volume->markAsModified(volume->mPolyVoxVolume->getEnclosingRegion());
 }
 
 template <typename VolumeType>

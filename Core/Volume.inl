@@ -44,14 +44,14 @@ void Volume<VoxelType>::setVoxelAt(int x, int y, int z, VoxelType value, bool ma
 	mPolyVoxVolume->setVoxelAt(x, y, z, value);
 	if(markAsModified)
 	{
-		mOctree->mRootOctreeNode->markDataAsModified(x, y, z, Clock::getTimestamp());
+		mOctree->mRootOctreeNode->markAsModified(x, y, z, Clock::getTimestamp());
 	}
 }
 
 template <typename VoxelType>
-void Volume<VoxelType>::markRegionAsModified(const PolyVox::Region& region)
+void Volume<VoxelType>::markAsModified(const PolyVox::Region& region)
 {
-	mOctree->mRootOctreeNode->markDataAsModified(region, Clock::getTimestamp());
+	mOctree->mRootOctreeNode->markAsModified(region, Clock::getTimestamp());
 }
 
 template <typename VoxelType>

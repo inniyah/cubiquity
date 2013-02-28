@@ -14,7 +14,7 @@ void luaRegister_GameplayColouredCubesVolume()
         {"getRootNodeForLua", lua_GameplayColouredCubesVolume_getRootNodeForLua},
         {"getVolumeForLua", lua_GameplayColouredCubesVolume_getVolumeForLua},
         {"getVoxel", lua_GameplayColouredCubesVolume_getVoxel},
-        {"markRegionAsModified", lua_GameplayColouredCubesVolume_markRegionAsModified},
+        {"markAsModified", lua_GameplayColouredCubesVolume_markAsModified},
         {"performUpdate", lua_GameplayColouredCubesVolume_performUpdate},
         {"setVoxel", lua_GameplayColouredCubesVolume_setVoxel},
         {NULL, NULL}
@@ -179,7 +179,7 @@ int lua_GameplayColouredCubesVolume_getVoxel(lua_State* state)
     return 0;
 }
 
-int lua_GameplayColouredCubesVolume_markRegionAsModified(lua_State* state)
+int lua_GameplayColouredCubesVolume_markAsModified(lua_State* state)
 {
     // Get the number of parameters.
     int paramCount = lua_gettop(state);
@@ -216,12 +216,12 @@ int lua_GameplayColouredCubesVolume_markRegionAsModified(lua_State* state)
                 int param6 = (int)luaL_checkint(state, 7);
 
                 GameplayColouredCubesVolume* instance = getInstance(state);
-                instance->markRegionAsModified(param1, param2, param3, param4, param5, param6);
+                instance->markAsModified(param1, param2, param3, param4, param5, param6);
                 
                 return 0;
             }
 
-            lua_pushstring(state, "lua_GameplayColouredCubesVolume_markRegionAsModified - Failed to match the given parameters to a valid function signature.");
+            lua_pushstring(state, "lua_GameplayColouredCubesVolume_markAsModified - Failed to match the given parameters to a valid function signature.");
             lua_error(state);
             break;
         }

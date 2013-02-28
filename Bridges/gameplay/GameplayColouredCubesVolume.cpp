@@ -149,9 +149,9 @@ void GameplayColouredCubesVolume::setVoxel(int x, int y, int z, float red, float
 	mCubiquityVolume->setVoxelAt(x, y, z, Colour(red, green, blue, alpha), markAsModified);
 }
 
-void GameplayColouredCubesVolume::markRegionAsModified(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ)
+void GameplayColouredCubesVolume::markAsModified(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ)
 {
-	mCubiquityVolume->markRegionAsModified(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ));
+	mCubiquityVolume->markAsModified(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ));
 }
 
 GameplayColouredCubesVolume* GameplayColouredCubesVolume::importVxl(const char* filename)
@@ -267,7 +267,7 @@ GameplayColouredCubesVolume* GameplayColouredCubesVolume::importVxl(const char* 
 
 
 
-	result->markRegionAsModified(0, 0, 0, 127, 127, 63);
+	result->markAsModified(0, 0, 0, 127, 127, 63);
 
 	return result;
 }

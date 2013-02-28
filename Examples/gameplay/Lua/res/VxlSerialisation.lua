@@ -96,7 +96,7 @@ function importVxl()
 		end
 	end
 
-	result:markRegionAsModified(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1)
+	result:markAsModified(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1)
 
 	return result
 end

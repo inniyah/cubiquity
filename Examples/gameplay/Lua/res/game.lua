@@ -22,7 +22,7 @@ function fillSphere(x, y, z, size, colour, paintOnly)
 			end
 		end
 	end
-	_colouredCubesVolume:markRegionAsModified(x-size, y-size, z-size, x+size, y+size, z+size)
+	_colouredCubesVolume:markAsModified(x-size, y-size, z-size, x+size, y+size, z+size)
 end
 
 function initialize()

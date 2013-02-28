@@ -23,7 +23,7 @@ public:
 
 	VoxelType getVoxelAt(int x, int y, int z);
 	void setVoxelAt(int x, int y, int z, VoxelType value, bool markAsModified = true);
-	void markRegionAsModified(const PolyVox::Region& region);
+	void markAsModified(const PolyVox::Region& region);
 
 	virtual void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
 protected:

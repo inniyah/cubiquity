@@ -14,8 +14,8 @@ public:
 
 	void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
 
-	void markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp);
-	void markDataAsModified(const PolyVox::Region& region, Timestamp newTimeStamp);
+	void markAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp);
+	void markAsModified(const PolyVox::Region& region, Timestamp newTimeStamp);
 
 	void clearWantedForRendering(void);
 	void determineWantedForRendering(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);

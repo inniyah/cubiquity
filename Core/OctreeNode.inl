@@ -60,7 +60,7 @@ void OctreeNode<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, f
 }
 
 template <typename VoxelType>
-void OctreeNode<VoxelType>::markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp)
+void OctreeNode<VoxelType>::markAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp)
 {
 	if(mRegion.containsPoint(x, y, z, -1)) //FIXME - Think if we really need this border.
 	{
@@ -76,7 +76,7 @@ void OctreeNode<VoxelType>::markDataAsModified(int32_t x, int32_t y, int32_t z, 
 					OctreeNode* child = children[ix][iy][iz];
 					if(child)
 					{
-						child->markDataAsModified(x, y, z, newTimeStamp);
+						child->markAsModified(x, y, z, newTimeStamp);
 					}
 				}
 			}
@@ -85,7 +85,7 @@ void OctreeNode<VoxelType>::markDataAsModified(int32_t x, int32_t y, int32_t z, 
 }
 
 template <typename VoxelType>
-void OctreeNode<VoxelType>::markDataAsModified(const Region& region, Timestamp newTimeStamp)
+void OctreeNode<VoxelType>::markAsModified(const Region& region, Timestamp newTimeStamp)
 {
 	if(intersects(mRegion, region))
 	{
@@ -101,7 +101,7 @@ void OctreeNode<VoxelType>::markDataAsModified(const Region& region, Timestamp n
 					OctreeNode* child = children[ix][iy][iz];
 					if(child)
 					{
-						child->markDataAsModified(region, newTimeStamp);
+						child->markAsModified(region, newTimeStamp);
 					}
 				}
 			}
