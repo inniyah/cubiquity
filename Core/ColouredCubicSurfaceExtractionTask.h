@@ -17,7 +17,7 @@ public:
 public:
 	OctreeNode< Colour >* mOctreeNode;
 	PolyVox::SimpleVolume<Colour>* mPolyVoxVolume;
-	PolyVox::SurfaceMesh<PolyVox::PositionMaterial<Colour> >* mColouredCubicMesh;
+	PolyVox::SurfaceMesh<PolyVox::PositionMaterial<Colour> >* mPolyVoxMesh;
 };
 
 template< typename SrcVolumeType, typename DstVolumeType>

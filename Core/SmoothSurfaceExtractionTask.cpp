@@ -11,7 +11,7 @@ using namespace PolyVox;
 SmoothSurfaceExtractionTask::SmoothSurfaceExtractionTask(OctreeNode< MultiMaterial >* octreeNode, PolyVox::SimpleVolume<typename MultiMaterialMarchingCubesController::MaterialType>* polyVoxVolume)
 	:mOctreeNode(octreeNode)
 	,mPolyVoxVolume(polyVoxVolume)
-	,mSmoothMesh(0)
+	,mPolyVoxMesh(0)
 {
 }
 
@@ -23,9 +23,9 @@ SmoothSurfaceExtractionTask::~SmoothSurfaceExtractionTask()
 void SmoothSurfaceExtractionTask::process(void)
 {
 	//Extract the surface
-	mSmoothMesh = new PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >;
+	mPolyVoxMesh = new PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >;
 
-	generateSmoothMesh(mOctreeNode->mRegion, mOctreeNode->mLodLevel, mSmoothMesh);
+	generateSmoothMesh(mOctreeNode->mRegion, mOctreeNode->mLodLevel, mPolyVoxMesh);
 }
 
 void SmoothSurfaceExtractionTask::generateSmoothMesh(const PolyVox::Region& region, uint32_t lodLevel, PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* resultMesh)

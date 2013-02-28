@@ -69,6 +69,20 @@ template <typename VoxelType>
 void Octree<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
 {
 	mRootOctreeNode->update(viewPosition, lodThreshold);
+
+	if(gMainThreadTaskProcessor.hasAnyFinishedTasks())
+	{
+		VoxelTraits<VoxelType>::SurfaceExtractionTaskType* task = dynamic_cast<VoxelTraits<VoxelType>::SurfaceExtractionTaskType*>(gMainThreadTaskProcessor.removeFirstFinishedTask());
+
+		POLYVOX_ASSERT(task, "Wrong task type"); //Need to think what we we do about list of different task types
+
+		if(task->mPolyVoxMesh->getNoOfIndices() > 0) //But if the new mesh is empty we should still delete any old mesh?
+		{
+			task->mOctreeNode->mPolyVoxMesh = task->mPolyVoxMesh;
+		}
+
+		task->mOctreeNode->setMeshLastUpdated(Clock::getTimestamp());
+	}
 }
 
 template <typename VoxelType>

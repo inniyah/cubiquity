@@ -18,7 +18,7 @@ public:
 public:
 	OctreeNode< MultiMaterial >* mOctreeNode;
 	PolyVox::SimpleVolume<typename MultiMaterialMarchingCubesController::MaterialType>* mPolyVoxVolume;
-	PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType> >* mSmoothMesh;
+	PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType> >* mPolyVoxMesh;
 };
 
 void recalculateMaterials(PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* mesh, const PolyVox::Vector3DFloat& meshOffset, PolyVox::SimpleVolume<MultiMaterial>* volume);

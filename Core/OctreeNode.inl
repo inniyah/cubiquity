@@ -18,9 +18,9 @@ OctreeNode<VoxelType>::OctreeNode(PolyVox::Region region, OctreeNode* parentRegi
 	,mOctree(octree)
 	,mWantedForRendering(false)
 	,mRenderThisNode(false)
-	,mLastSceduledForUpdate(Clock::getTimestamp())
-	,mMeshLastUpdated(Clock::getTimestamp())	
-	,mDataLastModified(Clock::getTimestamp())
+	,mLastSceduledForUpdate(Clock::getTimestamp()) // The order ofthese few initialisations is important
+	,mMeshLastUpdated(Clock::getTimestamp())	   // to meke sure the node is set to an 'out of date' 
+	,mDataLastModified(Clock::getTimestamp())      // state which will then try to update.
 	,mPolyVoxMesh(0)
 	,mGameEngineNode(0)
 	,mLodLevel(0)

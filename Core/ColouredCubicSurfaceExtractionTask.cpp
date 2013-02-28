@@ -12,7 +12,7 @@ using namespace PolyVox;
 ColouredCubicSurfaceExtractionTask::ColouredCubicSurfaceExtractionTask(OctreeNode< Colour >* octreeNode, PolyVox::SimpleVolume<Colour>* polyVoxVolume)
 	:mOctreeNode(octreeNode)
 	,mPolyVoxVolume(polyVoxVolume)
-	,mColouredCubicMesh(0)
+	,mPolyVoxMesh(0)
 {
 }
 
@@ -26,7 +26,7 @@ void ColouredCubicSurfaceExtractionTask::process(void)
 	PolyVox::Region lod0Region = mOctreeNode->mRegion;
 
 	//Extract the surface
-	mColouredCubicMesh = new PolyVox::SurfaceMesh<PolyVox::PositionMaterial<Colour> >;
+	mPolyVoxMesh = new PolyVox::SurfaceMesh<PolyVox::PositionMaterial<Colour> >;
 
 	uint32_t downScaleFactor = 0x0001 << mOctreeNode->mLodLevel;
 
@@ -34,7 +34,7 @@ void ColouredCubicSurfaceExtractionTask::process(void)
 
 	if(downScaleFactor == 1) 
 	{
-		PolyVox::CubicSurfaceExtractor< PolyVox::SimpleVolume<Colour>, ColouredCubesIsQuadNeeded > surfaceExtractor(mPolyVoxVolume, mOctreeNode->mRegion, mColouredCubicMesh, PolyVox::WrapModes::Border, Colour(0), true, isQuadNeeded);
+		PolyVox::CubicSurfaceExtractor< PolyVox::SimpleVolume<Colour>, ColouredCubesIsQuadNeeded > surfaceExtractor(mPolyVoxVolume, mOctreeNode->mRegion, mPolyVoxMesh, PolyVox::WrapModes::Border, Colour(0), true, isQuadNeeded);
 		surfaceExtractor.execute();
 	}
 	else if(downScaleFactor == 2)
@@ -60,11 +60,11 @@ void ColouredCubicSurfaceExtractionTask::process(void)
 		
 		//dstRegion.shiftLowerCorner(-1, -1, -1);
 
-		PolyVox::CubicSurfaceExtractor< PolyVox::RawVolume<Colour>, ColouredCubesIsQuadNeeded > surfaceExtractor(&resampledVolume, dstRegion, mColouredCubicMesh, PolyVox::WrapModes::Border, Colour(0), true, isQuadNeeded);
+		PolyVox::CubicSurfaceExtractor< PolyVox::RawVolume<Colour>, ColouredCubesIsQuadNeeded > surfaceExtractor(&resampledVolume, dstRegion, mPolyVoxMesh, PolyVox::WrapModes::Border, Colour(0), true, isQuadNeeded);
 		surfaceExtractor.execute();
 
-		mColouredCubicMesh->scaleVertices(static_cast<float>(downScaleFactor));
-		mColouredCubicMesh->translateVertices(Vector3DFloat(0.5f, 0.5f, 0.5f));
+		mPolyVoxMesh->scaleVertices(static_cast<float>(downScaleFactor));
+		mPolyVoxMesh->translateVertices(Vector3DFloat(0.5f, 0.5f, 0.5f));
 	}
 	else if(downScaleFactor == 4)
 	{
@@ -102,10 +102,10 @@ void ColouredCubicSurfaceExtractionTask::process(void)
 
 		//dstRegion.shiftLowerCorner(-1, -1, -1);
 
-		PolyVox::CubicSurfaceExtractor< PolyVox::RawVolume<Colour>, ColouredCubesIsQuadNeeded > surfaceExtractor(&resampledVolume2, dstRegion2, mColouredCubicMesh, PolyVox::WrapModes::Border, Colour(0), true, isQuadNeeded);
+		PolyVox::CubicSurfaceExtractor< PolyVox::RawVolume<Colour>, ColouredCubesIsQuadNeeded > surfaceExtractor(&resampledVolume2, dstRegion2, mPolyVoxMesh, PolyVox::WrapModes::Border, Colour(0), true, isQuadNeeded);
 		surfaceExtractor.execute();
 
-		mColouredCubicMesh->scaleVertices(static_cast<float>(downScaleFactor));
-		mColouredCubicMesh->translateVertices(Vector3DFloat(1.5f, 1.5f, 1.5f));
+		mPolyVoxMesh->scaleVertices(static_cast<float>(downScaleFactor));
+		mPolyVoxMesh->translateVertices(Vector3DFloat(1.5f, 1.5f, 1.5f));
 	}
 }
