@@ -9,8 +9,6 @@
 
 #include <sstream>
 
-using namespace PolyVox;
-
 template <typename VoxelType>
 OctreeNode<VoxelType>::OctreeNode(PolyVox::Region region, OctreeNode* parentRegion, Octree<VoxelType>* octree)
 	:mRegion(region)
@@ -85,7 +83,7 @@ void OctreeNode<VoxelType>::markAsModified(int32_t x, int32_t y, int32_t z, Time
 }
 
 template <typename VoxelType>
-void OctreeNode<VoxelType>::markAsModified(const Region& region, Timestamp newTimeStamp)
+void OctreeNode<VoxelType>::markAsModified(const PolyVox::Region& region, Timestamp newTimeStamp)
 {
 	if(intersects(mRegion, region))
 	{
@@ -182,11 +180,11 @@ void OctreeNode<VoxelType>::determineWantedForRendering(const PolyVox::Vector3DF
 	}
 	else
 	{
-		Vector3DFloat regionCentre = static_cast<Vector3DFloat>(mRegion.getCentre());
+		PolyVox::Vector3DFloat regionCentre = static_cast<PolyVox::Vector3DFloat>(mRegion.getCentre());
 
 		float distance = (viewPosition - regionCentre).length();
 
-		Vector3DInt32 diagonal = mRegion.getUpperCorner() - mRegion.getLowerCorner();
+		PolyVox::Vector3DInt32 diagonal = mRegion.getUpperCorner() - mRegion.getLowerCorner();
 		float diagonalLength = diagonal.length(); // A measure of our regions size
 
 		float projectedSize = diagonalLength / distance;
