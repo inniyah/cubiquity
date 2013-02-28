@@ -59,5 +59,5 @@ void Volume<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float
 {
 	gMainThreadTaskProcessor.processOneTask(); //Doesn't really belong here
 
-	mOctree->mRootOctreeNode->update(viewPosition, lodThreshold);
+	mOctree->update(viewPosition, lodThreshold);
 }

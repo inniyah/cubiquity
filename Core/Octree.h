@@ -1,6 +1,7 @@
 #ifndef CUBIQUITY_OCTREE_H_
 #define CUBIQUITY_OCTREE_H_
 
+#include "Clock.h"
 #include "CubiquityForwardDeclarations.h"
 
 namespace OctreeConstructionModes
@@ -18,6 +19,11 @@ class Octree
 {
 public:
 	Octree(Volume<VoxelType>* volume, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize);
+
+	void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
+
+	void markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp);
+	void markDataAsModified(const PolyVox::Region& region, Timestamp newTimeStamp);
 
 	void buildOctreeNodeTree(OctreeNode< VoxelType >* parent, const PolyVox::Region& regionToCover, OctreeConstructionMode octreeConstructionMode);
 

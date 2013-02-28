@@ -66,6 +66,24 @@ Octree<VoxelType>::Octree(Volume<VoxelType>* volume, OctreeConstructionMode octr
 }
 
 template <typename VoxelType>
+void Octree<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
+{
+	mRootOctreeNode->update(viewPosition, lodThreshold);
+}
+
+template <typename VoxelType>
+void Octree<VoxelType>::markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp)
+{
+	mRootOctreeNode->markDataAsModified(x, y, z, newTimeStamp);
+}
+
+template <typename VoxelType>
+void Octree<VoxelType>::markDataAsModified(const PolyVox::Region& region, Timestamp newTimeStamp)
+{
+	mRootOctreeNode->markDataAsModified(region, newTimeStamp);
+}
+
+template <typename VoxelType>
 void Octree<VoxelType>::buildOctreeNodeTree(OctreeNode< VoxelType >* parent, const PolyVox::Region& regionToCover, OctreeConstructionMode octreeConstructionMode)
 {
 	POLYVOX_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getHeightInVoxels(), "Region must be cubic");
