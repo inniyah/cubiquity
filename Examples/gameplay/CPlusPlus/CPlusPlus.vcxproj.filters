@@ -416,5 +416,8 @@
     <ClCompile Include="..\..\..\Core\MainThreadTaskProcessor.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Core\Task.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
