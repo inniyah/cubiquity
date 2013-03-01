@@ -2,6 +2,7 @@
 
 TaskState& operator++(TaskState& taskState)
 {
+	POLYVOX_ASSERT(taskState != TaskStates::Finished, "Cannot increment the finished task state!");
 	int tmp = static_cast<int>(taskState);
 	++tmp;
 	taskState = static_cast<TaskState>(tmp);
@@ -28,6 +29,6 @@ TaskState Task::getState(void)
 void Task::gotoNextState(void)
 {
 	// NEED MUTEX HERE?
-	POLYVOX_ASSERT(mState != TaskStates::Finished, "Already on the finished state!");
+	
 	mState++;
 }

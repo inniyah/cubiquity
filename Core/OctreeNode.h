@@ -48,6 +48,8 @@ public:
 	void* mGameEngineNode;
 
 	uint8_t mLodLevel; // Zero for leaf nodes.
+
+	Task* mLastSurfaceExtractionTask;
 };
 
 #include "OctreeNode.inl"

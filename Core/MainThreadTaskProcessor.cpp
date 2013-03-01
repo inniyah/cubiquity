@@ -35,7 +35,10 @@ void MainThreadTaskProcessor::processOneTask(void)
 		Task* task = mPendingTasks.front();
 		mPendingTasks.pop_front();
 
+		POLYVOX_ASSERT(task->getState() == TaskStates::Pending, "Task must have pending state to be processed");
+		task->gotoNextState();
 		task->process();
+		task->gotoNextState();
 
 		mFinishedTasks.push_back(task);
 	}
@@ -48,7 +51,10 @@ void MainThreadTaskProcessor::processAllTasks(void)
 		Task* task = mPendingTasks.front();
 		mPendingTasks.pop_front();
 
+		POLYVOX_ASSERT(task->getState() == TaskStates::Pending, "Task must have pending state to be processed");
+		task->gotoNextState();
 		task->process();
+		task->gotoNextState();
 
 		mFinishedTasks.push_back(task);
 	}

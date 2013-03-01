@@ -31,6 +31,7 @@ class SmoothTerrainVolume;
 
 class SmoothTerrainVolumeEditor;
 
+class Task;
 class TaskProcessor;
 
 template <typename _VoxelType>
