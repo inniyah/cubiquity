@@ -26,26 +26,19 @@ BackgroundTaskProcessor::~BackgroundTaskProcessor()
 
 void BackgroundTaskProcessor::addTask(Task* task)
 {
-	boost::unique_lock<boost::mutex> lock(mPendingTasksMutex);
-
-	mPendingTasks.push_back(task);
-
-	mHasPendingTasks.notify_one();
+	mPendingTasks.push(task);
 }
 
 bool BackgroundTaskProcessor::hasAnyFinishedTasks(void)
 {
-	boost::unique_lock<boost::mutex> lock(mFinishedTasksMutex);
-
-	return mFinishedTasks.size() > 0;
+	return !mFinishedTasks.empty();
 }
 
 Task* BackgroundTaskProcessor::removeFirstFinishedTask(void)
 {
-	boost::unique_lock<boost::mutex> lock(mFinishedTasksMutex);
 
-	Task* task = mFinishedTasks.front();
-	mFinishedTasks.pop_front();
+	Task* task = 0;
+	mFinishedTasks.wait_and_pop(task);
 	return task;
 }
 
@@ -53,26 +46,14 @@ void BackgroundTaskProcessor::processTasks(void)
 {
 	while(true)
 	{
-		boost::unique_lock<boost::mutex> pendingTasksLock(mPendingTasksMutex);
-
-		// Process data
-        while( mPendingTasks.size() == 0 ) // while - to guard agains spurious wakeups (see http://stackoverflow.com/a/2379903)
-        {
-            mHasPendingTasks.wait( pendingTasksLock );
-        }
-
-		Task* task = mPendingTasks.front();
-		mPendingTasks.pop_front();
+		Task* task = 0;
+		mPendingTasks.wait_and_pop(task);
 
 		POLYVOX_ASSERT(task->getState() == TaskStates::Pending, "Task must have pending state to be processed");
 		task->gotoNextState();
 		task->process();
 		task->gotoNextState();
 
-		// Save the completed task
-		{
-			boost::unique_lock<boost::mutex> lock(mFinishedTasksMutex);
-			mFinishedTasks.push_back(task);
-		}
+		mFinishedTasks.push(task);
 	}
 }
