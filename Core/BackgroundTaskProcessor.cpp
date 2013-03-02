@@ -2,18 +2,26 @@
 
 #include "boost/bind.hpp"
 
-BackgroundTaskProcessor gBackgroundTaskProcessor; //Our global instance
+BackgroundTaskProcessor gBackgroundTaskProcessor(1); //Our global instance
 
-BackgroundTaskProcessor::BackgroundTaskProcessor()
+BackgroundTaskProcessor::BackgroundTaskProcessor(uint32_t noOfThreads)
 	:TaskProcessor()
 {
-	mThread = new boost::thread(boost::bind(&BackgroundTaskProcessor::processTasks, this));
+	for(uint32_t ct = 0; ct < noOfThreads; ct++)
+	{
+		boost::thread* taskProcessingThread = new boost::thread(boost::bind(&BackgroundTaskProcessor::processTasks, this));
+		mThreads.push_back(taskProcessingThread);
+	}
 }
 
 BackgroundTaskProcessor::~BackgroundTaskProcessor()
 {
-	//mThread->join(); //This will never happen!
-	delete mThread;
+	for(std::list<boost::thread*>::iterator threadIter = mThreads.begin(); threadIter != mThreads.end(); threadIter++)
+	{
+		(*threadIter)->interrupt();
+		(*threadIter)->join();
+		delete *threadIter;
+	}
 }
 
 void BackgroundTaskProcessor::addTask(Task* task)
@@ -48,7 +56,7 @@ void BackgroundTaskProcessor::processTasks(void)
 		boost::unique_lock<boost::mutex> pendingTasksLock(mPendingTasksMutex);
 
 		// Process data
-        while( mPendingTasks.size() == 0 ) // while - to guard agains spurious wakeups
+        while( mPendingTasks.size() == 0 ) // while - to guard agains spurious wakeups (see http://stackoverflow.com/a/2379903)
         {
             mHasPendingTasks.wait( pendingTasksLock );
         }

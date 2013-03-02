@@ -10,7 +10,7 @@
 class BackgroundTaskProcessor : public TaskProcessor
 {
 public:
-	BackgroundTaskProcessor();
+	BackgroundTaskProcessor(uint32_t noOfThreads);
 	virtual ~BackgroundTaskProcessor();
 
 	void addTask(Task* task);
@@ -23,7 +23,7 @@ public:
 	std::list<Task*> mPendingTasks;
 	std::list<Task*> mFinishedTasks;
 
-	boost::thread* mThread;
+	std::list<boost::thread*> mThreads;
 	boost::mutex mPendingTasksMutex;
 	boost::mutex mFinishedTasksMutex;
 	boost::condition_variable mHasPendingTasks;
