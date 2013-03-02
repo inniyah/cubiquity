@@ -24,7 +24,9 @@ public:
 	std::list<Task*> mFinishedTasks;
 
 	boost::thread* mThread;
-	boost::mutex mMutex;
+	boost::mutex mPendingTasksMutex;
+	boost::mutex mFinishedTasksMutex;
+	boost::condition_variable mHasPendingTasks;
 };
 
 extern BackgroundTaskProcessor gBackgroundTaskProcessor;
