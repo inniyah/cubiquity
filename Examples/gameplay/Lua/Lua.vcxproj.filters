@@ -360,6 +360,9 @@
     <ClInclude Include="..\..\..\Core\Task.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Core\BackgroundTaskProcessor.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
@@ -459,6 +462,12 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Core\TaskProcessor.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Core\BackgroundTaskProcessor.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Core\Task.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
