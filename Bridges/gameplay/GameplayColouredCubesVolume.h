@@ -2,7 +2,6 @@
 #define GAMEPLAYCOLOUREDCUBESVOLUME_H_
 
 #include "ColouredCubesVolume.h"
-#include "MainThreadTaskProcessor.h"
 
 #include "gameplay.h"
 #include "Slider.h"

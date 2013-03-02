@@ -1,7 +1,6 @@
 #ifndef GAMEPLAYSMOOTHTERRAINVOLUME_H_
 #define GAMEPLAYSMOOTHTERRAINVOLUME_H_
 
-#include "MainThreadTaskProcessor.h"
 #include "SmoothTerrainVolume.h"
 #include "SmoothSurfaceExtractionTask.h"
 

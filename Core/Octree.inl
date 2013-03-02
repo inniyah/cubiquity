@@ -73,9 +73,9 @@ void Octree<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float
 
 	mRootOctreeNode->sceduleUpdateIfNeeded();
 
-	while(gMainThreadTaskProcessor.hasAnyFinishedTasks())
+	while(gBackgroundTaskProcessor.hasAnyFinishedTasks())
 	{
-		VoxelTraits<VoxelType>::SurfaceExtractionTaskType* task = dynamic_cast<VoxelTraits<VoxelType>::SurfaceExtractionTaskType*>(gMainThreadTaskProcessor.removeFirstFinishedTask());
+		VoxelTraits<VoxelType>::SurfaceExtractionTaskType* task = dynamic_cast<VoxelTraits<VoxelType>::SurfaceExtractionTaskType*>(gBackgroundTaskProcessor.removeFirstFinishedTask());
 
 		POLYVOX_ASSERT(task, "Wrong task type"); //Need to think what we we do about list of different task types
 

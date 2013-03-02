@@ -253,7 +253,7 @@ void OctreeNode<VoxelType>::sceduleUpdateIfNeeded(void)
 
 		mLastSurfaceExtractionTask = new VoxelTraits<VoxelType>::SurfaceExtractionTaskType(this, mOctree->mVolume->mPolyVoxVolume);
 
-		gMainThreadTaskProcessor.addTask(mLastSurfaceExtractionTask);
+		gBackgroundTaskProcessor.addTask(mLastSurfaceExtractionTask);
 
 		//updateMeshImpl(octreeNode);
 	}

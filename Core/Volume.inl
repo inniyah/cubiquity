@@ -6,6 +6,7 @@
 #include "PolyVoxCore/Impl/Utility.h" //Should we include from Impl?
 
 #include "Clock.h"
+#include "BackgroundTaskProcessor.h"
 #include "MainThreadTaskProcessor.h"
 #include "MultiMaterial.h"
 
@@ -59,6 +60,6 @@ void Volume<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float
 {
 	mOctree->update(viewPosition, lodThreshold);
 
-	gMainThreadTaskProcessor.processOneTask(); //Doesn't really belong here
+	//gMainThreadTaskProcessor.processOneTask(); //Doesn't really belong here
 	//gMainThreadTaskProcessor.processAllTasks(); //Doesn't really belong here
 }
