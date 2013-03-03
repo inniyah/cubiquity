@@ -277,7 +277,7 @@ void OctreeNode<VoxelType>::sceduleUpdateIfNeeded(void)
 template <typename VoxelType>
 bool OctreeNode<VoxelType>::updateFromCompletedTask(typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* completedTask)
 {
-	// There is sme chance that the volume data has been modified between the time that we started performing the
+	// There is some chance that the volume data has been modified between the time that we started performing the
 	// surface extraction and now. If the mesh is out of date then just discard it - a new one should be along soon.
 	if(completedTask->mStartedProcessingTimestamp > mDataLastModified)
 	{
