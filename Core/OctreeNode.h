@@ -30,7 +30,7 @@ public:
 
 	void sceduleUpdateIfNeeded(void);
 
-	bool updateFromCompletedTask(typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* completedTask);
+	void updateFromCompletedTask(typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* completedTask);
 
 	PolyVox::Region mRegion;
 	Timestamp mDataLastModified;
@@ -50,8 +50,6 @@ public:
 	void* mGameEngineNode;
 
 	uint8_t mLodLevel; // Zero for leaf nodes.
-
-	typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* mLastSurfaceExtractionTask;
 };
 
 #include "OctreeNode.inl"

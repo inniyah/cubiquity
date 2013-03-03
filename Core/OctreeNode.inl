@@ -22,7 +22,6 @@ OctreeNode<VoxelType>::OctreeNode(PolyVox::Region region, OctreeNode* parentRegi
 	,mPolyVoxMesh(0)
 	,mGameEngineNode(0)
 	,mLodLevel(0)
-	,mLastSurfaceExtractionTask(0)
 {
 	for(int z = 0; z < 2; z++)
 	{
@@ -247,15 +246,13 @@ void OctreeNode<VoxelType>::setMeshLastUpdated(Timestamp newTimeStamp)
 template <typename VoxelType>
 void OctreeNode<VoxelType>::sceduleUpdateIfNeeded(void)
 {
-	if((isMeshUpToDate() == false) && (isSceduledForUpdate() == false) && ((mLastSurfaceExtractionTask == 0) || (mLastSurfaceExtractionTask->getState() != TaskStates::Pending)) && (mWantedForRendering))
+	if((isMeshUpToDate() == false) && (isSceduledForUpdate() == false) && (mWantedForRendering))
 	{
 		mLastSceduledForUpdate = Clock::getTimestamp();
 
-		mLastSurfaceExtractionTask = new VoxelTraits<VoxelType>::SurfaceExtractionTaskType(this, mOctree->mVolume->mPolyVoxVolume);
+		typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* task = new VoxelTraits<VoxelType>::SurfaceExtractionTaskType(this, mOctree->mVolume->mPolyVoxVolume);
 
-		gBackgroundTaskProcessor.addTask(mLastSurfaceExtractionTask);
-
-		//updateMeshImpl(octreeNode);
+		gBackgroundTaskProcessor.addTask(task);
 	}
 
 	for(int iz = 0; iz < 2; iz++)
@@ -275,23 +272,12 @@ void OctreeNode<VoxelType>::sceduleUpdateIfNeeded(void)
 }
 
 template <typename VoxelType>
-bool OctreeNode<VoxelType>::updateFromCompletedTask(typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* completedTask)
+void OctreeNode<VoxelType>::updateFromCompletedTask(typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* completedTask)
 {
-	// There is some chance that the volume data has been modified between the time that we started performing the
-	// surface extraction and now. If the mesh is out of date then just discard it - a new one should be along soon.
-	if(completedTask->mStartedProcessingTimestamp > mDataLastModified)
+	if(completedTask->mPolyVoxMesh->getNoOfIndices() > 0)
 	{
-		if(completedTask->mPolyVoxMesh->getNoOfIndices() > 0)
-		{
-			mPolyVoxMesh = completedTask->mPolyVoxMesh;
-		}
-
-		setMeshLastUpdated(Clock::getTimestamp());
-
-		return true;
+		mPolyVoxMesh = completedTask->mPolyVoxMesh;
 	}
-	else
-	{
-		return false;
-	}
+
+	setMeshLastUpdated(Clock::getTimestamp());
 }

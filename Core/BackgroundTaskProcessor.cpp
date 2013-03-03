@@ -48,12 +48,7 @@ void BackgroundTaskProcessor::processTasks(void)
 	{
 		Task* task = 0;
 		mPendingTasks.wait_and_pop(task);
-
-		POLYVOX_ASSERT(task->getState() == TaskStates::Pending, "Task must have pending state to be processed");
-		task->gotoNextState();
 		task->process();
-		task->gotoNextState();
-
 		mFinishedTasks.push(task);
 	}
 }

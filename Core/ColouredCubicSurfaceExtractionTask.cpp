@@ -24,8 +24,6 @@ ColouredCubicSurfaceExtractionTask::~ColouredCubicSurfaceExtractionTask()
 
 void ColouredCubicSurfaceExtractionTask::process(void)
 {
-	mStartedProcessingTimestamp = Clock::getTimestamp();
-
 	PolyVox::Region lod0Region = mOctreeNode->mRegion;
 
 	//Extract the surface
