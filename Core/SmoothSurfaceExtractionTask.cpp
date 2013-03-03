@@ -23,6 +23,8 @@ SmoothSurfaceExtractionTask::~SmoothSurfaceExtractionTask()
 
 void SmoothSurfaceExtractionTask::process(void)
 {
+	mStartedProcessingTimestamp = Clock::getTimestamp();
+
 	//Extract the surface
 	mPolyVoxMesh = new PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >;
 

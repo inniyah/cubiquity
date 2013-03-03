@@ -11,6 +11,7 @@ public:
 	static Timestamp getTimestamp(void);
 
 private:
+	//This should use boost::atomic?
 	static Timestamp mTimestamp;
 };
 

@@ -1,6 +1,7 @@
 #ifndef CUBIQUITY_COLOUREDCUBICSURFACEEXTRACTIONTASK_H_
 #define CUBIQUITY_COLOUREDCUBICSURFACEEXTRACTIONTASK_H_
 
+#include "Clock.h"
 #include "Colour.h"
 #include "CubiquityForwardDeclarations.h"
 #include "Task.h"
@@ -18,6 +19,7 @@ public:
 	OctreeNode< Colour >* mOctreeNode;
 	PolyVox::SimpleVolume<Colour>* mPolyVoxVolume;
 	PolyVox::SurfaceMesh<PolyVox::PositionMaterial<Colour> >* mPolyVoxMesh;
+	Timestamp mStartedProcessingTimestamp;
 };
 
 template< typename SrcVolumeType, typename DstVolumeType>
