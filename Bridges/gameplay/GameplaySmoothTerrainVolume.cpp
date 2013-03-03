@@ -115,7 +115,10 @@ gameplay::Model* GameplaySmoothTerrainVolume::buildModelFromPolyVoxMesh(const Po
 		// of the isosurface materials are not at their full intensity (they are at roughly half
 		// because that's where the theshold is). We need to normalise the values to thier full range.
 		Vector<4, float> matAsVec = vecVertices[i].getMaterial();
-		matAsVec.normalise();
+		if(matAsVec.lengthSquared() > 0.001f)
+		{
+			matAsVec.normalise();
+		}
 
 		*ptr = matAsVec.getElement(0); ptr++;
 		*ptr = matAsVec.getElement(1); ptr++;
