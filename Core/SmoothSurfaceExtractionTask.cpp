@@ -6,6 +6,8 @@
 #include "PolyVoxCore/RawVolume.h"
 #include "PolyVoxCore/SimpleVolume.h"
 
+#include <limits>
+
 using namespace PolyVox;
 
 SmoothSurfaceExtractionTask::SmoothSurfaceExtractionTask(OctreeNode< MultiMaterial >* octreeNode, PolyVox::SimpleVolume<typename MultiMaterialMarchingCubesController::MaterialType>* polyVoxVolume)
@@ -13,6 +15,7 @@ SmoothSurfaceExtractionTask::SmoothSurfaceExtractionTask(OctreeNode< MultiMateri
 	,mOctreeNode(octreeNode)
 	,mPolyVoxVolume(polyVoxVolume)
 	,mPolyVoxMesh(0)
+	,mProcessingStartedTimestamp(std::numeric_limits<Timestamp>::max())
 {
 }
 
@@ -23,6 +26,7 @@ SmoothSurfaceExtractionTask::~SmoothSurfaceExtractionTask()
 
 void SmoothSurfaceExtractionTask::process(void)
 {
+	mProcessingStartedTimestamp = Clock::getTimestamp();
 	//Extract the surface
 	mPolyVoxMesh = new PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >;
 

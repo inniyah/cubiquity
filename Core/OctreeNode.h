@@ -50,6 +50,8 @@ public:
 	void* mGameEngineNode;
 
 	uint8_t mLodLevel; // Zero for leaf nodes.
+
+	typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* mLastSurfaceExtractionTask;
 };
 
 #include "OctreeNode.inl"

@@ -22,6 +22,7 @@ OctreeNode<VoxelType>::OctreeNode(PolyVox::Region region, OctreeNode* parentRegi
 	,mPolyVoxMesh(0)
 	,mGameEngineNode(0)
 	,mLodLevel(0)
+	,mLastSurfaceExtractionTask(0)
 {
 	for(int z = 0; z < 2; z++)
 	{
@@ -246,13 +247,13 @@ void OctreeNode<VoxelType>::setMeshLastUpdated(Timestamp newTimeStamp)
 template <typename VoxelType>
 void OctreeNode<VoxelType>::sceduleUpdateIfNeeded(void)
 {
-	if((isMeshUpToDate() == false) && (isSceduledForUpdate() == false) && (mWantedForRendering))
+	if((isMeshUpToDate() == false) && (isSceduledForUpdate() == false) && ((mLastSurfaceExtractionTask == 0) || (mLastSurfaceExtractionTask->mProcessingStartedTimestamp < Clock::getTimestamp())) && (mWantedForRendering))
 	{
 		mLastSceduledForUpdate = Clock::getTimestamp();
 
-		typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* task = new VoxelTraits<VoxelType>::SurfaceExtractionTaskType(this, mOctree->mVolume->mPolyVoxVolume);
+		mLastSurfaceExtractionTask = new VoxelTraits<VoxelType>::SurfaceExtractionTaskType(this, mOctree->mVolume->mPolyVoxVolume);
 
-		gBackgroundTaskProcessor.addTask(task);
+		gBackgroundTaskProcessor.addTask(mLastSurfaceExtractionTask);
 	}
 
 	for(int iz = 0; iz < 2; iz++)

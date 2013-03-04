@@ -19,6 +19,7 @@ public:
 	OctreeNode< Colour >* mOctreeNode;
 	PolyVox::SimpleVolume<Colour>* mPolyVoxVolume;
 	PolyVox::SurfaceMesh<PolyVox::PositionMaterial<Colour> >* mPolyVoxMesh;
+	Timestamp mProcessingStartedTimestamp;
 };
 
 template< typename SrcVolumeType, typename DstVolumeType>

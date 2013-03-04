@@ -7,6 +7,8 @@
 #include "PolyVoxCore/RawVolume.h"
 #include "PolyVoxCore/SimpleVolume.h"
 
+#include <limits>
+
 using namespace PolyVox;
 
 ColouredCubicSurfaceExtractionTask::ColouredCubicSurfaceExtractionTask(OctreeNode< Colour >* octreeNode, PolyVox::SimpleVolume<Colour>* polyVoxVolume)
@@ -14,6 +16,7 @@ ColouredCubicSurfaceExtractionTask::ColouredCubicSurfaceExtractionTask(OctreeNod
 	,mOctreeNode(octreeNode)
 	,mPolyVoxVolume(polyVoxVolume)
 	,mPolyVoxMesh(0)
+	,mProcessingStartedTimestamp(std::numeric_limits<Timestamp>::max())
 {
 }
 
@@ -24,6 +27,8 @@ ColouredCubicSurfaceExtractionTask::~ColouredCubicSurfaceExtractionTask()
 
 void ColouredCubicSurfaceExtractionTask::process(void)
 {
+	mProcessingStartedTimestamp = Clock::getTimestamp();
+
 	PolyVox::Region lod0Region = mOctreeNode->mRegion;
 
 	//Extract the surface
