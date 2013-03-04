@@ -26,14 +26,6 @@ public:
 		}
 	}
 
-	MultiMaterial(uint32_t value)
-	{
-		for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
-		{
-			setMaterial(ct, value);
-		}
-	}
-
 	// This function lets us convert a Vector of floats into a MultiMaterial. 
 	// This is useful for performing certain operations with more precision.
 	MultiMaterial(const PolyVox::Vector<NoOfMaterials, float>& value) throw()

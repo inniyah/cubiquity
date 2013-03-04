@@ -11,10 +11,6 @@ class Colour
 public:
 	Colour() : m_uRed(0), m_uGreen(0), m_uBlue(0), m_uAlpha(0) {}
 
-	// This is a bit of a hack as PolyVox initialies voxels with VoxelType(0), so we
-	// need to be able to be constructed with an int parameter. Is there a better way?
-	Colour(int value) : m_uRed(value), m_uGreen(value), m_uBlue(value), m_uAlpha(value) {}
-	
 	Colour(uint16_t red, uint16_t green, uint16_t blue, uint16_t alpha = 15) : m_uRed(red), m_uGreen(green), m_uBlue(blue), m_uAlpha(alpha) {}
 
 	Colour(float red, float green, float blue, float alpha = 1.0f)
