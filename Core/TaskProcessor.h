@@ -10,9 +10,6 @@ public:
 	virtual ~TaskProcessor() {}
 
 	virtual void addTask(Task* task) = 0;
-
-	virtual bool hasAnyFinishedTasks(void) = 0;
-	virtual Task* removeFirstFinishedTask(void) = 0;
 };
 
 //#include "TaskProcessor.inl"

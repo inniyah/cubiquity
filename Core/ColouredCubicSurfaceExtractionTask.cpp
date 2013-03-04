@@ -109,4 +109,6 @@ void ColouredCubicSurfaceExtractionTask::process(void)
 		mPolyVoxMesh->scaleVertices(static_cast<float>(downScaleFactor));
 		mPolyVoxMesh->translateVertices(Vector3DFloat(1.5f, 1.5f, 1.5f));
 	}
+
+	mOctreeNode->mOctree->mFinishedSurfaceExtractionTasks.push(this);
 }

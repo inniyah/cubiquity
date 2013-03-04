@@ -21,15 +21,9 @@ public:
 
 	void processTasks(void);
 
-	//std::list<Task*> mPendingTasks;
-	//std::list<Task*> mFinishedTasks;
 	concurrent_queue<Task*> mPendingTasks;
-	concurrent_queue<Task*> mFinishedTasks;
 
 	std::list<boost::thread*> mThreads;
-	//boost::mutex mPendingTasksMutex;
-	//boost::mutex mFinishedTasksMutex;
-	//boost::condition_variable mHasPendingTasks;
 };
 
 extern BackgroundTaskProcessor gBackgroundTaskProcessor;

@@ -27,6 +27,8 @@ void SmoothSurfaceExtractionTask::process(void)
 	mPolyVoxMesh = new PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >;
 
 	generateSmoothMesh(mOctreeNode->mRegion, mOctreeNode->mLodLevel, mPolyVoxMesh);
+
+	mOctreeNode->mOctree->mFinishedSurfaceExtractionTasks.push(this);
 }
 
 void SmoothSurfaceExtractionTask::generateSmoothMesh(const PolyVox::Region& region, uint32_t lodLevel, PolyVox::SurfaceMesh<PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* resultMesh)

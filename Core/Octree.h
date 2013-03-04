@@ -2,6 +2,7 @@
 #define CUBIQUITY_OCTREE_H_
 
 #include "Clock.h"
+#include "ConcurrentQueue.h"
 #include "CubiquityForwardDeclarations.h"
 
 namespace OctreeConstructionModes
@@ -30,6 +31,8 @@ public:
 	Volume<VoxelType>* mVolume;
 	OctreeNode<VoxelType>* mRootOctreeNode;
 	const unsigned int mBaseNodeSize;
+
+	concurrent_queue<Task*> mFinishedSurfaceExtractionTasks;
 };
 
 #include "Octree.inl"

@@ -29,19 +29,6 @@ void BackgroundTaskProcessor::addTask(Task* task)
 	mPendingTasks.push(task);
 }
 
-bool BackgroundTaskProcessor::hasAnyFinishedTasks(void)
-{
-	return !mFinishedTasks.empty();
-}
-
-Task* BackgroundTaskProcessor::removeFirstFinishedTask(void)
-{
-
-	Task* task = 0;
-	mFinishedTasks.wait_and_pop(task);
-	return task;
-}
-
 void BackgroundTaskProcessor::processTasks(void)
 {
 	while(true)
@@ -49,6 +36,5 @@ void BackgroundTaskProcessor::processTasks(void)
 		Task* task = 0;
 		mPendingTasks.wait_and_pop(task);
 		task->process();
-		mFinishedTasks.push(task);
 	}
 }

@@ -13,14 +13,10 @@ public:
 
 	void addTask(Task* task);
 
-	bool hasAnyFinishedTasks(void);
-	Task* removeFirstFinishedTask(void);
-
 	virtual void processOneTask(void)/* = 0*/;
 	virtual void processAllTasks(void)/* = 0*/;
 
 	std::list<Task*> mPendingTasks;
-	std::list<Task*> mFinishedTasks;
 };
 
 extern MainThreadTaskProcessor gMainThreadTaskProcessor;
