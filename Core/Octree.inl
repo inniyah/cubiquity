@@ -83,14 +83,14 @@ void Octree<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float
 
 		POLYVOX_ASSERT(task, "Wrong task type"); //Need to think what we we do about list of different task types
 
-		/*if(task->mPolyVoxMesh->getNoOfIndices() > 0) //But if the new mesh is empty we should still delete any old mesh?
+		task->mOctreeNode->updateFromCompletedTask(task);
+
+		if(task->mOctreeNode->mLastSurfaceExtractionTask == task)
 		{
-			task->mOctreeNode->mPolyVoxMesh = task->mPolyVoxMesh;
+			task->mOctreeNode->mLastSurfaceExtractionTask = 0;
 		}
 
-		task->mOctreeNode->setMeshLastUpdated(Clock::getTimestamp());*/
-
-		task->mOctreeNode->updateFromCompletedTask(task);
+		delete task;
 	}
 
 	mRootOctreeNode->determineWhetherToRender();
