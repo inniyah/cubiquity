@@ -254,13 +254,25 @@ void OctreeNode<VoxelType>::sceduleUpdateIfNeeded(const PolyVox::Vector3DFloat& 
 
 		mLastSurfaceExtractionTask = new VoxelTraits<VoxelType>::SurfaceExtractionTaskType(this, mOctree->mVolume->mPolyVoxVolume);
 
-		// Note: tasks get sorted by their distance from the camera at the time they are added. If we
-		// want to account for the camera moving then we would have to sort the task queue each frame.
-		PolyVox::Vector3DFloat regionCentre = static_cast<PolyVox::Vector3DFloat>(mRegion.getCentre());
-		float distance = (viewPosition - regionCentre).length(); //We don't use distance squared to keep the values smaller
-		mLastSurfaceExtractionTask->mPriority = std::numeric_limits<uint32_t>::max() - static_cast<uint32_t>(distance);
-
-		gBackgroundTaskProcessor.addTask(mLastSurfaceExtractionTask);
+		// If the node was rendered last frame then this update is probably the result of an editing operation, rather than
+		// the node only just becoming visible. For editing operations it is important to process them immediatly so that we
+		// don't see temporary cracks in the mesh as different parts up updated at different times.
+		if(mRenderThisNode) //This flag should still be set from last frame.
+		{
+			// We're going to process immediatly, but the completed task will still get queued in the finished
+			// queue, and we want to make sure it's the first out. So we still set a priority and make it high.
+			mLastSurfaceExtractionTask->mPriority = std::numeric_limits<uint32_t>::max();
+			gMainThreadTaskProcessor.addTask(mLastSurfaceExtractionTask);
+		}
+		else
+		{
+			// Note: tasks get sorted by their distance from the camera at the time they are added. If we
+			// want to account for the camera moving then we would have to sort the task queue each frame.
+			PolyVox::Vector3DFloat regionCentre = static_cast<PolyVox::Vector3DFloat>(mRegion.getCentre());
+			float distance = (viewPosition - regionCentre).length(); //We don't use distance squared to keep the values smaller
+			mLastSurfaceExtractionTask->mPriority = std::numeric_limits<uint32_t>::max() - static_cast<uint32_t>(distance);
+			gBackgroundTaskProcessor.addTask(mLastSurfaceExtractionTask);
+		}
 	}
 
 	for(int iz = 0; iz < 2; iz++)

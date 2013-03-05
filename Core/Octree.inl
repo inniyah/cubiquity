@@ -73,6 +73,11 @@ void Octree<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float
 
 	mRootOctreeNode->sceduleUpdateIfNeeded(viewPosition);
 
+
+	// Make sure any surface extraction tasks which were scheduled on the main thread get processed before we determine what to render.
+	gMainThreadTaskProcessor.processAllTasks(); //Doesn't really belong here
+
+	// This will include tasks from both the background and main threads.
 	while(!mFinishedSurfaceExtractionTasks.empty())
 	{
 		VoxelTraits<VoxelType>::SurfaceExtractionTaskType* task;

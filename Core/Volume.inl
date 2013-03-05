@@ -59,7 +59,4 @@ template <typename VoxelType>
 void Volume<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
 {
 	mOctree->update(viewPosition, lodThreshold);
-
-	//gMainThreadTaskProcessor.processOneTask(); //Doesn't really belong here
-	//gMainThreadTaskProcessor.processAllTasks(); //Doesn't really belong here
 }
