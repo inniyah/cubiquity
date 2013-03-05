@@ -21,7 +21,7 @@ public:
 
 	void processTasks(void);
 
-	concurrent_queue<Task*> mPendingTasks;
+	concurrent_queue<Task*, TaskSortCriterion> mPendingTasks;
 
 	std::list<boost::thread*> mThreads;
 };

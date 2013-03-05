@@ -28,7 +28,7 @@ public:
 
 	void setMeshLastUpdated(Timestamp newTimeStamp);
 
-	void sceduleUpdateIfNeeded(void);
+	void sceduleUpdateIfNeeded(const PolyVox::Vector3DFloat& viewPosition);
 
 	void updateFromCompletedTask(typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* completedTask);
 

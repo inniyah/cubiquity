@@ -7,6 +7,7 @@
 #include "PolyVoxCore/Region.h"
 #include "PolyVoxCore/SurfaceMesh.h"
 
+#include <limits>
 #include <sstream>
 
 template <typename VoxelType>
@@ -245,13 +246,19 @@ void OctreeNode<VoxelType>::setMeshLastUpdated(Timestamp newTimeStamp)
 }
 
 template <typename VoxelType>
-void OctreeNode<VoxelType>::sceduleUpdateIfNeeded(void)
+void OctreeNode<VoxelType>::sceduleUpdateIfNeeded(const PolyVox::Vector3DFloat& viewPosition)
 {
 	if((isMeshUpToDate() == false) && (isSceduledForUpdate() == false) && ((mLastSurfaceExtractionTask == 0) || (mLastSurfaceExtractionTask->mProcessingStartedTimestamp < Clock::getTimestamp())) && (mWantedForRendering))
 	{
 		mLastSceduledForUpdate = Clock::getTimestamp();
 
 		mLastSurfaceExtractionTask = new VoxelTraits<VoxelType>::SurfaceExtractionTaskType(this, mOctree->mVolume->mPolyVoxVolume);
+
+		// Note: tasks get sorted by their distance from the camera at the time they are added. If we
+		// want to account for the camera moving then we would have to sort the task queue each frame.
+		PolyVox::Vector3DFloat regionCentre = static_cast<PolyVox::Vector3DFloat>(mRegion.getCentre());
+		float distance = (viewPosition - regionCentre).length(); //We don't use distance squared to keep the values smaller
+		mLastSurfaceExtractionTask->mPriority = std::numeric_limits<uint32_t>::max() - static_cast<uint32_t>(distance);
 
 		gBackgroundTaskProcessor.addTask(mLastSurfaceExtractionTask);
 	}
@@ -265,7 +272,7 @@ void OctreeNode<VoxelType>::sceduleUpdateIfNeeded(void)
 				OctreeNode* child = children[ix][iy][iz];
 				if(child)
 				{
-					child->sceduleUpdateIfNeeded();
+					child->sceduleUpdateIfNeeded(viewPosition);
 				}
 			}
 		}

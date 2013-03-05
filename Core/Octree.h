@@ -4,6 +4,7 @@
 #include "Clock.h"
 #include "ConcurrentQueue.h"
 #include "CubiquityForwardDeclarations.h"
+#include "Task.h"
 #include "VoxelTraits.h"
 
 namespace OctreeConstructionModes
@@ -33,7 +34,7 @@ public:
 	OctreeNode<VoxelType>* mRootOctreeNode;
 	const unsigned int mBaseNodeSize;
 
-	concurrent_queue<typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType*> mFinishedSurfaceExtractionTasks;
+	concurrent_queue<typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType*, TaskSortCriterion> mFinishedSurfaceExtractionTasks;
 };
 
 #include "Octree.inl"

@@ -71,7 +71,7 @@ void Octree<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float
 	mRootOctreeNode->clearWantedForRendering();
 	mRootOctreeNode->determineWantedForRendering(viewPosition, lodThreshold);
 
-	mRootOctreeNode->sceduleUpdateIfNeeded();
+	mRootOctreeNode->sceduleUpdateIfNeeded(viewPosition);
 
 	while(!mFinishedSurfaceExtractionTasks.empty())
 	{

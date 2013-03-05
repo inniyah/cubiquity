@@ -6,11 +6,11 @@
 #include <queue>
 
 //Based on http://www.justsoftwaresolutions.co.uk/threading/implementing-a-thread-safe-queue-using-condition-variables.html
-template<typename Data>
+template<class Data, class Compare>
 class concurrent_queue
 {
 private:
-    std::queue<Data> the_queue;
+    std::priority_queue<Data, std::vector<Data>, Compare> the_queue;
     mutable boost::mutex the_mutex;
     boost::condition_variable the_condition_variable;
 public:
@@ -36,7 +36,7 @@ public:
             return false;
         }
         
-        popped_value=the_queue.front();
+        popped_value=the_queue.top();
         the_queue.pop();
         return true;
     }
@@ -49,7 +49,7 @@ public:
             the_condition_variable.wait(lock);
         }
         
-        popped_value=the_queue.front();
+        popped_value=the_queue.top();
         the_queue.pop();
     }
 
