@@ -97,15 +97,15 @@ void Octree<VoxelType>::update(const PolyVox::Vector3DFloat& viewPosition, float
 }
 
 template <typename VoxelType>
-void Octree<VoxelType>::markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp)
+void Octree<VoxelType>::markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority)
 {
-	mRootOctreeNode->markDataAsModified(x, y, z, newTimeStamp);
+	mRootOctreeNode->markDataAsModified(x, y, z, newTimeStamp, updatePriority);
 }
 
 template <typename VoxelType>
-void Octree<VoxelType>::markDataAsModified(const PolyVox::Region& region, Timestamp newTimeStamp)
+void Octree<VoxelType>::markDataAsModified(const PolyVox::Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority)
 {
-	mRootOctreeNode->markDataAsModified(region, newTimeStamp);
+	mRootOctreeNode->markDataAsModified(region, newTimeStamp, updatePriority);
 }
 
 template <typename VoxelType>

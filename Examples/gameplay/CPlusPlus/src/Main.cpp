@@ -226,7 +226,7 @@ void MeshGame::update(float elapsedTime)
 	mVolume->performUpdate(viewPos, mLod1StartSlider->getValue());
 
 	std::stringstream ss;
-	ss << "Tasks = " << gMainThreadTaskProcessor.mPendingTasks.size();
+	ss << "Tasks = " << gBackgroundTaskProcessor.mPendingTasks.size();
 	mTasks->setText(ss.str().c_str());
 
 	// Update UI.

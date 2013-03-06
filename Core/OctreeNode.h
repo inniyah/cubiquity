@@ -3,6 +3,7 @@
 
 #include "Clock.h"
 #include "CubiquityForwardDeclarations.h"
+#include "UpdatePriorities.h"
 #include "VoxelTraits.h"
 
 template <typename VoxelType>
@@ -12,8 +13,8 @@ public:
 	OctreeNode(PolyVox::Region region, OctreeNode* parentRegion, Octree<VoxelType>* octree);
 	~OctreeNode();
 
-	void markAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp);
-	void markAsModified(const PolyVox::Region& region, Timestamp newTimeStamp);
+	void markAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority);
+	void markAsModified(const PolyVox::Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority);
 
 	void clearWantedForRendering(void);
 	void determineWantedForRendering(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
@@ -42,8 +43,10 @@ public:
 
 	Octree<VoxelType>* mOctree;
 
+	// Use flags here?
 	bool mWantedForRendering;
 	bool mRenderThisNode;
+	bool mExtractOnMainThread;
 
 	const PolyVox::SurfaceMesh< typename VoxelTraits<VoxelType>::VertexType >* mPolyVoxMesh;
 

@@ -40,19 +40,20 @@ VoxelType Volume<VoxelType>::getVoxelAt(int x, int y, int z)
 }
 
 template <typename VoxelType>
-void Volume<VoxelType>::setVoxelAt(int x, int y, int z, VoxelType value, bool markAsModified)
+void Volume<VoxelType>::setVoxelAt(int x, int y, int z, VoxelType value, UpdatePriority updatePriority)
 {
 	mPolyVoxVolume->setVoxelAt(x, y, z, value);
-	if(markAsModified)
+	if(updatePriority != UpdatePriorities::DontUpdate)
 	{
-		mOctree->mRootOctreeNode->markAsModified(x, y, z, Clock::getTimestamp());
+		mOctree->mRootOctreeNode->markAsModified(x, y, z, Clock::getTimestamp(), updatePriority);
 	}
 }
 
 template <typename VoxelType>
-void Volume<VoxelType>::markAsModified(const PolyVox::Region& region)
+void Volume<VoxelType>::markAsModified(const PolyVox::Region& region, UpdatePriority updatePriority)
 {
-	mOctree->mRootOctreeNode->markAsModified(region, Clock::getTimestamp());
+	POLYVOX_ASSERT(updatePriority != UpdatePriorities::DontUpdate, "You cannot mark as modified yet request no update");
+	mOctree->mRootOctreeNode->markAsModified(region, Clock::getTimestamp(), updatePriority);
 }
 
 template <typename VoxelType>

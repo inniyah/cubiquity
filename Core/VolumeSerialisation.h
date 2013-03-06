@@ -1,6 +1,8 @@
 #ifndef CUBIQUITY_VOLUMESERIALISATION_H_
 #define CUBIQUITY_VOLUMESERIALISATION_H_
 
+#include "UpdatePriorities.h"
+
 template <typename VolumeType>
 void loadData(const char* filename, VolumeType* volume)
 {
@@ -30,7 +32,7 @@ void loadData(const char* filename, VolumeType* volume)
 				}
 
 				//Write the voxel value into the volume
-				volume->setVoxelAt(x, y, z, value, false); //Don't mark as dirty - we'll do that at the end.
+				volume->setVoxelAt(x, y, z, value, UpdatePriorities::DontUpdate); //Don't mark as dirty - we'll do that at the end.
 
 				/*if(y < 8)
 				{

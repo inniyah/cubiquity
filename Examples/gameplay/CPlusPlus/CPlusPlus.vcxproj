@@ -450,6 +450,7 @@
     <ClInclude Include="..\..\..\Core\SmoothTerrainVolumeEditor.h" />
     <ClInclude Include="..\..\..\Core\Task.h" />
     <ClInclude Include="..\..\..\Core\TaskProcessor.h" />
+    <ClInclude Include="..\..\..\Core\UpdatePriorities.h" />
     <ClInclude Include="..\..\..\Core\Volume.h" />
     <ClInclude Include="..\..\..\Core\VolumeSerialisation.h" />
     <ClInclude Include="..\..\..\Core\VoxelTraits.h" />

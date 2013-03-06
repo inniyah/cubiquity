@@ -338,6 +338,7 @@
     <None Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VolumeResampler.inl" />
     <None Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.inl" />
     <None Include="..\..\..\Core\MainThreadTaskProcessor.inl" />
+    <None Include="..\..\..\Core\Octree.inl" />
     <None Include="..\..\..\Core\OctreeNode.inl" />
     <None Include="..\..\..\Core\TaskProcessor.inl" />
     <None Include="..\..\..\Core\Volume.inl" />
@@ -456,6 +457,7 @@
     <ClInclude Include="..\..\..\Core\CubiquityForwardDeclarations.h" />
     <ClInclude Include="..\..\..\Core\MainThreadTaskProcessor.h" />
     <ClInclude Include="..\..\..\Core\MultiMaterial.h" />
+    <ClInclude Include="..\..\..\Core\Octree.h" />
     <ClInclude Include="..\..\..\Core\OctreeNode.h" />
     <ClInclude Include="..\..\..\Core\Raycasting.h" />
     <ClInclude Include="..\..\..\Core\SmoothSurfaceExtractionTask.h" />

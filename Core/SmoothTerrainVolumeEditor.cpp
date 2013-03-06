@@ -21,6 +21,10 @@ SmoothTerrainVolumeEditor::~SmoothTerrainVolumeEditor()
 
 void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float radius, uint32_t materialToUse, EditAction editAction, float timeElapsedInSeconds, float amount, float smoothBias)
 {
+	// We'll set this flag for operations which actually modify the shape of the
+	// mesh, as these can cause temporary cracks if not processed immediately.
+	bool needsImmediateUpdate = false;
+
 	int firstX = static_cast<int>(std::floor(centre.getX() - radius));
 	int firstY = static_cast<int>(std::floor(centre.getY() - radius));
 	int firstZ = static_cast<int>(std::floor(centre.getZ() - radius));
@@ -114,7 +118,8 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 							{
 								addToMaterial(materialToUse, uToAddOrSubtract, originalMat);
 							}
-							mSmoothTerrainVolume->setVoxelAt(x,y,z, originalMat, false);
+							mSmoothTerrainVolume->setVoxelAt(x,y,z, originalMat, UpdatePriorities::DontUpdate);
+							needsImmediateUpdate = true;
 							break;
 						}
 					case EditActions::Subtract:
@@ -122,14 +127,15 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 							MultiMaterial originalMat = mSmoothTerrainVolume->getVoxelAt(x, y, z);	
 							uint32_t sumOfMaterials = originalMat.getSumOfMaterials();
 							subtractFromMaterial(uToAddOrSubtract, originalMat);
-							mSmoothTerrainVolume->setVoxelAt(x,y,z, originalMat, false);
+							mSmoothTerrainVolume->setVoxelAt(x,y,z, originalMat, UpdatePriorities::DontUpdate);
+							needsImmediateUpdate = true;
 							break;
 						}
 					case EditActions::Paint:
 						{						
 							MultiMaterial originalMat = mSmoothTerrainVolume->getVoxelAt(x, y, z);	
 							addToMaterial(materialToUse, uToAddOrSubtract, originalMat);
-							mSmoothTerrainVolume->setVoxelAt(x,y,z, originalMat, false);
+							mSmoothTerrainVolume->setVoxelAt(x,y,z, originalMat, UpdatePriorities::DontUpdate);
 							break;
 						}
 					case EditActions::Smooth:
@@ -163,7 +169,8 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 							interpMat.setMaterial(2, (std::max<uint32_t>)(0, (std::min)(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp2 + bias))));
 							interpMat.setMaterial(3, (std::max<uint32_t>)(0, (std::min)(originalMat.getMaxMaterialValue(), static_cast<uint32_t>(interp3 + bias))));
 
-							mSmoothTerrainVolume->setVoxelAt(x,y,z, interpMat, false);
+							mSmoothTerrainVolume->setVoxelAt(x,y,z, interpMat, UpdatePriorities::DontUpdate);
+							needsImmediateUpdate = true;
 
 							break;
 						}
@@ -173,7 +180,7 @@ void SmoothTerrainVolumeEditor::edit(const PolyVox::Vector3DFloat& centre, float
 		}
 	}
 
-	mSmoothTerrainVolume->markAsModified(region);
+	mSmoothTerrainVolume->markAsModified(region, needsImmediateUpdate ? UpdatePriorities::Immediate : UpdatePriorities::Background);
 }
 
 void SmoothTerrainVolumeEditor::subtractFromMaterial(uint8_t amountToAdd, MultiMaterial& material)

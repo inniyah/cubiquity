@@ -17,8 +17,9 @@ OctreeNode<VoxelType>::OctreeNode(PolyVox::Region region, OctreeNode* parentRegi
 	,mOctree(octree)
 	,mWantedForRendering(false)
 	,mRenderThisNode(false)
-	,mLastSceduledForUpdate(Clock::getTimestamp()) // The order ofthese few initialisations is important
-	,mMeshLastUpdated(Clock::getTimestamp())	   // to meke sure the node is set to an 'out of date' 
+	,mExtractOnMainThread(false)
+	,mLastSceduledForUpdate(Clock::getTimestamp()) // The order of these few initialisations is important
+	,mMeshLastUpdated(Clock::getTimestamp())	   // to make sure the node is set to an 'out of date' 
 	,mDataLastModified(Clock::getTimestamp())      // state which will then try to update.
 	,mPolyVoxMesh(0)
 	,mGameEngineNode(0)
@@ -49,12 +50,18 @@ OctreeNode<VoxelType>::~OctreeNode()
 }
 
 template <typename VoxelType>
-void OctreeNode<VoxelType>::markAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp)
+void OctreeNode<VoxelType>::markAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority)
 {
+	// Note - Can't this function just call the other version?
+
 	if(mRegion.containsPoint(x, y, z, -1)) //FIXME - Think if we really need this border.
 	{
 		//mIsMeshUpToDate = false;
 		mDataLastModified = newTimeStamp;
+
+		// Note: If DontUpdate was passed (an invalid choice) it will end up on the background thread.
+		// Also we maintain mExtractOnMainThread if it was already set.
+		mExtractOnMainThread = mExtractOnMainThread || (updatePriority == UpdatePriorities::Immediate);
 
 		for(int iz = 0; iz < 2; iz++)
 		{
@@ -65,7 +72,7 @@ void OctreeNode<VoxelType>::markAsModified(int32_t x, int32_t y, int32_t z, Time
 					OctreeNode* child = children[ix][iy][iz];
 					if(child)
 					{
-						child->markAsModified(x, y, z, newTimeStamp);
+						child->markAsModified(x, y, z, newTimeStamp, updatePriority);
 					}
 				}
 			}
@@ -74,12 +81,15 @@ void OctreeNode<VoxelType>::markAsModified(int32_t x, int32_t y, int32_t z, Time
 }
 
 template <typename VoxelType>
-void OctreeNode<VoxelType>::markAsModified(const PolyVox::Region& region, Timestamp newTimeStamp)
+void OctreeNode<VoxelType>::markAsModified(const PolyVox::Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority)
 {
 	if(intersects(mRegion, region))
 	{
 		//mIsMeshUpToDate = false;
 		mDataLastModified = newTimeStamp;
+
+		// Note: If DontUpdate was passed (an invalid choice) it will end up on the background thread.
+		mExtractOnMainThread = (updatePriority == UpdatePriorities::Immediate);
 
 		for(int iz = 0; iz < 2; iz++)
 		{
@@ -90,7 +100,7 @@ void OctreeNode<VoxelType>::markAsModified(const PolyVox::Region& region, Timest
 					OctreeNode* child = children[ix][iy][iz];
 					if(child)
 					{
-						child->markAsModified(region, newTimeStamp);
+						child->markAsModified(region, newTimeStamp, updatePriority);
 					}
 				}
 			}
@@ -257,7 +267,7 @@ void OctreeNode<VoxelType>::sceduleUpdateIfNeeded(const PolyVox::Vector3DFloat& 
 		// If the node was rendered last frame then this update is probably the result of an editing operation, rather than
 		// the node only just becoming visible. For editing operations it is important to process them immediatly so that we
 		// don't see temporary cracks in the mesh as different parts up updated at different times.
-		if(mRenderThisNode) //This flag should still be set from last frame.
+		if(mExtractOnMainThread) //This flag should still be set from last frame.
 		{
 			// We're going to process immediatly, but the completed task will still get queued in the finished
 			// queue, and we want to make sure it's the first out. So we still set a priority and make it high.
@@ -273,6 +283,9 @@ void OctreeNode<VoxelType>::sceduleUpdateIfNeeded(const PolyVox::Vector3DFloat& 
 			mLastSurfaceExtractionTask->mPriority = std::numeric_limits<uint32_t>::max() - static_cast<uint32_t>(distance);
 			gBackgroundTaskProcessor.addTask(mLastSurfaceExtractionTask);
 		}
+
+		// Clear this flag otherwise this node will always be done on the main thread.
+		mExtractOnMainThread = false;
 	}
 
 	for(int iz = 0; iz < 2; iz++)

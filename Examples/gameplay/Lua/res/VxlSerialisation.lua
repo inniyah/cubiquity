@@ -63,7 +63,7 @@ function importVxl()
 
 					-- Rather ugly - Switch y and z and reverse 'up' to match our coordinate system
 					-- Offset of '-1' in zz-1 is a bit strange?
-					result:setVoxel(x, (mapHeight-1) - (zz-1), y, colour, false)
+					result:setVoxel(x, (mapHeight-1) - (zz-1), y, colour, 0)
 					zz = zz + 1
 					colorI = colorI + 1
 				end
@@ -77,7 +77,7 @@ function importVxl()
 		for j = 0, runlength do
 			-- Rather ugly - Switch y and z and reverse 'up' to match our coordinate system
 			-- Offset of '-1' in zz-1 is a bit strange?
-			result:setVoxel(x, (mapHeight-1) - (zz-1), y, colour, false)
+			result:setVoxel(x, (mapHeight-1) - (zz-1), y, colour, 0)
 			zz = zz + 1
 		end
 		if (N == 0) then
@@ -96,7 +96,7 @@ function importVxl()
 		end
 	end
 
-	result:markAsModified(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1)
+	result:markAsModified(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, 1)
 
 	return result
 end

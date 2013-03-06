@@ -46,9 +46,9 @@ public:
 	static GameplayColouredCubesVolume* importVxl(const char* filename);
 
 	gameplay::Vector4 getVoxel(int x, int y, int z);
-	void setVoxel(int x, int y, int z, const gameplay::Vector4& colour, bool markAsModified = true);
-	void setVoxel(int x, int y, int z, float red, float green, float blue, float alpha, bool markAsModified = true);
-	void markAsModified(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ);
+	void setVoxel(int x, int y, int z, const gameplay::Vector4& colour, int updatePriority = 1);
+	void setVoxel(int x, int y, int z, float red, float green, float blue, float alpha, int updatePriority = 1);
+	void markAsModified(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, int updatePriority = 1);
 
 	void performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold);
 

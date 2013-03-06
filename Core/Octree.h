@@ -5,6 +5,7 @@
 #include "ConcurrentQueue.h"
 #include "CubiquityForwardDeclarations.h"
 #include "Task.h"
+#include "UpdatePriorities.h"
 #include "VoxelTraits.h"
 
 namespace OctreeConstructionModes
@@ -25,8 +26,8 @@ public:
 
 	void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
 
-	void markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp);
-	void markDataAsModified(const PolyVox::Region& region, Timestamp newTimeStamp);
+	void markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority);
+	void markDataAsModified(const PolyVox::Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority);
 
 	void buildOctreeNodeTree(OctreeNode< VoxelType >* parent, const PolyVox::Region& regionToCover, OctreeConstructionMode octreeConstructionMode);
 

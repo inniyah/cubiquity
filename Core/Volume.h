@@ -2,6 +2,7 @@
 #define VOLUME_H_
 
 #include "Octree.h"
+#include "UpdatePriorities.h"
 #include "VoxelTraits.h"
 
 #include "PolyVoxCore/Array.h"
@@ -22,8 +23,8 @@ public:
 
 
 	VoxelType getVoxelAt(int x, int y, int z);
-	void setVoxelAt(int x, int y, int z, VoxelType value, bool markAsModified = true);
-	void markAsModified(const PolyVox::Region& region);
+	void setVoxelAt(int x, int y, int z, VoxelType value, UpdatePriority updatePriority = UpdatePriorities::Background);
+	void markAsModified(const PolyVox::Region& region, UpdatePriority updatePriority = UpdatePriorities::Background);
 
 	virtual void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
 protected:

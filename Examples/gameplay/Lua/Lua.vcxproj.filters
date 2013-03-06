@@ -136,6 +136,9 @@
     <None Include="..\..\..\Core\MainThreadTaskProcessor.inl">
       <Filter>Core</Filter>
     </None>
+    <None Include="..\..\..\Core\Octree.inl">
+      <Filter>Core</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h">
@@ -361,6 +364,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\Core\BackgroundTaskProcessor.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Core\Octree.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>

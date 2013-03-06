@@ -28,6 +28,12 @@ public:
         return the_queue.empty();
     }
 
+	uint32_t size() const
+    {
+        boost::mutex::scoped_lock lock(the_mutex);
+        return the_queue.size();
+    }
+
     bool try_pop(Data& popped_value)
     {
         boost::mutex::scoped_lock lock(the_mutex);

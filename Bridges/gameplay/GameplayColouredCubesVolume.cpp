@@ -138,19 +138,19 @@ gameplay::Vector4 GameplayColouredCubesVolume::getVoxel(int x, int y, int z)
 	return result;
 }
 
-void GameplayColouredCubesVolume::setVoxel(int x, int y, int z, const gameplay::Vector4& colour, bool markAsModified)
+void GameplayColouredCubesVolume::setVoxel(int x, int y, int z, const gameplay::Vector4& colour, int updatePriority)
 {
-	mCubiquityVolume->setVoxelAt(x, y, z, Colour(colour.x, colour.y, colour.z, colour.w), markAsModified);
+	mCubiquityVolume->setVoxelAt(x, y, z, Colour(colour.x, colour.y, colour.z, colour.w), static_cast<UpdatePriority>(updatePriority));
 }
 
-void GameplayColouredCubesVolume::setVoxel(int x, int y, int z, float red, float green, float blue, float alpha, bool markAsModified)
+void GameplayColouredCubesVolume::setVoxel(int x, int y, int z, float red, float green, float blue, float alpha, int updatePriority)
 {
-	mCubiquityVolume->setVoxelAt(x, y, z, Colour(red, green, blue, alpha), markAsModified);
+	mCubiquityVolume->setVoxelAt(x, y, z, Colour(red, green, blue, alpha), static_cast<UpdatePriority>(updatePriority));
 }
 
-void GameplayColouredCubesVolume::markAsModified(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ)
+void GameplayColouredCubesVolume::markAsModified(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, int updatePriority)
 {
-	mCubiquityVolume->markAsModified(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ));
+	mCubiquityVolume->markAsModified(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), static_cast<UpdatePriority>(updatePriority));
 }
 
 GameplayColouredCubesVolume* GameplayColouredCubesVolume::importVxl(const char* filename)
@@ -229,7 +229,7 @@ GameplayColouredCubesVolume* GameplayColouredCubesVolume::importVxl(const char* 
 				blue = data[i + 4 + colorI * 4];
 				// Do something with these colors
 				//makeVoxelColorful(x, y, zz, red, green, blue);
-				result->setVoxel(x, zz, y, Vector4(red / 255.0f, green / 255.0f, blue / 255.0f, 1.0), false);
+				result->setVoxel(x, zz, y, Vector4(red / 255.0f, green / 255.0f, blue / 255.0f, 1.0), 0);
 				zz++;
 				colorI++;
 			}
@@ -241,7 +241,7 @@ GameplayColouredCubesVolume* GameplayColouredCubesVolume::importVxl(const char* 
 		for (j = 0; j < runlength; j++)
 		{
 			//makeVoxelSolid(x, y, zz);
-			result->setVoxel(x, zz, y, Vector4(1.0, 0.0, 1.0, 1.0), false);
+			result->setVoxel(x, zz, y, Vector4(1.0, 0.0, 1.0, 1.0), 0);
 			zz++;
 		}
 		if (N == 0)
@@ -266,7 +266,7 @@ GameplayColouredCubesVolume* GameplayColouredCubesVolume::importVxl(const char* 
 
 
 
-	result->markAsModified(0, 0, 0, 127, 127, 63);
+	result->markAsModified(0, 0, 0, 127, 127, 63, 0);
 
 	return result;
 }

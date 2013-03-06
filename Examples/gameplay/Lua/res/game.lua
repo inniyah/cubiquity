@@ -13,16 +13,16 @@ function fillSphere(x, y, z, size, colour, paintOnly)
 					if paintOnly then
 						local currentColour = _colouredCubesVolume:getVoxel(iX, iY, iZ)
 						if currentColour:w() > 0.001 then
-							_colouredCubesVolume:setVoxel(iX, iY, iZ, colour, false)
+							_colouredCubesVolume:setVoxel(iX, iY, iZ, colour, 0)
 						end
 					else
-						_colouredCubesVolume:setVoxel(iX, iY, iZ, colour, false)
+						_colouredCubesVolume:setVoxel(iX, iY, iZ, colour, 0)
 					end
 				end
 			end
 		end
 	end
-	_colouredCubesVolume:markAsModified(x-size, y-size, z-size, x+size, y+size, z+size)
+	_colouredCubesVolume:markAsModified(x-size, y-size, z-size, x+size, y+size, z+size, 1)
 end
 
 function initialize()
