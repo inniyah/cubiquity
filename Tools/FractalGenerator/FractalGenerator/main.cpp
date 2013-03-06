@@ -4,14 +4,14 @@
 #include <complex>
 #include <cstdint>
 #include <iostream>
+#include <sstream>
 
 using namespace std;
 
-unsigned int doPoint(double cx, double cy, double cz)
-{
-	const unsigned int maxiterations=255;
-	const double mandpow=8.0;
+const uint32_t Size = 64;
 
+uint32_t evaluateMandlebulbSample(double cx, double cy, double cz, double n, uint32_t maxIterations)
+{
 	// program from http://www.treblig.org/3dbrot/3dbrot.c
 	double x,y,z;
 	double newx,newy,newz;
@@ -22,17 +22,17 @@ unsigned int doPoint(double cx, double cy, double cz)
 	y=0.0;
 	z=0.0;
 
-	for(i=0;(i<maxiterations) && ((x*x+y*y+z*z) < 2.0);i++)
+	for(i=0;(i<maxIterations) && ((x*x+y*y+z*z) < 2.0);i++)
 	{
-		/* These maths from http://www.skytopia.com/project/fractal/mandelbulb.html */
+		// Maths from http://www.skytopia.com/project/fractal/mandelbulb.html 
 		r = sqrt(x*x + y*y + z*z );
 		theta = atan2(sqrt(x*x + y*y) , z);
 		phi = atan2(y,x);
-		rpow = pow(r,mandpow);
+		rpow = pow(r,n);
 
-		newx = rpow * sin(theta*mandpow) * cos(phi*mandpow);
-		newy = rpow * sin(theta*mandpow) * sin(phi*mandpow);
-		newz = rpow * cos(theta*mandpow);
+		newx = rpow * sin(theta*n) * cos(phi*n);
+		newy = rpow * sin(theta*n) * sin(phi*n);
+		newz = rpow * cos(theta*n);
 
 		x=newx+cx;
 		y=newy+cy;
@@ -43,22 +43,27 @@ unsigned int doPoint(double cx, double cy, double cz)
 
 int main(int argc, char** argv)
 {
-	uint8_t image[256][256];
+	uint8_t image[Size][Size];
 
-	for(int y = 0; y < 256; y++)
+	for(int z = 0; z < Size; z++)
 	{
-		for(int x = 0; x < 256; x++)
+		for(int y = 0; y < Size; y++)
 		{
-			double xPos = x / 256.0;
-			double yPos = y / 256.0;
-			double zPos = 0.0;
-			image[x][y] = doPoint(xPos, yPos, zPos);
+			for(int x = 0; x < Size; x++)
+			{
+				// Map positions into the range -1.0 to +1.0
+				double xPos = x / (static_cast<double>(Size) / 2.0) - 1.0;
+				double yPos = y / (static_cast<double>(Size) / 2.0) - 1.0;
+				double zPos = z / (static_cast<double>(Size) / 2.0) - 1.0;
+				image[x][y] = evaluateMandlebulbSample(xPos, yPos, zPos, 8.0, 255);
+			}
 		}
+
+		stringstream ss;
+		ss << z << ".png";
+		int result = stbi_write_png(ss.str().c_str(), Size, Size, 1, image, Size);
+		cout << z << endl;
 	}
-
-	int result = stbi_write_png("output.png", 256, 256, 1, image, 256);
-
-	cout << result <<endl;
 
 	return 0;
 }
