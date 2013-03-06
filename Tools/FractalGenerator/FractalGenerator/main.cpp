@@ -7,45 +7,58 @@
 
 using namespace std;
 
- void draw_Mandelbrot(uint8_t image[256][256],                                   //where to draw the image
-                      uint8_t set_color, uint8_t non_set_color,       //which colors to use for set/non-set points
-                      double cxmin, double cxmax, double cymin, double cymax,//the rect to draw in the complex plane
-                      unsigned int max_iterations)                          //the maximum number of iterations
+unsigned int doPoint(double cx, double cy, double cz)
 {
-  std::size_t const ixsize = 256;
-  std::size_t const iysize = 256;
-  for (std::size_t ix = 0; ix < ixsize; ++ix)
-    for (std::size_t iy = 0; iy < iysize; ++iy)
-    {
-      std::complex<double> c(cxmin + ix/(ixsize-1.0)*(cxmax-cxmin), cymin + iy/(iysize-1.0)*(cymax-cymin));
-      std::complex<double> z = 0;
-      unsigned int iterations;
- 
-      for (iterations = 0; iterations < max_iterations && std::abs(z) < 2.0; ++iterations) 
-        z = z*z + c;
- 
-      image[ix][iy] = (iterations == max_iterations) ? set_color : non_set_color;
- 
-    }
+	const unsigned int maxiterations=255;
+	const double mandpow=8.0;
+
+	// program from http://www.treblig.org/3dbrot/3dbrot.c
+	double x,y,z;
+	double newx,newy,newz;
+	double theta,phi,rpow;
+	double r;
+	unsigned int i;
+	x=0.0;
+	y=0.0;
+	z=0.0;
+
+	for(i=0;(i<maxiterations) && ((x*x+y*y+z*z) < 2.0);i++)
+	{
+		/* These maths from http://www.skytopia.com/project/fractal/mandelbulb.html */
+		r = sqrt(x*x + y*y + z*z );
+		theta = atan2(sqrt(x*x + y*y) , z);
+		phi = atan2(y,x);
+		rpow = pow(r,mandpow);
+
+		newx = rpow * sin(theta*mandpow) * cos(phi*mandpow);
+		newy = rpow * sin(theta*mandpow) * sin(phi*mandpow);
+		newz = rpow * cos(theta*mandpow);
+
+		x=newx+cx;
+		y=newy+cy;
+		z=newz+cz;
+	}
+	return i;
 }
 
 int main(int argc, char** argv)
 {
-    uint8_t image[256][256];
+	uint8_t image[256][256];
 
-	draw_Mandelbrot(image, 255, 0, -1, 1, -1, 1, 200);
-
-	/*for(int y = 0; y < 256; y++)
+	for(int y = 0; y < 256; y++)
 	{
 		for(int x = 0; x < 256; x++)
 		{
-			image[x][y] = x;
+			double xPos = x / 256.0;
+			double yPos = y / 256.0;
+			double zPos = 0.0;
+			image[x][y] = doPoint(xPos, yPos, zPos);
 		}
-	}*/
+	}
 
 	int result = stbi_write_png("output.png", 256, 256, 1, image, 256);
 
 	cout << result <<endl;
 
-    return 0;
+	return 0;
 }
