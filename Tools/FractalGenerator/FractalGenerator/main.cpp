@@ -52,9 +52,9 @@ int main(int argc, char** argv)
 	double minZ = -sqrt(2.0);
 	double maxZ = sqrt(2.0);
 
-	double stepX = (maxX - minX) / ImageSize;
-	double stepY = (maxY - minY) / ImageSize;
-	double stepZ = (maxZ - minZ) / ImageSize;
+	double stepX = (maxX - minX) / (ImageSize - 1);
+	double stepY = (maxY - minY) / (ImageSize - 1);
+	double stepZ = (maxZ - minZ) / (ImageSize - 1);
 
 	for(int z = 0; z < ImageSize; z++)
 	{
@@ -65,7 +65,7 @@ int main(int argc, char** argv)
 				double xPos = minX + stepX * x;
 				double yPos = minY + stepY * y;
 				double zPos = minZ + stepZ * z;
-				image[x][y] = evaluateMandlebulbSample(xPos, yPos, zPos, 8.0, 255) > 1 ? 255 : 0;
+				image[x][y] = evaluateMandlebulbSample(xPos, yPos, zPos, 8.0, 255);
 			}
 		}
 
