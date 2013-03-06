@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const uint32_t Size = 64;
+const uint32_t ImageSize = 256;
 
 uint32_t evaluateMandlebulbSample(double cx, double cy, double cz, double n, uint32_t maxIterations)
 {
@@ -43,25 +43,37 @@ uint32_t evaluateMandlebulbSample(double cx, double cy, double cz, double n, uin
 
 int main(int argc, char** argv)
 {
-	uint8_t image[Size][Size];
+	uint8_t image[ImageSize][ImageSize];
 
-	for(int z = 0; z < Size; z++)
+	double minX = -sqrt(2.0);
+	double maxX = sqrt(2.0);
+	double minY = -sqrt(2.0);
+	double maxY = sqrt(2.0);
+	double minZ = -sqrt(2.0);
+	double maxZ = sqrt(2.0);
+
+	double stepX = (maxX - minX) / ImageSize;
+	double stepY = (maxY - minY) / ImageSize;
+	double stepZ = (maxZ - minZ) / ImageSize;
+
+	for(int z = 0; z < ImageSize; z++)
 	{
-		for(int y = 0; y < Size; y++)
+		for(int y = 0; y < ImageSize; y++)
 		{
-			for(int x = 0; x < Size; x++)
+			for(int x = 0; x < ImageSize; x++)
 			{
-				// Map positions into the range -1.0 to +1.0
-				double xPos = x / (static_cast<double>(Size) / 2.0) - 1.0;
-				double yPos = y / (static_cast<double>(Size) / 2.0) - 1.0;
-				double zPos = z / (static_cast<double>(Size) / 2.0) - 1.0;
-				image[x][y] = evaluateMandlebulbSample(xPos, yPos, zPos, 8.0, 255);
+				double xPos = minX + stepX * x;
+				double yPos = minY + stepY * y;
+				double zPos = minZ + stepZ * z;
+				image[x][y] = evaluateMandlebulbSample(xPos, yPos, zPos, 8.0, 255) > 1 ? 255 : 0;
 			}
 		}
 
 		stringstream ss;
-		ss << z << ".png";
-		int result = stbi_write_png(ss.str().c_str(), Size, Size, 1, image, Size);
+		ss << "output/" << z << ".png";
+		int result = stbi_write_png(ss.str().c_str(), ImageSize, ImageSize, 1, image, ImageSize);
+		assert(result); //If crashing here then make sur the output folder exists.
+
 		cout << z << endl;
 	}
 
