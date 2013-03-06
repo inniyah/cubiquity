@@ -8,7 +8,7 @@
 
 using namespace std;
 
-const uint32_t ImageSize = 256;
+const uint32_t ImageSize = 128;
 
 uint32_t evaluateMandlebulbSample(double cx, double cy, double cz, double n, uint32_t maxIterations)
 {
@@ -43,7 +43,7 @@ uint32_t evaluateMandlebulbSample(double cx, double cy, double cz, double n, uin
 
 int main(int argc, char** argv)
 {
-	uint8_t image[ImageSize][ImageSize];
+	uint8_t* image = new uint8_t[ImageSize * ImageSize];
 
 	double minX = -sqrt(2.0);
 	double maxX = sqrt(2.0);
@@ -65,7 +65,7 @@ int main(int argc, char** argv)
 				double xPos = minX + stepX * x;
 				double yPos = minY + stepY * y;
 				double zPos = minZ + stepZ * z;
-				image[x][y] = evaluateMandlebulbSample(xPos, yPos, zPos, 8.0, 255);
+				image[x + ImageSize * y] = evaluateMandlebulbSample(xPos, yPos, zPos, 8.0, 255);
 			}
 		}
 
@@ -76,6 +76,8 @@ int main(int argc, char** argv)
 
 		cout << z << endl;
 	}
+
+	delete[] image;
 
 	return 0;
 }
