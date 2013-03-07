@@ -3,33 +3,36 @@
 
 #include "CubiquityForwardDeclarations.h"
 
-class SmoothTerrainVolumeEditor
+namespace Cubiquity
 {
-public:
-	SmoothTerrainVolumeEditor(SmoothTerrainVolume* volume);
-	~SmoothTerrainVolumeEditor();
-
-	SmoothTerrainVolume* mSmoothTerrainVolume;
-
-protected:
-	class EditActions
+	class SmoothTerrainVolumeEditor
 	{
 	public:
-		enum EditAction
+		SmoothTerrainVolumeEditor(SmoothTerrainVolume* volume);
+		~SmoothTerrainVolumeEditor();
+
+		SmoothTerrainVolume* mSmoothTerrainVolume;
+
+	protected:
+		class EditActions
 		{
-			Add,
-			Subtract,
-			Paint, 
-			Smooth
+		public:
+			enum EditAction
+			{
+				Add,
+				Subtract,
+				Paint, 
+				Smooth
+			};
 		};
+		typedef EditActions::EditAction EditAction;
+
+		void addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial& material);
+		void subtractFromMaterial(uint8_t amountToAdd, MultiMaterial& material);
+		void edit(const ::PolyVox::Vector3DFloat& centre, float radius, uint32_t materialToUse, EditAction editAction, float timeElapsedInSeconds, float amount, float smoothBias);
+
+		::PolyVox::RawVolume<MultiMaterial>* mSmoothingVolume;
 	};
-	typedef EditActions::EditAction EditAction;
-
-	void addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial& material);
-	void subtractFromMaterial(uint8_t amountToAdd, MultiMaterial& material);
-	void edit(const PolyVox::Vector3DFloat& centre, float radius, uint32_t materialToUse, EditAction editAction, float timeElapsedInSeconds, float amount, float smoothBias);
-
-	PolyVox::RawVolume<MultiMaterial>* mSmoothingVolume;
-};
+}
 
 #endif //SMOOTHTERRAINVOLUMEEDITOR_H_

@@ -3,38 +3,41 @@
 
 #include "PolyVoxCore/PolyVoxForwardDeclarations.h"
 
-class Clock;
+namespace Cubiquity
+{
+	class Clock;
 
-class Colour;
+	class Colour;
 
-class ColouredCubesIsQuadNeeded;
+	class ColouredCubesIsQuadNeeded;
 
-class ColouredCubesVolume;
+	class ColouredCubesVolume;
 
-class ColouredCubicSurfaceExtractionTask;
+	class ColouredCubicSurfaceExtractionTask;
 
-class MainThreadTaskProcessor;
+	class MainThreadTaskProcessor;
 
-class MultiMaterial;
+	class MultiMaterial;
 
-class MultiMaterialMarchingCubesController;
+	class MultiMaterialMarchingCubesController;
 
-template <typename VoxelType>
-class Octree;
+	template <typename VoxelType>
+	class Octree;
 
-template <typename VoxelType>
-class OctreeNode;
+	template <typename VoxelType>
+	class OctreeNode;
 
-class SmoothSurfaceExtractionTask;
+	class SmoothSurfaceExtractionTask;
 
-class SmoothTerrainVolume;
+	class SmoothTerrainVolume;
 
-class SmoothTerrainVolumeEditor;
+	class SmoothTerrainVolumeEditor;
 
-class Task;
-class TaskProcessor;
+	class Task;
+	class TaskProcessor;
 
-template <typename _VoxelType>
-class Volume;
+	template <typename _VoxelType>
+	class Volume;
+}
 
 #endif //__Cubiquity_ForwardDeclarations_H__

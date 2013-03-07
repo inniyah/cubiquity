@@ -3,15 +3,16 @@
 
 #include "Task.h"
 
-class TaskProcessor
+namespace Cubiquity
 {
-public:
-	TaskProcessor() {}
-	virtual ~TaskProcessor() {}
+	class TaskProcessor
+	{
+	public:
+		TaskProcessor() {}
+		virtual ~TaskProcessor() {}
 
-	virtual void addTask(Task* task) = 0;
-};
-
-//#include "TaskProcessor.inl"
+		virtual void addTask(Task* task) = 0;
+	};
+}
 
 #endif //CUBIQUITY_TASKPROCESSOR_H_

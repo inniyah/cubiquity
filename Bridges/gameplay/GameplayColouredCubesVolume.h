@@ -8,58 +8,63 @@
 
 #include "Impl/GameplayVolume.h"
 
-/**
- * A volume containing coloured cubes.
- */
-class GameplayColouredCubesVolume : public GameplayVolume<ColouredCubesVolume>
+namespace Cubiquity
 {
-public:
+
 	/**
-     * Creates a new GameplayColouredCubesVolume.
-	 *
-     * @script{create}
-     */
-	static GameplayColouredCubesVolume* create(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
+	 * A volume containing coloured cubes.
+	 */
+	class GameplayColouredCubesVolume : public GameplayVolume<ColouredCubesVolume>
 	{
-		GameplayColouredCubesVolume* volume = new GameplayColouredCubesVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize);
-		return volume;
-	}
+	public:
+		/**
+		 * Creates a new GameplayColouredCubesVolume.
+		 *
+		 * @script{create}
+		 */
+		static GameplayColouredCubesVolume* create(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
+		{
+			GameplayColouredCubesVolume* volume = new GameplayColouredCubesVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize);
+			return volume;
+		}
 
-	// Ugly hack, as luagen can't see the base class implementation of this function (probably it can't handle templated base classes)
-	gameplay::Node* getRootNodeForLua(int dummyParamForLuagen)
-	{
-		return GameplayVolume<ColouredCubesVolume>::getRootNode();
-	}
+		// Ugly hack, as luagen can't see the base class implementation of this function (probably it can't handle templated base classes)
+		gameplay::Node* getRootNodeForLua(int dummyParamForLuagen)
+		{
+			return GameplayVolume<ColouredCubesVolume>::getRootNode();
+		}
 
-	// Ugly hack, as luagen can't see the base class implementation of this function (probably it can't handle templated base classes)
-	//Not sure I like exposing this one... should make some functions/classes friends instead?
-	ColouredCubesVolume* getVolumeForLua(int dummyParamForLuagen)
-	{
-		return GameplayVolume<ColouredCubesVolume>::getCubiquityVolume();
-	}
+		// Ugly hack, as luagen can't see the base class implementation of this function (probably it can't handle templated base classes)
+		//Not sure I like exposing this one... should make some functions/classes friends instead?
+		ColouredCubesVolume* getVolumeForLua(int dummyParamForLuagen)
+		{
+			return GameplayVolume<ColouredCubesVolume>::getCubiquityVolume();
+		}
 
-	//FIXME - This doesn't belong here but currently there is no .cpp file for volume serialisation.
-	// Probably it doesn't belong inside Cubiquity at all.
-	/**
-     * @script{create}
-     */
-	static GameplayColouredCubesVolume* importVxl(const char* filename);
+		//FIXME - This doesn't belong here but currently there is no .cpp file for volume serialisation.
+		// Probably it doesn't belong inside Cubiquity at all.
+		/**
+		 * @script{create}
+		 */
+		static GameplayColouredCubesVolume* importVxl(const char* filename);
 
-	gameplay::Vector4 getVoxel(int x, int y, int z);
-	void setVoxel(int x, int y, int z, const gameplay::Vector4& colour, int updatePriority = 1);
-	void setVoxel(int x, int y, int z, float red, float green, float blue, float alpha, int updatePriority = 1);
-	void markAsModified(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, int updatePriority = 1);
+		gameplay::Vector4 getVoxel(int x, int y, int z);
+		void setVoxel(int x, int y, int z, const gameplay::Vector4& colour, int updatePriority = 1);
+		void setVoxel(int x, int y, int z, float red, float green, float blue, float alpha, int updatePriority = 1);
+		void markAsModified(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, int updatePriority = 1);
 
-	void performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold);
+		void performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold);
 
-protected:
-	GameplayColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
-	virtual ~GameplayColouredCubesVolume();
+	protected:
+		GameplayColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
+		virtual ~GameplayColouredCubesVolume();
 
-private:
-	void syncNode(OctreeNode< Colour >* octreeNode, gameplay::Node* gameplayNode);
+	private:
+		void syncNode(OctreeNode< Colour >* octreeNode, gameplay::Node* gameplayNode);
 
-	gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PolyVox::PositionMaterial<Colour> >* polyVoxMesh);
-};
+		gameplay::Model* buildModelFromPolyVoxMesh(const ::PolyVox::SurfaceMesh< ::PolyVox::PositionMaterial<Colour> >* polyVoxMesh);
+	};
+
+}
 
 #endif //GAMEPLAYCOLOUREDCUBESVOLUME_H_

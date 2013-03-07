@@ -1,6 +1,9 @@
 #include "Task.h"
 
-Task::Task()
-	:mPriority(0)
+namespace Cubiquity
 {
+	Task::Task()
+		:mPriority(0)
+	{
+	}
 }

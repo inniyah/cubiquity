@@ -118,12 +118,6 @@
     <None Include="..\..\..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.inl">
       <Filter>PolyVox</Filter>
     </None>
-    <None Include="..\..\..\Core\TaskProcessor.inl">
-      <Filter>Core</Filter>
-    </None>
-    <None Include="..\..\..\Core\MainThreadTaskProcessor.inl">
-      <Filter>Core</Filter>
-    </None>
     <None Include="..\..\..\Core\OctreeNode.inl">
       <Filter>Core</Filter>
     </None>
@@ -350,9 +344,6 @@
     <ClCompile Include="src\Main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Bridges\gameplay\Impl\ExtraNodeData.cpp">
-      <Filter>Bridge\Impl</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Bridges\gameplay\GameplayColouredCubesVolume.cpp">
       <Filter>Bridge</Filter>
     </ClCompile>
@@ -417,9 +408,6 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Core\Clock.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Core\TaskProcessor.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Core\MainThreadTaskProcessor.cpp">

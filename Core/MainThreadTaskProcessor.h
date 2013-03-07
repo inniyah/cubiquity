@@ -5,22 +5,23 @@
 
 #include <list>
 
-class MainThreadTaskProcessor : public TaskProcessor
+namespace Cubiquity
 {
-public:
-	MainThreadTaskProcessor();
-	virtual ~MainThreadTaskProcessor();
+	class MainThreadTaskProcessor : public TaskProcessor
+	{
+	public:
+		MainThreadTaskProcessor();
+		virtual ~MainThreadTaskProcessor();
 
-	void addTask(Task* task);
+		void addTask(Task* task);
 
-	virtual void processOneTask(void)/* = 0*/;
-	virtual void processAllTasks(void)/* = 0*/;
+		virtual void processOneTask(void)/* = 0*/;
+		virtual void processAllTasks(void)/* = 0*/;
 
-	std::list<Task*> mPendingTasks;
-};
+		std::list<Task*> mPendingTasks;
+	};
 
-extern MainThreadTaskProcessor gMainThreadTaskProcessor;
-
-//#include "MainThreadTaskProcessor.inl"
+	extern MainThreadTaskProcessor gMainThreadTaskProcessor;
+}
 
 #endif //CUBIQUITY_MAINTHREADTASKPROCESSOR_H_

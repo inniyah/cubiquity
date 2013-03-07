@@ -8,24 +8,27 @@
 
 #include <list>
 
-class BackgroundTaskProcessor : public TaskProcessor
+namespace Cubiquity
 {
-public:
-	BackgroundTaskProcessor(uint32_t noOfThreads);
-	virtual ~BackgroundTaskProcessor();
+	class BackgroundTaskProcessor : public TaskProcessor
+	{
+	public:
+		BackgroundTaskProcessor(uint32_t noOfThreads);
+		virtual ~BackgroundTaskProcessor();
 
-	void addTask(Task* task);
+		void addTask(Task* task);
 
-	bool hasAnyFinishedTasks(void);
-	Task* removeFirstFinishedTask(void);
+		bool hasAnyFinishedTasks(void);
+		Task* removeFirstFinishedTask(void);
 
-	void processTasks(void);
+		void processTasks(void);
 
-	concurrent_queue<Task*, TaskSortCriterion> mPendingTasks;
+		concurrent_queue<Task*, TaskSortCriterion> mPendingTasks;
 
-	std::list<boost::thread*> mThreads;
-};
+		std::list<boost::thread*> mThreads;
+	};
 
-extern BackgroundTaskProcessor gBackgroundTaskProcessor;
+	extern BackgroundTaskProcessor gBackgroundTaskProcessor;
+}
 
 #endif //CUBIQUITY_BACKGROUNDTASKPROCESSOR_H_

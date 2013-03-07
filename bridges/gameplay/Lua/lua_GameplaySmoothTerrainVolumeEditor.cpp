@@ -3,6 +3,8 @@
 #include "lua_GameplaySmoothTerrainVolumeEditor.h"
 #include "GameplaySmoothTerrainVolumeEditor.h"
 
+using namespace Cubiquity;
+
 namespace gameplay
 {
 

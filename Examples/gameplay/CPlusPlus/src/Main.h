@@ -4,6 +4,8 @@
 #include "Colour.h"
 #include "MultiMaterial.h"
 
+#include "GameplayColouredCubesVolume.h"
+#include "GameplaySmoothTerrainVolume.h"
 #include "GameplaySmoothTerrainVolumeEditor.h"
 
 #include "gameplay.h"
@@ -11,9 +13,7 @@
 #include <bitset>
 
 using namespace gameplay;
-
-class GameplayColouredCubesVolume;
-class GameplaySmoothTerrainVolume;
+using namespace Cubiquity; // Bad!
 
 #define TERRAIN_SMOOTH
 //#define TERRAIN_CUBIC

@@ -3,17 +3,20 @@
 
 #include <cstdint>
 
-typedef uint32_t Timestamp;
-
-class Clock
+namespace Cubiquity
 {
-public:
-	static Timestamp getTimestamp(void);
+	typedef uint32_t Timestamp;
 
-private:
-	// This should be atomic but I don't have a recent enough version of boost.
-	// This will be addressed in the future with a new boost version or C++11.
-	static Timestamp mTimestamp;
-};
+	class Clock
+	{
+	public:
+		static Timestamp getTimestamp(void);
+
+	private:
+		// This should be atomic but I don't have a recent enough version of boost.
+		// This will be addressed in the future with a new boost version or C++11.
+		static Timestamp mTimestamp;
+	};
+}
 
 #endif //CUBIQUITY_CLOCK_H

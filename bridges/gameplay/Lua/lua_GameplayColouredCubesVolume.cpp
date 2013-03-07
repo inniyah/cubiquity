@@ -4,6 +4,8 @@
 #include "GameplayColouredCubesVolume.h"
 #include "gameplay.h"
 
+using namespace Cubiquity;
+
 namespace gameplay
 {
 

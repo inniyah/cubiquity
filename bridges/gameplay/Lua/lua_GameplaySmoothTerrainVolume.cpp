@@ -4,6 +4,8 @@
 #include "GameplaySmoothTerrainVolume.h"
 #include "gameplay.h"
 
+using namespace Cubiquity;
+
 namespace gameplay
 {
 

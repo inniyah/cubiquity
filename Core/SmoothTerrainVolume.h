@@ -4,14 +4,17 @@
 #include "CubiquityForwardDeclarations.h"
 #include "Volume.h"
 
-class SmoothTerrainVolume : public Volume<MultiMaterial>
+namespace Cubiquity
 {
+	class SmoothTerrainVolume : public Volume<MultiMaterial>
+	{
 
-public:
-	SmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
+	public:
+		SmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
 
-	virtual void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
-	void updateMeshImpl(OctreeNode< VoxelType >* octreeNode);
-};
+		virtual void update(const ::PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
+		void updateMeshImpl(OctreeNode< VoxelType >* octreeNode);
+	};
+}
 
 #endif //SMOOTHTERRAINVOLUME_H_

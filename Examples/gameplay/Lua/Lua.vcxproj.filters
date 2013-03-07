@@ -127,9 +127,6 @@
     <None Include="res\VxlSerialisation.lua">
       <Filter>res</Filter>
     </None>
-    <None Include="..\..\..\Core\TaskProcessor.inl">
-      <Filter>Core</Filter>
-    </None>
     <None Include="..\..\..\Core\OctreeNode.inl">
       <Filter>Core</Filter>
     </None>
@@ -374,9 +371,6 @@
     <ClCompile Include="src\Main.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\Bridges\gameplay\Impl\ExtraNodeData.cpp">
-      <Filter>Bridges\Impl</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\Bridges\gameplay\Lua\lua_all_bindings.cpp">
       <Filter>Bridges\Lua</Filter>
     </ClCompile>
@@ -465,9 +459,6 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Core\MainThreadTaskProcessor.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\Core\TaskProcessor.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\Core\BackgroundTaskProcessor.cpp">

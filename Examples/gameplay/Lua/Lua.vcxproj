@@ -340,7 +340,6 @@
     <None Include="..\..\..\Core\MainThreadTaskProcessor.inl" />
     <None Include="..\..\..\Core\Octree.inl" />
     <None Include="..\..\..\Core\OctreeNode.inl" />
-    <None Include="..\..\..\Core\TaskProcessor.inl" />
     <None Include="..\..\..\Core\Volume.inl" />
     <None Include="bar-descriptor.xml">
       <SubType>Designer</SubType>
@@ -370,7 +369,6 @@
     <ClCompile Include="..\..\..\Bridges\gameplay\GameplayRaycasting.cpp" />
     <ClCompile Include="..\..\..\Bridges\gameplay\GameplaySmoothTerrainVolume.cpp" />
     <ClCompile Include="..\..\..\Bridges\gameplay\GameplaySmoothTerrainVolumeEditor.cpp" />
-    <ClCompile Include="..\..\..\Bridges\gameplay\Impl\ExtraNodeData.cpp" />
     <ClCompile Include="..\..\..\Bridges\gameplay\Lua\lua_all_bindings.cpp" />
     <ClCompile Include="..\..\..\Bridges\gameplay\Lua\lua_GameplayColouredCubesVolume.cpp" />
     <ClCompile Include="..\..\..\Bridges\gameplay\Lua\lua_GameplayRaycasting.cpp" />
@@ -389,7 +387,6 @@
     <ClCompile Include="..\..\..\Core\SmoothTerrainVolume.cpp" />
     <ClCompile Include="..\..\..\Core\SmoothTerrainVolumeEditor.cpp" />
     <ClCompile Include="..\..\..\Core\Task.cpp" />
-    <ClCompile Include="..\..\..\Core\TaskProcessor.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>

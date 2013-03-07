@@ -11,8 +11,9 @@
 #include <algorithm>
 #include <sstream>
 
-using namespace PolyVox;
+//using namespace PolyVox;
 using namespace std;
+using namespace Cubiquity;
 
 //Rotates the goven node to point at the target.
 //NOTE - Might only work if node position and target are in world space?

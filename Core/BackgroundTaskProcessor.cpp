@@ -2,39 +2,42 @@
 
 #include "boost/bind.hpp"
 
-BackgroundTaskProcessor gBackgroundTaskProcessor(1); //Our global instance
-
-BackgroundTaskProcessor::BackgroundTaskProcessor(uint32_t noOfThreads)
-	:TaskProcessor()
+namespace Cubiquity
 {
-	for(uint32_t ct = 0; ct < noOfThreads; ct++)
+	BackgroundTaskProcessor gBackgroundTaskProcessor(1); //Our global instance
+
+	BackgroundTaskProcessor::BackgroundTaskProcessor(uint32_t noOfThreads)
+		:TaskProcessor()
 	{
-		boost::thread* taskProcessingThread = new boost::thread(boost::bind(&BackgroundTaskProcessor::processTasks, this));
-		mThreads.push_back(taskProcessingThread);
+		for(uint32_t ct = 0; ct < noOfThreads; ct++)
+		{
+			boost::thread* taskProcessingThread = new boost::thread(boost::bind(&BackgroundTaskProcessor::processTasks, this));
+			mThreads.push_back(taskProcessingThread);
+		}
 	}
-}
 
-BackgroundTaskProcessor::~BackgroundTaskProcessor()
-{
-	for(std::list<boost::thread*>::iterator threadIter = mThreads.begin(); threadIter != mThreads.end(); threadIter++)
+	BackgroundTaskProcessor::~BackgroundTaskProcessor()
 	{
-		(*threadIter)->interrupt();
-		(*threadIter)->join();
-		delete *threadIter;
+		for(std::list<boost::thread*>::iterator threadIter = mThreads.begin(); threadIter != mThreads.end(); threadIter++)
+		{
+			(*threadIter)->interrupt();
+			(*threadIter)->join();
+			delete *threadIter;
+		}
 	}
-}
 
-void BackgroundTaskProcessor::addTask(Task* task)
-{
-	mPendingTasks.push(task);
-}
-
-void BackgroundTaskProcessor::processTasks(void)
-{
-	while(true)
+	void BackgroundTaskProcessor::addTask(Task* task)
 	{
-		Task* task = 0;
-		mPendingTasks.wait_and_pop(task);
-		task->process();
+		mPendingTasks.push(task);
+	}
+
+	void BackgroundTaskProcessor::processTasks(void)
+	{
+		while(true)
+		{
+			Task* task = 0;
+			mPendingTasks.wait_and_pop(task);
+			task->process();
+		}
 	}
 }

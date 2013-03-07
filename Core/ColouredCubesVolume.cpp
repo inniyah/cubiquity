@@ -7,12 +7,15 @@
 
 using namespace PolyVox;
 
-ColouredCubesVolume::ColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
-	:Volume<Colour>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, OctreeConstructionModes::BoundVoxels, baseNodeSize)
+namespace Cubiquity
 {
-}
+	ColouredCubesVolume::ColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
+		:Volume<Colour>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, OctreeConstructionModes::BoundVoxels, baseNodeSize)
+	{
+	}
 
-void ColouredCubesVolume::update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
-{
-	Volume<Colour>::update(viewPosition, lodThreshold);
+	void ColouredCubesVolume::update(const ::PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
+	{
+		Volume<Colour>::update(viewPosition, lodThreshold);
+	}
 }

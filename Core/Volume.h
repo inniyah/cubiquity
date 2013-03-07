@@ -12,29 +12,32 @@
 #include "PolyVoxCore/CubicSurfaceExtractor.h"
 #include "PolyVoxCore/MarchingCubesSurfaceExtractor.h"
 
-template <typename _VoxelType>
-class Volume
+namespace Cubiquity
 {
-public:
-	typedef _VoxelType VoxelType;
+	template <typename _VoxelType>
+	class Volume
+	{
+	public:
+		typedef _VoxelType VoxelType;
 
-	Volume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize);
-	~Volume();
+		Volume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize);
+		~Volume();
 
 
-	VoxelType getVoxelAt(int x, int y, int z);
-	void setVoxelAt(int x, int y, int z, VoxelType value, UpdatePriority updatePriority = UpdatePriorities::Background);
-	void markAsModified(const PolyVox::Region& region, UpdatePriority updatePriority = UpdatePriorities::Background);
+		VoxelType getVoxelAt(int x, int y, int z);
+		void setVoxelAt(int x, int y, int z, VoxelType value, UpdatePriority updatePriority = UpdatePriorities::Background);
+		void markAsModified(const ::PolyVox::Region& region, UpdatePriority updatePriority = UpdatePriorities::Background);
 
-	virtual void update(const PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
-protected:
-	Volume& operator=(const Volume&);
+		virtual void update(const ::PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
+	protected:
+		Volume& operator=(const Volume&);
 
-public:
-	PolyVox::SimpleVolume<VoxelType>* mPolyVoxVolume;
-	//OctreeNode< VoxelType >* mRootOctreeNode;
-	Octree<VoxelType>* mOctree;
-};
+	public:
+		::PolyVox::SimpleVolume<VoxelType>* mPolyVoxVolume;
+		//OctreeNode< VoxelType >* mRootOctreeNode;
+		Octree<VoxelType>* mOctree;
+	};
+}
 
 #include "Volume.inl"
 
