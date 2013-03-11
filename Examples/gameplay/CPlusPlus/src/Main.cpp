@@ -147,8 +147,8 @@ void MeshGame::initialize()
 	mVolumeEditor = new GameplaySmoothTerrainVolumeEditor(mVolume);
 #endif
 #ifdef TERRAIN_CUBIC
-	mVolume = GameplayColouredCubesVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
-	//mVolume = GameplayVolumeSerialisation::gameplayImportColourSlices("C:\\temp\\output");
+	//mVolume = GameplayColouredCubesVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
+	mVolume = GameplayVolumeSerialisation::gameplayImportColourSlices("C:\\temp\\VoxeliensTerrain");
 	mVolumeEditor = 0;
 #endif
 
@@ -157,17 +157,17 @@ void MeshGame::initialize()
 #ifdef TERRAIN_SMOOTH
 		GameplayVolumeSerialisation::gameplayLoadData("res/level2MultiMaterial8Bit.vol", mVolume);
 #else
-		GameplayVolumeSerialisation::gameplayLoadData("res/level2.vol", mVolume);
+		//GameplayVolumeSerialisation::gameplayLoadData("res/level2.vol", mVolume);
 #endif
 #else
 #ifdef TERRAIN_SMOOTH
 		GameplayVolumeSerialisation::gameplayLoadData("/sdcard/external_sd/level2MultiMaterial8Bit.vol", mVolume);
 #else
-		GameplayVolumeSerialisation::gameplayLoadData("/sdcard/external_sd/level2.vol", mVolume);
+		//GameplayVolumeSerialisation::gameplayLoadData("/sdcard/external_sd/level2.vol", mVolume);
 #endif
 #endif
 
-	GameplayVolumeSerialisation::gameplayExportColourSlices(mVolume, "C:\\temp\\output");
+	//GameplayVolumeSerialisation::gameplayExportColourSlices(mVolume, "C:\\temp\\output");
 	
 	_polyVoxNode = mVolume->getRootNode();
 	_scene->addNode(mVolume->getRootNode());
@@ -219,8 +219,9 @@ void MeshGame::update(float elapsedTime)
 	}
 #endif
 
-	_cameraNode->setTranslation(64.0f, 16.0f, 64.0f);
+	_cameraNode->setTranslation(64.0f, 64.0f, 16.0f);
 	_cameraNode->setRotation(Quaternion::identity());
+	_cameraNode->rotateX(3.14 / 2.0); //Why negative?
 	_cameraNode->rotateY(mCameraRotationAngle);
 	_cameraNode->rotateX(-mCameraElevationAngle); //Why negative?
 	

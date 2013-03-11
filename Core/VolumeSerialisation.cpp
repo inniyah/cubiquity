@@ -26,7 +26,6 @@ namespace Cubiquity
 	{
 		string indexFileName(folder);
 		indexFileName = indexFileName + "\\Volume.idx";
-		//string indexFileName("C:\\temp\\output\\Volume.idx");
 		int c;
 		FILE* file = fopen(indexFileName.c_str(), "rt");
 		char chars[80];
@@ -106,7 +105,7 @@ namespace Cubiquity
 		for(int slice = 0; slice < sliceCount; slice++)
 		{
 			std::stringstream ss;
-			ss << "C:\\temp\\output\\" << slice << "." << index["SliceExtension"];
+			ss << folder << "\\" << slice << "." << index["SliceExtension"];
 			string imageFileName = ss.str();
 
 			int imageWidth = 0, imageHeight = 0, imageChannels;
