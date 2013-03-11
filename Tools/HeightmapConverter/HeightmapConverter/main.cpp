@@ -1,5 +1,6 @@
 #include <algorithm>
 #include <cstdint>
+#include <fstream>
 #include <iostream>
 #include <sstream>
 
@@ -13,6 +14,7 @@ using namespace std;
 int main(int argc, char** argv)
 {
 	int imageWidth, imageHeight, n;
+	uint32_t sliceCount = 0;
 	uint32_t imageRange = 256;
 	uint32_t outputChannels = 4;
 	unsigned char *heightData = stbi_load("height.png", &imageWidth, &imageHeight, &n, 0);
@@ -76,6 +78,8 @@ int main(int argc, char** argv)
 		int result = stbi_write_png(ss.str().c_str(), imageWidth, imageHeight, outputChannels, outputSliceData, imageWidth * outputChannels);
 		assert(result); //If crashing here then make sure the output folder exists.
 
+		sliceCount++;
+
 		// We're processing a heightmap, so one we have a completely
 		// empty slice we know there is no more data higher up
 		if(!anyPixelsSet)
@@ -85,6 +89,16 @@ int main(int argc, char** argv)
 	}
 
 	delete[] outputSliceData;
+
+	//Now write the index file
+	ofstream indexFile;
+	indexFile.open("C:/temp/output/Volume.idx");
+	indexFile << "Width = " << imageWidth << endl;
+	indexFile << "Height = " << imageHeight << endl;
+	indexFile << "SliceCount = " << sliceCount << endl;
+	indexFile << "ComponentCount = " << 4 << endl;
+	indexFile << "SliceExtension = " << "png" << endl;
+	indexFile.close();
 
 	return 0;
 }
