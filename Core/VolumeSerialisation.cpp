@@ -10,102 +10,88 @@
 #include <cassert>
 #include <cstdio>
 #include <fstream>
+#include <sstream>
 
 using namespace std;
 
 namespace Cubiquity
 {
-	bool convertStringToInt(const std::string& str, int& i)
+	//Converts a string to an integer and returns true only if the conversion was sucessful.
+	void convertStringToInt(const std::string& str, int& i)
 	{
+		//Perform the conversion using strtol().
 		char* end;
 		i = strtol(str.c_str(), &end, 10);
-		return (!*end);
+
+		// After conversion 'end' should be the null-terminator. If it's something
+		// else then the conversion was not a success so we throw an exception.
+		if(*end)
+		{
+			stringstream ss;
+			ss << "Could not convert '" << str << "' to an integer";
+			throw std::invalid_argument(ss.str());
+		}
 	}
 
-	ColouredCubesVolume* importSlices(std::string folder)
+	std::map<std::string, std::string> parseIndexFile(const std::string& filename)
 	{
-		string indexFileName(folder);
-		indexFileName = indexFileName + "\\Volume.idx";
-		int c;
-		FILE* file = fopen(indexFileName.c_str(), "rt");
-		char chars[80];
+		std::map<std::string, std::string> keyValuePairs;
+		FILE* file = fopen(filename.c_str(), "rt");
+		char chars[1024];
 		std::string line;
 
-		std::map<std::string, std::string> index;
+		//Ideally we'd use C++ code like this but it's crashing: http://www.gameplay3d.org/forums/viewtopic.php?f=3&t=378#p2204
+		//std::ifstream inputFile;
+		//inputFile.open (folder + "/Volume.idx", ifstream::in);
+		//while( std::getline( inputFile, line ) )
+		//{
+		//}
 
-		while( fgets(chars,80,file) )
+		while( fgets(chars,1024,file) )
 		{
 			line = string(chars);
 
 			// Strip white space
 			line.erase(remove_if(line.begin(), line.end(), isspace), line.end());
 
+			// Lines starting with '#' are comments
 			if(line.at(0) != '#')
 			{
 				std::stringstream ss(line);
+
+				//Everything before the '=' is the key
 				std::string key;
 				std::getline(ss, key, '=');
+
+				//The rest is the value
 				std::string value;
 				std::getline(ss, value);
-				index[key] = value;
+
+				//Save it in the map
+				keyValuePairs[key] = value;
 			}
 		}
 
+		return keyValuePairs;
+	}
 
-		//Open the index file
-		/*std::ifstream inputFile;
-		//inputFile.open (folder + "/Volume.idx", ifstream::in);
-		inputFile.open ("C:\\temp\\Utility.h", ifstream::in);
-		assert(inputFile.good());
-		assert(inputFile.is_open());
-		if(!inputFile.is_open())
-		{
-			cout << "Error" << std::endl;
-		}
-		
-
-		std::map<std::string, std::string> index;
-
-		try
-		{
-			int ch = inputFile.get();
-		}
-		catch(exception& e)
-		{
-			cout << e.what();
-		}
-
-		while( std::getline( inputFile, line ) )
-		{
-			// Strip white space
-			line.erase(remove_if(line.begin(), line.end(), isspace), line.end());
-
-			if(line.at(0) != '#')
-			{
-				std::stringstream ss(line);
-				std::string key;
-				std::getline(ss, key, ':');
-				std::string value;
-				std::getline(ss, value);
-				index[key] = value;
-			}
-		}*/
+	ColouredCubesVolume* importSlices(std::string folder)
+	{
+		string indexFileName(folder);
+		indexFileName = indexFileName + "\\Volume.idx";
+		std::map<std::string, std::string> index = parseIndexFile(indexFileName);
 
 		//Create the volume
-		int volumeWidth;
-		assert(convertStringToInt(index["Width"], volumeWidth));
-		int volumeHeight;
-		assert(convertStringToInt(index["Height"], volumeHeight));
-		int sliceCount;
-		assert(convertStringToInt(index["SliceCount"], sliceCount));
-		int componentCount;
-		assert(convertStringToInt(index["ComponentCount"], componentCount));
+		int volumeWidth;    convertStringToInt(index["Width"], volumeWidth);
+		int volumeHeight;   convertStringToInt(index["Height"], volumeHeight);
+		int sliceCount;     convertStringToInt(index["SliceCount"], sliceCount);
+		int componentCount; convertStringToInt(index["ComponentCount"], componentCount);
 
 		ColouredCubesVolume* volume = new ColouredCubesVolume(0, 0, 0, volumeWidth - 1, volumeHeight - 1, sliceCount - 1, 32, 32);
 		for(int slice = 0; slice < sliceCount; slice++)
 		{
 			std::stringstream ss;
-			ss << folder << "\\" << slice << "." << index["SliceExtension"];
+			ss << folder << "\\" << setfill('0') << setw(6) << slice << "." << index["SliceExtension"];
 			string imageFileName = ss.str();
 
 			int imageWidth = 0, imageHeight = 0, imageChannels;

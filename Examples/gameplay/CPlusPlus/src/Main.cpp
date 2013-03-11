@@ -148,7 +148,7 @@ void MeshGame::initialize()
 #endif
 #ifdef TERRAIN_CUBIC
 	//mVolume = GameplayColouredCubesVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
-	mVolume = GameplayVolumeSerialisation::gameplayImportColourSlices("C:\\temp\\VoxeliensTerrain");
+	mVolume = GameplayVolumeSerialisation::gameplayImportColourSlices("../../SliceData/VoxeliensTerrain");
 	mVolumeEditor = 0;
 #endif
 
@@ -221,7 +221,7 @@ void MeshGame::update(float elapsedTime)
 
 	_cameraNode->setTranslation(64.0f, 64.0f, 16.0f);
 	_cameraNode->setRotation(Quaternion::identity());
-	_cameraNode->rotateX(3.14 / 2.0); //Why negative?
+	_cameraNode->rotateX(3.14f / 2.0f); //Why negative?
 	_cameraNode->rotateY(mCameraRotationAngle);
 	_cameraNode->rotateX(-mCameraElevationAngle); //Why negative?
 	

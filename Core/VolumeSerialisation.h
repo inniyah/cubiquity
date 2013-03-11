@@ -4,9 +4,12 @@
 #include "CubiquityForwardDeclarations.h"
 #include "UpdatePriorities.h"
 
+#include <map>
+
 namespace Cubiquity
 {
-	bool convertStringToInt(const std::string& str, int& i);
+	std::map<std::string, std::string> parseIndexFile(const std::string& filename);
+	void convertStringToInt(const std::string& str, int& i);
 
 	ColouredCubesVolume* importSlices(std::string folder);
 	void exportSlices(ColouredCubesVolume* volume, std::string folder);
