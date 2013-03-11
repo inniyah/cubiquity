@@ -9,6 +9,7 @@ namespace Cubiquity
 	bool convertStringToInt(const std::string& str, int& i);
 
 	ColouredCubesVolume* importSlices(std::string folder);
+	void exportSlices(ColouredCubesVolume* volume, std::string folder);
 
 	template <typename VolumeType>
 	void loadData(const char* filename, VolumeType* volume)

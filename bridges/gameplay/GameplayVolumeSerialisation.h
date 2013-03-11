@@ -32,6 +32,11 @@ namespace Cubiquity
 			GameplayColouredCubesVolume* result = GameplayColouredCubesVolume::create(cubiquityVolume);
 			return result;
 		}
+
+		static void gameplayExportColourSlices(GameplayColouredCubesVolume* volume, const char* folderName)
+		{
+			exportSlices(volume->getCubiquityVolume(), folderName);
+		}
 	};
 }
 
