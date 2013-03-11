@@ -377,6 +377,7 @@
     <ClCompile Include="..\..\..\Core\SmoothTerrainVolume.cpp" />
     <ClCompile Include="..\..\..\Core\SmoothTerrainVolumeEditor.cpp" />
     <ClCompile Include="..\..\..\Core\Task.cpp" />
+    <ClCompile Include="..\..\..\Core\VolumeSerialisation.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>

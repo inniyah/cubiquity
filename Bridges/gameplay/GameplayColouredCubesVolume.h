@@ -28,6 +28,17 @@ namespace Cubiquity
 			return volume;
 		}
 
+		/**
+		 * I don't like exposing the internal cubiquity volume in this public interface.
+		 *
+		 * @script{create}
+		 */
+		static GameplayColouredCubesVolume* create(ColouredCubesVolume* cubiquityVolume)
+		{
+			GameplayColouredCubesVolume* volume = new GameplayColouredCubesVolume(cubiquityVolume);
+			return volume;
+		}
+
 		// Ugly hack, as luagen can't see the base class implementation of this function (probably it can't handle templated base classes)
 		gameplay::Node* getRootNodeForLua(int dummyParamForLuagen)
 		{
@@ -57,6 +68,7 @@ namespace Cubiquity
 
 	protected:
 		GameplayColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
+		GameplayColouredCubesVolume(ColouredCubesVolume* colouredCubesVolume);
 		virtual ~GameplayColouredCubesVolume();
 
 	private:

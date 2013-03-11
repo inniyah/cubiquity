@@ -1,6 +1,7 @@
 #ifndef GAMEPLAYVOLUMESERIALISATION_H_
 #define GAMEPLAYVOLUMESERIALISATION_H_
 
+#include "ColouredCubesVolume.h"
 #include "VolumeSerialisation.h"
 
 #include "GameplayColouredCubesVolume.h"
@@ -23,6 +24,13 @@ namespace Cubiquity
 		static void gameplayLoadData(const char* filename, GameplaySmoothTerrainVolume* volume)
 		{
 			loadData(filename, volume->getCubiquityVolume());
+		}
+
+		static GameplayColouredCubesVolume* gameplayImportColourSlices(const char* folderName)
+		{
+			ColouredCubesVolume* cubiquityVolume = importSlices(folderName);
+			GameplayColouredCubesVolume* result = GameplayColouredCubesVolume::create(cubiquityVolume);
+			return result;
 		}
 	};
 }

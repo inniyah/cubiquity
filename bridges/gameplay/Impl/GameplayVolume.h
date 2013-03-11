@@ -33,6 +33,12 @@ namespace Cubiquity
 			mCubiquityVolume = new _VolumeType(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize);
 		}
 
+		GameplayVolume(_VolumeType* cubiquityVolume)
+			:mRootGameplayNode(0)
+			,mCubiquityVolume(cubiquityVolume) //Consider ownership?
+		{
+		}
+
 		~GameplayVolume()
 		{
 		}

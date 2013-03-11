@@ -20,6 +20,14 @@ namespace Cubiquity
 		buildNode(mCubiquityVolume->mOctree->mRootOctreeNode, mRootGameplayNode);
 	}
 
+	GameplayColouredCubesVolume::GameplayColouredCubesVolume(ColouredCubesVolume* colouredCubesVolume)
+		:GameplayVolume<ColouredCubesVolume>(colouredCubesVolume)
+	{
+		mRootGameplayNode = createNodeWithExtraData< Colour >("RootGameplayNode");
+
+		buildNode(mCubiquityVolume->mOctree->mRootOctreeNode, mRootGameplayNode);
+	}
+
 	GameplayColouredCubesVolume::~GameplayColouredCubesVolume()
 	{
 	}

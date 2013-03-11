@@ -1,10 +1,15 @@
 #ifndef CUBIQUITY_VOLUMESERIALISATION_H_
 #define CUBIQUITY_VOLUMESERIALISATION_H_
 
+#include "CubiquityForwardDeclarations.h"
 #include "UpdatePriorities.h"
 
 namespace Cubiquity
 {
+	bool convertStringToInt(const std::string& str, int& i);
+
+	ColouredCubesVolume* importSlices(std::string folder);
+
 	template <typename VolumeType>
 	void loadData(const char* filename, VolumeType* volume)
 	{

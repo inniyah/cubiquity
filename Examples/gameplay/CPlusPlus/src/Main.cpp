@@ -147,7 +147,8 @@ void MeshGame::initialize()
 	mVolumeEditor = new GameplaySmoothTerrainVolumeEditor(mVolume);
 #endif
 #ifdef TERRAIN_CUBIC
-	mVolume = GameplayColouredCubesVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
+	//mVolume = GameplayColouredCubesVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
+	mVolume = GameplayVolumeSerialisation::gameplayImportColourSlices("C:\\temp\\output");
 	mVolumeEditor = 0;
 #endif
 
@@ -156,13 +157,13 @@ void MeshGame::initialize()
 #ifdef TERRAIN_SMOOTH
 		GameplayVolumeSerialisation::gameplayLoadData("res/level2MultiMaterial8Bit.vol", mVolume);
 #else
-		GameplayVolumeSerialisation::gameplayLoadData("res/level2.vol", mVolume);
+		//GameplayVolumeSerialisation::gameplayLoadData("res/level2.vol", mVolume);
 #endif
 #else
 #ifdef TERRAIN_SMOOTH
 		GameplayVolumeSerialisation::gameplayLoadData("/sdcard/external_sd/level2MultiMaterial8Bit.vol", mVolume);
 #else
-		GameplayVolumeSerialisation::gameplayLoadData("/sdcard/external_sd/level2.vol", mVolume);
+		//GameplayVolumeSerialisation::gameplayLoadData("/sdcard/external_sd/level2.vol", mVolume);
 #endif
 #endif
 	
@@ -262,8 +263,8 @@ void MeshGame::controlEvent(Control* control, EventType evt)
 				// Pushing forward (positive wheelDelta) should reduce distance to world.
 				mCameraDistance -= wheelDelta;
 				//Values copied from Voxeliens
-				mCameraDistance = min(mCameraDistance, 200.0f);
-				mCameraDistance = max(mCameraDistance, 91.0f); //sqrt(64*64+64*64) to stop camera clipping with volume
+				//mCameraDistance = min(mCameraDistance, 200.0f);
+				//mCameraDistance = max(mCameraDistance, 91.0f); //sqrt(64*64+64*64) to stop camera clipping with volume
 			}
 			else if(control == mZoomOutButton)
 			{
@@ -422,6 +423,6 @@ void MeshGame::moveCamera(int x, int y)
 	mCameraRotationAngle -= (deltaX * cameraSensitivity);
 	mCameraElevationAngle += (deltaY * cameraSensitivity);
 	
-	mCameraElevationAngle = min(mCameraElevationAngle, MATH_DEG_TO_RAD(70.0f)); //Value from voxeliens
-	mCameraElevationAngle = max(mCameraElevationAngle, MATH_DEG_TO_RAD(-5.0f)); //Value from voxeliens
+	//mCameraElevationAngle = min(mCameraElevationAngle, MATH_DEG_TO_RAD(70.0f)); //Value from voxeliens
+	//mCameraElevationAngle = max(mCameraElevationAngle, MATH_DEG_TO_RAD(-5.0f)); //Value from voxeliens
 }
