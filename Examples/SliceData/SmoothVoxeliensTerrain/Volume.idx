@@ -1,0 +1,5 @@
+Width = 128
+Height = 128
+SliceCount = 32
+ComponentCount = 4
+SliceExtension = png

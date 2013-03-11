@@ -28,12 +28,24 @@ namespace Cubiquity
 
 		static GameplayColouredCubesVolume* gameplayImportColourSlices(const char* folderName)
 		{
-			ColouredCubesVolume* cubiquityVolume = importSlices(folderName);
+			ColouredCubesVolume* cubiquityVolume = importColouredSlices(folderName);
 			GameplayColouredCubesVolume* result = GameplayColouredCubesVolume::create(cubiquityVolume);
 			return result;
 		}
 
 		static void gameplayExportColourSlices(GameplayColouredCubesVolume* volume, const char* folderName)
+		{
+			exportSlices(volume->getCubiquityVolume(), folderName);
+		}
+
+		static GameplaySmoothTerrainVolume* gameplayImportSmoothSlices(const char* folderName)
+		{
+			SmoothTerrainVolume* cubiquityVolume = importSmoothSlices(folderName);
+			GameplaySmoothTerrainVolume* result = GameplaySmoothTerrainVolume::create(cubiquityVolume);
+			return result;
+		}
+
+		static void gameplayExportSmoothSlices(GameplaySmoothTerrainVolume* volume, const char* folderName)
 		{
 			exportSlices(volume->getCubiquityVolume(), folderName);
 		}

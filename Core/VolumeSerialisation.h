@@ -11,8 +11,11 @@ namespace Cubiquity
 	std::map<std::string, std::string> parseIndexFile(const std::string& filename);
 	void convertStringToInt(const std::string& str, int& i);
 
-	ColouredCubesVolume* importSlices(std::string folder);
+	ColouredCubesVolume* importColouredSlices(std::string folder);
 	void exportSlices(ColouredCubesVolume* volume, std::string folder);
+
+	SmoothTerrainVolume* importSmoothSlices(std::string folder);
+	void exportSlices(SmoothTerrainVolume* volume, std::string folder);
 
 	template <typename VolumeType>
 	void loadData(const char* filename, VolumeType* volume)

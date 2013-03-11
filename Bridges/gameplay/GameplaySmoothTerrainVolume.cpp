@@ -18,6 +18,14 @@ namespace Cubiquity
 		buildNode(mCubiquityVolume->mOctree->mRootOctreeNode, mRootGameplayNode);
 	}
 
+	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(SmoothTerrainVolume* cubiquityVolume)
+		:GameplayVolume<SmoothTerrainVolume>(cubiquityVolume)
+	{
+		mRootGameplayNode = createNodeWithExtraData< MultiMaterial >("RootGameplayNode");
+
+		buildNode(mCubiquityVolume->mOctree->mRootOctreeNode, mRootGameplayNode);
+	}
+
 	GameplaySmoothTerrainVolume::~GameplaySmoothTerrainVolume()
 	{
 	}

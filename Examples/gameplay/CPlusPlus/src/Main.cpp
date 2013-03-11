@@ -143,7 +143,8 @@ void MeshGame::initialize()
 
 	// Create the volume and add it to the scene.
 #ifdef TERRAIN_SMOOTH
-	mVolume = GameplaySmoothTerrainVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
+	//mVolume = GameplaySmoothTerrainVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
+	mVolume = GameplayVolumeSerialisation::gameplayImportSmoothSlices("../../SliceData/SmoothVoxeliensTerrain");
 	mVolumeEditor = new GameplaySmoothTerrainVolumeEditor(mVolume);
 #endif
 #ifdef TERRAIN_CUBIC
@@ -155,19 +156,19 @@ void MeshGame::initialize()
 	//Rather dirty hack until I figure out how to package volume data with gameplay
 #ifdef WIN32
 #ifdef TERRAIN_SMOOTH
-		GameplayVolumeSerialisation::gameplayLoadData("res/level2MultiMaterial8Bit.vol", mVolume);
+		//GameplayVolumeSerialisation::gameplayLoadData("res/level2MultiMaterial8Bit.vol", mVolume);
 #else
 		//GameplayVolumeSerialisation::gameplayLoadData("res/level2.vol", mVolume);
 #endif
 #else
 #ifdef TERRAIN_SMOOTH
-		GameplayVolumeSerialisation::gameplayLoadData("/sdcard/external_sd/level2MultiMaterial8Bit.vol", mVolume);
+		//GameplayVolumeSerialisation::gameplayLoadData("/sdcard/external_sd/level2MultiMaterial8Bit.vol", mVolume);
 #else
 		//GameplayVolumeSerialisation::gameplayLoadData("/sdcard/external_sd/level2.vol", mVolume);
 #endif
 #endif
 
-	//GameplayVolumeSerialisation::gameplayExportColourSlices(mVolume, "C:\\temp\\output");
+	//GameplayVolumeSerialisation::gameplayExportSmoothSlices(mVolume, "C:\\temp\\output");
 	
 	_polyVoxNode = mVolume->getRootNode();
 	_scene->addNode(mVolume->getRootNode());
