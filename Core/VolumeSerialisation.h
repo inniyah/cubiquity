@@ -33,6 +33,15 @@ namespace Cubiquity
 	void pixelToVoxel(uint8_t* pixelData, Colour& voxelData, uint8_t componentCount);
 	void pixelToVoxel(uint8_t* pixelData, MultiMaterial& voxelData, uint8_t componentCount);
 
+	template <typename VoxelType>
+	void voxelToPixel(VoxelType& voxelData, uint8_t* pixelData, uint8_t componentCount)
+	{
+		POLYVOX_ASSERT(false, "NOT IMPLEMENTED");
+	}
+
+	void voxelToPixel(Colour& voxelData, uint8_t* pixelData, uint8_t componentCount);
+	void voxelToPixel(MultiMaterial& voxelData, uint8_t* pixelData, uint8_t componentCount);
+
 	template <typename VolumeType>
 	VolumeType* importVolDat(std::string folder)
 	{
@@ -68,7 +77,7 @@ namespace Cubiquity
 					unsigned char *pixel = sliceData + (y * imageWidth + x) * imageChannels;
 
 					VolumeType::VoxelType voxel;
-					pixelToVoxel(pixel, voxel, 4);
+					pixelToVoxel(pixel, voxel, componentCount);
 
 					// Note: We iterate backwards over y to flip this axis. The images in the VolDat format have x increasing to the right and y
 					// increasing downwards. However, we would like our terrain viewed from above (towards negative z) to match the slice images.
@@ -83,6 +92,64 @@ namespace Cubiquity
 		volume->markAsModified(volume->mPolyVoxVolume->getEnclosingRegion(), UpdatePriorities::Background);
 
 		return volume;
+	}
+
+	template <typename VolumeType>
+	void exportVolDat(VolumeType* volume, std::string folder)
+	{
+		uint32_t imageWidth = volume->mPolyVoxVolume->getWidth();
+		uint32_t imageHeight = volume->mPolyVoxVolume->getHeight();
+		uint32_t sliceCount = volume->mPolyVoxVolume->getDepth();
+		uint32_t componentCount = 4;
+
+		int outputSliceDataSize = imageWidth * imageHeight * componentCount;
+		unsigned char* outputSliceData = new unsigned char[outputSliceDataSize];
+
+		for(uint32_t slice = 0; slice < sliceCount; slice++)
+		{
+			std::fill(outputSliceData, outputSliceData + imageWidth * imageHeight, 0);
+
+			for(int x = 0; x < imageWidth; x++)
+			{
+				for(int y = 0; y < imageHeight; y++)
+				{
+					// Note: We iterate backwards over y to flip this axis. The images in the VolDat format have x increasing to the right and y
+					// increasing downwards. However, we would like our terrain viewed from above (towards negative z) to match the slice images.
+					int flippedY = (imageHeight - 1) - y;
+
+					unsigned char* pixel = outputSliceData + (y * imageWidth + x) * componentCount;
+					VolumeType::VoxelType voxel = volume->mPolyVoxVolume->getVoxel(x, flippedY, slice);
+
+					voxelToPixel(voxel, pixel, componentCount);
+				}
+			}
+
+			stringstream ss;
+			ss << "C:/temp/output/" << setfill('0') << setw(6) << slice << ".png";
+			int result = stbi_write_png(ss.str().c_str(), imageWidth, imageHeight, componentCount, outputSliceData, imageWidth * componentCount);
+			assert(result); //If crashing here then make sure the output folder exists.
+		}
+
+		delete[] outputSliceData;
+
+		//Now write the index file
+		/*ofstream indexFile;
+		indexFile.open("C:/temp/output/Volume.idx");
+		indexFile << "Width = " << imageWidth << endl;
+		indexFile << "Height = " << imageHeight << endl;
+		indexFile << "SliceCount = " << sliceCount << endl;
+		indexFile << "ComponentCount = " << 4 << endl;
+		indexFile << "SliceExtension = " << "png" << endl;
+		indexFile.close();*/
+
+		FILE *fp;
+		fp=fopen("C:/temp/output/Volume.idx", "w");
+		fprintf(fp, "Width = %d\n", imageWidth);
+		fprintf(fp, "Height = %d\n", imageHeight);
+		fprintf(fp, "SliceCount = %d\n", sliceCount);
+		fprintf(fp, "ComponentCount = 4\n");
+		fprintf(fp, "SliceExtension = png\n");
+		fclose(fp);
 	}
 
 	template <typename VolumeType>

@@ -35,7 +35,7 @@ namespace Cubiquity
 
 		static void gameplayExportColourSlices(GameplayColouredCubesVolume* volume, const char* folderName)
 		{
-			exportSlices(volume->getCubiquityVolume(), folderName);
+			exportVolDat<ColouredCubesVolume>(volume->getCubiquityVolume(), folderName);
 		}
 
 		static GameplaySmoothTerrainVolume* gameplayImportSmoothSlices(const char* folderName)
@@ -47,7 +47,7 @@ namespace Cubiquity
 
 		static void gameplayExportSmoothSlices(GameplaySmoothTerrainVolume* volume, const char* folderName)
 		{
-			exportSlices(volume->getCubiquityVolume(), folderName);
+			exportVolDat<SmoothTerrainVolume>(volume->getCubiquityVolume(), folderName);
 		}
 	};
 }

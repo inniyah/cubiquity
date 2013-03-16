@@ -97,129 +97,29 @@ namespace Cubiquity
 		voxelData.setMaterial(3, alpha);
 	}
 
-	void exportSlices(ColouredCubesVolume* volume, std::string folder)
+	void voxelToPixel(Colour& voxelData, uint8_t* pixelData, uint8_t componentCount)
 	{
-		uint32_t imageWidth = volume->mPolyVoxVolume->getWidth();
-		uint32_t imageHeight = volume->mPolyVoxVolume->getHeight();
-		uint32_t sliceCount = volume->mPolyVoxVolume->getDepth();
-		uint32_t componentCount = 4;
+		uint8_t* red = pixelData;
+		uint8_t* green = pixelData + 1;
+		uint8_t* blue = pixelData + 2;
+		uint8_t* alpha = pixelData + 3;
 
-		int outputSliceDataSize = imageWidth * imageHeight * componentCount;
-		unsigned char* outputSliceData = new unsigned char[outputSliceDataSize];
-
-		for(uint32_t slice = 0; slice < sliceCount; slice++)
-		{
-			std::fill(outputSliceData, outputSliceData + imageWidth * imageHeight, 0);
-
-			for(int x = 0; x < imageWidth; x++)
-			{
-				for(int y = 0; y < imageHeight; y++)
-				{
-					unsigned char* outputSliceDataValue = outputSliceData + (y * imageWidth + x) * componentCount;
-					unsigned char* red = outputSliceDataValue;
-					unsigned char* green = outputSliceDataValue + 1;
-					unsigned char* blue = outputSliceDataValue + 2;
-					unsigned char* alpha = outputSliceDataValue + 3;
-
-					// Note: We iterate backwards over y to flip this axis. The images in the VolDat format have x increasing to the right and y
-					// increasing downwards. However, we would like our terrain viewed from above (towards negative z) to match the slice images.
-					int flippedY = (imageHeight - 1) - y;
-
-					*red = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, flippedY, slice).getRedAsFloat() * 255.0f);
-					*green = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, flippedY, slice).getGreenAsFloat() * 255.0f);
-					*blue = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, flippedY, slice).getBlueAsFloat() * 255.0f);
-					*alpha = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, flippedY, slice).getAlphaAsFloat() * 255.0f);
-				}
-			}
-
-			stringstream ss;
-			ss << "C:/temp/output/" << setfill('0') << setw(6) << slice << ".png";
-			int result = stbi_write_png(ss.str().c_str(), imageWidth, imageHeight, componentCount, outputSliceData, imageWidth * componentCount);
-			assert(result); //If crashing here then make sure the output folder exists.
-		}
-
-		delete[] outputSliceData;
-
-		//Now write the index file
-		/*ofstream indexFile;
-		indexFile.open("C:/temp/output/Volume.idx");
-		indexFile << "Width = " << imageWidth << endl;
-		indexFile << "Height = " << imageHeight << endl;
-		indexFile << "SliceCount = " << sliceCount << endl;
-		indexFile << "ComponentCount = " << 4 << endl;
-		indexFile << "SliceExtension = " << "png" << endl;
-		indexFile.close();*/
-
-		FILE *fp;
-		fp=fopen("C:/temp/output/Volume.idx", "w");
-		fprintf(fp, "Width = %d\n", imageWidth);
-		fprintf(fp, "Height = %d\n", imageHeight);
-		fprintf(fp, "SliceCount = %d\n", sliceCount);
-		fprintf(fp, "ComponentCount = 4\n");
-		fprintf(fp, "SliceExtension = png\n");
-		fclose(fp);
+		*red = static_cast<unsigned char>(voxelData.getRedAsFloat() * 255.0f);
+		*green = static_cast<unsigned char>(voxelData.getGreenAsFloat() * 255.0f);
+		*blue = static_cast<unsigned char>(voxelData.getBlueAsFloat() * 255.0f);
+		*alpha = static_cast<unsigned char>(voxelData.getAlphaAsFloat() * 255.0f);
 	}
 
-	void exportSlices(SmoothTerrainVolume* volume, std::string folder)
+	void voxelToPixel(MultiMaterial& voxelData, uint8_t* pixelData, uint8_t componentCount)
 	{
-		uint32_t imageWidth = volume->mPolyVoxVolume->getWidth();
-		uint32_t imageHeight = volume->mPolyVoxVolume->getHeight();
-		uint32_t sliceCount = volume->mPolyVoxVolume->getDepth();
-		uint32_t componentCount = 4;
+		uint8_t* red = pixelData;
+		uint8_t* green = pixelData + 1;
+		uint8_t* blue = pixelData + 2;
+		uint8_t* alpha = pixelData + 3;
 
-		int outputSliceDataSize = imageWidth * imageHeight * componentCount;
-		unsigned char* outputSliceData = new unsigned char[outputSliceDataSize];
-
-		for(uint32_t slice = 0; slice < sliceCount; slice++)
-		{
-			std::fill(outputSliceData, outputSliceData + imageWidth * imageHeight, 0);
-
-			for(int x = 0; x < imageWidth; x++)
-			{
-				for(int y = 0; y < imageHeight; y++)
-				{
-					unsigned char* outputSliceDataValue = outputSliceData + (y * imageWidth + x) * componentCount;
-					unsigned char* red = outputSliceDataValue;
-					unsigned char* green = outputSliceDataValue + 1;
-					unsigned char* blue = outputSliceDataValue + 2;
-					unsigned char* alpha = outputSliceDataValue + 3;
-
-					// Note: We iterate backwards over y to flip this axis. The images in the VolDat format have x increasing to the right and y
-					// increasing downwards. However, we would like our terrain viewed from above (towards negative z) to match the slice images.
-					int flippedY = (imageHeight - 1) - y;
-
-					*red = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, flippedY, slice).getMaterial(0));
-					*green = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, flippedY, slice).getMaterial(1));
-					*blue = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, flippedY, slice).getMaterial(2));
-					*alpha = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, flippedY, slice).getMaterial(3));
-				}
-			}
-
-			stringstream ss;
-			ss << "C:/temp/output/" << setfill('0') << setw(6) << slice << ".png";
-			int result = stbi_write_png(ss.str().c_str(), imageWidth, imageHeight, componentCount, outputSliceData, imageWidth * componentCount);
-			assert(result); //If crashing here then make sure the output folder exists.
-		}
-
-		delete[] outputSliceData;
-
-		//Now write the index file
-		/*ofstream indexFile;
-		indexFile.open("C:/temp/output/Volume.idx");
-		indexFile << "Width = " << imageWidth << endl;
-		indexFile << "Height = " << imageHeight << endl;
-		indexFile << "SliceCount = " << sliceCount << endl;
-		indexFile << "ComponentCount = " << 4 << endl;
-		indexFile << "SliceExtension = " << "png" << endl;
-		indexFile.close();*/
-
-		FILE *fp;
-		fp=fopen("C:/temp/output/Volume.idx", "w");
-		fprintf(fp, "Width = %d\n", imageWidth);
-		fprintf(fp, "Height = %d\n", imageHeight);
-		fprintf(fp, "SliceCount = %d\n", sliceCount);
-		fprintf(fp, "ComponentCount = 4\n");
-		fprintf(fp, "SliceExtension = png\n");
-		fclose(fp);
+		*red = static_cast<unsigned char>(voxelData.getMaterial(0));
+		*green = static_cast<unsigned char>(voxelData.getMaterial(1));
+		*blue = static_cast<unsigned char>(voxelData.getMaterial(2));
+		*alpha = static_cast<unsigned char>(voxelData.getMaterial(3));
 	}
 }
