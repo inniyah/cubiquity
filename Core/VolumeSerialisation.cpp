@@ -114,8 +114,12 @@ namespace Cubiquity
 					unsigned char blue = *(pixel + 2);
 					unsigned char alpha = *(pixel + 3);
 
+					// Note: We iterate backwards over y to flip this axis. The images in the VolDat format have x increasing to the right and y
+					// increasing downwards. However, we would like our terrain viewed from above (towards negative z) to match the slice images.
+					int flippedY = (imageHeight - 1) - y;
+
 					//Might be faster not to use floats here
-					volume->setVoxelAt(x, y, slice, Colour(red / 255.0f, green / 255.0f, blue / 255.0f, alpha / 255.0f), UpdatePriorities::DontUpdate);
+					volume->setVoxelAt(x, flippedY, slice, Colour(red / 255.0f, green / 255.0f, blue / 255.0f, alpha / 255.0f), UpdatePriorities::DontUpdate);
 				}
 			}
 		}
@@ -149,10 +153,14 @@ namespace Cubiquity
 					unsigned char* blue = outputSliceDataValue + 2;
 					unsigned char* alpha = outputSliceDataValue + 3;
 
-					*red = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, y, slice).getRedAsFloat() * 255.0f);
-					*green = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, y, slice).getGreenAsFloat() * 255.0f);
-					*blue = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, y, slice).getBlueAsFloat() * 255.0f);
-					*alpha = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, y, slice).getAlphaAsFloat() * 255.0f);
+					// Note: We iterate backwards over y to flip this axis. The images in the VolDat format have x increasing to the right and y
+					// increasing downwards. However, we would like our terrain viewed from above (towards negative z) to match the slice images.
+					int flippedY = (imageHeight - 1) - y;
+
+					*red = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, flippedY, slice).getRedAsFloat() * 255.0f);
+					*green = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, flippedY, slice).getGreenAsFloat() * 255.0f);
+					*blue = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, flippedY, slice).getBlueAsFloat() * 255.0f);
+					*alpha = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, flippedY, slice).getAlphaAsFloat() * 255.0f);
 				}
 			}
 
@@ -227,7 +235,12 @@ namespace Cubiquity
 					material.setMaterial(1, green);
 					material.setMaterial(2, blue);
 					material.setMaterial(3, alpha);
-					volume->setVoxelAt(x, y, slice, material, UpdatePriorities::DontUpdate);
+
+					// Note: We iterate backwards over y to flip this axis. The images in the VolDat format have x increasing to the right and y
+					// increasing downwards. However, we would like our terrain viewed from above (towards negative z) to match the slice images.
+					int flippedY = (imageHeight - 1) - y;
+
+					volume->setVoxelAt(x, flippedY, slice, material, UpdatePriorities::DontUpdate);
 				}
 			}
 		}
@@ -261,10 +274,14 @@ namespace Cubiquity
 					unsigned char* blue = outputSliceDataValue + 2;
 					unsigned char* alpha = outputSliceDataValue + 3;
 
-					*red = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, y, slice).getMaterial(0));
-					*green = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, y, slice).getMaterial(1));
-					*blue = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, y, slice).getMaterial(2));
-					*alpha = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, y, slice).getMaterial(3));
+					// Note: We iterate backwards over y to flip this axis. The images in the VolDat format have x increasing to the right and y
+					// increasing downwards. However, we would like our terrain viewed from above (towards negative z) to match the slice images.
+					int flippedY = (imageHeight - 1) - y;
+
+					*red = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, flippedY, slice).getMaterial(0));
+					*green = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, flippedY, slice).getMaterial(1));
+					*blue = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, flippedY, slice).getMaterial(2));
+					*alpha = static_cast<unsigned char>(volume->mPolyVoxVolume->getVoxel(x, flippedY, slice).getMaterial(3));
 				}
 			}
 
