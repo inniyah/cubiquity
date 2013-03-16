@@ -1,8 +1,5 @@
 #include "VolumeSerialisation.h"
 
-#include "ColouredCubesVolume.h"
-#include "SmoothTerrainVolume.h"
-
 #include "stb_image.c"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
@@ -76,6 +73,29 @@ namespace Cubiquity
 		return keyValuePairs;
 	}
 
+	void pixelToVoxel(uint8_t* pixelData, Colour& voxelData, uint8_t componentCount)
+	{
+		uint8_t red = *pixelData;
+		uint8_t green = *(pixelData + 1);
+		uint8_t blue = *(pixelData + 2);
+		uint8_t alpha = *(pixelData + 3);
+
+		voxelData = Colour(red / 255.0f, green / 255.0f, blue / 255.0f, alpha / 255.0f);
+	}
+
+	void pixelToVoxel(uint8_t* pixelData, MultiMaterial& voxelData, uint8_t componentCount)
+	{
+		uint8_t red = *pixelData;
+		uint8_t green = *(pixelData + 1);
+		uint8_t blue = *(pixelData + 2);
+		uint8_t alpha = *(pixelData + 3);
+
+		voxelData.setMaterial(0, red);
+		voxelData.setMaterial(1, green);
+		voxelData.setMaterial(2, blue);
+		voxelData.setMaterial(3, alpha);
+	}
+
 	ColouredCubesVolume* importColouredSlices(std::string folder)
 	{
 		string indexFileName(folder);
@@ -109,17 +129,66 @@ namespace Cubiquity
 				{
 					unsigned char *pixel = sliceData + (y * imageWidth + x) * imageChannels;
 
-					unsigned char red = *pixel;
-					unsigned char green = *(pixel + 1);
-					unsigned char blue = *(pixel + 2);
-					unsigned char alpha = *(pixel + 3);
+					Colour voxel;
+					pixelToVoxel(pixel, voxel, 4);
 
 					// Note: We iterate backwards over y to flip this axis. The images in the VolDat format have x increasing to the right and y
 					// increasing downwards. However, we would like our terrain viewed from above (towards negative z) to match the slice images.
 					int flippedY = (imageHeight - 1) - y;
 
 					//Might be faster not to use floats here
-					volume->setVoxelAt(x, flippedY, slice, Colour(red / 255.0f, green / 255.0f, blue / 255.0f, alpha / 255.0f), UpdatePriorities::DontUpdate);
+					volume->setVoxelAt(x, flippedY, slice, voxel, UpdatePriorities::DontUpdate);
+				}
+			}
+		}
+
+		volume->markAsModified(volume->mPolyVoxVolume->getEnclosingRegion(), UpdatePriorities::Background);
+
+		return volume;
+	}
+
+	SmoothTerrainVolume* importSmoothSlices(std::string folder)
+	{
+		string indexFileName(folder);
+		indexFileName = indexFileName + "\\Volume.idx";
+		std::map<std::string, std::string> index = parseIndexFile(indexFileName);
+
+		//Create the volume
+		int volumeWidth;    convertStringToInt(index["Width"], volumeWidth);
+		int volumeHeight;   convertStringToInt(index["Height"], volumeHeight);
+		int sliceCount;     convertStringToInt(index["SliceCount"], sliceCount);
+		int componentCount; convertStringToInt(index["ComponentCount"], componentCount);
+
+		SmoothTerrainVolume* volume = new SmoothTerrainVolume(0, 0, 0, volumeWidth - 1, volumeHeight - 1, sliceCount - 1, 32, 32);
+		for(int slice = 0; slice < sliceCount; slice++)
+		{
+			std::stringstream ss;
+			ss << folder << "\\" << setfill('0') << setw(6) << slice << "." << index["SliceExtension"];
+			string imageFileName = ss.str();
+
+			int imageWidth = 0, imageHeight = 0, imageChannels;
+			unsigned char *sliceData = stbi_load(imageFileName.c_str(), &imageWidth, &imageHeight, &imageChannels, 0);
+			assert(imageWidth == volumeWidth);
+			assert(imageHeight == volumeHeight);
+			assert(imageChannels == componentCount);
+
+			assert(componentCount == 4);
+
+			for(int x = 0; x < imageWidth; x++)
+			{
+				for(int y = 0; y < imageHeight; y++)
+				{
+					unsigned char *pixel = sliceData + (y * imageWidth + x) * imageChannels;
+
+					MultiMaterial voxel;
+					pixelToVoxel(pixel, voxel, 4);
+
+					// Note: We iterate backwards over y to flip this axis. The images in the VolDat format have x increasing to the right and y
+					// increasing downwards. However, we would like our terrain viewed from above (towards negative z) to match the slice images.
+					int flippedY = (imageHeight - 1) - y;
+
+					//Might be faster not to use floats here
+					volume->setVoxelAt(x, flippedY, slice, voxel, UpdatePriorities::DontUpdate);
 				}
 			}
 		}
@@ -190,64 +259,6 @@ namespace Cubiquity
 		fprintf(fp, "ComponentCount = 4\n");
 		fprintf(fp, "SliceExtension = png\n");
 		fclose(fp);
-	}
-
-	SmoothTerrainVolume* importSmoothSlices(std::string folder)
-	{
-		string indexFileName(folder);
-		indexFileName = indexFileName + "\\Volume.idx";
-		std::map<std::string, std::string> index = parseIndexFile(indexFileName);
-
-		//Create the volume
-		int volumeWidth;    convertStringToInt(index["Width"], volumeWidth);
-		int volumeHeight;   convertStringToInt(index["Height"], volumeHeight);
-		int sliceCount;     convertStringToInt(index["SliceCount"], sliceCount);
-		int componentCount; convertStringToInt(index["ComponentCount"], componentCount);
-
-		SmoothTerrainVolume* volume = new SmoothTerrainVolume(0, 0, 0, volumeWidth - 1, volumeHeight - 1, sliceCount - 1, 32, 32);
-		for(int slice = 0; slice < sliceCount; slice++)
-		{
-			std::stringstream ss;
-			ss << folder << "\\" << setfill('0') << setw(6) << slice << "." << index["SliceExtension"];
-			string imageFileName = ss.str();
-
-			int imageWidth = 0, imageHeight = 0, imageChannels;
-			unsigned char *sliceData = stbi_load(imageFileName.c_str(), &imageWidth, &imageHeight, &imageChannels, 0);
-			assert(imageWidth == volumeWidth);
-			assert(imageHeight == volumeHeight);
-			assert(imageChannels == componentCount);
-
-			assert(componentCount == 4);
-
-			for(int x = 0; x < imageWidth; x++)
-			{
-				for(int y = 0; y < imageHeight; y++)
-				{
-					unsigned char *pixel = sliceData + (y * imageWidth + x) * imageChannels;
-
-					unsigned char red = *pixel;
-					unsigned char green = *(pixel + 1);
-					unsigned char blue = *(pixel + 2);
-					unsigned char alpha = *(pixel + 3);
-
-					MultiMaterial material;
-					material.setMaterial(0, red);
-					material.setMaterial(1, green);
-					material.setMaterial(2, blue);
-					material.setMaterial(3, alpha);
-
-					// Note: We iterate backwards over y to flip this axis. The images in the VolDat format have x increasing to the right and y
-					// increasing downwards. However, we would like our terrain viewed from above (towards negative z) to match the slice images.
-					int flippedY = (imageHeight - 1) - y;
-
-					volume->setVoxelAt(x, flippedY, slice, material, UpdatePriorities::DontUpdate);
-				}
-			}
-		}
-
-		volume->markAsModified(volume->mPolyVoxVolume->getEnclosingRegion(), UpdatePriorities::Background);
-
-		return volume;
 	}
 
 	void exportSlices(SmoothTerrainVolume* volume, std::string folder)

@@ -1,7 +1,9 @@
 #ifndef CUBIQUITY_VOLUMESERIALISATION_H_
 #define CUBIQUITY_VOLUMESERIALISATION_H_
 
+#include "ColouredCubesVolume.h"
 #include "CubiquityForwardDeclarations.h"
+#include "SmoothTerrainVolume.h"
 #include "UpdatePriorities.h"
 
 #include <map>
@@ -16,6 +18,14 @@ namespace Cubiquity
 
 	SmoothTerrainVolume* importSmoothSlices(std::string folder);
 	void exportSlices(SmoothTerrainVolume* volume, std::string folder);
+
+	template <typename VoxelType>
+	void pixelToVoxel(uint8_t* pixelData, VoxelType& voxelData, uint8_t componentCount)
+	{
+		POLYVOX_ASSERT(false, "NOT IMPLEMENTED");
+	}
+
+	void pixelToVoxel(uint8_t* pixelData, Colour& voxelData, uint8_t componentCount);
 
 	template <typename VolumeType>
 	void loadData(const char* filename, VolumeType* volume)
