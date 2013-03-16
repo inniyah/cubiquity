@@ -25,22 +25,22 @@ namespace Cubiquity
 	void exportSlices(SmoothTerrainVolume* volume, std::string folder);
 
 	template <typename VoxelType>
-	void pixelToVoxel(uint8_t* pixelData, VoxelType& voxelData, uint8_t componentCount)
+	void pixelToVoxel(uint8_t* pixelData, VoxelType& voxelData, uint32_t componentCount)
 	{
 		POLYVOX_ASSERT(false, "NOT IMPLEMENTED");
 	}
 
-	void pixelToVoxel(uint8_t* pixelData, Colour& voxelData, uint8_t componentCount);
-	void pixelToVoxel(uint8_t* pixelData, MultiMaterial& voxelData, uint8_t componentCount);
+	void pixelToVoxel(uint8_t* pixelData, Colour& voxelData, uint32_t componentCount);
+	void pixelToVoxel(uint8_t* pixelData, MultiMaterial& voxelData, uint32_t componentCount);
 
 	template <typename VoxelType>
-	void voxelToPixel(VoxelType& voxelData, uint8_t* pixelData, uint8_t componentCount)
+	void voxelToPixel(VoxelType& voxelData, uint8_t* pixelData, uint32_t componentCount)
 	{
 		POLYVOX_ASSERT(false, "NOT IMPLEMENTED");
 	}
 
-	void voxelToPixel(Colour& voxelData, uint8_t* pixelData, uint8_t componentCount);
-	void voxelToPixel(MultiMaterial& voxelData, uint8_t* pixelData, uint8_t componentCount);
+	void voxelToPixel(Colour& voxelData, uint8_t* pixelData, uint32_t componentCount);
+	void voxelToPixel(MultiMaterial& voxelData, uint8_t* pixelData, uint32_t componentCount);
 
 	template <typename VolumeType>
 	VolumeType* importVolDat(std::string folder)
@@ -131,16 +131,6 @@ namespace Cubiquity
 		}
 
 		delete[] outputSliceData;
-
-		//Now write the index file
-		/*ofstream indexFile;
-		indexFile.open("C:/temp/output/Volume.idx");
-		indexFile << "Width = " << imageWidth << endl;
-		indexFile << "Height = " << imageHeight << endl;
-		indexFile << "SliceCount = " << sliceCount << endl;
-		indexFile << "ComponentCount = " << 4 << endl;
-		indexFile << "SliceExtension = " << "png" << endl;
-		indexFile.close();*/
 
 		FILE *fp;
 		fp=fopen("C:/temp/output/Volume.idx", "w");
