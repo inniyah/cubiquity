@@ -39,7 +39,9 @@ void pointNodeAtTarget(Node* node, const Vector3& target, const Vector3& up = Ve
 MeshGame game;
 
 MeshGame::MeshGame()
-	: _font(NULL), mLastX(0), mLastY(0), mTimeBetweenUpdatesInSeconds(0.0f), mScreenPressed(false), mSphereVisible(false), mSelectedMaterial(0), mSphereNode(0)
+	:_font(NULL), mLastX(0), mLastY(0), mTimeBetweenUpdatesInSeconds(0.0f), mScreenPressed(false), mSphereVisible(false), mSelectedMaterial(0), mSphereNode(0)
+	,mLeftMouseButtonPressed(0)
+	,mRightMouseButtonPressed(0)
 {
 }
 
@@ -222,8 +224,13 @@ void MeshGame::update(float elapsedTime)
 		_cameraPositionNode->translate(rightVector);
 	}
 
+	if((mPaintButton->isSelected()) || (mSmoothButton->isSelected()))
+	{
+		mSphereVisible = true;
+	}
+
 #ifdef TERRAIN_SMOOTH
-	if(mScreenPressed)
+	if(mLeftMouseButtonPressed)
 	{
 		Ray ray;
 		_cameraNode->getCamera()->pickRay(getViewport(), mLastX, mLastY, &ray);
@@ -375,6 +382,41 @@ void MeshGame::keyEvent(Keyboard::KeyEvent evt, int key)
             break;					
         }
     }	
+}
+
+bool MeshGame::mouseEvent (Mouse::MouseEvent evt, int x, int y, int wheelDelta)
+{
+	if(evt == Mouse::MOUSE_PRESS_LEFT_BUTTON)
+	{
+		mLeftMouseButtonPressed = true;
+	}
+	else if(evt == Mouse::MOUSE_RELEASE_LEFT_BUTTON)
+	{
+		mLeftMouseButtonPressed = false;
+	}
+	else if(evt == Mouse::MOUSE_PRESS_RIGHT_BUTTON)
+	{
+		mRightMouseButtonPressed = true;
+	}
+	else if(evt == Mouse::MOUSE_RELEASE_RIGHT_BUTTON)
+	{
+		mRightMouseButtonPressed = false;
+	}
+	else if(evt == Mouse::MOUSE_MOVE)
+	{
+        int deltaX = x - mLastX;
+		int deltaY = y - mLastY;
+		if(mRightMouseButtonPressed)
+		{
+			_cameraYawNode->rotateY(MATH_DEG_TO_RAD(deltaX * -0.5));
+			_cameraPitchNode->rotateX(MATH_DEG_TO_RAD(deltaY * -0.5));
+		}
+	}
+
+	mLastX = x;
+	mLastY = y;
+
+	return true;
 }
 
 void MeshGame::touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int contactIndex)

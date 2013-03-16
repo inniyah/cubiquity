@@ -28,6 +28,7 @@ public:
     virtual ~MeshGame();
 
     void keyEvent(Keyboard::KeyEvent evt, int key);
+	bool mouseEvent (Mouse::MouseEvent evt, int x, int y, int wheelDelta);
     void touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int contactIndex);
 	void controlEvent(Control* control, EventType evt);
 
@@ -63,6 +64,8 @@ private:
 
 	static const int mNoOfKeys = 0xFFFF;
 	std::bitset<mNoOfKeys> mPressedKeys;
+	bool mLeftMouseButtonPressed;
+	bool mRightMouseButtonPressed;
 
 	float mCameraElevationAngle;
 	float mCameraRotationAngle;
