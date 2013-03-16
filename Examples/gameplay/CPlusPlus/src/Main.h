@@ -29,7 +29,6 @@ public:
 
     void keyEvent(Keyboard::KeyEvent evt, int key);
 	bool mouseEvent (Mouse::MouseEvent evt, int x, int y, int wheelDelta);
-    void touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int contactIndex);
 	void controlEvent(Control* control, EventType evt);
 
 protected:

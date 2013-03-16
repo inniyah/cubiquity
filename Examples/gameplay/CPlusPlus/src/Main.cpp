@@ -147,7 +147,8 @@ void MeshGame::initialize()
 	_scene->setActiveCamera(camera);
 	_scene->getActiveCamera()->setAspectRatio((float)getWidth() / (float)getHeight());
 
-	_cameraPositionNode->setTranslation(0, 30, 300);
+	_cameraPositionNode->setTranslation(10, 10, 10);
+	_cameraPositionNode->rotateX(3.142f * 0.5f);
 
 	mCameraElevationAngle = MATH_DEG_TO_RAD(45.0f); //Value from voxeliens
 	mCameraRotationAngle = 0.0f; //Value from voxeliens
@@ -229,22 +230,22 @@ void MeshGame::update(float elapsedTime)
 		mSphereVisible = true;
 	}
 
+	Ray ray;
+	_cameraNode->getCamera()->pickRay(getViewport(), mLastX, mLastY, &ray);
+
+	Vector3 dir = ray.getDirection();
+	dir *= 200.0f;
+	ray.setDirection(dir);
+
+	Vector3 intersection;
+	if(GameplayRaycasting::gameplayRaycast(mVolume, ray, 200.0f, intersection))
+	{
+		mSphereNode->setTranslation(intersection);
+	}
+
 #ifdef TERRAIN_SMOOTH
 	if(mLeftMouseButtonPressed)
-	{
-		Ray ray;
-		_cameraNode->getCamera()->pickRay(getViewport(), mLastX, mLastY, &ray);
-
-		Vector3 dir = ray.getDirection();
-		dir *= 200.0f;
-		ray.setDirection(dir);
-
-		Vector3 intersection;
-		if(GameplayRaycasting::gameplayRaycast(mVolume, ray, 200.0f, intersection))
-		{
-			mSphereNode->setTranslation(intersection);
-		}		
-
+	{		
 		if(mPaintButton->isSelected())
 		{
 			mVolumeEditor->applyPaint(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
@@ -417,47 +418,6 @@ bool MeshGame::mouseEvent (Mouse::MouseEvent evt, int x, int y, int wheelDelta)
 	mLastY = y;
 
 	return true;
-}
-
-void MeshGame::touchEvent(Touch::TouchEvent evt, int x, int y, unsigned int contactIndex)
-{
-    switch (evt)
-    {
-    case Touch::TOUCH_PRESS:
-		{
-			mLastX = x;
-			mLastY = y;
-			mScreenPressed = true;
-
-			if((mPaintButton->isSelected()) || (mSmoothButton->isSelected()))
-			{
-				mSphereVisible = true;
-			}
-
-			break;
-		}
-    case Touch::TOUCH_RELEASE:
-		{
-			mLastX = 0;
-			mLastY = 0;
-			mScreenPressed = false;
-			mSphereVisible = false;
-			break;
-		}
-    case Touch::TOUCH_MOVE:
-		{			
-			if(mRotateButton->isSelected())
-			{
-				moveCamera(x,y);
-			}
-
-			mLastX = x;
-			mLastY = y;
-			break;
-		}
-    default:
-        break;
-    };
 }
 
 bool MeshGame::drawScene(Node* node)
