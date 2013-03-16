@@ -157,12 +157,12 @@ void MeshGame::initialize()
 	// Create the volume and add it to the scene.
 #ifdef TERRAIN_SMOOTH
 	//mVolume = GameplaySmoothTerrainVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
-	mVolume = GameplayVolumeSerialisation::gameplayImportSmoothSlices("../../SliceData/SmoothVoxeliensTerrain");
+	mVolume = GameplayVolumeSerialisation::gameplayImportSmoothSlices("../../SliceData/SmoothVoxeliensTerrain/");
 	mVolumeEditor = new GameplaySmoothTerrainVolumeEditor(mVolume);
 #endif
 #ifdef TERRAIN_CUBIC
 	//mVolume = GameplayColouredCubesVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
-	mVolume = GameplayVolumeSerialisation::gameplayImportColourSlices("../../SliceData/VoxeliensTerrain");
+	mVolume = GameplayVolumeSerialisation::gameplayImportColourSlices("../../SliceData/VoxeliensTerrain/");
 	mVolumeEditor = 0;
 #endif
 
@@ -182,6 +182,7 @@ void MeshGame::initialize()
 #endif
 
 	//GameplayVolumeSerialisation::gameplayExportSmoothSlices(mVolume, "C:\\temp\\output");
+	//GameplayVolumeSerialisation::gameplayExportColourSlices(mVolume, "C:/temp/mytest/");
 	
 	_polyVoxNode = mVolume->getRootNode();
 	_scene->addNode(mVolume->getRootNode());

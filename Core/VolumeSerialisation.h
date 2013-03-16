@@ -6,10 +6,14 @@
 #include "SmoothTerrainVolume.h"
 #include "UpdatePriorities.h"
 
+#include "PolyVoxCore\Impl\ErrorHandling.h"
+
 #define STBI_HEADER_FILE_ONLY
 #include "stb_image.c"
 #undef STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
+
+#include "boost/filesystem.hpp"
 
 #include <map>
 
@@ -46,7 +50,7 @@ namespace Cubiquity
 	VolumeType* importVolDat(std::string folder)
 	{
 		string indexFileName(folder);
-		indexFileName = indexFileName + "\\Volume.idx";
+		indexFileName = indexFileName + "Volume.idx";
 		std::map<std::string, std::string> index = parseIndexFile(indexFileName);
 
 		//Create the volume
@@ -59,7 +63,7 @@ namespace Cubiquity
 		for(int slice = 0; slice < sliceCount; slice++)
 		{
 			std::stringstream ss;
-			ss << folder << "\\" << setfill('0') << setw(6) << slice << "." << index["SliceExtension"];
+			ss << folder << setfill('0') << setw(6) << slice << "." << index["SliceExtension"];
 			string imageFileName = ss.str();
 
 			int imageWidth = 0, imageHeight = 0, imageChannels;
@@ -97,6 +101,12 @@ namespace Cubiquity
 	template <typename VolumeType>
 	void exportVolDat(VolumeType* volume, std::string folder)
 	{
+		boost::filesystem::path path(folder);
+		if((!is_directory(path)) && (!boost::filesystem::create_directory(path)))
+		{
+			POLYVOX_THROW(std::runtime_error, "Failed to create directory \'" + folder + "\'for export");
+		}
+
 		uint32_t imageWidth = volume->mPolyVoxVolume->getWidth();
 		uint32_t imageHeight = volume->mPolyVoxVolume->getHeight();
 		uint32_t sliceCount = volume->mPolyVoxVolume->getDepth();
@@ -125,7 +135,7 @@ namespace Cubiquity
 			}
 
 			stringstream ss;
-			ss << "C:/temp/output/" << setfill('0') << setw(6) << slice << ".png";
+			ss << folder << setfill('0') << setw(6) << slice << ".png";
 			int result = stbi_write_png(ss.str().c_str(), imageWidth, imageHeight, componentCount, outputSliceData, imageWidth * componentCount);
 			assert(result); //If crashing here then make sure the output folder exists.
 		}
@@ -133,7 +143,7 @@ namespace Cubiquity
 		delete[] outputSliceData;
 
 		FILE *fp;
-		fp=fopen("C:/temp/output/Volume.idx", "w");
+		fp=fopen((folder + "Volume.idx").c_str(), "w");
 		fprintf(fp, "Width = %d\n", imageWidth);
 		fprintf(fp, "Height = %d\n", imageHeight);
 		fprintf(fp, "SliceCount = %d\n", sliceCount);

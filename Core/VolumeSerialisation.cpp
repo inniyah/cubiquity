@@ -90,27 +90,18 @@ namespace Cubiquity
 
 	void voxelToPixel(Colour& voxelData, uint8_t* pixelData, uint32_t componentCount)
 	{
-		uint8_t* red = pixelData;
-		uint8_t* green = pixelData + 1;
-		uint8_t* blue = pixelData + 2;
-		uint8_t* alpha = pixelData + 3;
-
-		*red = static_cast<unsigned char>(voxelData.getRedAsFloat() * 255.0f);
-		*green = static_cast<unsigned char>(voxelData.getGreenAsFloat() * 255.0f);
-		*blue = static_cast<unsigned char>(voxelData.getBlueAsFloat() * 255.0f);
-		*alpha = static_cast<unsigned char>(voxelData.getAlphaAsFloat() * 255.0f);
+		POLYVOX_ASSERT(componentCount == 4, "Images must have four colour channels to export from a ColouredCubesVolume");
+		*(pixelData + 0) = static_cast<uint8_t>(voxelData.getRedAsFloat() * 255.0f);
+		*(pixelData + 1) = static_cast<uint8_t>(voxelData.getGreenAsFloat() * 255.0f);
+		*(pixelData + 2) = static_cast<uint8_t>(voxelData.getBlueAsFloat() * 255.0f);
+		*(pixelData + 3) = static_cast<uint8_t>(voxelData.getAlphaAsFloat() * 255.0f);
 	}
 
 	void voxelToPixel(MultiMaterial& voxelData, uint8_t* pixelData, uint32_t componentCount)
 	{
-		uint8_t* red = pixelData;
-		uint8_t* green = pixelData + 1;
-		uint8_t* blue = pixelData + 2;
-		uint8_t* alpha = pixelData + 3;
-
-		*red = static_cast<unsigned char>(voxelData.getMaterial(0));
-		*green = static_cast<unsigned char>(voxelData.getMaterial(1));
-		*blue = static_cast<unsigned char>(voxelData.getMaterial(2));
-		*alpha = static_cast<unsigned char>(voxelData.getMaterial(3));
+		for(uint32_t ct = 0; ct < componentCount; ct++)
+		{
+			*(pixelData + ct) = static_cast<uint8_t>(voxelData.getMaterial(ct));
+		}
 	}
 }
