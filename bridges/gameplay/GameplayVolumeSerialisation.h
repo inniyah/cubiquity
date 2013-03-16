@@ -28,7 +28,7 @@ namespace Cubiquity
 
 		static GameplayColouredCubesVolume* gameplayImportColourSlices(const char* folderName)
 		{
-			ColouredCubesVolume* cubiquityVolume = importColouredSlices(folderName);
+			ColouredCubesVolume* cubiquityVolume = importVolDat<ColouredCubesVolume>(folderName);
 			GameplayColouredCubesVolume* result = GameplayColouredCubesVolume::create(cubiquityVolume);
 			return result;
 		}
@@ -40,7 +40,7 @@ namespace Cubiquity
 
 		static GameplaySmoothTerrainVolume* gameplayImportSmoothSlices(const char* folderName)
 		{
-			SmoothTerrainVolume* cubiquityVolume = importSmoothSlices(folderName);
+			SmoothTerrainVolume* cubiquityVolume = importVolDat<SmoothTerrainVolume>(folderName);
 			GameplaySmoothTerrainVolume* result = GameplaySmoothTerrainVolume::create(cubiquityVolume);
 			return result;
 		}
