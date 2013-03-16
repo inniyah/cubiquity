@@ -55,6 +55,9 @@ private:
 	Node* _lightNode;
 
 	Node* _cameraNode;
+	Node* _cameraPositionNode;
+	Node* _cameraYawNode;
+	Node* _cameraPitchNode;
 
 	Node* mSphereNode;
 

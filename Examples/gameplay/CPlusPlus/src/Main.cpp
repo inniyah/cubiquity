@@ -131,11 +131,21 @@ void MeshGame::initialize()
 	pointNodeAtTarget(_lightNode, Vector3(0.0f, 0.0f, 0.0f));
 	_scene->addNode(_lightNode);
 
+	_cameraPositionNode = _scene->addNode();
+	_cameraYawNode = Node::create();
+	_cameraPositionNode->addChild(_cameraYawNode);
+	_cameraPitchNode = Node::create();
+	_cameraYawNode->addChild(_cameraPitchNode);
+	_cameraNode = Node::create();
+	_cameraPitchNode->addChild(_cameraNode);
+
 	Camera* camera = Camera::createPerspective(60.0f, 1.0f, 0.1f, 1000.0f);
-	_cameraNode = _scene->addNode();
+	//_cameraNode = _scene->addNode();
 	_cameraNode->setCamera(camera);
 	_scene->setActiveCamera(camera);
 	_scene->getActiveCamera()->setAspectRatio((float)getWidth() / (float)getHeight());
+
+	_cameraPositionNode->setTranslation(0, 30, 300);
 
 	mCameraElevationAngle = MATH_DEG_TO_RAD(45.0f); //Value from voxeliens
 	mCameraRotationAngle = 0.0f; //Value from voxeliens
@@ -220,13 +230,13 @@ void MeshGame::update(float elapsedTime)
 	}
 #endif
 
-	_cameraNode->setTranslation(64.0f, 64.0f, 16.0f);
+	/*_cameraNode->setTranslation(64.0f, 64.0f, 16.0f);
 	_cameraNode->setRotation(Quaternion::identity());
 	_cameraNode->rotateX(3.14f / 2.0f); //Why negative?
 	_cameraNode->rotateY(mCameraRotationAngle);
 	_cameraNode->rotateX(-mCameraElevationAngle); //Why negative?
 	
-	_cameraNode->translate(_cameraNode->getForwardVector() * -mCameraDistance);
+	_cameraNode->translate(_cameraNode->getForwardVector() * -mCameraDistance);*/
 
 	Vector3 viewPos = _cameraNode->getTranslationWorld();
 	mVolume->performUpdate(viewPos, mLod1StartSlider->getValue());
