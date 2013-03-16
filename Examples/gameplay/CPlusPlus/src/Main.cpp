@@ -195,6 +195,33 @@ void MeshGame::update(float elapsedTime)
 {
 	mTimeBetweenUpdatesInSeconds = elapsedTime;
 
+	Vector3 forwardVector = _cameraNode->getForwardVectorWorld();
+	Vector3 rightVector = _cameraNode->getRightVectorWorld();
+
+	float speed = 0.1f;
+	float distance = elapsedTime * speed;
+
+	if(mPressedKeys.test(Keyboard::KEY_W))
+	{
+		forwardVector.scale(distance);
+		_cameraPositionNode->translate(forwardVector);
+	}
+	else if(mPressedKeys.test(Keyboard::KEY_S))
+	{
+		forwardVector.scale(-distance);
+		_cameraPositionNode->translate(forwardVector);
+	}
+	else if(mPressedKeys.test(Keyboard::KEY_A))
+	{
+		rightVector.scale(-distance);
+		_cameraPositionNode->translate(rightVector);
+	}
+	else if(mPressedKeys.test(Keyboard::KEY_D))
+	{
+		rightVector.scale(distance);
+		_cameraPositionNode->translate(rightVector);
+	}
+
 #ifdef TERRAIN_SMOOTH
 	if(mScreenPressed)
 	{
