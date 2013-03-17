@@ -18,14 +18,6 @@ namespace Cubiquity
 			setColour(red, green, blue, alpha);
 		}
 
-		Colour(float red, float green, float blue, float alpha = 1.0f)
-		{
-			setRed(static_cast<uint8_t>(red * 255.0f + 0.5f));
-			setGreen(static_cast<uint8_t>(green * 255.0f + 0.5f));
-			setBlue(static_cast<uint8_t>(blue * 255.0f + 0.5f));
-			setAlpha(static_cast<uint8_t>(alpha * 255.0f + 0.5f));
-		}
-
 		bool operator==(const Colour& rhs) const throw()
 		{
 			return ((m_uRed == rhs.m_uRed) && (m_uGreen == rhs.m_uGreen) && (m_uBlue == rhs.m_uBlue) && (m_uAlpha == rhs.m_uAlpha));
@@ -54,26 +46,6 @@ namespace Cubiquity
 		uint8_t getAlpha(void)
 		{
 			return m_uAlpha << 4;
-		}
-
-		float getRedAsFloat(void)
-		{
-			return getRed() / 255.0f;
-		}
-
-		float getGreenAsFloat(void)
-		{
-			return getGreen() / 255.0f;
-		}
-
-		float getBlueAsFloat(void)
-		{
-			return getBlue() / 255.0f;
-		}
-
-		float getAlphaAsFloat(void)
-		{
-			return getAlpha() / 255.0f;
 		}
 
 		void setRed(uint8_t value)

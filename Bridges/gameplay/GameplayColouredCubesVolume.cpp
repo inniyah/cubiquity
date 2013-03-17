@@ -114,7 +114,16 @@ namespace Cubiquity
 
 			// Encode colour in w component
 			Colour colour = vecVertices[i].getMaterial();
-			uint16_t colourAsUint = (static_cast<uint16_t>(colour.getRed()) << 12) | (static_cast<uint16_t>(colour.getGreen()) << 8) | (static_cast<uint16_t>(colour.getBlue()) << 4) | (colour.getAlpha());
+			uint16_t red = colour.getRed();
+			uint16_t green = colour.getGreen();
+			uint16_t blue = colour.getBlue();
+			uint16_t alpha = colour.getAlpha();
+
+			red = red << 8;
+			green = green << 4;
+			blue = blue;
+			alpha = alpha >> 4;
+			uint16_t colourAsUint = (red | green | blue | alpha);
 			*ptr = static_cast<float>(colourAsUint); ptr++;
 		}
 
@@ -144,7 +153,7 @@ namespace Cubiquity
 	gameplay::Vector4 GameplayColouredCubesVolume::getVoxel(int x, int y, int z)
 	{
 		Colour colour = mCubiquityVolume->getVoxelAt(x, y, z);
-		gameplay::Vector4 result(colour.getRedAsFloat(), colour.getGreenAsFloat(), colour.getBlueAsFloat(), colour.getAlphaAsFloat());
+		gameplay::Vector4 result(colour.getRed() / 255.0f, colour.getGreen() / 255.0f, colour.getBlue() / 255.0f, colour.getAlpha() / 255.0f);
 		return result;
 	}
 

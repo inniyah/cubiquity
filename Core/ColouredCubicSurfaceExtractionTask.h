@@ -75,7 +75,7 @@ namespace Cubiquity
 					if(noOfSolidVoxels > 7)
 					{
 						Colour colour;
-						colour.setColour(averageOf8Red / noOfSolidVoxels, averageOf8Green / noOfSolidVoxels, averageOf8Blue / noOfSolidVoxels, 15);
+						colour.setColour(averageOf8Red / noOfSolidVoxels, averageOf8Green / noOfSolidVoxels, averageOf8Blue / noOfSolidVoxels, 255);
 						pVolDst->setVoxelAt(dstPos, colour);
 					}
 					else
@@ -159,7 +159,7 @@ namespace Cubiquity
 							if(totalExposedFaces == 0) totalExposedFaces++;
 
 							Colour colour;
-							colour.setColour(totalRed / totalExposedFaces, totalGreen / totalExposedFaces, totalBlue / totalExposedFaces, 15);
+							colour.setColour(totalRed / totalExposedFaces, totalGreen / totalExposedFaces, totalBlue / totalExposedFaces, 255);
 							pVolDst->setVoxelAt(dstPos, colour);
 						}
 					}
