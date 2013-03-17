@@ -166,18 +166,8 @@ namespace Cubiquity
 	GameplayColouredCubesVolume* GameplayColouredCubesVolume::importVxl(const char* filename)
 	{
 		GameplayColouredCubesVolume* result = create(0, 0, 0, 511, 63, 511, 64, 64);
-		/*for(int z = 0; z < 64; z++)
-		{
-			for(int y = 0; y < 128; y++)
-			{
-				for(int x = 0; x < 128; x++)
-				{
-					result->setVoxel(x, y, z, Vector4(1.0, 0.0, 0.0, 1.0), false);
-				}
-			}
-		}*/
 
-		FILE* inputFile = fopen("VxlEditor\\ToLoad.vxl", "rb");
+		FILE* inputFile = fopen(filename, "rb");
 		POLYVOX_ASSERT(inputFile, "Failed to open input file!");
 
 		// Determine input file's size.
@@ -239,7 +229,7 @@ namespace Cubiquity
 					blue = data[i + 4 + colorI * 4];
 					// Do something with these colors
 					//makeVoxelColorful(x, y, zz, red, green, blue);
-					result->setVoxel(x, zz, y, Vector4(red / 255.0f, green / 255.0f, blue / 255.0f, 1.0), 0);
+					result->setVoxel(x, 63 - zz, y, Vector4(red / 255.0f, green / 255.0f, blue / 255.0f, 1.0), UpdatePriorities::DontUpdate);
 					zz++;
 					colorI++;
 				}
@@ -251,7 +241,7 @@ namespace Cubiquity
 			for (j = 0; j < runlength; j++)
 			{
 				//makeVoxelSolid(x, y, zz);
-				result->setVoxel(x, zz, y, Vector4(1.0, 0.0, 1.0, 1.0), 0);
+				result->setVoxel(x, 63 - zz, y, Vector4(1.0, 0.0, 1.0, 1.0), UpdatePriorities::DontUpdate);
 				zz++;
 			}
 			if (N == 0)
@@ -276,7 +266,7 @@ namespace Cubiquity
 
 
 
-		result->markAsModified(0, 0, 0, 127, 127, 63, 0);
+		result->markAsModified(0, 0, 0, 511, 63, 511, UpdatePriorities::Background);
 
 		return result;
 	}

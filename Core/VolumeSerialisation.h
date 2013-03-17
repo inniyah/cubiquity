@@ -107,7 +107,7 @@ namespace Cubiquity
 			POLYVOX_THROW(std::runtime_error, "Failed to create directory \'" + folder + "\'for export");
 		}
 
-		// Note that 'y' and 'z' axiz are flipped as Gameplay physics engine assumes 'y' is up.
+		// Note that 'y' and 'z' axis are flipped as Gameplay physics engine assumes 'y' is up.
 		uint32_t imageWidth = volume->mPolyVoxVolume->getWidth();
 		uint32_t imageHeight = volume->mPolyVoxVolume->getDepth();
 		uint32_t sliceCount = volume->mPolyVoxVolume->getHeight();
@@ -126,7 +126,7 @@ namespace Cubiquity
 				{
 					unsigned char* pixel = outputSliceData + (y * imageWidth + x) * componentCount;
 
-					// Note that 'y' and 'z' axiz are flipped as Gameplay physics engine assumes 'y' is up.
+					// Note that 'y' and 'z' axis are flipped as Gameplay physics engine assumes 'y' is up.
 					VolumeType::VoxelType voxel = volume->mPolyVoxVolume->getVoxel(x, slice, y);
 
 					voxelToPixel(voxel, pixel, componentCount);
