@@ -41,11 +41,11 @@ function initialize()
     _touchX = 0
 	_touchY = 0
 
-	--[[local volumeWidth = 128
+	local volumeWidth = 128
 	local volumeHeight = 32
 	local volumeDepth = 128
 	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, 64, 32)
-	GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)]]
+	GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
 
 	--[[local volumeWidth = 510
 	local volumeHeight = 254
@@ -53,8 +53,8 @@ function initialize()
 	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, 64, 32)
 	GameplayVolumeSerialisation.gameplayLoadData("res/Mountain.vol", _colouredCubesVolume)]]
 
-	game:getScriptController():loadScript("res/VxlSerialisation.lua")
-	_colouredCubesVolume = importVxl();
+	--[[game:getScriptController():loadScript("res/VxlSerialisation.lua")
+	_colouredCubesVolume = importVxl();]]
 
     -- Load font
     _font = Font.create("res/arial40.gpb")

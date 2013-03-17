@@ -49,7 +49,7 @@ namespace Cubiquity
 	template <typename VolumeType>
 	VolumeType* importVolDat(std::string folder)
 	{
-		string indexFileName(folder);
+		std::string indexFileName(folder);
 		indexFileName = indexFileName + "Volume.idx";
 		std::map<std::string, std::string> index = parseIndexFile(indexFileName);
 
@@ -66,8 +66,8 @@ namespace Cubiquity
 		for(int slice = 0; slice < sliceCount; slice++)
 		{
 			std::stringstream ss;
-			ss << folder << setfill('0') << setw(6) << slice << "." << index["SliceExtension"];
-			string imageFileName = ss.str();
+			ss << folder << std::setfill('0') << std::setw(6) << slice << "." << index["SliceExtension"];
+			std::string imageFileName = ss.str();
 
 			int imageWidth = 0, imageHeight = 0, imageChannels;
 			unsigned char *sliceData = stbi_load(imageFileName.c_str(), &imageWidth, &imageHeight, &imageChannels, 0);
@@ -133,8 +133,8 @@ namespace Cubiquity
 				}
 			}
 
-			stringstream ss;
-			ss << folder << setfill('0') << setw(6) << slice << ".png";
+			std::stringstream ss;
+			ss << folder << std::setfill('0') << std::setw(6) << slice << ".png";
 			int result = stbi_write_png(ss.str().c_str(), imageWidth, imageHeight, componentCount, outputSliceData, imageWidth * componentCount);
 			assert(result); //If crashing here then make sure the output folder exists.
 		}
