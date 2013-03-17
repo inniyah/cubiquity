@@ -11,9 +11,23 @@ namespace Cubiquity
 	class Colour
 	{
 	public:
+		static const uint32_t NoOfRedBits = 4;
+		static const uint32_t NoOfGreenBits = 4;
+		static const uint32_t NoOfBlueBits = 4;
+		static const uint32_t NoOfAlphaBits = 4;
+
+		typedef uint16_t StorageType;
+		static_assert(NoOfRedBits + NoOfGreenBits + NoOfBlueBits + NoOfAlphaBits <= sizeof(StorageType) * CHAR_BIT, "StorageType does not have enough bits!");
+
+		static const uint32_t MaxInOutValue = 255;
+		static const uint32_t RedScaleFactor = MaxInOutValue / ((0x01 << NoOfRedBits) - 1);
+		static const uint32_t GreenScaleFactor = MaxInOutValue / ((0x01 << NoOfGreenBits) - 1);
+		static const uint32_t BlueScaleFactor = MaxInOutValue / ((0x01 << NoOfBlueBits) - 1);
+		static const uint32_t AlphaScaleFactor = MaxInOutValue / ((0x01 << NoOfAlphaBits) - 1);
+
 		Colour() : m_uRed(0), m_uGreen(0), m_uBlue(0), m_uAlpha(0) {}
 
-		Colour(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha = 255)
+		Colour(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha = MaxInOutValue)
 		{
 			setColour(red, green, blue, alpha);
 		}
@@ -30,42 +44,42 @@ namespace Cubiquity
 
 		uint8_t getRed(void)
 		{
-			return m_uRed << 4;
+			return m_uRed * RedScaleFactor;
 		}
 
 		uint8_t getGreen(void)
 		{
-			return m_uGreen << 4;
+			return m_uGreen * GreenScaleFactor;
 		}
 
 		uint8_t getBlue(void)
 		{
-			return m_uBlue << 4;
+			return m_uBlue * BlueScaleFactor;
 		}
 
 		uint8_t getAlpha(void)
 		{
-			return m_uAlpha << 4;
+			return m_uAlpha * AlphaScaleFactor;
 		}
 
 		void setRed(uint8_t value)
 		{
-			m_uRed = value >> 4;
+			m_uRed = value / RedScaleFactor;
 		}
 
 		void setGreen(uint8_t value)
 		{
-			m_uGreen = value >> 4;
+			m_uGreen = value / GreenScaleFactor;
 		}
 
 		void setBlue(uint8_t value)
 		{
-			m_uBlue = value >> 4;
+			m_uBlue = value / BlueScaleFactor;
 		}
 
 		void setAlpha(uint8_t value)
 		{
-			m_uAlpha = value >> 4;
+			m_uAlpha = value / AlphaScaleFactor;
 		}
 
 		void setColour(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
@@ -77,10 +91,10 @@ namespace Cubiquity
 		}
 
 	private:
-		uint16_t m_uRed : 4;
-		uint16_t m_uGreen : 4;
-		uint16_t m_uBlue : 4;
-		uint16_t m_uAlpha : 4;
+		StorageType m_uRed : NoOfRedBits;
+		StorageType m_uGreen : NoOfGreenBits;
+		StorageType m_uBlue : NoOfBlueBits;
+		StorageType m_uAlpha : NoOfAlphaBits;
 	};
 
 	// These operations are used by the smooth raycast to perform trilinear interpolation.
