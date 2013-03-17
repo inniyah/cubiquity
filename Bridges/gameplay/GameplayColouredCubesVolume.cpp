@@ -114,17 +114,15 @@ namespace Cubiquity
 
 			// Encode colour in w component
 			Colour colour = vecVertices[i].getMaterial();
-			uint16_t red = colour.getRed();
-			uint16_t green = colour.getGreen();
-			uint16_t blue = colour.getBlue();
-			uint16_t alpha = colour.getAlpha();
+			uint8_t red = colour.getRed();
+			uint8_t green = colour.getGreen();
+			uint8_t blue = colour.getBlue();
 
-			red = red << 8;
-			green = green << 4;
-			blue = blue;
-			alpha = alpha >> 4;
-			uint16_t colourAsUint = (red | green | blue | alpha);
-			*ptr = static_cast<float>(colourAsUint); ptr++;
+			// A single precision float can eactly represent all integer values from 0 to 2^24 (http://www.mathworks.nl/help/matlab/ref/flintmax.html).
+			// We can use therefore precisely and uniquely represent our three eight-bit colours but combining them into a single value as shown below.
+			// In the shader we then extract the colours again. If we want to add alpha we will have to pass each component with only six bits of precision.
+			float colourAsFloat = static_cast<float>(red * 65536 + green * 256 + blue);
+			*ptr = colourAsFloat; ptr++;
 		}
 
 		Mesh* mesh = Mesh::createMesh(VertexFormat(elements, 1), polyVoxMesh->getVertices().size(), false);
