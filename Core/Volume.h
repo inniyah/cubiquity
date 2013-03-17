@@ -23,6 +23,9 @@ namespace Cubiquity
 		Volume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize);
 		~Volume();
 
+		uint32_t getWidth(void);
+		uint32_t getHeight(void);
+		uint32_t getDepth(void);
 
 		VoxelType getVoxelAt(int x, int y, int z);
 		void setVoxelAt(int x, int y, int z, VoxelType value, UpdatePriority updatePriority = UpdatePriorities::Background);

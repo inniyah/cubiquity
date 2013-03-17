@@ -26,6 +26,21 @@ namespace Cubiquity
 			return mCubiquityVolume;
 		}
 
+		uint32_t getWidth(void)
+		{
+			return mCubiquityVolume->getWidth();
+		}
+
+		uint32_t getHeight(void)
+		{
+			return mCubiquityVolume->getHeight();
+		}
+
+		uint32_t getDepth(void)
+		{
+			return mCubiquityVolume->getDepth();
+		}
+
 	protected:
 		GameplayVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
 			:mRootGameplayNode(0)

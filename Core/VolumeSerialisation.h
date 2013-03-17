@@ -59,7 +59,10 @@ namespace Cubiquity
 		int sliceCount;     convertStringToInt(index["SliceCount"], sliceCount);
 		int componentCount; convertStringToInt(index["ComponentCount"], componentCount);
 
-		VolumeType* volume = new VolumeType(0, 0, 0, volumeWidth - 1, volumeHeight - 1, sliceCount - 1, 32, 32);
+		// When importing we treat 'y' as up because the Gameplay physics engine makes some
+		// assumptions about this. This means we need to swap the 'y' and 'slice' indices.
+		VolumeType* volume = new VolumeType(0, 0, 0, volumeWidth - 1, sliceCount - 1, volumeHeight - 1, 32, 32);
+
 		for(int slice = 0; slice < sliceCount; slice++)
 		{
 			std::stringstream ss;
@@ -83,12 +86,9 @@ namespace Cubiquity
 					VolumeType::VoxelType voxel;
 					pixelToVoxel(pixel, voxel, componentCount);
 
-					// Note: We iterate backwards over y to flip this axis. The images in the VolDat format have x increasing to the right and y
-					// increasing downwards. However, we would like our terrain viewed from above (towards negative z) to match the slice images.
-					int flippedY = (imageHeight - 1) - y;
-
-					//Might be faster not to use floats here
-					volume->setVoxelAt(x, flippedY, slice, voxel, UpdatePriorities::DontUpdate);
+					// When importing we treat 'y' as up because the Gameplay physics engine makes some
+					// assumptions about this. This means we need to swap the 'y' and 'slice' indices.
+					volume->setVoxelAt(x, slice, y, voxel, UpdatePriorities::DontUpdate);
 				}
 			}
 		}
@@ -107,9 +107,10 @@ namespace Cubiquity
 			POLYVOX_THROW(std::runtime_error, "Failed to create directory \'" + folder + "\'for export");
 		}
 
+		// Note that 'y' and 'z' axiz are flipped as Gameplay physics engine assumes 'y' is up.
 		uint32_t imageWidth = volume->mPolyVoxVolume->getWidth();
-		uint32_t imageHeight = volume->mPolyVoxVolume->getHeight();
-		uint32_t sliceCount = volume->mPolyVoxVolume->getDepth();
+		uint32_t imageHeight = volume->mPolyVoxVolume->getDepth();
+		uint32_t sliceCount = volume->mPolyVoxVolume->getHeight();
 		uint32_t componentCount = 4;
 
 		int outputSliceDataSize = imageWidth * imageHeight * componentCount;
@@ -123,12 +124,10 @@ namespace Cubiquity
 			{
 				for(int y = 0; y < imageHeight; y++)
 				{
-					// Note: We iterate backwards over y to flip this axis. The images in the VolDat format have x increasing to the right and y
-					// increasing downwards. However, we would like our terrain viewed from above (towards negative z) to match the slice images.
-					int flippedY = (imageHeight - 1) - y;
-
 					unsigned char* pixel = outputSliceData + (y * imageWidth + x) * componentCount;
-					VolumeType::VoxelType voxel = volume->mPolyVoxVolume->getVoxel(x, flippedY, slice);
+
+					// Note that 'y' and 'z' axiz are flipped as Gameplay physics engine assumes 'y' is up.
+					VolumeType::VoxelType voxel = volume->mPolyVoxVolume->getVoxel(x, slice, y);
 
 					voxelToPixel(voxel, pixel, componentCount);
 				}

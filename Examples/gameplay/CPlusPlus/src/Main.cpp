@@ -35,6 +35,25 @@ void pointNodeAtTarget(Node* node, const Vector3& target, const Vector3& up = Ve
 	node->rotate(rotation);
 }
 
+void lookAt(Node* node, const Vector3& eye, const Vector3& target, const Vector3& up)
+{
+    // Create lookAt matrix
+    Matrix matrix;
+    Matrix::createLookAt(eye, target, up, &matrix);
+    matrix.invert();  // <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< add this line
+
+    // Pull SRT components out of matrix
+    Vector3 scale;
+    Quaternion rotation;
+    Vector3 translation;
+    matrix.decompose(&scale, &rotation, &translation);
+
+    // Set SRT on node
+    node->setScale(scale);
+    node->setTranslation(translation);
+    node->setRotation(rotation);
+}
+
 // Declare our game instance
 MeshGame game;
 
@@ -147,8 +166,8 @@ void MeshGame::initialize()
 	_scene->setActiveCamera(camera);
 	_scene->getActiveCamera()->setAspectRatio((float)getWidth() / (float)getHeight());
 
-	_cameraPositionNode->setTranslation(10, 10, 10);
-	_cameraPositionNode->rotateX(3.142f * 0.5f);
+	
+	//_cameraPositionNode->rotateX(3.142f * 0.5f);
 
 	mCameraElevationAngle = MATH_DEG_TO_RAD(45.0f); //Value from voxeliens
 	mCameraRotationAngle = 0.0f; //Value from voxeliens
@@ -183,6 +202,10 @@ void MeshGame::initialize()
 
 	//GameplayVolumeSerialisation::gameplayExportSmoothSlices(mVolume, "C:\\temp\\output");
 	//GameplayVolumeSerialisation::gameplayExportColourSlices(mVolume, "C:/temp/mytest/");
+
+	_cameraPositionNode->setTranslation(mVolume->getWidth() / 2.0f, mVolume->getHeight(), mVolume->getDepth());
+
+	//_cameraPositionNode->setTranslation(10.0f, 10.0f, 10.0f);
 	
 	_polyVoxNode = mVolume->getRootNode();
 	_scene->addNode(mVolume->getRootNode());
