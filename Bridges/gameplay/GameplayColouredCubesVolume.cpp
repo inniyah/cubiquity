@@ -114,7 +114,7 @@ namespace Cubiquity
 
 			// Encode colour in w component
 			Colour colour = vecVertices[i].getMaterial();
-			uint16_t colourAsUint = (colour.getRed() << 12) | (colour.getGreen() << 8) | (colour.getBlue() << 4) | (colour.getAlpha());
+			uint16_t colourAsUint = (static_cast<uint16_t>(colour.getRed()) << 12) | (static_cast<uint16_t>(colour.getGreen()) << 8) | (static_cast<uint16_t>(colour.getBlue()) << 4) | (colour.getAlpha());
 			*ptr = static_cast<float>(colourAsUint); ptr++;
 		}
 

@@ -269,7 +269,7 @@ void MeshGame::update(float elapsedTime)
 
 #ifdef TERRAIN_SMOOTH
 	if(mLeftMouseButtonPressed)
-	{		
+	{		 
 		if(mPaintButton->isSelected())
 		{
 			mVolumeEditor->applyPaint(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());

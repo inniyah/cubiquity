@@ -13,13 +13,18 @@ namespace Cubiquity
 	public:
 		Colour() : m_uRed(0), m_uGreen(0), m_uBlue(0), m_uAlpha(0) {}
 
-		Colour(uint16_t red, uint16_t green, uint16_t blue, uint16_t alpha = 15) : m_uRed(red), m_uGreen(green), m_uBlue(blue), m_uAlpha(alpha) {}
+		Colour(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha = 255)
+		{
+			setColour(red, green, blue, alpha);
+		}
 
 		Colour(float red, float green, float blue, float alpha = 1.0f)
-			: m_uRed(static_cast<uint16_t>(red * 15.0f + 0.5f))
-			, m_uGreen(static_cast<uint16_t>(green * 15.0f + 0.5f))
-			, m_uBlue(static_cast<uint16_t>(blue * 15.0f + 0.5f))
-			, m_uAlpha(static_cast<uint16_t>(alpha * 15.0f + 0.5f)) {}
+		{
+			setRed(static_cast<uint8_t>(red * 255.0f + 0.5f));
+			setGreen(static_cast<uint8_t>(green * 255.0f + 0.5f));
+			setBlue(static_cast<uint8_t>(blue * 255.0f + 0.5f));
+			setAlpha(static_cast<uint8_t>(alpha * 255.0f + 0.5f));
+		}
 
 		bool operator==(const Colour& rhs) const throw()
 		{
@@ -31,55 +36,75 @@ namespace Cubiquity
 			return !(*this == rhs);
 		}
 
-		uint16_t getRed(void)
+		uint8_t getRed(void)
 		{
-			return m_uRed;
+			return m_uRed << 4;
 		}
 
-		uint16_t getGreen(void)
+		uint8_t getGreen(void)
 		{
-			return m_uGreen;
+			return m_uGreen << 4;
 		}
 
-		uint16_t getBlue(void)
+		uint8_t getBlue(void)
 		{
-			return m_uBlue;
+			return m_uBlue << 4;
 		}
 
-		uint16_t getAlpha(void)
+		uint8_t getAlpha(void)
 		{
-			return m_uAlpha;
+			return m_uAlpha << 4;
 		}
 
 		float getRedAsFloat(void)
 		{
-			return m_uRed / 15.0f;
+			return getRed() / 255.0f;
 		}
 
 		float getGreenAsFloat(void)
 		{
-			return m_uGreen / 15.0f;
+			return getGreen() / 255.0f;
 		}
 
 		float getBlueAsFloat(void)
 		{
-			return m_uBlue / 15.0f;
+			return getBlue() / 255.0f;
 		}
 
 		float getAlphaAsFloat(void)
 		{
-			return m_uAlpha / 15.0f;
+			return getAlpha() / 255.0f;
 		}
 
-		void setColour(uint16_t red, uint16_t green, uint16_t blue, uint16_t alpha)
+		void setRed(uint8_t value)
 		{
-			m_uRed = red;
-			m_uGreen = green;
-			m_uBlue = blue;
-			m_uAlpha = alpha;
+			m_uRed = value >> 4;
 		}
 
-	public:
+		void setGreen(uint8_t value)
+		{
+			m_uGreen = value >> 4;
+		}
+
+		void setBlue(uint8_t value)
+		{
+			m_uBlue = value >> 4;
+		}
+
+		void setAlpha(uint8_t value)
+		{
+			m_uAlpha = value >> 4;
+		}
+
+		void setColour(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
+		{
+			setRed(red);
+			setGreen(green);
+			setBlue(blue);
+			setAlpha(alpha);
+		}
+
+	private:
 		uint16_t m_uRed : 4;
 		uint16_t m_uGreen : 4;
 		uint16_t m_uBlue : 4;
