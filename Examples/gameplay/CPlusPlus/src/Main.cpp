@@ -182,9 +182,7 @@ void MeshGame::initialize()
 #ifdef TERRAIN_CUBIC
 	//mVolume = GameplayColouredCubesVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
 	//mVolume = GameplayVolumeSerialisation::gameplayImportColourSlices("../../SliceData/VoxeliensTerrain/");
-	mVolume = GameplayColouredCubesVolume::importVxl("C:\\code\\cubiquity\\Examples\\gameplay\\Lua\\res\\Capitol.vxl");
-
-	GameplayVolumeSerialisation::gameplayExportColourSlices(mVolume, "C:\\temp\\Capitol\\");
+	mVolume = GameplayVolumeSerialisation::gameplayImportVxl("C:\\code\\cubiquity\\Examples\\gameplay\\Lua\\res\\Capitol.vxl");
 
 	mVolumeEditor = 0;
 #endif

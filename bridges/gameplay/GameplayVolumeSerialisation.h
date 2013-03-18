@@ -49,6 +49,13 @@ namespace Cubiquity
 		{
 			exportVolDat<SmoothTerrainVolume>(volume->getCubiquityVolume(), folderName);
 		}
+
+		static GameplayColouredCubesVolume* gameplayImportVxl(const char* filename)
+		{
+			ColouredCubesVolume* cubiquityVolume = importVxl(filename);
+			GameplayColouredCubesVolume* result = GameplayColouredCubesVolume::create(cubiquityVolume);
+			return result;
+		}
 	};
 }
 
