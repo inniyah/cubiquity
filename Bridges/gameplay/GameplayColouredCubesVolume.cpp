@@ -154,13 +154,8 @@ namespace Cubiquity
 		gameplay::Vector4 result(colour.getRed() / 255.0f, colour.getGreen() / 255.0f, colour.getBlue() / 255.0f, colour.getAlpha() / 255.0f);
 		return result;
 	}
-
-	void GameplayColouredCubesVolume::setVoxel(int x, int y, int z, const gameplay::Vector4& colour, int updatePriority)
-	{
-		mCubiquityVolume->setVoxelAt(x, y, z, Colour(colour.x, colour.y, colour.z, colour.w), static_cast<UpdatePriority>(updatePriority));
-	}
-
-	void GameplayColouredCubesVolume::setVoxel(int x, int y, int z, float red, float green, float blue, float alpha, int updatePriority)
+	
+	void GameplayColouredCubesVolume::setVoxel(int x, int y, int z, uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha, int updatePriority)
 	{
 		mCubiquityVolume->setVoxelAt(x, y, z, Colour(red, green, blue, alpha), static_cast<UpdatePriority>(updatePriority));
 	}
@@ -236,7 +231,7 @@ namespace Cubiquity
 					blue = data[i + 4 + colorI * 4];
 					// Do something with these colors
 					//makeVoxelColorful(x, y, zz, red, green, blue);
-					result->setVoxel(x, 63 - zz, y, Vector4(red / 255.0f, green / 255.0f, blue / 255.0f, 1.0), UpdatePriorities::DontUpdate);
+					result->setVoxel(x, 63 - zz, y, red, green, blue, 255, UpdatePriorities::DontUpdate);
 					zz++;
 					colorI++;
 				}
@@ -248,7 +243,7 @@ namespace Cubiquity
 			for (j = 0; j < runlength; j++)
 			{
 				//makeVoxelSolid(x, y, zz);
-				result->setVoxel(x, 63 - zz, y, Vector4(1.0, 0.0, 1.0, 1.0), UpdatePriorities::DontUpdate);
+				result->setVoxel(x, 63 - zz, y, 127, 127, 127, 255, UpdatePriorities::DontUpdate);
 				zz++;
 			}
 			if (N == 0)

@@ -181,7 +181,11 @@ void MeshGame::initialize()
 #endif
 #ifdef TERRAIN_CUBIC
 	//mVolume = GameplayColouredCubesVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
-	mVolume = GameplayVolumeSerialisation::gameplayImportColourSlices("../../SliceData/VoxeliensTerrain/");
+	//mVolume = GameplayVolumeSerialisation::gameplayImportColourSlices("../../SliceData/VoxeliensTerrain/");
+	mVolume = GameplayColouredCubesVolume::importVxl("C:\\code\\cubiquity\\Examples\\gameplay\\Lua\\res\\Capitol.vxl");
+
+	GameplayVolumeSerialisation::gameplayExportColourSlices(mVolume, "C:\\temp\\Capitol\\");
+
 	mVolumeEditor = 0;
 #endif
 
@@ -298,7 +302,7 @@ void MeshGame::update(float elapsedTime)
 	_cameraNode->translate(_cameraNode->getForwardVector() * -mCameraDistance);*/
 
 	Vector3 viewPos = _cameraNode->getTranslationWorld();
-	mVolume->performUpdate(viewPos, mLod1StartSlider->getValue());
+	mVolume->performUpdate(viewPos, 0);
 
 	std::stringstream ss;
 	ss << "Tasks = " << gBackgroundTaskProcessor.mPendingTasks.size();
