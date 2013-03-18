@@ -27,6 +27,17 @@ namespace Cubiquity
 			return volume;
 		}
 
+		/**
+		 * Creates a new GameplaySmoothTerrainVolume.
+		 *
+		 * @script{create}
+		 */
+		static GameplaySmoothTerrainVolume* create(const char* volDatFolder)
+		{
+			GameplaySmoothTerrainVolume* volume = new GameplaySmoothTerrainVolume(volDatFolder);
+			return volume;
+		}
+
 		static GameplaySmoothTerrainVolume* create(SmoothTerrainVolume* cubiquityVolume)
 		{
 			GameplaySmoothTerrainVolume* volume = new GameplaySmoothTerrainVolume(cubiquityVolume);
@@ -50,6 +61,7 @@ namespace Cubiquity
 
 	protected:
 		GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
+		GameplaySmoothTerrainVolume(const char* volDatFolder);
 		GameplaySmoothTerrainVolume(SmoothTerrainVolume* cubiquityVolume);
 		virtual ~GameplaySmoothTerrainVolume();
 

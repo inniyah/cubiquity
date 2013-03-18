@@ -42,6 +42,13 @@ namespace Cubiquity
 		}
 
 	protected:
+
+		GameplayVolume()
+			:mRootGameplayNode(0)
+			,mCubiquityVolume(0)
+		{
+		}
+
 		GameplayVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
 			:mRootGameplayNode(0)
 		{

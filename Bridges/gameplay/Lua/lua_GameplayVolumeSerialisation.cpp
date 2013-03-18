@@ -16,6 +16,11 @@ void luaRegister_GameplayVolumeSerialisation()
     };
     const luaL_Reg lua_statics[] = 
     {
+        {"gameplayExportColourSlices", lua_GameplayVolumeSerialisation_static_gameplayExportColourSlices},
+        {"gameplayExportSmoothSlices", lua_GameplayVolumeSerialisation_static_gameplayExportSmoothSlices},
+        {"gameplayImportColourSlices", lua_GameplayVolumeSerialisation_static_gameplayImportColourSlices},
+        {"gameplayImportSmoothSlices", lua_GameplayVolumeSerialisation_static_gameplayImportSmoothSlices},
+        {"gameplayImportVxl", lua_GameplayVolumeSerialisation_static_gameplayImportVxl},
         {"gameplayLoadData", lua_GameplayVolumeSerialisation_static_gameplayLoadData},
         {NULL, NULL}
     };
@@ -99,6 +104,232 @@ int lua_GameplayVolumeSerialisation__init(lua_State* state)
         default:
         {
             lua_pushstring(state, "Invalid number of parameters (expected 0).");
+            lua_error(state);
+            break;
+        }
+    }
+    return 0;
+}
+
+int lua_GameplayVolumeSerialisation_static_gameplayExportColourSlices(lua_State* state)
+{
+    // Get the number of parameters.
+    int paramCount = lua_gettop(state);
+
+    // Attempt to match the parameters to a valid binding.
+    switch (paramCount)
+    {
+        case 2:
+        {
+            if ((lua_type(state, 1) == LUA_TUSERDATA || lua_type(state, 1) == LUA_TTABLE || lua_type(state, 1) == LUA_TNIL) &&
+                (lua_type(state, 2) == LUA_TSTRING || lua_type(state, 2) == LUA_TNIL))
+            {
+                // Get parameter 1 off the stack.
+                bool param1Valid;
+                ScriptUtil::LuaArray<GameplayColouredCubesVolume> param1 = ScriptUtil::getObjectPointer<GameplayColouredCubesVolume>(1, "GameplayColouredCubesVolume", false, &param1Valid);
+                if (!param1Valid)
+                {
+                    lua_pushstring(state, "Failed to convert parameter 1 to type 'GameplayColouredCubesVolume'.");
+                    lua_error(state);
+                }
+
+                // Get parameter 2 off the stack.
+                const char* param2 = ScriptUtil::getString(2, false);
+
+                GameplayVolumeSerialisation::gameplayExportColourSlices(param1, param2);
+                
+                return 0;
+            }
+
+            lua_pushstring(state, "lua_GameplayVolumeSerialisation_static_gameplayExportColourSlices - Failed to match the given parameters to a valid function signature.");
+            lua_error(state);
+            break;
+        }
+        default:
+        {
+            lua_pushstring(state, "Invalid number of parameters (expected 2).");
+            lua_error(state);
+            break;
+        }
+    }
+    return 0;
+}
+
+int lua_GameplayVolumeSerialisation_static_gameplayExportSmoothSlices(lua_State* state)
+{
+    // Get the number of parameters.
+    int paramCount = lua_gettop(state);
+
+    // Attempt to match the parameters to a valid binding.
+    switch (paramCount)
+    {
+        case 2:
+        {
+            if ((lua_type(state, 1) == LUA_TUSERDATA || lua_type(state, 1) == LUA_TTABLE || lua_type(state, 1) == LUA_TNIL) &&
+                (lua_type(state, 2) == LUA_TSTRING || lua_type(state, 2) == LUA_TNIL))
+            {
+                // Get parameter 1 off the stack.
+                bool param1Valid;
+                ScriptUtil::LuaArray<GameplaySmoothTerrainVolume> param1 = ScriptUtil::getObjectPointer<GameplaySmoothTerrainVolume>(1, "GameplaySmoothTerrainVolume", false, &param1Valid);
+                if (!param1Valid)
+                {
+                    lua_pushstring(state, "Failed to convert parameter 1 to type 'GameplaySmoothTerrainVolume'.");
+                    lua_error(state);
+                }
+
+                // Get parameter 2 off the stack.
+                const char* param2 = ScriptUtil::getString(2, false);
+
+                GameplayVolumeSerialisation::gameplayExportSmoothSlices(param1, param2);
+                
+                return 0;
+            }
+
+            lua_pushstring(state, "lua_GameplayVolumeSerialisation_static_gameplayExportSmoothSlices - Failed to match the given parameters to a valid function signature.");
+            lua_error(state);
+            break;
+        }
+        default:
+        {
+            lua_pushstring(state, "Invalid number of parameters (expected 2).");
+            lua_error(state);
+            break;
+        }
+    }
+    return 0;
+}
+
+int lua_GameplayVolumeSerialisation_static_gameplayImportColourSlices(lua_State* state)
+{
+    // Get the number of parameters.
+    int paramCount = lua_gettop(state);
+
+    // Attempt to match the parameters to a valid binding.
+    switch (paramCount)
+    {
+        case 1:
+        {
+            if ((lua_type(state, 1) == LUA_TSTRING || lua_type(state, 1) == LUA_TNIL))
+            {
+                // Get parameter 1 off the stack.
+                const char* param1 = ScriptUtil::getString(1, false);
+
+                void* returnPtr = (void*)GameplayVolumeSerialisation::gameplayImportColourSlices(param1);
+                if (returnPtr)
+                {
+                    ScriptUtil::LuaObject* object = (ScriptUtil::LuaObject*)lua_newuserdata(state, sizeof(ScriptUtil::LuaObject));
+                    object->instance = returnPtr;
+                    object->owns = false;
+                    luaL_getmetatable(state, "GameplayColouredCubesVolume");
+                    lua_setmetatable(state, -2);
+                }
+                else
+                {
+                    lua_pushnil(state);
+                }
+
+                return 1;
+            }
+
+            lua_pushstring(state, "lua_GameplayVolumeSerialisation_static_gameplayImportColourSlices - Failed to match the given parameters to a valid function signature.");
+            lua_error(state);
+            break;
+        }
+        default:
+        {
+            lua_pushstring(state, "Invalid number of parameters (expected 1).");
+            lua_error(state);
+            break;
+        }
+    }
+    return 0;
+}
+
+int lua_GameplayVolumeSerialisation_static_gameplayImportSmoothSlices(lua_State* state)
+{
+    // Get the number of parameters.
+    int paramCount = lua_gettop(state);
+
+    // Attempt to match the parameters to a valid binding.
+    switch (paramCount)
+    {
+        case 1:
+        {
+            if ((lua_type(state, 1) == LUA_TSTRING || lua_type(state, 1) == LUA_TNIL))
+            {
+                // Get parameter 1 off the stack.
+                const char* param1 = ScriptUtil::getString(1, false);
+
+                void* returnPtr = (void*)GameplayVolumeSerialisation::gameplayImportSmoothSlices(param1);
+                if (returnPtr)
+                {
+                    ScriptUtil::LuaObject* object = (ScriptUtil::LuaObject*)lua_newuserdata(state, sizeof(ScriptUtil::LuaObject));
+                    object->instance = returnPtr;
+                    object->owns = false;
+                    luaL_getmetatable(state, "GameplaySmoothTerrainVolume");
+                    lua_setmetatable(state, -2);
+                }
+                else
+                {
+                    lua_pushnil(state);
+                }
+
+                return 1;
+            }
+
+            lua_pushstring(state, "lua_GameplayVolumeSerialisation_static_gameplayImportSmoothSlices - Failed to match the given parameters to a valid function signature.");
+            lua_error(state);
+            break;
+        }
+        default:
+        {
+            lua_pushstring(state, "Invalid number of parameters (expected 1).");
+            lua_error(state);
+            break;
+        }
+    }
+    return 0;
+}
+
+int lua_GameplayVolumeSerialisation_static_gameplayImportVxl(lua_State* state)
+{
+    // Get the number of parameters.
+    int paramCount = lua_gettop(state);
+
+    // Attempt to match the parameters to a valid binding.
+    switch (paramCount)
+    {
+        case 1:
+        {
+            if ((lua_type(state, 1) == LUA_TSTRING || lua_type(state, 1) == LUA_TNIL))
+            {
+                // Get parameter 1 off the stack.
+                const char* param1 = ScriptUtil::getString(1, false);
+
+                void* returnPtr = (void*)GameplayVolumeSerialisation::gameplayImportVxl(param1);
+                if (returnPtr)
+                {
+                    ScriptUtil::LuaObject* object = (ScriptUtil::LuaObject*)lua_newuserdata(state, sizeof(ScriptUtil::LuaObject));
+                    object->instance = returnPtr;
+                    object->owns = false;
+                    luaL_getmetatable(state, "GameplayColouredCubesVolume");
+                    lua_setmetatable(state, -2);
+                }
+                else
+                {
+                    lua_pushnil(state);
+                }
+
+                return 1;
+            }
+
+            lua_pushstring(state, "lua_GameplayVolumeSerialisation_static_gameplayImportVxl - Failed to match the given parameters to a valid function signature.");
+            lua_error(state);
+            break;
+        }
+        default:
+        {
+            lua_pushstring(state, "Invalid number of parameters (expected 1).");
             lua_error(state);
             break;
         }

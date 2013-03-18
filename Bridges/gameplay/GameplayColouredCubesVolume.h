@@ -29,6 +29,17 @@ namespace Cubiquity
 		}
 
 		/**
+		 * Creates a new GameplayColouredCubesVolume.
+		 *
+		 * @script{create}
+		 */
+		static GameplayColouredCubesVolume* create(const char* volDatFolder)
+		{
+			GameplayColouredCubesVolume* volume = new GameplayColouredCubesVolume(volDatFolder);
+			return volume;
+		}
+
+		/**
 		 * I don't like exposing the internal cubiquity volume in this public interface.
 		 *
 		 * @script{create}
@@ -60,6 +71,7 @@ namespace Cubiquity
 
 	protected:
 		GameplayColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
+		GameplayColouredCubesVolume(const char* volDatFolder);
 		GameplayColouredCubesVolume(ColouredCubesVolume* colouredCubesVolume);
 		virtual ~GameplayColouredCubesVolume();
 

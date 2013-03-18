@@ -2,6 +2,7 @@
 
 #include "Clock.h"
 #include "ColouredCubicSurfaceExtractionTask.h"
+#include "VolumeSerialisation.h"
 
 #include "gameplay.h"
 
@@ -15,6 +16,16 @@ namespace Cubiquity
 	GameplayColouredCubesVolume::GameplayColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
 		:GameplayVolume<ColouredCubesVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize)
 	{
+		mRootGameplayNode = createNodeWithExtraData< Colour >("RootGameplayNode");
+
+		buildNode(mCubiquityVolume->mOctree->mRootOctreeNode, mRootGameplayNode);
+	}
+
+	GameplayColouredCubesVolume::GameplayColouredCubesVolume(const char* volDatFolder)
+		//:GameplayVolume<ColouredCubesVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize)
+	{
+		mCubiquityVolume = importVolDat<ColouredCubesVolume>(volDatFolder);
+
 		mRootGameplayNode = createNodeWithExtraData< Colour >("RootGameplayNode");
 
 		buildNode(mCubiquityVolume->mOctree->mRootOctreeNode, mRootGameplayNode);

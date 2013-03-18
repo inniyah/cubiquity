@@ -1,6 +1,7 @@
 #include "GameplaySmoothTerrainVolume.h"
 
 #include "Clock.h"
+#include "VolumeSerialisation.h"
 
 #include "gameplay.h"
 
@@ -13,6 +14,16 @@ namespace Cubiquity
 	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
 		:GameplayVolume<SmoothTerrainVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize)
 	{
+		mRootGameplayNode = createNodeWithExtraData< MultiMaterial >("RootGameplayNode");
+
+		buildNode(mCubiquityVolume->mOctree->mRootOctreeNode, mRootGameplayNode);
+	}
+
+	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(const char* volDatFolder)
+		//:GameplayVolume<SmoothTerrainVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize)
+	{
+		mCubiquityVolume = importVolDat<SmoothTerrainVolume>(volDatFolder);
+
 		mRootGameplayNode = createNodeWithExtraData< MultiMaterial >("RootGameplayNode");
 
 		buildNode(mCubiquityVolume->mOctree->mRootOctreeNode, mRootGameplayNode);
