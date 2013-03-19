@@ -41,20 +41,12 @@ function initialize()
     _touchX = 0
 	_touchY = 0
 
-	local volumeWidth = 128
-	local volumeHeight = 32
-	local volumeDepth = 128
-	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, 64, 32)
-	GameplayVolumeSerialisation.gameplayLoadData("res/level2.vol", _colouredCubesVolume)
+	local volumeWidth = 512
+	local volumeHeight = 64
+	local volumeDepth = 512
 
-	--[[local volumeWidth = 510
-	local volumeHeight = 254
-	local volumeDepth = 510
-	_colouredCubesVolume = GameplayColouredCubesVolume.create(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, 64, 32)
-	GameplayVolumeSerialisation.gameplayLoadData("res/Mountain.vol", _colouredCubesVolume)]]
-
-	--[[game:getScriptController():loadScript("res/VxlSerialisation.lua")
-	_colouredCubesVolume = importVxl();]]
+	--_colouredCubesVolume = GameplayColouredCubesVolume.create("../../SliceData/VoxeliensTerrain/");
+	_colouredCubesVolume = GameplayColouredCubesVolume.create("C:\\code\\cubiquity\\Examples\\gameplay\\Lua\\res\\Capitol.vxl");
 
     -- Load font
     _font = Font.create("res/arial40.gpb")

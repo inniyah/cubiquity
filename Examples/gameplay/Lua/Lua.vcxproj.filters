@@ -467,5 +467,8 @@
     <ClCompile Include="..\..\..\Core\Task.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\Core\VolumeSerialisation.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

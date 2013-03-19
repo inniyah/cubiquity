@@ -14,7 +14,6 @@ void luaRegister_GameplaySmoothTerrainVolume()
     const luaL_Reg lua_members[] = 
     {
         {"getRootNodeForLua", lua_GameplaySmoothTerrainVolume_getRootNodeForLua},
-        {"getVolumeForLua", lua_GameplaySmoothTerrainVolume_getVolumeForLua},
         {"performUpdate", lua_GameplaySmoothTerrainVolume_performUpdate},
         {NULL, NULL}
     };
@@ -70,44 +69,6 @@ int lua_GameplaySmoothTerrainVolume_getRootNodeForLua(lua_State* state)
             }
 
             lua_pushstring(state, "lua_GameplaySmoothTerrainVolume_getRootNodeForLua - Failed to match the given parameters to a valid function signature.");
-            lua_error(state);
-            break;
-        }
-        default:
-        {
-            lua_pushstring(state, "Invalid number of parameters (expected 2).");
-            lua_error(state);
-            break;
-        }
-    }
-    return 0;
-}
-
-int lua_GameplaySmoothTerrainVolume_getVolumeForLua(lua_State* state)
-{
-    // Get the number of parameters.
-    int paramCount = lua_gettop(state);
-
-    // Attempt to match the parameters to a valid binding.
-    switch (paramCount)
-    {
-        case 2:
-        {
-            if ((lua_type(state, 1) == LUA_TUSERDATA) &&
-                lua_type(state, 2) == LUA_TNUMBER)
-            {
-                // Get parameter 1 off the stack.
-                int param1 = (int)luaL_checkint(state, 2);
-
-                GameplaySmoothTerrainVolume* instance = getInstance(state);
-                SmoothTerrainVolume* result = instance->getVolumeForLua(param1);
-
-                // Push the return value onto the stack.
-                lua_pushlightuserdata(state, result);
-                return 1;
-            }
-
-            lua_pushstring(state, "lua_GameplaySmoothTerrainVolume_getVolumeForLua - Failed to match the given parameters to a valid function signature.");
             lua_error(state);
             break;
         }
@@ -179,18 +140,17 @@ int lua_GameplaySmoothTerrainVolume_static_create(lua_State* state)
         {
             do
             {
-                if (lua_type(state, 1) == LUA_TNONE)
+                if ((lua_type(state, 1) == LUA_TSTRING || lua_type(state, 1) == LUA_TNIL))
                 {
                     // Get parameter 1 off the stack.
-                    GP_WARN("Attempting to get parameter 1 with unrecognized type SmoothTerrainVolume as an unsigned integer.");
-                    SmoothTerrainVolume* param1 = (SmoothTerrainVolume)luaL_checkunsigned(state, 1);
+                    const char* param1 = ScriptUtil::getString(1, false);
 
                     void* returnPtr = (void*)GameplaySmoothTerrainVolume::create(param1);
                     if (returnPtr)
                     {
                         ScriptUtil::LuaObject* object = (ScriptUtil::LuaObject*)lua_newuserdata(state, sizeof(ScriptUtil::LuaObject));
                         object->instance = returnPtr;
-                        object->owns = false;
+                        object->owns = true;
                         luaL_getmetatable(state, "GameplaySmoothTerrainVolume");
                         lua_setmetatable(state, -2);
                     }
