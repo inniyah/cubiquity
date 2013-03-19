@@ -41,12 +41,12 @@ function initialize()
     _touchX = 0
 	_touchY = 0
 
-	local volumeWidth = 512
-	local volumeHeight = 64
-	local volumeDepth = 512
+	local volumeWidth = 128
+	local volumeHeight = 32
+	local volumeDepth = 128
 
-	--_colouredCubesVolume = GameplayColouredCubesVolume.create("../../SliceData/VoxeliensTerrain/");
-	_colouredCubesVolume = GameplayColouredCubesVolume.create("C:\\code\\cubiquity\\Examples\\gameplay\\Lua\\res\\Capitol.vxl");
+	_colouredCubesVolume = GameplayColouredCubesVolume.create("../../SliceData/VoxeliensTerrain/");
+	--_colouredCubesVolume = GameplayColouredCubesVolume.create("C:\\code\\cubiquity\\Examples\\gameplay\\Lua\\res\\Capitol.vxl");
 
     -- Load font
     _font = Font.create("res/arial40.gpb")

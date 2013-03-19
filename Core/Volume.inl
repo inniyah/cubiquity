@@ -36,30 +36,6 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	uint32_t Volume<VoxelType>::getWidth(void)
-	{
-		return mPolyVoxVolume->getWidth();
-	}
-
-	template <typename VoxelType>
-	uint32_t Volume<VoxelType>::getHeight(void)
-	{
-		return mPolyVoxVolume->getHeight();
-	}
-
-	template <typename VoxelType>
-	uint32_t Volume<VoxelType>::getDepth(void)
-	{
-		return mPolyVoxVolume->getDepth();
-	}
-
-	template <typename VoxelType>
-	VoxelType Volume<VoxelType>::getVoxelAt(int x, int y, int z)
-	{
-		return mPolyVoxVolume->getVoxelAt(x, y, z);
-	}
-
-	template <typename VoxelType>
 	void Volume<VoxelType>::setVoxelAt(int x, int y, int z, VoxelType value, UpdatePriority updatePriority)
 	{
 		mPolyVoxVolume->setVoxelAt(x, y, z, value);

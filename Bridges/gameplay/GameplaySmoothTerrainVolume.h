@@ -47,20 +47,8 @@ namespace Cubiquity
 		void performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold);
 
 	protected:
-		/**
-		 * Text here...
-		 * @script{ignore}
-		 */
 		GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
-		/**
-		 * Text here...
-		 * @script{ignore}
-		 */
 		GameplaySmoothTerrainVolume(const char* dataToLoad);
-		/**
-		 * Text here...
-		 * @script{ignore}
-		 */
 		GameplaySmoothTerrainVolume(SmoothTerrainVolume* cubiquityVolume);
 		virtual ~GameplaySmoothTerrainVolume();
 

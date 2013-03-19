@@ -20,24 +20,25 @@ namespace Cubiquity
 	public:
 		typedef _VoxelType VoxelType;
 
-		Volume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize);
-		~Volume();
+		//Getters just forward to the underlying volume
+		uint32_t getWidth(void) { return mPolyVoxVolume->getWidth(); }
+		uint32_t getHeight(void) { return mPolyVoxVolume->getHeight(); }
+		uint32_t getDepth(void) { return mPolyVoxVolume->getDepth(); }
+		VoxelType getVoxelAt(int x, int y, int z) { return mPolyVoxVolume->getVoxelAt(x, y, z); }
 
-		uint32_t getWidth(void);
-		uint32_t getHeight(void);
-		uint32_t getDepth(void);
-
-		VoxelType getVoxelAt(int x, int y, int z);
 		void setVoxelAt(int x, int y, int z, VoxelType value, UpdatePriority updatePriority = UpdatePriorities::Background);
 		void markAsModified(const ::PolyVox::Region& region, UpdatePriority updatePriority = UpdatePriorities::Background);
 
 		virtual void update(const ::PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
+
 	protected:
+		Volume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize);
+		~Volume();
+
 		Volume& operator=(const Volume&);
 
 	public:
 		::PolyVox::SimpleVolume<VoxelType>* mPolyVoxVolume;
-		//OctreeNode< VoxelType >* mRootOctreeNode;
 		Octree<VoxelType>* mOctree;
 	};
 }
