@@ -33,9 +33,9 @@ namespace Cubiquity
 		 *
 		 * @script{create}
 		 */
-		static GameplayColouredCubesVolume* create(const char* volDatFolder)
+		static GameplayColouredCubesVolume* create(const char* directory)
 		{
-			GameplayColouredCubesVolume* volume = new GameplayColouredCubesVolume(volDatFolder);
+			GameplayColouredCubesVolume* volume = new GameplayColouredCubesVolume(directory);
 			return volume;
 		}
 
@@ -71,7 +71,7 @@ namespace Cubiquity
 
 	protected:
 		GameplayColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
-		GameplayColouredCubesVolume(const char* volDatFolder);
+		GameplayColouredCubesVolume(const char* directory);
 		GameplayColouredCubesVolume(ColouredCubesVolume* colouredCubesVolume);
 		virtual ~GameplayColouredCubesVolume();
 

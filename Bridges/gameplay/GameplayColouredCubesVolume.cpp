@@ -21,10 +21,11 @@ namespace Cubiquity
 		buildNode(mCubiquityVolume->mOctree->mRootOctreeNode, mRootGameplayNode);
 	}
 
-	GameplayColouredCubesVolume::GameplayColouredCubesVolume(const char* volDatFolder)
-		//:GameplayVolume<ColouredCubesVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize)
+	GameplayColouredCubesVolume::GameplayColouredCubesVolume(const char* directory)
 	{
-		mCubiquityVolume = importVolDat<ColouredCubesVolume>(volDatFolder);
+		// For now we assume the folder contains voldat data, but eventually we will
+		// check for the Volume.idx to decide if it is VolDat or raw Cubiquity data.
+		mCubiquityVolume = importVolDat<ColouredCubesVolume>(directory);
 
 		mRootGameplayNode = createNodeWithExtraData< Colour >("RootGameplayNode");
 
