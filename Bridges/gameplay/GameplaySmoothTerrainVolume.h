@@ -32,15 +32,9 @@ namespace Cubiquity
 		 *
 		 * @script{create}
 		 */
-		static GameplaySmoothTerrainVolume* create(const char* directory)
+		static GameplaySmoothTerrainVolume* create(const char* dataToLoad)
 		{
-			GameplaySmoothTerrainVolume* volume = new GameplaySmoothTerrainVolume(directory);
-			return volume;
-		}
-
-		static GameplaySmoothTerrainVolume* create(SmoothTerrainVolume* cubiquityVolume)
-		{
-			GameplaySmoothTerrainVolume* volume = new GameplaySmoothTerrainVolume(cubiquityVolume);
+			GameplaySmoothTerrainVolume* volume = new GameplaySmoothTerrainVolume(dataToLoad);
 			return volume;
 		}
 
@@ -50,18 +44,23 @@ namespace Cubiquity
 			return GameplayVolume<SmoothTerrainVolume>::getRootNode();
 		}
 
-		// Ugly hack, as luagen can't see the base class implementation of this function (probably it can't handle templated base classes)
-		//Not sure I like exposing this one... should make some functions/classes friends instead?
-		SmoothTerrainVolume* getVolumeForLua(int dummyParamForLuagen)
-		{
-			return GameplayVolume<SmoothTerrainVolume>::getCubiquityVolume();
-		}
-
 		void performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold);
 
 	protected:
+		/**
+		 * Text here...
+		 * @script{ignore}
+		 */
 		GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
-		GameplaySmoothTerrainVolume(const char* directory);
+		/**
+		 * Text here...
+		 * @script{ignore}
+		 */
+		GameplaySmoothTerrainVolume(const char* dataToLoad);
+		/**
+		 * Text here...
+		 * @script{ignore}
+		 */
 		GameplaySmoothTerrainVolume(SmoothTerrainVolume* cubiquityVolume);
 		virtual ~GameplaySmoothTerrainVolume();
 

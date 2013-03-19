@@ -33,20 +33,9 @@ namespace Cubiquity
 		 *
 		 * @script{create}
 		 */
-		static GameplayColouredCubesVolume* create(const char* directory)
+		static GameplayColouredCubesVolume* create(const char* dataToLoad)
 		{
-			GameplayColouredCubesVolume* volume = new GameplayColouredCubesVolume(directory);
-			return volume;
-		}
-
-		/**
-		 * I don't like exposing the internal cubiquity volume in this public interface.
-		 *
-		 * @script{create}
-		 */
-		static GameplayColouredCubesVolume* create(ColouredCubesVolume* cubiquityVolume)
-		{
-			GameplayColouredCubesVolume* volume = new GameplayColouredCubesVolume(cubiquityVolume);
+			GameplayColouredCubesVolume* volume = new GameplayColouredCubesVolume(dataToLoad);
 			return volume;
 		}
 
@@ -56,13 +45,6 @@ namespace Cubiquity
 			return GameplayVolume<ColouredCubesVolume>::getRootNode();
 		}
 
-		// Ugly hack, as luagen can't see the base class implementation of this function (probably it can't handle templated base classes)
-		//Not sure I like exposing this one... should make some functions/classes friends instead?
-		ColouredCubesVolume* getVolumeForLua(int dummyParamForLuagen)
-		{
-			return GameplayVolume<ColouredCubesVolume>::getCubiquityVolume();
-		}
-
 		gameplay::Vector4 getVoxel(int x, int y, int z);
 		void setVoxel(int x, int y, int z, uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha, int updatePriority = 1);
 		void markAsModified(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, int updatePriority = 1);
@@ -70,8 +52,20 @@ namespace Cubiquity
 		void performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold);
 
 	protected:
+		/**
+		 * Text here...
+		 * @script{ignore}
+		 */
 		GameplayColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
-		GameplayColouredCubesVolume(const char* directory);
+		/**
+		 * Text here...
+		 * @script{ignore}
+		 */
+		GameplayColouredCubesVolume(const char* dataToLoad);
+		/**
+		 * Text here...
+		 * @script{ignore}
+		 */
 		GameplayColouredCubesVolume(ColouredCubesVolume* colouredCubesVolume);
 		virtual ~GameplayColouredCubesVolume();
 

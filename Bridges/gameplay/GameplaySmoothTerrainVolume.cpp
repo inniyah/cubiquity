@@ -19,11 +19,22 @@ namespace Cubiquity
 		buildNode(mCubiquityVolume->mOctree->mRootOctreeNode, mRootGameplayNode);
 	}
 
-	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(const char* directory)
+	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(const char* dataToLoad)
 	{
-		// For now we assume the folder contains voldat data, but eventually we will
-		// check for the Volume.idx to decide if it is VolDat or raw Cubiquity data.
-		mCubiquityVolume = importVolDat<SmoothTerrainVolume>(directory);
+		// Check whether the provided data is a file or a directory
+		FILE* file = fopen(dataToLoad, "rb");
+		if(file)
+		{
+			// For now we assume it's .vxl
+			//mCubiquityVolume = importVxl(dataToLoad);
+			POLYVOX_ASSERT(false, ".vxl data cannot be loaded into smooth terrain volumes");
+		}
+		else
+		{
+			// For now we assume it's VolDat. Leter on we should check for
+			// Volume.idx and load raw Cubiquity data instead if necessary.
+			mCubiquityVolume = importVolDat<SmoothTerrainVolume>(dataToLoad);
+		}
 
 		mRootGameplayNode = createNodeWithExtraData< MultiMaterial >("RootGameplayNode");
 
