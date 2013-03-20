@@ -15,15 +15,19 @@ using namespace std;
 
 namespace Cubiquity
 {
-	//Converts a string to an integer and returns true only if the conversion was sucessful.
+	// --------------------------------------------------
+	// Converts a string to an integer and returns
+	// true only if the conversion was sucessful.
+	// --------------------------------------------------
 	void convertStringToInt(const std::string& str, int& i)
 	{
-		//Perform the conversion using strtol().
+		// Perform the conversion using strtol().
 		char* end;
 		i = strtol(str.c_str(), &end, 10);
 
-		// After conversion 'end' should be the null-terminator. If it's something
-		// else then the conversion was not a success so we throw an exception.
+		// After conversion 'end' should be the null-terminator.
+		// If it's something else then the conversion was not a
+		// success so we throw an exception.
 		if(*end)
 		{
 			stringstream ss;
@@ -32,6 +36,10 @@ namespace Cubiquity
 		}
 	}
 
+	// --------------------------------------------------
+	// Reads the contens of a VolDat 'Volume.idx'
+	// file and return a map with the key and values.
+	// --------------------------------------------------
 	std::map<std::string, std::string> parseIndexFile(const std::string& filename)
 	{
 		std::map<std::string, std::string> keyValuePairs;

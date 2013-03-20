@@ -48,6 +48,9 @@ namespace Cubiquity
 
 	ColouredCubesVolume* importVxl(const std::string& filename);
 
+	// --------------------------------------------------
+	// Imports data in the VolDat format.
+	// --------------------------------------------------
 	template <typename VolumeType>
 	VolumeType* importVolDat(std::string folder)
 	{
@@ -65,6 +68,7 @@ namespace Cubiquity
 		// assumptions about this. This means we need to swap the 'y' and 'slice' indices.
 		VolumeType* volume = new VolumeType(0, 0, 0, volumeWidth - 1, sliceCount - 1, volumeHeight - 1, 32, 32);
 
+		// Now iterate over each slice and import the data.
 		for(int slice = 0; slice < sliceCount; slice++)
 		{
 			std::stringstream ss;
@@ -79,6 +83,7 @@ namespace Cubiquity
 
 			assert(componentCount == 4);
 
+			// Now iterate over each pixel.
 			for(int x = 0; x < imageWidth; x++)
 			{
 				for(int y = 0; y < imageHeight; y++)
@@ -100,6 +105,9 @@ namespace Cubiquity
 		return volume;
 	}
 
+	// --------------------------------------------------
+	// Exports data in the VolDat format.
+	// --------------------------------------------------
 	template <typename VolumeType>
 	void exportVolDat(VolumeType* volume, std::string folder)
 	{
@@ -114,6 +122,7 @@ namespace Cubiquity
 		uint32_t imageHeight = volume->mPolyVoxVolume->getDepth();
 		uint32_t sliceCount = volume->mPolyVoxVolume->getHeight();
 		uint32_t componentCount = 4;
+		std::string sliceExtension("png");
 
 		int outputSliceDataSize = imageWidth * imageHeight * componentCount;
 		unsigned char* outputSliceData = new unsigned char[outputSliceDataSize];
@@ -135,8 +144,9 @@ namespace Cubiquity
 				}
 			}
 
+			// Now save the slice data as an image file.
 			std::stringstream ss;
-			ss << folder << std::setfill('0') << std::setw(6) << slice << ".png";
+			ss << folder << std::setfill('0') << std::setw(6) << slice << "." << sliceExtension;
 			int result = stbi_write_png(ss.str().c_str(), imageWidth, imageHeight, componentCount, outputSliceData, imageWidth * componentCount);
 			assert(result); //If crashing here then make sure the output folder exists.
 		}
@@ -148,8 +158,8 @@ namespace Cubiquity
 		fprintf(fp, "Width = %d\n", imageWidth);
 		fprintf(fp, "Height = %d\n", imageHeight);
 		fprintf(fp, "SliceCount = %d\n", sliceCount);
-		fprintf(fp, "ComponentCount = 4\n");
-		fprintf(fp, "SliceExtension = png\n");
+		fprintf(fp, "ComponentCount = %d\n", componentCount);
+		fprintf(fp, "SliceExtension = %s\n", sliceExtension.c_str());
 		fclose(fp);
 	}
 
