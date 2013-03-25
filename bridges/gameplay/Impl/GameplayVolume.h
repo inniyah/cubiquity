@@ -84,12 +84,12 @@ namespace Cubiquity
 
 		if(octreeNode->parent)
 		{
-			::PolyVox::Vector3DInt32 translation = octreeNode->mRegion.getLowerCorner() - octreeNode->parent->mRegion.getLowerCorner();
+			Vector3I translation = octreeNode->mRegion.getLowerCorner() - octreeNode->parent->mRegion.getLowerCorner();
 			gameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
 		}
 		else
 		{
-			::PolyVox::Vector3DInt32 translation = octreeNode->mRegion.getLowerCorner();
+			Vector3I translation = octreeNode->mRegion.getLowerCorner();
 			gameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
 		}
 

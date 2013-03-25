@@ -3,6 +3,7 @@
 
 #include "Octree.h"
 #include "UpdatePriorities.h"
+#include "Vector.h"
 #include "VoxelTraits.h"
 
 #include "PolyVoxCore/Array.h"
@@ -27,9 +28,9 @@ namespace Cubiquity
 		VoxelType getVoxelAt(int x, int y, int z) { return mPolyVoxVolume->getVoxelAt(x, y, z); }
 
 		void setVoxelAt(int x, int y, int z, VoxelType value, UpdatePriority updatePriority = UpdatePriorities::Background);
-		void markAsModified(const ::PolyVox::Region& region, UpdatePriority updatePriority = UpdatePriorities::Background);
+		void markAsModified(const Region& region, UpdatePriority updatePriority = UpdatePriorities::Background);
 
-		virtual void update(const ::PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
+		virtual void update(const Vector3F& viewPosition, float lodThreshold);
 
 	protected:
 		Volume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize);

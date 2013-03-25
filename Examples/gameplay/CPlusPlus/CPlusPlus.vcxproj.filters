@@ -339,6 +339,12 @@
     <ClInclude Include="..\..\..\Core\UpdatePriorities.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\Core\Vector.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Core\Region.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">

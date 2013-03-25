@@ -4,7 +4,9 @@
 #include "Clock.h"
 #include "Colour.h"
 #include "CubiquityForwardDeclarations.h"
+#include "Region.h"
 #include "Task.h"
+#include "Vector.h"
 #include "VoxelTraits.h"
 
 namespace Cubiquity
@@ -25,7 +27,7 @@ namespace Cubiquity
 	};
 
 	template< typename SrcVolumeType, typename DstVolumeType>
-	void rescaleCubicVolume(SrcVolumeType* pVolSrc, const ::PolyVox::Region& regSrc, DstVolumeType* pVolDst, const ::PolyVox::Region& regDst)
+	void rescaleCubicVolume(SrcVolumeType* pVolSrc, const Region& regSrc, DstVolumeType* pVolDst, const Region& regDst)
 	{
 		POLYVOX_ASSERT(regSrc.getWidthInVoxels() == regDst.getWidthInVoxels() * 2, "Wrong size!");
 		POLYVOX_ASSERT(regSrc.getHeightInVoxels() == regDst.getHeightInVoxels() * 2, "Wrong size!");

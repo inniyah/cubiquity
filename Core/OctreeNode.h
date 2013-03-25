@@ -3,7 +3,9 @@
 
 #include "Clock.h"
 #include "CubiquityForwardDeclarations.h"
+#include "Region.h"
 #include "UpdatePriorities.h"
+#include "Vector.h"
 #include "VoxelTraits.h"
 
 namespace Cubiquity
@@ -12,14 +14,14 @@ namespace Cubiquity
 	class OctreeNode
 	{
 	public:	
-		OctreeNode(::PolyVox::Region region, OctreeNode* parentRegion, Octree<VoxelType>* octree);
+		OctreeNode(Region region, OctreeNode* parentRegion, Octree<VoxelType>* octree);
 		~OctreeNode();
 
 		void markAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority);
-		void markAsModified(const ::PolyVox::Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority);
+		void markAsModified(const Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority);
 
 		void clearWantedForRendering(void);
-		void determineWantedForRendering(const ::PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
+		void determineWantedForRendering(const Vector3F& viewPosition, float lodThreshold);
 		void determineWhetherToRender(void);
 
 		bool hasAnyChildren(void);
@@ -31,11 +33,11 @@ namespace Cubiquity
 
 		void setMeshLastUpdated(Timestamp newTimeStamp);
 
-		void sceduleUpdateIfNeeded(const ::PolyVox::Vector3DFloat& viewPosition);
+		void sceduleUpdateIfNeeded(const Vector3F& viewPosition);
 
 		void updateFromCompletedTask(typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* completedTask);
 
-		::PolyVox::Region mRegion;
+		Region mRegion;
 		Timestamp mDataLastModified;
 		Timestamp mMeshLastUpdated;
 		Timestamp mLastSceduledForUpdate;

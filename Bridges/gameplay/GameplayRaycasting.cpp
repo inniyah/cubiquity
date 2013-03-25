@@ -6,8 +6,8 @@ namespace Cubiquity
 {
 	bool GameplayRaycasting::gameplayRaycast(GameplayColouredCubesVolume* volume, gameplay::Ray startAndDirection, float length, gameplay::Vector3& result)
 	{
-		::PolyVox::Vector3DFloat v3dStart(startAndDirection.getOrigin().x, startAndDirection.getOrigin().y, startAndDirection.getOrigin().z);
-		::PolyVox::Vector3DFloat v3dDirection(startAndDirection.getDirection().x, startAndDirection.getDirection().y, startAndDirection.getDirection().z);
+		Vector3F v3dStart(startAndDirection.getOrigin().x, startAndDirection.getOrigin().y, startAndDirection.getOrigin().z);
+		Vector3F v3dDirection(startAndDirection.getDirection().x, startAndDirection.getDirection().y, startAndDirection.getDirection().z);
 		v3dDirection *= length;
 
 		ColouredCubesRaycastTestFunctor raycastTestFunctor;
@@ -23,8 +23,8 @@ namespace Cubiquity
 
 	bool GameplayRaycasting::gameplayRaycast(GameplaySmoothTerrainVolume* volume, gameplay::Ray startAndDirection, float length, gameplay::Vector3& result)
 	{
-		::PolyVox::Vector3DFloat v3dStart(startAndDirection.getOrigin().x, startAndDirection.getOrigin().y, startAndDirection.getOrigin().z);
-		::PolyVox::Vector3DFloat v3dDirection(startAndDirection.getDirection().x, startAndDirection.getDirection().y, startAndDirection.getDirection().z);
+		Vector3F v3dStart(startAndDirection.getOrigin().x, startAndDirection.getOrigin().y, startAndDirection.getOrigin().z);
+		Vector3F v3dDirection(startAndDirection.getDirection().x, startAndDirection.getDirection().y, startAndDirection.getDirection().z);
 		v3dDirection *= length;
 
 		RaycastTestFunctor<MultiMaterial> raycastTestFunctor;

@@ -19,7 +19,7 @@ namespace Cubiquity
 		:mPolyVoxVolume(0)
 		,mOctree(0)
 	{
-		::PolyVox::Region volumeRegion(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
+		Region volumeRegion(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
 
 		POLYVOX_ASSERT(volumeRegion.getWidthInVoxels() > 0, "All volume dimensions must be greater than zero");
 		POLYVOX_ASSERT(volumeRegion.getHeightInVoxels() > 0, "All volume dimensions must be greater than zero");
@@ -46,14 +46,14 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void Volume<VoxelType>::markAsModified(const ::PolyVox::Region& region, UpdatePriority updatePriority)
+	void Volume<VoxelType>::markAsModified(const Region& region, UpdatePriority updatePriority)
 	{
 		POLYVOX_ASSERT(updatePriority != UpdatePriorities::DontUpdate, "You cannot mark as modified yet request no update");
 		mOctree->mRootOctreeNode->markAsModified(region, Clock::getTimestamp(), updatePriority);
 	}
 
 	template <typename VoxelType>
-	void Volume<VoxelType>::update(const ::PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
+	void Volume<VoxelType>::update(const Vector3F& viewPosition, float lodThreshold)
 	{
 		mOctree->update(viewPosition, lodThreshold);
 	}

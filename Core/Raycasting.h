@@ -16,7 +16,7 @@ namespace Cubiquity
 		{
 		}
 
-		bool operator()(::PolyVox::Vector3DFloat pos, const VoxelType& voxel)
+		bool operator()(Vector3F pos, const VoxelType& voxel)
 		{
 		}
 	};
@@ -29,13 +29,13 @@ namespace Cubiquity
 		{
 		}
 
-		bool operator()(::PolyVox::Vector3DFloat pos, const MultiMaterial& voxel)
+		bool operator()(Vector3F pos, const MultiMaterial& voxel)
 		{
 			mLastPos = pos;
 			return voxel.getSumOfMaterials() <= MultiMaterial::getMaxMaterialValue() / 2;
 		}
 
-		::PolyVox::Vector3DFloat mLastPos;
+		Vector3F mLastPos;
 	};
 
 	template <>
@@ -46,12 +46,12 @@ namespace Cubiquity
 		{
 		}
 
-		bool operator()(::PolyVox::Vector3DFloat pos, const Colour& voxel)
+		bool operator()(Vector3F pos, const Colour& voxel)
 		{
 			return false;
 		}
 
-		::PolyVox::Vector3DFloat mLastPos;
+		Vector3F mLastPos;
 	};
 
 	class ColouredCubesRaycastTestFunctor
@@ -68,7 +68,7 @@ namespace Cubiquity
 			return sampler.getVoxel().getAlpha() == 0;
 		}
 
-		::PolyVox::Vector3DInt32 mLastPos;
+		Vector3I mLastPos;
 	};
 
 
@@ -80,13 +80,13 @@ namespace Cubiquity
 	// Also, should we handle computing the exact intersection point? Repeatedly bisect the last
 	// two points, of perform interpolation between them? Maybe user code could perform such interpolation?
 	template<typename VolumeType, typename Callback>
-	::PolyVox::RaycastResult smoothRaycastWithDirection(VolumeType* polyVoxVolume, const ::PolyVox::Vector3DFloat& v3dStart, const ::PolyVox::Vector3DFloat& v3dDirectionAndLength, Callback& callback, float fStepSize = 1.0f)
+	::PolyVox::RaycastResult smoothRaycastWithDirection(VolumeType* polyVoxVolume, const Vector3F& v3dStart, const Vector3F& v3dDirectionAndLength, Callback& callback, float fStepSize = 1.0f)
 	{		
 		POLYVOX_ASSERT(fStepSize > 0.0f, "Raycast step size must be greater than zero");
 		uint32_t mMaxNoOfSteps = static_cast<uint32_t>(v3dDirectionAndLength.length() / fStepSize);
 
-		::PolyVox::Vector3DFloat v3dPos = v3dStart;
-		const ::PolyVox::Vector3DFloat v3dStep =  v3dDirectionAndLength / static_cast<float>(mMaxNoOfSteps);
+		Vector3F v3dPos = v3dStart;
+		const Vector3F v3dStep =  v3dDirectionAndLength / static_cast<float>(mMaxNoOfSteps);
 
 		for(uint32_t ct = 0; ct < mMaxNoOfSteps; ct++)
 		{

@@ -4,8 +4,10 @@
 #include "Clock.h"
 #include "ConcurrentQueue.h"
 #include "CubiquityForwardDeclarations.h"
+#include "Region.h"
 #include "Task.h"
 #include "UpdatePriorities.h"
+#include "Vector.h"
 #include "VoxelTraits.h"
 
 namespace Cubiquity
@@ -26,12 +28,12 @@ namespace Cubiquity
 	public:
 		Octree(Volume<VoxelType>* volume, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize);
 
-		void update(const ::PolyVox::Vector3DFloat& viewPosition, float lodThreshold);
+		void update(const Vector3F& viewPosition, float lodThreshold);
 
 		void markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority);
-		void markDataAsModified(const ::PolyVox::Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority);
+		void markDataAsModified(const Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority);
 
-		void buildOctreeNodeTree(OctreeNode< VoxelType >* parent, const ::PolyVox::Region& regionToCover, OctreeConstructionMode octreeConstructionMode);
+		void buildOctreeNodeTree(OctreeNode< VoxelType >* parent, const Region& regionToCover, OctreeConstructionMode octreeConstructionMode);
 
 		Volume<VoxelType>* mVolume;
 		OctreeNode<VoxelType>* mRootOctreeNode;

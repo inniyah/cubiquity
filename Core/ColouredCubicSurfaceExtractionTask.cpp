@@ -31,7 +31,7 @@ namespace Cubiquity
 	{
 		mProcessingStartedTimestamp = Clock::getTimestamp();
 
-		::PolyVox::Region lod0Region = mOctreeNode->mRegion;
+		Region lod0Region = mOctreeNode->mRegion;
 
 		//Extract the surface
 		mPolyVoxMesh = new ::PolyVox::SurfaceMesh<::PolyVox::PositionMaterial<Colour> >;
@@ -48,18 +48,18 @@ namespace Cubiquity
 		else if(downScaleFactor == 2)
 		{
 		
-			::PolyVox::Region srcRegion = mOctreeNode->mRegion;
+			Region srcRegion = mOctreeNode->mRegion;
 
 			srcRegion.grow(2);
 
-			::PolyVox::Vector3DInt32 lowerCorner = srcRegion.getLowerCorner();
-			::PolyVox::Vector3DInt32 upperCorner = srcRegion.getUpperCorner();
+			Vector3I lowerCorner = srcRegion.getLowerCorner();
+			Vector3I upperCorner = srcRegion.getUpperCorner();
 
 			upperCorner = upperCorner - lowerCorner;
 			upperCorner = upperCorner / static_cast<int32_t>(downScaleFactor);
 			upperCorner = upperCorner + lowerCorner;
 
-			::PolyVox::Region dstRegion(lowerCorner, upperCorner);
+			Region dstRegion(lowerCorner, upperCorner);
 
 			::PolyVox::RawVolume<Colour> resampledVolume(dstRegion);
 			rescaleCubicVolume(mPolyVoxVolume, srcRegion, &resampledVolume, dstRegion);
@@ -76,18 +76,18 @@ namespace Cubiquity
 		}
 		else if(downScaleFactor == 4)
 		{
-			::PolyVox::Region srcRegion = mOctreeNode->mRegion;
+			Region srcRegion = mOctreeNode->mRegion;
 
 			srcRegion.grow(4);
 
-			::PolyVox::Vector3DInt32 lowerCorner = srcRegion.getLowerCorner();
-			::PolyVox::Vector3DInt32 upperCorner = srcRegion.getUpperCorner();
+			Vector3I lowerCorner = srcRegion.getLowerCorner();
+			Vector3I upperCorner = srcRegion.getUpperCorner();
 
 			upperCorner = upperCorner - lowerCorner;
 			upperCorner = upperCorner / static_cast<int32_t>(2);
 			upperCorner = upperCorner + lowerCorner;
 
-			::PolyVox::Region dstRegion(lowerCorner, upperCorner);
+			Region dstRegion(lowerCorner, upperCorner);
 
 			::PolyVox::RawVolume<Colour> resampledVolume(dstRegion);
 			rescaleCubicVolume(mPolyVoxVolume, srcRegion, &resampledVolume, dstRegion);
@@ -101,7 +101,7 @@ namespace Cubiquity
 			upperCorner = upperCorner / static_cast<int32_t>(2);
 			upperCorner = upperCorner + lowerCorner;
 
-			::PolyVox::Region dstRegion2(lowerCorner, upperCorner);
+			Region dstRegion2(lowerCorner, upperCorner);
 
 			::PolyVox::RawVolume<Colour> resampledVolume2(dstRegion2);
 			rescaleCubicVolume(&resampledVolume, dstRegion, &resampledVolume2, dstRegion2);

@@ -37,7 +37,7 @@ namespace Cubiquity
 		mOctreeNode->mOctree->mFinishedSurfaceExtractionTasks.push(this);
 	}
 
-	void SmoothSurfaceExtractionTask::generateSmoothMesh(const ::PolyVox::Region& region, uint32_t lodLevel, ::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* resultMesh)
+	void SmoothSurfaceExtractionTask::generateSmoothMesh(const Region& region, uint32_t lodLevel, ::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* resultMesh)
 	{
 		MultiMaterialMarchingCubesController controller;
 
@@ -54,12 +54,12 @@ namespace Cubiquity
 			int crackHidingFactor = 5; //This should probably be configurable?
 			controller.setThreshold(controller.getThreshold() + (downSampleFactor * crackHidingFactor));
 
-			::PolyVox::Region highRegion = region;
+			Region highRegion = region;
 			highRegion.grow(downSampleFactor, downSampleFactor, downSampleFactor);
 
-			::PolyVox::Region lowRegion = highRegion;
-			::PolyVox::Vector3DInt32 lowerCorner = lowRegion.getLowerCorner();
-			::PolyVox::Vector3DInt32 upperCorner = lowRegion.getUpperCorner();
+			Region lowRegion = highRegion;
+			Vector3I lowerCorner = lowRegion.getLowerCorner();
+			Vector3I upperCorner = lowRegion.getUpperCorner();
 
 			upperCorner = upperCorner - lowerCorner;
 			upperCorner = upperCorner / static_cast<int32_t>(downSampleFactor);
@@ -77,11 +77,11 @@ namespace Cubiquity
 
 			resultMesh->scaleVertices(static_cast<float>(downSampleFactor));
 
-			recalculateMaterials(resultMesh, static_cast<::PolyVox::Vector3DFloat>(mOctreeNode->mRegion.getLowerCorner()), mPolyVoxVolume);
+			recalculateMaterials(resultMesh, static_cast<Vector3F>(mOctreeNode->mRegion.getLowerCorner()), mPolyVoxVolume);
 		}
 	}
 
-	void recalculateMaterials(::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* mesh, const ::PolyVox::Vector3DFloat& meshOffset,  ::PolyVox::SimpleVolume<MultiMaterial>* volume)
+	void recalculateMaterials(::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* mesh, const Vector3F& meshOffset,  ::PolyVox::SimpleVolume<MultiMaterial>* volume)
 	{
 		std::vector< PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >& vertices = mesh->getRawVertexData();
 		for(uint32_t ct = 0; ct < vertices.size(); ct++)
@@ -105,7 +105,7 @@ namespace Cubiquity
 	}
 
 
-	MultiMaterial getInterpolatedValue(::PolyVox::SimpleVolume<MultiMaterial>* volume, const ::PolyVox::Vector3DFloat& position)
+	MultiMaterial getInterpolatedValue(::PolyVox::SimpleVolume<MultiMaterial>* volume, const Vector3F& position)
 	{
 		::PolyVox::SimpleVolume<MultiMaterial>::Sampler sampler(volume);
 

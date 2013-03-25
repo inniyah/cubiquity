@@ -14,7 +14,7 @@ namespace Cubiquity
 	{
 	}
 
-	void ColouredCubesVolume::update(const ::PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
+	void ColouredCubesVolume::update(const Vector3F& viewPosition, float lodThreshold)
 	{
 		Volume<Colour>::update(viewPosition, lodThreshold);
 	}

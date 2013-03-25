@@ -442,12 +442,14 @@
     <ClInclude Include="..\..\..\Core\Octree.h" />
     <ClInclude Include="..\..\..\Core\OctreeNode.h" />
     <ClInclude Include="..\..\..\Core\Raycasting.h" />
+    <ClInclude Include="..\..\..\Core\Region.h" />
     <ClInclude Include="..\..\..\Core\SmoothSurfaceExtractionTask.h" />
     <ClInclude Include="..\..\..\Core\SmoothTerrainVolume.h" />
     <ClInclude Include="..\..\..\Core\SmoothTerrainVolumeEditor.h" />
     <ClInclude Include="..\..\..\Core\Task.h" />
     <ClInclude Include="..\..\..\Core\TaskProcessor.h" />
     <ClInclude Include="..\..\..\Core\UpdatePriorities.h" />
+    <ClInclude Include="..\..\..\Core\Vector.h" />
     <ClInclude Include="..\..\..\Core\Volume.h" />
     <ClInclude Include="..\..\..\Core\VolumeSerialisation.h" />
     <ClInclude Include="..\..\..\Core\VoxelTraits.h" />

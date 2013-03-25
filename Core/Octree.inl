@@ -9,7 +9,7 @@ namespace Cubiquity
 		,mRootOctreeNode(0)
 		,mBaseNodeSize(baseNodeSize)
 	{
-		::PolyVox::Region regionToCover(mVolume->mPolyVoxVolume->getEnclosingRegion());
+		Region regionToCover(mVolume->mPolyVoxVolume->getEnclosingRegion());
 		if(octreeConstructionMode == OctreeConstructionModes::BoundVoxels)
 		{
 			regionToCover.shiftUpperCorner(1, 1, 1);
@@ -40,7 +40,7 @@ namespace Cubiquity
 		uint32_t heightIncrease = octreeTargetSize - regionToCoverHeight;
 		uint32_t depthIncrease = octreeTargetSize - regionToCoverDepth;
 
-		::PolyVox::Region octreeRegion(regionToCover);
+		Region octreeRegion(regionToCover);
 	
 		if(widthIncrease % 2 == 1)
 		{
@@ -68,7 +68,7 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void Octree<VoxelType>::update(const ::PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
+	void Octree<VoxelType>::update(const Vector3F& viewPosition, float lodThreshold)
 	{
 		mRootOctreeNode->clearWantedForRendering();
 		mRootOctreeNode->determineWantedForRendering(viewPosition, lodThreshold);
@@ -105,13 +105,13 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void Octree<VoxelType>::markDataAsModified(const ::PolyVox::Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority)
+	void Octree<VoxelType>::markDataAsModified(const Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority)
 	{
 		mRootOctreeNode->markDataAsModified(region, newTimeStamp, updatePriority);
 	}
 
 	template <typename VoxelType>
-	void Octree<VoxelType>::buildOctreeNodeTree(OctreeNode< VoxelType >* parent, const ::PolyVox::Region& regionToCover, OctreeConstructionMode octreeConstructionMode)
+	void Octree<VoxelType>::buildOctreeNodeTree(OctreeNode< VoxelType >* parent, const Region& regionToCover, OctreeConstructionMode octreeConstructionMode)
 	{
 		POLYVOX_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getHeightInVoxels(), "Region must be cubic");
 		POLYVOX_ASSERT(parent->mRegion.getWidthInVoxels() == parent->mRegion.getDepthInVoxels(), "Region must be cubic");
@@ -121,17 +121,17 @@ namespace Cubiquity
 
 		if(parentSize > mBaseNodeSize)
 		{
-			::PolyVox::Vector3DInt32 baseLowerCorner = parent->mRegion.getLowerCorner();
+			Vector3I baseLowerCorner = parent->mRegion.getLowerCorner();
 			int32_t childSize = (octreeConstructionMode == OctreeConstructionModes::BoundCells) ? parent->mRegion.getWidthInCells() / 2 : parent->mRegion.getWidthInVoxels() / 2;
 
-			::PolyVox::Vector3DInt32 baseUpperCorner;
+			Vector3I baseUpperCorner;
 			if(octreeConstructionMode == OctreeConstructionModes::BoundCells)
 			{
-				baseUpperCorner = baseLowerCorner + ::PolyVox::Vector3DInt32(childSize, childSize, childSize);
+				baseUpperCorner = baseLowerCorner + Vector3I(childSize, childSize, childSize);
 			}
 			else
 			{
-				baseUpperCorner = baseLowerCorner + ::PolyVox::Vector3DInt32(childSize-1, childSize-1, childSize-1);
+				baseUpperCorner = baseLowerCorner + Vector3I(childSize-1, childSize-1, childSize-1);
 			}
 
 			for(int z = 0; z < 2; z++)
@@ -140,8 +140,8 @@ namespace Cubiquity
 				{
 					for(int x = 0; x < 2; x++)
 					{
-						::PolyVox::Vector3DInt32 offset (x*childSize, y*childSize, z*childSize);
-						::PolyVox::Region childRegion(baseLowerCorner + offset, baseUpperCorner + offset);
+						Vector3I offset (x*childSize, y*childSize, z*childSize);
+						Region childRegion(baseLowerCorner + offset, baseUpperCorner + offset);
 						if(intersects(childRegion, regionToCover))
 						{
 							OctreeNode< VoxelType >* octreeNode = new OctreeNode< VoxelType >(childRegion, parent, this);

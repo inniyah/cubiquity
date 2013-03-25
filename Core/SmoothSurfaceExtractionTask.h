@@ -15,7 +15,7 @@ namespace Cubiquity
 
 		void process(void);
 
-		void generateSmoothMesh(const ::PolyVox::Region& region, uint32_t lodLevel, ::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* resultMesh);
+		void generateSmoothMesh(const Region& region, uint32_t lodLevel, ::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* resultMesh);
 
 	public:
 		OctreeNode< MultiMaterial >* mOctreeNode;
@@ -24,11 +24,11 @@ namespace Cubiquity
 		Timestamp mProcessingStartedTimestamp;
 	};
 
-	void recalculateMaterials(::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* mesh, const ::PolyVox::Vector3DFloat& meshOffset, ::PolyVox::SimpleVolume<MultiMaterial>* volume);
-	MultiMaterial getInterpolatedValue(::PolyVox::SimpleVolume<MultiMaterial>* volume, const ::PolyVox::Vector3DFloat& position);
+	void recalculateMaterials(::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* mesh, const Vector3F& meshOffset, ::PolyVox::SimpleVolume<MultiMaterial>* volume);
+	MultiMaterial getInterpolatedValue(::PolyVox::SimpleVolume<MultiMaterial>* volume, const Vector3F& position);
 
 	template< typename SrcVolumeType, typename DstVolumeType>
-	void resampleVolume(uint32_t factor, SrcVolumeType* srcVolume, const ::PolyVox::Region& srcRegion, DstVolumeType* dstVolume, const ::PolyVox::Region& dstRegion)
+	void resampleVolume(uint32_t factor, SrcVolumeType* srcVolume, const Region& srcRegion, DstVolumeType* dstVolume, const Region& dstRegion)
 	{
 		POLYVOX_ASSERT(srcRegion.getWidthInCells() == dstRegion.getWidthInCells() * factor, "Destination volume must be half the size of source volume");
 		POLYVOX_ASSERT(srcRegion.getHeightInCells() == dstRegion.getHeightInCells() * factor, "Destination volume must be half the size of source volume");

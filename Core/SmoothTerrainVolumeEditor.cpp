@@ -21,7 +21,7 @@ namespace Cubiquity
 		}
 	}
 
-	void SmoothTerrainVolumeEditor::edit(const ::PolyVox::Vector3DFloat& centre, float radius, uint32_t materialToUse, EditAction editAction, float timeElapsedInSeconds, float amount, float smoothBias)
+	void SmoothTerrainVolumeEditor::edit(const Vector3F& centre, float radius, uint32_t materialToUse, EditAction editAction, float timeElapsedInSeconds, float amount, float smoothBias)
 	{
 		// We'll set this flag for operations which actually modify the shape of the
 		// mesh, as these can cause temporary cracks if not processed immediately.
@@ -46,7 +46,7 @@ namespace Cubiquity
 		lastY = std::min(lastY,mSmoothTerrainVolume->mPolyVoxVolume->getEnclosingRegion().getUpperCorner().getY());
 		lastZ = std::min(lastZ,mSmoothTerrainVolume->mPolyVoxVolume->getEnclosingRegion().getUpperCorner().getZ());
 
-		::PolyVox::Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
+		Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
 
 		// Do the smoothing once, before we start iterating over all the voxels.
 		// At a per-voxel level we only need to do the interpolation.

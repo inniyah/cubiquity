@@ -13,7 +13,7 @@
 namespace Cubiquity
 {
 	template <typename VoxelType>
-	OctreeNode<VoxelType>::OctreeNode(::PolyVox::Region region, OctreeNode* parentRegion, Octree<VoxelType>* octree)
+	OctreeNode<VoxelType>::OctreeNode(Region region, OctreeNode* parentRegion, Octree<VoxelType>* octree)
 		:mRegion(region)
 		,parent(parentRegion)
 		,mOctree(octree)
@@ -83,7 +83,7 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void OctreeNode<VoxelType>::markAsModified(const ::PolyVox::Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority)
+	void OctreeNode<VoxelType>::markAsModified(const Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority)
 	{
 		if(intersects(mRegion, region))
 		{
@@ -175,7 +175,7 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void OctreeNode<VoxelType>::determineWantedForRendering(const ::PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
+	void OctreeNode<VoxelType>::determineWantedForRendering(const Vector3F& viewPosition, float lodThreshold)
 	{
 		if(mLodLevel == 0)
 		{
@@ -183,11 +183,11 @@ namespace Cubiquity
 		}
 		else
 		{
-			::PolyVox::Vector3DFloat regionCentre = static_cast<::PolyVox::Vector3DFloat>(mRegion.getCentre());
+			Vector3F regionCentre = static_cast<Vector3F>(mRegion.getCentre());
 
 			float distance = (viewPosition - regionCentre).length();
 
-			::PolyVox::Vector3DInt32 diagonal = mRegion.getUpperCorner() - mRegion.getLowerCorner();
+			Vector3I diagonal = mRegion.getUpperCorner() - mRegion.getLowerCorner();
 			float diagonalLength = diagonal.length(); // A measure of our regions size
 
 			float projectedSize = diagonalLength / distance;
@@ -258,7 +258,7 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void OctreeNode<VoxelType>::sceduleUpdateIfNeeded(const ::PolyVox::Vector3DFloat& viewPosition)
+	void OctreeNode<VoxelType>::sceduleUpdateIfNeeded(const Vector3F& viewPosition)
 	{
 		if((isMeshUpToDate() == false) && (isSceduledForUpdate() == false) && ((mLastSurfaceExtractionTask == 0) || (mLastSurfaceExtractionTask->mProcessingStartedTimestamp < Clock::getTimestamp())) && (mWantedForRendering))
 		{
@@ -280,7 +280,7 @@ namespace Cubiquity
 			{
 				// Note: tasks get sorted by their distance from the camera at the time they are added. If we
 				// want to account for the camera moving then we would have to sort the task queue each frame.
-				::PolyVox::Vector3DFloat regionCentre = static_cast<::PolyVox::Vector3DFloat>(mRegion.getCentre());
+				Vector3F regionCentre = static_cast<Vector3F>(mRegion.getCentre());
 				float distance = (viewPosition - regionCentre).length(); //We don't use distance squared to keep the values smaller
 				mLastSurfaceExtractionTask->mPriority = std::numeric_limits<uint32_t>::max() - static_cast<uint32_t>(distance);
 				gBackgroundTaskProcessor.addTask(mLastSurfaceExtractionTask);

@@ -17,7 +17,7 @@ namespace Cubiquity
 	{
 	}
 
-	void SmoothTerrainVolume::update(const ::PolyVox::Vector3DFloat& viewPosition, float lodThreshold)
+	void SmoothTerrainVolume::update(const Vector3F& viewPosition, float lodThreshold)
 	{
 		Volume<typename MultiMaterialMarchingCubesController::MaterialType>::update(viewPosition, lodThreshold);
 	}

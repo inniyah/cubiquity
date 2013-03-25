@@ -211,7 +211,7 @@ namespace Cubiquity
 			}
 		}
 
-		result->markAsModified(::PolyVox::Region(0, 0, 0, 511, 63, 511), UpdatePriorities::Background);
+		result->markAsModified(Region(0, 0, 0, 511, 63, 511), UpdatePriorities::Background);
 
 		return result;
 	}
