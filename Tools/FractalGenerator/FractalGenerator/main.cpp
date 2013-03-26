@@ -3,6 +3,7 @@
 
 #include <complex>
 #include <cstdint>
+#include <iomanip>
 #include <iostream>
 #include <sstream>
 
@@ -44,7 +45,7 @@ uint32_t evaluateMandlebulbSample(double cx, double cy, double cz, double n, uin
 int main(int argc, char** argv)
 {
 	const int ComponentCount = 1;
-	const std::string SliceExtension(".png");
+	const std::string SliceExtension("png");
 
 	uint8_t* image = new uint8_t[ImageSize * ImageSize];
 
@@ -73,7 +74,7 @@ int main(int argc, char** argv)
 		}
 
 		stringstream ss;
-		ss << "output/" << z << SliceExtension;
+		ss << "output/" << std::setfill('0') << std::setw(6) << z << "." << SliceExtension;
 		int result = stbi_write_png(ss.str().c_str(), ImageSize, ImageSize, ComponentCount, image, ImageSize);
 		assert(result); //If crashing here then make sur the output folder exists.
 
