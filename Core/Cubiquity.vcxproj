@@ -1,0 +1,215 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\AmbientOcclusionCalculator.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Array.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\ArraySizes.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\AStarPathfinder.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\BaseVolume.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Compressor.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\ConstVolumeProxy.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\CubicSurfaceExtractor.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\CubicSurfaceExtractorWithNormals.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\DefaultIsQuadNeeded.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\DefaultMarchingCubesController.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Density.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\GradientEstimators.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\AStarPathfinderImpl.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Block.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\CompilerCapabilities.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Config.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ErrorHandling.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\MarchingCubesTables.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\RandomUnitVectors.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\RandomVectors.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\SubArray.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\TypeDef.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Utility.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Interpolation.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\IteratorController.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\LargeVolume.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Log.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\LowPassFilter.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\MarchingCubesSurfaceExtractor.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Material.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\MaterialDensityPair.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\MinizCompressor.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\PolyVoxForwardDeclarations.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\RawVolume.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Raycast.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Region.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\RLECompressor.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\SimpleVolume.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\SurfaceMesh.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Vector.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VertexTypes.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VolumeResampler.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.h" />
+    <ClInclude Include="BackgroundTaskProcessor.h" />
+    <ClInclude Include="Clock.h" />
+    <ClInclude Include="Colour.h" />
+    <ClInclude Include="ColouredCubesVolume.h" />
+    <ClInclude Include="ColouredCubicSurfaceExtractionTask.h" />
+    <ClInclude Include="ConcurrentQueue.h" />
+    <ClInclude Include="CubiquityForwardDeclarations.h" />
+    <ClInclude Include="MainThreadTaskProcessor.h" />
+    <ClInclude Include="MultiMaterial.h" />
+    <ClInclude Include="Octree.h" />
+    <ClInclude Include="OctreeNode.h" />
+    <ClInclude Include="Raycasting.h" />
+    <ClInclude Include="Region.h" />
+    <ClInclude Include="SmoothSurfaceExtractionTask.h" />
+    <ClInclude Include="SmoothTerrainVolume.h" />
+    <ClInclude Include="SmoothTerrainVolumeEditor.h" />
+    <ClInclude Include="Task.h" />
+    <ClInclude Include="TaskProcessor.h" />
+    <ClInclude Include="UpdatePriorities.h" />
+    <ClInclude Include="Vector.h" />
+    <ClInclude Include="Volume.h" />
+    <ClInclude Include="VolumeSerialisation.h" />
+    <ClInclude Include="VoxelTraits.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\AmbientOcclusionCalculator.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Array.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\AStarPathfinder.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\BaseVolume.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\BaseVolumeSampler.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\CubicSurfaceExtractor.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\CubicSurfaceExtractorWithNormals.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\GradientEstimators.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Block.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\SubArray.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\IteratorController.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\LargeVolume.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\LargeVolumeSampler.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\LowPassFilter.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\MarchingCubesSurfaceExtractor.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\RawVolume.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\RawVolumeSampler.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Raycast.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\RLECompressor.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\SimpleVolume.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\SimpleVolumeBlock.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\SimpleVolumeSampler.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\SurfaceMesh.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Vector.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VolumeResampler.inl" />
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.inl" />
+    <None Include="Octree.inl" />
+    <None Include="OctreeNode.inl" />
+    <None Include="Volume.inl" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\ArraySizes.cpp" />
+    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\AStarPathfinder.cpp" />
+    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\ErrorHandling.cpp" />
+    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\MarchingCubesTables.cpp" />
+    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\RandomUnitVectors.cpp" />
+    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\RandomVectors.cpp" />
+    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\Utility.cpp" />
+    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Log.cpp" />
+    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\MinizCompressor.cpp" />
+    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Region.cpp" />
+    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\VertexTypes.cpp" />
+    <ClCompile Include="BackgroundTaskProcessor.cpp" />
+    <ClCompile Include="Clock.cpp" />
+    <ClCompile Include="Colour.cpp" />
+    <ClCompile Include="ColouredCubesVolume.cpp" />
+    <ClCompile Include="ColouredCubicSurfaceExtractionTask.cpp" />
+    <ClCompile Include="MainThreadTaskProcessor.cpp" />
+    <ClCompile Include="MultiMaterial.cpp" />
+    <ClCompile Include="SmoothSurfaceExtractionTask.cpp" />
+    <ClCompile Include="SmoothTerrainVolume.cpp" />
+    <ClCompile Include="SmoothTerrainVolumeEditor.cpp" />
+    <ClCompile Include="Task.cpp" />
+    <ClCompile Include="VolumeSerialisation.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{58E18F35-2592-4F54-98B7-FF7B8DE0AE1E}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>Cubiquity</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\code\polyvox\library\PolyVoxCore\include;C:\Program Files (x86)\boost\boost_1_47;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>libboost_filesystem-vc100-mt-1_47.lib;libboost_system-vc100-mt-1_47.lib;libboost_thread-vc100-mt-1_47.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalLibraryDirectories>C:\Program Files (x86)\boost\boost_1_47\lib</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>C:\code\polyvox\library\PolyVoxCore\include;C:\Program Files (x86)\boost\boost_1_47;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+    <Lib>
+      <AdditionalDependencies>libboost_filesystem-vc100-mt-1_47.lib;libboost_system-vc100-mt-1_47.lib;libboost_thread-vc100-mt-1_47.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Lib>
+    <Lib>
+      <AdditionalLibraryDirectories>C:\Program Files (x86)\boost\boost_1_47\lib</AdditionalLibraryDirectories>
+    </Lib>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
