@@ -13,6 +13,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Lua", "Examples\gameplay\Lu
 		{58E18F35-2592-4F54-98B7-FF7B8DE0AE1E} = {58E18F35-2592-4F54-98B7-FF7B8DE0AE1E}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CubiquityC", "Wrappers\C\CubiquityC.vcxproj", "{4BAFE49E-7FC2-4C92-8E57-E1C3BCFF0BC4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{58E18F35-2592-4F54-98B7-FF7B8DE0AE1E} = {58E18F35-2592-4F54-98B7-FF7B8DE0AE1E}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -56,6 +61,15 @@ Global
 		{9246B677-8D22-24BC-65CB-3590F6458F08}.Release|Win32.Build.0 = Release|Win32
 		{9246B677-8D22-24BC-65CB-3590F6458F08}.Release|x64.ActiveCfg = Release|x64
 		{9246B677-8D22-24BC-65CB-3590F6458F08}.Release|x64.Build.0 = Release|x64
+		{4BAFE49E-7FC2-4C92-8E57-E1C3BCFF0BC4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{4BAFE49E-7FC2-4C92-8E57-E1C3BCFF0BC4}.Debug|Win32.Build.0 = Debug|Win32
+		{4BAFE49E-7FC2-4C92-8E57-E1C3BCFF0BC4}.Debug|x64.ActiveCfg = Debug|Win32
+		{4BAFE49E-7FC2-4C92-8E57-E1C3BCFF0BC4}.DebugMem|Win32.ActiveCfg = Debug|Win32
+		{4BAFE49E-7FC2-4C92-8E57-E1C3BCFF0BC4}.DebugMem|Win32.Build.0 = Debug|Win32
+		{4BAFE49E-7FC2-4C92-8E57-E1C3BCFF0BC4}.DebugMem|x64.ActiveCfg = Debug|Win32
+		{4BAFE49E-7FC2-4C92-8E57-E1C3BCFF0BC4}.Release|Win32.ActiveCfg = Release|Win32
+		{4BAFE49E-7FC2-4C92-8E57-E1C3BCFF0BC4}.Release|Win32.Build.0 = Release|Win32
+		{4BAFE49E-7FC2-4C92-8E57-E1C3BCFF0BC4}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
