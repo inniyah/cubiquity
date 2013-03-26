@@ -273,7 +273,7 @@ namespace Cubiquity
 			{
 				// We're going to process immediatly, but the completed task will still get queued in the finished
 				// queue, and we want to make sure it's the first out. So we still set a priority and make it high.
-				mLastSurfaceExtractionTask->mPriority = std::numeric_limits<uint32_t>::max();
+				mLastSurfaceExtractionTask->mPriority = (std::numeric_limits<uint32_t>::max)();
 				gMainThreadTaskProcessor.addTask(mLastSurfaceExtractionTask);
 			}
 			else
@@ -282,7 +282,7 @@ namespace Cubiquity
 				// want to account for the camera moving then we would have to sort the task queue each frame.
 				Vector3F regionCentre = static_cast<Vector3F>(mRegion.getCentre());
 				float distance = (viewPosition - regionCentre).length(); //We don't use distance squared to keep the values smaller
-				mLastSurfaceExtractionTask->mPriority = std::numeric_limits<uint32_t>::max() - static_cast<uint32_t>(distance);
+				mLastSurfaceExtractionTask->mPriority = (std::numeric_limits<uint32_t>::max)() - static_cast<uint32_t>(distance);
 				gBackgroundTaskProcessor.addTask(mLastSurfaceExtractionTask);
 			}
 

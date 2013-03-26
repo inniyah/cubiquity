@@ -14,4 +14,6 @@ extern "C"
 {
 	CUBIQUITYC_API float getZero(void);
 	CUBIQUITYC_API float getOne(void);
+
+	CUBIQUITYC_API unsigned int newSmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
 }

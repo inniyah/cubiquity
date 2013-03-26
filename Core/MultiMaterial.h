@@ -132,7 +132,7 @@ namespace Cubiquity
 			StorageType result = mMaterials >> (BitsPerMaterial * index);
 
 			// Build a mask containing all '0''s except for the least significant bits (which are '1's).
-			StorageType mask = std::numeric_limits<StorageType>::max(); //Set to all '1's
+			StorageType mask = (std::numeric_limits<StorageType>::max)(); //Set to all '1's
 			mask = mask << BitsPerMaterial; // Insert the required number of '0's for the lower bits
 			mask = ~mask; // And invert
 			result = result & mask;
@@ -147,7 +147,7 @@ namespace Cubiquity
 			// The bits we want to set first get cleared to zeros.
 			// To do this we create a mask which is all '1' except
 			// for the bits we wish to clear (which are '0').
-			StorageType mask = std::numeric_limits<StorageType>::max(); //Set to all '1's
+			StorageType mask = (std::numeric_limits<StorageType>::max)(); //Set to all '1's
 			mask = mask << BitsPerMaterial; // Insert the required number of '0's for the lower bits
 			mask = ~mask; // We want to insert '1's next, so fake this by inverting before and after
 			mask = mask << (BitsPerMaterial * index); // Insert the '0's which we will invert to '1's.

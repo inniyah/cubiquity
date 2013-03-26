@@ -17,7 +17,7 @@ namespace Cubiquity
 		,mOctreeNode(octreeNode)
 		,mPolyVoxVolume(polyVoxVolume)
 		,mPolyVoxMesh(0)
-		,mProcessingStartedTimestamp(std::numeric_limits<Timestamp>::max())
+		,mProcessingStartedTimestamp((std::numeric_limits<Timestamp>::max)())
 	{
 	}
 
