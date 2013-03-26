@@ -15,6 +15,7 @@
 
 #include "boost/filesystem.hpp"
 
+#include <climits>
 #include <map>
 
 namespace Cubiquity
@@ -121,10 +122,12 @@ namespace Cubiquity
 		uint32_t imageWidth = volume->mPolyVoxVolume->getWidth();
 		uint32_t imageHeight = volume->mPolyVoxVolume->getDepth();
 		uint32_t sliceCount = volume->mPolyVoxVolume->getHeight();
-		uint32_t componentCount = 4;
 		std::string sliceExtension("png");
+		uint32_t componentCount = 4;
+		std::string componentType("u");
+		uint32_t componentSize = 8;
 
-		int outputSliceDataSize = imageWidth * imageHeight * componentCount;
+		int outputSliceDataSize = imageWidth * imageHeight * componentCount * (componentSize / CHAR_BIT);
 		unsigned char* outputSliceData = new unsigned char[outputSliceDataSize];
 
 		for(uint32_t slice = 0; slice < sliceCount; slice++)
@@ -158,8 +161,11 @@ namespace Cubiquity
 		fprintf(fp, "Width = %d\n", imageWidth);
 		fprintf(fp, "Height = %d\n", imageHeight);
 		fprintf(fp, "SliceCount = %d\n", sliceCount);
-		fprintf(fp, "ComponentCount = %d\n", componentCount);
 		fprintf(fp, "SliceExtension = %s\n", sliceExtension.c_str());
+		fprintf(fp, "ComponentCount = %d\n", componentCount);
+		fprintf(fp, "ComponentType = %s\n", componentType.c_str());
+		fprintf(fp, "ComponentSize = %d\n", componentSize);
+		
 		fclose(fp);
 	}
 
