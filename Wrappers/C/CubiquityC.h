@@ -10,13 +10,8 @@
 #define CUBIQUITYC_API __declspec(dllimport)
 #endif
 
-// This class is exported from the CubiquityC.dll
-class CUBIQUITYC_API CCubiquityC {
-public:
-	CCubiquityC(void);
-	// TODO: add your methods here.
-};
-
-extern CUBIQUITYC_API int nCubiquityC;
-
-CUBIQUITYC_API int fnCubiquityC(void);
+extern "C"
+{
+	CUBIQUITYC_API float getZero(void);
+	CUBIQUITYC_API float getOne(void);
+}

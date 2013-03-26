@@ -4,19 +4,13 @@
 #include "stdafx.h"
 #include "CubiquityC.h"
 
-
-// This is an example of an exported variable
-CUBIQUITYC_API int nCubiquityC=0;
-
 // This is an example of an exported function.
-CUBIQUITYC_API int fnCubiquityC(void)
+CUBIQUITYC_API float getZero(void)
 {
-	return 42;
+	return 0.0f;
 }
 
-// This is the constructor of a class that has been exported.
-// see CubiquityC.h for the class definition
-CCubiquityC::CCubiquityC()
+CUBIQUITYC_API float getOne(void)
 {
-	return;
+	return 1.0f;
 }
