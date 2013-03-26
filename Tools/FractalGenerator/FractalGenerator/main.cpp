@@ -43,6 +43,9 @@ uint32_t evaluateMandlebulbSample(double cx, double cy, double cz, double n, uin
 
 int main(int argc, char** argv)
 {
+	const int ComponentCount = 1;
+	const std::string SliceExtension(".png");
+
 	uint8_t* image = new uint8_t[ImageSize * ImageSize];
 
 	double minX = -sqrt(2.0);
@@ -70,14 +73,25 @@ int main(int argc, char** argv)
 		}
 
 		stringstream ss;
-		ss << "output/" << z << ".png";
-		int result = stbi_write_png(ss.str().c_str(), ImageSize, ImageSize, 1, image, ImageSize);
+		ss << "output/" << z << SliceExtension;
+		int result = stbi_write_png(ss.str().c_str(), ImageSize, ImageSize, ComponentCount, image, ImageSize);
 		assert(result); //If crashing here then make sur the output folder exists.
 
 		cout << z << endl;
 	}
 
 	delete[] image;
+
+	FILE *fp;
+	fp=fopen("output/Volume.idx", "w");
+	fprintf(fp, "Width = %d\n", ImageSize);
+	fprintf(fp, "Height = %d\n", ImageSize);
+	fprintf(fp, "SliceCount = %d\n", ImageSize);
+	fprintf(fp, "SliceExtension = %s\n", SliceExtension.c_str());
+	fprintf(fp, "ComponentCount = %d\n", ComponentCount);
+	fprintf(fp, "ComponentType = u\n");
+	fprintf(fp, "ComponentSize = 8\n");
+	fclose(fp);
 
 	return 0;
 }
