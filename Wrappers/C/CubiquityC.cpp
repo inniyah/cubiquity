@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "CubiquityC.h"
 
+#include "OctreeNode.h"
 #include "SmoothTerrainVolume.h"
 
 #include <vector>
@@ -35,4 +36,17 @@ CUBIQUITYC_API unsigned int newSmoothTerrainVolume(int lowerX, int lowerY, int l
 	volume->setVoxelAt(centreX, centreY, centreZ, value, Cubiquity::UpdatePriorities::Immediate);
 
 	return gSmoothTerrainVolumes.size() - 1;
+}
+
+CUBIQUITYC_API int getMeshData(unsigned int volumeHandle)
+{
+	SmoothTerrainVolume* volume = gSmoothTerrainVolumes[volumeHandle];
+
+	volume->update(Vector3F(0.0f, 0.0f, 0.0f), 100000);
+
+	OctreeNode<MultiMaterial>* node = volume->mOctree->mRootOctreeNode;
+
+	const ::PolyVox::SurfaceMesh< typename VoxelTraits<MultiMaterial>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
+
+	return polyVoxMesh->getNoOfVertices();
 }

@@ -16,4 +16,6 @@ extern "C"
 	CUBIQUITYC_API float getOne(void);
 
 	CUBIQUITYC_API unsigned int newSmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
+
+	CUBIQUITYC_API int getMeshData(unsigned int volumeHandle);
 }
