@@ -9,7 +9,7 @@
 
 using namespace std;
 
-const uint32_t ImageSize = 128;
+const uint32_t ImageSize = 512;
 
 uint32_t evaluateMandlebulbSample(double cx, double cy, double cz, double n, uint32_t maxIterations)
 {
@@ -44,10 +44,11 @@ uint32_t evaluateMandlebulbSample(double cx, double cy, double cz, double n, uin
 
 int main(int argc, char** argv)
 {
-	const int ComponentCount = 1;
+	bool applyColouring = true;
+	const int ComponentCount =  applyColouring ? 4 : 1;
 	const std::string SliceExtension("png");
 
-	uint8_t* image = new uint8_t[ImageSize * ImageSize];
+	uint8_t* image = new uint8_t[ImageSize * ImageSize * ComponentCount];
 
 	double minX = -sqrt(2.0);
 	double maxX = sqrt(2.0);
@@ -62,6 +63,9 @@ int main(int argc, char** argv)
 
 	for(int z = 0; z < ImageSize; z++)
 	{
+		memset(image, 0, ImageSize * ImageSize * ComponentCount);
+		uint8_t* currentPixel = image;
+
 		for(int y = 0; y < ImageSize; y++)
 		{
 			for(int x = 0; x < ImageSize; x++)
@@ -69,13 +73,34 @@ int main(int argc, char** argv)
 				double xPos = minX + stepX * x;
 				double yPos = minY + stepY * y;
 				double zPos = minZ + stepZ * z;
-				image[x + ImageSize * y] = evaluateMandlebulbSample(xPos, yPos, zPos, 8.0, 255);
+
+				const uint32_t maxIterations = 255;
+				uint32_t noOfIterations = evaluateMandlebulbSample(xPos, yPos, zPos, 8.0, maxIterations);
+
+				if(applyColouring)
+				{
+					if(noOfIterations == maxIterations)
+					{
+						double distance = sqrt(xPos * xPos + yPos * yPos + zPos * zPos);
+						// Set this to a solid voxel
+						*(currentPixel + 0) = static_cast<uint8_t>(sin((distance + 17.34) * 10.0) * 255.0);
+						*(currentPixel + 1) = static_cast<uint8_t>(sin((distance + 2.875) * 15.0) * 255.0);
+						*(currentPixel + 2) = static_cast<uint8_t>(sin((distance + 165.8) * 20.0) * 255.0);
+						*(currentPixel + 3) = 255;
+					}
+				}
+				else
+				{
+					*currentPixel = std::min(noOfIterations, static_cast<uint32_t>(255));
+				}
+
+				currentPixel += ComponentCount;
 			}
 		}
 
 		stringstream ss;
 		ss << "output/" << std::setfill('0') << std::setw(6) << z << "." << SliceExtension;
-		int result = stbi_write_png(ss.str().c_str(), ImageSize, ImageSize, ComponentCount, image, ImageSize);
+		int result = stbi_write_png(ss.str().c_str(), ImageSize, ImageSize, ComponentCount, image, ImageSize * ComponentCount);
 		assert(result); //If crashing here then make sur the output folder exists.
 
 		cout << z << endl;
