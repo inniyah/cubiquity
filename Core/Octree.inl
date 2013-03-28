@@ -61,10 +61,18 @@ namespace Cubiquity
 
 		octreeRegion.grow(widthIncrease / 2, heightIncrease / 2, depthIncrease / 2);
 
-		mRootOctreeNode = new OctreeNode< VoxelType >(octreeRegion, 0, this);
+		mRootOctreeNode = createNode(octreeRegion, 0);
 		mRootOctreeNode->mLodLevel = noOfLodLevels - 1;
 
 		buildOctreeNodeTree(mRootOctreeNode, regionToCover, octreeConstructionMode);
+	}
+
+	template <typename VoxelType>
+	OctreeNode<VoxelType>* Octree<VoxelType>::createNode(Region region, OctreeNode<VoxelType>* parent)
+	{
+		OctreeNode< VoxelType >* node = new OctreeNode< VoxelType >(region, parent, this);
+		mNodes.push_back(node);
+		return node;
 	}
 
 	template <typename VoxelType>
@@ -144,7 +152,7 @@ namespace Cubiquity
 						Region childRegion(baseLowerCorner + offset, baseUpperCorner + offset);
 						if(intersects(childRegion, regionToCover))
 						{
-							OctreeNode< VoxelType >* octreeNode = new OctreeNode< VoxelType >(childRegion, parent, this);
+							OctreeNode< VoxelType >* octreeNode = createNode(childRegion, parent);
 							parent->children[x][y][z] = octreeNode;
 							buildOctreeNodeTree(octreeNode, regionToCover, octreeConstructionMode);
 						}

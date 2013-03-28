@@ -10,6 +10,8 @@
 #include "Vector.h"
 #include "VoxelTraits.h"
 
+#include <vector>
+
 namespace Cubiquity
 {
 	namespace OctreeConstructionModes
@@ -28,6 +30,8 @@ namespace Cubiquity
 	public:
 		Octree(Volume<VoxelType>* volume, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize);
 
+		OctreeNode<VoxelType>* createNode(Region region, OctreeNode<VoxelType>* parent);
+
 		void update(const Vector3F& viewPosition, float lodThreshold);
 
 		void markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority);
@@ -38,6 +42,8 @@ namespace Cubiquity
 		Volume<VoxelType>* mVolume;
 		OctreeNode<VoxelType>* mRootOctreeNode;
 		const unsigned int mBaseNodeSize;
+
+		std::vector< OctreeNode<VoxelType>*> mNodes;
 
 		concurrent_queue<typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType*, TaskSortCriterion> mFinishedSurfaceExtractionTasks;
 	};
