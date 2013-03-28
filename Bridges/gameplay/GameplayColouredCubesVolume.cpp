@@ -18,7 +18,7 @@ namespace Cubiquity
 	{
 		mRootGameplayNode = createNodeWithExtraData< Colour >("RootGameplayNode");
 
-		buildNode(mCubiquityVolume->mOctree->mRootOctreeNode, mRootGameplayNode);
+		buildNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayNode);
 	}
 
 	GameplayColouredCubesVolume::GameplayColouredCubesVolume(const char* dataToLoad)
@@ -39,7 +39,7 @@ namespace Cubiquity
 
 		mRootGameplayNode = createNodeWithExtraData< Colour >("RootGameplayNode");
 
-		buildNode(mCubiquityVolume->mOctree->mRootOctreeNode, mRootGameplayNode);
+		buildNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayNode);
 	}
 
 	GameplayColouredCubesVolume::GameplayColouredCubesVolume(ColouredCubesVolume* colouredCubesVolume)
@@ -47,7 +47,7 @@ namespace Cubiquity
 	{
 		mRootGameplayNode = createNodeWithExtraData< Colour >("RootGameplayNode");
 
-		buildNode(mCubiquityVolume->mOctree->mRootOctreeNode, mRootGameplayNode);
+		buildNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayNode);
 	}
 
 	GameplayColouredCubesVolume::~GameplayColouredCubesVolume()
@@ -61,9 +61,9 @@ namespace Cubiquity
 
 		//Now ensure the gameplay node tree matches the one in the volume.
 
-		if(mCubiquityVolume->mOctree->mRootOctreeNode != 0)
+		if(mCubiquityVolume->getRootOctreeNode() != 0)
 		{
-			syncNode(mCubiquityVolume->mOctree->mRootOctreeNode, mRootGameplayNode);
+			syncNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayNode);
 		}
 	}
 

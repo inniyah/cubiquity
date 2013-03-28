@@ -32,7 +32,9 @@ namespace Cubiquity
 
 		VoxelType getVoxelAt(int32_t x, int32_t y, int32_t z) { return mPolyVoxVolume->getVoxelAt(x, y, z); }
 
-		::PolyVox::SimpleVolume<VoxelType>* _getPolyVoxVolume() { return mPolyVoxVolume; }
+		::PolyVox::SimpleVolume<VoxelType>* _getPolyVoxVolume(void) { return mPolyVoxVolume; }
+
+		OctreeNode<VoxelType>* getRootOctreeNode(void) { return mOctree->mRootOctreeNode; }
 
 		void setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, UpdatePriority updatePriority = UpdatePriorities::Background);
 
@@ -48,7 +50,6 @@ namespace Cubiquity
 
 	private:
 		::PolyVox::SimpleVolume<VoxelType>* mPolyVoxVolume;
-	public:
 		Octree<VoxelType>* mOctree;
 	};
 }

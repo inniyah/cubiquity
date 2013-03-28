@@ -16,7 +16,7 @@ namespace Cubiquity
 	{
 		mRootGameplayNode = createNodeWithExtraData< MultiMaterial >("RootGameplayNode");
 
-		buildNode(mCubiquityVolume->mOctree->mRootOctreeNode, mRootGameplayNode);
+		buildNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayNode);
 	}
 
 	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(const char* dataToLoad)
@@ -38,7 +38,7 @@ namespace Cubiquity
 
 		mRootGameplayNode = createNodeWithExtraData< MultiMaterial >("RootGameplayNode");
 
-		buildNode(mCubiquityVolume->mOctree->mRootOctreeNode, mRootGameplayNode);
+		buildNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayNode);
 	}
 
 	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(SmoothTerrainVolume* cubiquityVolume)
@@ -46,7 +46,7 @@ namespace Cubiquity
 	{
 		mRootGameplayNode = createNodeWithExtraData< MultiMaterial >("RootGameplayNode");
 
-		buildNode(mCubiquityVolume->mOctree->mRootOctreeNode, mRootGameplayNode);
+		buildNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayNode);
 	}
 
 	GameplaySmoothTerrainVolume::~GameplaySmoothTerrainVolume()
@@ -60,9 +60,9 @@ namespace Cubiquity
 
 		//Now ensure the gameplay node tree matches the one in the volume.
 
-		if(mCubiquityVolume->mOctree->mRootOctreeNode != 0)
+		if(mCubiquityVolume->getRootOctreeNode() != 0)
 		{
-			syncNode(mCubiquityVolume->mOctree->mRootOctreeNode, mRootGameplayNode);
+			syncNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayNode);
 		}
 	}
 
