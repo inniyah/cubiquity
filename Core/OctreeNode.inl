@@ -13,9 +13,9 @@
 namespace Cubiquity
 {
 	template <typename VoxelType>
-	OctreeNode<VoxelType>::OctreeNode(Region region, OctreeNode* parentRegion, Octree<VoxelType>* octree)
+	OctreeNode<VoxelType>::OctreeNode(Region region, OctreeNode* parent, Octree<VoxelType>* octree)
 		:mRegion(region)
-		,parent(parentRegion)
+		,mParent(parent)
 		,mOctree(octree)
 		,mWantedForRendering(false)
 		,mRenderThisNode(false)
@@ -39,7 +39,7 @@ namespace Cubiquity
 			}
 		}
 
-		if(parent)
+		if(mParent)
 		{
 			POLYVOX_ASSERT(parent->mLodLevel < 100, "LOD level has gone below zero and wrapped around.");
 			mLodLevel = parent->mLodLevel-1;

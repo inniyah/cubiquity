@@ -82,9 +82,9 @@ namespace Cubiquity
 		ss << "LOD = " << int(octreeNode->mLodLevel) << ", Region = (" << octreeNode->mRegion.getLowerX() << "," << octreeNode->mRegion.getLowerY() << "," << octreeNode->mRegion.getLowerZ() << ") to (" << octreeNode->mRegion.getUpperX() << "," << octreeNode->mRegion.getUpperY() << "," << octreeNode->mRegion.getUpperZ() << ")";
 		gameplayNode->setId(ss.str().c_str());
 
-		if(octreeNode->parent)
+		if(octreeNode->mParent)
 		{
-			Vector3I translation = octreeNode->mRegion.getLowerCorner() - octreeNode->parent->mRegion.getLowerCorner();
+			Vector3I translation = octreeNode->mRegion.getLowerCorner() - octreeNode->mParent->mRegion.getLowerCorner();
 			gameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
 		}
 		else
