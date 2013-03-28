@@ -18,6 +18,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CubiquityC", "Wrappers\C\Cu
 		{58E18F35-2592-4F54-98B7-FF7B8DE0AE1E} = {58E18F35-2592-4F54-98B7-FF7B8DE0AE1E}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CubiquityCTest", "Wrappers\CubiquityCTest\CubiquityCTest.vcxproj", "{05CAC8C4-3A1A-4692-914B-27B3880E2BE6}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4BAFE49E-7FC2-4C92-8E57-E1C3BCFF0BC4} = {4BAFE49E-7FC2-4C92-8E57-E1C3BCFF0BC4}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -70,6 +75,15 @@ Global
 		{4BAFE49E-7FC2-4C92-8E57-E1C3BCFF0BC4}.Release|Win32.ActiveCfg = Release|Win32
 		{4BAFE49E-7FC2-4C92-8E57-E1C3BCFF0BC4}.Release|Win32.Build.0 = Release|Win32
 		{4BAFE49E-7FC2-4C92-8E57-E1C3BCFF0BC4}.Release|x64.ActiveCfg = Release|Win32
+		{05CAC8C4-3A1A-4692-914B-27B3880E2BE6}.Debug|Win32.ActiveCfg = Debug|Win32
+		{05CAC8C4-3A1A-4692-914B-27B3880E2BE6}.Debug|Win32.Build.0 = Debug|Win32
+		{05CAC8C4-3A1A-4692-914B-27B3880E2BE6}.Debug|x64.ActiveCfg = Debug|Win32
+		{05CAC8C4-3A1A-4692-914B-27B3880E2BE6}.DebugMem|Win32.ActiveCfg = Debug|Win32
+		{05CAC8C4-3A1A-4692-914B-27B3880E2BE6}.DebugMem|Win32.Build.0 = Debug|Win32
+		{05CAC8C4-3A1A-4692-914B-27B3880E2BE6}.DebugMem|x64.ActiveCfg = Debug|Win32
+		{05CAC8C4-3A1A-4692-914B-27B3880E2BE6}.Release|Win32.ActiveCfg = Release|Win32
+		{05CAC8C4-3A1A-4692-914B-27B3880E2BE6}.Release|Win32.Build.0 = Release|Win32
+		{05CAC8C4-3A1A-4692-914B-27B3880E2BE6}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
