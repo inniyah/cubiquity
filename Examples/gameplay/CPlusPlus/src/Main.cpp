@@ -185,6 +185,7 @@ void MeshGame::initialize()
 	//mVolume = GameplayVolumeSerialisation::gameplayImportColourSlices("../../SliceData/VoxeliensTerrain/");
 	//mVolume = GameplayVolumeSerialisation::gameplayImportVxl("C:\\code\\cubiquity\\Examples\\gameplay\\Lua\\res\\Capitol.vxl");
 	mVolume = GameplayColouredCubesVolume::create("../../SliceData/VoxeliensTerrain/");
+	//mVolume = GameplayColouredCubesVolume::create("C:\\code\\cubiquity\\Tools\\FractalGenerator\\FractalGenerator\\output\\");
 	//mVolume = GameplayColouredCubesVolume::create("C:\\code\\cubiquity\\Examples\\gameplay\\Lua\\res\\Capitol.vxl");
 
 	mVolumeEditor = 0;
@@ -303,7 +304,7 @@ void MeshGame::update(float elapsedTime)
 	_cameraNode->translate(_cameraNode->getForwardVector() * -mCameraDistance);*/
 
 	Vector3 viewPos = _cameraNode->getTranslationWorld();
-	mVolume->performUpdate(viewPos, 0);
+	mVolume->performUpdate(viewPos, mLod1StartSlider->getValue());
 
 	std::stringstream ss;
 	ss << "Tasks = " << gBackgroundTaskProcessor.mPendingTasks.size();

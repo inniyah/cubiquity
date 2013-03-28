@@ -82,8 +82,6 @@ namespace Cubiquity
 			assert(imageHeight == volumeHeight);
 			assert(imageChannels == componentCount);
 
-			assert(componentCount == 4);
-
 			// Now iterate over each pixel.
 			for(int x = 0; x < imageWidth; x++)
 			{
@@ -134,9 +132,9 @@ namespace Cubiquity
 		{
 			std::fill(outputSliceData, outputSliceData + imageWidth * imageHeight, 0);
 
-			for(int x = 0; x < imageWidth; x++)
+			for(uint32_t x = 0; x < imageWidth; x++)
 			{
-				for(int y = 0; y < imageHeight; y++)
+				for(uint32_t y = 0; y < imageHeight; y++)
 				{
 					unsigned char* pixel = outputSliceData + (y * imageWidth + x) * componentCount;
 

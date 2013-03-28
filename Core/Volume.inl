@@ -15,7 +15,7 @@
 namespace Cubiquity
 {
 	template <typename VoxelType>
-	Volume<VoxelType>::Volume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize)
+	Volume<VoxelType>::Volume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, uint32_t blockSize, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize)
 		:mPolyVoxVolume(0)
 		,mOctree(0)
 	{
@@ -36,7 +36,7 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void Volume<VoxelType>::setVoxelAt(int x, int y, int z, VoxelType value, UpdatePriority updatePriority)
+	void Volume<VoxelType>::setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, UpdatePriority updatePriority)
 	{
 		mPolyVoxVolume->setVoxelAt(x, y, z, value);
 		if(updatePriority != UpdatePriorities::DontUpdate)

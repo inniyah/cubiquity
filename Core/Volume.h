@@ -22,18 +22,21 @@ namespace Cubiquity
 		typedef _VoxelType VoxelType;
 
 		//Getters just forward to the underlying volume
-		uint32_t getWidth(void) { return mPolyVoxVolume->getWidth(); }
-		uint32_t getHeight(void) { return mPolyVoxVolume->getHeight(); }
-		uint32_t getDepth(void) { return mPolyVoxVolume->getDepth(); }
-		VoxelType getVoxelAt(int x, int y, int z) { return mPolyVoxVolume->getVoxelAt(x, y, z); }
+		uint32_t getWidth(void) const { return mPolyVoxVolume->getWidth(); }
+		uint32_t getHeight(void) const { return mPolyVoxVolume->getHeight(); }
+		uint32_t getDepth(void) const { return mPolyVoxVolume->getDepth(); }
+		const Region& getEnclosingRegion(void) const { return mPolyVoxVolume->getEnclosingRegion(); }
 
-		void setVoxelAt(int x, int y, int z, VoxelType value, UpdatePriority updatePriority = UpdatePriorities::Background);
+		VoxelType getVoxelAt(int32_t x, int32_t y, int32_t z) { return mPolyVoxVolume->getVoxelAt(x, y, z); }
+
+		void setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, UpdatePriority updatePriority = UpdatePriorities::Background);
+
 		void markAsModified(const Region& region, UpdatePriority updatePriority = UpdatePriorities::Background);
 
 		virtual void update(const Vector3F& viewPosition, float lodThreshold);
 
 	protected:
-		Volume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize);
+		Volume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, uint32_t blockSize, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize);
 		~Volume();
 
 		Volume& operator=(const Volume&);

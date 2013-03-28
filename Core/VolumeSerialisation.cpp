@@ -84,8 +84,19 @@ namespace Cubiquity
 
 	void pixelToVoxel(uint8_t* pixelData, Colour& voxelData, uint32_t componentCount)
 	{
-		POLYVOX_ASSERT(componentCount == 4, "Images must have four colour channels to import into a ColouredCubesVolume");
-		voxelData = Colour(*(pixelData + 0), *(pixelData + 1), *(pixelData + 2), *(pixelData + 3));
+		if(componentCount == 1)
+		{
+			uint8_t pixel = *pixelData;
+			voxelData = Colour(255, pixel, 0, pixel > 127 ? 255 : 0);
+		}
+		else if(componentCount == 4)
+		{
+			voxelData = Colour(*(pixelData + 0), *(pixelData + 1), *(pixelData + 2), *(pixelData + 3));
+		}
+		else
+		{
+			POLYVOX_ASSERT(false, "Invalid number of colour channels");
+		}
 	}
 
 	void pixelToVoxel(uint8_t* pixelData, MultiMaterial& voxelData, uint32_t componentCount)
