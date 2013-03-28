@@ -38,13 +38,13 @@ namespace Cubiquity
 		float radiusSquared = radius * radius;
 
 		//Check bounds.
-		firstX = std::max(firstX,mSmoothTerrainVolume->mPolyVoxVolume->getEnclosingRegion().getLowerCorner().getX());
-		firstY = std::max(firstY,mSmoothTerrainVolume->mPolyVoxVolume->getEnclosingRegion().getLowerCorner().getY());
-		firstZ = std::max(firstZ,mSmoothTerrainVolume->mPolyVoxVolume->getEnclosingRegion().getLowerCorner().getZ());
+		firstX = std::max(firstX,mSmoothTerrainVolume->getEnclosingRegion().getLowerCorner().getX());
+		firstY = std::max(firstY,mSmoothTerrainVolume->getEnclosingRegion().getLowerCorner().getY());
+		firstZ = std::max(firstZ,mSmoothTerrainVolume->getEnclosingRegion().getLowerCorner().getZ());
 
-		lastX = std::min(lastX,mSmoothTerrainVolume->mPolyVoxVolume->getEnclosingRegion().getUpperCorner().getX());
-		lastY = std::min(lastY,mSmoothTerrainVolume->mPolyVoxVolume->getEnclosingRegion().getUpperCorner().getY());
-		lastZ = std::min(lastZ,mSmoothTerrainVolume->mPolyVoxVolume->getEnclosingRegion().getUpperCorner().getZ());
+		lastX = std::min(lastX,mSmoothTerrainVolume->getEnclosingRegion().getUpperCorner().getX());
+		lastY = std::min(lastY,mSmoothTerrainVolume->getEnclosingRegion().getUpperCorner().getY());
+		lastZ = std::min(lastZ,mSmoothTerrainVolume->getEnclosingRegion().getUpperCorner().getZ());
 
 		Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
 
@@ -68,7 +68,7 @@ namespace Cubiquity
 			}
 
 			// We might not need to do this at float precision, it should be tested again.
-			::PolyVox::LowPassFilter< ::PolyVox::SimpleVolume<MultiMaterial>, ::PolyVox::RawVolume<MultiMaterial>, ::PolyVox::Vector<4, float> > lowPassFilter(mSmoothTerrainVolume->mPolyVoxVolume, region, mSmoothingVolume, region, 3);
+			::PolyVox::LowPassFilter< ::PolyVox::SimpleVolume<MultiMaterial>, ::PolyVox::RawVolume<MultiMaterial>, ::PolyVox::Vector<4, float> > lowPassFilter(mSmoothTerrainVolume->_getPolyVoxVolume(), region, mSmoothingVolume, region, 3);
 			lowPassFilter.execute();
 		}
 

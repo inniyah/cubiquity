@@ -9,7 +9,7 @@ namespace Cubiquity
 		,mRootOctreeNode(0)
 		,mBaseNodeSize(baseNodeSize)
 	{
-		Region regionToCover(mVolume->mPolyVoxVolume->getEnclosingRegion());
+		Region regionToCover(mVolume->getEnclosingRegion());
 		if(octreeConstructionMode == OctreeConstructionModes::BoundVoxels)
 		{
 			regionToCover.shiftUpperCorner(1, 1, 1);

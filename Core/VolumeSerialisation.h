@@ -99,7 +99,7 @@ namespace Cubiquity
 			}
 		}
 
-		volume->markAsModified(volume->mPolyVoxVolume->getEnclosingRegion(), UpdatePriorities::Background);
+		volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Background);
 
 		return volume;
 	}
@@ -117,9 +117,9 @@ namespace Cubiquity
 		}
 
 		// Note that 'y' and 'z' axis are flipped as Gameplay physics engine assumes 'y' is up.
-		uint32_t imageWidth = volume->mPolyVoxVolume->getWidth();
-		uint32_t imageHeight = volume->mPolyVoxVolume->getDepth();
-		uint32_t sliceCount = volume->mPolyVoxVolume->getHeight();
+		uint32_t imageWidth = volume->getWidth();
+		uint32_t imageHeight = volume->getDepth();
+		uint32_t sliceCount = volume->getHeight();
 		std::string sliceExtension("png");
 		uint32_t componentCount = 4;
 		std::string componentType("u");
@@ -139,7 +139,7 @@ namespace Cubiquity
 					unsigned char* pixel = outputSliceData + (y * imageWidth + x) * componentCount;
 
 					// Note that 'y' and 'z' axis are flipped as Gameplay physics engine assumes 'y' is up.
-					VolumeType::VoxelType voxel = volume->mPolyVoxVolume->getVoxel(x, slice, y);
+					VolumeType::VoxelType voxel = volume->getVoxelAt(x, slice, y);
 
 					voxelToPixel(voxel, pixel, componentCount);
 				}
@@ -181,11 +181,11 @@ namespace Cubiquity
 		typename VolumeType::VoxelType value;
 
 		//This three-level for loop iterates over every voxel in the volume
-		for (int z = 0; z < volume->mPolyVoxVolume->getWidth(); z++)
+		for (int z = 0; z < volume->getWidth(); z++)
 		{
-			for (int y = 0; y < volume->mPolyVoxVolume->getHeight(); y++)
+			for (int y = 0; y < volume->getHeight(); y++)
 			{
-				for (int x = 0; x < volume->mPolyVoxVolume->getDepth(); x++)
+				for (int x = 0; x < volume->getDepth(); x++)
 				{
 					//Slow and inefficient reading one voxel at a time!
 					size_t elementsRead = fread(&value, sizeof(typename VolumeType::VoxelType), 1, inputFile);
@@ -211,7 +211,7 @@ namespace Cubiquity
 
 		fclose(inputFile);
 
-		volume->markAsModified(volume->mPolyVoxVolume->getEnclosingRegion());
+		volume->markAsModified(volume->getEnclosingRegion());
 	}
 
 	template <typename VolumeType>

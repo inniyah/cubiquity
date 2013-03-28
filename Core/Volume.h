@@ -18,6 +18,9 @@ namespace Cubiquity
 	template <typename _VoxelType>
 	class Volume
 	{
+		friend class Octree<_VoxelType>;
+		friend class OctreeNode<_VoxelType>;
+
 	public:
 		typedef _VoxelType VoxelType;
 
@@ -28,6 +31,8 @@ namespace Cubiquity
 		const Region& getEnclosingRegion(void) const { return mPolyVoxVolume->getEnclosingRegion(); }
 
 		VoxelType getVoxelAt(int32_t x, int32_t y, int32_t z) { return mPolyVoxVolume->getVoxelAt(x, y, z); }
+
+		::PolyVox::SimpleVolume<VoxelType>* _getPolyVoxVolume() { return mPolyVoxVolume; }
 
 		void setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, UpdatePriority updatePriority = UpdatePriorities::Background);
 
@@ -41,8 +46,9 @@ namespace Cubiquity
 
 		Volume& operator=(const Volume&);
 
-	public:
+	private:
 		::PolyVox::SimpleVolume<VoxelType>* mPolyVoxVolume;
+	public:
 		Octree<VoxelType>* mOctree;
 	};
 }
