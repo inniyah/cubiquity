@@ -41,7 +41,7 @@ namespace Cubiquity
 		mPolyVoxVolume->setVoxelAt(x, y, z, value);
 		if(updatePriority != UpdatePriorities::DontUpdate)
 		{
-			mOctree->mNodes[mOctree->mRootOctreeNode]->markAsModified(x, y, z, Clock::getTimestamp(), updatePriority);
+			mOctree->markDataAsModified(x, y, z, Clock::getTimestamp(), updatePriority);
 		}
 	}
 
@@ -49,7 +49,7 @@ namespace Cubiquity
 	void Volume<VoxelType>::markAsModified(const Region& region, UpdatePriority updatePriority)
 	{
 		POLYVOX_ASSERT(updatePriority != UpdatePriorities::DontUpdate, "You cannot mark as modified yet request no update");
-		mOctree->mNodes[mOctree->mRootOctreeNode]->markAsModified(region, Clock::getTimestamp(), updatePriority);
+		mOctree->markDataAsModified(region, Clock::getTimestamp(), updatePriority);
 	}
 
 	template <typename VoxelType>

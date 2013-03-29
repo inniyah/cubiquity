@@ -52,65 +52,6 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void OctreeNode<VoxelType>::markAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority)
-	{
-		// Note - Can't this function just call the other version?
-
-		if(mRegion.containsPoint(x, y, z, -1)) //FIXME - Think if we really need this border.
-		{
-			//mIsMeshUpToDate = false;
-			mDataLastModified = newTimeStamp;
-
-			// Note: If DontUpdate was passed (an invalid choice) it will end up on the background thread.
-			// Also we maintain mExtractOnMainThread if it was already set.
-			mExtractOnMainThread = mExtractOnMainThread || (updatePriority == UpdatePriorities::Immediate);
-
-			for(int iz = 0; iz < 2; iz++)
-			{
-				for(int iy = 0; iy < 2; iy++)
-				{
-					for(int ix = 0; ix < 2; ix++)
-					{
-						OctreeNode* child = mOctree->mNodes[children[ix][iy][iz]];
-						if(child)
-						{
-							child->markAsModified(x, y, z, newTimeStamp, updatePriority);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	template <typename VoxelType>
-	void OctreeNode<VoxelType>::markAsModified(const Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority)
-	{
-		if(intersects(mRegion, region))
-		{
-			//mIsMeshUpToDate = false;
-			mDataLastModified = newTimeStamp;
-
-			// Note: If DontUpdate was passed (an invalid choice) it will end up on the background thread.
-			mExtractOnMainThread = (updatePriority == UpdatePriorities::Immediate);
-
-			for(int iz = 0; iz < 2; iz++)
-			{
-				for(int iy = 0; iy < 2; iy++)
-				{
-					for(int ix = 0; ix < 2; ix++)
-					{
-						OctreeNode* child = mOctree->mNodes[children[ix][iy][iz]];
-						if(child)
-						{
-							child->markAsModified(region, newTimeStamp, updatePriority);
-						}
-					}
-				}
-			}
-		}
-	}
-
-	template <typename VoxelType>
 	bool OctreeNode<VoxelType>::hasAnyChildren(void)
 	{
 		for(int z = 0; z < 2; z++)

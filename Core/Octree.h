@@ -51,6 +51,9 @@ namespace Cubiquity
 		void clearWantedForRendering(uint16_t index);
 		void determineWantedForRendering(uint16_t index, const Vector3F& viewPosition, float lodThreshold);
 		void determineWhetherToRender(uint16_t index);
+
+		void markAsModified(uint16_t index, int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority);
+		void markAsModified(uint16_t index, const Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority);
 	};
 }
 

@@ -17,9 +17,6 @@ namespace Cubiquity
 		OctreeNode(Region region, uint16_t parent, Octree<VoxelType>* octree);
 		~OctreeNode();
 
-		void markAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority);
-		void markAsModified(const Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority);
-
 		bool hasAnyChildren(void);
 
 		bool allChildrenUpToDate(void);

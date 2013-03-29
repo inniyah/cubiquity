@@ -112,13 +112,13 @@ namespace Cubiquity
 	template <typename VoxelType>
 	void Octree<VoxelType>::markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority)
 	{
-		mRootOctreeNode->markDataAsModified(x, y, z, newTimeStamp, updatePriority);
+		markAsModified(mRootOctreeNode, x, y, z, newTimeStamp, updatePriority);
 	}
 
 	template <typename VoxelType>
 	void Octree<VoxelType>::markDataAsModified(const Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority)
 	{
-		mRootOctreeNode->markDataAsModified(region, newTimeStamp, updatePriority);
+		markAsModified(mRootOctreeNode, region, newTimeStamp, updatePriority);
 	}
 
 	template <typename VoxelType>
@@ -247,6 +247,69 @@ namespace Cubiquity
 					if(child)
 					{
 						determineWhetherToRender(child);
+					}
+				}
+			}
+		}
+	}
+
+	template <typename VoxelType>
+	void Octree<VoxelType>::markAsModified(uint16_t index, int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority)
+	{
+		// Note - Can't this function just call the other version?
+
+		OctreeNode<VoxelType>* node = mNodes[index];
+
+		if(node->mRegion.containsPoint(x, y, z, -1)) //FIXME - Think if we really need this border.
+		{
+			//mIsMeshUpToDate = false;
+			node->mDataLastModified = newTimeStamp;
+
+			// Note: If DontUpdate was passed (an invalid choice) it will end up on the background thread.
+			// Also we maintain mExtractOnMainThread if it was already set.
+			node->mExtractOnMainThread = node->mExtractOnMainThread || (updatePriority == UpdatePriorities::Immediate);
+
+			for(int iz = 0; iz < 2; iz++)
+			{
+				for(int iy = 0; iy < 2; iy++)
+				{
+					for(int ix = 0; ix < 2; ix++)
+					{
+						uint16_t child = node->children[ix][iy][iz];
+						if(child)
+						{
+							markAsModified(child, x, y, z, newTimeStamp, updatePriority);
+						}
+					}
+				}
+			}
+		}
+	}
+
+	template <typename VoxelType>
+	void Octree<VoxelType>::markAsModified(uint16_t index, const Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority)
+	{
+		OctreeNode<VoxelType>* node = mNodes[index];
+
+		if(intersects(node->mRegion, region))
+		{
+			//mIsMeshUpToDate = false;
+			node->mDataLastModified = newTimeStamp;
+
+			// Note: If DontUpdate was passed (an invalid choice) it will end up on the background thread.
+			node->mExtractOnMainThread = (updatePriority == UpdatePriorities::Immediate);
+
+			for(int iz = 0; iz < 2; iz++)
+			{
+				for(int iy = 0; iy < 2; iy++)
+				{
+					for(int ix = 0; ix < 2; ix++)
+					{
+						uint16_t child = node->children[ix][iy][iz];
+						if(child)
+						{
+							markAsModified(child, region, newTimeStamp, updatePriority);
+						}
 					}
 				}
 			}
