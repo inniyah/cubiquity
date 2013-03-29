@@ -46,6 +46,10 @@ namespace Cubiquity
 		std::vector< OctreeNode<VoxelType>*> mNodes;
 
 		concurrent_queue<typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType*, TaskSortCriterion> mFinishedSurfaceExtractionTasks;
+
+	private:
+		void clearWantedForRendering(uint16_t index);
+		void determineWantedForRendering(uint16_t index, const Vector3F& viewPosition, float lodThreshold);
 	};
 }
 

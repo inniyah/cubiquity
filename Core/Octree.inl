@@ -81,8 +81,8 @@ namespace Cubiquity
 	template <typename VoxelType>
 	void Octree<VoxelType>::update(const Vector3F& viewPosition, float lodThreshold)
 	{
-		mNodes[mRootOctreeNode]->clearWantedForRendering();
-		mNodes[mRootOctreeNode]->determineWantedForRendering(viewPosition, lodThreshold);
+		clearWantedForRendering(mRootOctreeNode);
+		determineWantedForRendering(mRootOctreeNode, viewPosition, lodThreshold);
 
 		mNodes[mRootOctreeNode]->sceduleUpdateIfNeeded(viewPosition);
 
@@ -161,6 +161,70 @@ namespace Cubiquity
 						}
 					}
 				}
+			}
+		}
+	}
+
+	template <typename VoxelType>
+	void Octree<VoxelType>::clearWantedForRendering(uint16_t index)
+	{
+		mNodes[index]->mWantedForRendering = false;
+
+		for(int iz = 0; iz < 2; iz++)
+			{
+				for(int iy = 0; iy < 2; iy++)
+				{
+					for(int ix = 0; ix < 2; ix++)
+					{
+						uint16_t child = mNodes[index]->children[ix][iy][iz];
+						if(child)
+						{
+							clearWantedForRendering(child);
+						}
+					}
+				}
+			}
+	}
+
+	template <typename VoxelType>
+	void Octree<VoxelType>::determineWantedForRendering(uint16_t index, const Vector3F& viewPosition, float lodThreshold)
+	{
+		OctreeNode<VoxelType>* node = mNodes[index];
+		if(node->mLodLevel == 0)
+		{
+			node->mWantedForRendering = true;
+		}
+		else
+		{
+			Vector3F regionCentre = static_cast<Vector3F>(node->mRegion.getCentre());
+
+			float distance = (viewPosition - regionCentre).length();
+
+			Vector3I diagonal = node->mRegion.getUpperCorner() - node->mRegion.getLowerCorner();
+			float diagonalLength = diagonal.length(); // A measure of our regions size
+
+			float projectedSize = diagonalLength / distance;
+
+			if((projectedSize > lodThreshold) || (node->mLodLevel > 2)) //subtree height check prevents building LODs for node near the root.
+			{
+				for(int iz = 0; iz < 2; iz++)
+				{
+					for(int iy = 0; iy < 2; iy++)
+					{
+						for(int ix = 0; ix < 2; ix++)
+						{
+							uint16_t child = mNodes[index]->children[ix][iy][iz];
+							if(child)
+							{
+								determineWantedForRendering(child, viewPosition, lodThreshold);
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				node->mWantedForRendering = true;
 			}
 		}
 	}

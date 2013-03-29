@@ -20,8 +20,6 @@ namespace Cubiquity
 		void markAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority);
 		void markAsModified(const Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority);
 
-		void clearWantedForRendering(void);
-		void determineWantedForRendering(const Vector3F& viewPosition, float lodThreshold);
 		void determineWhetherToRender(void);
 
 		bool hasAnyChildren(void);

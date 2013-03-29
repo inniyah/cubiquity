@@ -154,69 +154,6 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void OctreeNode<VoxelType>::clearWantedForRendering(void)
-	{
-		mWantedForRendering = false;
-
-		for(int iz = 0; iz < 2; iz++)
-		{
-			for(int iy = 0; iy < 2; iy++)
-			{
-				for(int ix = 0; ix < 2; ix++)
-				{
-					OctreeNode* child = mOctree->mNodes[children[ix][iy][iz]];
-					if(child)
-					{
-						child->clearWantedForRendering();
-					}
-				}
-			}
-		}
-	}
-
-	template <typename VoxelType>
-	void OctreeNode<VoxelType>::determineWantedForRendering(const Vector3F& viewPosition, float lodThreshold)
-	{
-		if(mLodLevel == 0)
-		{
-			mWantedForRendering = true;
-		}
-		else
-		{
-			Vector3F regionCentre = static_cast<Vector3F>(mRegion.getCentre());
-
-			float distance = (viewPosition - regionCentre).length();
-
-			Vector3I diagonal = mRegion.getUpperCorner() - mRegion.getLowerCorner();
-			float diagonalLength = diagonal.length(); // A measure of our regions size
-
-			float projectedSize = diagonalLength / distance;
-
-			if((projectedSize > lodThreshold) || (mLodLevel > 2)) //subtree height check prevents building LODs for node near the root.
-			{
-				for(int iz = 0; iz < 2; iz++)
-				{
-					for(int iy = 0; iy < 2; iy++)
-					{
-						for(int ix = 0; ix < 2; ix++)
-						{
-							OctreeNode* child = mOctree->mNodes[children[ix][iy][iz]];
-							if(child)
-							{
-								child->determineWantedForRendering(viewPosition, lodThreshold);
-							}
-						}
-					}
-				}
-			}
-			else
-			{
-				mWantedForRendering = true;
-			}
-		}
-	}
-
-	template <typename VoxelType>
 	void OctreeNode<VoxelType>::determineWhetherToRender(void)
 	{
 		//At some point we should handle the issue that we might want to render but the mesh might not be ready.
