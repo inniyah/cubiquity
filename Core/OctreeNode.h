@@ -17,16 +17,10 @@ namespace Cubiquity
 		OctreeNode(Region region, uint16_t parent, Octree<VoxelType>* octree);
 		~OctreeNode();
 
-		bool hasAnyChildren(void);
-
-		bool allChildrenUpToDate(void);
-
 		bool isMeshUpToDate(void);
 		bool isSceduledForUpdate(void);
 
 		void setMeshLastUpdated(Timestamp newTimeStamp);
-
-		void sceduleUpdateIfNeeded(const Vector3F& viewPosition);
 
 		void updateFromCompletedTask(typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* completedTask);
 

@@ -52,49 +52,6 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	bool OctreeNode<VoxelType>::hasAnyChildren(void)
-	{
-		for(int z = 0; z < 2; z++)
-		{
-			for(int y = 0; y < 2; y++)
-			{
-				for(int x = 0; x < 2; x++)
-				{
-					if(children[x][y][z] != 0)
-					{
-						return true;
-					}
-				}
-			}
-		}
-
-		return false;
-	}
-
-	template <typename VoxelType>
-	bool OctreeNode<VoxelType>::allChildrenUpToDate(void)
-	{
-		for(int z = 0; z < 2; z++)
-		{
-			for(int y = 0; y < 2; y++)
-			{
-				for(int x = 0; x < 2; x++)
-				{
-					if(children[x][y][z] != 0)
-					{
-						if(mOctree->mNodes[children[x][y][z]]->isMeshUpToDate() == false)
-						{
-							return false;
-						}
-					}
-				}
-			}
-		}
-
-		return true;
-	}
-
-	template <typename VoxelType>
 	bool OctreeNode<VoxelType>::isMeshUpToDate(void)
 	{
 		return mMeshLastUpdated > mDataLastModified;
@@ -111,55 +68,6 @@ namespace Cubiquity
 	void OctreeNode<VoxelType>::setMeshLastUpdated(Timestamp newTimeStamp)
 	{
 		mMeshLastUpdated = newTimeStamp;
-	}
-
-	template <typename VoxelType>
-	void OctreeNode<VoxelType>::sceduleUpdateIfNeeded(const Vector3F& viewPosition)
-	{
-		if((isMeshUpToDate() == false) && (isSceduledForUpdate() == false) && ((mLastSurfaceExtractionTask == 0) || (mLastSurfaceExtractionTask->mProcessingStartedTimestamp < Clock::getTimestamp())) && (mWantedForRendering))
-		{
-			mLastSceduledForUpdate = Clock::getTimestamp();
-
-			mLastSurfaceExtractionTask = new VoxelTraits<VoxelType>::SurfaceExtractionTaskType(this, mOctree->mVolume->mPolyVoxVolume);
-
-			// If the node was rendered last frame then this update is probably the result of an editing operation, rather than
-			// the node only just becoming visible. For editing operations it is important to process them immediatly so that we
-			// don't see temporary cracks in the mesh as different parts up updated at different times.
-			if(mExtractOnMainThread) //This flag should still be set from last frame.
-			{
-				// We're going to process immediatly, but the completed task will still get queued in the finished
-				// queue, and we want to make sure it's the first out. So we still set a priority and make it high.
-				mLastSurfaceExtractionTask->mPriority = (std::numeric_limits<uint32_t>::max)();
-				gMainThreadTaskProcessor.addTask(mLastSurfaceExtractionTask);
-			}
-			else
-			{
-				// Note: tasks get sorted by their distance from the camera at the time they are added. If we
-				// want to account for the camera moving then we would have to sort the task queue each frame.
-				Vector3F regionCentre = static_cast<Vector3F>(mRegion.getCentre());
-				float distance = (viewPosition - regionCentre).length(); //We don't use distance squared to keep the values smaller
-				mLastSurfaceExtractionTask->mPriority = (std::numeric_limits<uint32_t>::max)() - static_cast<uint32_t>(distance);
-				gBackgroundTaskProcessor.addTask(mLastSurfaceExtractionTask);
-			}
-
-			// Clear this flag otherwise this node will always be done on the main thread.
-			mExtractOnMainThread = false;
-		}
-
-		for(int iz = 0; iz < 2; iz++)
-		{
-			for(int iy = 0; iy < 2; iy++)
-			{
-				for(int ix = 0; ix < 2; ix++)
-				{
-					OctreeNode* child = mOctree->mNodes[children[ix][iy][iz]];
-					if(child)
-					{
-						child->sceduleUpdateIfNeeded(viewPosition);
-					}
-				}
-			}
-		}
 	}
 
 	template <typename VoxelType>

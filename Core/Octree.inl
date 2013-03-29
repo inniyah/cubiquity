@@ -84,7 +84,7 @@ namespace Cubiquity
 		clearWantedForRendering(mRootOctreeNode);
 		determineWantedForRendering(mRootOctreeNode, viewPosition, lodThreshold);
 
-		mNodes[mRootOctreeNode]->sceduleUpdateIfNeeded(viewPosition);
+		sceduleUpdateIfNeeded(mRootOctreeNode, viewPosition);
 
 
 		// Make sure any surface extraction tasks which were scheduled on the main thread get processed before we determine what to render.
@@ -310,6 +310,57 @@ namespace Cubiquity
 						{
 							markAsModified(child, region, newTimeStamp, updatePriority);
 						}
+					}
+				}
+			}
+		}
+	}
+
+	template <typename VoxelType>
+	void Octree<VoxelType>::sceduleUpdateIfNeeded(uint16_t index, const Vector3F& viewPosition)
+	{
+		OctreeNode<VoxelType>* node = mNodes[index];
+
+		if((node->isMeshUpToDate() == false) && (node->isSceduledForUpdate() == false) && ((node->mLastSurfaceExtractionTask == 0) || (node->mLastSurfaceExtractionTask->mProcessingStartedTimestamp < Clock::getTimestamp())) && (node->mWantedForRendering))
+		{
+			node->mLastSceduledForUpdate = Clock::getTimestamp();
+
+			node->mLastSurfaceExtractionTask = new VoxelTraits<VoxelType>::SurfaceExtractionTaskType(node, mVolume->mPolyVoxVolume);
+
+			// If the node was rendered last frame then this update is probably the result of an editing operation, rather than
+			// the node only just becoming visible. For editing operations it is important to process them immediatly so that we
+			// don't see temporary cracks in the mesh as different parts up updated at different times.
+			if(node->mExtractOnMainThread) //This flag should still be set from last frame.
+			{
+				// We're going to process immediatly, but the completed task will still get queued in the finished
+				// queue, and we want to make sure it's the first out. So we still set a priority and make it high.
+				node->mLastSurfaceExtractionTask->mPriority = (std::numeric_limits<uint32_t>::max)();
+				gMainThreadTaskProcessor.addTask(node->mLastSurfaceExtractionTask);
+			}
+			else
+			{
+				// Note: tasks get sorted by their distance from the camera at the time they are added. If we
+				// want to account for the camera moving then we would have to sort the task queue each frame.
+				Vector3F regionCentre = static_cast<Vector3F>(node->mRegion.getCentre());
+				float distance = (viewPosition - regionCentre).length(); //We don't use distance squared to keep the values smaller
+				node->mLastSurfaceExtractionTask->mPriority = (std::numeric_limits<uint32_t>::max)() - static_cast<uint32_t>(distance);
+				gBackgroundTaskProcessor.addTask(node->mLastSurfaceExtractionTask);
+			}
+
+			// Clear this flag otherwise this node will always be done on the main thread.
+			node->mExtractOnMainThread = false;
+		}
+
+		for(int iz = 0; iz < 2; iz++)
+		{
+			for(int iy = 0; iy < 2; iy++)
+			{
+				for(int ix = 0; ix < 2; ix++)
+				{
+					uint16_t child = node->children[ix][iy][iz];
+					if(child)
+					{
+						sceduleUpdateIfNeeded(child, viewPosition);
 					}
 				}
 			}
