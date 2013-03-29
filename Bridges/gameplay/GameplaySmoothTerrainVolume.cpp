@@ -109,7 +109,7 @@ namespace Cubiquity
 			{
 				for(int ix = 0; ix < 2; ix++)
 				{
-					OctreeNode< MultiMaterial >* child = octreeNode->mOctree->getChildNode(octreeNode, ix, iy, iz);
+					OctreeNode< MultiMaterial >* child = getCubiquityVolume()->getOctree()->getChildNode(octreeNode, ix, iy, iz);
 					if(child != 0)
 					{
 						Node* childNode = reinterpret_cast<Node*>(child->mGameEngineNode);

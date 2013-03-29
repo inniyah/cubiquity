@@ -13,6 +13,8 @@ namespace Cubiquity
 	template <typename VoxelType>
 	class OctreeNode
 	{
+		friend class Octree<VoxelType>;
+
 	public:	
 		OctreeNode(Region region, uint16_t parent, Octree<VoxelType>* octree);
 		~OctreeNode();
@@ -29,9 +31,6 @@ namespace Cubiquity
 		Timestamp mMeshLastUpdated;
 		Timestamp mLastSceduledForUpdate;
 
-		uint16_t mParent;
-		uint16_t children[2][2][2];
-
 		Octree<VoxelType>* mOctree;
 
 		// Use flags here?
@@ -46,6 +45,10 @@ namespace Cubiquity
 		uint8_t mLodLevel; // Zero for leaf nodes.
 
 		typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* mLastSurfaceExtractionTask;
+
+	private:
+		uint16_t mParent;
+		uint16_t children[2][2][2];
 	};
 }
 

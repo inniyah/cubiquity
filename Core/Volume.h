@@ -36,6 +36,8 @@ namespace Cubiquity
 
 		OctreeNode<VoxelType>* getRootOctreeNode(void) { return mOctree->getRootNode(); }
 
+		Octree<VoxelType>* getOctree(void) { return mOctree; };
+
 		void setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, UpdatePriority updatePriority = UpdatePriorities::Background);
 
 		void markAsModified(const Region& region, UpdatePriority updatePriority = UpdatePriorities::Background);
