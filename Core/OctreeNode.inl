@@ -13,7 +13,7 @@
 namespace Cubiquity
 {
 	template <typename VoxelType>
-	OctreeNode<VoxelType>::OctreeNode(Region region, OctreeNode* parent, Octree<VoxelType>* octree)
+	OctreeNode<VoxelType>::OctreeNode(Region region, uint16_t parent, Octree<VoxelType>* octree)
 		:mRegion(region)
 		,mParent(parent)
 		,mOctree(octree)
@@ -41,8 +41,8 @@ namespace Cubiquity
 
 		if(mParent)
 		{
-			POLYVOX_ASSERT(parent->mLodLevel < 100, "LOD level has gone below zero and wrapped around.");
-			mLodLevel = parent->mLodLevel-1;
+			POLYVOX_ASSERT(mOctree->mNodes[parent]->mLodLevel < 100, "LOD level has gone below zero and wrapped around.");
+			mLodLevel = mOctree->mNodes[parent]->mLodLevel-1;
 		}
 	}
 
@@ -71,7 +71,7 @@ namespace Cubiquity
 				{
 					for(int ix = 0; ix < 2; ix++)
 					{
-						OctreeNode* child = children[ix][iy][iz];
+						OctreeNode* child = mOctree->mNodes[children[ix][iy][iz]];
 						if(child)
 						{
 							child->markAsModified(x, y, z, newTimeStamp, updatePriority);
@@ -99,7 +99,7 @@ namespace Cubiquity
 				{
 					for(int ix = 0; ix < 2; ix++)
 					{
-						OctreeNode* child = children[ix][iy][iz];
+						OctreeNode* child = mOctree->mNodes[children[ix][iy][iz]];
 						if(child)
 						{
 							child->markAsModified(region, newTimeStamp, updatePriority);
@@ -141,7 +141,7 @@ namespace Cubiquity
 				{
 					if(children[x][y][z] != 0)
 					{
-						if(children[x][y][z]->isMeshUpToDate() == false)
+						if(mOctree->mNodes[children[x][y][z]]->isMeshUpToDate() == false)
 						{
 							return false;
 						}
@@ -164,7 +164,7 @@ namespace Cubiquity
 			{
 				for(int ix = 0; ix < 2; ix++)
 				{
-					OctreeNode* child = children[ix][iy][iz];
+					OctreeNode* child = mOctree->mNodes[children[ix][iy][iz]];
 					if(child)
 					{
 						child->clearWantedForRendering();
@@ -200,7 +200,7 @@ namespace Cubiquity
 					{
 						for(int ix = 0; ix < 2; ix++)
 						{
-							OctreeNode* child = children[ix][iy][iz];
+							OctreeNode* child = mOctree->mNodes[children[ix][iy][iz]];
 							if(child)
 							{
 								child->determineWantedForRendering(viewPosition, lodThreshold);
@@ -228,7 +228,7 @@ namespace Cubiquity
 			{
 				for(int ix = 0; ix < 2; ix++)
 				{
-					OctreeNode* child = children[ix][iy][iz];
+					OctreeNode* child = mOctree->mNodes[children[ix][iy][iz]];
 					if(child)
 					{
 						child->determineWhetherToRender();
@@ -296,7 +296,7 @@ namespace Cubiquity
 			{
 				for(int ix = 0; ix < 2; ix++)
 				{
-					OctreeNode* child = children[ix][iy][iz];
+					OctreeNode* child = mOctree->mNodes[children[ix][iy][iz]];
 					if(child)
 					{
 						child->sceduleUpdateIfNeeded(viewPosition);

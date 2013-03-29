@@ -30,17 +30,17 @@ namespace Cubiquity
 	public:
 		Octree(Volume<VoxelType>* volume, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize);
 
-		OctreeNode<VoxelType>* createNode(Region region, OctreeNode<VoxelType>* parent);
+		uint16_t createNode(Region region, uint16_t parent);
 
 		void update(const Vector3F& viewPosition, float lodThreshold);
 
 		void markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority);
 		void markDataAsModified(const Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority);
 
-		void buildOctreeNodeTree(OctreeNode< VoxelType >* parent, const Region& regionToCover, OctreeConstructionMode octreeConstructionMode);
+		void buildOctreeNodeTree(uint16_t parent, const Region& regionToCover, OctreeConstructionMode octreeConstructionMode);
 
 		Volume<VoxelType>* mVolume;
-		OctreeNode<VoxelType>* mRootOctreeNode;
+		uint16_t mRootOctreeNode;
 		const unsigned int mBaseNodeSize;
 
 		std::vector< OctreeNode<VoxelType>*> mNodes;

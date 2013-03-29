@@ -111,10 +111,10 @@ namespace Cubiquity
 				{
 					if(octreeNode->children[ix][iy][iz] != 0)
 					{
-						Node* childNode = reinterpret_cast<Node*>(octreeNode->children[ix][iy][iz]->mGameEngineNode);
+						Node* childNode = reinterpret_cast<Node*>(octreeNode->mOctree->mNodes[octreeNode->children[ix][iy][iz]]->mGameEngineNode);
 						GP_ASSERT(childNode);
 
-						syncNode(octreeNode->children[ix][iy][iz], childNode);
+						syncNode(octreeNode->mOctree->mNodes[octreeNode->children[ix][iy][iz]], childNode);
 					}
 				}
 			}

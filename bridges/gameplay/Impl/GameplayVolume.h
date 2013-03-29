@@ -84,7 +84,7 @@ namespace Cubiquity
 
 		if(octreeNode->mParent)
 		{
-			Vector3I translation = octreeNode->mRegion.getLowerCorner() - octreeNode->mParent->mRegion.getLowerCorner();
+			Vector3I translation = octreeNode->mRegion.getLowerCorner() - octreeNode->mOctree->mNodes[octreeNode->mParent]->mRegion.getLowerCorner();
 			gameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
 		}
 		else
@@ -101,7 +101,7 @@ namespace Cubiquity
 				{
 					if(octreeNode->children[ix][iy][iz] != 0)
 					{
-						gameplay::Node* childNode = reinterpret_cast<gameplay::Node*>(octreeNode->children[ix][iy][iz]->mGameEngineNode);
+						gameplay::Node* childNode = reinterpret_cast<gameplay::Node*>(octreeNode->mOctree->mNodes[octreeNode->children[ix][iy][iz]]->mGameEngineNode);
 						if(childNode == 0)
 						{		
 							childNode = createNodeWithExtraData< typename _VolumeType::VoxelType >();
@@ -109,7 +109,7 @@ namespace Cubiquity
 							gameplayNode->addChild(childNode);
 						}
 
-						buildNode(octreeNode->children[ix][iy][iz], childNode);
+						buildNode(octreeNode->mOctree->mNodes[octreeNode->children[ix][iy][iz]], childNode);
 					}
 				}
 			}

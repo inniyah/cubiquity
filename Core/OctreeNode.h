@@ -14,7 +14,7 @@ namespace Cubiquity
 	class OctreeNode
 	{
 	public:	
-		OctreeNode(Region region, OctreeNode* parent, Octree<VoxelType>* octree);
+		OctreeNode(Region region, uint16_t parent, Octree<VoxelType>* octree);
 		~OctreeNode();
 
 		void markAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority);
@@ -42,8 +42,8 @@ namespace Cubiquity
 		Timestamp mMeshLastUpdated;
 		Timestamp mLastSceduledForUpdate;
 
-		OctreeNode* mParent;
-		OctreeNode* children[2][2][2];
+		uint16_t mParent;
+		uint16_t children[2][2][2];
 
 		Octree<VoxelType>* mOctree;
 

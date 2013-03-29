@@ -42,9 +42,9 @@ CUBIQUITYC_API int getMeshData(unsigned int volumeHandle)
 {
 	SmoothTerrainVolume* volume = gSmoothTerrainVolumes[volumeHandle];
 
-	volume->update(Vector3F(0.0f, 0.0f, 0.0f), 100000);
+	volume->update(Vector3F(0.0f, 0.0f, 0.0f), 0);
 
-	OctreeNode<MultiMaterial>* node = volume->mOctree->mRootOctreeNode;
+	OctreeNode<MultiMaterial>* node = volume->getRootOctreeNode();
 
 	const ::PolyVox::SurfaceMesh< typename VoxelTraits<MultiMaterial>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
