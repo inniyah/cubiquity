@@ -106,7 +106,7 @@ namespace Cubiquity
 			delete task;
 		}
 
-		mNodes[mRootOctreeNode]->determineWhetherToRender();
+		determineWhetherToRender(mRootOctreeNode);
 	}
 
 	template <typename VoxelType>
@@ -213,7 +213,7 @@ namespace Cubiquity
 					{
 						for(int ix = 0; ix < 2; ix++)
 						{
-							uint16_t child = mNodes[index]->children[ix][iy][iz];
+							uint16_t child = node->children[ix][iy][iz];
 							if(child)
 							{
 								determineWantedForRendering(child, viewPosition, lodThreshold);
@@ -225,6 +225,30 @@ namespace Cubiquity
 			else
 			{
 				node->mWantedForRendering = true;
+			}
+		}
+	}
+
+	template <typename VoxelType>
+	void Octree<VoxelType>::determineWhetherToRender(uint16_t index)
+	{
+		OctreeNode<VoxelType>* node = mNodes[index];
+
+		//At some point we should handle the issue that we might want to render but the mesh might not be ready.
+		node->mRenderThisNode = node->mWantedForRendering;
+
+		for(int iz = 0; iz < 2; iz++)
+		{
+			for(int iy = 0; iy < 2; iy++)
+			{
+				for(int ix = 0; ix < 2; ix++)
+				{
+					uint16_t child = node->children[ix][iy][iz];
+					if(child)
+					{
+						determineWhetherToRender(child);
+					}
+				}
 			}
 		}
 	}

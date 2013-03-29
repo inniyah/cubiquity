@@ -50,6 +50,7 @@ namespace Cubiquity
 	private:
 		void clearWantedForRendering(uint16_t index);
 		void determineWantedForRendering(uint16_t index, const Vector3F& viewPosition, float lodThreshold);
+		void determineWhetherToRender(uint16_t index);
 	};
 }
 

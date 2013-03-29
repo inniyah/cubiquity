@@ -154,28 +154,6 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void OctreeNode<VoxelType>::determineWhetherToRender(void)
-	{
-		//At some point we should handle the issue that we might want to render but the mesh might not be ready.
-		mRenderThisNode = mWantedForRendering;
-
-		for(int iz = 0; iz < 2; iz++)
-		{
-			for(int iy = 0; iy < 2; iy++)
-			{
-				for(int ix = 0; ix < 2; ix++)
-				{
-					OctreeNode* child = mOctree->mNodes[children[ix][iy][iz]];
-					if(child)
-					{
-						child->determineWhetherToRender();
-					}
-				}
-			}
-		}
-	}
-
-	template <typename VoxelType>
 	bool OctreeNode<VoxelType>::isMeshUpToDate(void)
 	{
 		return mMeshLastUpdated > mDataLastModified;
