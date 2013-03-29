@@ -6,7 +6,7 @@ namespace Cubiquity
 	template <typename VoxelType>
 	Octree<VoxelType>::Octree(Volume<VoxelType>* volume, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize)
 		:mVolume(volume)
-		,mRootOctreeNode(0)
+		,mRootNodeIndex(InvalidNodeIndex)
 		,mBaseNodeSize(baseNodeSize)
 	{
 		Region regionToCover(mVolume->getEnclosingRegion());
@@ -61,11 +61,10 @@ namespace Cubiquity
 
 		octreeRegion.grow(widthIncrease / 2, heightIncrease / 2, depthIncrease / 2);
 
-		mNodes.push_back(0); //DUMMY NODE AT ZERO - HACK!!
-		mRootOctreeNode = createNode(octreeRegion, 0);
-		mNodes[mRootOctreeNode]->mLodLevel = noOfLodLevels - 1;
+		mRootNodeIndex = createNode(octreeRegion, InvalidNodeIndex);
+		mNodes[mRootNodeIndex]->mLodLevel = noOfLodLevels - 1;
 
-		buildOctreeNodeTree(mRootOctreeNode, regionToCover, octreeConstructionMode);
+		buildOctreeNodeTree(mRootNodeIndex, regionToCover, octreeConstructionMode);
 	}
 
 	template <typename VoxelType>
@@ -73,14 +72,14 @@ namespace Cubiquity
 	{
 		OctreeNode< VoxelType >* node = new OctreeNode< VoxelType >(region, parent, this);
 
-		if(parent)
+		if(parent != InvalidNodeIndex)
 		{
 			POLYVOX_ASSERT(mNodes[parent]->mLodLevel < 100, "LOD level has gone below zero and wrapped around.");
 			node->mLodLevel = mNodes[parent]->mLodLevel-1;
 		}
 
 		mNodes.push_back(node);
-		POLYVOX_ASSERT(mNodes.size() <= std::numeric_limits<uint16_t>::max(), "Too many octree nodes!");
+		POLYVOX_ASSERT(mNodes.size() < InvalidNodeIndex, "Too many octree nodes!");
 		uint16_t index = mNodes.size() - 1;
 		return index;
 	}
@@ -88,22 +87,22 @@ namespace Cubiquity
 	template <typename VoxelType>
 	OctreeNode<VoxelType>* Octree<VoxelType>::getChildNode(OctreeNode<VoxelType>* parent, int childX, int childY, int childZ)
 	{
-		return mNodes[parent->children[childX][childY][childZ]];
+		return parent->children[childX][childY][childZ] == InvalidNodeIndex ? 0 : mNodes[parent->children[childX][childY][childZ]];
 	}
 
 	template <typename VoxelType>
 	OctreeNode<VoxelType>* Octree<VoxelType>::getParentNode(OctreeNode<VoxelType>* child)
 	{
-		return mNodes[child->mParent];
+		return child->mParent == InvalidNodeIndex ? 0 : mNodes[child->mParent];
 	}
 
 	template <typename VoxelType>
 	void Octree<VoxelType>::update(const Vector3F& viewPosition, float lodThreshold)
 	{
-		clearWantedForRendering(mRootOctreeNode);
-		determineWantedForRendering(mRootOctreeNode, viewPosition, lodThreshold);
+		clearWantedForRendering(mRootNodeIndex);
+		determineWantedForRendering(mRootNodeIndex, viewPosition, lodThreshold);
 
-		sceduleUpdateIfNeeded(mRootOctreeNode, viewPosition);
+		sceduleUpdateIfNeeded(mRootNodeIndex, viewPosition);
 
 
 		// Make sure any surface extraction tasks which were scheduled on the main thread get processed before we determine what to render.
@@ -125,19 +124,19 @@ namespace Cubiquity
 			delete task;
 		}
 
-		determineWhetherToRender(mRootOctreeNode);
+		determineWhetherToRender(mRootNodeIndex);
 	}
 
 	template <typename VoxelType>
 	void Octree<VoxelType>::markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority)
 	{
-		markAsModified(mRootOctreeNode, x, y, z, newTimeStamp, updatePriority);
+		markAsModified(mRootNodeIndex, x, y, z, newTimeStamp, updatePriority);
 	}
 
 	template <typename VoxelType>
 	void Octree<VoxelType>::markDataAsModified(const Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority)
 	{
-		markAsModified(mRootOctreeNode, region, newTimeStamp, updatePriority);
+		markAsModified(mRootNodeIndex, region, newTimeStamp, updatePriority);
 	}
 
 	template <typename VoxelType>
@@ -195,10 +194,10 @@ namespace Cubiquity
 				{
 					for(int ix = 0; ix < 2; ix++)
 					{
-						uint16_t child = mNodes[index]->children[ix][iy][iz];
-						if(child)
+						uint16_t childIndex = mNodes[index]->children[ix][iy][iz];
+						if(childIndex != InvalidNodeIndex)
 						{
-							clearWantedForRendering(child);
+							clearWantedForRendering(childIndex);
 						}
 					}
 				}
@@ -232,10 +231,10 @@ namespace Cubiquity
 					{
 						for(int ix = 0; ix < 2; ix++)
 						{
-							uint16_t child = node->children[ix][iy][iz];
-							if(child)
+							uint16_t childIndex = node->children[ix][iy][iz];
+							if(childIndex != InvalidNodeIndex)
 							{
-								determineWantedForRendering(child, viewPosition, lodThreshold);
+								determineWantedForRendering(childIndex, viewPosition, lodThreshold);
 							}
 						}
 					}
@@ -262,10 +261,10 @@ namespace Cubiquity
 			{
 				for(int ix = 0; ix < 2; ix++)
 				{
-					uint16_t child = node->children[ix][iy][iz];
-					if(child)
+					uint16_t childIndex = node->children[ix][iy][iz];
+					if(childIndex != InvalidNodeIndex)
 					{
-						determineWhetherToRender(child);
+						determineWhetherToRender(childIndex);
 					}
 				}
 			}
@@ -294,10 +293,10 @@ namespace Cubiquity
 				{
 					for(int ix = 0; ix < 2; ix++)
 					{
-						uint16_t child = node->children[ix][iy][iz];
-						if(child)
+						uint16_t childIndex = node->children[ix][iy][iz];
+						if(childIndex != InvalidNodeIndex)
 						{
-							markAsModified(child, x, y, z, newTimeStamp, updatePriority);
+							markAsModified(childIndex, x, y, z, newTimeStamp, updatePriority);
 						}
 					}
 				}
@@ -324,10 +323,10 @@ namespace Cubiquity
 				{
 					for(int ix = 0; ix < 2; ix++)
 					{
-						uint16_t child = node->children[ix][iy][iz];
-						if(child)
+						uint16_t childIndex = node->children[ix][iy][iz];
+						if(childIndex != InvalidNodeIndex)
 						{
-							markAsModified(child, region, newTimeStamp, updatePriority);
+							markAsModified(childIndex, region, newTimeStamp, updatePriority);
 						}
 					}
 				}
@@ -376,10 +375,10 @@ namespace Cubiquity
 			{
 				for(int ix = 0; ix < 2; ix++)
 				{
-					uint16_t child = node->children[ix][iy][iz];
-					if(child)
+					uint16_t childIndex = node->children[ix][iy][iz];
+					if(childIndex != InvalidNodeIndex)
 					{
-						sceduleUpdateIfNeeded(child, viewPosition);
+						sceduleUpdateIfNeeded(childIndex, viewPosition);
 					}
 				}
 			}

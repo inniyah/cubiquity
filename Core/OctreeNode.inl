@@ -34,7 +34,7 @@ namespace Cubiquity
 			{
 				for(int x = 0; x < 2; x++)
 				{
-					children[x][y][z] = 0;
+					children[x][y][z] = Octree<VoxelType>::InvalidNodeIndex;
 				}
 			}
 		}

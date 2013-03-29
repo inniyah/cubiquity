@@ -28,11 +28,11 @@ namespace Cubiquity
 	class Octree
 	{
 	public:
+		static const uint16_t InvalidNodeIndex = 0xFFFF;
+
 		Octree(Volume<VoxelType>* volume, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize);
 
-		uint16_t createNode(Region region, uint16_t parent);
-
-		OctreeNode<VoxelType>* getRootNode(void) { return mNodes[mRootOctreeNode]; }
+		OctreeNode<VoxelType>* getRootNode(void) { return mNodes[mRootNodeIndex]; }
 
 		OctreeNode<VoxelType>* getChildNode(OctreeNode<VoxelType>* parent, int childX, int childY, int childZ);
 		OctreeNode<VoxelType>* getParentNode(OctreeNode<VoxelType>* child);
@@ -44,13 +44,11 @@ namespace Cubiquity
 
 		void buildOctreeNodeTree(uint16_t parent, const Region& regionToCover, OctreeConstructionMode octreeConstructionMode);
 
-		Volume<VoxelType>* mVolume;
-		uint16_t mRootOctreeNode;
-		const unsigned int mBaseNodeSize;
-
 		concurrent_queue<typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType*, TaskSortCriterion> mFinishedSurfaceExtractionTasks;
 
 	private:
+		uint16_t createNode(Region region, uint16_t parent);
+
 		void clearWantedForRendering(uint16_t index);
 		void determineWantedForRendering(uint16_t index, const Vector3F& viewPosition, float lodThreshold);
 		void determineWhetherToRender(uint16_t index);
@@ -61,6 +59,11 @@ namespace Cubiquity
 		void sceduleUpdateIfNeeded(uint16_t index, const Vector3F& viewPosition);
 
 		std::vector< OctreeNode<VoxelType>*> mNodes;
+
+		uint16_t mRootNodeIndex;
+		const unsigned int mBaseNodeSize;
+
+		Volume<VoxelType>* mVolume;
 	};
 }
 
