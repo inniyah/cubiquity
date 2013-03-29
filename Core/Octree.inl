@@ -72,10 +72,29 @@ namespace Cubiquity
 	uint16_t Octree<VoxelType>::createNode(Region region, uint16_t parent)
 	{
 		OctreeNode< VoxelType >* node = new OctreeNode< VoxelType >(region, parent, this);
+
+		if(parent)
+		{
+			POLYVOX_ASSERT(mNodes[parent]->mLodLevel < 100, "LOD level has gone below zero and wrapped around.");
+			node->mLodLevel = mNodes[parent]->mLodLevel-1;
+		}
+
 		mNodes.push_back(node);
 		POLYVOX_ASSERT(mNodes.size() <= std::numeric_limits<uint16_t>::max(), "Too many octree nodes!");
 		uint16_t index = mNodes.size() - 1;
 		return index;
+	}
+
+	template <typename VoxelType>
+	OctreeNode<VoxelType>* Octree<VoxelType>::getChildNode(OctreeNode<VoxelType>* parent, int childX, int childY, int childZ)
+	{
+		return mNodes[parent->children[childX][childY][childZ]];
+	}
+
+	template <typename VoxelType>
+	OctreeNode<VoxelType>* Octree<VoxelType>::getParentNode(OctreeNode<VoxelType>* child)
+	{
+		return mNodes[child->mParent];
 	}
 
 	template <typename VoxelType>

@@ -100,12 +100,13 @@ namespace Cubiquity
 			{
 				for(int ix = 0; ix < 2; ix++)
 				{
-					if(octreeNode->children[ix][iy][iz] != 0)
+					OctreeNode< Colour >* child = octreeNode->mOctree->getChildNode(octreeNode, ix, iy, iz);
+					if(child)
 					{
-						Node* childNode = reinterpret_cast<Node*>(octreeNode->mOctree->mNodes[octreeNode->children[ix][iy][iz]]->mGameEngineNode);
+						Node* childNode = reinterpret_cast<Node*>(child->mGameEngineNode);
 						GP_ASSERT(childNode);
 
-						syncNode(octreeNode->mOctree->mNodes[octreeNode->children[ix][iy][iz]], childNode);
+						syncNode(child, childNode);
 					}
 				}
 			}

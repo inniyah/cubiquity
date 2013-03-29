@@ -34,7 +34,7 @@ namespace Cubiquity
 
 		::PolyVox::SimpleVolume<VoxelType>* _getPolyVoxVolume(void) { return mPolyVoxVolume; }
 
-		OctreeNode<VoxelType>* getRootOctreeNode(void) { return mOctree->mNodes[mOctree->mRootOctreeNode]; }
+		OctreeNode<VoxelType>* getRootOctreeNode(void) { return mOctree->getRootNode(); }
 
 		void setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, UpdatePriority updatePriority = UpdatePriorities::Background);
 

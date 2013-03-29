@@ -38,12 +38,6 @@ namespace Cubiquity
 				}
 			}
 		}
-
-		if(mParent)
-		{
-			POLYVOX_ASSERT(mOctree->mNodes[parent]->mLodLevel < 100, "LOD level has gone below zero and wrapped around.");
-			mLodLevel = mOctree->mNodes[parent]->mLodLevel-1;
-		}
 	}
 
 	template <typename VoxelType>

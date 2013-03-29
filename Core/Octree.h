@@ -32,6 +32,11 @@ namespace Cubiquity
 
 		uint16_t createNode(Region region, uint16_t parent);
 
+		OctreeNode<VoxelType>* getRootNode(void) { return mNodes[mRootOctreeNode]; }
+
+		OctreeNode<VoxelType>* getChildNode(OctreeNode<VoxelType>* parent, int childX, int childY, int childZ);
+		OctreeNode<VoxelType>* getParentNode(OctreeNode<VoxelType>* child);
+
 		void update(const Vector3F& viewPosition, float lodThreshold);
 
 		void markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority);
