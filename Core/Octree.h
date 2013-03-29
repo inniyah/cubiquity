@@ -48,8 +48,6 @@ namespace Cubiquity
 		uint16_t mRootOctreeNode;
 		const unsigned int mBaseNodeSize;
 
-		std::vector< OctreeNode<VoxelType>*> mNodes;
-
 		concurrent_queue<typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType*, TaskSortCriterion> mFinishedSurfaceExtractionTasks;
 
 	private:
@@ -61,6 +59,8 @@ namespace Cubiquity
 		void markAsModified(uint16_t index, const Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority);
 
 		void sceduleUpdateIfNeeded(uint16_t index, const Vector3F& viewPosition);
+
+		std::vector< OctreeNode<VoxelType>*> mNodes;
 	};
 }
 
