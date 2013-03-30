@@ -101,7 +101,6 @@ namespace Cubiquity
 	{
 		acceptVisitor(ClearWantedForRenderingVisitor<VoxelType>());
 
-		//determineWantedForRendering(mRootNodeIndex, viewPosition, lodThreshold);
 		acceptVisitor(DetermineWantedForRenderingVisitor<VoxelType>(viewPosition, lodThreshold));
 
 		sceduleUpdateIfNeeded(mRootNodeIndex, viewPosition);
@@ -126,7 +125,7 @@ namespace Cubiquity
 			delete task;
 		}
 
-		determineWhetherToRender(mRootNodeIndex);
+		acceptVisitor(DetermineWhetherToRenderVisitor<VoxelType>());
 	}
 
 	template <typename VoxelType>
@@ -179,73 +178,6 @@ namespace Cubiquity
 							mNodes[parent]->children[x][y][z] = octreeNode;
 							buildOctreeNodeTree(octreeNode, regionToCover, octreeConstructionMode);
 						}
-					}
-				}
-			}
-		}
-	}
-
-	template <typename VoxelType>
-	void Octree<VoxelType>::determineWantedForRendering(uint16_t index, const Vector3F& viewPosition, float lodThreshold)
-	{
-		OctreeNode<VoxelType>* node = mNodes[index];
-		if(node->mLodLevel == 0)
-		{
-			node->mWantedForRendering = true;
-		}
-		else
-		{
-			Vector3F regionCentre = static_cast<Vector3F>(node->mRegion.getCentre());
-
-			float distance = (viewPosition - regionCentre).length();
-
-			Vector3I diagonal = node->mRegion.getUpperCorner() - node->mRegion.getLowerCorner();
-			float diagonalLength = diagonal.length(); // A measure of our regions size
-
-			float projectedSize = diagonalLength / distance;
-
-			if((projectedSize > lodThreshold) || (node->mLodLevel > 2)) //subtree height check prevents building LODs for node near the root.
-			{
-				for(int iz = 0; iz < 2; iz++)
-				{
-					for(int iy = 0; iy < 2; iy++)
-					{
-						for(int ix = 0; ix < 2; ix++)
-						{
-							uint16_t childIndex = node->children[ix][iy][iz];
-							if(childIndex != InvalidNodeIndex)
-							{
-								determineWantedForRendering(childIndex, viewPosition, lodThreshold);
-							}
-						}
-					}
-				}
-			}
-			else
-			{
-				node->mWantedForRendering = true;
-			}
-		}
-	}
-
-	template <typename VoxelType>
-	void Octree<VoxelType>::determineWhetherToRender(uint16_t index)
-	{
-		OctreeNode<VoxelType>* node = mNodes[index];
-
-		//At some point we should handle the issue that we might want to render but the mesh might not be ready.
-		node->mRenderThisNode = node->mWantedForRendering;
-
-		for(int iz = 0; iz < 2; iz++)
-		{
-			for(int iy = 0; iy < 2; iy++)
-			{
-				for(int ix = 0; ix < 2; ix++)
-				{
-					uint16_t childIndex = node->children[ix][iy][iz];
-					if(childIndex != InvalidNodeIndex)
-					{
-						determineWhetherToRender(childIndex);
 					}
 				}
 			}
