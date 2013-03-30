@@ -99,11 +99,10 @@ namespace Cubiquity
 	template <typename VoxelType>
 	void Octree<VoxelType>::update(const Vector3F& viewPosition, float lodThreshold)
 	{
-		//clearWantedForRendering(mRootNodeIndex);
-
 		acceptVisitor(ClearWantedForRenderingVisitor<VoxelType>());
 
-		determineWantedForRendering(mRootNodeIndex, viewPosition, lodThreshold);
+		//determineWantedForRendering(mRootNodeIndex, viewPosition, lodThreshold);
+		acceptVisitor(DetermineWantedForRenderingVisitor<VoxelType>(viewPosition, lodThreshold));
 
 		sceduleUpdateIfNeeded(mRootNodeIndex, viewPosition);
 
@@ -373,18 +372,21 @@ namespace Cubiquity
 	{
 		OctreeNode<VoxelType>* node = mNodes[index];
 
-		visitor(node);
+		bool processChildren = visitor(node);
 
-		for(int iz = 0; iz < 2; iz++)
+		if(processChildren)
 		{
-			for(int iy = 0; iy < 2; iy++)
+			for(int iz = 0; iz < 2; iz++)
 			{
-				for(int ix = 0; ix < 2; ix++)
+				for(int iy = 0; iy < 2; iy++)
 				{
-					uint16_t childIndex = node->children[ix][iy][iz];
-					if(childIndex != InvalidNodeIndex)
+					for(int ix = 0; ix < 2; ix++)
 					{
-						visitNode(childIndex, visitor);
+						uint16_t childIndex = node->children[ix][iy][iz];
+						if(childIndex != InvalidNodeIndex)
+						{
+							visitNode(childIndex, visitor);
+						}
 					}
 				}
 			}

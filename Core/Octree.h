@@ -36,6 +36,53 @@ namespace Cubiquity
 	};
 
 	template <typename VoxelType>
+	class DetermineWantedForRenderingVisitor
+	{
+	public:
+		DetermineWantedForRenderingVisitor(const Vector3F& viewPosition, float lodThreshold)
+			:mViewPosition(viewPosition)
+			,mLodThreshold(lodThreshold)
+		{
+		}
+
+		bool operator()(OctreeNode<VoxelType>* octreeNode)
+		{
+			if(octreeNode->mLodLevel == 0)
+			{
+				octreeNode->mWantedForRendering = true;
+				return false;
+			}
+			else
+			{
+				Vector3F regionCentre = static_cast<Vector3F>(octreeNode->mRegion.getCentre());
+
+				float distance = (mViewPosition - regionCentre).length();
+
+				Vector3I diagonal = octreeNode->mRegion.getUpperCorner() - octreeNode->mRegion.getLowerCorner();
+				float diagonalLength = diagonal.length(); // A measure of our regions size
+
+				float projectedSize = diagonalLength / distance;
+
+				bool processChildren = ((projectedSize > mLodThreshold) || (octreeNode->mLodLevel > 2)); //subtree height check prevents building LODs for node near the root.
+
+				if(processChildren)
+				{
+					return true;
+				}
+				else
+				{
+					octreeNode->mWantedForRendering = true;
+					return false;
+				}
+			}
+		}
+
+	private:
+		const Vector3F& mViewPosition;
+		float mLodThreshold;
+	};
+
+	template <typename VoxelType>
 	class Octree
 	{
 	public:
@@ -66,7 +113,6 @@ namespace Cubiquity
 		template<typename VisitorType>
 		void visitNode(uint16_t index, VisitorType visitor);
 
-		void clearWantedForRendering(uint16_t index);
 		void determineWantedForRendering(uint16_t index, const Vector3F& viewPosition, float lodThreshold);
 		void determineWhetherToRender(uint16_t index);
 
