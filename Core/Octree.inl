@@ -99,7 +99,11 @@ namespace Cubiquity
 	template <typename VoxelType>
 	void Octree<VoxelType>::update(const Vector3F& viewPosition, float lodThreshold)
 	{
-		clearWantedForRendering(mRootNodeIndex);
+		//clearWantedForRendering(mRootNodeIndex);
+
+		ClearWantedForRenderingVisitor<VoxelType> clearer;
+		visitEachNode(clearer);
+
 		determineWantedForRendering(mRootNodeIndex, viewPosition, lodThreshold);
 
 		sceduleUpdateIfNeeded(mRootNodeIndex, viewPosition);

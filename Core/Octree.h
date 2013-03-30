@@ -25,12 +25,52 @@ namespace Cubiquity
 	typedef OctreeConstructionModes::OctreeConstructionMode OctreeConstructionMode;
 
 	template <typename VoxelType>
+	class ClearWantedForRenderingVisitor
+	{
+	public:
+		bool execute(OctreeNode<VoxelType>* octreeNode)
+		{
+			octreeNode->mWantedForRendering = false;
+			return true;
+		}
+	};
+
+	template <typename VoxelType>
 	class Octree
 	{
 	public:
 		static const uint16_t InvalidNodeIndex = 0xFFFF;
 
 		Octree(Volume<VoxelType>* volume, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize);
+
+		template<typename VisitorType>
+		void visitNode(uint16_t index, VisitorType visitor)
+		{
+			OctreeNode<VoxelType>* node = mNodes[index];
+
+			visitor.execute(node);
+
+			for(int iz = 0; iz < 2; iz++)
+			{
+				for(int iy = 0; iy < 2; iy++)
+				{
+					for(int ix = 0; ix < 2; ix++)
+					{
+						uint16_t childIndex = node->children[ix][iy][iz];
+						if(childIndex != InvalidNodeIndex)
+						{
+							visitNode(childIndex, visitor);
+						}
+					}
+				}
+			}
+		}
+
+		template<typename VisitorType>
+		void visitEachNode(VisitorType visitor)
+		{
+			visitNode(mRootNodeIndex, visitor);
+		}
 
 		OctreeNode<VoxelType>* getRootNode(void) { return mNodes[mRootNodeIndex]; }
 
