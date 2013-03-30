@@ -28,7 +28,7 @@ namespace Cubiquity
 	class ClearWantedForRenderingVisitor
 	{
 	public:
-		bool execute(OctreeNode<VoxelType>* octreeNode)
+		bool operator()(OctreeNode<VoxelType>* octreeNode)
 		{
 			octreeNode->mWantedForRendering = false;
 			return true;
@@ -44,33 +44,7 @@ namespace Cubiquity
 		Octree(Volume<VoxelType>* volume, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize);
 
 		template<typename VisitorType>
-		void visitNode(uint16_t index, VisitorType visitor)
-		{
-			OctreeNode<VoxelType>* node = mNodes[index];
-
-			visitor.execute(node);
-
-			for(int iz = 0; iz < 2; iz++)
-			{
-				for(int iy = 0; iy < 2; iy++)
-				{
-					for(int ix = 0; ix < 2; ix++)
-					{
-						uint16_t childIndex = node->children[ix][iy][iz];
-						if(childIndex != InvalidNodeIndex)
-						{
-							visitNode(childIndex, visitor);
-						}
-					}
-				}
-			}
-		}
-
-		template<typename VisitorType>
-		void visitEachNode(VisitorType visitor)
-		{
-			visitNode(mRootNodeIndex, visitor);
-		}
+		void acceptVisitor(VisitorType visitor) { visitNode(mRootNodeIndex, visitor); }
 
 		OctreeNode<VoxelType>* getRootNode(void) { return mNodes[mRootNodeIndex]; }
 
@@ -88,6 +62,9 @@ namespace Cubiquity
 
 	private:
 		uint16_t createNode(Region region, uint16_t parent);
+
+		template<typename VisitorType>
+		void visitNode(uint16_t index, VisitorType visitor);
 
 		void clearWantedForRendering(uint16_t index);
 		void determineWantedForRendering(uint16_t index, const Vector3F& viewPosition, float lodThreshold);

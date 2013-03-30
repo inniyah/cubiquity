@@ -101,8 +101,7 @@ namespace Cubiquity
 	{
 		//clearWantedForRendering(mRootNodeIndex);
 
-		ClearWantedForRenderingVisitor<VoxelType> clearer;
-		visitEachNode(clearer);
+		acceptVisitor(ClearWantedForRenderingVisitor<VoxelType>());
 
 		determineWantedForRendering(mRootNodeIndex, viewPosition, lodThreshold);
 
@@ -185,27 +184,6 @@ namespace Cubiquity
 				}
 			}
 		}
-	}
-
-	template <typename VoxelType>
-	void Octree<VoxelType>::clearWantedForRendering(uint16_t index)
-	{
-		mNodes[index]->mWantedForRendering = false;
-
-		for(int iz = 0; iz < 2; iz++)
-			{
-				for(int iy = 0; iy < 2; iy++)
-				{
-					for(int ix = 0; ix < 2; ix++)
-					{
-						uint16_t childIndex = mNodes[index]->children[ix][iy][iz];
-						if(childIndex != InvalidNodeIndex)
-						{
-							clearWantedForRendering(childIndex);
-						}
-					}
-				}
-			}
 	}
 
 	template <typename VoxelType>
@@ -383,6 +361,30 @@ namespace Cubiquity
 					if(childIndex != InvalidNodeIndex)
 					{
 						sceduleUpdateIfNeeded(childIndex, viewPosition);
+					}
+				}
+			}
+		}
+	}
+
+	template <typename VoxelType>
+	template<typename VisitorType>
+	void Octree<VoxelType>::visitNode(uint16_t index, VisitorType visitor)
+	{
+		OctreeNode<VoxelType>* node = mNodes[index];
+
+		visitor(node);
+
+		for(int iz = 0; iz < 2; iz++)
+		{
+			for(int iy = 0; iy < 2; iy++)
+			{
+				for(int ix = 0; ix < 2; ix++)
+				{
+					uint16_t childIndex = node->children[ix][iy][iz];
+					if(childIndex != InvalidNodeIndex)
+					{
+						visitNode(childIndex, visitor);
 					}
 				}
 			}
