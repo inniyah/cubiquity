@@ -16,16 +16,6 @@ namespace Cubiquity
 	class GameplayVolumeSerialisation
 	{
 	public:
-		static void gameplayLoadData(const char* filename, GameplayColouredCubesVolume* volume)
-		{
-			loadData(filename, volume->getCubiquityVolume());
-		}
-
-		static void gameplayLoadData(const char* filename, GameplaySmoothTerrainVolume* volume)
-		{
-			loadData(filename, volume->getCubiquityVolume());
-		}
-
 		/*static GameplayColouredCubesVolume* gameplayImportColourSlices(const char* folderName)
 		{
 			ColouredCubesVolume* cubiquityVolume = importVolDat<ColouredCubesVolume>(folderName);

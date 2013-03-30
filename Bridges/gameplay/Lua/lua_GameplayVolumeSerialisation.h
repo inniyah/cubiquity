@@ -9,7 +9,6 @@ int lua_GameplayVolumeSerialisation__gc(lua_State* state);
 int lua_GameplayVolumeSerialisation__init(lua_State* state);
 int lua_GameplayVolumeSerialisation_static_gameplayExportColourSlices(lua_State* state);
 int lua_GameplayVolumeSerialisation_static_gameplayExportSmoothSlices(lua_State* state);
-int lua_GameplayVolumeSerialisation_static_gameplayLoadData(lua_State* state);
 
 void luaRegister_GameplayVolumeSerialisation();
 

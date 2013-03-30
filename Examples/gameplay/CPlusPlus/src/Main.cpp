@@ -191,21 +191,6 @@ void MeshGame::initialize()
 	mVolumeEditor = 0;
 #endif
 
-	//Rather dirty hack until I figure out how to package volume data with gameplay
-#ifdef WIN32
-#ifdef TERRAIN_SMOOTH
-		//GameplayVolumeSerialisation::gameplayLoadData("res/level2MultiMaterial8Bit.vol", mVolume);
-#else
-		//GameplayVolumeSerialisation::gameplayLoadData("res/level2.vol", mVolume);
-#endif
-#else
-#ifdef TERRAIN_SMOOTH
-		//GameplayVolumeSerialisation::gameplayLoadData("/sdcard/external_sd/level2MultiMaterial8Bit.vol", mVolume);
-#else
-		//GameplayVolumeSerialisation::gameplayLoadData("/sdcard/external_sd/level2.vol", mVolume);
-#endif
-#endif
-
 	//GameplayVolumeSerialisation::gameplayExportSmoothSlices(mVolume, "C:\\temp\\output");
 	//GameplayVolumeSerialisation::gameplayExportColourSlices(mVolume, "C:/temp/mytest/");
 
