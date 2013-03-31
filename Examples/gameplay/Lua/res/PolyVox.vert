@@ -8,7 +8,7 @@ uniform mat4 u_inverseTransposeWorldViewMatrix;     // Matrix to transform a nor
 
 // Outputs
 varying vec4 v_worldSpacePosition;
-varying vec4 v_colour;
+varying vec4 v_color;
 
 vec3 floatToRGB(float inputVal)
 {	
@@ -30,7 +30,7 @@ vec3 floatToRGB(float inputVal)
 void main()
 {
     //Vertex colour
-    v_colour = vec4(floatToRGB(a_position.w), 1.0);
+    v_color = vec4(floatToRGB(a_position.w), 1.0);
     
     //Vertex position
     v_worldSpacePosition = u_worldMatrix * vec4(a_position.xyz, 1.0);
