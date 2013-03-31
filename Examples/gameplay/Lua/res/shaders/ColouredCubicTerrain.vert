@@ -100,5 +100,5 @@ void main()
     applyLight(a_position);
         
     // Transform position to clip space.
-    gl_Position = u_viewProjectionMatrix * v_worldSpacePosition;
+    gl_Position = u_worldViewProjectionMatrix * vec4(a_position.xyz, 1.0);
 }
