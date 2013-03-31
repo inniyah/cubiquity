@@ -1,12 +1,12 @@
-material PolyVox
+material ColouredCubicTerrain
 {
     technique
     {
         pass
         {
             // shaders
-            vertexShader = res/PolyVox.vert
-            fragmentShader = res/PolyVox.frag
+            vertexShader = res/shaders/coloredcubicterrain.vert
+            fragmentShader = res/shaders/coloredcubicterrain.frag
             
             defines = SPECULAR
             

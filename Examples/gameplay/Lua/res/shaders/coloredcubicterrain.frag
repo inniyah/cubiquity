@@ -28,13 +28,13 @@ varying vec3 v_cameraDirection;                 // Camera direction
 vec3 v_normalVector;
 
 // Lighting
-#include "shaders/lighting.frag"
+#include "lighting.frag"
 #if defined(POINT_LIGHT)
-#include "shaders/lighting-point.frag"
+#include "lighting-point.frag"
 #elif defined(SPOT_LIGHT)
-#include "shaders/lighting-spot.frag"
+#include "lighting-spot.frag"
 #else
-#include "shaders/lighting-directional.frag"
+#include "lighting-directional.frag"
 #endif
 
 void main()

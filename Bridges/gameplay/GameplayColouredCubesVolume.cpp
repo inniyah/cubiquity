@@ -77,7 +77,7 @@ namespace Cubiquity
 			if(octreeNode->mPolyVoxMesh)
 			{
 				Model* model = buildModelFromPolyVoxMesh(octreeNode->mPolyVoxMesh);
-				model->setMaterial("res/PolyVox.material");
+				model->setMaterial("res/ColouredCubicTerrain.material");
 				gameplayNode->setModel(model);
 				SAFE_RELEASE(model);
 			}

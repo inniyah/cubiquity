@@ -53,22 +53,22 @@ varying vec3 v_cameraDirection;								// Direction the camera is looking at in 
 #if defined(POINT_LIGHT)
 varying vec3 v_vertexToPointLightDirection;					// Direction of point light w.r.t current vertex in tangent space
 varying float v_pointLightAttenuation;						// Attenuation of point light
-#include "shaders/lighting-point.vert"
+#include "lighting-point.vert"
 #elif defined(SPOT_LIGHT)
 varying vec3 v_vertexToSpotLightDirection;					// Direction of the spot light w.r.t current vertex in tangent space
 varying float v_spotLightAttenuation;						// Attenuation of spot light
 
 // Lighting
-#include "shaders/lighting-spot.vert"
+#include "lighting-spot.vert"
 #else
-#include "shaders/lighting-directional.vert"
+#include "lighting-directional.vert"
 #endif
 
 // Skinning
 #if defined(SKINNING)
-#include "shaders/skinning.vert"
+#include "skinning.vert"
 #else
-#include "shaders/skinning-none.vert" 
+#include "skinning-none.vert" 
 #endif
 
 vec3 floatToRGB(float inputVal)
