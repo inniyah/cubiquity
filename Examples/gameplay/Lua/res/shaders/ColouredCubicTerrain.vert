@@ -112,13 +112,13 @@ void main()
     applyLight(position);
 
     // Texture transformation
-    v_texCoord = a_texCoord;
-    #if defined(TEXTURE_REPEAT)
-    v_texCoord *= u_textureRepeat;
-    #endif
-    #if defined(TEXTURE_OFFSET)
-    v_texCoord += u_textureOffset;
-    #endif
+    //v_texCoord = a_texCoord;
+    //#if defined(TEXTURE_REPEAT)
+    //v_texCoord *= u_textureRepeat;
+    //#endif
+    //#if defined(TEXTURE_OFFSET)
+    //v_texCoord += u_textureOffset;
+    //#endif
     
     ////////////////////////////////////////////////////////////////////////////////
     // Back to our own code here

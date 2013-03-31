@@ -24,6 +24,17 @@ material ColouredCubicTerrain
             // samplers
             sampler u_diffuseTexture
             {
+                path = res/TilesBumpMap.png
+                mipmap = true
+                wrapS = REPEAT
+                wrapT = REPEAT
+                minFilter = LINEAR
+                magFilter = LINEAR
+            }
+            
+            // samplers
+            sampler u_noiseTexture
+            {
                 path = res/noise.png
                 mipmap = false
                 wrapS = REPEAT

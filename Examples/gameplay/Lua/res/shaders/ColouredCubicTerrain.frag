@@ -6,6 +6,7 @@ precision highp float;
 
 // Uniforms
 uniform sampler2D u_diffuseTexture;             // Diffuse map texture
+uniform sampler2D u_noiseTexture;
 uniform vec3 u_ambientColor;                    // Ambient color
 uniform vec3 u_lightColor;                      // Light color
 uniform vec3 u_lightDirection;					// Light direction
@@ -21,7 +22,7 @@ uniform float u_modulateAlpha;              	// Modulation alpha
 
 // Varyings
 //varying vec3 v_normalVector;                    // Normal vector in view space
-varying vec2 v_texCoord;                        // Texture coordinate
+//varying vec2 v_texCoord;                        // Texture coordinate
 #if defined(POINT_LIGHT)
 varying vec3 v_vertexToPointLightDirection;		// Light direction w.r.t current vertex in tangent space.
 varying float v_pointLightAttenuation;			// Attenuation of point light.
@@ -44,6 +45,7 @@ varying vec4 v_color;
 // expects the normal to have been passed in, but actually it is not 
 // varying and we are instead calculating the normal in the fragment shader.
 vec3 v_normalVector;
+vec2 v_texCoord;
 
 // Lighting 
 #include "lighting.frag"
@@ -64,6 +66,11 @@ void main()
     // Calculate the normal vector
     v_normalVector = normalize(cross(dFdx(v_worldSpacePosition.xyz), dFdy(v_worldSpacePosition.xyz)));
     
+    //Compute texture coordinates
+    v_texCoord = vec2(dot(v_worldSpacePosition.xyz, v_normalVector.yzx), dot(v_worldSpacePosition.xyz, v_normalVector.zxy));
+    v_texCoord /= 9.0;
+    v_texCoord += 0.5;
+    
     // Compute noise. Ideally we would pull a noise value from a 3D texture based on the position of the voxel,
     // but gameplay only seems to support 2D textures at the moment. Therefore we store the texture 'slices'
     // above each other to give a texture which is x pixels wide and y=x*x pixels high.
@@ -73,12 +80,14 @@ void main()
     voxelCentre = floor(voxelCentre + vec3(0.5)); // 'floor' is more widely supported than 'round'.
     vec2 noiseTextureSmaplePos = vec2(voxelCentre.x, voxelCentre.y + voxelCentre.z * noiseTextureBaseSize);
     noiseTextureSmaplePos = noiseTextureSmaplePos / vec2(noiseTextureBaseSize, noiseTextureBaseSize * noiseTextureBaseSize);
-    vec3 noise = texture2D(u_diffuseTexture, noiseTextureSmaplePos).rgb; // Sample the texture.
+    vec3 noise = texture2D(u_noiseTexture, noiseTextureSmaplePos).rgb; // Sample the texture.
     noise = noise * 2.0 - 1.0; // Adjust range to be -1.0 to +1.0
     noise *= noiseStrength; // Scale to desired strength.
     
+    vec3 texCol = texture2D(u_diffuseTexture, v_texCoord);
+    
     //Form the base color by applying noise to the colour which was passed in.
-    _baseColor = vec4(v_color.rgb + noise, 1.0) ;
+    _baseColor = vec4((v_color.rgb + noise) * texCol, 1.0) ;
 
     // Light the pixel
     gl_FragColor.a = _baseColor.a;
