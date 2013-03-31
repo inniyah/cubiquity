@@ -79,8 +79,20 @@ void main()
     
     //Form the base color by applying noise to the colour which was passed in.
     _baseColor = vec4(v_color.rgb + noise, 1.0) ;
-    
-    // Perfomrm lighting
+
+    // Light the pixel
+    gl_FragColor.a = _baseColor.a;
+    #if defined(TEXTURE_DISCARD_ALPHA)
+    if (gl_FragColor.a < 0.5)
+        discard;
+    #endif
     gl_FragColor.rgb = getLitPixel();
-    gl_FragColor.a = 1.0;
+	
+	// Global color modulation
+	#if defined(MODULATE_COLOR)
+	gl_FragColor *= u_modulateColor;
+	#endif
+	#if defined(MODULATE_ALPHA)
+    gl_FragColor.a *= u_modulateAlpha;
+    #endif
 }
