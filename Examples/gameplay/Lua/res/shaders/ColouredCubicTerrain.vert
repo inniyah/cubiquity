@@ -90,9 +90,8 @@ vec3 floatToRGB(float inputVal)
 
 void main()
 {    
-    //Extract material and reset 'w' ready for gameplay shader code.
+    //Extract material
     float material = a_position.w;
-    a_position.w = 1.0; // Seems legit - 'attribute' keyword is deprecated and does not mean read-only.
     
     ////////////////////////////////////////////////////////////////////////////////
     // Gameplay shader code starts here
@@ -100,6 +99,9 @@ void main()
     // Get the position and normal
     vec4 position = getPosition();
     //vec3 normal = getNormal();
+    
+    // Reset 'w' ready for gameplay shader code.
+    position.w = 1.0;
 
     // Transform position to clip space.
     gl_Position = u_worldViewProjectionMatrix * position;
