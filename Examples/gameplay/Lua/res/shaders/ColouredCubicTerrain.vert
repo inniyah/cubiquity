@@ -97,14 +97,28 @@ void main()
     ////////////////////////////////////////////////////////////////////////////////
     // Gameplay shader code starts here
     ////////////////////////////////////////////////////////////////////////////////
+    // Get the position and normal
     vec4 position = getPosition();
     //vec3 normal = getNormal();
-    
+
     // Transform position to clip space.
     gl_Position = u_worldViewProjectionMatrix * position;
-    
+
+    // Transform normal to view space.
+	//mat3 normalMatrix = mat3(u_inverseTransposeWorldViewMatrix[0].xyz, u_inverseTransposeWorldViewMatrix[1].xyz, u_inverseTransposeWorldViewMatrix[2].xyz);
+    //v_normalVector = normalMatrix * normal;
+
     // Apply light.
     applyLight(position);
+
+    // Texture transformation
+    v_texCoord = a_texCoord;
+    #if defined(TEXTURE_REPEAT)
+    v_texCoord *= u_textureRepeat;
+    #endif
+    #if defined(TEXTURE_OFFSET)
+    v_texCoord += u_textureOffset;
+    #endif
     
     ////////////////////////////////////////////////////////////////////////////////
     // Back to our own code here
