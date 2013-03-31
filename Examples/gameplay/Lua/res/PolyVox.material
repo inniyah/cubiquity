@@ -8,11 +8,17 @@ material PolyVox
             vertexShader = res/PolyVox.vert
             fragmentShader = res/PolyVox.frag
             
+            defines = SPECULAR
+            
             // uniforms
             u_worldMatrix = WORLD_MATRIX
             u_viewProjectionMatrix = VIEW_PROJECTION_MATRIX
+            u_worldViewMatrix = WORLD_VIEW_MATRIX
             //u_inverseTransposeWorldViewMatrix = INVERSE_TRANSPOSE_WORLD_VIEW_MATRIX
             u_ambientColor = 0.3, 0.3, 0.3
+            u_cameraPosition = CAMERA_VIEW_POSITION
+            
+            u_specularExponent = 10
             
             // samplers
             sampler u_texture0

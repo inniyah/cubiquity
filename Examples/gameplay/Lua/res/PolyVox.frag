@@ -10,9 +10,17 @@ uniform vec3 u_lightColor;                      // Light color
 uniform vec3 u_lightDirection;       	        // Light direction
 uniform sampler2D u_texture0;
 
+#if defined(SPECULAR)
+uniform float u_specularExponent;				// Specular exponent.
+#endif
+
 // Inputs
 varying vec4 v_worldSpacePosition;
 varying vec4 v_color;
+
+#if defined(SPECULAR)
+varying vec3 v_cameraDirection;                 // Camera direction
+#endif
 
 // This one is named like a varying parameter as this is how Gameplay
 // expects the normal to have been passed in, but actually it is not 
