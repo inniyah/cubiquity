@@ -89,16 +89,30 @@ vec3 floatToRGB(float inputVal)
 }
 
 void main()
-{
-    //Vertex colour
-    v_color = vec4(floatToRGB(a_position.w), 1.0);
+{    
+    //Extract material and reset 'w' ready for gameplay shader code.
+    float material = a_position.w;
+    a_position.w = 1.0; // Seems legit - 'attribute' keyword is deprecated and does not mean read-only.
     
-    //Vertex position
-    v_worldSpacePosition = u_worldMatrix * vec4(a_position.xyz, 1.0);
+    ////////////////////////////////////////////////////////////////////////////////
+    // Gameplay shader code starts here
+    ////////////////////////////////////////////////////////////////////////////////
+    vec4 position = getPosition();
+    //vec3 normal = getNormal();
+    
+    // Transform position to clip space.
+    gl_Position = u_worldViewProjectionMatrix * position;
     
     // Apply light.
-    applyLight(a_position);
-        
-    // Transform position to clip space.
-    gl_Position = u_worldViewProjectionMatrix * vec4(a_position.xyz, 1.0);
+    applyLight(position);
+    
+    ////////////////////////////////////////////////////////////////////////////////
+    // Back to our own code here
+    ////////////////////////////////////////////////////////////////////////////////
+    
+    //Vertex colour
+    v_color = vec4(floatToRGB(material), 1.0);
+    
+    //Vertex position
+    v_worldSpacePosition = u_worldMatrix * position;   
 }
