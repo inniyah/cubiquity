@@ -5,8 +5,8 @@ material ColouredCubicTerrain
         pass
         {
             // shaders
-            vertexShader = res/shaders/coloredcubicterrain.vert
-            fragmentShader = res/shaders/coloredcubicterrain.frag
+            vertexShader = res/shaders/ColouredCubicTerrain.vert
+            fragmentShader = res/shaders/ColouredCubicTerrain.frag
             
             defines = SPECULAR
             
