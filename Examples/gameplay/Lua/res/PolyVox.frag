@@ -5,7 +5,6 @@ precision highp float;
 #endif
 
 // Uniforms
-uniform vec4 u_diffuseColor;                    // Diffuse color
 uniform vec3 u_ambientColor;                    // Ambient color
 uniform vec3 u_lightColor;                      // Light color
 uniform vec3 u_lightDirection;       	        // Light direction
@@ -15,6 +14,9 @@ uniform sampler2D u_texture0;
 varying vec4 v_worldSpacePosition;
 varying vec4 v_color;
 
+// This one is named like a varying parameter as this is how Gameplay
+// expects the normal to have been passed in, but actually it is not 
+// varying and we are instead calculating the normal in the fragment shader.
 vec3 v_normalVector;
 
 // Lighting
@@ -29,11 +31,7 @@ vec3 v_normalVector;
 
 void main()
 {
-	// Base color
-    vec4 baseColor = v_color;
-
-    // Normalize the vectors.
-    vec3 lightDirection = normalize(u_lightDirection);
+    // Calculate the normal vector
     v_normalVector = normalize(cross(dFdx(v_worldSpacePosition.xyz), dFdy(v_worldSpacePosition.xyz)));
     
     // Compute noise. Ideally we would pull a noise value from a 3D texture based on the position of the voxel,
@@ -49,13 +47,10 @@ void main()
     noise = noise * 2.0 - 1.0; // Adjust range to be -1.0 to +1.0
     noise *= noiseStrength; // Scale to desired strength.
     
-    _baseColor = vec4(baseColor.rgb, 1.0);
-    _ambientColor = u_ambientColor;
-    _diffuseColor = u_lightColor;
+    //Form the base color by applying noise to the colour which was passed in.
+    _baseColor = vec4(v_color.rgb + noise, 1.0) ;
     
-    vec3 result = getLitPixel();
-
-    // Light the pixel
-    gl_FragColor.a = baseColor.a;
-    gl_FragColor.rgb = result + noise;
+    // Perfomrm lighting
+    gl_FragColor.rgb = getLitPixel();
+    gl_FragColor.a = 1.0;
 }
