@@ -52,7 +52,7 @@ vec3 v_cameraDirection;
 vec3 v_lightDirection;
 
 uniform mat4 u_worldViewMatrix;
-uniform mat4 u_inverseTransposeViewMatrix;
+uniform mat4 u_inverseTransposeWorldViewMatrix;
 
 vec4 a_position;
 
@@ -75,21 +75,21 @@ void main()
 {
     a_position = v_modelSpacePosition;
     
-    // Calculate the normal vector
-    v_normalVector = normalize(cross(dFdx(v_worldSpacePosition.xyz), dFdy(v_worldSpacePosition.xyz))); 
-    // This fixes normal corruption which has been seen - NOTE: Only works on axis aligned faces unless we move to model space?
+    // Calculate the normal vector in model space (as would normally be passed into the vertex shader).
+    v_normalVector = normalize(cross(dFdx(v_modelSpacePosition.xyz), dFdy(v_modelSpacePosition.xyz))); 
+    // This fixes normal corruption which has been seen.
     v_normalVector = floor(v_normalVector + vec3(0.5, 0.5, 0.5));
     
     // Transform the normal, tangent and binormals to view space.
-	mat3 inverseTransposeViewMatrix = mat3(u_inverseTransposeViewMatrix[0].xyz, u_inverseTransposeViewMatrix[1].xyz, u_inverseTransposeViewMatrix[2].xyz);
-    vec3 normalVector = normalize(inverseTransposeViewMatrix * v_normalVector);
+	mat3 inverseTransposeWorldViewMatrix = mat3(u_inverseTransposeWorldViewMatrix[0].xyz, u_inverseTransposeWorldViewMatrix[1].xyz, u_inverseTransposeWorldViewMatrix[2].xyz);
+    vec3 normalVector = normalize(inverseTransposeWorldViewMatrix * v_normalVector);
     
     vec3 tangent = normalVector.yzx;
     vec3 binormal = normalVector.zxy;
     
     // Create a transform to convert a vector to tangent space.
-    vec3 tangentVector  = normalize(inverseTransposeViewMatrix * tangent);
-    vec3 binormalVector = normalize(inverseTransposeViewMatrix * binormal);
+    vec3 tangentVector  = normalize(inverseTransposeWorldViewMatrix * tangent);
+    vec3 binormalVector = normalize(inverseTransposeWorldViewMatrix * binormal);
     mat3 tangentSpaceTransformMatrix = mat3(tangentVector.x, binormalVector.x, normalVector.x, tangentVector.y, binormalVector.y, normalVector.y, tangentVector.z, binormalVector.z, normalVector.z);
     
     // Apply light.
