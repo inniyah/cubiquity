@@ -65,7 +65,8 @@ void main()
 {
     // Calculate the normal vector
     v_normalVector = normalize(cross(dFdx(v_worldSpacePosition.xyz), dFdy(v_worldSpacePosition.xyz))); 
-    v_normalVector = floor(v_normalVector + vec3(0.5, 0.5, 0.5)); // This fixes normal corruption which has been seen.
+    // This fixes normal corruption which has been seen - NOTE: Only works on axis aligned faces unless we move to model space?
+    v_normalVector = floor(v_normalVector + vec3(0.5, 0.5, 0.5));
     
     //Compute texture coordinates
     v_texCoord = vec2(dot(v_worldSpacePosition.xyz, v_normalVector.yzx), dot(v_worldSpacePosition.xyz, v_normalVector.zxy));
