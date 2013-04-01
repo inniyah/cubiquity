@@ -6,13 +6,14 @@ precision highp float;
 
 // Uniforms
 uniform sampler2D u_diffuseTexture;             // Diffuse map texture
+uniform sampler2D u_normalmapTexture;       	// Normalmap texture
 uniform sampler2D u_noiseTexture;
 uniform vec3 u_ambientColor;                    // Ambient color
 uniform vec3 u_lightColor;                      // Light color
 uniform vec3 u_lightDirection;					// Light direction
 #if defined(SPECULAR)
 uniform float u_specularExponent;				// Specular exponent
-uniform vec3 u_cameraPosition; 
+uniform vec3 u_cameraPosition;
 #endif
 #if defined(MODULATE_COLOR)
 uniform vec4 u_modulateColor;               	// Modulation color
@@ -32,7 +33,7 @@ varying vec3 v_spotLightDirection;				// Direction of spot light in tangent spac
 varying vec3 v_vertexToSpotLightDirection;		// Direction of the spot light w.r.t current vertex in tangent space.
 varying float v_spotLightAttenuation;			// Attenuation of spot light.
 #else
-varying vec3 v_lightDirection;					// Direction of light in tangent space.
+//varying vec3 v_lightDirection;					// Direction of light in tangent space.
 #endif
 #if defined(SPECULAR)
 //varying vec3 v_cameraDirection;                 // Camera direction
@@ -49,8 +50,12 @@ varying vec4 v_color;
 vec3 v_normalVector;
 vec2 v_texCoord;
 vec3 v_cameraDirection;
+vec3 v_lightDirection;
 
-uniform mat4 u_worldViewMatrix;	
+uniform mat4 u_worldViewMatrix;
+uniform mat4 u_inverseTransposeViewMatrix;
+
+vec4 a_position;
 
 // Lighting 
 #include "lighting.frag"
@@ -69,13 +74,30 @@ uniform vec3 u_spotLightDirection;              // Direction of a spot light sou
 
 void main()
 {
-    //
-    applyLight(v_modelSpacePosition);
+    a_position = v_modelSpacePosition;
     
     // Calculate the normal vector
     v_normalVector = normalize(cross(dFdx(v_worldSpacePosition.xyz), dFdy(v_worldSpacePosition.xyz))); 
     // This fixes normal corruption which has been seen - NOTE: Only works on axis aligned faces unless we move to model space?
     v_normalVector = floor(v_normalVector + vec3(0.5, 0.5, 0.5));
+    
+    // Transform the normal, tangent and binormals to view space.
+	mat3 inverseTransposeViewMatrix = mat3(u_inverseTransposeViewMatrix[0].xyz, u_inverseTransposeViewMatrix[1].xyz, u_inverseTransposeViewMatrix[2].xyz);
+    vec3 normalVector = normalize(inverseTransposeViewMatrix * v_normalVector);
+    
+    vec3 tangent = normalVector.yzx;
+    vec3 binormal = normalVector.zxy;
+    
+    // Create a transform to convert a vector to tangent space.
+    vec3 tangentVector  = normalize(inverseTransposeViewMatrix * tangent);
+    vec3 binormalVector = normalize(inverseTransposeViewMatrix * binormal);
+    mat3 tangentSpaceTransformMatrix = mat3(tangentVector.x, binormalVector.x, normalVector.x, tangentVector.y, binormalVector.y, normalVector.y, tangentVector.z, binormalVector.z, normalVector.z);
+    
+    // Apply light.
+    applyLight(tangentSpaceTransformMatrix);
+    
+    //
+    //applyLight(v_modelSpacePosition);
     
     //Compute texture coordinates
     v_texCoord = vec2(dot(v_worldSpacePosition.xyz, v_normalVector.yzx), dot(v_worldSpacePosition.xyz, v_normalVector.zxy));
