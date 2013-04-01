@@ -227,7 +227,7 @@ function drawScene(node)
 				model:getMaterial():getParameter("u_lightColor"):setValue(_light:getColor());
 			end
 			if (model:getMaterial():getParameter("u_lightDirection")) then
-				model:getMaterial():getParameter("u_lightDirection"):setValue(lightNode:getForwardVectorWorld());
+				model:getMaterial():getParameter("u_lightDirection"):setValue(lightNode:getForwardVectorView());
 			end
 		end
         model:draw()

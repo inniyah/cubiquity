@@ -455,7 +455,7 @@ bool MeshGame::drawScene(Node* node)
     if (model)
 	{
 		model->getMaterial()->getParameter("u_lightColor")->setValue(_light->getColor());
-		model->getMaterial()->getParameter("u_lightDirection")->setValue(_lightNode->getForwardVectorWorld());
+		model->getMaterial()->getParameter("u_lightDirection")->setValue(_lightNode->getForwardVectorView());
 		model->draw(mWireframeCheckBox->isChecked());
 	}
     return true;
