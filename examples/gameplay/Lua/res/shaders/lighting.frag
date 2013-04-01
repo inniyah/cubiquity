@@ -23,7 +23,7 @@ vec3 computeLighting(vec3 normalVector, vec3 lightDirection, float attenuation, 
     specularIntensity = max(0.0, specularIntensity);
     _specularColor = u_lightColor * _baseColor.rgb * specularIntensity;
 	
-	return _ambientColor + _diffuseColor + (_specularColor * 0.001);
+	return _ambientColor + _diffuseColor + _specularColor;
 }
 
 #else

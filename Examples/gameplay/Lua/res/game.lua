@@ -164,7 +164,7 @@ function update(elapsedTime)
 	local viewPos = _cameraPositionNode:getTranslationWorld()
 	_colouredCubesVolume:performUpdate(viewPos, lodLevel)
 
-	if(_colouredCubesVolume) then
+	--[[if(_colouredCubesVolume) then
 		ray = Ray.new();
 		_cameraNode:getCamera():pickRay(Game.getInstance():getViewport(), _touchX, _touchY, ray);
 
@@ -178,14 +178,15 @@ function update(elapsedTime)
 		end
 
 		if(leftMousePressed) then
-			--_colouredCubesVolume:setVoxel(intersection:x(), intersection:y(), intersection:z(), 0.99, 0.0, 0.0)
 			local colour = Vector4.new(redSlider:getValue(), greenSlider:getValue(), blueSlider:getValue(), 1.0)
 			fillSphere(intersection:x(), intersection:y(), intersection:z(), _modelNode:getScaleX(), colour, true)
 		end
-	end
+	end]]
 
 	lightNode:setIdentity()
-	lightNode:translate(lightSlider:getValue(), 10, light2Slider:getValue());
+	lightNode:translate(lightSlider:getValue(), 8, light2Slider:getValue());
+	_modelNode:setIdentity()
+	_modelNode:translate(lightSlider:getValue(), 8, light2Slider:getValue());
 	--lightNode:rotateX(-1.57 + lightSlider:getValue()) -- Point light down
 	--lightNode:rotateY(light2Slider:getValue())
 end
