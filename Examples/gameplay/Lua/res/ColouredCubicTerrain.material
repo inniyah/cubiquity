@@ -25,33 +25,22 @@ material ColouredCubicTerrain
             // samplers
             sampler u_diffuseTexture
             {
-                path = res/TilesBumpMap.png
-                mipmap = true
-                wrapS = REPEAT
-                wrapT = REPEAT
-                minFilter = LINEAR
-                magFilter = LINEAR
-            }
-            
-            sampler u_normalmapTexture
-            {
-                path = res/bricks.png
-                mipmap = true
-                wrapS = REPEAT
-                wrapT = REPEAT
-                minFilter = NEAREST_MIPMAP_LINEAR
-                magFilter = LINEAR
-            }
-            
-            // samplers
-            sampler u_noiseTexture
-            {
                 path = res/noise.png
                 mipmap = false
                 wrapS = REPEAT
                 wrapT = REPEAT
                 minFilter = NEAREST
                 magFilter = NEAREST
+            }
+            
+            sampler u_normalmapTexture
+            {
+                path = res/TilesNormalMap.png
+                mipmap = true
+                wrapS = REPEAT
+                wrapT = REPEAT
+                minFilter = NEAREST_MIPMAP_LINEAR
+                magFilter = LINEAR
             }
 
             // render state
