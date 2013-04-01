@@ -1,6 +1,7 @@
 //Mine
 uniform mat4 u_viewProjectionMatrix;           // Matrix to transform a position to clip space.
 
+varying vec4 v_modelSpacePosition;
 varying vec4 v_worldSpacePosition;
 varying vec4 v_color;
 
@@ -124,7 +125,7 @@ void main()
     // Apply light.
     //applyLight(tangentSpaceTransformMatrix);
     
-    applyLight(position);
+    //applyLight(position);
     
     // Texture transformation.
     //v_texCoord = a_texCoord;
@@ -143,5 +144,6 @@ void main()
     v_color = vec4(floatToRGB(material), 1.0);
     
     //Vertex position
-    v_worldSpacePosition = u_worldMatrix * position;   
+    v_worldSpacePosition = u_worldMatrix * position;
+    v_modelSpacePosition = position;
 }

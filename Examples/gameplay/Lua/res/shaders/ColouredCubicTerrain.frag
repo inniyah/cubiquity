@@ -12,6 +12,7 @@ uniform vec3 u_lightColor;                      // Light color
 uniform vec3 u_lightDirection;					// Light direction
 #if defined(SPECULAR)
 uniform float u_specularExponent;				// Specular exponent
+uniform vec3 u_cameraPosition; 
 #endif
 #if defined(MODULATE_COLOR)
 uniform vec4 u_modulateColor;               	// Modulation color
@@ -34,10 +35,11 @@ varying float v_spotLightAttenuation;			// Attenuation of spot light.
 varying vec3 v_lightDirection;					// Direction of light in tangent space.
 #endif
 #if defined(SPECULAR)
-varying vec3 v_cameraDirection;                 // Camera direction
+//varying vec3 v_cameraDirection;                 // Camera direction
 #endif
 
 // Inputs
+varying vec4 v_modelSpacePosition;
 varying vec4 v_worldSpacePosition;
 varying vec4 v_color;
 
@@ -46,6 +48,9 @@ varying vec4 v_color;
 // varying and we are instead calculating the normal in the fragment shader.
 vec3 v_normalVector;
 vec2 v_texCoord;
+vec3 v_cameraDirection;
+
+uniform mat4 u_worldViewMatrix;	
 
 // Lighting 
 #include "lighting.frag"
@@ -57,12 +62,16 @@ uniform float u_spotLightOuterAngleCos;			// The soft outer part [0.0 - 1.0]
 uniform vec3 u_spotLightDirection;              // Direction of a spot light source
 #include "lighting-spot.frag"
 #else
+#include "lighting-directional.vert"            // Hack for applyLighting
 #include "lighting-directional.frag"
 #endif
 
 
 void main()
 {
+    //
+    applyLight(v_modelSpacePosition);
+    
     // Calculate the normal vector
     v_normalVector = normalize(cross(dFdx(v_worldSpacePosition.xyz), dFdy(v_worldSpacePosition.xyz))); 
     // This fixes normal corruption which has been seen - NOTE: Only works on axis aligned faces unless we move to model space?
