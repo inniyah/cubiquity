@@ -32,7 +32,7 @@ material ColouredCubicTerrain
             
             sampler u_normalmapTexture
             {
-                path = res/TilesNormalMap.png
+                path = res/VoxelNormalMap256.png
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT

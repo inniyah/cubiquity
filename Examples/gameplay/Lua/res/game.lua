@@ -70,10 +70,10 @@ function initialize()
 	_scene:addNode(_modelNode)
 
     -- Create the light node
-	_light = Light.createPoint(1.0, 1.0, 1.0, 100.0)
+	_light = Light.createPoint(0.7, 0.7, 0.7, 100.0)
 	lightNode = Node.create()
 	lightNode:setLight(_light)
-	lightNode:setTranslation(64.0, 20.0, 64.0)
+	lightNode:setTranslation(64.0, 8.0, 126.0)
 	--lightNode:rotateX(-1.57) -- Point light down
 	_scene:addNode(lightNode)
 
@@ -94,7 +94,7 @@ function initialize()
 	camera:setAspectRatio(game:getWidth() / game:getHeight())
 	_cameraNode:setCamera(camera)
 	_scene:setActiveCamera(camera)
-	_cameraPositionNode:setTranslation(0, 30, 300)
+	_cameraPositionNode:setTranslation(0, 30, 150)
 	--_cameraPositionNode:setTranslation(volumeWidth / 2, volumeHeight * 1.5, volumeDepth * 1.2)
 	--_cameraPitchNode:rotateX(-0.0)
 
@@ -143,7 +143,7 @@ function update(elapsedTime)
 	local forwardVector = _cameraNode:getForwardVectorWorld()
 	local rightVector = _cameraNode:getRightVectorWorld()
 
-	local speed = 0.1
+	local speed = 0.01
 	local distance = elapsedTime * speed
 
 	if(wPressed) then
@@ -184,7 +184,8 @@ function update(elapsedTime)
 		end
 	end
 
-	--lightNode:setIdentity()
+	lightNode:setIdentity()
+	lightNode:translate(lightSlider:getValue(), 10, light2Slider:getValue());
 	--lightNode:rotateX(-1.57 + lightSlider:getValue()) -- Point light down
 	--lightNode:rotateY(light2Slider:getValue())
 end

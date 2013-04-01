@@ -101,7 +101,7 @@ void main()
     
     //Compute texture coordinates
     v_texCoord = vec2(dot(v_worldSpacePosition.xyz, v_normalVector.yzx), dot(v_worldSpacePosition.xyz, v_normalVector.zxy));
-    v_texCoord /= 9.0;
+    //v_texCoord /= 9.0;
     v_texCoord += 0.5;
     
     // Compute noise. Ideally we would pull a noise value from a 3D texture based on the position of the voxel,
@@ -119,6 +119,9 @@ void main()
     
     //Form the base color by applying noise to the colour which was passed in.
     _baseColor = vec4(v_color.rgb + noise, 1.0) ;
+    
+    //_baseColor *= 0.001;
+    //_baseColor += 1.0;
 
     // Light the pixel
     gl_FragColor.a = _baseColor.a;
