@@ -7,7 +7,7 @@ material Icosphere3
             // shaders
             vertexShader = res/shaders/colored.vert
             fragmentShader = res/shaders/colored.frag
-			defines = VERTEX_COLOR
+			defines = VERTEX_COLOR; POINT_LIGHT; SPECULAR
 
              // uniforms
             u_worldViewProjectionMatrix = WORLD_VIEW_PROJECTION_MATRIX

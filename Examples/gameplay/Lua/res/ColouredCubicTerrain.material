@@ -8,7 +8,7 @@ material ColouredCubicTerrain
             vertexShader = res/shaders/ColouredCubicTerrain.vert
             fragmentShader = res/shaders/ColouredCubicTerrain.frag
             
-            defines = TEXTURE_REPEAT; SPECULAR; BUMPED
+            defines = TEXTURE_REPEAT; SPECULAR; BUMPED; POINT_LIGHT
             u_worldMatrix = WORLD_MATRIX
 			u_worldViewMatrix = WORLD_VIEW_MATRIX
  			u_worldViewProjectionMatrix = WORLD_VIEW_PROJECTION_MATRIX

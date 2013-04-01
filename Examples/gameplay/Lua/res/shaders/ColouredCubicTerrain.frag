@@ -25,8 +25,8 @@ uniform float u_modulateAlpha;              	// Modulation alpha
 //varying vec3 v_normalVector;                    // Normal vector in view space
 //varying vec2 v_texCoord;                        // Texture coordinate
 #if defined(POINT_LIGHT)
-varying vec3 v_vertexToPointLightDirection;		// Light direction w.r.t current vertex in tangent space.
-varying float v_pointLightAttenuation;			// Attenuation of point light.
+vec3 v_vertexToPointLightDirection;		// Light direction w.r.t current vertex in tangent space.
+float v_pointLightAttenuation;			// Attenuation of point light.
 #elif defined(SPOT_LIGHT)
 varying vec3 v_spotLightDirection;				// Direction of spot light in tangent space.
 varying vec3 v_vertexToSpotLightDirection;		// Direction of the spot light w.r.t current vertex in tangent space.
@@ -51,6 +51,9 @@ vec2 v_texCoord;
 vec3 v_cameraDirection;
 vec3 v_lightDirection;
 
+uniform vec3 u_pointLightPosition;							// Position of light
+uniform float u_pointLightRangeInverse;						// Inverse of light range
+
 uniform mat4 u_worldViewMatrix;
 uniform mat4 u_inverseTransposeWorldViewMatrix;
 
@@ -59,6 +62,7 @@ vec4 a_position;
 // Lighting 
 #include "lighting.frag"
 #if defined(POINT_LIGHT)
+#include "lighting-point.vert"            // Hack for applyLighting
 #include "lighting-point.frag"
 #elif defined(SPOT_LIGHT)
 uniform float u_spotLightInnerAngleCos;			// The bright spot [0.0 - 1.0]
