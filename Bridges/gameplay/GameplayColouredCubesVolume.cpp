@@ -178,7 +178,7 @@ namespace Cubiquity
 		return result;
 	}
 	
-	void GameplayColouredCubesVolume::setVoxel(int x, int y, int z, uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha, int updatePriority)
+	void GameplayColouredCubesVolume::setVoxel(int x, int y, int z, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha, int updatePriority)
 	{
 		mCubiquityVolume->setVoxelAt(x, y, z, Colour(red, green, blue, alpha), static_cast<UpdatePriority>(updatePriority));
 	}

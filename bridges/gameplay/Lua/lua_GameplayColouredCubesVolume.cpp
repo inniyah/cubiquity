@@ -299,10 +299,10 @@ int lua_GameplayColouredCubesVolume_setVoxel(lua_State* state)
                 lua_type(state, 2) == LUA_TNUMBER &&
                 lua_type(state, 3) == LUA_TNUMBER &&
                 lua_type(state, 4) == LUA_TNUMBER &&
-                lua_type(state, 5) == LUA_TNONE &&
-                lua_type(state, 6) == LUA_TNONE &&
-                lua_type(state, 7) == LUA_TNONE &&
-                lua_type(state, 8) == LUA_TNONE)
+                lua_type(state, 5) == LUA_TNUMBER &&
+                lua_type(state, 6) == LUA_TNUMBER &&
+                lua_type(state, 7) == LUA_TNUMBER &&
+                lua_type(state, 8) == LUA_TNUMBER)
             {
                 // Get parameter 1 off the stack.
                 int param1 = (int)luaL_checkint(state, 2);
@@ -314,20 +314,16 @@ int lua_GameplayColouredCubesVolume_setVoxel(lua_State* state)
                 int param3 = (int)luaL_checkint(state, 4);
 
                 // Get parameter 4 off the stack.
-                GP_WARN("Attempting to get parameter 4 with unrecognized type uint8_t as an unsigned integer.");
-                uint8_t param4 = (uint8_t)luaL_checkunsigned(state, 5);
+                unsigned char param4 = (unsigned char)luaL_checkunsigned(state, 5);
 
                 // Get parameter 5 off the stack.
-                GP_WARN("Attempting to get parameter 5 with unrecognized type uint8_t as an unsigned integer.");
-                uint8_t param5 = (uint8_t)luaL_checkunsigned(state, 6);
+                unsigned char param5 = (unsigned char)luaL_checkunsigned(state, 6);
 
                 // Get parameter 6 off the stack.
-                GP_WARN("Attempting to get parameter 6 with unrecognized type uint8_t as an unsigned integer.");
-                uint8_t param6 = (uint8_t)luaL_checkunsigned(state, 7);
+                unsigned char param6 = (unsigned char)luaL_checkunsigned(state, 7);
 
                 // Get parameter 7 off the stack.
-                GP_WARN("Attempting to get parameter 7 with unrecognized type uint8_t as an unsigned integer.");
-                uint8_t param7 = (uint8_t)luaL_checkunsigned(state, 8);
+                unsigned char param7 = (unsigned char)luaL_checkunsigned(state, 8);
 
                 GameplayColouredCubesVolume* instance = getInstance(state);
                 instance->setVoxel(param1, param2, param3, param4, param5, param6, param7);
@@ -345,10 +341,10 @@ int lua_GameplayColouredCubesVolume_setVoxel(lua_State* state)
                 lua_type(state, 2) == LUA_TNUMBER &&
                 lua_type(state, 3) == LUA_TNUMBER &&
                 lua_type(state, 4) == LUA_TNUMBER &&
-                lua_type(state, 5) == LUA_TNONE &&
-                lua_type(state, 6) == LUA_TNONE &&
-                lua_type(state, 7) == LUA_TNONE &&
-                lua_type(state, 8) == LUA_TNONE &&
+                lua_type(state, 5) == LUA_TNUMBER &&
+                lua_type(state, 6) == LUA_TNUMBER &&
+                lua_type(state, 7) == LUA_TNUMBER &&
+                lua_type(state, 8) == LUA_TNUMBER &&
                 lua_type(state, 9) == LUA_TNUMBER)
             {
                 // Get parameter 1 off the stack.
@@ -361,20 +357,16 @@ int lua_GameplayColouredCubesVolume_setVoxel(lua_State* state)
                 int param3 = (int)luaL_checkint(state, 4);
 
                 // Get parameter 4 off the stack.
-                GP_WARN("Attempting to get parameter 4 with unrecognized type uint8_t as an unsigned integer.");
-                uint8_t param4 = (uint8_t)luaL_checkunsigned(state, 5);
+                unsigned char param4 = (unsigned char)luaL_checkunsigned(state, 5);
 
                 // Get parameter 5 off the stack.
-                GP_WARN("Attempting to get parameter 5 with unrecognized type uint8_t as an unsigned integer.");
-                uint8_t param5 = (uint8_t)luaL_checkunsigned(state, 6);
+                unsigned char param5 = (unsigned char)luaL_checkunsigned(state, 6);
 
                 // Get parameter 6 off the stack.
-                GP_WARN("Attempting to get parameter 6 with unrecognized type uint8_t as an unsigned integer.");
-                uint8_t param6 = (uint8_t)luaL_checkunsigned(state, 7);
+                unsigned char param6 = (unsigned char)luaL_checkunsigned(state, 7);
 
                 // Get parameter 7 off the stack.
-                GP_WARN("Attempting to get parameter 7 with unrecognized type uint8_t as an unsigned integer.");
-                uint8_t param7 = (uint8_t)luaL_checkunsigned(state, 8);
+                unsigned char param7 = (unsigned char)luaL_checkunsigned(state, 8);
 
                 // Get parameter 8 off the stack.
                 int param8 = (int)luaL_checkint(state, 9);

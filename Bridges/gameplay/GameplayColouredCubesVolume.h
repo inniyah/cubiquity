@@ -46,7 +46,7 @@ namespace Cubiquity
 		}
 
 		gameplay::Vector4 getVoxel(int x, int y, int z);
-		void setVoxel(int x, int y, int z, uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha, int updatePriority = 1);
+		void setVoxel(int x, int y, int z, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha, int updatePriority = 1);
 		void markAsModified(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, int updatePriority = 1);
 
 		void performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold);

@@ -1,6 +1,6 @@
 -- This lua script file represents a lua implementation translation of sample00-mesh with a box instead of a duck.
 
-function fillSphere(x, y, z, size, colour, paintOnly)
+function fillSphere(x, y, z, size, r, g, b, a, paintOnly)
 	local sizeSquared = size * size;
 	for iZ=z-size, z+size do
 		for iY=y-size, y+size do
@@ -13,10 +13,10 @@ function fillSphere(x, y, z, size, colour, paintOnly)
 					if paintOnly then
 						local currentColour = _colouredCubesVolume:getVoxel(iX, iY, iZ)
 						if currentColour:w() > 0.001 then
-							_colouredCubesVolume:setVoxel(iX, iY, iZ, colour, 0)
+							_colouredCubesVolume:setVoxel(iX, iY, iZ, r, g, b, a, 0)
 						end
 					else
-						_colouredCubesVolume:setVoxel(iX, iY, iZ, colour, 0)
+						_colouredCubesVolume:setVoxel(iX, iY, iZ, r, g, b, a, 0)
 					end
 				end
 			end
@@ -164,7 +164,7 @@ function update(elapsedTime)
 	local viewPos = _cameraPositionNode:getTranslationWorld()
 	_colouredCubesVolume:performUpdate(viewPos, lodLevel)
 
-	--[[if(_colouredCubesVolume) then
+	if(_colouredCubesVolume) then
 		ray = Ray.new();
 		_cameraNode:getCamera():pickRay(Game.getInstance():getViewport(), _touchX, _touchY, ray);
 
@@ -179,14 +179,14 @@ function update(elapsedTime)
 
 		if(leftMousePressed) then
 			local colour = Vector4.new(redSlider:getValue(), greenSlider:getValue(), blueSlider:getValue(), 1.0)
-			fillSphere(intersection:x(), intersection:y(), intersection:z(), _modelNode:getScaleX(), colour, true)
+			fillSphere(intersection:x(), intersection:y(), intersection:z(), _modelNode:getScaleX(), redSlider:getValue() * 255, greenSlider:getValue() * 255, blueSlider:getValue() * 255, 255, true)
 		end
-	end]]
+	end
 
 	lightNode:setIdentity()
 	lightNode:translate(lightSlider:getValue(), 8, light2Slider:getValue());
-	_modelNode:setIdentity()
-	_modelNode:translate(lightSlider:getValue(), 8, light2Slider:getValue());
+	--_modelNode:setIdentity()
+	--_modelNode:translate(lightSlider:getValue(), 8, light2Slider:getValue());
 	--lightNode:rotateX(-1.57 + lightSlider:getValue()) -- Point light down
 	--lightNode:rotateY(light2Slider:getValue())
 end
