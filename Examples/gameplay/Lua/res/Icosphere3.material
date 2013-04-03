@@ -14,8 +14,6 @@ material Icosphere3
             u_inverseTransposeWorldViewMatrix = INVERSE_TRANSPOSE_WORLD_VIEW_MATRIX
             
             u_ambientColor = 0.3, 0.3, 0.3
-            u_lightColor = 0.7, 0.7, 0.7
-            u_lightDirection = 0.0, -1.0, 0.0
             
             // render state
             renderState

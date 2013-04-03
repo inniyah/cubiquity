@@ -17,9 +17,6 @@ material ColouredCubicTerrain
             u_ambientColor = 0.3, 0.3, 0.3
             u_cameraPosition = CAMERA_VIEW_POSITION
             
-            u_lightColor = 0.7, 0.7, 0.7
-            u_lightDirection = 0.0, -1.0, 0.0
-            
             u_specularExponent = 10
             
             // samplers
