@@ -70,7 +70,7 @@ function initialize()
 	_scene:addNode(_modelNode)
 
     -- Create the light node
-	_light = Light.createPoint(0.7, 0.7, 0.7, 100.0)
+	_light = Light.createDirectional(0.7, 0.7, 0.7)
 	lightNode = Node.create()
 	lightNode:setLight(_light)
 	lightNode:setTranslation(64.0, 8.0, 126.0)
@@ -78,8 +78,9 @@ function initialize()
 	_scene:addNode(lightNode)
 
     -- Bind the light node's direction into the box material.
+	--_modelNode:getModel():getMaterial():getParameter("u_lightColor"):bindValue(_light, "&Light::getColor")
     --_modelNode:getModel():getMaterial():getParameter("u_pointLightPosition"):bindValue(lightNode, "&Node::getTranslationView")
-	--_modelNode:getModel():getMaterial():getParameter("u_pointLightRangeInverse")->setValue(_pointLightNode->getLight()->getRangeInverse());
+	--_modelNode:getModel():getMaterial():getParameter("u_pointLightRangeInverse"):bindValue(_light, "&Light::getRangeInverse")
 
 	--Camera model based on http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Creating+a+simple+first-person+camera+system
 	_cameraPositionNode = _scene:addNode()
@@ -143,7 +144,7 @@ function update(elapsedTime)
 	local forwardVector = _cameraNode:getForwardVectorWorld()
 	local rightVector = _cameraNode:getRightVectorWorld()
 
-	local speed = 0.01
+	local speed = 0.1
 	local distance = elapsedTime * speed
 
 	if(wPressed) then
@@ -225,15 +226,15 @@ function drawScene(node)
 	local model = node:getModel()
     if model then
 		if (model:getMaterial()) then
-			if (model:getMaterial():getParameter("u_lightColor")) then
-				model:getMaterial():getParameter("u_lightColor"):setValue(_light:getColor());
+			--[[if (model:getMaterial():getParameter("u_lightColor")) then
+				model:getMaterial():getParameter("u_lightColor"):setValue(_light:getColor())
 			end
-			if (model:getMaterial():getParameter("u_pointLightPosition")) then
-				model:getMaterial():getParameter("u_pointLightPosition"):setValue(lightNode:getTranslationView());
-			end
-			if (model:getMaterial():getParameter("u_pointLightRangeInverse")) then
-				model:getMaterial():getParameter("u_pointLightRangeInverse"):setValue(lightNode:getLight():getRangeInverse());
-			end
+			if (model:getMaterial():getParameter("u_lightDirection")) then
+				model:getMaterial():getParameter("u_lightDirection"):setValue(lightNode:getForwardVectorWorld())
+			end]]
+			--[[if (model:getMaterial():getParameter("u_pointLightRangeInverse")) then
+				model:getMaterial():getParameter("u_pointLightRangeInverse"):setValue(lightNode:getLight():getRangeInverse())
+			end]]
 		end
         model:draw()
     end
