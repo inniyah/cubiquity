@@ -175,11 +175,12 @@ function update(elapsedTime)
 	end
 
 	-- Point the light down and then apply the slider rotations
-	sceneLightTransform = Transform.new();
+	--[[sceneLightTransform = Transform.new();
 	sceneLightTransform:rotateX(-1.57079)
 	sceneLightTransform:rotateX(lightSlider:getValue())
 	sceneLightTransform:rotateY(light2Slider:getValue())
-	_scene:setLightDirection(sceneLightTransform:getForwardVector())
+	_scene:setLightDirection(sceneLightTransform:getForwardVector())]]
+	_scene:setLightDirection(Vector3.new(0.0, -1.0, 0.0))
 end
 
 -- Avoid allocating new objects every frame.

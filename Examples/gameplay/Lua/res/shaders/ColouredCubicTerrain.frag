@@ -14,38 +14,34 @@ uniform vec3 u_ambientColor;                    // Ambient color
 uniform vec3 u_lightColor;                      // Light color
 uniform vec3 u_worldSpaceLightDirection;					// Light direction
 uniform float u_specularExponent;				// Specular exponent
-uniform vec3 u_viewSpaceCameraPosition;
-uniform mat4 u_modelToViewMatrix;
-uniform mat4 u_inverseTransposeModelToViewMatrix;
+uniform vec3 u_worldSpaceCameraPosition;
+uniform mat4 u_inverseTransposeModelToWorldMatrix;
 
 void main()
 {
-    // Calculate the normal vector in model space (as would normally be passed into the vertex shader).
+    // Calculate the normal vector in model space (cubes are always axis aligned in model space).
     vec3 modelSpaceNormal = normalize(cross(dFdx(v_modelSpacePosition.xyz), dFdy(v_modelSpacePosition.xyz))); 
     // This fixes normal corruption which has been seen.
     modelSpaceNormal = floor(modelSpaceNormal + vec3(0.5, 0.5, 0.5));
     
-    // Transform the normal, tangent and binormals to view space.
-	mat3 inverseTransposeWorldViewMatrix = mat3(u_inverseTransposeModelToViewMatrix[0].xyz, u_inverseTransposeModelToViewMatrix[1].xyz, u_inverseTransposeModelToViewMatrix[2].xyz);
-    vec3 viewSpaceNormal = normalize(inverseTransposeWorldViewMatrix * modelSpaceNormal);
-    
-    vec3 tangent = viewSpaceNormal.yzx;
-    vec3 binormal = viewSpaceNormal.zxy;
+    // Compute our normal, tangent and binormal in world space.
+	mat3 inverseTransposeModelToWorldMatrix = mat3(u_inverseTransposeModelToWorldMatrix[0].xyz, u_inverseTransposeModelToWorldMatrix[1].xyz, u_inverseTransposeModelToWorldMatrix[2].xyz);
+    vec3 worldSpaceNormal = normalize(inverseTransposeModelToWorldMatrix * modelSpaceNormal);
+    vec3 worldSpaceTangent = worldSpaceNormal.yzx;
+    vec3 worldSpaceBinormal = worldSpaceNormal.zxy;
     
     // Create a transform to convert a vector to tangent space.
-    vec3 tangentVector  = normalize(inverseTransposeWorldViewMatrix * tangent);
-    vec3 binormalVector = normalize(inverseTransposeWorldViewMatrix * binormal);
-    mat3 tangentSpaceTransformMatrix = mat3(tangentVector.x, binormalVector.x, viewSpaceNormal.x, tangentVector.y, binormalVector.y, viewSpaceNormal.y, tangentVector.z, binormalVector.z, viewSpaceNormal.z);
+    mat3 worldToTangentMatrix = mat3(worldSpaceTangent.x, worldSpaceBinormal.x, worldSpaceNormal.x, worldSpaceTangent.y, worldSpaceBinormal.y, worldSpaceNormal.y, worldSpaceTangent.z, worldSpaceBinormal.z, worldSpaceNormal.z);
     
     // Transform light direction to tangent space
-    vec3 tangentSpaceLightDirection = tangentSpaceTransformMatrix * u_worldSpaceLightDirection;
+    vec3 tangentSpaceLightDirection = worldToTangentMatrix * u_worldSpaceLightDirection;
     
     // Compute the camera direction for specular lighting
-	vec4 positionWorldViewSpace = u_modelToViewMatrix * v_modelSpacePosition;
-    vec3 viewSpaceCameraDirection = u_viewSpaceCameraPosition - positionWorldViewSpace.xyz;
+    vec3 worldSpaceCameraDirection = u_worldSpaceCameraPosition - v_worldSpacePosition.xyz;
+    vec3 tangentSpaceCameraDirection = worldToTangentMatrix * worldSpaceCameraDirection;
     
     //Compute texture coordinates
-    vec2 texCoords = vec2(dot(v_worldSpacePosition.xyz, modelSpaceNormal.yzx), dot(v_worldSpacePosition.xyz, modelSpaceNormal.zxy));
+    vec2 texCoords = vec2(dot(v_worldSpacePosition.xyz, worldSpaceTangent), dot(v_worldSpacePosition.xyz, worldSpaceBinormal));
     //texCoords /= 9.0;
     texCoords += 0.5;
     
@@ -65,35 +61,22 @@ void main()
     //Form the base color by applying noise to the colour which was passed in.
     vec4 baseColor = vec4(v_color.rgb + noise, 1.0) ;
     
-    //baseColor *= 0.001;
-    //baseColor += 1.0;
-
-    // Light the pixel
-    gl_FragColor.a = baseColor.a;
-    #if defined(TEXTURE_DISCARD_ALPHA)
-    if (gl_FragColor.a < 0.5)
-        discard;
-    #endif
-    
     // Fetch normals from the normal map
-    vec3 normalVector = normalize(texture2D(u_normalmapTexture, texCoords).rgb * 2.0 - 1.0);
-    vec3 lightDirection = normalize(tangentSpaceLightDirection);
-    
-    vec3 cameraDirection = normalize(viewSpaceCameraDirection);
+    vec3 tangentSpaceNormal = normalize(texture2D(u_normalmapTexture, texCoords).rgb * 2.0 - 1.0);
     
     float attenuation = 1.0;
     // Ambient
     vec3 ambientColor = baseColor.rgb * u_ambientColor;
 
     // Diffuse
-    float ddot = dot(normalVector, lightDirection);
+    float ddot = dot(tangentSpaceNormal, tangentSpaceLightDirection);
     float diffuseIntensity = attenuation * ddot;
     diffuseIntensity = max(0.0, diffuseIntensity);
     vec3 diffuseColor = u_lightColor * baseColor.rgb * diffuseIntensity;
 
     // Specular
-    vec3 halfVector = normalize(lightDirection + cameraDirection);
-    float specularIntensity = attenuation * max(0.0, pow(dot(normalVector, halfVector), u_specularExponent));
+    vec3 tangentSpaceHalfVector = normalize(tangentSpaceLightDirection + tangentSpaceCameraDirection);
+    float specularIntensity = attenuation * max(0.0, pow(dot(tangentSpaceNormal, tangentSpaceHalfVector), u_specularExponent));
     specularIntensity = max(0.0, specularIntensity);
     vec3 specularColor = u_lightColor * baseColor.rgb * specularIntensity;
 	

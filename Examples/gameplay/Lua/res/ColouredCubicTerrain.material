@@ -11,13 +11,12 @@ material ColouredCubicTerrain
 			defines = TEXTURE_REPEAT; SPECULAR; BUMPED
             u_modelToWorldMatrix = WORLD_MATRIX
             u_worldToClipMatrix = VIEW_PROJECTION_MATRIX
-			u_modelToViewMatrix = WORLD_VIEW_MATRIX
-			u_inverseTransposeModelToViewMatrix = INVERSE_TRANSPOSE_WORLD_VIEW_MATRIX
+			u_inverseTransposeModelToWorldMatrix = INVERSE_TRANSPOSE_WORLD_MATRIX
             
             u_ambientColor = SCENE_AMBIENT_COLOR
             u_lightColor = SCENE_LIGHT_COLOR
             u_worldSpaceLightDirection = SCENE_LIGHT_DIRECTION
-            u_viewSpaceCameraPosition = CAMERA_VIEW_POSITION
+            u_worldSpaceCameraPosition = CAMERA_WORLD_POSITION
             
             u_specularExponent = 10
             
