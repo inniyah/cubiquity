@@ -1,149 +1,44 @@
-//Mine
-uniform mat4 u_viewProjectionMatrix;           // Matrix to transform a position to clip space.
-
-varying vec4 v_modelSpacePosition;
-varying vec4 v_worldSpacePosition;
-varying vec4 v_color;
-
-#define LIGHTING
-//#define BUMPED
-
 // Inputs
-attribute vec4 a_position;									// Vertex Position							(x, y, z, w)
-attribute vec3 a_normal;									// Vertex Normal							(x, y, z)
-attribute vec2 a_texCoord;									// Vertex Texture Coordinate				(u, v)
-attribute vec3 a_tangent;									// Vertex Tangent							(x, y, z)
-attribute vec3 a_binormal;									// Vertex Binormal/Bitangent				(x, y, z)
-#if defined(SKINNING)
-attribute vec4 a_blendWeights;								// Vertex blend weight, up to 4				(0, 1, 2, 3) 
-attribute vec4 a_blendIndices;								// Vertex blend index int u_matrixPalette	(0, 1, 2, 3)
-#endif
+attribute vec4 a_position;									// Vertex Position (x, y, z, w)
 
 // Uniforms
-uniform mat4 u_worldViewProjectionMatrix;					// Matrix to transform a position to clip space
-uniform mat4 u_inverseTransposeWorldViewMatrix;				// Matrix to transform a normal to view space
-#if defined(SPECULAR) || defined(SPOT_LIGHT) || defined(POINT_LIGHT)
-uniform mat4 u_worldViewMatrix;								// Matrix to tranform a position to view space
 uniform mat4 u_worldMatrix;								    // Matrix to tranform a position to world space
-#endif
-#if defined(SKINNING)
-uniform vec4 u_matrixPalette[SKINNING_JOINT_COUNT * 3];		// Array of 4x3 matrices
-#endif
-#if defined(SPECULAR)
-uniform vec3 u_cameraPosition;                 				// Position of the camera in view space
-#endif
-#if defined(TEXTURE_REPEAT)
-uniform vec2 u_textureRepeat;
-#endif
-#if defined(TEXTURE_OFFSET)
-uniform vec2 u_textureOffset;
-#endif
-#if defined(POINT_LIGHT)
-uniform vec3 u_pointLightPosition;							// Position of light
-uniform float u_pointLightRangeInverse;						// Inverse of light range
-#elif defined(SPOT_LIGHT)
-uniform vec3 u_spotLightPosition;							// Position of light
-uniform float u_spotLightRangeInverse;						// Inverse of light range
-uniform vec3 u_spotLightDirection;							// Direction of light
-#else
-uniform vec3 u_lightDirection;								// Direction of light
-#endif
+uniform mat4 u_worldViewMatrix;								// Matrix to tranform a position to view space
+uniform mat4 u_worldViewProjectionMatrix;					// Matrix to transform a position to clip space
 
-// Varyings
-varying vec3 v_normalVector;								// Normal vector in view space
-varying vec2 v_texCoord;									// Texture Coordinate
-#if defined(SPECULAR)
-varying vec3 v_cameraDirection;								// Direction the camera is looking at in tangent space
-#endif
-
-// Lighting
-#if defined(POINT_LIGHT)
-varying vec3 v_vertexToPointLightDirection;					// Direction of point light w.r.t current vertex in tangent space
-varying float v_pointLightAttenuation;						// Attenuation of point light
-#include "lighting-point.vert"
-#elif defined(SPOT_LIGHT)
-varying vec3 v_vertexToSpotLightDirection;					// Direction of the spot light w.r.t current vertex in tangent space
-varying float v_spotLightAttenuation;						// Attenuation of spot light
-varying vec3 v_spotLightDirection;							// Direction of spot light in tangent space
-#include "lighting-spot.vert"
-#else
-varying vec3 v_lightDirection;								// Direction of light
-#include "lighting-directional.vert"
-#endif
-
-// Skinning
-#if defined(SKINNING)
-#include "skinning.vert"
-#else
-#include "skinning-none.vert" 
-#endif
+// Varying
+varying vec4 v_color;
+varying vec4 v_modelSpacePosition;
+varying vec4 v_worldSpacePosition;
 
 vec3 floatToRGB(float inputVal)
 {	
-	//Store the input in each component
+	// Store the input in each component
 	vec3 inputVec = vec3(inputVal, inputVal, inputVal);
 	
-	//Convert each component to a value in the range 0-255
+	// Convert each component to a value in the range 0-255
 	vec3 result = floor(inputVec / vec3(65536.0, 256.0, 1.0));	
 	vec3 shiftedResult = vec3(0.0, result.rg) * 256.0;	
 	result -= shiftedResult;
 	
-	//Convert to range 0-1
+	// Convert to range 0-1
 	result /= 255.0;
 	
-	//return the result	
+	// Return the result	
 	return result;
 }
 
 void main()
 {    
-    //Extract material
-    float material = a_position.w;
+    // Vertex colour from w component of position
+    v_color = vec4(floatToRGB(a_position.w), 1.0);
     
-    ////////////////////////////////////////////////////////////////////////////////
-    // Gameplay shader code starts here
-    ////////////////////////////////////////////////////////////////////////////////
-    // Get the position, normal, tangents and binormals.
-    vec4 position = getPosition();
-    position.w = 1.0;
-    //vec3 normal = getNormal();
-    //vec3 tangent = getTangent();
-    //vec3 binormal = getBinormal();
+    // Reset 'w' for valid model space position
+    v_modelSpacePosition = vec4(a_position.xyz, 1.0);
+
+    // Vertex position
+    v_worldSpacePosition = u_worldMatrix * v_modelSpacePosition;
     
     // Transform position to clip space.
-    gl_Position = u_worldViewProjectionMatrix * position;
-
-    // Transform the normal, tangent and binormals to view space.
-	//mat3 inverseTransposeWorldViewMatrix = mat3(u_inverseTransposeWorldViewMatrix[0].xyz, u_inverseTransposeWorldViewMatrix[1].xyz, //u_inverseTransposeWorldViewMatrix[2].xyz);
-    //vec3 normalVector = normalize(inverseTransposeWorldViewMatrix * normal);
-    
-    // Create a transform to convert a vector to tangent space.
-    //vec3 tangentVector  = normalize(inverseTransposeWorldViewMatrix * tangent);
-    //vec3 binormalVector = normalize(inverseTransposeWorldViewMatrix * binormal);
-    //mat3 tangentSpaceTransformMatrix = mat3(tangentVector.x, binormalVector.x, normalVector.x, tangentVector.y, binormalVector.y, normalVector.y, //tangentVector.z, binormalVector.z, normalVector.z);
-    
-    // Apply light.
-    //applyLight(tangentSpaceTransformMatrix);
-    
-    //applyLight(position);
-    
-    // Texture transformation.
-    //v_texCoord = a_texCoord;
-    //#if defined(TEXTURE_REPEAT)
-    //v_texCoord *= u_textureRepeat;
-    //#endif
-    //#if defined(TEXTURE_OFFSET)
-    //v_texCoord += u_textureOffset;
-    //#endif
-    
-    ////////////////////////////////////////////////////////////////////////////////
-    // Back to our own code here
-    ////////////////////////////////////////////////////////////////////////////////
-    
-    //Vertex colour
-    v_color = vec4(floatToRGB(material), 1.0);
-    
-    //Vertex position
-    v_worldSpacePosition = u_worldMatrix * position;
-    v_modelSpacePosition = position;
+    gl_Position = u_worldViewProjectionMatrix * v_modelSpacePosition;
 }
