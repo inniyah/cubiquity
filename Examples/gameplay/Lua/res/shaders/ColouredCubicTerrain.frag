@@ -12,17 +12,11 @@ uniform sampler2D u_diffuseTexture;             // Diffuse map texture
 uniform sampler2D u_normalmapTexture;       	// Normalmap texture
 uniform vec3 u_ambientColor;                    // Ambient color
 uniform vec3 u_lightColor;                      // Light color
-uniform vec3 u_lightDirection;					// Light direction
+uniform vec3 u_worldSpaceLightDirection;					// Light direction
 uniform float u_specularExponent;				// Specular exponent
-uniform vec3 u_cameraPosition;
-uniform mat4 u_worldViewMatrix;
-uniform mat4 u_inverseTransposeWorldViewMatrix;
-
-// Varyings
-vec4 _baseColor;
-vec3 _ambientColor;
-vec3 _diffuseColor;
-vec3 _specularColor;
+uniform vec3 u_viewSpaceCameraPosition;
+uniform mat4 u_modelToViewMatrix;
+uniform mat4 u_inverseTransposeModelToViewMatrix;
 
 void main()
 {
@@ -32,7 +26,7 @@ void main()
     modelSpaceNormal = floor(modelSpaceNormal + vec3(0.5, 0.5, 0.5));
     
     // Transform the normal, tangent and binormals to view space.
-	mat3 inverseTransposeWorldViewMatrix = mat3(u_inverseTransposeWorldViewMatrix[0].xyz, u_inverseTransposeWorldViewMatrix[1].xyz, u_inverseTransposeWorldViewMatrix[2].xyz);
+	mat3 inverseTransposeWorldViewMatrix = mat3(u_inverseTransposeModelToViewMatrix[0].xyz, u_inverseTransposeModelToViewMatrix[1].xyz, u_inverseTransposeModelToViewMatrix[2].xyz);
     vec3 viewSpaceNormal = normalize(inverseTransposeWorldViewMatrix * modelSpaceNormal);
     
     vec3 tangent = viewSpaceNormal.yzx;
@@ -44,11 +38,11 @@ void main()
     mat3 tangentSpaceTransformMatrix = mat3(tangentVector.x, binormalVector.x, viewSpaceNormal.x, tangentVector.y, binormalVector.y, viewSpaceNormal.y, tangentVector.z, binormalVector.z, viewSpaceNormal.z);
     
     // Transform light direction to tangent space
-    vec3 tangentSpaceLightDirection = tangentSpaceTransformMatrix * u_lightDirection;
+    vec3 tangentSpaceLightDirection = tangentSpaceTransformMatrix * u_worldSpaceLightDirection;
     
     // Compute the camera direction for specular lighting
-	vec4 positionWorldViewSpace = u_worldViewMatrix * v_modelSpacePosition;
-    vec3 viewSpaceCameraDirection = u_cameraPosition - positionWorldViewSpace.xyz;
+	vec4 positionWorldViewSpace = u_modelToViewMatrix * v_modelSpacePosition;
+    vec3 viewSpaceCameraDirection = u_viewSpaceCameraPosition - positionWorldViewSpace.xyz;
     
     //Compute texture coordinates
     vec2 texCoords = vec2(dot(v_worldSpacePosition.xyz, modelSpaceNormal.yzx), dot(v_worldSpacePosition.xyz, modelSpaceNormal.zxy));
@@ -69,13 +63,13 @@ void main()
     noise *= noiseStrength; // Scale to desired strength.
     
     //Form the base color by applying noise to the colour which was passed in.
-    _baseColor = vec4(v_color.rgb + noise, 1.0) ;
+    vec4 baseColor = vec4(v_color.rgb + noise, 1.0) ;
     
-    //_baseColor *= 0.001;
-    //_baseColor += 1.0;
+    //baseColor *= 0.001;
+    //baseColor += 1.0;
 
     // Light the pixel
-    gl_FragColor.a = _baseColor.a;
+    gl_FragColor.a = baseColor.a;
     #if defined(TEXTURE_DISCARD_ALPHA)
     if (gl_FragColor.a < 0.5)
         discard;
@@ -89,28 +83,20 @@ void main()
     
     float attenuation = 1.0;
     // Ambient
-    _ambientColor = _baseColor.rgb * u_ambientColor;
+    vec3 ambientColor = baseColor.rgb * u_ambientColor;
 
     // Diffuse
     float ddot = dot(normalVector, lightDirection);
     float diffuseIntensity = attenuation * ddot;
     diffuseIntensity = max(0.0, diffuseIntensity);
-    _diffuseColor = u_lightColor * _baseColor.rgb * diffuseIntensity;
+    vec3 diffuseColor = u_lightColor * baseColor.rgb * diffuseIntensity;
 
     // Specular
     vec3 halfVector = normalize(lightDirection + cameraDirection);
     float specularIntensity = attenuation * max(0.0, pow(dot(normalVector, halfVector), u_specularExponent));
     specularIntensity = max(0.0, specularIntensity);
-    _specularColor = u_lightColor * _baseColor.rgb * specularIntensity;
+    vec3 specularColor = u_lightColor * baseColor.rgb * specularIntensity;
 	
-	gl_FragColor.rgb =  _ambientColor + _diffuseColor + _specularColor;
-   
-	
-	// Global color modulation
-	#if defined(MODULATE_COLOR)
-	gl_FragColor *= u_modulateColor;
-	#endif
-	#if defined(MODULATE_ALPHA)
-    gl_FragColor.a *= u_modulateAlpha;
-    #endif
+	gl_FragColor.rgb =  ambientColor + diffuseColor + specularColor;
+    gl_FragColor.a = 1.0;
 }
