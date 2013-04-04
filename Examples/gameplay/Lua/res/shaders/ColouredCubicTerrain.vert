@@ -1,15 +1,14 @@
 // Inputs
 attribute vec4 a_position;									// Vertex Position (x, y, z, w)
 
-// Uniforms
-uniform mat4 u_worldMatrix;								    // Matrix to tranform a position to world space
-uniform mat4 u_worldViewMatrix;								// Matrix to tranform a position to view space
-uniform mat4 u_worldViewProjectionMatrix;					// Matrix to transform a position to clip space
-
-// Varying
+// Outputs
 varying vec4 v_color;
 varying vec4 v_modelSpacePosition;
 varying vec4 v_worldSpacePosition;
+
+// Uniforms
+uniform mat4 u_worldMatrix;								    // Matrix to tranform a position to world space
+uniform mat4 u_viewProjectionMatrix;					// Matrix to transform a position to clip space
 
 vec3 floatToRGB(float inputVal)
 {	
@@ -40,5 +39,5 @@ void main()
     v_worldSpacePosition = u_worldMatrix * v_modelSpacePosition;
     
     // Transform position to clip space.
-    gl_Position = u_worldViewProjectionMatrix * v_modelSpacePosition;
+    gl_Position = u_viewProjectionMatrix * v_worldSpacePosition;
 }
