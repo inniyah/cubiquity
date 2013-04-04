@@ -77,11 +77,6 @@ function initialize()
 	--lightNode:rotateX(-1.57) -- Point light down
 	_scene:addNode(lightNode)
 
-	-- We can't bind (only set) the color from Lua. But it's not changing anyway.
-	_modelNode:getModel():getMaterial():getParameter("u_lightColor"):setValue(_light:getColor())
-    -- Bind the light node's direction into the box material.
-    _modelNode:getModel():getMaterial():getParameter("u_lightDirection"):bindValue(lightNode, "&Node::getForwardVectorView")
-
 	--Camera model based on http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Creating+a+simple+first-person+camera+system
 	_cameraPositionNode = _scene:addNode()
 	_cameraYawNode = Node.create()
@@ -184,12 +179,11 @@ function update(elapsedTime)
 		end
 	end
 
+	-- Point the light down and then apply the slider rotations
 	lightNode:setIdentity()
-	lightNode:translate(lightSlider:getValue(), 8, light2Slider:getValue());
-	--_modelNode:setIdentity()
-	--_modelNode:translate(lightSlider:getValue(), 8, light2Slider:getValue());
-	--lightNode:rotateX(-1.57 + lightSlider:getValue()) -- Point light down
-	--lightNode:rotateY(light2Slider:getValue())
+	lightNode:rotateX(-1.57079)
+	lightNode:rotateX(lightSlider:getValue())
+	lightNode:rotateY(light2Slider:getValue())
 end
 
 -- Avoid allocating new objects every frame.
@@ -230,11 +224,8 @@ function drawScene(node)
 				model:getMaterial():getParameter("u_lightColor"):setValue(_light:getColor())
 			end
 			if (model:getMaterial():getParameter("u_lightDirection")) then
-				model:getMaterial():getParameter("u_lightDirection"):setValue(lightNode:getForwardVectorWorld())
+				model:getMaterial():getParameter("u_lightDirection"):setValue(lightNode:getForwardVectorView())
 			end
-			--[[if (model:getMaterial():getParameter("u_pointLightRangeInverse")) then
-				model:getMaterial():getParameter("u_pointLightRangeInverse"):setValue(lightNode:getLight():getRangeInverse())
-			end]]
 		end
         model:draw()
     end

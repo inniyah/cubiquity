@@ -112,10 +112,10 @@ form particleEditor
             style = noBorder
             size = 150, 50
             orientation = HORIZONTAL
-            min = 0
-            max = 128
-            value = 64
-            step = 1
+            min = -1.57079
+            max = 1.57079
+            value = 0
+            step = 0.01
             consumeInputEvents = false
         }
         
@@ -131,10 +131,10 @@ form particleEditor
             style = noBorder
             size = 150, 50
             orientation = HORIZONTAL
-            min = 0
-            max = 128
-            value = 64
-            step = 1
+            min = -1.57079
+            max = 1.57079
+            value = 0
+            step = 0.01
             consumeInputEvents = false
         }
     }
