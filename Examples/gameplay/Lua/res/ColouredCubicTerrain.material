@@ -14,7 +14,9 @@ material ColouredCubicTerrain
  			u_worldViewProjectionMatrix = WORLD_VIEW_PROJECTION_MATRIX
 			u_inverseTransposeWorldViewMatrix = INVERSE_TRANSPOSE_WORLD_VIEW_MATRIX
             
-            u_ambientColor = 0.3, 0.3, 0.3
+            u_ambientColor = SCENE_AMBIENT_COLOR
+            u_lightColor = SCENE_LIGHT_COLOR
+            u_lightDirection = SCENE_LIGHT_DIRECTION
             u_cameraPosition = CAMERA_VIEW_POSITION
             
             u_specularExponent = 10

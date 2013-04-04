@@ -69,13 +69,8 @@ function initialize()
 	_modelNode:setModel(model)
 	_scene:addNode(_modelNode)
 
-    -- Create the light node
-	_light = Light.createDirectional(0.7, 0.7, 0.7)
-	lightNode = Node.create()
-	lightNode:setLight(_light)
-	lightNode:setTranslation(64.0, 8.0, 126.0)
-	--lightNode:rotateX(-1.57) -- Point light down
-	_scene:addNode(lightNode)
+	_scene:setAmbientColor(0.3, 0.3, 0.3)
+	_scene:setLightColor(0.7, 0.7, 0.7)
 
 	--Camera model based on http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Creating+a+simple+first-person+camera+system
 	_cameraPositionNode = _scene:addNode()
@@ -180,10 +175,11 @@ function update(elapsedTime)
 	end
 
 	-- Point the light down and then apply the slider rotations
-	lightNode:setIdentity()
-	lightNode:rotateX(-1.57079)
-	lightNode:rotateX(lightSlider:getValue())
-	lightNode:rotateY(light2Slider:getValue())
+	sceneLightTransform = Transform.new();
+	sceneLightTransform:rotateX(-1.57079)
+	sceneLightTransform:rotateX(lightSlider:getValue())
+	sceneLightTransform:rotateY(light2Slider:getValue())
+	_scene:setLightDirection(sceneLightTransform:getForwardVector())
 end
 
 -- Avoid allocating new objects every frame.
@@ -219,14 +215,7 @@ function drawScene(node)
 
 	local model = node:getModel()
     if model then
-		if (model:getMaterial()) then
-			if (model:getMaterial():getParameter("u_lightColor")) then
-				model:getMaterial():getParameter("u_lightColor"):setValue(_light:getColor())
-			end
-			if (model:getMaterial():getParameter("u_lightDirection")) then
-				model:getMaterial():getParameter("u_lightDirection"):setValue(lightNode:getForwardVectorView())
-			end
-		end
+		
         model:draw()
     end
 
