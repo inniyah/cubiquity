@@ -4,7 +4,7 @@ precision highp float;
 
 uniform vec3 u_ambientColor;                    // Ambient color
 uniform vec3 u_lightColor;                      // Light color
-uniform vec3 u_lightDirection;       	        // Light direction
+uniform vec3 u_worldSpaceLightVector;       	        // Light direction
 uniform sampler2D u_texture0;
 uniform sampler2D u_texture1;
 uniform sampler2D u_texture2;
@@ -30,7 +30,7 @@ vec4 textureTriplanar(sampler2D texture, vec3 position, vec3 normal, float scale
 void main()
 {	
     // Normalize the vectors.
-    vec3 lightDirection = normalize(u_lightDirection);
+    vec3 lightDirection = normalize(u_worldSpaceLightVector);
     vec3 normalVector = v_normal;   
     
     vec4 texCoord0 = v_texCoord0;

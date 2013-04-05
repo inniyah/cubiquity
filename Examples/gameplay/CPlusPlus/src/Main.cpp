@@ -116,7 +116,7 @@ void MeshGame::initialize()
     SAFE_RELEASE(bundle);
 
 	Model* model = Model::create(sphere);
-	model->setMaterial("res/Icosphere3.material");
+	model->setMaterial("res/shaders/VertexColouredMesh.material");
 	mSphereNode = Node::create();
 	mSphereNode->setModel(model);
 	float scale = mBrushSizeSlider->getValue();
@@ -131,7 +131,7 @@ void MeshGame::initialize()
 		for(int x = 0; x < 128; x += 40)
 		{
 			Model* objectModel = Model::create(objectMesh);
-			objectModel->setMaterial("res/Icosphere3.material");
+			objectModel->setMaterial("res/shaders/VertexColouredMesh.material");
 
 			Node* objectNode = Node::create();
 			objectNode->setModel(objectModel);
@@ -455,7 +455,13 @@ bool MeshGame::drawScene(Node* node)
     if (model)
 	{
 		model->getMaterial()->getParameter("u_lightColor")->setValue(_light->getColor());
-		model->getMaterial()->getParameter("u_lightDirection")->setValue(_lightNode->getForwardVectorView());
+#ifdef TERRAIN_SMOOTH
+		model->getMaterial()->getParameter("u_worldSpaceLightVector")->setValue(_lightNode->getForwardVectorView()); //WRONG!!
+#else
+		Vector3 lightVector = _lightNode->getForwardVectorWorld();
+		lightVector.negate(); // NOTE: Negated to point *towards* light.
+		model->getMaterial()->getParameter("u_worldSpaceLightVector")->setValue(lightVector);
+#endif
 		model->draw(mWireframeCheckBox->isChecked());
 	}
     return true;

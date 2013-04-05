@@ -18,7 +18,7 @@ void main()
 
     // Transform normal to world space.
     mat3 inverseTransposeModelToWorldMatrix = mat3(u_inverseTransposeModelToWorldMatrix[0].xyz, u_inverseTransposeModelToWorldMatrix[1].xyz, u_inverseTransposeModelToWorldMatrix[2].xyz);
-    v_normalVector = inverseTransposeModelToWorldMatrix * normal;
+    v_normalVector = inverseTransposeModelToWorldMatrix * a_normal;
     
     // Pass the vertex color to fragment shader
 	v_color = a_color;

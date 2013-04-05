@@ -1,0 +1,50 @@
+material ColouredCubicTerrain
+{
+    technique
+    {
+        pass
+        {
+            // shaders
+            vertexShader = res/shaders/ColouredCubicTerrain.vert
+            fragmentShader = res/shaders/ColouredCubicTerrain.frag
+            
+			defines = TEXTURE_REPEAT; SPECULAR; BUMPED
+            u_modelToWorldMatrix = WORLD_MATRIX
+            u_worldToClipMatrix = VIEW_PROJECTION_MATRIX
+			u_inverseTransposeModelToWorldMatrix = INVERSE_TRANSPOSE_WORLD_MATRIX
+            
+            u_ambientColor = SCENE_AMBIENT_COLOR
+            u_worldSpaceCameraPosition = CAMERA_WORLD_POSITION
+            
+            u_specularExponent = 10
+            
+            // samplers
+            sampler u_diffuseTexture
+            {
+                path = res/noise.png
+                mipmap = false
+                wrapS = REPEAT
+                wrapT = REPEAT
+                minFilter = NEAREST
+                magFilter = NEAREST
+            }
+            
+            sampler u_normalmapTexture
+            {
+                path = res/VoxelNormalMap256.png
+                mipmap = true
+                wrapS = REPEAT
+                wrapT = REPEAT
+                minFilter = NEAREST_MIPMAP_LINEAR
+                magFilter = LINEAR
+            }
+
+            // render state
+            renderState
+            {
+                cullFace = true
+                depthTest = true
+            }
+        }
+    }
+}
