@@ -63,14 +63,20 @@ function initialize()
 	local meshBundle = Bundle.create("res/Icosphere3.gpb")
 	local mesh = meshBundle:loadMesh("Sphere_001")
 	local model = Model.create(mesh)
-	model:setMaterial("res/Icosphere3.material")
+	model:setMaterial("res/shaders/VertexColouredMesh.material")
 
 	_modelNode = Node.create()
 	_modelNode:setModel(model)
 	_scene:addNode(_modelNode)
 
+    -- Create the light node
+	_light = Light.createDirectional(0.7, 0.7, 0.7)
+	lightNode = Node.create()
+	lightNode:setLight(_light)
+	lightNode:setTranslation(64.0, 8.0, 126.0)
+	--lightNode:rotateX(-1.57) -- Point light down
+	_scene:addNode(lightNode)
 	_scene:setAmbientColor(0.3, 0.3, 0.3)
-	_scene:setLightColor(0.7, 0.7, 0.7)
 
 	--Camera model based on http://www.ogre3d.org/tikiwiki/tiki-index.php?page=Creating+a+simple+first-person+camera+system
 	_cameraPositionNode = _scene:addNode()
@@ -175,12 +181,10 @@ function update(elapsedTime)
 	end
 
 	-- Point the light down and then apply the slider rotations
-	--[[sceneLightTransform = Transform.new();
-	sceneLightTransform:rotateX(-1.57079)
-	sceneLightTransform:rotateX(lightSlider:getValue())
-	sceneLightTransform:rotateY(light2Slider:getValue())
-	_scene:setLightDirection(sceneLightTransform:getForwardVector())]]
-	_scene:setLightDirection(Vector3.new(0.0, -1.0, 0.0))
+	lightNode:setIdentity()
+	lightNode:rotateX(-1.57079)
+	lightNode:rotateX(lightSlider:getValue())
+	lightNode:rotateY(light2Slider:getValue())
 end
 
 -- Avoid allocating new objects every frame.
@@ -216,7 +220,12 @@ function drawScene(node)
 
 	local model = node:getModel()
     if model then
-		
+		if (model:getMaterial()) then
+				model:getMaterial():getParameter("u_lightColor"):setValue(_light:getColor())
+				lightVector = lightNode:getForwardVectorWorld()
+				lightVector:negate() --NOTE: Negated to point *towards* light.
+				model:getMaterial():getParameter("u_worldSpaceLightVector"):setValue(lightVector)
+		end
         model:draw()
     end
 

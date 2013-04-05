@@ -12,7 +12,7 @@ uniform sampler2D u_diffuseTexture;             // Diffuse map texture
 uniform sampler2D u_normalmapTexture;       	// Normalmap texture
 uniform vec3 u_ambientColor;                    // Ambient color
 uniform vec3 u_lightColor;                      // Light color
-uniform vec3 u_worldSpaceLightDirection;					// Light direction
+uniform vec3 u_worldSpaceLightVector;			// Points *towards* the light source
 uniform float u_specularExponent;				// Specular exponent
 uniform vec3 u_worldSpaceCameraPosition;
 uniform mat4 u_inverseTransposeModelToWorldMatrix;
@@ -34,7 +34,7 @@ void main()
     mat3 worldToTangentMatrix = mat3(worldSpaceTangent.x, worldSpaceBinormal.x, worldSpaceNormal.x, worldSpaceTangent.y, worldSpaceBinormal.y, worldSpaceNormal.y, worldSpaceTangent.z, worldSpaceBinormal.z, worldSpaceNormal.z);
     
     // Transform light direction to tangent space
-    vec3 tangentSpaceLightDirection = worldToTangentMatrix * u_worldSpaceLightDirection;
+    vec3 tangentSpaceLightVector = worldToTangentMatrix * u_worldSpaceLightVector;
     
     // Compute the camera direction for specular lighting
     vec3 worldSpaceCameraDirection = u_worldSpaceCameraPosition - v_worldSpacePosition.xyz;
@@ -69,13 +69,13 @@ void main()
     vec3 ambientColor = baseColor.rgb * u_ambientColor;
 
     // Diffuse
-    float ddot = dot(tangentSpaceNormal, tangentSpaceLightDirection);
+    float ddot = dot(tangentSpaceNormal, tangentSpaceLightVector);
     float diffuseIntensity = attenuation * ddot;
     diffuseIntensity = max(0.0, diffuseIntensity);
     vec3 diffuseColor = u_lightColor * baseColor.rgb * diffuseIntensity;
 
     // Specular
-    vec3 tangentSpaceHalfVector = normalize(tangentSpaceLightDirection + tangentSpaceCameraDirection);
+    vec3 tangentSpaceHalfVector = normalize(tangentSpaceLightVector + tangentSpaceCameraDirection);
     float specularIntensity = attenuation * max(0.0, pow(dot(tangentSpaceNormal, tangentSpaceHalfVector), u_specularExponent));
     specularIntensity = max(0.0, specularIntensity);
     vec3 specularColor = u_lightColor * baseColor.rgb * specularIntensity;

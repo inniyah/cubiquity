@@ -14,10 +14,6 @@ material Icosphere3
             u_inverseTransposeWorldViewMatrix = INVERSE_TRANSPOSE_WORLD_VIEW_MATRIX
             
             u_ambientColor = SCENE_AMBIENT_COLOR
-            u_lightColor = SCENE_LIGHT_COLOR
-            
-            //WRONG - Provided position is in world space but should be view space.
-            u_lightDirection = SCENE_LIGHT_DIRECTION
             
             // render state
             renderState

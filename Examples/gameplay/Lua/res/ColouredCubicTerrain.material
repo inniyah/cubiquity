@@ -14,8 +14,6 @@ material ColouredCubicTerrain
 			u_inverseTransposeModelToWorldMatrix = INVERSE_TRANSPOSE_WORLD_MATRIX
             
             u_ambientColor = SCENE_AMBIENT_COLOR
-            u_lightColor = SCENE_LIGHT_COLOR
-            u_worldSpaceLightDirection = SCENE_LIGHT_DIRECTION
             u_worldSpaceCameraPosition = CAMERA_WORLD_POSITION
             
             u_specularExponent = 10
