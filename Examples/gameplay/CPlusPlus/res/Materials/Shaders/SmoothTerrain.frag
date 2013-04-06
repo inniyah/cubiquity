@@ -52,7 +52,7 @@ void main()
 
     // Diffuse
 	float attenuation = 1.0;
-    float ddot = dot(normalVector, -lightDirection); //Vector to light is inverse of light direction
+    float ddot = dot(normalVector, lightDirection);
     float intensity =  max(0.0, attenuation * ddot);
     vec3 diffuseColor = u_lightColor * baseColor.rgb * intensity;
 

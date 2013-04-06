@@ -455,13 +455,9 @@ bool MeshGame::drawScene(Node* node)
     if (model)
 	{
 		model->getMaterial()->getParameter("u_lightColor")->setValue(_light->getColor());
-#ifdef TERRAIN_SMOOTH
-		model->getMaterial()->getParameter("u_worldSpaceLightVector")->setValue(_lightNode->getForwardVectorView()); //WRONG!!
-#else
 		Vector3 lightVector = _lightNode->getForwardVectorWorld();
 		lightVector.negate(); // NOTE: Negated to point *towards* light.
 		model->getMaterial()->getParameter("u_worldSpaceLightVector")->setValue(lightVector);
-#endif
 		model->draw(mWireframeCheckBox->isChecked());
 	}
     return true;
