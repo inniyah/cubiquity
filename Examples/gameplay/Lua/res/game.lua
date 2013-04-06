@@ -63,7 +63,7 @@ function initialize()
 	local meshBundle = Bundle.create("res/Models/Icosphere3.gpb")
 	local mesh = meshBundle:loadMesh("Sphere_001")
 	local model = Model.create(mesh)
-	model:setMaterial("res/Materials/Shaders/VertexColouredMesh.material")
+	model:setMaterial("res/Materials/VertexColouredMesh.material")
 
 	_modelNode = Node.create()
 	_modelNode:setModel(model)

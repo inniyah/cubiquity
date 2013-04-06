@@ -116,7 +116,7 @@ void MeshGame::initialize()
     SAFE_RELEASE(bundle);
 
 	Model* model = Model::create(sphere);
-	model->setMaterial("res/Materials/Shaders/VertexColouredMesh.material");
+	model->setMaterial("res/Materials/VertexColouredMesh.material");
 	mSphereNode = Node::create();
 	mSphereNode->setModel(model);
 	float scale = mBrushSizeSlider->getValue();
@@ -131,7 +131,7 @@ void MeshGame::initialize()
 		for(int x = 0; x < 128; x += 40)
 		{
 			Model* objectModel = Model::create(objectMesh);
-			objectModel->setMaterial("res/Materials/Shaders/VertexColouredMesh.material");
+			objectModel->setMaterial("res/Materials/VertexColouredMesh.material");
 
 			Node* objectNode = Node::create();
 			objectNode->setModel(objectModel);
