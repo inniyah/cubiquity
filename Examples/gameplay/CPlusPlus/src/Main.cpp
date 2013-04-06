@@ -71,10 +71,10 @@ MeshGame::~MeshGame()
 void MeshGame::initialize()
 {    
     // Load font
-    _font = Font::create("res/arial40.gpb");
+    _font = Font::create("res/Fonts/arial40.gpb");
 
 	// Load the form for editing ParticleEmitters.
-    mForm = Form::create("res/editor.form");
+    mForm = Form::create("res/Forms/editor.form");
     mForm->setConsumeInputEvents(false);
 
 	mRotateButton = (RadioButton*)mForm->getControl("RotateButton");
