@@ -76,7 +76,7 @@ namespace Cubiquity
 			if(octreeNode->mPolyVoxMesh)
 			{
 				Model* model = buildModelFromPolyVoxMesh(octreeNode->mPolyVoxMesh);
-				model->setMaterial("res/SmoothTerrain.material");
+				model->setMaterial("res/Materials/Shaders/SmoothTerrain.material");
 				gameplayNode->setModel(model);
 				SAFE_RELEASE(model);
 

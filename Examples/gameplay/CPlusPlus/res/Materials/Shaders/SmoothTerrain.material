@@ -5,8 +5,8 @@ material SmoothTerrain
         pass
         {
             // shaders
-            vertexShader = res/SmoothTerrain.vert
-            fragmentShader = res/SmoothTerrain.frag
+            vertexShader = res/Materials/Shaders/SmoothTerrain.vert
+            fragmentShader = res/Materials/Shaders/SmoothTerrain.frag
             
             // uniforms
             u_worldMatrix = WORLD_MATRIX
