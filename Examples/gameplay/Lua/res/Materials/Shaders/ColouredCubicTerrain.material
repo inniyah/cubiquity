@@ -5,8 +5,8 @@ material ColouredCubicTerrain
         pass
         {
             // shaders
-            vertexShader = res/shaders/ColouredCubicTerrain.vert
-            fragmentShader = res/shaders/ColouredCubicTerrain.frag
+            vertexShader = res/Materials/Shaders/ColouredCubicTerrain.vert
+            fragmentShader = res/Materials/Shaders/ColouredCubicTerrain.frag
             
 			defines = TEXTURE_REPEAT; SPECULAR; BUMPED
             u_modelToWorldMatrix = WORLD_MATRIX
@@ -21,7 +21,7 @@ material ColouredCubicTerrain
             // samplers
             sampler u_diffuseTexture
             {
-                path = res/noise.png
+                path = res/Materials/Textures/noise.png
                 mipmap = false
                 wrapS = REPEAT
                 wrapT = REPEAT
@@ -31,7 +31,7 @@ material ColouredCubicTerrain
             
             sampler u_normalmapTexture
             {
-                path = res/VoxelNormalMap256.png
+                path = res/Materials/Textures/VoxelNormalMap256.png
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT
