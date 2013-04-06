@@ -111,7 +111,7 @@ void MeshGame::initialize()
 	_scene = Scene::create();
 
 	// Load mesh/scene from file
-    Bundle* bundle = Bundle::create("res/Icosphere3.gpb");
+    Bundle* bundle = Bundle::create("res/Models/Icosphere3.gpb");
 	Mesh* sphere = bundle->loadMesh("Sphere_001");
     SAFE_RELEASE(bundle);
 
@@ -124,7 +124,7 @@ void MeshGame::initialize()
 	_scene->addNode(mSphereNode);
 
 	//Create some physics object for testing.
-	Bundle* boxBundle = Bundle::create("res/box.gpb");
+	Bundle* boxBundle = Bundle::create("res/Models/box.gpb");
 	Mesh* objectMesh = boxBundle->loadMesh("boxShape");
 	for(int z = 0; z < 128; z += 40)
 	{
