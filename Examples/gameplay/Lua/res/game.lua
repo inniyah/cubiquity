@@ -49,7 +49,7 @@ function initialize()
 	--_colouredCubesVolume = GameplayColouredCubesVolume.create("C:\\code\\cubiquity\\Examples\\gameplay\\Lua\\res\\Capitol.vxl");
 
     -- Load font
-    _font = Font.create("res/arial40.gpb")
+    _font = Font.create("res/Fonts/arial40.gpb")
 
     -- Load mesh/scene from file
     --local bundle = Bundle.create("res/box.gpb")
@@ -60,7 +60,7 @@ function initialize()
 	
 
     -- Create the paint brush
-	local meshBundle = Bundle.create("res/Icosphere3.gpb")
+	local meshBundle = Bundle.create("res/Models/Icosphere3.gpb")
 	local mesh = meshBundle:loadMesh("Sphere_001")
 	local model = Model.create(mesh)
 	model:setMaterial("res/Materials/Shaders/VertexColouredMesh.material")
