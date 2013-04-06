@@ -1,6 +1,6 @@
 theme particleEditor
 {
-    texture = res/editor.png
+    texture = res/Forms/editor.png
 
     imageList normalImages
     {

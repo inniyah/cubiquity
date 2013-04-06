@@ -98,7 +98,7 @@ function initialize()
 	local dummyValue = 42
 	_scene:addNode(_colouredCubesVolume:getRootNodeForLua(dummyValue))
 
-	form = Form.create("res/editor.form")
+	form = Form.create("res/Forms/editor.form")
 	form:setConsumeInputEvents(false)
 	lodSlider = form:getControl("LodSlider")
 	if lodSlider ~= nil then
