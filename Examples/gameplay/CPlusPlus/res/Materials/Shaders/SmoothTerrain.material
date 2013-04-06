@@ -17,7 +17,7 @@ material SmoothTerrain
             // samplers
             sampler u_texture0
             {
-                path = res/Rock.png
+                path = res/Materials/Textures/Rock.png
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT
@@ -27,7 +27,7 @@ material SmoothTerrain
             
             sampler u_texture1
             {
-                path = res/Grass.png
+                path = res/Materials/Textures/Grass.png
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT
@@ -37,7 +37,7 @@ material SmoothTerrain
             
             sampler u_texture2
             {
-                path = res/Water.png
+                path = res/Materials/Textures/Water.png
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT
@@ -47,7 +47,7 @@ material SmoothTerrain
             
             sampler u_texture3
             {
-                path = res/SandDiffuseMap.png
+                path = res/Materials/Textures/SandDiffuseMap.png
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT
