@@ -318,13 +318,7 @@
       <SubType>Designer</SubType>
     </None>
     <None Include="icon.png" />
-    <None Include="res\box.dae" />
-    <None Include="res\box.gpb" />
-    <None Include="res\box.material" />
-    <None Include="res\colored.frag" />
-    <None Include="res\colored.vert" />
     <None Include="res\game.lua" />
-    <None Include="res\VxlSerialisation.lua" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\Bridges\gameplay\GameplayColouredCubesVolume.cpp" />

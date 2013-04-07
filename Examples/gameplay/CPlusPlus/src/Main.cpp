@@ -69,12 +69,14 @@ MeshGame::~MeshGame()
 }
 
 void MeshGame::initialize()
-{    
+{   
+	FileSystem::setResourcePath("C:/code/cubiquity/Examples/gameplay/");
+
     // Load font
     _font = Font::create("res/Fonts/arial40.gpb");
 
 	// Load the form for editing ParticleEmitters.
-    mForm = Form::create("res/Forms/editor.form");
+    mForm = Form::create("res/Forms/CppExample.form");
     mForm->setConsumeInputEvents(false);
 
 	mRotateButton = (RadioButton*)mForm->getControl("RotateButton");

@@ -19,25 +19,7 @@
     <None Include="game.config" />
     <None Include="icon.png" />
     <None Include="bar-descriptor.xml" />
-    <None Include="res\box.dae">
-      <Filter>res</Filter>
-    </None>
-    <None Include="res\box.gpb">
-      <Filter>res</Filter>
-    </None>
-    <None Include="res\box.material">
-      <Filter>res</Filter>
-    </None>
-    <None Include="res\colored.frag">
-      <Filter>res</Filter>
-    </None>
-    <None Include="res\colored.vert">
-      <Filter>res</Filter>
-    </None>
     <None Include="res\game.lua">
-      <Filter>res</Filter>
-    </None>
-    <None Include="res\VxlSerialisation.lua">
       <Filter>res</Filter>
     </None>
   </ItemGroup>
