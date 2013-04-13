@@ -45,8 +45,8 @@ material ColouredCubicTerrain
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT
-                minFilter = NEAREST_MIPMAP_LINEAR
-                magFilter = LINEAR
+                minFilter = NEAREST
+                magFilter = NEAREST
             }
             
             sampler u_normalTexture
