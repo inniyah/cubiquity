@@ -29,19 +29,9 @@ material ColouredCubicTerrain
                 magFilter = NEAREST
             }
             
-            sampler u_combinedTexture
-            {
-                path = res/Materials/Textures/TestCombined.png
-                mipmap = true
-                wrapS = REPEAT
-                wrapT = REPEAT
-                minFilter = NEAREST_MIPMAP_LINEAR
-                magFilter = LINEAR
-            }
-            
             sampler u_depthTexture
             {
-                path = res/Materials/Textures/TestDepthMap.png
+                path = res/Materials/Textures/TestDepth.png
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT
@@ -52,6 +42,16 @@ material ColouredCubicTerrain
             sampler u_rcsmTexture
             {
                 path = res/Materials/Textures/TestRCSM.png
+                mipmap = true
+                wrapS = REPEAT
+                wrapT = REPEAT
+                minFilter = NEAREST_MIPMAP_LINEAR
+                magFilter = LINEAR
+            }
+            
+            sampler u_normalTexture
+            {
+                path = res/Materials/Textures/TestNormal.png
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT
