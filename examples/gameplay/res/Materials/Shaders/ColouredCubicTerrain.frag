@@ -17,6 +17,48 @@ uniform float u_specularExponent;				// Specular exponent
 uniform vec3 u_worldSpaceCameraPosition;
 uniform mat4 u_inverseTransposeModelToWorldMatrix;
 
+// ray intersect depth map using binary cone space leaping
+// depth value stored in alpha channel (black is at object surface)
+// and cone ratio stored in blue channel
+void ray_intersect_relaxedcone(
+	sampler2D relaxedcone_relief_map,
+	inout vec3 p,
+	inout vec3 v)
+{
+	const int cone_steps=30;
+	const int binary_steps=16;
+	
+	vec3 p0 = p;
+
+	v /= v.z;
+	
+	float dist = length(v.xy);
+	
+	for( int i=0;i<cone_steps;i++ )
+	{
+		vec4 tex = tex2D(relaxedcone_relief_map, p.xy);
+
+		float height = saturate(tex.w - p.z);
+		
+		float cone_ratio = tex.z;
+		
+		p += v * (cone_ratio * height / (dist + cone_ratio));
+	}
+
+	v *= p.z*0.5;
+	p = p0 + v;
+
+	for( int i=0;i<binary_steps;i++ )
+	{
+		vec4 tex = tex2D(relaxedcone_relief_map, p.xy);
+		v *= 0.5;
+		if (p.z<tex.w)
+			p+=v;
+		else
+			p-=v;
+	}
+}
+
 void main()
 {
     // Calculate the normal vector in model space (cubes are always axis aligned in model space).
@@ -59,10 +101,21 @@ void main()
     noise *= noiseStrength; // Scale to desired strength.
     
     //Form the base color by applying noise to the colour which was passed in.
-    vec4 baseColor = vec4(v_color.rgb + noise, 1.0) ;
+    vec4 baseColor = vec4(v_color.rgb + noise, 1.0) ;    
     
-    // Fetch normals from the normal map
-    vec3 tangentSpaceNormal = normalize(texture2D(u_normalmapTexture, texCoords).rgb * 2.0 - 1.0);
+    vec3 p = vec3(texCoords,0);
+	vec3 v = normalize(tangentSpaceCameraDirection);
+    v.z = -v.z;
+    float depth = 0.1;
+    v.xy *= depth;
+    
+    ray_intersect_relaxedcone(u_normalmapTexture, p, v);
+    
+    // Fetch normals from the normal map    
+    vec3 tangentSpaceNormal = texture2D(u_normalmapTexture, p.xy).rgb;
+	tangentSpaceNormal.xy = 2.0 * tangentSpaceNormal.xy - 1.0;
+	tangentSpaceNormal.y = -tangentSpaceNormal.y;
+	tangentSpaceNormal.z = sqrt(1.0 - dot(tangentSpaceNormal.xy,tangentSpaceNormal.xy));
     
     float attenuation = 1.0;
     // Ambient

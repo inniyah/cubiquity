@@ -140,7 +140,7 @@ function update(elapsedTime)
 	local forwardVector = _cameraNode:getForwardVectorWorld()
 	local rightVector = _cameraNode:getRightVectorWorld()
 
-	local speed = 0.1
+	local speed = 0.01
 	local distance = elapsedTime * speed
 
 	if(wPressed) then

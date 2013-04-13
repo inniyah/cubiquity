@@ -31,7 +31,7 @@ material ColouredCubicTerrain
             
             sampler u_normalmapTexture
             {
-                path = res/Materials/Textures/VoxelNormalMap256.png
+                path = res/Materials/Textures/rcsm2.png
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT
