@@ -9,7 +9,7 @@ varying vec4 v_worldSpacePosition;
 
 // Uniforms
 uniform sampler2D u_diffuseTexture;             // Diffuse map texture
-uniform sampler2D u_normalmapTexture;       	// Normalmap texture
+uniform sampler2D u_combinedTexture;         	// Combined texture
 uniform vec3 u_ambientColor;                    // Ambient color
 uniform vec3 u_lightColor;                      // Light color
 uniform vec3 u_worldSpaceLightVector;			// Points *towards* the light source
@@ -109,10 +109,10 @@ void main()
     float depth = 0.1;
     v.xy *= depth;
     
-    ray_intersect_relaxedcone(u_normalmapTexture, p, v);
+    ray_intersect_relaxedcone(u_combinedTexture, p, v);
     
     // Fetch normals from the normal map    
-    vec3 tangentSpaceNormal = texture2D(u_normalmapTexture, p.xy).rgb;
+    vec3 tangentSpaceNormal = texture2D(u_combinedTexture, p.xy).rgb;
 	tangentSpaceNormal.xy = 2.0 * tangentSpaceNormal.xy - 1.0;
 	tangentSpaceNormal.y = -tangentSpaceNormal.y;
 	tangentSpaceNormal.z = sqrt(1.0 - dot(tangentSpaceNormal.xy,tangentSpaceNormal.xy));

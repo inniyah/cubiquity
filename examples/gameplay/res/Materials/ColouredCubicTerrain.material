@@ -29,9 +29,9 @@ material ColouredCubicTerrain
                 magFilter = NEAREST
             }
             
-            sampler u_normalmapTexture
+            sampler u_combinedTexture
             {
-                path = res/Materials/Textures/rcsm2.png
+                path = res/Materials/Textures/TestCombined.png
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT
