@@ -22,6 +22,9 @@ CUBIQUITYC_API float getOne(void)
 	return 1.0f;
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Volume functions
+////////////////////////////////////////////////////////////////////////////////
 CUBIQUITYC_API unsigned int newSmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
 {
 	SmoothTerrainVolume* volume = new SmoothTerrainVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize);
@@ -38,15 +41,81 @@ CUBIQUITYC_API unsigned int newSmoothTerrainVolume(int lowerX, int lowerY, int l
 	return gSmoothTerrainVolumes.size() - 1;
 }
 
-CUBIQUITYC_API int getMeshData(unsigned int volumeHandle)
+CUBIQUITYC_API void updateVolume(unsigned int volumeHandle)
 {
 	SmoothTerrainVolume* volume = gSmoothTerrainVolumes[volumeHandle];
 
 	volume->update(Vector3F(0.0f, 0.0f, 0.0f), 0);
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Octree functions
+////////////////////////////////////////////////////////////////////////////////
+CUBIQUITYC_API unsigned int getRootOctreeNode(unsigned int volumeHandle)
+{
+	SmoothTerrainVolume* volume = gSmoothTerrainVolumes[volumeHandle];
 
 	OctreeNode<MultiMaterial>* node = volume->getRootOctreeNode();
+
+	return node->mSelf;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Mesh functions
+////////////////////////////////////////////////////////////////////////////////
+CUBIQUITYC_API unsigned int getNoOfVertices(unsigned int volumeHandle, unsigned int octreeNodeHandle)
+{
+	SmoothTerrainVolume* volume = gSmoothTerrainVolumes[volumeHandle];
+
+	OctreeNode<MultiMaterial>* node = volume->getOctree()->getNodeFromIndex(octreeNodeHandle);
 
 	const ::PolyVox::SurfaceMesh< typename VoxelTraits<MultiMaterial>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
 	return polyVoxMesh->getNoOfVertices();
+}
+
+CUBIQUITYC_API unsigned int getNoOfIndices(unsigned int volumeHandle, unsigned int octreeNodeHandle)
+{
+	SmoothTerrainVolume* volume = gSmoothTerrainVolumes[volumeHandle];
+
+	OctreeNode<MultiMaterial>* node = volume->getOctree()->getNodeFromIndex(octreeNodeHandle);
+
+	const ::PolyVox::SurfaceMesh< typename VoxelTraits<MultiMaterial>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
+
+	return polyVoxMesh->getNoOfIndices();
+}
+
+CUBIQUITYC_API float* getVertices(unsigned int volumeHandle, unsigned int octreeNodeHandle)
+{
+	SmoothTerrainVolume* volume = gSmoothTerrainVolumes[volumeHandle];
+
+	OctreeNode<MultiMaterial>* node = volume->getOctree()->getNodeFromIndex(octreeNodeHandle);
+
+	const ::PolyVox::SurfaceMesh< typename VoxelTraits<MultiMaterial>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
+
+	const std::vector< typename VoxelTraits<MultiMaterial>::VertexType >& vertexVector = polyVoxMesh->getVertices();
+
+	const VoxelTraits<MultiMaterial>::VertexType* vertexPointer = &(vertexVector[0]);
+
+	const float* constFloatPointer = reinterpret_cast<const float*>(vertexPointer);
+
+	float* floatPointer = const_cast<float*>(constFloatPointer);
+
+	return floatPointer;
+}
+
+CUBIQUITYC_API unsigned int* getIndices(unsigned int volumeHandle, unsigned int octreeNodeHandle)
+{
+	SmoothTerrainVolume* volume = gSmoothTerrainVolumes[volumeHandle];
+
+	OctreeNode<MultiMaterial>* node = volume->getOctree()->getNodeFromIndex(octreeNodeHandle);
+
+	const ::PolyVox::SurfaceMesh< typename VoxelTraits<MultiMaterial>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
+
+	const std::vector< unsigned int >& indexVector = polyVoxMesh->getIndices();
+	const unsigned int* constUIntPointer = &(indexVector[0]);
+
+	unsigned int* uintPointer = const_cast<unsigned int*>(constUIntPointer);
+
+	return uintPointer;
 }

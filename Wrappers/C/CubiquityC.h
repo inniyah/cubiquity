@@ -15,7 +15,17 @@ extern "C"
 	CUBIQUITYC_API float getZero(void);
 	CUBIQUITYC_API float getOne(void);
 
+	// Volume functions
 	CUBIQUITYC_API unsigned int newSmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
+	CUBIQUITYC_API void updateVolume(unsigned int volumeHandle);
 
-	CUBIQUITYC_API int getMeshData(unsigned int volumeHandle);
+	// Octree functions
+	CUBIQUITYC_API unsigned int getRootOctreeNode(unsigned int volumeHandle);
+
+	// Mesh functions
+	CUBIQUITYC_API unsigned int getNoOfVertices(unsigned int volumeHandle, unsigned int octreeNodeHandle);
+	CUBIQUITYC_API unsigned int getNoOfIndices(unsigned int volumeHandle, unsigned int octreeNodeHandle);
+
+	CUBIQUITYC_API float* getVertices(unsigned int volumeHandle, unsigned int octreeNodeHandle);
+	CUBIQUITYC_API unsigned int* getIndices(unsigned int volumeHandle, unsigned int octreeNodeHandle);
 }

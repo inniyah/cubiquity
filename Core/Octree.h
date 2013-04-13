@@ -110,6 +110,9 @@ namespace Cubiquity
 		OctreeNode<VoxelType>* getChildNode(OctreeNode<VoxelType>* parent, int childX, int childY, int childZ);
 		OctreeNode<VoxelType>* getParentNode(OctreeNode<VoxelType>* child);
 
+		// This one feels hacky?
+		OctreeNode<VoxelType>* getNodeFromIndex(uint16_t index) { return mNodes[index]; }
+
 		void update(const Vector3F& viewPosition, float lodThreshold);
 
 		void markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority);

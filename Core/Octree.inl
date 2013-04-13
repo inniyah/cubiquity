@@ -81,6 +81,7 @@ namespace Cubiquity
 		mNodes.push_back(node);
 		POLYVOX_ASSERT(mNodes.size() < InvalidNodeIndex, "Too many octree nodes!");
 		uint16_t index = mNodes.size() - 1;
+		mNodes[index]->mSelf = index;
 		return index;
 	}
 
