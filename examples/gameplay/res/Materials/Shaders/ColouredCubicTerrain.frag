@@ -116,7 +116,7 @@ void main()
     // Fetch normals from the normal map    
     vec3 tangentSpaceNormal = texture2D(u_normalTexture, p.xy).rgb;
 	tangentSpaceNormal.xy = 2.0 * tangentSpaceNormal.xy - 1.0;
-	tangentSpaceNormal.y = -tangentSpaceNormal.y;
+	tangentSpaceNormal.y = tangentSpaceNormal.y;
 	tangentSpaceNormal.z = sqrt(1.0 - dot(tangentSpaceNormal.xy,tangentSpaceNormal.xy));
     
     float attenuation = 1.0;

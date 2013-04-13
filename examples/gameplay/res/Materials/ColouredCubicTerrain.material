@@ -35,7 +35,7 @@ material ColouredCubicTerrain
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT
-                minFilter = NEAREST_MIPMAP_LINEAR
+                minFilter = LINEAR
                 magFilter = LINEAR
             }
             
