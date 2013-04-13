@@ -31,7 +31,7 @@ material ColouredCubicTerrain
             
             sampler u_depthTexture
             {
-                path = res/Materials/Textures/TestDepth.png
+                path = res/Materials/Textures/BevelledDepth.png
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT
@@ -41,7 +41,7 @@ material ColouredCubicTerrain
             
             sampler u_rcsmTexture
             {
-                path = res/Materials/Textures/TestRCSM.png
+                path = res/Materials/Textures/BevelledRCSM.png
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT
@@ -51,7 +51,7 @@ material ColouredCubicTerrain
             
             sampler u_normalTexture
             {
-                path = res/Materials/Textures/TestNormal.png
+                path = res/Materials/Textures/BevelledNormal.png
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT
