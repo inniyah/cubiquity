@@ -6,7 +6,7 @@ material SmoothTerrain
         {
             // shaders
             vertexShader = res/Materials/Shaders/SmoothTerrain.vert
-            fragmentShader = res/Materials/Shaders/NoTriplanar.frag
+            fragmentShader = res/Materials/Shaders/SmoothTerrain.frag
             
             // uniforms
             u_worldMatrix = WORLD_MATRIX
