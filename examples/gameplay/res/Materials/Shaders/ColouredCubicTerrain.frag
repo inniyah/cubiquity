@@ -10,6 +10,7 @@ varying vec4 v_worldSpacePosition;
 // Uniforms
 uniform sampler2D u_diffuseTexture;             // Diffuse map texture
 uniform sampler2D u_combinedTexture;         	// Combined texture
+uniform sampler2D u_depthTexture;           	// Depth texture
 uniform vec3 u_ambientColor;                    // Ambient color
 uniform vec3 u_lightColor;                      // Light color
 uniform vec3 u_worldSpaceLightVector;			// Points *towards* the light source
@@ -21,7 +22,6 @@ uniform mat4 u_inverseTransposeModelToWorldMatrix;
 // depth value stored in alpha channel (black is at object surface)
 // and cone ratio stored in blue channel
 void ray_intersect_relaxedcone(
-	sampler2D relaxedcone_relief_map,
 	inout vec3 p,
 	inout vec3 v)
 {
@@ -36,7 +36,7 @@ void ray_intersect_relaxedcone(
 	
 	for( int i=0;i<cone_steps;i++ )
 	{
-		vec4 tex = tex2D(relaxedcone_relief_map, p.xy);
+		vec4 tex = tex2D(u_combinedTexture, p.xy);
 
 		float height = saturate(tex.w - p.z);
 		
@@ -50,9 +50,9 @@ void ray_intersect_relaxedcone(
 
 	for( int i=0;i<binary_steps;i++ )
 	{
-		vec4 tex = tex2D(relaxedcone_relief_map, p.xy);
+		vec4 tex = tex2D(u_depthTexture, p.xy);
 		v *= 0.5;
-		if (p.z<tex.w)
+		if (p.z<tex.r)
 			p+=v;
 		else
 			p-=v;
@@ -109,7 +109,7 @@ void main()
     float depth = 0.1;
     v.xy *= depth;
     
-    ray_intersect_relaxedcone(u_combinedTexture, p, v);
+    ray_intersect_relaxedcone(p, v);
     
     // Fetch normals from the normal map    
     vec3 tangentSpaceNormal = texture2D(u_combinedTexture, p.xy).rgb;
