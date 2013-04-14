@@ -28,6 +28,16 @@ material ColouredCubicTerrain
                 minFilter = NEAREST
                 magFilter = NEAREST
             }
+			
+			sampler u_depthAndCones
+            {
+                path = res/Materials/Textures/TestDepthAndCones.png
+                mipmap = true
+                wrapS = REPEAT
+                wrapT = REPEAT
+                minFilter = NEAREST_MIPMAP_LINEAR
+                magFilter = LINEAR
+            }
             
             sampler u_normalmapTexture
             {

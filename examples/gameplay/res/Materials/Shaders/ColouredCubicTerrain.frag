@@ -9,6 +9,7 @@ varying vec4 v_worldSpacePosition;
 
 // Uniforms
 uniform sampler2D u_diffuseTexture;             // Diffuse map texture
+uniform sampler2D u_depthAndCones;
 uniform sampler2D u_normalmapTexture;       	// Normalmap texture
 uniform vec3 u_ambientColor;                    // Ambient color
 uniform vec3 u_lightColor;                      // Light color
@@ -36,11 +37,11 @@ void ray_intersect_relaxedcone(
 	
 	for( int i=0;i<cone_steps;i++ )
 	{
-		vec4 tex = texture2D(relaxedcone_relief_map, p.xy);
+		vec4 tex = texture2D(u_depthAndCones, p.xy);
 
-		float height = clamp(tex.w - p.z, 0.0, 1.0);
+		float height = clamp(tex.x - p.z, 0.0, 1.0);
 		
-		float cone_ratio = tex.z;
+		float cone_ratio = tex.y;
 		
 		p += v * (cone_ratio * height / (dist + cone_ratio));
 	}
