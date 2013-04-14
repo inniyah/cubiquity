@@ -87,11 +87,11 @@ function initialize()
 	_cameraNode = Node.create()
 	_cameraPitchNode:addChild(_cameraNode)
 
-	local camera = Camera.createPerspective(60.0, 1.0, 0.5, 2000.0)
+	local camera = Camera.createPerspective(60.0, 1.0, 0.1, 300.0)
 	camera:setAspectRatio(game:getWidth() / game:getHeight())
 	_cameraNode:setCamera(camera)
 	_scene:setActiveCamera(camera)
-	_cameraPositionNode:setTranslation(0, 30, 150)
+	_cameraPositionNode:setTranslation(64, 3.6, 120.5)
 	--_cameraPositionNode:setTranslation(volumeWidth / 2, volumeHeight * 1.5, volumeDepth * 1.2)
 	--_cameraPitchNode:rotateX(-0.0)
 
