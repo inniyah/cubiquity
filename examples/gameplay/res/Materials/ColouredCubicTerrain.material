@@ -32,11 +32,11 @@ material ColouredCubicTerrain
 			sampler u_depthAndCones
             {
                 path = res/Materials/Textures/TestDepthAndCones.png
-                mipmap = true
+                mipmap = false
                 wrapS = REPEAT
                 wrapT = REPEAT
-                minFilter = NEAREST_MIPMAP_LINEAR
-                magFilter = LINEAR
+                minFilter = NEAREST
+                magFilter = NEAREST
             }
 			
 			sampler u_depth
@@ -45,7 +45,7 @@ material ColouredCubicTerrain
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT
-                minFilter = NEAREST_MIPMAP_LINEAR
+                minFilter = LINEAR_MIPMAP_LINEAR
                 magFilter = LINEAR
             }
             
