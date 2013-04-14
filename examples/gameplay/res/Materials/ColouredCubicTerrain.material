@@ -49,9 +49,9 @@ material ColouredCubicTerrain
                 magFilter = LINEAR
             }
             
-            sampler u_normalmapTexture
+            sampler u_normals
             {
-                path = res/Materials/Textures/rcsm.png
+                path = res/Materials/Textures/TestNormals.png
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT
