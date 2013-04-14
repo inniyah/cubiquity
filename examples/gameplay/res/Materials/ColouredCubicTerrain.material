@@ -38,6 +38,16 @@ material ColouredCubicTerrain
                 minFilter = NEAREST_MIPMAP_LINEAR
                 magFilter = LINEAR
             }
+			
+			sampler u_depth
+            {
+                path = res/Materials/Textures/TestDepth.png
+                mipmap = true
+                wrapS = REPEAT
+                wrapT = REPEAT
+                minFilter = NEAREST_MIPMAP_LINEAR
+                magFilter = LINEAR
+            }
             
             sampler u_normalmapTexture
             {
