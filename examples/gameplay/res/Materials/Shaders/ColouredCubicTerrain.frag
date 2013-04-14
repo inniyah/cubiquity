@@ -36,9 +36,9 @@ void ray_intersect_relaxedcone(
 	
 	for( int i=0;i<cone_steps;i++ )
 	{
-		vec4 tex = tex2D(relaxedcone_relief_map, p.xy);
+		vec4 tex = texture2D(relaxedcone_relief_map, p.xy);
 
-		float height = saturate(tex.w - p.z);
+		float height = clamp(tex.w - p.z, 0.0, 1.0);
 		
 		float cone_ratio = tex.z;
 		
@@ -50,7 +50,7 @@ void ray_intersect_relaxedcone(
 
 	for( int i=0;i<binary_steps;i++ )
 	{
-		vec4 tex = tex2D(relaxedcone_relief_map, p.xy);
+		vec4 tex = texture2D(relaxedcone_relief_map, p.xy);
 		v *= 0.5;
 		if (p.z<tex.w)
 			p+=v;
