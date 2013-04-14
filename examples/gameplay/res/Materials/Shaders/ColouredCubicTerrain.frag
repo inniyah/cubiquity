@@ -9,9 +9,7 @@ varying vec4 v_worldSpacePosition;
 
 // Uniforms
 uniform sampler2D u_diffuseTexture;             // Diffuse map texture
-uniform sampler2D u_depthTexture;           	// Depth texture
-uniform sampler2D u_rcsmTexture;             	// RCSM texture
-uniform sampler2D u_normalTexture;           	// Normal texture
+uniform sampler2D u_normalmapTexture;       	// Normalmap texture
 uniform vec3 u_ambientColor;                    // Ambient color
 uniform vec3 u_lightColor;                      // Light color
 uniform vec3 u_worldSpaceLightVector;			// Points *towards* the light source
@@ -23,11 +21,12 @@ uniform mat4 u_inverseTransposeModelToWorldMatrix;
 // depth value stored in alpha channel (black is at object surface)
 // and cone ratio stored in blue channel
 void ray_intersect_relaxedcone(
+	sampler2D relaxedcone_relief_map,
 	inout vec3 p,
 	inout vec3 v)
 {
-	const int cone_steps=15;
-	const int binary_steps=8;
+	const int cone_steps=30;
+	const int binary_steps=16;
 	
 	vec3 p0 = p;
 
@@ -37,12 +36,11 @@ void ray_intersect_relaxedcone(
 	
 	for( int i=0;i<cone_steps;i++ )
 	{
-		float depth = texture2D(u_depthTexture, p.xy).r;
-        float cone = texture2D(u_rcsmTexture, p.xy).r;
+		vec4 tex = tex2D(relaxedcone_relief_map, p.xy);
 
-		float height = saturate(depth - p.z);
+		float height = saturate(tex.w - p.z);
 		
-		float cone_ratio = cone;
+		float cone_ratio = tex.z;
 		
 		p += v * (cone_ratio * height / (dist + cone_ratio));
 	}
@@ -52,9 +50,9 @@ void ray_intersect_relaxedcone(
 
 	for( int i=0;i<binary_steps;i++ )
 	{
-		vec4 tex = texture2D(u_depthTexture, p.xy);
+		vec4 tex = tex2D(relaxedcone_relief_map, p.xy);
 		v *= 0.5;
-		if (p.z<tex.r)
+		if (p.z<tex.w)
 			p+=v;
 		else
 			p-=v;
@@ -87,22 +85,14 @@ void main()
     //Compute texture coordinates
     vec2 texCoords = vec2(dot(v_worldSpacePosition.xyz, worldSpaceTangent), dot(v_worldSpacePosition.xyz, worldSpaceBinormal));
     //texCoords /= 9.0;
-    texCoords += 0.5;    
-    
-    vec3 p = vec3(texCoords,0);
-	vec3 v = normalize(tangentSpaceCameraDirection);
-    v.z = -v.z;
-    float depth = 0.1;
-    v.xy *= depth;
-    
-    ray_intersect_relaxedcone(p, v);
+    texCoords += 0.5;
     
     // Compute noise. Ideally we would pull a noise value from a 3D texture based on the position of the voxel,
     // but gameplay only seems to support 2D textures at the moment. Therefore we store the texture 'slices'
     // above each other to give a texture which is x pixels wide and y=x*x pixels high.
     const float noiseTextureBaseSize = 16.0; //Size of our 3D texture, actually the width of our 2D replacement.
     const float noiseStrength = 0.04;
-    vec3 voxelCentre = p.xyz + vec3(0.5, 0.5, 0.5); // Back along normal takes us towards center of voxel.
+    vec3 voxelCentre = v_worldSpacePosition.xyz - (modelSpaceNormal * 0.5); // Back along normal takes us towards center of voxel.
     voxelCentre = floor(voxelCentre + vec3(0.5)); // 'floor' is more widely supported than 'round'.
     vec2 noiseTextureSmaplePos = vec2(voxelCentre.x, voxelCentre.y + voxelCentre.z * noiseTextureBaseSize);
     noiseTextureSmaplePos = noiseTextureSmaplePos / vec2(noiseTextureBaseSize, noiseTextureBaseSize * noiseTextureBaseSize);
@@ -111,12 +101,20 @@ void main()
     noise *= noiseStrength; // Scale to desired strength.
     
     //Form the base color by applying noise to the colour which was passed in.
-    vec4 baseColor = vec4(v_color.rgb + noise, 1.0) ;
+    vec4 baseColor = vec4(v_color.rgb + noise, 1.0) ;    
+    
+    vec3 p = vec3(texCoords,0);
+	vec3 v = normalize(tangentSpaceCameraDirection);
+    v.z = -v.z;
+    float depth = 0.1;
+    v.xy *= depth;
+    
+    ray_intersect_relaxedcone(u_normalmapTexture, p, v);
     
     // Fetch normals from the normal map    
-    vec3 tangentSpaceNormal = texture2D(u_normalTexture, p.xy).rgb;
+    vec3 tangentSpaceNormal = texture2D(u_normalmapTexture, p.xy).rgb;
 	tangentSpaceNormal.xy = 2.0 * tangentSpaceNormal.xy - 1.0;
-	tangentSpaceNormal.y = tangentSpaceNormal.y;
+	tangentSpaceNormal.y = -tangentSpaceNormal.y;
 	tangentSpaceNormal.z = sqrt(1.0 - dot(tangentSpaceNormal.xy,tangentSpaceNormal.xy));
     
     float attenuation = 1.0;

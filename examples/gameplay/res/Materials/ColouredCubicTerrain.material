@@ -29,29 +29,9 @@ material ColouredCubicTerrain
                 magFilter = NEAREST
             }
             
-            sampler u_depthTexture
+            sampler u_normalmapTexture
             {
-                path = res/Materials/Textures/TestDepth.png
-                mipmap = true
-                wrapS = REPEAT
-                wrapT = REPEAT
-                minFilter = LINEAR
-                magFilter = LINEAR
-            }
-            
-            sampler u_rcsmTexture
-            {
-                path = res/Materials/Textures/TestRCSM.png
-                mipmap = true
-                wrapS = REPEAT
-                wrapT = REPEAT
-                minFilter = NEAREST
-                magFilter = NEAREST
-            }
-            
-            sampler u_normalTexture
-            {
-                path = res/Materials/Textures/TestNormal.png
+                path = res/Materials/Textures/rcsm.png
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT
