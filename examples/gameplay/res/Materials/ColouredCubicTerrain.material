@@ -29,16 +29,29 @@ material ColouredCubicTerrain
                 magFilter = NEAREST
             }
 			
+            // This texture stores both the depth map and the heightmap. We store them together because they both get sampled
+            // for each step of the ray traversal. Ideally we would compute custom mipmaps where higher levels contains the
+            // *average* of the depth but the *minimum* of the cone size. However, this is a lot of work, so instead we've just
+            // disabled mipmapping. Note that this appears to have a significant performance impact so it might be worth coming
+            // back to this custom mipmap idea in the future.
 			sampler u_depthAndCones
             {
                 path = res/Materials/Textures/TestDepthAndCones.png
                 mipmap = false
                 wrapS = REPEAT
                 wrapT = REPEAT
+                
+                // If enabling the first line then also enable 'mipmap' above.
+                // Currently this is faster but introduces artifacts.
+                //minFilter = NEAREST_MIPMAP_LINEAR                
                 minFilter = NEAREST
+                
                 magFilter = NEAREST
             }
 			
+            // We also store depth in a separate texture so that we can use the mipmaps for performance benefits. We sample this
+            // texture in the case that we only need the depth value and not the cone value. In the future we can probably get
+            // rid of this texture if we can set up the custom mipmaps described previously.
 			sampler u_depth
             {
                 path = res/Materials/Textures/TestDepth.png
