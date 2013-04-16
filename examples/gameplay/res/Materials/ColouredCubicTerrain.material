@@ -31,7 +31,7 @@ material ColouredCubicTerrain
 			
 			sampler u_depthAndCones
             {
-                path = res/Materials/Textures/Tiles2DepthAndCones.png
+                path = res/Materials/Textures/BevelledDepthAndCones.png
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT
@@ -48,7 +48,7 @@ material ColouredCubicTerrain
             
             sampler u_normals
             {
-                path = res/Materials/Textures/Tiles2NormalsAndOcclusion.png
+                path = res/Materials/Textures/BevelledNormalsAndOcclusion.png
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT
