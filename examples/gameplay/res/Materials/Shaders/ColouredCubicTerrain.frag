@@ -112,24 +112,24 @@ void main()
     ray_intersect_relaxedcone(p, v);
     
     // Fetch normals from the normal map    
-    vec3 tangentSpaceNormal = texture2D(u_normals, p.xy).rgb;
-	tangentSpaceNormal.xy = 2.0 * tangentSpaceNormal.xy - 1.0;
-	tangentSpaceNormal.y = tangentSpaceNormal.y;
-	tangentSpaceNormal.z = sqrt(1.0 - dot(tangentSpaceNormal.xy,tangentSpaceNormal.xy));
+    vec4 tangentSpaceNormalAndOcclusion = texture2D(u_normals, p.xy);
+	tangentSpaceNormalAndOcclusion.xy = 2.0 * tangentSpaceNormalAndOcclusion.xy - 1.0;
+	tangentSpaceNormalAndOcclusion.y = tangentSpaceNormalAndOcclusion.y;
+	tangentSpaceNormalAndOcclusion.z = sqrt(1.0 - dot(tangentSpaceNormalAndOcclusion.xy,tangentSpaceNormalAndOcclusion.xy));
     
     float attenuation = 1.0;
     // Ambient
-    vec3 ambientColor = baseColor.rgb * u_ambientColor;
+    vec3 ambientColor = baseColor.rgb * u_ambientColor * tangentSpaceNormalAndOcclusion.a;
 
     // Diffuse
-    float ddot = dot(tangentSpaceNormal, tangentSpaceLightVector);
+    float ddot = dot(tangentSpaceNormalAndOcclusion.xyz, tangentSpaceLightVector);
     float diffuseIntensity = attenuation * ddot;
     diffuseIntensity = max(0.0, diffuseIntensity);
     vec3 diffuseColor = u_lightColor * baseColor.rgb * diffuseIntensity;
 
     // Specular
     vec3 tangentSpaceHalfVector = normalize(tangentSpaceLightVector + tangentSpaceCameraDirection);
-    float specularIntensity = attenuation * max(0.0, pow(dot(tangentSpaceNormal, tangentSpaceHalfVector), u_specularExponent));
+    float specularIntensity = attenuation * max(0.0, pow(dot(tangentSpaceNormalAndOcclusion.xyz, tangentSpaceHalfVector), u_specularExponent));
     specularIntensity = max(0.0, specularIntensity);
     vec3 specularColor = u_lightColor * baseColor.rgb * specularIntensity;
 	

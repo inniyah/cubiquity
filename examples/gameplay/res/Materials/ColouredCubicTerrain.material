@@ -48,7 +48,7 @@ material ColouredCubicTerrain
             
             sampler u_normals
             {
-                path = res/Materials/Textures/TestNormals.png
+                path = res/Materials/Textures/TestNormalsAndOcclusion.png
                 mipmap = true
                 wrapS = REPEAT
                 wrapT = REPEAT
