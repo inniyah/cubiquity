@@ -90,6 +90,10 @@ void main()
     // Compute noise. Ideally we would pull a noise value from a 3D texture based on the position of the voxel,
     // but gameplay only seems to support 2D textures at the moment. Therefore we store the texture 'slices'
     // above each other to give a texture which is x pixels wide and y=x*x pixels high.
+    // NOTE: We are using the world space position to sample our noise texture. With RCSM this can lead to artifacts because
+    // the final position is different after tracing the ray. This can lead to the noise texture appear to not line up with
+    // the tile texture, particularly at glancing angles. In theory this can be fixed by transforming the final (tangent 
+    // space) position back to world space and sampling with that, but in practice it was a little tricky so I left it.
     const float noiseTextureBaseSize = 16.0; //Size of our 3D texture, actually the width of our 2D replacement.
     const float noiseStrength = 0.04;
     vec3 voxelCentre = v_worldSpacePosition.xyz - (modelSpaceNormal * 0.5); // Back along normal takes us towards center of voxel.
