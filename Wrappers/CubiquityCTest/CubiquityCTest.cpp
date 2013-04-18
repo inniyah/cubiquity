@@ -18,7 +18,7 @@ typedef std::ostringstream tstringstream;
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	unsigned int volumeID = newSmoothTerrainVolume(0, 0, 0, 15, 15, 15, 32, 32);
+	unsigned int volumeID = newColouredCubesVolume(0, 0, 0, 15, 15, 15, 32, 32);
 	updateVolume(volumeID);
 	unsigned int rootOctreeNodeHandle = getRootOctreeNode(volumeID);
 	unsigned int noOfVertices = getNoOfVertices(volumeID, rootOctreeNodeHandle);
@@ -37,7 +37,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	stros << std::endl << std::endl;
 	OutputDebugString(stros.str().c_str());
 
-	unsigned int floatsPerVert = 7;
+	unsigned int floatsPerVert = 4;
 	for(unsigned int ct = 0; ct < noOfVertices * floatsPerVert; )
 	{
 		tstringstream stros;    
@@ -45,9 +45,9 @@ int _tmain(int argc, _TCHAR* argv[])
 		stros << pVertices[ct] << " "; ct++;
 		stros << pVertices[ct] << " "; ct++;
 
+		/*stros << pVertices[ct] << " "; ct++;
 		stros << pVertices[ct] << " "; ct++;
-		stros << pVertices[ct] << " "; ct++;
-		stros << pVertices[ct] << " "; ct++;
+		stros << pVertices[ct] << " "; ct++;*/
 
 		stros << pVertices[ct] << " "; ct++;
 		/*stros << pVertices[ct] << " "; ct++;

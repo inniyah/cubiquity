@@ -16,7 +16,7 @@ extern "C"
 	CUBIQUITYC_API float getOne(void);
 
 	// Volume functions
-	CUBIQUITYC_API unsigned int newSmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
+	CUBIQUITYC_API unsigned int newColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
 	CUBIQUITYC_API void updateVolume(unsigned int volumeHandle);
 
 	// Octree functions
