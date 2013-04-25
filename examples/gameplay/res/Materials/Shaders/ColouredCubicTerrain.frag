@@ -87,7 +87,19 @@ void main()
     //texCoords /= 9.0;
     texCoords += 0.5;
     
-    // Compute noise. Ideally we would pull a noise value from a 3D texture based on the position of the voxel,
+    vec3 p = vec3(texCoords,0);
+	vec3 v = normalize(tangentSpaceCameraDirection);
+    v.z = -v.z;
+    float depth = 0.1;
+    v.xy *= depth;
+    
+    ray_intersect_relaxedcone(p, v);
+	
+	mat3 tangentToWorldMatrix = inverse(worldToTangentMatrix);
+	vec3 pInWorldSpace = tangentToWorldMatrix * vec3(p.xy, 0);
+	pInWorldSpace -= 0.5;
+	
+	// Compute noise. Ideally we would pull a noise value from a 3D texture based on the position of the voxel,
     // but gameplay only seems to support 2D textures at the moment. Therefore we store the texture 'slices'
     // above each other to give a texture which is x pixels wide and y=x*x pixels high.
     // NOTE: We are using the world space position to sample our noise texture. With RCSM this can lead to artifacts because
@@ -96,7 +108,7 @@ void main()
     // space) position back to world space and sampling with that, but in practice it was a little tricky so I left it.
     const float noiseTextureBaseSize = 16.0; //Size of our 3D texture, actually the width of our 2D replacement.
     const float noiseStrength = 0.04;
-    vec3 voxelCentre = v_worldSpacePosition.xyz - (modelSpaceNormal * 0.5); // Back along normal takes us towards center of voxel.
+    vec3 voxelCentre = pInWorldSpace - (modelSpaceNormal * 0.5); // Back along normal takes us towards center of voxel.
     voxelCentre = floor(voxelCentre + vec3(0.5)); // 'floor' is more widely supported than 'round'.
     vec2 noiseTextureSmaplePos = vec2(voxelCentre.x, voxelCentre.y + voxelCentre.z * noiseTextureBaseSize);
     noiseTextureSmaplePos = noiseTextureSmaplePos / vec2(noiseTextureBaseSize, noiseTextureBaseSize * noiseTextureBaseSize);
@@ -106,14 +118,6 @@ void main()
     
     //Form the base color by applying noise to the colour which was passed in.
     vec4 baseColor = vec4(v_color.rgb + noise, 1.0) ;    
-    
-    vec3 p = vec3(texCoords,0);
-	vec3 v = normalize(tangentSpaceCameraDirection);
-    v.z = -v.z;
-    float depth = 0.1;
-    v.xy *= depth;
-    
-    ray_intersect_relaxedcone(p, v);
     
     // Fetch normals from the normal map    
     vec4 tangentSpaceNormalAndOcclusion = texture2D(u_normals, p.xy);
