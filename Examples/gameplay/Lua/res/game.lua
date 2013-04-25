@@ -91,7 +91,7 @@ function initialize()
 	camera:setAspectRatio(game:getWidth() / game:getHeight())
 	_cameraNode:setCamera(camera)
 	_scene:setActiveCamera(camera)
-	_cameraPositionNode:setTranslation(64, 3.6, 120.5)
+	_cameraPositionNode:setTranslation(64, 10.6, 120.5)
 	--_cameraPositionNode:setTranslation(volumeWidth / 2, volumeHeight * 1.5, volumeDepth * 1.2)
 	--_cameraPitchNode:rotateX(-0.0)
 

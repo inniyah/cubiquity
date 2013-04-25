@@ -84,19 +84,24 @@ void main()
     
     //Compute texture coordinates
     vec2 texCoords = vec2(dot(v_worldSpacePosition.xyz, worldSpaceTangent), dot(v_worldSpacePosition.xyz, worldSpaceBinormal));
-    //texCoords /= 9.0;
+    
+	
     texCoords += 0.5;
+	texCoords /= 4.0;
+	
     
     vec3 p = vec3(texCoords,0);
 	vec3 v = normalize(tangentSpaceCameraDirection);
     v.z = -v.z;
-    float depth = 0.1;
+    float depth = 0.03;
     v.xy *= depth;
     
     ray_intersect_relaxedcone(p, v);
 	
 	mat3 tangentToWorldMatrix = inverse(worldToTangentMatrix);
 	vec3 pInWorldSpace = tangentToWorldMatrix * vec3(p.xy, 0);
+	
+	pInWorldSpace *= 4.0;
 	pInWorldSpace -= 0.5;
 	
 	// Compute noise. Ideally we would pull a noise value from a 3D texture based on the position of the voxel,
