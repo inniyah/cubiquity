@@ -11,7 +11,7 @@ namespace Cubiquity
 		v3dDirection *= length;
 
 		ColouredCubesRaycastTestFunctor raycastTestFunctor;
-		::PolyVox::RaycastResult myResult = ::PolyVox::raycastWithDirection(volume->getCubiquityVolume()->_getPolyVoxVolume(), v3dStart, v3dDirection, raycastTestFunctor);
+		::PolyVox::RaycastResult myResult = ::PolyVox::raycastWithDirection(getPolyVoxVolumeFrom(volume->getCubiquityVolume()), v3dStart, v3dDirection, raycastTestFunctor);
 		if(myResult == ::PolyVox::RaycastResults::Interupted)
 		{
 			result = gameplay::Vector3(raycastTestFunctor.mLastPos.getX(), raycastTestFunctor.mLastPos.getY(), raycastTestFunctor.mLastPos.getZ());
@@ -28,7 +28,7 @@ namespace Cubiquity
 		v3dDirection *= length;
 
 		RaycastTestFunctor<MultiMaterial> raycastTestFunctor;
-		::PolyVox::RaycastResult myResult = smoothRaycastWithDirection(volume->getCubiquityVolume()->_getPolyVoxVolume(), v3dStart, v3dDirection, raycastTestFunctor, 0.5f);
+		::PolyVox::RaycastResult myResult = smoothRaycastWithDirection(getPolyVoxVolumeFrom(volume->getCubiquityVolume()), v3dStart, v3dDirection, raycastTestFunctor, 0.5f);
 		if(myResult == ::PolyVox::RaycastResults::Interupted)
 		{
 			result = gameplay::Vector3(raycastTestFunctor.mLastPos.getX(), raycastTestFunctor.mLastPos.getY(), raycastTestFunctor.mLastPos.getZ());

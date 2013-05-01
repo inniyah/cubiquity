@@ -1,6 +1,7 @@
 #ifndef VOLUME_H_
 #define VOLUME_H_
 
+#include "CubiquityForwardDeclarations.h"
 #include "Octree.h"
 #include "UpdatePriorities.h"
 #include "Vector.h"
@@ -15,11 +16,18 @@
 
 namespace Cubiquity
 {
+	// Forward declaration for private volume accessor
+	template <typename VoxelType>
+	::PolyVox::SimpleVolume<VoxelType>* getPolyVoxVolumeFrom(Volume<VoxelType>* cubiquityVolume);
+
 	template <typename _VoxelType>
 	class Volume
 	{
 		friend class Octree<_VoxelType>;
 		friend class OctreeNode<_VoxelType>;
+		// This one provides a way for other Cubiquity code to access the PolyVox::Volume without letting user code do it. To enforce this we
+		// actually want a nested namespace, but it seems VS2010 has problems with that. See here: http://stackoverflow.com/q/16307836/2337254
+		friend ::PolyVox::SimpleVolume<_VoxelType>* getPolyVoxVolumeFrom<>(Volume<_VoxelType>* cubiquityVolume);
 
 	public:
 		typedef _VoxelType VoxelType;
@@ -31,8 +39,6 @@ namespace Cubiquity
 		const Region& getEnclosingRegion(void) const { return mPolyVoxVolume->getEnclosingRegion(); }
 
 		VoxelType getVoxelAt(int32_t x, int32_t y, int32_t z) { return mPolyVoxVolume->getVoxelAt(x, y, z); }
-
-		::PolyVox::SimpleVolume<VoxelType>* _getPolyVoxVolume(void) { return mPolyVoxVolume; }
 
 		OctreeNode<VoxelType>* getRootOctreeNode(void) { return mOctree->getRootNode(); }
 
@@ -54,6 +60,12 @@ namespace Cubiquity
 		::PolyVox::SimpleVolume<VoxelType>* mPolyVoxVolume;
 		Octree<VoxelType>* mOctree;
 	};
+
+	template <typename VoxelType>
+	::PolyVox::SimpleVolume<VoxelType>* getPolyVoxVolumeFrom(Volume<VoxelType>* cubiquityVolume)
+	{
+		return cubiquityVolume->mPolyVoxVolume;
+	}
 }
 
 #include "Volume.inl"
