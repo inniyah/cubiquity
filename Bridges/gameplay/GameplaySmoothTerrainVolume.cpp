@@ -19,7 +19,7 @@ namespace Cubiquity
 		buildNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayNode);
 	}
 
-	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(const char* dataToLoad)
+	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(const char* dataToLoad, unsigned int blockSize, unsigned int baseNodeSize)
 	{
 		// Check whether the provided data is a file or a directory
 		FILE* file = fopen(dataToLoad, "rb");
@@ -33,7 +33,7 @@ namespace Cubiquity
 		{
 			// For now we assume it's VolDat. Leter on we should check for
 			// Volume.idx and load raw Cubiquity data instead if necessary.
-			mCubiquityVolume = importVolDat<SmoothTerrainVolume>(dataToLoad);
+			mCubiquityVolume = importVolDat<SmoothTerrainVolume>(dataToLoad, blockSize, baseNodeSize);
 		}
 
 		mRootGameplayNode = createNodeWithExtraData< MultiMaterial >("RootGameplayNode");

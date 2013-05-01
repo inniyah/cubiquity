@@ -6,6 +6,7 @@
 
 #include "OctreeNode.h"
 #include "ColouredCubesVolume.h"
+#include "VolumeSerialisation.h"
 
 #include <vector>
 
@@ -27,17 +28,18 @@ CUBIQUITYC_API float getOne(void)
 ////////////////////////////////////////////////////////////////////////////////
 CUBIQUITYC_API unsigned int newColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
 {
-	ColouredCubesVolume* volume = new ColouredCubesVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize);
+	//ColouredCubesVolume* volume = new ColouredCubesVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize);
+	ColouredCubesVolume* volume = importVolDat<ColouredCubesVolume>("C:/temp/VoxeliensTerrain/", 256, 256);
 	gColouredCubesVolumes.push_back(volume);
 
-	int centreX = (lowerX + upperX) / 2;
+	/*int centreX = (lowerX + upperX) / 2;
 	int centreY = (lowerY + upperY) / 2;
 	int centreZ = (lowerZ + upperZ) / 2;
 
 	//MultiMaterial value;
 	//value.setMaterial(0, 255);
 	Colour value(255, 0, 255, 255);
-	volume->setVoxelAt(centreX, centreY, centreZ, value, Cubiquity::UpdatePriorities::Immediate);
+	volume->setVoxelAt(centreX, centreY, centreZ, value, Cubiquity::UpdatePriorities::Immediate);*/
 
 	return gColouredCubesVolumes.size() - 1;
 }

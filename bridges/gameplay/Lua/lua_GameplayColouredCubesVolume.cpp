@@ -399,16 +399,24 @@ int lua_GameplayColouredCubesVolume_static_create(lua_State* state)
     // Attempt to match the parameters to a valid binding.
     switch (paramCount)
     {
-        case 1:
+        case 3:
         {
             do
             {
-                if ((lua_type(state, 1) == LUA_TSTRING || lua_type(state, 1) == LUA_TNIL))
+                if ((lua_type(state, 1) == LUA_TSTRING || lua_type(state, 1) == LUA_TNIL) &&
+                    lua_type(state, 2) == LUA_TNUMBER &&
+                    lua_type(state, 3) == LUA_TNUMBER)
                 {
                     // Get parameter 1 off the stack.
                     const char* param1 = ScriptUtil::getString(1, false);
 
-                    void* returnPtr = (void*)GameplayColouredCubesVolume::create(param1);
+                    // Get parameter 2 off the stack.
+                    unsigned int param2 = (unsigned int)luaL_checkunsigned(state, 2);
+
+                    // Get parameter 3 off the stack.
+                    unsigned int param3 = (unsigned int)luaL_checkunsigned(state, 3);
+
+                    void* returnPtr = (void*)GameplayColouredCubesVolume::create(param1, param2, param3);
                     if (returnPtr)
                     {
                         ScriptUtil::LuaObject* object = (ScriptUtil::LuaObject*)lua_newuserdata(state, sizeof(ScriptUtil::LuaObject));
@@ -491,7 +499,7 @@ int lua_GameplayColouredCubesVolume_static_create(lua_State* state)
         }
         default:
         {
-            lua_pushstring(state, "Invalid number of parameters (expected 1 or 8).");
+            lua_pushstring(state, "Invalid number of parameters (expected 3 or 8).");
             lua_error(state);
             break;
         }

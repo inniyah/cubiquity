@@ -21,7 +21,7 @@ namespace Cubiquity
 		buildNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayNode);
 	}
 
-	GameplayColouredCubesVolume::GameplayColouredCubesVolume(const char* dataToLoad)
+	GameplayColouredCubesVolume::GameplayColouredCubesVolume(const char* dataToLoad, unsigned int blockSize, unsigned int baseNodeSize)
 	{
 		// Check whether the provided data is a file or a directory
 		FILE* file = fopen(dataToLoad, "rb");
@@ -34,7 +34,7 @@ namespace Cubiquity
 		{
 			// For now we assume it's VolDat. Leter on we should check for
 			// Volume.idx and load raw Cubiquity data instead if necessary.
-			mCubiquityVolume = importVolDat<ColouredCubesVolume>(dataToLoad);
+			mCubiquityVolume = importVolDat<ColouredCubesVolume>(dataToLoad, blockSize, baseNodeSize);
 		}
 
 		mRootGameplayNode = createNodeWithExtraData< Colour >("RootGameplayNode");

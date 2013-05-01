@@ -7,6 +7,9 @@
     <Filter Include="Core">
       <UniqueIdentifier>{79bab3af-20cd-4450-afd4-a1ea86802fa8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Impl">
+      <UniqueIdentifier>{1da4ee1e-0f5a-4edd-b71f-b3554a21e0f7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.h">
@@ -212,6 +215,9 @@
     </ClInclude>
     <ClInclude Include="VoxelTraits.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Impl\VolumePrivateAccessor.h">
+      <Filter>Core\Impl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -10,7 +10,7 @@ namespace Cubiquity
 	class ColouredCubesVolume : public Volume<Colour>
 	{
 	public:
-		ColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
+		ColouredCubesVolume(const Region& region, unsigned int blockSize, unsigned int baseNodeSize);
 
 		virtual void update(const Vector3F& viewPosition, float lodThreshold);
 		void updateMeshImpl(OctreeNode< VoxelType >* octreeNode);

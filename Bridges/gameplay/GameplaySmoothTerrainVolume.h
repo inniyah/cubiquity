@@ -32,9 +32,9 @@ namespace Cubiquity
 		 *
 		 * @script{create}
 		 */
-		static GameplaySmoothTerrainVolume* create(const char* dataToLoad)
+		static GameplaySmoothTerrainVolume* create(const char* dataToLoad, unsigned int blockSize, unsigned int baseNodeSize)
 		{
-			GameplaySmoothTerrainVolume* volume = new GameplaySmoothTerrainVolume(dataToLoad);
+			GameplaySmoothTerrainVolume* volume = new GameplaySmoothTerrainVolume(dataToLoad, blockSize, baseNodeSize);
 			return volume;
 		}
 
@@ -48,7 +48,7 @@ namespace Cubiquity
 
 	protected:
 		GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
-		GameplaySmoothTerrainVolume(const char* dataToLoad);
+		GameplaySmoothTerrainVolume(const char* dataToLoad, unsigned int blockSize, unsigned int baseNodeSize);
 		GameplaySmoothTerrainVolume(SmoothTerrainVolume* cubiquityVolume);
 		virtual ~GameplaySmoothTerrainVolume();
 

@@ -15,17 +15,15 @@
 namespace Cubiquity
 {
 	template <typename VoxelType>
-	Volume<VoxelType>::Volume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, uint32_t blockSize, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize)
+	Volume<VoxelType>::Volume(const Region& region, uint32_t blockSize, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize)
 		:mPolyVoxVolume(0)
 		,mOctree(0)
 	{
-		Region volumeRegion(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
-
-		POLYVOX_ASSERT(volumeRegion.getWidthInVoxels() > 0, "All volume dimensions must be greater than zero");
-		POLYVOX_ASSERT(volumeRegion.getHeightInVoxels() > 0, "All volume dimensions must be greater than zero");
-		POLYVOX_ASSERT(volumeRegion.getDepthInVoxels() > 0, "All volume dimensions must be greater than zero");
+		POLYVOX_ASSERT(region.getWidthInVoxels() > 0, "All volume dimensions must be greater than zero");
+		POLYVOX_ASSERT(region.getHeightInVoxels() > 0, "All volume dimensions must be greater than zero");
+		POLYVOX_ASSERT(region.getDepthInVoxels() > 0, "All volume dimensions must be greater than zero");
 	
-		mPolyVoxVolume = new ::PolyVox::SimpleVolume<VoxelType>(volumeRegion);
+		mPolyVoxVolume = new ::PolyVox::SimpleVolume<VoxelType>(region);
 
 		mOctree = new Octree<VoxelType>(this, octreeConstructionMode, baseNodeSize);
 	}

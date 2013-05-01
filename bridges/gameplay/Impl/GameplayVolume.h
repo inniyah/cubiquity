@@ -52,7 +52,7 @@ namespace Cubiquity
 		GameplayVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
 			:mRootGameplayNode(0)
 		{
-			mCubiquityVolume = new _VolumeType(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize);
+			mCubiquityVolume = new _VolumeType(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), blockSize, baseNodeSize);
 		}
 
 		GameplayVolume(_VolumeType* cubiquityVolume)

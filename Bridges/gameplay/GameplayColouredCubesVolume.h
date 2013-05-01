@@ -33,9 +33,9 @@ namespace Cubiquity
 		 *
 		 * @script{create}
 		 */
-		static GameplayColouredCubesVolume* create(const char* dataToLoad)
+		static GameplayColouredCubesVolume* create(const char* dataToLoad, unsigned int blockSize, unsigned int baseNodeSize)
 		{
-			GameplayColouredCubesVolume* volume = new GameplayColouredCubesVolume(dataToLoad);
+			GameplayColouredCubesVolume* volume = new GameplayColouredCubesVolume(dataToLoad, blockSize, baseNodeSize);
 			return volume;
 		}
 
@@ -61,7 +61,7 @@ namespace Cubiquity
 		 * Text here...
 		 * @script{ignore}
 		 */
-		GameplayColouredCubesVolume(const char* dataToLoad);
+		GameplayColouredCubesVolume(const char* dataToLoad, unsigned int blockSize, unsigned int baseNodeSize);
 		/**
 		 * Text here...
 		 * @script{ignore}

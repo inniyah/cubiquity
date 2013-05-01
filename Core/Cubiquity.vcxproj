@@ -63,6 +63,7 @@
     <ClInclude Include="ColouredCubicSurfaceExtractionTask.h" />
     <ClInclude Include="ConcurrentQueue.h" />
     <ClInclude Include="CubiquityForwardDeclarations.h" />
+    <ClInclude Include="Impl\VolumePrivateAccessor.h" />
     <ClInclude Include="MainThreadTaskProcessor.h" />
     <ClInclude Include="MultiMaterial.h" />
     <ClInclude Include="Octree.h" />

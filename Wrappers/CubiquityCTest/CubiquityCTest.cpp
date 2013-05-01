@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 
+#include <iostream>
 #include <sstream>
 
 #include <Windows.h>
@@ -18,7 +19,7 @@ typedef std::ostringstream tstringstream;
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	unsigned int volumeID = newColouredCubesVolume(0, 0, 0, 15, 15, 15, 32, 32);
+	unsigned int volumeID = newColouredCubesVolume(0, 0, 0, 127, 127, 127, 256, 256);
 	updateVolume(volumeID);
 	unsigned int rootOctreeNodeHandle = getRootOctreeNode(volumeID);
 	unsigned int noOfVertices = getNoOfVertices(volumeID, rootOctreeNodeHandle);
@@ -26,7 +27,13 @@ int _tmain(int argc, _TCHAR* argv[])
 	float* pVertices = getVertices(volumeID, rootOctreeNodeHandle);
 	unsigned int* pIndices = getIndices(volumeID, rootOctreeNodeHandle);
 
-	for(unsigned int ct = 0; ct < noOfIndices; ct++)
+	tstringstream stros;    
+	stros << noOfVertices << " " << noOfIndices;
+	OutputDebugString(stros.str().c_str());
+
+	std::cout << noOfVertices << " " << noOfIndices << std::endl;
+
+	/*for(unsigned int ct = 0; ct < noOfIndices; ct++)
 	{   
 		tstringstream stros;    
 		stros << pIndices[ct] << " ";
@@ -35,9 +42,9 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	tstringstream stros;    
 	stros << std::endl << std::endl;
-	OutputDebugString(stros.str().c_str());
+	OutputDebugString(stros.str().c_str());*/
 
-	unsigned int floatsPerVert = 4;
+	/*unsigned int floatsPerVert = 4;
 	for(unsigned int ct = 0; ct < noOfVertices * floatsPerVert; )
 	{
 		tstringstream stros;    
@@ -45,17 +52,10 @@ int _tmain(int argc, _TCHAR* argv[])
 		stros << pVertices[ct] << " "; ct++;
 		stros << pVertices[ct] << " "; ct++;
 
-		/*stros << pVertices[ct] << " "; ct++;
 		stros << pVertices[ct] << " "; ct++;
-		stros << pVertices[ct] << " "; ct++;*/
-
-		stros << pVertices[ct] << " "; ct++;
-		/*stros << pVertices[ct] << " "; ct++;
-		stros << pVertices[ct] << " "; ct++;
-		stros << pVertices[ct] << " "; ct++;*/
 		stros << std::endl;
 		OutputDebugString(stros.str().c_str());
-	}
+	}*/
 
 	return 0;
 }

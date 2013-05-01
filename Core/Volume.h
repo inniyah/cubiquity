@@ -32,17 +32,16 @@ namespace Cubiquity
 	public:
 		typedef _VoxelType VoxelType;
 
-		//Getters just forward to the underlying volume
+		// These functions just forward to the underlying PolyVox volume
 		uint32_t getWidth(void) const { return mPolyVoxVolume->getWidth(); }
 		uint32_t getHeight(void) const { return mPolyVoxVolume->getHeight(); }
 		uint32_t getDepth(void) const { return mPolyVoxVolume->getDepth(); }
 		const Region& getEnclosingRegion(void) const { return mPolyVoxVolume->getEnclosingRegion(); }
-
 		VoxelType getVoxelAt(int32_t x, int32_t y, int32_t z) { return mPolyVoxVolume->getVoxelAt(x, y, z); }
 
-		OctreeNode<VoxelType>* getRootOctreeNode(void) { return mOctree->getRootNode(); }
-
+		// Octree access
 		Octree<VoxelType>* getOctree(void) { return mOctree; };
+		OctreeNode<VoxelType>* getRootOctreeNode(void) { return mOctree->getRootNode(); }
 
 		void setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, UpdatePriority updatePriority = UpdatePriorities::Background);
 
@@ -51,7 +50,7 @@ namespace Cubiquity
 		virtual void update(const Vector3F& viewPosition, float lodThreshold);
 
 	protected:
-		Volume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, uint32_t blockSize, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize);
+		Volume(const Region& region, uint32_t blockSize, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize);
 		~Volume();
 
 		Volume& operator=(const Volume&);
