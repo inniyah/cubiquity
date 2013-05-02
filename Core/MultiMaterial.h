@@ -203,16 +203,14 @@ namespace Cubiquity
 	};
 }
 
-using namespace Cubiquity;
-
 // We overload the trilinear interpolation for the MultiMaterial type because it does not have enough precision.
 // The overloaded version converts the values to floats and interpolates those before converting back.
 // See also http://www.gotw.ca/publications/mill17.htm - Why Not Specialize Function Templates?
 namespace PolyVox
 {
-	MultiMaterial trilerp(
-		const MultiMaterial& v000,const MultiMaterial& v100,const MultiMaterial& v010,const MultiMaterial& v110,
-		const MultiMaterial& v001,const MultiMaterial& v101,const MultiMaterial& v011,const MultiMaterial& v111,
+	::Cubiquity::MultiMaterial trilerp(
+		const ::Cubiquity::MultiMaterial& v000,const ::Cubiquity::MultiMaterial& v100,const ::Cubiquity::MultiMaterial& v010,const ::Cubiquity::MultiMaterial& v110,
+		const ::Cubiquity::MultiMaterial& v001,const ::Cubiquity::MultiMaterial& v101,const ::Cubiquity::MultiMaterial& v011,const ::Cubiquity::MultiMaterial& v111,
 		const float x, const float y, const float z);
 }
 

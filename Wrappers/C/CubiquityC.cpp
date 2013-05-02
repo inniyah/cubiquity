@@ -10,18 +10,9 @@
 
 #include <vector>
 
+using namespace Cubiquity;
+
 std::vector<ColouredCubesVolume*> gColouredCubesVolumes;
-
-// This is an example of an exported function.
-CUBIQUITYC_API float getZero(void)
-{
-	return 0.0f;
-}
-
-CUBIQUITYC_API float getOne(void)
-{
-	return 1.0f;
-}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Volume functions
