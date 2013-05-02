@@ -19,6 +19,9 @@ namespace Cubiquity
 		OctreeNode(Region region, uint16_t parent, Octree<VoxelType>* octree);
 		~OctreeNode();
 
+		OctreeNode* getChildNode(int childX, int childY, int childZ);
+		OctreeNode* getParentNode(void);
+
 		bool isMeshUpToDate(void);
 		bool isSceduledForUpdate(void);
 

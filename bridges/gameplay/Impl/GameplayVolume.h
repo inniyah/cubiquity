@@ -82,9 +82,9 @@ namespace Cubiquity
 		ss << "LOD = " << int(octreeNode->mLodLevel) << ", Region = (" << octreeNode->mRegion.getLowerX() << "," << octreeNode->mRegion.getLowerY() << "," << octreeNode->mRegion.getLowerZ() << ") to (" << octreeNode->mRegion.getUpperX() << "," << octreeNode->mRegion.getUpperY() << "," << octreeNode->mRegion.getUpperZ() << ")";
 		gameplayNode->setId(ss.str().c_str());
 
-		if(octreeNode->mOctree->getParentNode(octreeNode))
+		if(octreeNode->getParentNode())
 		{
-			Vector3I translation = octreeNode->mRegion.getLowerCorner() - octreeNode->mOctree->getParentNode(octreeNode)->mRegion.getLowerCorner();
+			Vector3I translation = octreeNode->mRegion.getLowerCorner() - octreeNode->getParentNode()->mRegion.getLowerCorner();
 			gameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
 		}
 		else
@@ -99,9 +99,9 @@ namespace Cubiquity
 			{
 				for(int ix = 0; ix < 2; ix++)
 				{
-					if(octreeNode->mOctree->getChildNode(octreeNode, ix, iy, iz) != 0)
+					if(octreeNode->getChildNode(ix, iy, iz) != 0)
 					{
-						gameplay::Node* childNode = reinterpret_cast<gameplay::Node*>(octreeNode->mOctree->getChildNode(octreeNode, ix, iy, iz)->mGameEngineNode);
+						gameplay::Node* childNode = reinterpret_cast<gameplay::Node*>(octreeNode->getChildNode(ix, iy, iz)->mGameEngineNode);
 						if(childNode == 0)
 						{		
 							childNode = createNodeWithExtraData< typename _VolumeType::VoxelType >();
@@ -109,7 +109,7 @@ namespace Cubiquity
 							gameplayNode->addChild(childNode);
 						}
 
-						buildNode(octreeNode->mOctree->getChildNode(octreeNode, ix, iy, iz), childNode);
+						buildNode(octreeNode->getChildNode(ix, iy, iz), childNode);
 					}
 				}
 			}

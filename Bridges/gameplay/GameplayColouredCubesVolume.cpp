@@ -100,7 +100,7 @@ namespace Cubiquity
 			{
 				for(int ix = 0; ix < 2; ix++)
 				{
-					OctreeNode< Colour >* child = getCubiquityVolume()->getOctree()->getChildNode(octreeNode, ix, iy, iz);
+					OctreeNode< Colour >* child = octreeNode->getChildNode(ix, iy, iz);
 					if(child)
 					{
 						Node* childNode = reinterpret_cast<Node*>(child->mGameEngineNode);

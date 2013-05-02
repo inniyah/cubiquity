@@ -86,18 +86,6 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	OctreeNode<VoxelType>* Octree<VoxelType>::getChildNode(OctreeNode<VoxelType>* parent, int childX, int childY, int childZ)
-	{
-		return parent->children[childX][childY][childZ] == InvalidNodeIndex ? 0 : mNodes[parent->children[childX][childY][childZ]];
-	}
-
-	template <typename VoxelType>
-	OctreeNode<VoxelType>* Octree<VoxelType>::getParentNode(OctreeNode<VoxelType>* child)
-	{
-		return child->mParent == InvalidNodeIndex ? 0 : mNodes[child->mParent];
-	}
-
-	template <typename VoxelType>
 	void Octree<VoxelType>::update(const Vector3F& viewPosition, float lodThreshold)
 	{
 		acceptVisitor(ClearWantedForRenderingVisitor<VoxelType>());

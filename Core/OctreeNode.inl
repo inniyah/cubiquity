@@ -46,6 +46,18 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
+	OctreeNode<VoxelType>* OctreeNode<VoxelType>::getChildNode(int childX, int childY, int childZ)
+	{
+		return children[childX][childY][childZ] == Octree<VoxelType>::InvalidNodeIndex ? 0 : mOctree->mNodes[children[childX][childY][childZ]];
+	}
+
+	template <typename VoxelType>
+	OctreeNode<VoxelType>* OctreeNode<VoxelType>::getParentNode(void)
+	{
+		return mParent == Octree<VoxelType>::InvalidNodeIndex ? 0 : mOctree->mNodes[mParent];
+	}
+
+	template <typename VoxelType>
 	bool OctreeNode<VoxelType>::isMeshUpToDate(void)
 	{
 		return mMeshLastUpdated > mDataLastModified;

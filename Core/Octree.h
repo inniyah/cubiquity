@@ -97,6 +97,8 @@ namespace Cubiquity
 	template <typename VoxelType>
 	class Octree
 	{
+		friend class OctreeNode<VoxelType>;
+
 	public:
 		static const uint16_t InvalidNodeIndex = 0xFFFF;
 
@@ -106,9 +108,6 @@ namespace Cubiquity
 		void acceptVisitor(VisitorType visitor) { visitNode(mRootNodeIndex, visitor); }
 
 		OctreeNode<VoxelType>* getRootNode(void) { return mNodes[mRootNodeIndex]; }
-
-		OctreeNode<VoxelType>* getChildNode(OctreeNode<VoxelType>* parent, int childX, int childY, int childZ);
-		OctreeNode<VoxelType>* getParentNode(OctreeNode<VoxelType>* child);
 
 		// This one feels hacky?
 		OctreeNode<VoxelType>* getNodeFromIndex(uint16_t index) { return mNodes[index]; }
