@@ -43,10 +43,13 @@ namespace Cubiquity
 		Octree<VoxelType>* getOctree(void) { return mOctree; };
 		OctreeNode<VoxelType>* getRootOctreeNode(void) { return mOctree->getRootNode(); }
 
+		// Set voxel doesn't just pass straight through, it also marks the voxel as modified.
 		void setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, UpdatePriority updatePriority = UpdatePriorities::Background);
 
+		// Marks a region as mdified so it will be regenerated later.
 		void markAsModified(const Region& region, UpdatePriority updatePriority = UpdatePriorities::Background);
 
+		// Should be called before rendering a frame to update the mehes and octree structure.
 		virtual void update(const Vector3F& viewPosition, float lodThreshold);
 
 	protected:
