@@ -22,21 +22,19 @@ ColouredCubesVolume* getVolumeFromHandle(uint16_t handle)
 ////////////////////////////////////////////////////////////////////////////////
 // Volume functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API unsigned int newColouredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, uint32_t blockSize, uint32_t baseNodeSize)
+CUBIQUITYC_API uint16_t newColouredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, uint32_t blockSize, uint32_t baseNodeSize)
 {
-	//ColouredCubesVolume* volume = new ColouredCubesVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize);
-	ColouredCubesVolume* volume = importVolDat<ColouredCubesVolume>("C:/temp/VoxeliensTerrain/", 256, 256);
+	ColouredCubesVolume* volume = new ColouredCubesVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), blockSize, baseNodeSize);
+	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 	gColouredCubesVolumes.push_back(volume);
+	return gColouredCubesVolumes.size() - 1;
+}
 
-	/*int centreX = (lowerX + upperX) / 2;
-	int centreY = (lowerY + upperY) / 2;
-	int centreZ = (lowerZ + upperZ) / 2;
-
-	//MultiMaterial value;
-	//value.setMaterial(0, 255);
-	Colour value(255, 0, 255, 255);
-	volume->setVoxelAt(centreX, centreY, centreZ, value, Cubiquity::UpdatePriorities::Immediate);*/
-
+CUBIQUITYC_API uint16_t newColouredCubesVolumeFromVolDat(const char* volDatToImport, uint32_t blockSize, uint32_t baseNodeSize)
+{
+	ColouredCubesVolume* volume = importVolDat<ColouredCubesVolume>(volDatToImport, 256, 256);
+	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
+	gColouredCubesVolumes.push_back(volume);
 	return gColouredCubesVolumes.size() - 1;
 }
 
@@ -45,6 +43,15 @@ CUBIQUITYC_API void updateVolume(uint16_t volumeHandle)
 	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
 
 	volume->update(Vector3F(0.0f, 0.0f, 0.0f), 0);
+}
+
+CUBIQUITYC_API void deleteColouredCubesVolume(uint16_t volumeHandle)
+{
+	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+	delete volume;
+
+	// In the future we could consider reusing this slot as we can detect that it set to zero.
+	gColouredCubesVolumes[volumeHandle] = 0;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

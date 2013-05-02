@@ -15,7 +15,8 @@
 extern "C"
 {
 	// Volume functions
-	CUBIQUITYC_API unsigned int newColouredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, uint32_t blockSize, uint32_t baseNodeSize);
+	CUBIQUITYC_API uint16_t newColouredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, uint32_t blockSize, uint32_t baseNodeSize);
+	CUBIQUITYC_API uint16_t newColouredCubesVolumeFromVolDat(const char* volDatToImport, uint32_t blockSize, uint32_t baseNodeSize);
 	CUBIQUITYC_API void updateVolume(uint16_t volumeHandle);
 
 	// Octree functions
