@@ -14,10 +14,15 @@ using namespace Cubiquity;
 
 std::vector<ColouredCubesVolume*> gColouredCubesVolumes;
 
+ColouredCubesVolume* getVolumeFromHandle(uint16_t handle)
+{
+	return gColouredCubesVolumes[handle];
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Volume functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API unsigned int newColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
+CUBIQUITYC_API unsigned int newColouredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, uint32_t blockSize, uint32_t baseNodeSize)
 {
 	//ColouredCubesVolume* volume = new ColouredCubesVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize);
 	ColouredCubesVolume* volume = importVolDat<ColouredCubesVolume>("C:/temp/VoxeliensTerrain/", 256, 256);
@@ -35,9 +40,9 @@ CUBIQUITYC_API unsigned int newColouredCubesVolume(int lowerX, int lowerY, int l
 	return gColouredCubesVolumes.size() - 1;
 }
 
-CUBIQUITYC_API void updateVolume(unsigned int volumeHandle)
+CUBIQUITYC_API void updateVolume(uint16_t volumeHandle)
 {
-	ColouredCubesVolume* volume = gColouredCubesVolumes[volumeHandle];
+	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
 
 	volume->update(Vector3F(0.0f, 0.0f, 0.0f), 0);
 }
@@ -45,7 +50,7 @@ CUBIQUITYC_API void updateVolume(unsigned int volumeHandle)
 ////////////////////////////////////////////////////////////////////////////////
 // Octree functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API unsigned int getRootOctreeNode(unsigned int volumeHandle)
+CUBIQUITYC_API uint16_t getRootOctreeNode(uint16_t volumeHandle)
 {
 	ColouredCubesVolume* volume = gColouredCubesVolumes[volumeHandle];
 
@@ -57,7 +62,7 @@ CUBIQUITYC_API unsigned int getRootOctreeNode(unsigned int volumeHandle)
 ////////////////////////////////////////////////////////////////////////////////
 // Mesh functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API unsigned int getNoOfVertices(unsigned int volumeHandle, unsigned int octreeNodeHandle)
+CUBIQUITYC_API unsigned int getNoOfVertices(uint16_t volumeHandle, uint16_t octreeNodeHandle)
 {
 	ColouredCubesVolume* volume = gColouredCubesVolumes[volumeHandle];
 
@@ -68,7 +73,7 @@ CUBIQUITYC_API unsigned int getNoOfVertices(unsigned int volumeHandle, unsigned 
 	return polyVoxMesh->getNoOfVertices();
 }
 
-CUBIQUITYC_API unsigned int getNoOfIndices(unsigned int volumeHandle, unsigned int octreeNodeHandle)
+CUBIQUITYC_API unsigned int getNoOfIndices(uint16_t volumeHandle, uint16_t octreeNodeHandle)
 {
 	ColouredCubesVolume* volume = gColouredCubesVolumes[volumeHandle];
 
@@ -79,7 +84,7 @@ CUBIQUITYC_API unsigned int getNoOfIndices(unsigned int volumeHandle, unsigned i
 	return polyVoxMesh->getNoOfIndices();
 }
 
-CUBIQUITYC_API float* getVertices(unsigned int volumeHandle, unsigned int octreeNodeHandle)
+CUBIQUITYC_API float* getVertices(uint16_t volumeHandle, uint16_t octreeNodeHandle)
 {
 	ColouredCubesVolume* volume = gColouredCubesVolumes[volumeHandle];
 
@@ -98,7 +103,7 @@ CUBIQUITYC_API float* getVertices(unsigned int volumeHandle, unsigned int octree
 	return floatPointer;
 }
 
-CUBIQUITYC_API unsigned int* getIndices(unsigned int volumeHandle, unsigned int octreeNodeHandle)
+CUBIQUITYC_API unsigned int* getIndices(uint16_t volumeHandle, uint16_t octreeNodeHandle)
 {
 	ColouredCubesVolume* volume = gColouredCubesVolumes[volumeHandle];
 
