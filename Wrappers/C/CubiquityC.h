@@ -22,11 +22,13 @@ extern "C"
 
 	// Octree functions
 	CUBIQUITYC_API int32_t cuGetRootOctreeNode(int32_t volumeHandle);
+	CUBIQUITYC_API int32_t cuGetChildNode(int32_t volumeHandle, int32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ);
+	CUBIQUITYC_API int32_t cuNodeHasMesh(int32_t volumeHandle, int32_t nodeHandle);
 
 	// Mesh functions
-	CUBIQUITYC_API uint32_t cuGetNoOfVertices(int32_t volumeHandle, int32_t octreeNodeHandle);
-	CUBIQUITYC_API uint32_t cuGetNoOfIndices(int32_t volumeHandle, int32_t octreeNodeHandle);
+	CUBIQUITYC_API uint32_t cuGetNoOfVertices(int32_t volumeHandle, int32_t nodeHandle);
+	CUBIQUITYC_API uint32_t cuGetNoOfIndices(int32_t volumeHandle, int32_t nodeHandle);
 
-	CUBIQUITYC_API float* cuGetVertices(int32_t volumeHandle, int32_t octreeNodeHandle);
-	CUBIQUITYC_API uint32_t* cuGetIndices(int32_t volumeHandle, int32_t octreeNodeHandle);
+	CUBIQUITYC_API float* cuGetVertices(int32_t volumeHandle, int32_t nodeHandle);
+	CUBIQUITYC_API uint32_t* cuGetIndices(int32_t volumeHandle, int32_t nodeHandle);
 }

@@ -46,7 +46,7 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	OctreeNode<VoxelType>* OctreeNode<VoxelType>::getChildNode(int childX, int childY, int childZ)
+	OctreeNode<VoxelType>* OctreeNode<VoxelType>::getChildNode(uint32_t childX, uint32_t childY, uint32_t childZ)
 	{
 		return children[childX][childY][childZ] == Octree<VoxelType>::InvalidNodeIndex ? 0 : mOctree->mNodes[children[childX][childY][childZ]];
 	}
