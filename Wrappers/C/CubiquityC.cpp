@@ -22,7 +22,7 @@ ColouredCubesVolume* getVolumeFromHandle(uint16_t handle)
 ////////////////////////////////////////////////////////////////////////////////
 // Volume functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API uint16_t newColouredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, uint32_t blockSize, uint32_t baseNodeSize)
+CUBIQUITYC_API int32_t cuNewColouredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, uint32_t blockSize, uint32_t baseNodeSize)
 {
 	ColouredCubesVolume* volume = new ColouredCubesVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), blockSize, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
@@ -30,7 +30,7 @@ CUBIQUITYC_API uint16_t newColouredCubesVolume(int32_t lowerX, int32_t lowerY, i
 	return gColouredCubesVolumes.size() - 1;
 }
 
-CUBIQUITYC_API uint16_t newColouredCubesVolumeFromVolDat(const char* volDatToImport, uint32_t blockSize, uint32_t baseNodeSize)
+CUBIQUITYC_API int32_t cuNewColouredCubesVolumeFromVolDat(const char* volDatToImport, uint32_t blockSize, uint32_t baseNodeSize)
 {
 	ColouredCubesVolume* volume = importVolDat<ColouredCubesVolume>(volDatToImport, 256, 256);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
@@ -38,14 +38,14 @@ CUBIQUITYC_API uint16_t newColouredCubesVolumeFromVolDat(const char* volDatToImp
 	return gColouredCubesVolumes.size() - 1;
 }
 
-CUBIQUITYC_API void updateVolume(uint16_t volumeHandle)
+CUBIQUITYC_API void cuUpdateVolume(int32_t volumeHandle)
 {
 	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
 
 	volume->update(Vector3F(0.0f, 0.0f, 0.0f), 0);
 }
 
-CUBIQUITYC_API void deleteColouredCubesVolume(uint16_t volumeHandle)
+CUBIQUITYC_API void cuDeleteColouredCubesVolume(int32_t volumeHandle)
 {
 	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
 	delete volume;
@@ -57,7 +57,7 @@ CUBIQUITYC_API void deleteColouredCubesVolume(uint16_t volumeHandle)
 ////////////////////////////////////////////////////////////////////////////////
 // Octree functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API uint16_t getRootOctreeNode(uint16_t volumeHandle)
+CUBIQUITYC_API int32_t cuGetRootOctreeNode(int32_t volumeHandle)
 {
 	ColouredCubesVolume* volume = gColouredCubesVolumes[volumeHandle];
 
@@ -69,7 +69,7 @@ CUBIQUITYC_API uint16_t getRootOctreeNode(uint16_t volumeHandle)
 ////////////////////////////////////////////////////////////////////////////////
 // Mesh functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API unsigned int getNoOfVertices(uint16_t volumeHandle, uint16_t octreeNodeHandle)
+CUBIQUITYC_API uint32_t cuGetNoOfVertices(int32_t volumeHandle, int32_t octreeNodeHandle)
 {
 	ColouredCubesVolume* volume = gColouredCubesVolumes[volumeHandle];
 
@@ -80,7 +80,7 @@ CUBIQUITYC_API unsigned int getNoOfVertices(uint16_t volumeHandle, uint16_t octr
 	return polyVoxMesh->getNoOfVertices();
 }
 
-CUBIQUITYC_API unsigned int getNoOfIndices(uint16_t volumeHandle, uint16_t octreeNodeHandle)
+CUBIQUITYC_API uint32_t cuGetNoOfIndices(int32_t volumeHandle, int32_t octreeNodeHandle)
 {
 	ColouredCubesVolume* volume = gColouredCubesVolumes[volumeHandle];
 
@@ -91,7 +91,7 @@ CUBIQUITYC_API unsigned int getNoOfIndices(uint16_t volumeHandle, uint16_t octre
 	return polyVoxMesh->getNoOfIndices();
 }
 
-CUBIQUITYC_API float* getVertices(uint16_t volumeHandle, uint16_t octreeNodeHandle)
+CUBIQUITYC_API float* cuGetVertices(int32_t volumeHandle, int32_t octreeNodeHandle)
 {
 	ColouredCubesVolume* volume = gColouredCubesVolumes[volumeHandle];
 
@@ -110,7 +110,7 @@ CUBIQUITYC_API float* getVertices(uint16_t volumeHandle, uint16_t octreeNodeHand
 	return floatPointer;
 }
 
-CUBIQUITYC_API unsigned int* getIndices(uint16_t volumeHandle, uint16_t octreeNodeHandle)
+CUBIQUITYC_API uint32_t* cuGetIndices(int32_t volumeHandle, int32_t octreeNodeHandle)
 {
 	ColouredCubesVolume* volume = gColouredCubesVolumes[volumeHandle];
 

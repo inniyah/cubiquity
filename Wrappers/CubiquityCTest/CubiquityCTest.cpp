@@ -20,13 +20,13 @@ typedef std::ostringstream tstringstream;
 int _tmain(int argc, _TCHAR* argv[])
 {
 	//unsigned int volumeID = newColouredCubesVolume(0, 0, 0, 127, 127, 127, 256, 256);
-	unsigned int volumeID = newColouredCubesVolumeFromVolDat("C:/temp/VoxeliensTerrain/", 256, 256);
-	updateVolume(volumeID);
-	unsigned int rootOctreeNodeHandle = getRootOctreeNode(volumeID);
-	unsigned int noOfVertices = getNoOfVertices(volumeID, rootOctreeNodeHandle);
-	unsigned int noOfIndices = getNoOfIndices(volumeID, rootOctreeNodeHandle);
-	float* pVertices = getVertices(volumeID, rootOctreeNodeHandle);
-	unsigned int* pIndices = getIndices(volumeID, rootOctreeNodeHandle);
+	unsigned int volumeID = cuNewColouredCubesVolumeFromVolDat("C:/temp/VoxeliensTerrain/", 256, 256);
+	cuUpdateVolume(volumeID);
+	unsigned int rootOctreeNodeHandle = cuGetRootOctreeNode(volumeID);
+	unsigned int noOfVertices = cuGetNoOfVertices(volumeID, rootOctreeNodeHandle);
+	unsigned int noOfIndices = cuGetNoOfIndices(volumeID, rootOctreeNodeHandle);
+	float* pVertices = cuGetVertices(volumeID, rootOctreeNodeHandle);
+	unsigned int* pIndices = cuGetIndices(volumeID, rootOctreeNodeHandle);
 
 	tstringstream stros;    
 	stros << noOfVertices << " " << noOfIndices;
