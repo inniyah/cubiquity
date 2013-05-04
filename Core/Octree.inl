@@ -90,7 +90,9 @@ namespace Cubiquity
 	{
 		acceptVisitor(ClearWantedForRenderingVisitor<VoxelType>());
 
-		acceptVisitor(DetermineWantedForRenderingVisitor<VoxelType>(viewPosition, lodThreshold));
+		//acceptVisitor(DetermineWantedForRenderingVisitor<VoxelType>(viewPosition, lodThreshold));
+
+		determineWantedForRendering(mRootNodeIndex, viewPosition, lodThreshold);
 
 		sceduleUpdateIfNeeded(mRootNodeIndex, viewPosition);
 
@@ -283,6 +285,52 @@ namespace Cubiquity
 						sceduleUpdateIfNeeded(childIndex, viewPosition);
 					}
 				}
+			}
+		}
+	}
+
+	template <typename VoxelType>
+	void Octree<VoxelType>::determineWantedForRendering(uint16_t index, const Vector3F& viewPosition, float lodThreshold)
+	{
+		OctreeNode<VoxelType>* octreeNode = mNodes[index];
+
+		if(octreeNode->mHeight == 0)
+		{
+			octreeNode->mWantedForRendering = true;
+		}
+		else
+		{
+			Vector3F regionCentre = static_cast<Vector3F>(octreeNode->mRegion.getCentre());
+
+			float distance = (viewPosition - regionCentre).length();
+
+			Vector3I diagonal = octreeNode->mRegion.getUpperCorner() - octreeNode->mRegion.getLowerCorner();
+			float diagonalLength = diagonal.length(); // A measure of our regions size
+
+			float projectedSize = diagonalLength / distance;
+
+			bool processChildren = ((projectedSize > lodThreshold) || (octreeNode->mHeight > 2)); //subtree height check prevents building LODs for node near the root.
+
+			if(processChildren)
+			{
+				for(int iz = 0; iz < 2; iz++)
+				{
+					for(int iy = 0; iy < 2; iy++)
+					{
+						for(int ix = 0; ix < 2; ix++)
+						{
+							uint16_t childIndex = octreeNode->children[ix][iy][iz];
+							if(childIndex != InvalidNodeIndex)
+							{
+								determineWantedForRendering(childIndex, viewPosition, lodThreshold);
+							}
+						}
+					}
+				}
+			}
+			else
+			{
+				octreeNode->mWantedForRendering = true;
 			}
 		}
 	}

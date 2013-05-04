@@ -132,6 +132,8 @@ namespace Cubiquity
 
 		void sceduleUpdateIfNeeded(uint16_t index, const Vector3F& viewPosition);
 
+		void determineWantedForRendering(uint16_t index, const Vector3F& viewPosition, float lodThreshold);
+
 		std::vector< OctreeNode<VoxelType>*> mNodes;
 
 		uint16_t mRootNodeIndex;
