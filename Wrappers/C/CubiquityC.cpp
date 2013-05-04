@@ -39,7 +39,7 @@ CUBIQUITYC_API int32_t cuNewColouredCubesVolume(int32_t lowerX, int32_t lowerY, 
 
 CUBIQUITYC_API int32_t cuNewColouredCubesVolumeFromVolDat(const char* volDatToImport, uint32_t blockSize, uint32_t baseNodeSize)
 {
-	ColouredCubesVolume* volume = importVolDat<ColouredCubesVolume>(volDatToImport, 256, 256);
+	ColouredCubesVolume* volume = importVolDat<ColouredCubesVolume>(volDatToImport, blockSize, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 	gColouredCubesVolumes.push_back(volume);
 	return gColouredCubesVolumes.size() - 1;
@@ -91,6 +91,24 @@ CUBIQUITYC_API int32_t cuNodeHasMesh(int32_t volumeHandle, int32_t nodeHandle)
 {
 	OctreeNode<Colour>* node = getNodeFromHandle(volumeHandle, nodeHandle);
 	return node->mPolyVoxMesh != 0;
+}
+
+CUBIQUITYC_API int32_t cuGetNodePositionX(int32_t volumeHandle, int32_t nodeHandle)
+{
+	OctreeNode<Colour>* node = getNodeFromHandle(volumeHandle, nodeHandle);
+	return node->mRegion.getLowerX();
+}
+
+CUBIQUITYC_API int32_t cuGetNodePositionY(int32_t volumeHandle, int32_t nodeHandle)
+{
+	OctreeNode<Colour>* node = getNodeFromHandle(volumeHandle, nodeHandle);
+	return node->mRegion.getLowerY();
+}
+
+CUBIQUITYC_API int32_t cuGetNodePositionZ(int32_t volumeHandle, int32_t nodeHandle)
+{
+	OctreeNode<Colour>* node = getNodeFromHandle(volumeHandle, nodeHandle);
+	return node->mRegion.getLowerZ();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
