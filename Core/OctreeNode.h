@@ -45,7 +45,7 @@ namespace Cubiquity
 
 		void* mGameEngineNode;
 
-		uint8_t mLodLevel; // Zero for leaf nodes.
+		uint8_t mHeight; // Zero for leaf nodes.
 
 		typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* mLastSurfaceExtractionTask;
 

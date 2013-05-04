@@ -79,7 +79,7 @@ namespace Cubiquity
 		octreeNode->mGameEngineNode = gameplayNode;
 
 		std::stringstream ss;
-		ss << "LOD = " << int(octreeNode->mLodLevel) << ", Region = (" << octreeNode->mRegion.getLowerX() << "," << octreeNode->mRegion.getLowerY() << "," << octreeNode->mRegion.getLowerZ() << ") to (" << octreeNode->mRegion.getUpperX() << "," << octreeNode->mRegion.getUpperY() << "," << octreeNode->mRegion.getUpperZ() << ")";
+		ss << "LOD = " << int(octreeNode->mHeight) << ", Region = (" << octreeNode->mRegion.getLowerX() << "," << octreeNode->mRegion.getLowerY() << "," << octreeNode->mRegion.getLowerZ() << ") to (" << octreeNode->mRegion.getUpperX() << "," << octreeNode->mRegion.getUpperY() << "," << octreeNode->mRegion.getUpperZ() << ")";
 		gameplayNode->setId(ss.str().c_str());
 
 		if(octreeNode->getParentNode())

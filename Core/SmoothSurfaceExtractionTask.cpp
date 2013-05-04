@@ -32,7 +32,7 @@ namespace Cubiquity
 		//Extract the surface
 		mPolyVoxMesh = new ::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >;
 
-		generateSmoothMesh(mOctreeNode->mRegion, mOctreeNode->mLodLevel, mPolyVoxMesh);
+		generateSmoothMesh(mOctreeNode->mRegion, mOctreeNode->mHeight, mPolyVoxMesh);
 
 		mOctreeNode->mOctree->mFinishedSurfaceExtractionTasks.push(this);
 	}

@@ -36,7 +36,7 @@ namespace Cubiquity
 		//Extract the surface
 		mPolyVoxMesh = new ::PolyVox::SurfaceMesh<::PolyVox::PositionMaterial<Colour> >;
 
-		uint32_t downScaleFactor = 0x0001 << mOctreeNode->mLodLevel;
+		uint32_t downScaleFactor = 0x0001 << mOctreeNode->mHeight;
 
 		ColouredCubesIsQuadNeeded isQuadNeeded;
 

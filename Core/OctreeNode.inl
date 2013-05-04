@@ -25,7 +25,7 @@ namespace Cubiquity
 		,mDataLastModified(Clock::getTimestamp())      // state which will then try to update.
 		,mPolyVoxMesh(0)
 		,mGameEngineNode(0)
-		,mLodLevel(0)
+		,mHeight(0)
 		,mLastSurfaceExtractionTask(0)
 	{
 		for(int z = 0; z < 2; z++)

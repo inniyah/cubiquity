@@ -80,7 +80,7 @@ namespace Cubiquity
 				SAFE_RELEASE(model);
 
 				//There is a weird bug, whereby if we use the LOD 0 for physics it resets the node positions somehow. So we use LOD 1 here.
-				if(octreeNode->mLodLevel == 1)
+				if(octreeNode->mHeight == 1)
 				{
 					PhysicsCollisionShape::Definition physDef = buildCollisionObjectFromPolyVoxMesh(octreeNode->mPolyVoxMesh);
 

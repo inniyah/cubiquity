@@ -47,7 +47,7 @@ namespace Cubiquity
 
 		bool operator()(OctreeNode<VoxelType>* octreeNode)
 		{
-			if(octreeNode->mLodLevel == 0)
+			if(octreeNode->mHeight == 0)
 			{
 				octreeNode->mWantedForRendering = true;
 				return false;
@@ -63,7 +63,7 @@ namespace Cubiquity
 
 				float projectedSize = diagonalLength / distance;
 
-				bool processChildren = ((projectedSize > mLodThreshold) || (octreeNode->mLodLevel > 2)); //subtree height check prevents building LODs for node near the root.
+				bool processChildren = ((projectedSize > mLodThreshold) || (octreeNode->mHeight > 2)); //subtree height check prevents building LODs for node near the root.
 
 				if(processChildren)
 				{

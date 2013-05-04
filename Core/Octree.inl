@@ -30,7 +30,7 @@ namespace Cubiquity
 
 		uint32_t octreeTargetSize = ::PolyVox::upperPowerOfTwo(largestVolumeDimension);
 
-		uint8_t noOfLodLevels = logBase2((octreeTargetSize) / mBaseNodeSize) + 1;
+		uint8_t maxHeightOfTree = logBase2((octreeTargetSize) / mBaseNodeSize) + 1;
 
 		uint32_t regionToCoverWidth = (octreeConstructionMode == OctreeConstructionModes::BoundCells) ? mRegionToCover.getWidthInCells() : mRegionToCover.getWidthInVoxels();
 		uint32_t regionToCoverHeight = (octreeConstructionMode == OctreeConstructionModes::BoundCells) ? mRegionToCover.getHeightInCells() : mRegionToCover.getHeightInVoxels();
@@ -62,7 +62,7 @@ namespace Cubiquity
 		octreeRegion.grow(widthIncrease / 2, heightIncrease / 2, depthIncrease / 2);
 
 		mRootNodeIndex = createNode(octreeRegion, InvalidNodeIndex);
-		mNodes[mRootNodeIndex]->mLodLevel = noOfLodLevels - 1;
+		mNodes[mRootNodeIndex]->mHeight = maxHeightOfTree - 1;
 
 		buildOctreeNodeTree(mRootNodeIndex, octreeConstructionMode);
 	}
@@ -74,8 +74,8 @@ namespace Cubiquity
 
 		if(parent != InvalidNodeIndex)
 		{
-			POLYVOX_ASSERT(mNodes[parent]->mLodLevel < 100, "LOD level has gone below zero and wrapped around.");
-			node->mLodLevel = mNodes[parent]->mLodLevel-1;
+			POLYVOX_ASSERT(mNodes[parent]->mHeight < 100, "Node height has gone below zero and wrapped around.");
+			node->mHeight = mNodes[parent]->mHeight-1;
 		}
 
 		mNodes.push_back(node);
