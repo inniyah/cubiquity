@@ -8,13 +8,14 @@ namespace Cubiquity
 		:mVolume(volume)
 		,mRootNodeIndex(InvalidNodeIndex)
 		,mBaseNodeSize(baseNodeSize)
+		,mOctreeConstructionMode(octreeConstructionMode)
 	{
 		mRegionToCover = mVolume->getEnclosingRegion();
-		if(octreeConstructionMode == OctreeConstructionModes::BoundVoxels)
+		if(mOctreeConstructionMode == OctreeConstructionModes::BoundVoxels)
 		{
 			mRegionToCover.shiftUpperCorner(1, 1, 1);
 		}
-		else if(octreeConstructionMode == OctreeConstructionModes::BoundCells)
+		else if(mOctreeConstructionMode == OctreeConstructionModes::BoundCells)
 		{
 			mRegionToCover.shiftLowerCorner(-1, -1, -1);
 			mRegionToCover.shiftUpperCorner(1, 1, 1);
@@ -23,7 +24,7 @@ namespace Cubiquity
 		POLYVOX_ASSERT(::PolyVox::isPowerOf2(mBaseNodeSize), "Node size must be a power of two");
 
 		uint32_t largestVolumeDimension = std::max(mRegionToCover.getWidthInVoxels(), std::max(mRegionToCover.getHeightInVoxels(), mRegionToCover.getDepthInVoxels()));
-		if(octreeConstructionMode == OctreeConstructionModes::BoundCells)
+		if(mOctreeConstructionMode == OctreeConstructionModes::BoundCells)
 		{
 			largestVolumeDimension--;
 		}
@@ -32,9 +33,9 @@ namespace Cubiquity
 
 		uint8_t maxHeightOfTree = logBase2((octreeTargetSize) / mBaseNodeSize) + 1;
 
-		uint32_t regionToCoverWidth = (octreeConstructionMode == OctreeConstructionModes::BoundCells) ? mRegionToCover.getWidthInCells() : mRegionToCover.getWidthInVoxels();
-		uint32_t regionToCoverHeight = (octreeConstructionMode == OctreeConstructionModes::BoundCells) ? mRegionToCover.getHeightInCells() : mRegionToCover.getHeightInVoxels();
-		uint32_t regionToCoverDepth = (octreeConstructionMode == OctreeConstructionModes::BoundCells) ? mRegionToCover.getDepthInCells() : mRegionToCover.getDepthInVoxels();
+		uint32_t regionToCoverWidth = (mOctreeConstructionMode == OctreeConstructionModes::BoundCells) ? mRegionToCover.getWidthInCells() : mRegionToCover.getWidthInVoxels();
+		uint32_t regionToCoverHeight = (mOctreeConstructionMode == OctreeConstructionModes::BoundCells) ? mRegionToCover.getHeightInCells() : mRegionToCover.getHeightInVoxels();
+		uint32_t regionToCoverDepth = (mOctreeConstructionMode == OctreeConstructionModes::BoundCells) ? mRegionToCover.getDepthInCells() : mRegionToCover.getDepthInVoxels();
 
 		uint32_t widthIncrease = octreeTargetSize - regionToCoverWidth;
 		uint32_t heightIncrease = octreeTargetSize - regionToCoverHeight;
@@ -64,7 +65,7 @@ namespace Cubiquity
 		mRootNodeIndex = createNode(octreeRegion, InvalidNodeIndex);
 		mNodes[mRootNodeIndex]->mHeight = maxHeightOfTree - 1;
 
-		buildOctreeNodeTree(mRootNodeIndex, octreeConstructionMode);
+		buildOctreeNodeTree(mRootNodeIndex);
 	}
 
 	template <typename VoxelType>
@@ -132,21 +133,21 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void Octree<VoxelType>::buildOctreeNodeTree(uint16_t parent, OctreeConstructionMode octreeConstructionMode)
+	void Octree<VoxelType>::buildOctreeNodeTree(uint16_t parent)
 	{
 		POLYVOX_ASSERT(mNodes[parent]->mRegion.getWidthInVoxels() == mNodes[parent]->mRegion.getHeightInVoxels(), "Region must be cubic");
 		POLYVOX_ASSERT(mNodes[parent]->mRegion.getWidthInVoxels() == mNodes[parent]->mRegion.getDepthInVoxels(), "Region must be cubic");
 
 		//We know that width/height/depth are all the same.
-		uint32_t parentSize = static_cast<uint32_t>((octreeConstructionMode == OctreeConstructionModes::BoundCells) ? mNodes[parent]->mRegion.getWidthInCells() : mNodes[parent]->mRegion.getWidthInVoxels());
+		uint32_t parentSize = static_cast<uint32_t>((mOctreeConstructionMode == OctreeConstructionModes::BoundCells) ? mNodes[parent]->mRegion.getWidthInCells() : mNodes[parent]->mRegion.getWidthInVoxels());
 
 		if(parentSize > mBaseNodeSize)
 		{
 			Vector3I baseLowerCorner = mNodes[parent]->mRegion.getLowerCorner();
-			int32_t childSize = (octreeConstructionMode == OctreeConstructionModes::BoundCells) ? mNodes[parent]->mRegion.getWidthInCells() / 2 : mNodes[parent]->mRegion.getWidthInVoxels() / 2;
+			int32_t childSize = (mOctreeConstructionMode == OctreeConstructionModes::BoundCells) ? mNodes[parent]->mRegion.getWidthInCells() / 2 : mNodes[parent]->mRegion.getWidthInVoxels() / 2;
 
 			Vector3I baseUpperCorner;
-			if(octreeConstructionMode == OctreeConstructionModes::BoundCells)
+			if(mOctreeConstructionMode == OctreeConstructionModes::BoundCells)
 			{
 				baseUpperCorner = baseLowerCorner + Vector3I(childSize, childSize, childSize);
 			}
@@ -167,7 +168,7 @@ namespace Cubiquity
 						{
 							uint16_t octreeNode = createNode(childRegion, parent);
 							mNodes[parent]->children[x][y][z] = octreeNode;
-							buildOctreeNodeTree(octreeNode, octreeConstructionMode);
+							buildOctreeNodeTree(octreeNode);
 						}
 					}
 				}

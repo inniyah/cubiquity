@@ -117,7 +117,7 @@ namespace Cubiquity
 		void markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority);
 		void markDataAsModified(const Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority);
 
-		void buildOctreeNodeTree(uint16_t parent, OctreeConstructionMode octreeConstructionMode);
+		void buildOctreeNodeTree(uint16_t parent);
 
 		concurrent_queue<typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType*, TaskSortCriterion> mFinishedSurfaceExtractionTasks;
 
@@ -144,6 +144,8 @@ namespace Cubiquity
 		// The extent of the octree may be significantly larger than the volume, but we only want to
 		// create nodes which actually overlap the volume (otherwise they are guarenteed to be empty).
 		Region mRegionToCover;
+
+		OctreeConstructionMode mOctreeConstructionMode;
 	};
 }
 
