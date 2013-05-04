@@ -70,7 +70,6 @@ namespace Cubiquity
 	void GameplayColouredCubesVolume::syncNode(OctreeNode< Colour >* octreeNode, gameplay::Node* gameplayNode)
 	{
 		ExtraNodeData< Colour >* extraNodeData = static_cast<ExtraNodeData< Colour >*>(gameplayNode->getUserPointer());
-		extraNodeData->mOctreeNode = octreeNode;
 
 		if(extraNodeData->mTimeStamp < octreeNode->mMeshLastUpdated)
 		{

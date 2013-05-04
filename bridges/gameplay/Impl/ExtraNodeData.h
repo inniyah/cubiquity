@@ -13,12 +13,10 @@ namespace Cubiquity
 	public:
 		ExtraNodeData()
 			:mTimeStamp(0)
-			,mOctreeNode(0)
 		{
 		}
 
 		Timestamp mTimeStamp;
-		OctreeNode<VoxelType>* mOctreeNode;
 	};
 
 	template <typename VoxelType>
