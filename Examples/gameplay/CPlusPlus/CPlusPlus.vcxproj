@@ -311,6 +311,7 @@
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <None Include="..\..\..\Bridges\gameplay\Impl\GameplayVolume.inl" />
     <None Include="bar-descriptor.xml">
       <SubType>Designer</SubType>
     </None>

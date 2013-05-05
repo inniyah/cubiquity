@@ -14,6 +14,9 @@
     <None Include="game.config" />
     <None Include="icon.png" />
     <None Include="bar-descriptor.xml" />
+    <None Include="..\..\..\Bridges\gameplay\Impl\GameplayVolume.inl">
+      <Filter>Bridge\Impl</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Main.h">
