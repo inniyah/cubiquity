@@ -5,8 +5,6 @@
 
 #include "Volume.h"
 
-#include "Impl/ExtraNodeData.h"
-
 #include <sstream>
 
 namespace Cubiquity

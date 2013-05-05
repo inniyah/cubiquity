@@ -77,8 +77,6 @@ namespace Cubiquity
 
 	void GameplaySmoothTerrainVolume::syncNode(OctreeNode< MultiMaterial >* octreeNode, GameplayOctreeNode* gameplayOctreeNode)
 	{
-		//ExtraNodeData< MultiMaterial >* extraNodeData = static_cast<ExtraNodeData<  MultiMaterial >*>(gameplayNode->getUserPointer());
-
 		if(gameplayOctreeNode->mTimeStamp < octreeNode->mMeshLastUpdated)
 		{
 			if(octreeNode->mPolyVoxMesh)

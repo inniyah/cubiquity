@@ -19,9 +19,6 @@
     <ClInclude Include="src\Main.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\Bridges\gameplay\Impl\ExtraNodeData.h">
-      <Filter>Bridge\Impl</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\Bridges\gameplay\Impl\GameplayVolume.h">
       <Filter>Bridge\Impl</Filter>
     </ClInclude>
