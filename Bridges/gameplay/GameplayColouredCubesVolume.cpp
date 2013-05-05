@@ -16,8 +16,6 @@ namespace Cubiquity
 	GameplayColouredCubesVolume::GameplayColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
 		:GameplayVolume<ColouredCubesVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize)
 	{
-		//mRootGameplayNode = createNodeWithExtraData< Colour >("RootGameplayNode");
-
 		mRootGameplayNode = new GameplayOctreeNode();
 		mRootGameplayNode->mGameplayNode = Node::create();
 
@@ -27,8 +25,6 @@ namespace Cubiquity
 
 		Vector3I translation = mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerCorner();
 		mRootGameplayNode->mGameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
-
-		//buildNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayNode);
 	}
 
 	GameplayColouredCubesVolume::GameplayColouredCubesVolume(const char* dataToLoad, unsigned int blockSize, unsigned int baseNodeSize)
@@ -47,8 +43,6 @@ namespace Cubiquity
 			mCubiquityVolume = importVolDat<ColouredCubesVolume>(dataToLoad, blockSize, baseNodeSize);
 		}
 
-		//mRootGameplayNode = createNodeWithExtraData< Colour >("RootGameplayNode");
-
 		mRootGameplayNode = new GameplayOctreeNode();
 		mRootGameplayNode->mGameplayNode = Node::create();
 
@@ -58,15 +52,11 @@ namespace Cubiquity
 
 		Vector3I translation = mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerCorner();
 		mRootGameplayNode->mGameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
-
-		//buildNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayNode);
 	}
 
 	GameplayColouredCubesVolume::GameplayColouredCubesVolume(ColouredCubesVolume* colouredCubesVolume)
 		:GameplayVolume<ColouredCubesVolume>(colouredCubesVolume)
 	{
-		//mRootGameplayNode = createNodeWithExtraData< Colour >("RootGameplayNode");
-
 		mRootGameplayNode = new GameplayOctreeNode();
 		mRootGameplayNode->mGameplayNode = Node::create();
 
@@ -76,8 +66,6 @@ namespace Cubiquity
 
 		Vector3I translation = mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerCorner();
 		mRootGameplayNode->mGameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
-
-		//buildNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayNode);
 	}
 
 	GameplayColouredCubesVolume::~GameplayColouredCubesVolume()
