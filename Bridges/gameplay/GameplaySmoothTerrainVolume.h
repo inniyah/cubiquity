@@ -49,7 +49,6 @@ namespace Cubiquity
 	protected:
 		GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize);
 		GameplaySmoothTerrainVolume(const char* dataToLoad, unsigned int blockSize, unsigned int baseNodeSize);
-		GameplaySmoothTerrainVolume(SmoothTerrainVolume* cubiquityVolume);
 		virtual ~GameplaySmoothTerrainVolume();
 
 	private:

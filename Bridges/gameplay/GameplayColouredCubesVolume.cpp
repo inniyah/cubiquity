@@ -38,12 +38,6 @@ namespace Cubiquity
 		initialiseOctree();
 	}
 
-	GameplayColouredCubesVolume::GameplayColouredCubesVolume(ColouredCubesVolume* colouredCubesVolume)
-		:GameplayVolume<ColouredCubesVolume>(colouredCubesVolume)
-	{
-		initialiseOctree();
-	}
-
 	GameplayColouredCubesVolume::~GameplayColouredCubesVolume()
 	{
 	}

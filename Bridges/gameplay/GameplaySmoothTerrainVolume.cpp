@@ -37,12 +37,6 @@ namespace Cubiquity
 		initialiseOctree();
 	}
 
-	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(SmoothTerrainVolume* cubiquityVolume)
-		:GameplayVolume<SmoothTerrainVolume>(cubiquityVolume)
-	{
-		initialiseOctree();
-	}
-
 	GameplaySmoothTerrainVolume::~GameplaySmoothTerrainVolume()
 	{
 	}

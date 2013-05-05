@@ -62,11 +62,6 @@ namespace Cubiquity
 		 * @script{ignore}
 		 */
 		GameplayColouredCubesVolume(const char* dataToLoad, unsigned int blockSize, unsigned int baseNodeSize);
-		/**
-		 * Text here...
-		 * @script{ignore}
-		 */
-		GameplayColouredCubesVolume(ColouredCubesVolume* colouredCubesVolume);
 		virtual ~GameplayColouredCubesVolume();
 
 	private:
