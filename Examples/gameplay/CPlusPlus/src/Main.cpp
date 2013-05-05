@@ -138,7 +138,7 @@ void MeshGame::initialize()
 			Node* objectNode = Node::create();
 			objectNode->setModel(objectModel);
 			_scene->addNode(objectNode);
-			objectNode->translate(x, 40.0, z);
+			objectNode->translate(x, 100.0, z);
 
 			PhysicsRigidBody::Parameters boxParams;
 			boxParams.mass = 10.0f;
