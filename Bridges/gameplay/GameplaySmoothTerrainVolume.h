@@ -52,9 +52,8 @@ namespace Cubiquity
 		virtual ~GameplaySmoothTerrainVolume();
 
 	private:
-		void syncNode(OctreeNode< MultiMaterial >* octreeNode, GameplayOctreeNode* gameplayOctreeNode);
 
-		gameplay::Model* buildModelFromPolyVoxMesh(const ::PolyVox::SurfaceMesh< ::PolyVox::PositionMaterialNormal<MultiMaterialMarchingCubesController::MaterialType > >* polyVoxMesh);
+		gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< typename VoxelTraits<typename VolumeType::VoxelType>::VertexType>* polyVoxMesh);
 	};
 }
 

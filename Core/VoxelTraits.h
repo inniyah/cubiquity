@@ -17,6 +17,8 @@ namespace Cubiquity
 	public:
 		typedef ::PolyVox::PositionMaterial<Colour> VertexType;
 		typedef ColouredCubicSurfaceExtractionTask SurfaceExtractionTaskType;
+		static const bool IsColour = true;
+		static const bool IsMultiMaterial = false;
 	};
 
 	template<>
@@ -25,6 +27,8 @@ namespace Cubiquity
 	public:
 		typedef ::PolyVox::PositionMaterialNormal< MultiMaterialMarchingCubesController::MaterialType > VertexType;
 		typedef SmoothSurfaceExtractionTask SurfaceExtractionTaskType;
+		static const bool IsColour = false;
+		static const bool IsMultiMaterial = true;
 	};
 }
 
