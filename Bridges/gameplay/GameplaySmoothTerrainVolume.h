@@ -53,7 +53,7 @@ namespace Cubiquity
 
 	private:
 
-		gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< typename VoxelTraits<typename VolumeType::VoxelType>::VertexType>* polyVoxMesh);
+		gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< typename VoxelTraits<typename CubiquityVolumeType::VoxelType>::VertexType>* polyVoxMesh);
 	};
 }
 

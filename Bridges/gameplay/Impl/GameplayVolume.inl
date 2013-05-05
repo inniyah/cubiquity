@@ -1,7 +1,7 @@
 namespace Cubiquity
 {
-	template <typename VolumeType>
-	void GameplayVolume<VolumeType>::initialiseOctree(void)
+	template <typename CubiquityVolumeType>
+	void GameplayVolume<CubiquityVolumeType>::initialiseOctree(void)
 	{
 		GP_ASSERT(mCubiquityVolume);
 		GP_ASSERT(mCubiquityVolume->getRootOctreeNode());
@@ -17,11 +17,11 @@ namespace Cubiquity
 		mRootGameplayOctreeNode->mGameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
 	}
 
-	template <typename _VolumeType>
-	gameplay::PhysicsCollisionShape::Definition GameplayVolume<_VolumeType>::buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< typename VoxelTraits<typename _VolumeType::VoxelType>::VertexType>* polyVoxMesh)
+	template <typename CubiquityVolumeType>
+	gameplay::PhysicsCollisionShape::Definition GameplayVolume<CubiquityVolumeType>::buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< typename VoxelTraits<typename CubiquityVolumeType::VoxelType>::VertexType>* polyVoxMesh)
 	{
 		//Now set up the physics
-		const std::vector< typename VoxelTraits<typename VolumeType::VoxelType>::VertexType >& vecVertices = polyVoxMesh->getVertices();
+		const std::vector< typename VoxelTraits<typename CubiquityVolumeType::VoxelType>::VertexType >& vecVertices = polyVoxMesh->getVertices();
 		const std::vector<unsigned int>& vecIndices = polyVoxMesh->getIndices();
 		float* vertexData = new float[polyVoxMesh->getVertices().size() * 3];
 

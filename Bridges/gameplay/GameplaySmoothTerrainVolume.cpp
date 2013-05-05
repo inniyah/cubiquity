@@ -54,7 +54,7 @@ namespace Cubiquity
 		}
 	}
 
-	gameplay::Model* GameplaySmoothTerrainVolume::buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< typename VoxelTraits<typename VolumeType::VoxelType>::VertexType>* polyVoxMesh)
+	gameplay::Model* GameplaySmoothTerrainVolume::buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< typename VoxelTraits<typename CubiquityVolumeType::VoxelType>::VertexType>* polyVoxMesh)
 	{
 		//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
 		const std::vector<PositionMaterialNormal<MultiMaterialMarchingCubesController::MaterialType> >& vecVertices = polyVoxMesh->getVertices();

@@ -34,11 +34,11 @@ namespace Cubiquity
 		GameplayOctreeNode* mChildren[2][2][2];
 	};
 
-	template <typename _VolumeType>
+	template <typename _CubiquityVolumeType>
 	class GameplayVolume : public gameplay::Ref
 	{
 	public:
-		typedef _VolumeType VolumeType;
+		typedef _CubiquityVolumeType CubiquityVolumeType;
 
 		gameplay::Node* getRootNode(void)
 		{
@@ -46,7 +46,7 @@ namespace Cubiquity
 		}
 
 		//Not sure I like exposing this one... should make some functions/classes friends instead?
-		_VolumeType* getCubiquityVolume(void)
+		CubiquityVolumeType* getCubiquityVolume(void)
 		{
 			return mCubiquityVolume;
 		}
@@ -78,7 +78,7 @@ namespace Cubiquity
 			:mRootGameplayOctreeNode(0)
 			,mCubiquityVolume(0)
 		{
-			mCubiquityVolume = new _VolumeType(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), blockSize, baseNodeSize);
+			mCubiquityVolume = new CubiquityVolumeType(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), blockSize, baseNodeSize);
 		}
 
 		~GameplayVolume()
@@ -87,18 +87,18 @@ namespace Cubiquity
 
 		void initialiseOctree(void);
 
-		gameplay::PhysicsCollisionShape::Definition buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< typename VoxelTraits<typename _VolumeType::VoxelType>::VertexType>* polyVoxMesh);
+		gameplay::PhysicsCollisionShape::Definition buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< typename VoxelTraits<typename CubiquityVolumeType::VoxelType>::VertexType>* polyVoxMesh);
 
-		virtual gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< typename VoxelTraits<typename VolumeType::VoxelType>::VertexType>* polyVoxMesh) = 0;
+		virtual gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< typename VoxelTraits<typename CubiquityVolumeType::VoxelType>::VertexType>* polyVoxMesh) = 0;
 
-		void syncNode(OctreeNode< typename VolumeType::VoxelType >* octreeNode, GameplayOctreeNode* gameplayOctreeNode)
+		void syncNode(OctreeNode< typename CubiquityVolumeType::VoxelType >* octreeNode, GameplayOctreeNode* gameplayOctreeNode)
 		{
 			if(gameplayOctreeNode->mTimeStamp < octreeNode->mMeshLastUpdated)
 			{
 				if(octreeNode->mPolyVoxMesh)
 				{
 					Model* model = buildModelFromPolyVoxMesh(octreeNode->mPolyVoxMesh);
-					if(VoxelTraits<typename VolumeType::VoxelType>::IsColour)
+					if(VoxelTraits<typename CubiquityVolumeType::VoxelType>::IsColour)
 					{
 						model->setMaterial("res/Materials/ColouredCubicTerrain.material");
 					}
@@ -138,7 +138,7 @@ namespace Cubiquity
 				{
 					for(int ix = 0; ix < 2; ix++)
 					{
-						OctreeNode< typename VolumeType::VoxelType >* child = octreeNode->getChildNode(ix, iy, iz);
+						OctreeNode< typename CubiquityVolumeType::VoxelType >* child = octreeNode->getChildNode(ix, iy, iz);
 						if(child)
 						{
 							//Node* childNode = reinterpret_cast<Node*>(child->mGameEngineNode);
@@ -166,7 +166,7 @@ namespace Cubiquity
 
 	protected:
 
-		_VolumeType* mCubiquityVolume;
+		CubiquityVolumeType* mCubiquityVolume;
 		GameplayOctreeNode* mRootGameplayOctreeNode;
 	};
 }
