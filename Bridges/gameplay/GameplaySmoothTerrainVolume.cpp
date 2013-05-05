@@ -14,15 +14,7 @@ namespace Cubiquity
 	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
 		:GameplayVolume<SmoothTerrainVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize)
 	{
-		mRootGameplayNode = new GameplayOctreeNode();
-		mRootGameplayNode->mGameplayNode = Node::create();
-
-		std::stringstream ss;
-		ss << "LOD = " << int(mCubiquityVolume->getRootOctreeNode()->mHeight) << ", Region = (" << mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerX() << "," << mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerY() << "," << mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerZ() << ") to (" << mCubiquityVolume->getRootOctreeNode()->mRegion.getUpperX() << "," << mCubiquityVolume->getRootOctreeNode()->mRegion.getUpperY() << "," << mCubiquityVolume->getRootOctreeNode()->mRegion.getUpperZ() << ")";
-		mRootGameplayNode->mGameplayNode->setId(ss.str().c_str());
-
-		Vector3I translation = mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerCorner();
-		mRootGameplayNode->mGameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
+		initialiseOctree();
 	}
 
 	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(const char* dataToLoad, unsigned int blockSize, unsigned int baseNodeSize)
@@ -42,29 +34,13 @@ namespace Cubiquity
 			mCubiquityVolume = importVolDat<SmoothTerrainVolume>(dataToLoad, blockSize, baseNodeSize);
 		}
 
-		mRootGameplayNode = new GameplayOctreeNode();
-		mRootGameplayNode->mGameplayNode = Node::create();
-
-		std::stringstream ss;
-		ss << "LOD = " << int(mCubiquityVolume->getRootOctreeNode()->mHeight) << ", Region = (" << mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerX() << "," << mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerY() << "," << mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerZ() << ") to (" << mCubiquityVolume->getRootOctreeNode()->mRegion.getUpperX() << "," << mCubiquityVolume->getRootOctreeNode()->mRegion.getUpperY() << "," << mCubiquityVolume->getRootOctreeNode()->mRegion.getUpperZ() << ")";
-		mRootGameplayNode->mGameplayNode->setId(ss.str().c_str());
-
-		Vector3I translation = mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerCorner();
-		mRootGameplayNode->mGameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
+		initialiseOctree();
 	}
 
 	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(SmoothTerrainVolume* cubiquityVolume)
 		:GameplayVolume<SmoothTerrainVolume>(cubiquityVolume)
 	{
-		mRootGameplayNode = new GameplayOctreeNode();
-		mRootGameplayNode->mGameplayNode = Node::create();
-
-		std::stringstream ss;
-		ss << "LOD = " << int(mCubiquityVolume->getRootOctreeNode()->mHeight) << ", Region = (" << mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerX() << "," << mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerY() << "," << mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerZ() << ") to (" << mCubiquityVolume->getRootOctreeNode()->mRegion.getUpperX() << "," << mCubiquityVolume->getRootOctreeNode()->mRegion.getUpperY() << "," << mCubiquityVolume->getRootOctreeNode()->mRegion.getUpperZ() << ")";
-		mRootGameplayNode->mGameplayNode->setId(ss.str().c_str());
-
-		Vector3I translation = mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerCorner();
-		mRootGameplayNode->mGameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
+		initialiseOctree();
 	}
 
 	GameplaySmoothTerrainVolume::~GameplaySmoothTerrainVolume()
