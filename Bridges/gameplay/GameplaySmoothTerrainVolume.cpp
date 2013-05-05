@@ -50,7 +50,7 @@ namespace Cubiquity
 
 		if(mCubiquityVolume->getRootOctreeNode() != 0)
 		{
-			syncNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayNode);
+			syncNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayOctreeNode);
 		}
 	}
 

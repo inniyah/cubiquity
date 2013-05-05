@@ -40,7 +40,7 @@ namespace Cubiquity
 	public:
 		gameplay::Node* getRootNode(void)
 		{
-			return mRootGameplayNode->mGameplayNode;
+			return mRootGameplayOctreeNode->mGameplayNode;
 		}
 
 		//Not sure I like exposing this one... should make some functions/classes friends instead?
@@ -67,21 +67,16 @@ namespace Cubiquity
 	protected:
 
 		GameplayVolume()
-			:mRootGameplayNode(0)
+			:mRootGameplayOctreeNode(0)
 			,mCubiquityVolume(0)
 		{
 		}
 
 		GameplayVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
-			:mRootGameplayNode(0)
+			:mRootGameplayOctreeNode(0)
+			,mCubiquityVolume(0)
 		{
 			mCubiquityVolume = new _VolumeType(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), blockSize, baseNodeSize);
-		}
-
-		GameplayVolume(_VolumeType* cubiquityVolume)
-			:mRootGameplayNode(0)
-			,mCubiquityVolume(cubiquityVolume) //Consider ownership?
-		{
 		}
 
 		~GameplayVolume()
@@ -90,21 +85,24 @@ namespace Cubiquity
 
 		void initialiseOctree(void)
 		{
-			mRootGameplayNode = new GameplayOctreeNode();
-			mRootGameplayNode->mGameplayNode = Node::create();
+			GP_ASSERT(mCubiquityVolume);
+			GP_ASSERT(mCubiquityVolume->getRootOctreeNode());
+
+			mRootGameplayOctreeNode = new GameplayOctreeNode();
+			mRootGameplayOctreeNode->mGameplayNode = Node::create();
 
 			std::stringstream ss;
 			ss << "LOD = " << int(mCubiquityVolume->getRootOctreeNode()->mHeight) << ", Region = (" << mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerX() << "," << mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerY() << "," << mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerZ() << ") to (" << mCubiquityVolume->getRootOctreeNode()->mRegion.getUpperX() << "," << mCubiquityVolume->getRootOctreeNode()->mRegion.getUpperY() << "," << mCubiquityVolume->getRootOctreeNode()->mRegion.getUpperZ() << ")";
-			mRootGameplayNode->mGameplayNode->setId(ss.str().c_str());
+			mRootGameplayOctreeNode->mGameplayNode->setId(ss.str().c_str());
 
 			Vector3I translation = mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerCorner();
-			mRootGameplayNode->mGameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
+			mRootGameplayOctreeNode->mGameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
 		}
 
 	protected:
 
 		_VolumeType* mCubiquityVolume;
-		GameplayOctreeNode* mRootGameplayNode;
+		GameplayOctreeNode* mRootGameplayOctreeNode;
 	};
 
 }

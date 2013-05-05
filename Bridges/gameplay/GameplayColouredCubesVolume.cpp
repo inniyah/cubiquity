@@ -20,6 +20,7 @@ namespace Cubiquity
 	}
 
 	GameplayColouredCubesVolume::GameplayColouredCubesVolume(const char* dataToLoad, unsigned int blockSize, unsigned int baseNodeSize)
+		:GameplayVolume<ColouredCubesVolume>()
 	{
 		// Check whether the provided data is a file or a directory
 		FILE* file = fopen(dataToLoad, "rb");
@@ -51,7 +52,7 @@ namespace Cubiquity
 
 		if(mCubiquityVolume->getRootOctreeNode() != 0)
 		{
-			syncNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayNode);
+			syncNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayOctreeNode);
 		}
 	}
 
