@@ -70,7 +70,7 @@ namespace Cubiquity
 		virtual ~GameplayColouredCubesVolume();
 
 	private:
-		void syncNode(OctreeNode< Colour >* octreeNode, gameplay::Node* gameplayNode);
+		void syncNode(OctreeNode< Colour >* octreeNode, GameplayOctreeNode* gameplayOctreeNode);
 
 		gameplay::Model* buildModelFromPolyVoxMesh(const ::PolyVox::SurfaceMesh< ::PolyVox::PositionMaterial<Colour> >* polyVoxMesh);
 	};

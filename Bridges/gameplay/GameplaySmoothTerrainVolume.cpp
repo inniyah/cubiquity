@@ -14,7 +14,10 @@ namespace Cubiquity
 	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
 		:GameplayVolume<SmoothTerrainVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize)
 	{
-		mRootGameplayNode = createNodeWithExtraData< MultiMaterial >("RootGameplayNode");
+		//mRootGameplayNode = createNodeWithExtraData< MultiMaterial >("RootGameplayNode");
+
+		mRootGameplayNode = new GameplayOctreeNode();
+		mRootGameplayNode->mGameplayNode = Node::create();
 
 		buildNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayNode);
 	}
@@ -36,7 +39,10 @@ namespace Cubiquity
 			mCubiquityVolume = importVolDat<SmoothTerrainVolume>(dataToLoad, blockSize, baseNodeSize);
 		}
 
-		mRootGameplayNode = createNodeWithExtraData< MultiMaterial >("RootGameplayNode");
+		//mRootGameplayNode = createNodeWithExtraData< MultiMaterial >("RootGameplayNode");
+
+		mRootGameplayNode = new GameplayOctreeNode();
+		mRootGameplayNode->mGameplayNode = Node::create();
 
 		buildNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayNode);
 	}
@@ -44,7 +50,10 @@ namespace Cubiquity
 	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(SmoothTerrainVolume* cubiquityVolume)
 		:GameplayVolume<SmoothTerrainVolume>(cubiquityVolume)
 	{
-		mRootGameplayNode = createNodeWithExtraData< MultiMaterial >("RootGameplayNode");
+		//mRootGameplayNode = createNodeWithExtraData< MultiMaterial >("RootGameplayNode");
+
+		mRootGameplayNode = new GameplayOctreeNode();
+		mRootGameplayNode->mGameplayNode = Node::create();
 
 		buildNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayNode);
 	}
@@ -66,17 +75,17 @@ namespace Cubiquity
 		}
 	}
 
-	void GameplaySmoothTerrainVolume::syncNode(OctreeNode< MultiMaterial >* octreeNode, gameplay::Node* gameplayNode)
+	void GameplaySmoothTerrainVolume::syncNode(OctreeNode< MultiMaterial >* octreeNode, GameplayOctreeNode* gameplayOctreeNode)
 	{
-		ExtraNodeData< MultiMaterial >* extraNodeData = static_cast<ExtraNodeData<  MultiMaterial >*>(gameplayNode->getUserPointer());
+		//ExtraNodeData< MultiMaterial >* extraNodeData = static_cast<ExtraNodeData<  MultiMaterial >*>(gameplayNode->getUserPointer());
 
-		if(extraNodeData->mTimeStamp < octreeNode->mMeshLastUpdated)
+		if(gameplayOctreeNode->mTimeStamp < octreeNode->mMeshLastUpdated)
 		{
 			if(octreeNode->mPolyVoxMesh)
 			{
 				Model* model = buildModelFromPolyVoxMesh(octreeNode->mPolyVoxMesh);
 				model->setMaterial("res/Materials/SmoothTerrain.material");
-				gameplayNode->setModel(model);
+				gameplayOctreeNode->mGameplayNode->setModel(model);
 				SAFE_RELEASE(model);
 
 				//There is a weird bug, whereby if we use the LOD 0 for physics it resets the node positions somehow. So we use LOD 1 here.
@@ -86,20 +95,20 @@ namespace Cubiquity
 
 					PhysicsRigidBody::Parameters groundParams;
 					groundParams.mass = 0.0f;
-					gameplayNode->setCollisionObject(PhysicsCollisionObject::RIGID_BODY, physDef, &groundParams);
+					gameplayOctreeNode->mGameplayNode->setCollisionObject(PhysicsCollisionObject::RIGID_BODY, physDef, &groundParams);
 				}
 			}	
 
-			extraNodeData->mTimeStamp = Clock::getTimestamp();
+			gameplayOctreeNode->mTimeStamp = Clock::getTimestamp();
 		}
 
 		if(octreeNode->mRenderThisNode)
 		{
-			gameplayNode->setTag("RenderThisNode", "t");
+			gameplayOctreeNode->mGameplayNode->setTag("RenderThisNode", "t");
 		}
 		else
 		{
-			gameplayNode->setTag("RenderThisNode", "f");
+			gameplayOctreeNode->mGameplayNode->setTag("RenderThisNode", "f");
 		}
 
 		for(int iz = 0; iz < 2; iz++)
@@ -111,7 +120,8 @@ namespace Cubiquity
 					OctreeNode< MultiMaterial >* child = octreeNode->getChildNode(ix, iy, iz);
 					if(child != 0)
 					{
-						Node* childNode = reinterpret_cast<Node*>(child->mGameEngineNode);
+						//Node* childNode = reinterpret_cast<Node*>(child->mGameEngineNode);
+						GameplayOctreeNode* childNode = gameplayOctreeNode->mChildren[ix][iy][iz];
 						GP_ASSERT(childNode);
 
 						syncNode(child, childNode);

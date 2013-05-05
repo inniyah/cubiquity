@@ -16,7 +16,10 @@ namespace Cubiquity
 	GameplayColouredCubesVolume::GameplayColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
 		:GameplayVolume<ColouredCubesVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize)
 	{
-		mRootGameplayNode = createNodeWithExtraData< Colour >("RootGameplayNode");
+		//mRootGameplayNode = createNodeWithExtraData< Colour >("RootGameplayNode");
+
+		mRootGameplayNode = new GameplayOctreeNode();
+		mRootGameplayNode->mGameplayNode = Node::create();
 
 		buildNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayNode);
 	}
@@ -37,7 +40,10 @@ namespace Cubiquity
 			mCubiquityVolume = importVolDat<ColouredCubesVolume>(dataToLoad, blockSize, baseNodeSize);
 		}
 
-		mRootGameplayNode = createNodeWithExtraData< Colour >("RootGameplayNode");
+		//mRootGameplayNode = createNodeWithExtraData< Colour >("RootGameplayNode");
+
+		mRootGameplayNode = new GameplayOctreeNode();
+		mRootGameplayNode->mGameplayNode = Node::create();
 
 		buildNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayNode);
 	}
@@ -45,7 +51,10 @@ namespace Cubiquity
 	GameplayColouredCubesVolume::GameplayColouredCubesVolume(ColouredCubesVolume* colouredCubesVolume)
 		:GameplayVolume<ColouredCubesVolume>(colouredCubesVolume)
 	{
-		mRootGameplayNode = createNodeWithExtraData< Colour >("RootGameplayNode");
+		//mRootGameplayNode = createNodeWithExtraData< Colour >("RootGameplayNode");
+
+		mRootGameplayNode = new GameplayOctreeNode();
+		mRootGameplayNode->mGameplayNode = Node::create();
 
 		buildNode(mCubiquityVolume->getRootOctreeNode(), mRootGameplayNode);
 	}
@@ -67,30 +76,34 @@ namespace Cubiquity
 		}
 	}
 
-	void GameplayColouredCubesVolume::syncNode(OctreeNode< Colour >* octreeNode, gameplay::Node* gameplayNode)
+	void GameplayColouredCubesVolume::syncNode(OctreeNode< Colour >* octreeNode, GameplayOctreeNode* gameplayOctreeNode)
 	{
-		ExtraNodeData< Colour >* extraNodeData = static_cast<ExtraNodeData< Colour >*>(gameplayNode->getUserPointer());
+		//ExtraNodeData< Colour >* extraNodeData = static_cast<ExtraNodeData< Colour >*>(gameplayNode->getUserPointer());
 
-		if(extraNodeData->mTimeStamp < octreeNode->mMeshLastUpdated)
+		if(gameplayOctreeNode->mTimeStamp < octreeNode->mMeshLastUpdated)
 		{
 			if(octreeNode->mPolyVoxMesh)
 			{
 				Model* model = buildModelFromPolyVoxMesh(octreeNode->mPolyVoxMesh);
 				model->setMaterial("res/Materials/ColouredCubicTerrain.material");
-				gameplayNode->setModel(model);
+				gameplayOctreeNode->mGameplayNode->setModel(model);
 				SAFE_RELEASE(model);
 			}
 
-			extraNodeData->mTimeStamp = Clock::getTimestamp();
+			gameplayOctreeNode->mTimeStamp = Clock::getTimestamp();
 		}
 
 		if(octreeNode->mRenderThisNode)
 		{
-			gameplayNode->setTag("RenderThisNode", "t");
+			GP_ASSERT(gameplayOctreeNode);
+			GP_ASSERT(gameplayOctreeNode->mGameplayNode);
+			gameplayOctreeNode->mGameplayNode->setTag("RenderThisNode", "t");
 		}
 		else
 		{
-			gameplayNode->setTag("RenderThisNode", "f");
+			GP_ASSERT(gameplayOctreeNode);
+			GP_ASSERT(gameplayOctreeNode->mGameplayNode);
+			gameplayOctreeNode->mGameplayNode->setTag("RenderThisNode", "f");
 		}
 
 		for(int iz = 0; iz < 2; iz++)
@@ -102,7 +115,8 @@ namespace Cubiquity
 					OctreeNode< Colour >* child = octreeNode->getChildNode(ix, iy, iz);
 					if(child)
 					{
-						Node* childNode = reinterpret_cast<Node*>(child->mGameEngineNode);
+						//Node* childNode = reinterpret_cast<Node*>(child->mGameEngineNode);
+						GameplayOctreeNode* childNode = gameplayOctreeNode->mChildren[ix][iy][iz];
 						GP_ASSERT(childNode);
 
 						syncNode(child, childNode);

@@ -91,9 +91,9 @@ namespace Cubiquity
 	{
 		acceptVisitor(ClearWantedForRenderingVisitor<VoxelType>());
 
-		//acceptVisitor(DetermineWantedForRenderingVisitor<VoxelType>(viewPosition, lodThreshold));
+		acceptVisitor(DetermineWantedForRenderingVisitor<VoxelType>(viewPosition, lodThreshold));
 
-		determineWantedForRendering(mRootNodeIndex, viewPosition, lodThreshold);
+		//determineWantedForRendering(mRootNodeIndex, viewPosition, lodThreshold);
 
 		sceduleUpdateIfNeeded(mRootNodeIndex, viewPosition);
 
@@ -314,13 +314,39 @@ namespace Cubiquity
 
 			if(processChildren)
 			{
-				for(int iz = 0; iz < 2; iz++)
+				for(int z = 0; z < 2; z++)
 				{
-					for(int iy = 0; iy < 2; iy++)
+					for(int y = 0; y < 2; y++)
 					{
-						for(int ix = 0; ix < 2; ix++)
+						for(int x = 0; x < 2; x++)
 						{
-							uint16_t childIndex = octreeNode->children[ix][iy][iz];
+							uint16_t childIndex = octreeNode->children[x][y][z];
+
+							//If the node doesn't exist we create it.
+							if(childIndex == InvalidNodeIndex)
+							{
+								Vector3I baseLowerCorner = octreeNode->mRegion.getLowerCorner();
+								int32_t childSize = (mOctreeConstructionMode == OctreeConstructionModes::BoundCells) ? octreeNode->mRegion.getWidthInCells() / 2 : octreeNode->mRegion.getWidthInVoxels() / 2;
+
+								Vector3I baseUpperCorner;
+								if(mOctreeConstructionMode == OctreeConstructionModes::BoundCells)
+								{
+									baseUpperCorner = baseLowerCorner + Vector3I(childSize, childSize, childSize);
+								}
+								else
+								{
+									baseUpperCorner = baseLowerCorner + Vector3I(childSize-1, childSize-1, childSize-1);
+								}
+
+								Vector3I offset (x*childSize, y*childSize, z*childSize);
+								Region childRegion(baseLowerCorner + offset, baseUpperCorner + offset);
+								if(intersects(childRegion, mRegionToCover))
+								{
+									childIndex = createNode(childRegion, index);
+									octreeNode->children[x][y][z] = childIndex;
+								}
+							}
+
 							if(childIndex != InvalidNodeIndex)
 							{
 								determineWantedForRendering(childIndex, viewPosition, lodThreshold);
