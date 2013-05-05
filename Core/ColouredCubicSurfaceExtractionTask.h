@@ -26,15 +26,15 @@ namespace Cubiquity
 		Timestamp mProcessingStartedTimestamp;
 	};
 
-	template< typename SrcVolumeType, typename DstVolumeType>
-	void rescaleCubicVolume(SrcVolumeType* pVolSrc, const Region& regSrc, DstVolumeType* pVolDst, const Region& regDst)
+	template< typename SrcPolyVoxVolumeType, typename DstPolyVoxVolumeType>
+	void rescaleCubicVolume(SrcPolyVoxVolumeType* pVolSrc, const Region& regSrc, DstPolyVoxVolumeType* pVolDst, const Region& regDst)
 	{
 		POLYVOX_ASSERT(regSrc.getWidthInVoxels() == regDst.getWidthInVoxels() * 2, "Wrong size!");
 		POLYVOX_ASSERT(regSrc.getHeightInVoxels() == regDst.getHeightInVoxels() * 2, "Wrong size!");
 		POLYVOX_ASSERT(regSrc.getDepthInVoxels() == regDst.getDepthInVoxels() * 2, "Wrong size!");
 
-		SrcVolumeType::Sampler srcSampler(pVolSrc);
-		DstVolumeType::Sampler dstSampler(pVolDst);
+		SrcPolyVoxVolumeType::Sampler srcSampler(pVolSrc);
+		DstPolyVoxVolumeType::Sampler dstSampler(pVolDst);
 
 		// First of all we iterate over all destination voxels and compute their colour as the
 		// average of the colours of the eight corresponding voxels in the higher resolution version.

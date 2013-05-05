@@ -27,8 +27,8 @@ namespace Cubiquity
 	void recalculateMaterials(::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* mesh, const Vector3F& meshOffset, ::PolyVox::SimpleVolume<MultiMaterial>* volume);
 	MultiMaterial getInterpolatedValue(::PolyVox::SimpleVolume<MultiMaterial>* volume, const Vector3F& position);
 
-	template< typename SrcVolumeType, typename DstVolumeType>
-	void resampleVolume(uint32_t factor, SrcVolumeType* srcVolume, const Region& srcRegion, DstVolumeType* dstVolume, const Region& dstRegion)
+	template< typename SrcPolyVoxVolumeType, typename DstPolyVoxVolumeType>
+	void resampleVolume(uint32_t factor, SrcPolyVoxVolumeType* srcVolume, const Region& srcRegion, DstPolyVoxVolumeType* dstVolume, const Region& dstRegion)
 	{
 		POLYVOX_ASSERT(srcRegion.getWidthInCells() == dstRegion.getWidthInCells() * factor, "Destination volume must be half the size of source volume");
 		POLYVOX_ASSERT(srcRegion.getHeightInCells() == dstRegion.getHeightInCells() * factor, "Destination volume must be half the size of source volume");

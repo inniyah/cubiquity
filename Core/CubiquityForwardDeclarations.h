@@ -36,7 +36,7 @@ namespace Cubiquity
 	class Task;
 	class TaskProcessor;
 
-	template <typename _VoxelType>
+	template <typename VoxelType>
 	class Volume;
 }
 
