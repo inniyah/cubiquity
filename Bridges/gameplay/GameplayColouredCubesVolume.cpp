@@ -184,31 +184,6 @@ namespace Cubiquity
 		return model;
 	}
 
-	PhysicsCollisionShape::Definition GameplayColouredCubesVolume::buildCollisionObjectFromPolyVoxMesh(const ::PolyVox::SurfaceMesh< ::PolyVox::PositionMaterial<Colour> >* polyVoxMesh)
-	{
-		//Now set up the physics
-		const std::vector< PositionMaterial<Colour> >& vecVertices = polyVoxMesh->getVertices();
-		const std::vector<unsigned int>& vecIndices = polyVoxMesh->getIndices();
-		float* vertexData = new float[polyVoxMesh->getVertices().size() * 3];
-
-		unsigned int* physicsIndices = new unsigned int [vecIndices.size()];
-		for(uint32_t ct = 0; ct < vecIndices.size(); ct++)
-		{
-			physicsIndices[ct] = vecIndices[ct];
-		}
-
-		float* ptr = vertexData;
-		for(uint32_t i = 0; i < vecVertices.size(); i++)
-		{
-			// Position stored in x,y,z components.
-			*ptr = vecVertices[i].getPosition().getX(); ptr++;
-			*ptr = vecVertices[i].getPosition().getY(); ptr++;
-			*ptr = vecVertices[i].getPosition().getZ(); ptr++;
-		}
-
-		return PhysicsCollisionShape::custom(vertexData, polyVoxMesh->getVertices().size(), physicsIndices, vecIndices.size());
-	}
-
 	gameplay::Vector4 GameplayColouredCubesVolume::getVoxel(int x, int y, int z)
 	{
 		Colour colour = mCubiquityVolume->getVoxelAt(x, y, z);

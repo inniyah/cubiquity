@@ -55,7 +55,6 @@ namespace Cubiquity
 		void syncNode(OctreeNode< MultiMaterial >* octreeNode, GameplayOctreeNode* gameplayOctreeNode);
 
 		gameplay::Model* buildModelFromPolyVoxMesh(const ::PolyVox::SurfaceMesh< ::PolyVox::PositionMaterialNormal<MultiMaterialMarchingCubesController::MaterialType > >* polyVoxMesh);
-		gameplay::PhysicsCollisionShape::Definition buildCollisionObjectFromPolyVoxMesh(const ::PolyVox::SurfaceMesh< ::PolyVox::PositionMaterialNormal<MultiMaterialMarchingCubesController::MaterialType > >* polyVoxMesh);
 	};
 }
 
