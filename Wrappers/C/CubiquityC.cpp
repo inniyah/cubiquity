@@ -14,15 +14,37 @@ using namespace Cubiquity;
 
 std::vector<ColouredCubesVolume*> gColouredCubesVolumes;
 
+int32_t encodeNodeHandle(int32_t volumeHandle, int32_t nodeHandle)
+{
+	if((volumeHandle >= 8) || (nodeHandle >= 65536))
+	{
+		return -1;
+	}
+
+	volumeHandle = volumeHandle << 28;
+	return volumeHandle | nodeHandle;
+}
+
+void decodeNodeHandle(int32_t nodeHandle, int32_t* volumePart, int32_t* nodePart)
+{
+	// Validation needed?
+	*volumePart = nodeHandle >> 28;
+	*nodePart = nodeHandle & 0x0000FFFF;
+}
+
 ColouredCubesVolume* getVolumeFromHandle(int32_t volumeHandle)
 {
 	return gColouredCubesVolumes[volumeHandle];
 }
 
-OctreeNode<Colour>* getNodeFromHandle(int32_t volumeHandle, int32_t nodeHandle)
+OctreeNode<Colour>* getNodeFromHandle(int32_t nodeHandle)
 {
-	ColouredCubesVolume* volume = gColouredCubesVolumes[volumeHandle];
-	OctreeNode<Colour>* node = volume->getOctree()->getNodeFromIndex(nodeHandle);
+	int32_t volumePart;
+	int32_t nodePart;
+	decodeNodeHandle(nodeHandle, &volumePart, &nodePart);
+
+	ColouredCubesVolume* volume = gColouredCubesVolumes[volumePart];
+	OctreeNode<Colour>* node = volume->getOctree()->getNodeFromIndex(nodePart);
 	return node;
 }
 
@@ -67,15 +89,17 @@ CUBIQUITYC_API void cuDeleteColouredCubesVolume(int32_t volumeHandle)
 CUBIQUITYC_API int32_t cuGetRootOctreeNode(int32_t volumeHandle)
 {
 	ColouredCubesVolume* volume = gColouredCubesVolumes[volumeHandle];
-
 	OctreeNode<Colour>* node = volume->getRootOctreeNode();
+	int32_t nodeHandle = node->mSelf;
 
-	return node->mSelf;
+	int32_t combinedHandle = encodeNodeHandle(volumeHandle, nodeHandle);
+
+	return combinedHandle;
 }
 
-CUBIQUITYC_API int32_t cuGetChildNode(int32_t volumeHandle, int32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ)
+CUBIQUITYC_API int32_t cuGetChildNode(int32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ)
 {
-	OctreeNode<Colour>* node = getNodeFromHandle(volumeHandle, nodeHandle);
+	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 	OctreeNode<Colour>* child = node->getChildNode(childX, childY, childZ);
 	if(child)
 	{
@@ -87,54 +111,54 @@ CUBIQUITYC_API int32_t cuGetChildNode(int32_t volumeHandle, int32_t nodeHandle, 
 	}
 }
 
-CUBIQUITYC_API int32_t cuNodeHasMesh(int32_t volumeHandle, int32_t nodeHandle)
+CUBIQUITYC_API int32_t cuNodeHasMesh(int32_t nodeHandle)
 {
-	OctreeNode<Colour>* node = getNodeFromHandle(volumeHandle, nodeHandle);
+	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 	return node->mPolyVoxMesh != 0;
 }
 
-CUBIQUITYC_API int32_t cuGetNodePositionX(int32_t volumeHandle, int32_t nodeHandle)
+CUBIQUITYC_API int32_t cuGetNodePositionX(int32_t nodeHandle)
 {
-	OctreeNode<Colour>* node = getNodeFromHandle(volumeHandle, nodeHandle);
+	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 	return node->mRegion.getLowerX();
 }
 
-CUBIQUITYC_API int32_t cuGetNodePositionY(int32_t volumeHandle, int32_t nodeHandle)
+CUBIQUITYC_API int32_t cuGetNodePositionY(int32_t nodeHandle)
 {
-	OctreeNode<Colour>* node = getNodeFromHandle(volumeHandle, nodeHandle);
+	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 	return node->mRegion.getLowerY();
 }
 
-CUBIQUITYC_API int32_t cuGetNodePositionZ(int32_t volumeHandle, int32_t nodeHandle)
+CUBIQUITYC_API int32_t cuGetNodePositionZ(int32_t nodeHandle)
 {
-	OctreeNode<Colour>* node = getNodeFromHandle(volumeHandle, nodeHandle);
+	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 	return node->mRegion.getLowerZ();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Mesh functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API uint32_t cuGetNoOfVertices(int32_t volumeHandle, int32_t nodeHandle)
+CUBIQUITYC_API uint32_t cuGetNoOfVertices(int32_t nodeHandle)
 {
-	OctreeNode<Colour>* node = getNodeFromHandle(volumeHandle, nodeHandle);
+	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 
 	const ::PolyVox::SurfaceMesh< typename VoxelTraits<Colour>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
 	return polyVoxMesh->getNoOfVertices();
 }
 
-CUBIQUITYC_API uint32_t cuGetNoOfIndices(int32_t volumeHandle, int32_t nodeHandle)
+CUBIQUITYC_API uint32_t cuGetNoOfIndices(int32_t nodeHandle)
 {
-	OctreeNode<Colour>* node = getNodeFromHandle(volumeHandle, nodeHandle);
+	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 
 	const ::PolyVox::SurfaceMesh< typename VoxelTraits<Colour>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
 	return polyVoxMesh->getNoOfIndices();
 }
 
-CUBIQUITYC_API float* cuGetVertices(int32_t volumeHandle, int32_t nodeHandle)
+CUBIQUITYC_API float* cuGetVertices(int32_t nodeHandle)
 {
-	OctreeNode<Colour>* node = getNodeFromHandle(volumeHandle, nodeHandle);
+	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 
 	const ::PolyVox::SurfaceMesh< typename VoxelTraits<Colour>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
@@ -149,9 +173,9 @@ CUBIQUITYC_API float* cuGetVertices(int32_t volumeHandle, int32_t nodeHandle)
 	return floatPointer;
 }
 
-CUBIQUITYC_API uint32_t* cuGetIndices(int32_t volumeHandle, int32_t nodeHandle)
+CUBIQUITYC_API uint32_t* cuGetIndices(int32_t nodeHandle)
 {
-	OctreeNode<Colour>* node = getNodeFromHandle(volumeHandle, nodeHandle);
+	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 
 	const ::PolyVox::SurfaceMesh< typename VoxelTraits<Colour>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
