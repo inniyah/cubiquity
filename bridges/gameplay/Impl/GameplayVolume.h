@@ -51,6 +51,7 @@ namespace Cubiquity
 
 		~GameplayOctreeNode()
 		{
+			// Delete any children first
 			for(int iz = 0; iz < 2; iz++)
 			{
 				for(int iy = 0; iy < 2; iy++)
@@ -63,6 +64,11 @@ namespace Cubiquity
 				}
 			}
 
+			// And remove ourself from gameplay's scenegraph
+			if(mParent)
+			{
+				mParent->mGameplayNode->removeChild(mGameplayNode);
+			}
 			mGameplayNode->release();
 		}
 

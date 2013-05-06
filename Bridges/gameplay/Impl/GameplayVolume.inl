@@ -59,22 +59,27 @@ namespace Cubiquity
 			{
 				for(int ix = 0; ix < 2; ix++)
 				{
-					OctreeNode< typename CubiquityVolumeType::VoxelType >* child = octreeNode->getChildNode(ix, iy, iz);
-					if(child)
+					OctreeNode< typename CubiquityVolumeType::VoxelType >* childOctreeNode = octreeNode->getChildNode(ix, iy, iz);
+					if(childOctreeNode)
 					{
-						//Node* childNode = reinterpret_cast<Node*>(child->mGameEngineNode);
 						GameplayOctreeNode< typename CubiquityVolumeType::VoxelType >* childGameplayOctreeNode = gameplayOctreeNode->mChildren[ix][iy][iz];
 
 						if(childGameplayOctreeNode == 0)
 						{
-							childGameplayOctreeNode = new GameplayOctreeNode< typename CubiquityVolumeType::VoxelType >(child, gameplayOctreeNode);
-
-							
-
+							childGameplayOctreeNode = new GameplayOctreeNode< typename CubiquityVolumeType::VoxelType >(childOctreeNode, gameplayOctreeNode);
 							gameplayOctreeNode->mChildren[ix][iy][iz] = childGameplayOctreeNode;							
 						}
 
-						syncNode(child, childGameplayOctreeNode);
+						syncNode(childOctreeNode, childGameplayOctreeNode);
+					}
+					else
+					{
+						// If the child doesn't exist in the cubiquity  octree then make sure it doesn't exist in the gameplay octree.
+						if(gameplayOctreeNode->mChildren[ix][iy][iz])
+						{
+							delete gameplayOctreeNode->mChildren[ix][iy][iz];
+							gameplayOctreeNode->mChildren[ix][iy][iz] = 0;
+						}
 					}
 				}
 			}
