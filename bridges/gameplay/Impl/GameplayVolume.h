@@ -69,7 +69,7 @@ namespace Cubiquity
 			{
 				mParent->mGameplayNode->removeChild(mGameplayNode);
 			}
-			mGameplayNode->release();
+			SAFE_RELEASE(mGameplayNode);
 		}
 
 		gameplay::Node* mGameplayNode;

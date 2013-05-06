@@ -18,6 +18,7 @@ namespace Cubiquity
 		{
 			if(octreeNode->mPolyVoxMesh)
 			{
+				// Set up the renderable mesh
 				Model* model = buildModelFromPolyVoxMesh(octreeNode->mPolyVoxMesh);
 				if(VoxelTraits<typename CubiquityVolumeType::VoxelType>::IsColour)
 				{
@@ -30,16 +31,17 @@ namespace Cubiquity
 				gameplayOctreeNode->mGameplayNode->setModel(model);
 				SAFE_RELEASE(model);
 
-				//There is a weird bug, whereby if we use the LOD 0 for physics it resets the node positions somehow. So we use LOD 1 here.
-				//if(octreeNode->mHeight == 0)
-				{
-					PhysicsCollisionShape::Definition physDef = buildCollisionObjectFromPolyVoxMesh(octreeNode->mPolyVoxMesh);
-
-					PhysicsRigidBody::Parameters groundParams;
-					groundParams.mass = 0.0f;
-					gameplayOctreeNode->mGameplayNode->setCollisionObject(PhysicsCollisionObject::RIGID_BODY, physDef, &groundParams);
-				}
+				// Set up the collision mesh
+				PhysicsCollisionShape::Definition physDef = buildCollisionObjectFromPolyVoxMesh(octreeNode->mPolyVoxMesh);
+				PhysicsRigidBody::Parameters groundParams;
+				groundParams.mass = 0.0f;
+				gameplayOctreeNode->mGameplayNode->setCollisionObject(PhysicsCollisionObject::RIGID_BODY, physDef, &groundParams);
 			}	
+			else
+			{
+				gameplayOctreeNode->mGameplayNode->setModel(0);
+				gameplayOctreeNode->mGameplayNode->setCollisionObject(PhysicsCollisionObject::NONE);
+			}
 
 			gameplayOctreeNode->mMeshLastSyncronised = Clock::getTimestamp();
 		}
