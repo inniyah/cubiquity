@@ -12,9 +12,10 @@ namespace Cubiquity
 	class GameplayOctreeNode
 	{
 	public:
-		GameplayOctreeNode()
+		GameplayOctreeNode(GameplayOctreeNode* parent)
 			:mGameplayNode(0)
-			,mTimeStamp(0)
+			,mMeshLastSyncronised(0)
+			,mParent(parent)
 		{
 			for(int iz = 0; iz < 2; iz++)
 			{
@@ -26,11 +27,36 @@ namespace Cubiquity
 					}
 				}
 			}
+
+			mGameplayNode = gameplay::Node::create();
+			
+			if(parent)
+			{
+				parent->mGameplayNode->addChild(mGameplayNode);
+			}
+		}
+
+		~GameplayOctreeNode()
+		{
+			for(int iz = 0; iz < 2; iz++)
+			{
+				for(int iy = 0; iy < 2; iy++)
+				{
+					for(int ix = 0; ix < 2; ix++)
+					{
+						delete mChildren[ix][iy][iz];
+						mChildren[ix][iy][iz] = 0;
+					}
+				}
+			}
+
+			mGameplayNode->release();
 		}
 
 		gameplay::Node* mGameplayNode;
-		Timestamp mTimeStamp;
+		Timestamp mMeshLastSyncronised;
 
+		GameplayOctreeNode* mParent;
 		GameplayOctreeNode* mChildren[2][2][2];
 	};
 
