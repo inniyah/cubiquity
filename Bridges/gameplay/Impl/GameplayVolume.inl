@@ -6,19 +6,13 @@ namespace Cubiquity
 		GP_ASSERT(mCubiquityVolume);
 		GP_ASSERT(mCubiquityVolume->getRootOctreeNode());
 
-		mRootGameplayOctreeNode = new GameplayOctreeNode(0);
-		mRootGameplayOctreeNode->mGameplayNode = Node::create();
+		mRootGameplayOctreeNode = new GameplayOctreeNode< typename CubiquityVolumeType::VoxelType >(mCubiquityVolume->getRootOctreeNode(), 0);
 
-		std::stringstream ss;
-		ss << "LOD = " << int(mCubiquityVolume->getRootOctreeNode()->mHeight) << ", Region = (" << mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerX() << "," << mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerY() << "," << mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerZ() << ") to (" << mCubiquityVolume->getRootOctreeNode()->mRegion.getUpperX() << "," << mCubiquityVolume->getRootOctreeNode()->mRegion.getUpperY() << "," << mCubiquityVolume->getRootOctreeNode()->mRegion.getUpperZ() << ")";
-		mRootGameplayOctreeNode->mGameplayNode->setId(ss.str().c_str());
-
-		Vector3I translation = mCubiquityVolume->getRootOctreeNode()->mRegion.getLowerCorner();
-		mRootGameplayOctreeNode->mGameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
+		
 	}
 
 	template <typename CubiquityVolumeType>
-	void GameplayVolume<CubiquityVolumeType>::syncNode(OctreeNode< typename CubiquityVolumeType::VoxelType >* octreeNode, GameplayOctreeNode* gameplayOctreeNode)
+	void GameplayVolume<CubiquityVolumeType>::syncNode(OctreeNode< typename CubiquityVolumeType::VoxelType >* octreeNode, GameplayOctreeNode< typename CubiquityVolumeType::VoxelType >* gameplayOctreeNode)
 	{
 		if(gameplayOctreeNode->mMeshLastSyncronised < octreeNode->mMeshLastUpdated)
 		{
@@ -69,14 +63,13 @@ namespace Cubiquity
 					if(child)
 					{
 						//Node* childNode = reinterpret_cast<Node*>(child->mGameEngineNode);
-						GameplayOctreeNode* childGameplayOctreeNode = gameplayOctreeNode->mChildren[ix][iy][iz];
+						GameplayOctreeNode< typename CubiquityVolumeType::VoxelType >* childGameplayOctreeNode = gameplayOctreeNode->mChildren[ix][iy][iz];
 
 						if(childGameplayOctreeNode == 0)
 						{
-							childGameplayOctreeNode = new GameplayOctreeNode(gameplayOctreeNode);
+							childGameplayOctreeNode = new GameplayOctreeNode< typename CubiquityVolumeType::VoxelType >(child, gameplayOctreeNode);
 
-							Vector3I translation = child->mRegion.getLowerCorner() - octreeNode->mRegion.getLowerCorner();
-							childGameplayOctreeNode->mGameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
+							
 
 							gameplayOctreeNode->mChildren[ix][iy][iz] = childGameplayOctreeNode;							
 						}

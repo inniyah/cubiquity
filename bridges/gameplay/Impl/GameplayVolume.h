@@ -9,10 +9,11 @@
 
 namespace Cubiquity
 {
+	template <typename VoxelType>
 	class GameplayOctreeNode
 	{
 	public:
-		GameplayOctreeNode(GameplayOctreeNode* parent)
+		GameplayOctreeNode(OctreeNode<VoxelType>* octreeNode, GameplayOctreeNode* parent)
 			:mGameplayNode(0)
 			,mMeshLastSyncronised(0)
 			,mParent(parent)
@@ -29,10 +30,22 @@ namespace Cubiquity
 			}
 
 			mGameplayNode = gameplay::Node::create();
+
+			std::stringstream ss;
+			ss << "LOD = " << int(octreeNode->mHeight) << ", Region = " << octreeNode->mRegion;
+			mGameplayNode->setId(ss.str().c_str());
 			
 			if(parent)
 			{
+				GP_ASSERT(octreeNode->getParentNode());
+				Vector3I translation = octreeNode->mRegion.getLowerCorner() - octreeNode->getParentNode()->mRegion.getLowerCorner();
+				mGameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
 				parent->mGameplayNode->addChild(mGameplayNode);
+			}
+			else
+			{
+				Vector3I translation = octreeNode->mRegion.getLowerCorner();
+				mGameplayNode->setTranslation(translation.getX(), translation.getY(), translation.getZ());
 			}
 		}
 
@@ -117,12 +130,12 @@ namespace Cubiquity
 
 		virtual gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< typename VoxelTraits<typename CubiquityVolumeType::VoxelType>::VertexType>* polyVoxMesh) = 0;
 
-		void syncNode(OctreeNode< typename CubiquityVolumeType::VoxelType >* octreeNode, GameplayOctreeNode* gameplayOctreeNode);
+		void syncNode(OctreeNode< typename CubiquityVolumeType::VoxelType >* octreeNode, GameplayOctreeNode< typename CubiquityVolumeType::VoxelType >* gameplayOctreeNode);
 
 	protected:
 
 		CubiquityVolumeType* mCubiquityVolume;
-		GameplayOctreeNode* mRootGameplayOctreeNode;
+		GameplayOctreeNode< typename CubiquityVolumeType::VoxelType >* mRootGameplayOctreeNode;
 	};
 }
 
