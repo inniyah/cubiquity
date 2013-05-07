@@ -20,9 +20,9 @@ namespace Cubiquity
 		,mWantedForRendering(false)
 		,mRenderThisNode(false)
 		,mExtractOnMainThread(false)
-		,mLastSceduledForUpdate(Clock::getTimestamp()) // The order of these few initialisations is important
-		,mMeshLastUpdated(Clock::getTimestamp())	   // to make sure the node is set to an 'out of date' 
-		,mDataLastModified(Clock::getTimestamp())      // state which will then try to update.
+		,mLastSceduledForUpdate(0) // The values of these few initialisations is important
+		,mMeshLastUpdated(1)	   // to make sure the node is set to an 'out of date' 
+		,mDataLastModified(2)      // state which will then try to update.
 		,mPolyVoxMesh(0)
 		,mGameEngineNode(0)
 		,mHeight(0)

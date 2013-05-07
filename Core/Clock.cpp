@@ -4,7 +4,9 @@
 
 namespace Cubiquity
 {
-	Timestamp Clock::mTimestamp = 0;
+	// We initialise the clock to a reasonably sized value, so that we can initialise
+	// timestamps to small values and be sure that they will immediatly be out-of-date.
+	Timestamp Clock::mTimestamp = 100;
 
 	Timestamp Clock::getTimestamp(void)
 	{
