@@ -31,9 +31,9 @@ namespace Cubiquity
 
 			mGameplayNode = gameplay::Node::create();
 
-			///std::stringstream ss;
-			//ss << "LOD = " << int(octreeNode->mHeight) << ", Region = " << octreeNode->mRegion;
-			//mGameplayNode->setId(ss.str().c_str());
+			std::stringstream ss;
+			ss << "LOD = " << int(octreeNode->mHeight) << ", Region = " << octreeNode->mRegion;
+			mGameplayNode->setId(ss.str().c_str());
 			
 			if(parent)
 			{
