@@ -55,6 +55,18 @@ CUBIQUITYC_API int32_t cuNewColouredCubesVolume(int32_t lowerX, int32_t lowerY, 
 {
 	ColouredCubesVolume* volume = new ColouredCubesVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), blockSize, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
+
+	//Replace an existing entry if it has been deleted.
+	for(int ct = 0; ct < gColouredCubesVolumes.size(); ct++)
+	{
+		if(gColouredCubesVolumes[ct] == 0)
+		{
+			gColouredCubesVolumes[ct] = volume;
+			return ct;
+		}
+	}
+
+	//Otherwise append a new entry.
 	gColouredCubesVolumes.push_back(volume);
 	return gColouredCubesVolumes.size() - 1;
 }
@@ -63,6 +75,17 @@ CUBIQUITYC_API int32_t cuNewColouredCubesVolumeFromVolDat(const char* volDatToIm
 {
 	ColouredCubesVolume* volume = importVolDat<ColouredCubesVolume>(volDatToImport, blockSize, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
+	//Replace an existing entry if it has been deleted.
+	for(int ct = 0; ct < gColouredCubesVolumes.size(); ct++)
+	{
+		if(gColouredCubesVolumes[ct] == 0)
+		{
+			gColouredCubesVolumes[ct] = volume;
+			return ct;
+		}
+	}
+
+	//Otherwise append a new entry.
 	gColouredCubesVolumes.push_back(volume);
 	return gColouredCubesVolumes.size() - 1;
 }
@@ -81,6 +104,12 @@ CUBIQUITYC_API void cuDeleteColouredCubesVolume(int32_t volumeHandle)
 
 	// In the future we could consider reusing this slot as we can detect that it set to zero.
 	gColouredCubesVolumes[volumeHandle] = 0;
+}
+
+CUBIQUITYC_API void cuSetVoxel(int32_t volumeHandle, int32_t x, int32_t y, int32_t z, uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
+{
+	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+	volume->setVoxelAt(x, y, z, Colour(red, green, blue, alpha), UpdatePriorities::Immediate);
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -135,6 +164,12 @@ CUBIQUITYC_API int32_t cuGetNodePositionZ(int32_t nodeHandle)
 	return node->mRegion.getLowerZ();
 }
 
+CUBIQUITYC_API uint32_t cuGetMeshLastUpdated(int32_t nodeHandle)
+{
+	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
+	return node->mMeshLastUpdated;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Mesh functions
 ////////////////////////////////////////////////////////////////////////////////
@@ -185,4 +220,12 @@ CUBIQUITYC_API uint32_t* cuGetIndices(int32_t nodeHandle)
 	unsigned int* uintPointer = const_cast<unsigned int*>(constUIntPointer);
 
 	return uintPointer;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Clock functions
+////////////////////////////////////////////////////////////////////////////////
+CUBIQUITYC_API uint32_t cuGetCurrentTime(void)
+{
+	return Clock::getTimestamp();
 }
