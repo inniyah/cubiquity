@@ -4,8 +4,9 @@
 #include "stdafx.h"
 #include "CubiquityC.h"
 
-#include "OctreeNode.h"
 #include "ColouredCubesVolume.h"
+#include "OctreeNode.h"
+#include "Raycasting.h"
 #include "VolumeSerialisation.h"
 
 #include <vector>
@@ -106,10 +107,31 @@ CUBIQUITYC_API void cuDeleteColouredCubesVolume(int32_t volumeHandle)
 	gColouredCubesVolumes[volumeHandle] = 0;
 }
 
-CUBIQUITYC_API void cuSetVoxel(int32_t volumeHandle, int32_t x, int32_t y, int32_t z, uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
+CUBIQUITYC_API void cuGetVoxel(int32_t volumeHandle, int32_t x, int32_t y, int32_t z, uint8_t* red, uint8_t* green, uint8_t* blue, uint8_t* alpha)
 {
 	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
-	volume->setVoxelAt(x, y, z, Colour(red, green, blue, alpha), UpdatePriorities::Immediate);
+	Colour& colour = volume->getVoxelAt(x, y, z);
+	*red = colour.getRed();
+	*green = colour.getGreen();
+	*blue = colour.getBlue();
+	*alpha = colour.getAlpha();
+}
+
+CUBIQUITYC_API void cuSetVoxel(int32_t volumeHandle, int32_t x, int32_t y, int32_t z, uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
+{
+	try
+	{
+		ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+		volume->setVoxelAt(x, y, z, Colour(red, green, blue, alpha), UpdatePriorities::Immediate);
+	}
+	catch (const std::exception& ex)
+	{
+		// Should log it!
+	}
+	catch (...)
+	{
+		// Should log it!
+	}
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -146,22 +168,13 @@ CUBIQUITYC_API int32_t cuNodeHasMesh(int32_t nodeHandle)
 	return node->mPolyVoxMesh != 0;
 }
 
-CUBIQUITYC_API int32_t cuGetNodePositionX(int32_t nodeHandle)
+CUBIQUITYC_API void cuGetNodePosition(int32_t nodeHandle, int32_t* x, int32_t* y, int32_t* z)
 {
 	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
-	return node->mRegion.getLowerX();
-}
-
-CUBIQUITYC_API int32_t cuGetNodePositionY(int32_t nodeHandle)
-{
-	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
-	return node->mRegion.getLowerY();
-}
-
-CUBIQUITYC_API int32_t cuGetNodePositionZ(int32_t nodeHandle)
-{
-	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
-	return node->mRegion.getLowerZ();
+	const Vector3I& lowerCorner = node->mRegion.getLowerCorner();
+	*x = lowerCorner.getX();
+	*y = lowerCorner.getY();
+	*z = lowerCorner.getZ();
 }
 
 CUBIQUITYC_API uint32_t cuGetMeshLastUpdated(int32_t nodeHandle)
@@ -228,4 +241,28 @@ CUBIQUITYC_API uint32_t* cuGetIndices(int32_t nodeHandle)
 CUBIQUITYC_API uint32_t cuGetCurrentTime(void)
 {
 	return Clock::getTimestamp();
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Raycasting functions
+////////////////////////////////////////////////////////////////////////////////
+CUBIQUITYC_API int32_t cuPickVoxel(int32_t volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, int32_t* resultX, int32_t* resultY, int32_t* resultZ)
+{
+	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+
+	Vector3F v3dStart(rayStartX, rayStartY, rayStartZ);
+	Vector3F v3dDirection(rayDirX, rayDirY, rayDirZ);
+
+	ColouredCubesRaycastTestFunctor raycastTestFunctor;
+	PolyVox::RaycastResult myResult = PolyVox::raycastWithDirection(getPolyVoxVolumeFrom(volume), v3dStart, v3dDirection, raycastTestFunctor);
+	if(myResult == ::PolyVox::RaycastResults::Interupted)
+	{
+		//result = gameplay::Vector3(raycastTestFunctor.mLastPos.getX(), raycastTestFunctor.mLastPos.getY(), raycastTestFunctor.mLastPos.getZ());
+		*resultX = raycastTestFunctor.mLastPos.getX() + 0.5f;
+		*resultY = raycastTestFunctor.mLastPos.getY() + 0.5f;
+		*resultZ = raycastTestFunctor.mLastPos.getZ() + 0.5f;
+		return 1;
+	}
+
+	return -1;
 }

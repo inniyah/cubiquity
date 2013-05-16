@@ -96,9 +96,6 @@
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\LargeVolume.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Log.h">
-      <Filter>PolyVox</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\LowPassFilter.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
@@ -332,9 +329,6 @@
       <Filter>PolyVox</Filter>
     </ClCompile>
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\AStarPathfinder.cpp">
-      <Filter>PolyVox</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Log.cpp">
       <Filter>PolyVox</Filter>
     </ClCompile>
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\MinizCompressor.cpp">

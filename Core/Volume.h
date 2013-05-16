@@ -26,12 +26,13 @@ namespace Cubiquity
 	public:
 		typedef _VoxelType VoxelType;
 
-		// These functions just forward to the underlying PolyVox volume
+		// These functions just forward to the underlying PolyVox volume.
 		uint32_t getWidth(void) const { return mPolyVoxVolume->getWidth(); }
 		uint32_t getHeight(void) const { return mPolyVoxVolume->getHeight(); }
 		uint32_t getDepth(void) const { return mPolyVoxVolume->getDepth(); }
 		const Region& getEnclosingRegion(void) const { return mPolyVoxVolume->getEnclosingRegion(); }
-		VoxelType getVoxelAt(int32_t x, int32_t y, int32_t z) { return mPolyVoxVolume->getVoxelAt(x, y, z); }
+		// Note this adds a border rather than calling straight through.
+		VoxelType getVoxelAt(int32_t x, int32_t y, int32_t z) { return mPolyVoxVolume->getVoxelWithWrapping(x, y, z, ::PolyVox::WrapModes::Border, VoxelType()); }
 
 		// Octree access
 		Octree<VoxelType>* getOctree(void) { return mOctree; };
@@ -43,7 +44,7 @@ namespace Cubiquity
 		// Marks a region as mdified so it will be regenerated later.
 		void markAsModified(const Region& region, UpdatePriority updatePriority = UpdatePriorities::Background);
 
-		// Should be called before rendering a frame to update the mehes and octree structure.
+		// Should be called before rendering a frame to update the meshes and octree structure.
 		virtual void update(const Vector3F& viewPosition, float lodThreshold);
 
 	protected:
