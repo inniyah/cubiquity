@@ -39,7 +39,6 @@
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Interpolation.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\IteratorController.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\LargeVolume.h" />
-    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Log.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\LowPassFilter.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\MarchingCubesSurfaceExtractor.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Material.h" />
@@ -121,7 +120,6 @@
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\RandomUnitVectors.cpp" />
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\RandomVectors.cpp" />
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\Utility.cpp" />
-    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Log.cpp" />
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\MinizCompressor.cpp" />
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Region.cpp" />
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\VertexTypes.cpp" />
