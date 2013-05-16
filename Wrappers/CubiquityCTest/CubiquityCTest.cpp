@@ -23,10 +23,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	unsigned int volumeID = cuNewColouredCubesVolumeFromVolDat("C:/temp/VoxeliensTerrain/", 256, 256);
 	cuUpdateVolume(volumeID);
 	unsigned int rootOctreeNodeHandle = cuGetRootOctreeNode(volumeID);
-	unsigned int noOfVertices = cuGetNoOfVertices(volumeID, rootOctreeNodeHandle);
-	unsigned int noOfIndices = cuGetNoOfIndices(volumeID, rootOctreeNodeHandle);
-	float* pVertices = cuGetVertices(volumeID, rootOctreeNodeHandle);
-	unsigned int* pIndices = cuGetIndices(volumeID, rootOctreeNodeHandle);
+	unsigned int noOfVertices = cuGetNoOfVertices(rootOctreeNodeHandle);
+	unsigned int noOfIndices = cuGetNoOfIndices(rootOctreeNodeHandle);
+	float* pVertices = cuGetVertices(rootOctreeNodeHandle);
+	unsigned int* pIndices = cuGetIndices(rootOctreeNodeHandle);
 
 	tstringstream stros;    
 	stros << noOfVertices << " " << noOfIndices;
