@@ -216,6 +216,9 @@
     <ClInclude Include="Impl\VolumePrivateAccessor.h">
       <Filter>Core\Impl</Filter>
     </ClInclude>
+    <ClInclude Include="Logging.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.inl">
@@ -374,6 +377,9 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="VolumeSerialisation.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Logging.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>

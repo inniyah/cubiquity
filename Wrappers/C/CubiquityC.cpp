@@ -5,6 +5,7 @@
 #include "CubiquityC.h"
 
 #include "ColouredCubesVolume.h"
+#include "Logging.h"
 #include "OctreeNode.h"
 #include "Raycasting.h"
 #include "VolumeSerialisation.h"
@@ -54,6 +55,8 @@ OctreeNode<Colour>* getNodeFromHandle(int32_t nodeHandle)
 ////////////////////////////////////////////////////////////////////////////////
 CUBIQUITYC_API int32_t cuNewColouredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, uint32_t blockSize, uint32_t baseNodeSize)
 {
+	logMessage("In cuNewColouredCubesVolume");
+
 	ColouredCubesVolume* volume = new ColouredCubesVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), blockSize, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 
