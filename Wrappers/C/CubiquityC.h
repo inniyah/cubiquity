@@ -20,15 +20,14 @@ extern "C"
 	CUBIQUITYC_API void cuUpdateVolume(int32_t volumeHandle);
 	CUBIQUITYC_API void cuDeleteColouredCubesVolume(int32_t volumeHandle);
 
+	CUBIQUITYC_API void cuGetVoxel(int32_t volumeHandle, int32_t x, int32_t y, int32_t z, uint8_t* red, uint8_t* green, uint8_t* blue, uint8_t* alpha);
 	CUBIQUITYC_API void cuSetVoxel(int32_t volumeHandle, int32_t x, int32_t y, int32_t z, uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha);
 
 	// Octree functions
 	CUBIQUITYC_API int32_t cuGetRootOctreeNode(int32_t volumeHandle);
 	CUBIQUITYC_API int32_t cuGetChildNode(int32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ);
 	CUBIQUITYC_API int32_t cuNodeHasMesh(int32_t nodeHandle);
-	CUBIQUITYC_API int32_t cuGetNodePositionX(int32_t nodeHandle);
-	CUBIQUITYC_API int32_t cuGetNodePositionY(int32_t nodeHandle);
-	CUBIQUITYC_API int32_t cuGetNodePositionZ(int32_t nodeHandle);
+	CUBIQUITYC_API void cuGetNodePosition(int32_t nodeHandle, int32_t* x, int32_t* y, int32_t* z);
 	CUBIQUITYC_API uint32_t cuGetMeshLastUpdated(int32_t nodeHandle);
 
 	// Mesh functions
@@ -38,6 +37,9 @@ extern "C"
 	CUBIQUITYC_API float* cuGetVertices(int32_t nodeHandle);
 	CUBIQUITYC_API uint32_t* cuGetIndices(int32_t nodeHandle);
 
-	//Clock functions
+	// Clock functions
 	CUBIQUITYC_API uint32_t cuGetCurrentTime(void);
+
+	// Raycasting functions
+	CUBIQUITYC_API int32_t cuPickVoxel(int32_t volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, int32_t* resultX, int32_t* resultY, int32_t* resultZ);
 }

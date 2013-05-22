@@ -36,10 +36,19 @@ namespace Cubiquity
 	template <typename VoxelType>
 	void Volume<VoxelType>::setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, UpdatePriority updatePriority)
 	{
-		mPolyVoxVolume->setVoxelAt(x, y, z, value);
-		if(updatePriority != UpdatePriorities::DontUpdate)
+		if(mPolyVoxVolume->getEnclosingRegion().containsPoint(x, y, z))
 		{
-			mOctree->markDataAsModified(x, y, z, Clock::getTimestamp(), updatePriority);
+			mPolyVoxVolume->setVoxelAt(x, y, z, value);
+			if(updatePriority != UpdatePriorities::DontUpdate)
+			{
+				mOctree->markDataAsModified(x, y, z, Clock::getTimestamp(), updatePriority);
+			}
+		}
+		else
+		{
+			std::stringstream ss;
+			ss << "Attempted to write to voxel (" << x << ", " << y << ", " << z << ") which is outside of volume";
+			throw std::out_of_range(ss.str());
 		}
 	}
 

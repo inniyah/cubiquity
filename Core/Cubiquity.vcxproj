@@ -63,6 +63,7 @@
     <ClInclude Include="ConcurrentQueue.h" />
     <ClInclude Include="CubiquityForwardDeclarations.h" />
     <ClInclude Include="Impl\VolumePrivateAccessor.h" />
+    <ClInclude Include="Logging.h" />
     <ClInclude Include="MainThreadTaskProcessor.h" />
     <ClInclude Include="MultiMaterial.h" />
     <ClInclude Include="Octree.h" />
@@ -128,6 +129,7 @@
     <ClCompile Include="Colour.cpp" />
     <ClCompile Include="ColouredCubesVolume.cpp" />
     <ClCompile Include="ColouredCubicSurfaceExtractionTask.cpp" />
+    <ClCompile Include="Logging.cpp" />
     <ClCompile Include="MainThreadTaskProcessor.cpp" />
     <ClCompile Include="MultiMaterial.cpp" />
     <ClCompile Include="SmoothSurfaceExtractionTask.cpp" />
@@ -171,17 +173,17 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_LIB;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\code\polyvox\library\PolyVoxCore\include;C:\Program Files (x86)\boost\boost_1_47;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\code\polyvox\library\PolyVoxCore\include;C:\Program Files (x86)\boost\boost_1_54_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>libboost_filesystem-vc100-mt-1_47.lib;libboost_system-vc100-mt-1_47.lib;libboost_thread-vc100-mt-1_47.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libboost_filesystem-vc100-mt-1_54.lib;libboost_log-vc100-mt-1_54.lib;libboost_system-vc100-mt-1_54.lib;libboost_thread-vc100-mt-1_54.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>C:\Program Files (x86)\boost\boost_1_47\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files (x86)\boost\boost_1_54_0\stage\lib</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -193,7 +195,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:\code\polyvox\library\PolyVoxCore\include;C:\Program Files (x86)\boost\boost_1_47;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\code\polyvox\library\PolyVoxCore\include;C:\Program Files (x86)\boost\boost_1_54_0;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -202,10 +204,10 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>libboost_filesystem-vc100-mt-1_47.lib;libboost_system-vc100-mt-1_47.lib;libboost_thread-vc100-mt-1_47.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libboost_filesystem-vc100-mt-1_54.lib;libboost_log-vc100-mt-1_54.lib;libboost_system-vc100-mt-1_54.lib;libboost_thread-vc100-mt-1_54.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <Lib>
-      <AdditionalLibraryDirectories>C:\Program Files (x86)\boost\boost_1_47\lib</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Program Files (x86)\boost\boost_1_54_0\stage\lib</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
