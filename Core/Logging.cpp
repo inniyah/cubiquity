@@ -26,7 +26,8 @@ namespace Cubiquity
 					<< "<" << boost::log::expressions::attr< unsigned int >("ThreadID") << ">: "
 					<< boost::log::expressions::smessage
 			),
-			boost::log::keywords::auto_flush = true
+			boost::log::keywords::auto_flush = true,
+			boost::log::keywords::open_mode = std::ios_base::app
 		);
 
 		boost::log::add_common_attributes();
