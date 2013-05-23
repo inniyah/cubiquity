@@ -50,7 +50,16 @@ namespace Cubiquity
 			int sync()
 			{
 				boost::log::sources::severity_logger_mt< boost::log::trivial::severity_level >& lg = my_logger::get();
-				BOOST_LOG_SEV(lg, mSeverityLevel) << str();
+
+				// PolyVox log messages usually finish with a newline, so they can be easily written directly to cout/cerr.
+				// But Boost.Log automatically appends the newline, so we end up with two. Therefore we strip it off first.
+				std::string& message = str();
+				if (!message.empty() && message[message.length()-1] == '\n')
+				{
+					message.erase(message.length()-1);
+				}
+				BOOST_LOG_SEV(lg, mSeverityLevel) << message;
+
 				str("");
 				return 0;
 			}
