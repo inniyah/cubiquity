@@ -83,20 +83,24 @@ namespace Cubiquity
 		BOOST_LOG_SEV(lg, boost::log::trivial::info) << message << std::flush;
 	}
 
-	class EntryAndExitPoints
+	class LogConfigurer
 	{
 	public:
-		EntryAndExitPoints()
+		LogConfigurer()
 		{
-			std::cout << "Starting Cubiquity" << std::endl;
 			PolyVox::setFatalStream(&fatalStream);
+
+			PolyVox::logFatal() << "\n\n" << std::endl;
+			PolyVox::logFatal() << "********************************************************************************" << std::endl;
+			PolyVox::logFatal() << "***                           Initialising Cubiquity                         ***" << std::endl;
+			PolyVox::logFatal() << "********************************************************************************" << std::endl;
 		}
 
-		~EntryAndExitPoints()
+		~LogConfigurer()
 		{
-			std::cout << "Exiting Cubiquity" << std::endl;
+			PolyVox::setFatalStream(&(std::cerr));
 		}
 	};
 
-	EntryAndExitPoints gEntryAndExitPoint;
+	LogConfigurer gLogConfigurer;
 }
