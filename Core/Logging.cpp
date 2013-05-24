@@ -118,30 +118,4 @@ namespace Cubiquity
 		boost::log::sources::severity_logger_mt< boost::log::trivial::severity_level >& lg = my_logger::get();
 		BOOST_LOG_SEV(lg, boost::log::trivial::info) << message << std::flush;
 	}
-
-	// This class (via it's single global instance) ensures that PoyVox's logging
-	// output is redirected to Boost as soon as the application is started.
-	/*class LogConfigurer
-	{
-	public:
-		LogConfigurer()
-		{
-			std::cout << "in constructor" << std::endl;
-			PolyVox::setFatalStream(&fatalStream);
-
-			PolyVox::logFatal() << "\n" << std::endl;
-			PolyVox::logFatal() << "\n" << std::endl;
-			PolyVox::logFatal() << "********************************************************************************" << std::endl;
-			PolyVox::logFatal() << "***                           Initialising Cubiquity                         ***" << std::endl;
-			PolyVox::logFatal() << "********************************************************************************" << std::endl;
-		}
-
-		~LogConfigurer()
-		{
-			//PolyVox::setFatalStream(&(std::cerr));
-		}
-	};
-
-	// The single global instance of the above class.
-	LogConfigurer gLogConfigurer;*/
 }

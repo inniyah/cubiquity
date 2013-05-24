@@ -14,6 +14,26 @@
 
 using namespace Cubiquity;
 
+// This class (via it's single global instance) allows code to be executed when the library is loaded and unloaded.
+// I do have some concerns about how robust this is - in particular see here: http://stackoverflow.com/a/1229542
+class EntryAndExitPoints
+{
+public:
+	EntryAndExitPoints()
+	{
+		// Note that we can't actually write to the log from this entry point
+		// code as the global Boost.Log source might nothave been created yet.
+		setLogVerbosity(LogLevels::Info);
+	}
+
+	~EntryAndExitPoints()
+	{
+	}
+};
+
+// The single global instance of the above class.
+EntryAndExitPoints gEntryAndExitPoints;
+
 std::vector<ColouredCubesVolume*> gColouredCubesVolumes;
 
 int32_t encodeNodeHandle(int32_t volumeHandle, int32_t nodeHandle)
@@ -55,7 +75,7 @@ OctreeNode<Colour>* getNodeFromHandle(int32_t nodeHandle)
 ////////////////////////////////////////////////////////////////////////////////
 CUBIQUITYC_API int32_t cuNewColouredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, uint32_t blockSize, uint32_t baseNodeSize)
 {
-	logMessage("In cuNewColouredCubesVolume");
+	//logMessage("In cuNewColouredCubesVolume");
 
 	ColouredCubesVolume* volume = new ColouredCubesVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), blockSize, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
@@ -77,6 +97,8 @@ CUBIQUITYC_API int32_t cuNewColouredCubesVolume(int32_t lowerX, int32_t lowerY, 
 
 CUBIQUITYC_API int32_t cuNewColouredCubesVolumeFromVolDat(const char* volDatToImport, uint32_t blockSize, uint32_t baseNodeSize)
 {
+	//setLogVerbosity(LogLevels::Info);
+
 	ColouredCubesVolume* volume = importVolDat<ColouredCubesVolume>(volDatToImport, blockSize, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 	//Replace an existing entry if it has been deleted.
