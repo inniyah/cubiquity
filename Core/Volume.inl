@@ -7,6 +7,7 @@
 
 #include "Clock.h"
 #include "BackgroundTaskProcessor.h"
+#include "Logging.h"
 #include "MainThreadTaskProcessor.h"
 #include "MultiMaterial.h"
 
@@ -19,6 +20,8 @@ namespace Cubiquity
 		:mPolyVoxVolume(0)
 		,mOctree(0)
 	{
+		logInfo() << "Creating Volume for " << region << std::endl;
+
 		POLYVOX_ASSERT(region.getWidthInVoxels() > 0, "All volume dimensions must be greater than zero");
 		POLYVOX_ASSERT(region.getHeightInVoxels() > 0, "All volume dimensions must be greater than zero");
 		POLYVOX_ASSERT(region.getDepthInVoxels() > 0, "All volume dimensions must be greater than zero");
