@@ -8,6 +8,7 @@
 #include <boost/log/utility/setup/file.hpp>
 #include <boost/log/utility/setup/common_attributes.hpp>
 
+#include <iomanip>
 #include <string>
 
 namespace Cubiquity
@@ -21,7 +22,7 @@ namespace Cubiquity
 			boost::log::keywords::format =
 			(
 				boost::log::expressions::stream
-					<< "[" << boost::log::trivial::severity << "]" 
+					<< "[" << std::left << std::setw (7) << boost::log::trivial::severity << "]" 
 					<< "<" << boost::log::expressions::attr< unsigned int >("ThreadID") << ">: "
 					<< boost::log::expressions::smessage
 			),
