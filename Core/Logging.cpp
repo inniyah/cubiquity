@@ -12,8 +12,7 @@
 
 namespace Cubiquity
 {
-	//BOOST_LOG_GLOBAL_LOGGER(my_logger, boost::log::sources::severity_logger_mt< boost::log::trivial::severity_level >)
-
+	// This is the main log source, which is created on demand.
 	BOOST_LOG_INLINE_GLOBAL_LOGGER_INIT(my_logger, boost::log::sources::severity_logger_mt< boost::log::trivial::severity_level >)
 	{
 		boost::log::add_file_log
@@ -36,17 +35,25 @@ namespace Cubiquity
 		return lg;
 	}
 
+	// This class provides an implementation of an std::ostream which writes its output to the
+	// Boost logging system rather than one of the standard streams. It is used to redirect
+	// PolyVox's logging output to Boost. It is based on this code: http://stackoverflow.com/a/4372966
 	class BoostLogStream : public std::ostream
 	{
 	private:
 		class BoostLogBuf : public std::stringbuf
 		{
 		private:
-			// or whatever you need for your application
 			boost::log::trivial::severity_level mSeverityLevel;
 		public:
+			// Constructor
 			BoostLogBuf(boost::log::trivial::severity_level severityLevel) : mSeverityLevel(severityLevel) { }
+
+			// Destructor doesn't call pubsync() becaus this is causing a crash in Boost.
+			// It seems that maybe the Boost.Log source no longer exists at this point?
 			~BoostLogBuf() {  /*pubsync();*/ }
+
+			// Sync function writes output to a Boost.Log source.
 			int sync()
 			{
 				boost::log::sources::severity_logger_mt< boost::log::trivial::severity_level >& lg = my_logger::get();
@@ -66,16 +73,45 @@ namespace Cubiquity
 		};
 
 	public:
-		// Other constructors could specify filename, etc
-		// just remember to pass whatever you need to CLogBuf
 		BoostLogStream(boost::log::trivial::severity_level severityLevel) : std::ostream(new BoostLogBuf(severityLevel)) {}
 		~BoostLogStream() { delete rdbuf(); }
 	};
 
-	BoostLogStream fatalStream(boost::log::trivial::fatal);
+	// std::ostreams which redirect output to Boost.Log
+	BoostLogStream traceStream(boost::log::trivial::trace);	
+	BoostLogStream debugStream(boost::log::trivial::debug);	
+	BoostLogStream infoStream(boost::log::trivial::info);	
+	BoostLogStream warningStream(boost::log::trivial::warning);	
+	BoostLogStream errorStream(boost::log::trivial::error);	
+	BoostLogStream fatalStream(boost::log::trivial::fatal);	
 
-	//BOOST_LOG_GLOBAL_LOGGER_INIT(my_logger, boost::log::sources::severity_logger_mt< boost::log::trivial::severity_level >)
-	
+	void setLogVerbosity(LogLevel minimumLogLevel)
+	{
+		PolyVox::setTraceStream(PolyVox::getNullStream());
+		PolyVox::setDebugStream(PolyVox::getNullStream());
+		PolyVox::setInfoStream(PolyVox::getNullStream());
+		PolyVox::setWarningStream(PolyVox::getNullStream());
+		PolyVox::setErrorStream(PolyVox::getNullStream());
+		PolyVox::setFatalStream(PolyVox::getNullStream());
+
+		switch(minimumLogLevel)
+		{
+		case LogLevels::Disabled:
+			return;
+		case LogLevels::Trace:
+			PolyVox::setTraceStream(&traceStream);
+		case LogLevels::Debug:
+			PolyVox::setDebugStream(&debugStream);
+		case LogLevels::Info:
+			PolyVox::setInfoStream(&infoStream);
+		case LogLevels::Warning:
+			PolyVox::setWarningStream(&warningStream);
+		case LogLevels::Error:
+			PolyVox::setErrorStream(&errorStream);
+		case LogLevels::Fatal:
+			PolyVox::setFatalStream(&fatalStream);
+		}
+	}
 
 	void logMessage(const std::string& message)
 	{
@@ -83,14 +119,18 @@ namespace Cubiquity
 		BOOST_LOG_SEV(lg, boost::log::trivial::info) << message << std::flush;
 	}
 
-	class LogConfigurer
+	// This class (via it's single global instance) ensures that PoyVox's logging
+	// output is redirected to Boost as soon as the application is started.
+	/*class LogConfigurer
 	{
 	public:
 		LogConfigurer()
 		{
+			std::cout << "in constructor" << std::endl;
 			PolyVox::setFatalStream(&fatalStream);
 
-			PolyVox::logFatal() << "\n\n" << std::endl;
+			PolyVox::logFatal() << "\n" << std::endl;
+			PolyVox::logFatal() << "\n" << std::endl;
 			PolyVox::logFatal() << "********************************************************************************" << std::endl;
 			PolyVox::logFatal() << "***                           Initialising Cubiquity                         ***" << std::endl;
 			PolyVox::logFatal() << "********************************************************************************" << std::endl;
@@ -98,9 +138,10 @@ namespace Cubiquity
 
 		~LogConfigurer()
 		{
-			PolyVox::setFatalStream(&(std::cerr));
+			//PolyVox::setFatalStream(&(std::cerr));
 		}
 	};
 
-	LogConfigurer gLogConfigurer;
+	// The single global instance of the above class.
+	LogConfigurer gLogConfigurer;*/
 }

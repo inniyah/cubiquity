@@ -5,6 +5,23 @@
 
 namespace Cubiquity
 {
+	namespace LogLevels
+	{
+		enum LogLevel
+		{
+			Disabled,
+			Trace,
+			Debug,
+			Info,
+			Warning,
+			Error,
+			Fatal,
+		};
+	}
+	typedef LogLevels::LogLevel LogLevel;
+
+	void setLogVerbosity(LogLevel minimumLogLevel);
+
 	void logMessage(const std::string& message);
 }
 
