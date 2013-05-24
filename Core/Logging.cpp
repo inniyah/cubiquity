@@ -59,8 +59,8 @@ namespace Cubiquity
 			{
 				boost::log::sources::severity_logger_mt< boost::log::trivial::severity_level >& lg = gCubiquityLogger::get();
 
-				// PolyVox log messages usually finish with a newline, so they can be easily written directly to cout/cerr.
-				// But Boost.Log automatically appends the newline, so we end up with two. Therefore we strip it off first.
+				// PolyVox automatically appends an 'std::endl' to messages written to a log stream. But Boost.Log 
+				// also automatically appends the newline, so we end up with two. Therefore we strip one off first.
 				std::string& message = str();
 				if (!message.empty() && message[message.length()-1] == '\n')
 				{
