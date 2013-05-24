@@ -1,7 +1,7 @@
 #ifndef __CUBIQUITY_LOGGING_H__
 #define __CUBIQUITY_LOGGING_H__
 
-#include <string>
+#include "PolyVoxCore/Impl/ErrorHandling.h"
 
 namespace Cubiquity
 {
@@ -22,7 +22,13 @@ namespace Cubiquity
 
 	void setLogVerbosity(LogLevel minimumLogLevel);
 
-	void logMessage(const std::string& message);
+	// Pull the PolyVox logging functions into Cubiquity
+	using PolyVox::logTrace;
+	using PolyVox::logDebug;
+	using PolyVox::logInfo;
+	using PolyVox::logWarning;
+	using PolyVox::logError;
+	using PolyVox::logFatal;
 }
 
 #endif //__CUBIQUITY_LOGGING_H__

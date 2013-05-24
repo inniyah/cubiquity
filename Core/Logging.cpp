@@ -1,7 +1,5 @@
 #include "Logging.h"
 
-#include "PolyVoxCore/Impl/ErrorHandling.h"
-
 #include <boost/log/expressions.hpp>
 #include <boost/log/sources/severity_logger.hpp>
 #include <boost/log/sources/record_ostream.hpp>
@@ -10,10 +8,12 @@
 #include <boost/log/utility/setup/file.hpp>
 #include <boost/log/utility/setup/common_attributes.hpp>
 
+#include <string>
+
 namespace Cubiquity
 {
 	// This is the main log source, which is created on demand.
-	BOOST_LOG_INLINE_GLOBAL_LOGGER_INIT(my_logger, boost::log::sources::severity_logger_mt< boost::log::trivial::severity_level >)
+	BOOST_LOG_INLINE_GLOBAL_LOGGER_INIT(gCubiquityLogger, boost::log::sources::severity_logger_mt< boost::log::trivial::severity_level >)
 	{
 		boost::log::add_file_log
 		(
@@ -56,7 +56,7 @@ namespace Cubiquity
 			// Sync function writes output to a Boost.Log source.
 			int sync()
 			{
-				boost::log::sources::severity_logger_mt< boost::log::trivial::severity_level >& lg = my_logger::get();
+				boost::log::sources::severity_logger_mt< boost::log::trivial::severity_level >& lg = gCubiquityLogger::get();
 
 				// PolyVox log messages usually finish with a newline, so they can be easily written directly to cout/cerr.
 				// But Boost.Log automatically appends the newline, so we end up with two. Therefore we strip it off first.
@@ -111,11 +111,5 @@ namespace Cubiquity
 		case LogLevels::Fatal:
 			PolyVox::setFatalStream(&fatalStream);
 		}
-	}
-
-	void logMessage(const std::string& message)
-	{
-		boost::log::sources::severity_logger_mt< boost::log::trivial::severity_level >& lg = my_logger::get();
-		BOOST_LOG_SEV(lg, boost::log::trivial::info) << message << std::flush;
 	}
 }
