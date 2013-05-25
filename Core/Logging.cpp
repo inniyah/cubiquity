@@ -4,6 +4,7 @@
 #include <boost/log/sources/severity_logger.hpp>
 #include <boost/log/sources/record_ostream.hpp>
 #include <boost/log/sources/global_logger_storage.hpp>
+#include <boost/log/support/date_time.hpp>
 #include <boost/log/trivial.hpp>
 #include <boost/log/utility/setup/file.hpp>
 #include <boost/log/utility/setup/common_attributes.hpp>
@@ -22,6 +23,7 @@ namespace Cubiquity
 			boost::log::keywords::format =
 			(
 				boost::log::expressions::stream
+					<< "[" << boost::log::expressions::format_date_time< boost::posix_time::ptime >("TimeStamp", "%H:%M:%S") << "]"
 					<< "[" << std::left << std::setw (7) << boost::log::trivial::severity << "]" 
 					<< "<" << boost::log::expressions::attr< unsigned int >("ThreadID") << ">: "
 					<< boost::log::expressions::smessage
