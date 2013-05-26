@@ -28,9 +28,9 @@ extern "C"
 	CUBIQUITYC_API void cuGetRootOctreeNode(uint32_t* result, uint32_t volumeHandle);
 	CUBIQUITYC_API void cuHasChildNode(uint32_t* result, uint32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ);
 	CUBIQUITYC_API void cuGetChildNode(uint32_t* result, uint32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ);
-	CUBIQUITYC_API int32_t cuNodeHasMesh(uint32_t nodeHandle);
+	CUBIQUITYC_API void cuNodeHasMesh(uint32_t* result, uint32_t nodeHandle);
 	CUBIQUITYC_API void cuGetNodePosition(uint32_t nodeHandle, int32_t* x, int32_t* y, int32_t* z);
-	CUBIQUITYC_API uint32_t cuGetMeshLastUpdated(uint32_t nodeHandle);
+	CUBIQUITYC_API void cuGetMeshLastUpdated(uint32_t* result, uint32_t nodeHandle);
 
 	// Mesh functions
 	CUBIQUITYC_API uint32_t cuGetNoOfVertices(uint32_t nodeHandle);

@@ -28,17 +28,11 @@ public class CubiquityDLL
 	[DllImport ("CubiquityC")]
 	public static extern void cuGetChildNode(out uint result, uint nodeHandle, uint childX, uint childY, uint childZ);
 	[DllImport ("CubiquityC")]
-	public static extern int cuNodeHasMesh(uint nodeHandle);
+	public static extern void cuNodeHasMesh(out uint result, uint nodeHandle);
 	[DllImport ("CubiquityC")]
 	public static extern void cuGetNodePosition(uint nodeHandle, out int x, out int y, out int z);
 	[DllImport ("CubiquityC")]
-	public static extern int cuGetNodePositionX(uint nodeHandle);
-	[DllImport ("CubiquityC")]
-	public static extern int cuGetNodePositionY(uint nodeHandle);
-	[DllImport ("CubiquityC")]
-	public static extern int cuGetNodePositionZ(uint nodeHandle);
-	[DllImport ("CubiquityC")]
-	public static extern uint cuGetMeshLastUpdated(uint nodeHandle);
+	public static extern void cuGetMeshLastUpdated(out uint result, uint nodeHandle);
 	
 	// Mesh functions
 	[DllImport ("CubiquityC")]

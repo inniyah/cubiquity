@@ -215,10 +215,10 @@ CUBIQUITYC_API void cuGetChildNode(uint32_t* result, uint32_t nodeHandle, uint32
 	}
 }
 
-CUBIQUITYC_API int32_t cuNodeHasMesh(uint32_t nodeHandle)
+CUBIQUITYC_API void cuNodeHasMesh(uint32_t* result, uint32_t nodeHandle)
 {
 	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
-	return node->mPolyVoxMesh != 0;
+	*result = (node->mPolyVoxMesh != 0) ? 1 : 0;
 }
 
 CUBIQUITYC_API void cuGetNodePosition(uint32_t nodeHandle, int32_t* x, int32_t* y, int32_t* z)
@@ -230,10 +230,10 @@ CUBIQUITYC_API void cuGetNodePosition(uint32_t nodeHandle, int32_t* x, int32_t* 
 	*z = lowerCorner.getZ();
 }
 
-CUBIQUITYC_API uint32_t cuGetMeshLastUpdated(uint32_t nodeHandle)
+CUBIQUITYC_API void cuGetMeshLastUpdated(uint32_t* result, uint32_t nodeHandle)
 {
 	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
-	return node->mMeshLastUpdated;
+	*result = node->mMeshLastUpdated;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

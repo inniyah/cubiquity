@@ -113,7 +113,8 @@ public class ColouredCubesVolume : MonoBehaviour
 	
 	public void syncNode(uint nodeHandle, GameObject gameObjectToSync)
 	{
-		uint meshLastUpdated = CubiquityDLL.cuGetMeshLastUpdated(nodeHandle);		
+		uint meshLastUpdated;
+		CubiquityDLL.cuGetMeshLastUpdated(out meshLastUpdated, nodeHandle);		
 		OctreeNodeData octreeNodeData = (OctreeNodeData)(gameObjectToSync.GetComponent<OctreeNodeData>());
 		
 		//Debug.Log ("In syncNode: meshLastSyncronised = " + octreeNodeData.meshLastSyncronised + ", meshLastUpdated = " + meshLastUpdated);
@@ -122,7 +123,9 @@ public class ColouredCubesVolume : MonoBehaviour
 		{
 			Debug.Log("Mesh data is out of date");
 			
-			if(CubiquityDLL.cuNodeHasMesh(nodeHandle) != 0)
+			uint nodeHasMesh;
+			CubiquityDLL.cuNodeHasMesh(out nodeHasMesh, nodeHandle);
+			if(nodeHasMesh == 1)
 			{				
 				Mesh mesh = BuildMeshFromNodeHandle(nodeHandle);	
 				Debug.Log("Built mesh - now attaching");
