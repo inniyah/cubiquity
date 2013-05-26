@@ -4,6 +4,14 @@ using System.Text;
 
 public class CubiquityDLL
 {
+	public static void Validate(int returnCode)
+	{
+		if(returnCode < 0)
+		{
+			throw new CubiquityException("An exception occured inside Cubiquity. Please see the log file for details");
+		}
+	}
+	
 	// Volume functions
 	[DllImport ("CubiquityC")]
 	public static extern int cuNewColouredCubesVolume(out uint result, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, uint blockSize, uint baseNodeSize);
