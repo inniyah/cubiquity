@@ -257,7 +257,7 @@ CUBIQUITYC_API void cuGetNoOfIndices(uint32_t* result, uint32_t nodeHandle)
 	*result = polyVoxMesh->getNoOfIndices();
 }
 
-CUBIQUITYC_API float* cuGetVertices(uint32_t nodeHandle)
+CUBIQUITYC_API void cuGetVertices(float** result, uint32_t nodeHandle)
 {
 	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 
@@ -271,10 +271,10 @@ CUBIQUITYC_API float* cuGetVertices(uint32_t nodeHandle)
 
 	float* floatPointer = const_cast<float*>(constFloatPointer);
 
-	return floatPointer;
+	*result = floatPointer;
 }
 
-CUBIQUITYC_API uint32_t* cuGetIndices(uint32_t nodeHandle)
+CUBIQUITYC_API void cuGetIndices(uint32_t** result, uint32_t nodeHandle)
 {
 	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 
@@ -285,7 +285,7 @@ CUBIQUITYC_API uint32_t* cuGetIndices(uint32_t nodeHandle)
 
 	unsigned int* uintPointer = const_cast<unsigned int*>(constUIntPointer);
 
-	return uintPointer;
+	*result = uintPointer;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

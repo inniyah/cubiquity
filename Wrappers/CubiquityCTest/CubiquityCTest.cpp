@@ -29,8 +29,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	cuGetNoOfVertices(&noOfVertices, rootOctreeNodeHandle);
 	unsigned int noOfIndices;
 	cuGetNoOfIndices(&noOfIndices, rootOctreeNodeHandle);
-	float* pVertices = cuGetVertices(rootOctreeNodeHandle);
-	unsigned int* pIndices = cuGetIndices(rootOctreeNodeHandle);
+	float* pVertices;
+	cuGetVertices(&pVertices, rootOctreeNodeHandle);
+	unsigned int* pIndices;
+	cuGetIndices(&pIndices, rootOctreeNodeHandle);
 
 	tstringstream stros;    
 	stros << noOfVertices << " " << noOfIndices;

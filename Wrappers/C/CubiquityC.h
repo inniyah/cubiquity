@@ -36,8 +36,8 @@ extern "C"
 	CUBIQUITYC_API void cuGetNoOfVertices(uint32_t* result, uint32_t nodeHandle);
 	CUBIQUITYC_API void cuGetNoOfIndices(uint32_t* result, uint32_t nodeHandle);
 
-	CUBIQUITYC_API float* cuGetVertices(uint32_t nodeHandle);
-	CUBIQUITYC_API uint32_t* cuGetIndices(uint32_t nodeHandle);
+	CUBIQUITYC_API void cuGetVertices(float** result, uint32_t nodeHandle);
+	CUBIQUITYC_API void cuGetIndices(uint32_t** result, uint32_t nodeHandle);
 
 	// Clock functions
 	CUBIQUITYC_API uint32_t cuGetCurrentTime(void);

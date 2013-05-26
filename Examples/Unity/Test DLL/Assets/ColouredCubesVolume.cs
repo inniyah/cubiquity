@@ -221,7 +221,8 @@ public class ColouredCubesVolume : MonoBehaviour
 		CubiquityDLL.cuGetNoOfIndices(out noOfIndices, nodeHandle);
 		//Debug.Log("No of indices = " + noOfIndices + " at " + Time.time);
 		
-		IntPtr ptrResultVerts = CubiquityDLL.cuGetVertices(nodeHandle);
+		IntPtr ptrResultVerts;
+		CubiquityDLL.cuGetVertices(out ptrResultVerts, nodeHandle);
 		
 		// Load the results into a managed array. 
 		uint floatsPerVert = 4;
@@ -242,7 +243,8 @@ public class ColouredCubesVolume : MonoBehaviour
 		
 		//Build a mesh procedurally
 		
-		IntPtr ptrResultIndices = CubiquityDLL.cuGetIndices(nodeHandle);
+		IntPtr ptrResultIndices;
+		CubiquityDLL.cuGetIndices(out ptrResultIndices, nodeHandle);
 		
 		// Load the results into a managed array.
         int[] resultIndices = new int[noOfIndices]; //Should be unsigned!

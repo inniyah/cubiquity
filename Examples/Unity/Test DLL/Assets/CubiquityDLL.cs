@@ -40,9 +40,9 @@ public class CubiquityDLL
 	[DllImport ("CubiquityC")]
 	public static extern void cuGetNoOfIndices(out uint result, uint octreeNodeHandle);
 	[DllImport ("CubiquityC")]
-	public static extern IntPtr cuGetVertices(uint octreeNodeHandle);
+	public static extern void cuGetVertices(out IntPtr result, uint octreeNodeHandle);
 	[DllImport ("CubiquityC")]
-	public static extern IntPtr cuGetIndices(uint octreeNodeHandle);
+	public static extern void cuGetIndices(out IntPtr result, uint octreeNodeHandle);
 	
 	// Clock functions
 	[DllImport ("CubiquityC")]
