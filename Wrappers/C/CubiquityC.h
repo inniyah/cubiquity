@@ -40,8 +40,8 @@ extern "C"
 	CUBIQUITYC_API void cuGetIndices(uint32_t** result, uint32_t nodeHandle);
 
 	// Clock functions
-	CUBIQUITYC_API uint32_t cuGetCurrentTime(void);
+	CUBIQUITYC_API void cuGetCurrentTime(uint32_t* result);
 
 	// Raycasting functions
-	CUBIQUITYC_API int32_t cuPickVoxel(uint32_t volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, int32_t* resultX, int32_t* resultY, int32_t* resultZ);
+	CUBIQUITYC_API void cuPickVoxel(uint32_t* result, uint32_t volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, int32_t* resultX, int32_t* resultY, int32_t* resultZ);
 }

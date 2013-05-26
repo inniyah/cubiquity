@@ -46,9 +46,9 @@ public class CubiquityDLL
 	
 	// Clock functions
 	[DllImport ("CubiquityC")]
-	public static extern uint cuGetCurrentTime();
+	public static extern void cuGetCurrentTime(out uint result);
 	
 	// Raycasting functions
 	[DllImport ("CubiquityC")]
-	public static extern int cuPickVoxel(uint volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, out int resultX, out int resultY, out int resultZ);
+	public static extern void cuPickVoxel(out uint result, uint volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, out int resultX, out int resultY, out int resultZ);
 }

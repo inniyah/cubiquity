@@ -27,7 +27,9 @@ public class ColouredCubesVolume : MonoBehaviour
 	
 	public void performAwake()
 	{
-        Debug.Log("In performAwake(): Timestamp = " + CubiquityDLL.cuGetCurrentTime());
+		uint currentTime;
+		CubiquityDLL.cuGetCurrentTime(out currentTime);
+        Debug.Log("In performAwake(): Timestamp = " + currentTime);
 
         if (volumeHandle == -1)
         {
@@ -46,7 +48,7 @@ public class ColouredCubesVolume : MonoBehaviour
 	
 	public void performUpdate()
 	{
-		Debug.Log ("performUpdate");
+		//Debug.Log ("performUpdate");
 		counter++;
 		CubiquityDLL.cuUpdateVolume((uint)volumeHandle);
 		
@@ -141,7 +143,9 @@ public class ColouredCubesVolume : MonoBehaviour
 				mr.renderer.material.shader = Shader.Find("ColouredCubesVolume");
 			}
 			
-			octreeNodeData.meshLastSyncronised = (int)(CubiquityDLL.cuGetCurrentTime());
+			uint currentTime;
+			CubiquityDLL.cuGetCurrentTime(out currentTime);
+			octreeNodeData.meshLastSyncronised = (int)(currentTime);
 		}		
 		
 		//Now syncronise any children
