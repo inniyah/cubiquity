@@ -12,6 +12,26 @@
 
 #include <vector>
 
+#define OPEN_C_INTERFACE \
+	try \
+	{
+
+#define CLOSE_C_INTERFACE \
+	return 1; \
+	} \
+	catch (const std::exception& ex) \
+	{ \
+		logError() << "An exception has reached the C interface and been suppressed."; \
+		logError() << "\tType: std::exception"; \
+		logError() << "\tMessage: \"" << ex.what() << "\""; \
+		return -1; \
+	} \
+	catch (...) \
+	{ \
+		logError() << "An unrecognised exception has reached the C interface and been suppressed."; \
+		return -1; \
+	} \
+
 using namespace Cubiquity;
 
 // This class (via it's single global instance) allows code to be executed when the library is loaded and unloaded.
@@ -73,9 +93,9 @@ OctreeNode<Colour>* getNodeFromHandle(uint32_t nodeHandle)
 ////////////////////////////////////////////////////////////////////////////////
 // Volume functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API void cuNewColouredCubesVolume(uint32_t* result, int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, uint32_t blockSize, uint32_t baseNodeSize)
+CUBIQUITYC_API int32_t cuNewColouredCubesVolume(uint32_t* result, int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, uint32_t blockSize, uint32_t baseNodeSize)
 {
-	//logMessage("In cuNewColouredCubesVolume");
+	OPEN_C_INTERFACE
 
 	ColouredCubesVolume* volume = new ColouredCubesVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), blockSize, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
@@ -93,11 +113,13 @@ CUBIQUITYC_API void cuNewColouredCubesVolume(uint32_t* result, int32_t lowerX, i
 	//Otherwise append a new entry.
 	gColouredCubesVolumes.push_back(volume);
 	*result = gColouredCubesVolumes.size() - 1;
+
+	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API void cuNewColouredCubesVolumeFromVolDat(uint32_t* result, const char* volDatToImport, uint32_t blockSize, uint32_t baseNodeSize)
+CUBIQUITYC_API int32_t cuNewColouredCubesVolumeFromVolDat(uint32_t* result, const char* volDatToImport, uint32_t blockSize, uint32_t baseNodeSize)
 {
-	//setLogVerbosity(LogLevels::Info);
+	OPEN_C_INTERFACE
 
 	ColouredCubesVolume* volume = importVolDat<ColouredCubesVolume>(volDatToImport, blockSize, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
@@ -114,56 +136,65 @@ CUBIQUITYC_API void cuNewColouredCubesVolumeFromVolDat(uint32_t* result, const c
 	//Otherwise append a new entry.
 	gColouredCubesVolumes.push_back(volume);
 	*result = gColouredCubesVolumes.size() - 1;
+
+	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API void cuUpdateVolume(uint32_t volumeHandle)
+CUBIQUITYC_API int32_t cuUpdateVolume(uint32_t volumeHandle)
 {
+	OPEN_C_INTERFACE
+
 	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
 
 	volume->update(Vector3F(0.0f, 0.0f, 0.0f), 0);
+
+	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API void cuDeleteColouredCubesVolume(uint32_t volumeHandle)
+CUBIQUITYC_API int32_t cuDeleteColouredCubesVolume(uint32_t volumeHandle)
 {
+	OPEN_C_INTERFACE
+
 	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
 	delete volume;
 
 	// In the future we could consider reusing this slot as we can detect that it set to zero.
 	gColouredCubesVolumes[volumeHandle] = 0;
+
+	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API void cuGetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, uint8_t* red, uint8_t* green, uint8_t* blue, uint8_t* alpha)
+CUBIQUITYC_API int32_t cuGetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, uint8_t* red, uint8_t* green, uint8_t* blue, uint8_t* alpha)
 {
+	OPEN_C_INTERFACE
+
 	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
 	Colour& colour = volume->getVoxelAt(x, y, z);
 	*red = colour.getRed();
 	*green = colour.getGreen();
 	*blue = colour.getBlue();
 	*alpha = colour.getAlpha();
+
+	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API void cuSetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
+CUBIQUITYC_API int32_t cuSetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
 {
-	try
-	{
-		ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
-		volume->setVoxelAt(x, y, z, Colour(red, green, blue, alpha), UpdatePriorities::Immediate);
-	}
-	catch (const std::exception& ex)
-	{
-		// Should log it!
-	}
-	catch (...)
-	{
-		// Should log it!
-	}
+	OPEN_C_INTERFACE
+
+	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+	volume->setVoxelAt(x, y, z, Colour(red, green, blue, alpha), UpdatePriorities::Immediate);
+	
+	CLOSE_C_INTERFACE
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Octree functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API void cuHasRootOctreeNode(uint32_t* result, uint32_t volumeHandle)
+CUBIQUITYC_API int32_t cuHasRootOctreeNode(uint32_t* result, uint32_t volumeHandle)
 {
+	OPEN_C_INTERFACE
+
 	ColouredCubesVolume* volume = gColouredCubesVolumes[volumeHandle];
 	OctreeNode<Colour>* node = volume->getRootOctreeNode();
 	if(node)
@@ -174,10 +205,14 @@ CUBIQUITYC_API void cuHasRootOctreeNode(uint32_t* result, uint32_t volumeHandle)
 	{
 		*result = 0;
 	}
+
+	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API void cuGetRootOctreeNode(uint32_t* result, uint32_t volumeHandle)
+CUBIQUITYC_API int32_t cuGetRootOctreeNode(uint32_t* result, uint32_t volumeHandle)
 {
+	OPEN_C_INTERFACE
+
 	ColouredCubesVolume* volume = gColouredCubesVolumes[volumeHandle];
 	OctreeNode<Colour>* node = volume->getRootOctreeNode();
 	uint32_t nodeHandle = node->mSelf;
@@ -185,10 +220,14 @@ CUBIQUITYC_API void cuGetRootOctreeNode(uint32_t* result, uint32_t volumeHandle)
 	uint32_t combinedHandle = encodeNodeHandle(volumeHandle, nodeHandle);
 
 	*result = combinedHandle;
+
+	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API void cuHasChildNode(uint32_t* result, uint32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ)
+CUBIQUITYC_API int32_t cuHasChildNode(uint32_t* result, uint32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ)
 {
+	OPEN_C_INTERFACE
+
 	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 	OctreeNode<Colour>* child = node->getChildNode(childX, childY, childZ);
 	if(child)
@@ -199,10 +238,14 @@ CUBIQUITYC_API void cuHasChildNode(uint32_t* result, uint32_t nodeHandle, uint32
 	{
 		*result = 0;
 	}
+
+	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API void cuGetChildNode(uint32_t* result, uint32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ)
+CUBIQUITYC_API int32_t cuGetChildNode(uint32_t* result, uint32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ)
 {
+	OPEN_C_INTERFACE
+
 	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 	OctreeNode<Colour>* child = node->getChildNode(childX, childY, childZ);
 	if(child)
@@ -213,52 +256,76 @@ CUBIQUITYC_API void cuGetChildNode(uint32_t* result, uint32_t nodeHandle, uint32
 	{
 		*result = 1000000000;
 	}
+
+	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API void cuNodeHasMesh(uint32_t* result, uint32_t nodeHandle)
+CUBIQUITYC_API int32_t cuNodeHasMesh(uint32_t* result, uint32_t nodeHandle)
 {
+	OPEN_C_INTERFACE
+
 	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 	*result = (node->mPolyVoxMesh != 0) ? 1 : 0;
+
+	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API void cuGetNodePosition(uint32_t nodeHandle, int32_t* x, int32_t* y, int32_t* z)
+CUBIQUITYC_API int32_t cuGetNodePosition(uint32_t nodeHandle, int32_t* x, int32_t* y, int32_t* z)
 {
+	OPEN_C_INTERFACE
+
 	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 	const Vector3I& lowerCorner = node->mRegion.getLowerCorner();
 	*x = lowerCorner.getX();
 	*y = lowerCorner.getY();
 	*z = lowerCorner.getZ();
+
+	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API void cuGetMeshLastUpdated(uint32_t* result, uint32_t nodeHandle)
+CUBIQUITYC_API int32_t cuGetMeshLastUpdated(uint32_t* result, uint32_t nodeHandle)
 {
+	OPEN_C_INTERFACE
+
 	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 	*result = node->mMeshLastUpdated;
+
+	CLOSE_C_INTERFACE
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Mesh functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API void cuGetNoOfVertices(uint32_t* result, uint32_t nodeHandle)
+CUBIQUITYC_API int32_t cuGetNoOfVertices(uint32_t* result, uint32_t nodeHandle)
 {
+	OPEN_C_INTERFACE
+
 	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 
 	const ::PolyVox::SurfaceMesh< typename VoxelTraits<Colour>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
 	*result = polyVoxMesh->getNoOfVertices();
+
+	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API void cuGetNoOfIndices(uint32_t* result, uint32_t nodeHandle)
+CUBIQUITYC_API int32_t cuGetNoOfIndices(uint32_t* result, uint32_t nodeHandle)
 {
+	OPEN_C_INTERFACE
+
 	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 
 	const ::PolyVox::SurfaceMesh< typename VoxelTraits<Colour>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
 	*result = polyVoxMesh->getNoOfIndices();
+
+	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API void cuGetVertices(float** result, uint32_t nodeHandle)
+CUBIQUITYC_API int32_t cuGetVertices(float** result, uint32_t nodeHandle)
 {
+	OPEN_C_INTERFACE
+
 	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 
 	const ::PolyVox::SurfaceMesh< typename VoxelTraits<Colour>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
@@ -272,10 +339,14 @@ CUBIQUITYC_API void cuGetVertices(float** result, uint32_t nodeHandle)
 	float* floatPointer = const_cast<float*>(constFloatPointer);
 
 	*result = floatPointer;
+
+	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API void cuGetIndices(uint32_t** result, uint32_t nodeHandle)
+CUBIQUITYC_API int32_t cuGetIndices(uint32_t** result, uint32_t nodeHandle)
 {
+	OPEN_C_INTERFACE
+
 	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 
 	const ::PolyVox::SurfaceMesh< typename VoxelTraits<Colour>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
@@ -286,21 +357,29 @@ CUBIQUITYC_API void cuGetIndices(uint32_t** result, uint32_t nodeHandle)
 	unsigned int* uintPointer = const_cast<unsigned int*>(constUIntPointer);
 
 	*result = uintPointer;
+
+	CLOSE_C_INTERFACE
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Clock functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API void cuGetCurrentTime(uint32_t* result)
+CUBIQUITYC_API int32_t cuGetCurrentTime(uint32_t* result)
 {
+	OPEN_C_INTERFACE
+
 	*result = Clock::getTimestamp();
+
+	CLOSE_C_INTERFACE
 }
 
 ////////////////////////////////////////////////////////////////////////////////
 // Raycasting functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API void cuPickVoxel(uint32_t* result, uint32_t volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, int32_t* resultX, int32_t* resultY, int32_t* resultZ)
+CUBIQUITYC_API int32_t cuPickVoxel(uint32_t* result, uint32_t volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, int32_t* resultX, int32_t* resultY, int32_t* resultZ)
 {
+	OPEN_C_INTERFACE
+
 	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
 
 	Vector3F v3dStart(rayStartX, rayStartY, rayStartZ);
@@ -321,5 +400,5 @@ CUBIQUITYC_API void cuPickVoxel(uint32_t* result, uint32_t volumeHandle, float r
 		*result = 0;
 	}
 
-
+	CLOSE_C_INTERFACE
 }
