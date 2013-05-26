@@ -36,9 +36,9 @@ public class CubiquityDLL
 	
 	// Mesh functions
 	[DllImport ("CubiquityC")]
-	public static extern uint cuGetNoOfVertices(uint octreeNodeHandle);
+	public static extern void cuGetNoOfVertices(out uint result, uint octreeNodeHandle);
 	[DllImport ("CubiquityC")]
-	public static extern uint cuGetNoOfIndices(uint octreeNodeHandle);
+	public static extern void cuGetNoOfIndices(out uint result, uint octreeNodeHandle);
 	[DllImport ("CubiquityC")]
 	public static extern IntPtr cuGetVertices(uint octreeNodeHandle);
 	[DllImport ("CubiquityC")]

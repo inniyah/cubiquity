@@ -239,22 +239,22 @@ CUBIQUITYC_API void cuGetMeshLastUpdated(uint32_t* result, uint32_t nodeHandle)
 ////////////////////////////////////////////////////////////////////////////////
 // Mesh functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API uint32_t cuGetNoOfVertices(uint32_t nodeHandle)
+CUBIQUITYC_API void cuGetNoOfVertices(uint32_t* result, uint32_t nodeHandle)
 {
 	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 
 	const ::PolyVox::SurfaceMesh< typename VoxelTraits<Colour>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
-	return polyVoxMesh->getNoOfVertices();
+	*result = polyVoxMesh->getNoOfVertices();
 }
 
-CUBIQUITYC_API uint32_t cuGetNoOfIndices(uint32_t nodeHandle)
+CUBIQUITYC_API void cuGetNoOfIndices(uint32_t* result, uint32_t nodeHandle)
 {
 	OctreeNode<Colour>* node = getNodeFromHandle(nodeHandle);
 
 	const ::PolyVox::SurfaceMesh< typename VoxelTraits<Colour>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
-	return polyVoxMesh->getNoOfIndices();
+	*result = polyVoxMesh->getNoOfIndices();
 }
 
 CUBIQUITYC_API float* cuGetVertices(uint32_t nodeHandle)

@@ -214,9 +214,11 @@ public class ColouredCubesVolume : MonoBehaviour
 	
 	Mesh BuildMeshFromNodeHandle(uint nodeHandle)
 	{
-		uint noOfVertices = CubiquityDLL.cuGetNoOfVertices(nodeHandle);
+		uint noOfVertices;
+		CubiquityDLL.cuGetNoOfVertices(out noOfVertices, nodeHandle);
 		//Debug.Log("No of vertices = " + noOfVertices + " at " + Time.time);
-		uint noOfIndices = CubiquityDLL.cuGetNoOfIndices(nodeHandle);
+		uint noOfIndices;
+		CubiquityDLL.cuGetNoOfIndices(out noOfIndices, nodeHandle);
 		//Debug.Log("No of indices = " + noOfIndices + " at " + Time.time);
 		
 		IntPtr ptrResultVerts = CubiquityDLL.cuGetVertices(nodeHandle);

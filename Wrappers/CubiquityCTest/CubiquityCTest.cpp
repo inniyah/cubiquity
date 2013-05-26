@@ -25,8 +25,10 @@ int _tmain(int argc, _TCHAR* argv[])
 	cuUpdateVolume(volumeID);
 	unsigned int rootOctreeNodeHandle;
 	cuGetRootOctreeNode(&rootOctreeNodeHandle, volumeID);
-	unsigned int noOfVertices = cuGetNoOfVertices(rootOctreeNodeHandle);
-	unsigned int noOfIndices = cuGetNoOfIndices(rootOctreeNodeHandle);
+	unsigned int noOfVertices;
+	cuGetNoOfVertices(&noOfVertices, rootOctreeNodeHandle);
+	unsigned int noOfIndices;
+	cuGetNoOfIndices(&noOfIndices, rootOctreeNodeHandle);
 	float* pVertices = cuGetVertices(rootOctreeNodeHandle);
 	unsigned int* pIndices = cuGetIndices(rootOctreeNodeHandle);
 
