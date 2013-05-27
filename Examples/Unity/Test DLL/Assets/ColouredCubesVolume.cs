@@ -25,8 +25,17 @@ public class ColouredCubesVolume : MonoBehaviour
 	
 	public static int counter = 0;
 	
+	public Material colouredCubesMaterial;
+	
 	public void performAwake()
-	{
+	{		
+		if(rootGameObject != null)
+		{
+			deleteGameObject(rootGameObject);
+		}
+		
+		colouredCubesMaterial = new Material(Shader.Find("ColouredCubesVolume"));
+			
 		uint currentTime;
 		CubiquityDLL.cuGetCurrentTime(out currentTime);
         Debug.Log("In performAwake(): Timestamp = " + currentTime);
@@ -44,6 +53,32 @@ public class ColouredCubesVolume : MonoBehaviour
         }
 		//volumeHandle = CubiquityDLL.cuNewColouredCubesVolume(0, 0, 0, (int)Width - 1, (int)Height - 1, (int)Depth - 1, 64, 64);
 		
+	}
+	
+	public void deleteGameObject(GameObject gameObjectToDelete)
+	{
+		MeshFilter mf = (MeshFilter)gameObjectToDelete.GetComponent(typeof(MeshFilter));
+		Destroy(mf.mesh);
+		
+		OctreeNodeData octreeNodeData = gameObjectToDelete.GetComponent<OctreeNodeData>();
+		
+		//Now delete any children
+		for(uint z = 0; z < 2; z++)
+		{
+			for(uint y = 0; y < 2; y++)
+			{
+				for(uint x = 0; x < 2; x++)
+				{
+					GameObject childObject = octreeNodeData.GetChild(x, y, z);
+					if(childObject != null)
+					{
+						deleteGameObject(childObject);
+					}
+				}
+			}
+		}
+		
+		Destroy(gameObjectToDelete);
 	}
 	
 	public void performUpdate()
@@ -135,12 +170,19 @@ public class ColouredCubesVolume : MonoBehaviour
 		        MeshFilter mf = (MeshFilter)gameObjectToSync.GetComponent(typeof(MeshFilter));
 		        MeshRenderer mr = (MeshRenderer)gameObjectToSync.GetComponent(typeof(MeshRenderer));
 				MeshCollider mc = (MeshCollider)gameObjectToSync.GetComponent(typeof(MeshCollider));
-		        mf.mesh = mesh;
 				
+				if(mf.sharedMesh != null)
+				{
+					DestroyImmediate(mf.sharedMesh);
+				}
+				
+		        mf.sharedMesh = mesh;
 				mc.sharedMesh = mesh;
-				//mc.material.bounciness = 1.0f;
 				
-				mr.renderer.material.shader = Shader.Find("ColouredCubesVolume");
+				mr.material = colouredCubesMaterial;
+				
+				//mc.material.bounciness = 1.0f;				
+				//mr.renderer.material.shader = Shader.Find("ColouredCubesVolume");
 			}
 			
 			uint currentTime;
@@ -212,6 +254,8 @@ public class ColouredCubesVolume : MonoBehaviour
 		{
 			newGameObject.transform.localPosition = octreeNodeData.lowerCorner;
 		}
+		
+		//newGameObject.hideFlags = HideFlags.HideAndDontSave;
 		
 		return newGameObject;
 	}

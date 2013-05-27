@@ -16,6 +16,7 @@ public class ColouredCubesVolumeEditor : Editor
 		
 		ColouredCubesVolume colouredCubesVolume = VoxelTerrainRoot.GetComponent<ColouredCubesVolume>();
 		colouredCubesVolume.performAwake();
+		colouredCubesVolume.performUpdate();
     }
 	
 	// Use this for initialization
