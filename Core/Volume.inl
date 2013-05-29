@@ -20,7 +20,7 @@ namespace Cubiquity
 		:mPolyVoxVolume(0)
 		,mOctree(0)
 	{
-		logInfo() << "Creating Volume for " << region;
+		logTrace() << "Entering Volume(" << region << ",...)";
 
 		POLYVOX_ASSERT(region.getWidthInVoxels() > 0, "All volume dimensions must be greater than zero");
 		POLYVOX_ASSERT(region.getHeightInVoxels() > 0, "All volume dimensions must be greater than zero");
@@ -29,11 +29,15 @@ namespace Cubiquity
 		mPolyVoxVolume = new ::PolyVox::SimpleVolume<VoxelType>(region);
 
 		mOctree = new Octree<VoxelType>(this, octreeConstructionMode, baseNodeSize);
+
+		logTrace() << "Exiting Volume(" << region << ",...)";
 	}
 
 	template <typename VoxelType>
 	Volume<VoxelType>::~Volume()
 	{
+		logTrace() << "Entering ~Volume()";
+		logTrace() << "Exiting ~Volume()";
 	}
 
 	template <typename VoxelType>

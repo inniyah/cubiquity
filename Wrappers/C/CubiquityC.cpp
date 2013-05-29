@@ -153,6 +153,8 @@ CUBIQUITYC_API int32_t cuUpdateVolume(uint32_t volumeHandle)
 
 CUBIQUITYC_API int32_t cuDeleteColouredCubesVolume(uint32_t volumeHandle)
 {
+	logTrace() << "In cuDeleteColouredCubesVolume()";
+
 	OPEN_C_INTERFACE
 
 	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
