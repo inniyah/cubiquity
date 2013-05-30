@@ -16,7 +16,8 @@ public struct MyVertex
 [System.Serializable]
 public class ColouredCubesVolume : MonoBehaviour
 {
-	public int volumeHandle = -1;
+	public uint volumeHandle = 0;
+	public bool hasVolumeHandle = false;
 	public GameObject rootGameObject;
 	
 	public Material colouredCubesMaterial;
@@ -33,10 +34,11 @@ public class ColouredCubesVolume : MonoBehaviour
 		uint currentTime = CubiquityDLL.GetCurrentTime();
         Debug.Log("In performAwake(): Timestamp = " + currentTime);
 
-        if (volumeHandle == -1)
+        if (hasVolumeHandle == false)
         {
 			uint volHand = CubiquityDLL.NewColouredCubesVolumeFromVolDat(new StringBuilder("C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/"), 64, 64);
-			volumeHandle = (int)volHand;
+			volumeHandle = volHand;
+			hasVolumeHandle = true;
             Debug.Log("Created volume: handle = " + volumeHandle);
         }
         else
@@ -114,12 +116,14 @@ public class ColouredCubesVolume : MonoBehaviour
 	{
 		Debug.Log("Deleting volume with handle = " + volumeHandle);
 		CubiquityDLL.DeleteColouredCubesVolume((uint)volumeHandle);
+		volumeHandle = 0;
+		hasVolumeHandle = false;
 	}
 	
 	public Color32 GetVoxel(int x, int y, int z)
 	{
 		Color32 color = new Color32();
-		if(volumeHandle > -1)
+		if(hasVolumeHandle)
 		{
 			CubiquityDLL.GetVoxel((uint)volumeHandle, x, y, z, out color.r, out color.g, out color.b, out color.a);
 		}
@@ -128,7 +132,7 @@ public class ColouredCubesVolume : MonoBehaviour
 	
 	public void SetVoxel(int x, int y, int z, Color32 color)
 	{
-		if(volumeHandle > -1)
+		if(hasVolumeHandle)
 		{
 			if(x >= 0 && y >= 0 && z >= 0 && x < 128 && y < 32 && z < 128) // FIX THESE VALUES!
 			{
