@@ -137,8 +137,11 @@ public class ColouredCubesVolume : MonoBehaviour
 	{
 		if(volumeHandle > -1)
 		{
-			byte alpha = color.a > 127 ? (byte)255 : (byte)0; // Threshold the alpha until we support transparency.
-			CubiquityDLL.SetVoxel((uint)volumeHandle, x, y, z, color.r, color.g, color.b, alpha);
+			if(x >= 0 && y >= 0 && z >= 0 && x < 128 && y < 32 && z < 128) // FIX THESE VALUES!
+			{
+				byte alpha = color.a > 127 ? (byte)255 : (byte)0; // Threshold the alpha until we support transparency.
+				CubiquityDLL.SetVoxel((uint)volumeHandle, x, y, z, color.r, color.g, color.b, alpha);
+			}
 		}
 	}
 	
