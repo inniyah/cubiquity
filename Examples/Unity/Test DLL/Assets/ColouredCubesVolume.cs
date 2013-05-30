@@ -43,7 +43,7 @@ public class ColouredCubesVolume : MonoBehaviour
         if (volumeHandle == -1)
         {
 			uint volHand;
-            CubiquityDLL.cuNewColouredCubesVolumeFromVolDat(out volHand, new StringBuilder("C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/"), 64, 64);
+            CubiquityDLL.cuNewColouredCubesVolumeFromVolDat(new StringBuilder("C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/"), 64, 64, out volHand);
 			volumeHandle = (int)volHand;
             Debug.Log("Created volume: handle = " + volumeHandle);
         }
@@ -88,12 +88,12 @@ public class ColouredCubesVolume : MonoBehaviour
 		CubiquityDLL.cuUpdateVolume((uint)volumeHandle);
 		
 		uint hasRootNode;
-		CubiquityDLL.cuHasRootOctreeNode(out hasRootNode, (uint)volumeHandle);
+		CubiquityDLL.cuHasRootOctreeNode((uint)volumeHandle, out hasRootNode);
 		
 		if(hasRootNode == 1)
 		{		
 			uint rootNodeHandle;
-			CubiquityDLL.cuGetRootOctreeNode(out rootNodeHandle, (uint)volumeHandle);
+			CubiquityDLL.cuGetRootOctreeNode((uint)volumeHandle, out rootNodeHandle);
 		
 			if(rootGameObject == null)
 			{
@@ -151,7 +151,7 @@ public class ColouredCubesVolume : MonoBehaviour
 	public void syncNode(uint nodeHandle, GameObject gameObjectToSync)
 	{
 		uint meshLastUpdated;
-		CubiquityDLL.cuGetMeshLastUpdated(out meshLastUpdated, nodeHandle);		
+		CubiquityDLL.cuGetMeshLastUpdated(nodeHandle, out meshLastUpdated);		
 		OctreeNodeData octreeNodeData = (OctreeNodeData)(gameObjectToSync.GetComponent<OctreeNodeData>());
 		
 		//Debug.Log ("In syncNode: meshLastSyncronised = " + octreeNodeData.meshLastSyncronised + ", meshLastUpdated = " + meshLastUpdated);
@@ -161,7 +161,7 @@ public class ColouredCubesVolume : MonoBehaviour
 			Debug.Log("Mesh data is out of date");
 			
 			uint nodeHasMesh;
-			CubiquityDLL.cuNodeHasMesh(out nodeHasMesh, nodeHandle);
+			CubiquityDLL.cuNodeHasMesh(nodeHandle, out nodeHasMesh);
 			if(nodeHasMesh == 1)
 			{				
 				Mesh mesh = BuildMeshFromNodeHandle(nodeHandle);	
@@ -198,12 +198,12 @@ public class ColouredCubesVolume : MonoBehaviour
 				for(uint x = 0; x < 2; x++)
 				{
 					uint hasChildNodeHandle;
-					CubiquityDLL.cuHasChildNode(out hasChildNodeHandle, nodeHandle, x, y, z);
+					CubiquityDLL.cuHasChildNode(nodeHandle, x, y, z, out hasChildNodeHandle);
 					if(hasChildNodeHandle == 1)
 					{					
 					
 						uint childNodeHandle;
-						CubiquityDLL.cuGetChildNode(out childNodeHandle, nodeHandle, x, y, z);					
+						CubiquityDLL.cuGetChildNode(nodeHandle, x, y, z, out childNodeHandle);					
 						
 						GameObject childGameObject = octreeNodeData.GetChild(x,y,z);
 						
@@ -263,14 +263,14 @@ public class ColouredCubesVolume : MonoBehaviour
 	Mesh BuildMeshFromNodeHandle(uint nodeHandle)
 	{
 		uint noOfVertices;
-		CubiquityDLL.cuGetNoOfVertices(out noOfVertices, nodeHandle);
+		CubiquityDLL.cuGetNoOfVertices(nodeHandle, out noOfVertices);
 		//Debug.Log("No of vertices = " + noOfVertices + " at " + Time.time);
 		uint noOfIndices;
-		CubiquityDLL.cuGetNoOfIndices(out noOfIndices, nodeHandle);
+		CubiquityDLL.cuGetNoOfIndices(nodeHandle, out noOfIndices);
 		//Debug.Log("No of indices = " + noOfIndices + " at " + Time.time);
 		
 		IntPtr ptrResultVerts;
-		CubiquityDLL.cuGetVertices(out ptrResultVerts, nodeHandle);
+		CubiquityDLL.cuGetVertices(nodeHandle, out ptrResultVerts);
 		
 		// Load the results into a managed array. 
 		uint floatsPerVert = 4;
@@ -292,7 +292,7 @@ public class ColouredCubesVolume : MonoBehaviour
 		//Build a mesh procedurally
 		
 		IntPtr ptrResultIndices;
-		CubiquityDLL.cuGetIndices(out ptrResultIndices, nodeHandle);
+		CubiquityDLL.cuGetIndices(nodeHandle, out ptrResultIndices);
 		
 		// Load the results into a managed array.
         int[] resultIndices = new int[noOfIndices]; //Should be unsigned!

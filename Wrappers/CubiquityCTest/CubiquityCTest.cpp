@@ -21,18 +21,18 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	//unsigned int volumeID = newColouredCubesVolume(0, 0, 0, 127, 127, 127, 256, 256);
 	unsigned int volumeID;
-	cuNewColouredCubesVolumeFromVolDat(&volumeID, "C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/", 256, 256);
+	cuNewColouredCubesVolumeFromVolDat("C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/", 256, 256, &volumeID);
 	cuUpdateVolume(volumeID);
 	unsigned int rootOctreeNodeHandle;
-	cuGetRootOctreeNode(&rootOctreeNodeHandle, volumeID);
+	cuGetRootOctreeNode(volumeID, &rootOctreeNodeHandle);
 	unsigned int noOfVertices;
-	cuGetNoOfVertices(&noOfVertices, rootOctreeNodeHandle);
+	cuGetNoOfVertices(rootOctreeNodeHandle, &noOfVertices);
 	unsigned int noOfIndices;
-	cuGetNoOfIndices(&noOfIndices, rootOctreeNodeHandle);
+	cuGetNoOfIndices(rootOctreeNodeHandle, &noOfIndices);
 	float* pVertices;
-	cuGetVertices(&pVertices, rootOctreeNodeHandle);
+	cuGetVertices(rootOctreeNodeHandle, &pVertices);
 	unsigned int* pIndices;
-	cuGetIndices(&pIndices, rootOctreeNodeHandle);
+	cuGetIndices(rootOctreeNodeHandle, &pIndices);
 
 	tstringstream stros;    
 	stros << noOfVertices << " " << noOfIndices;

@@ -14,9 +14,9 @@ public class CubiquityDLL
 	
 	// Volume functions
 	[DllImport ("CubiquityC")]
-	public static extern int cuNewColouredCubesVolume(out uint result, int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, uint blockSize, uint baseNodeSize);
+	public static extern int cuNewColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, uint blockSize, uint baseNodeSize, out uint result);
 	[DllImport ("CubiquityC")]
-	public static extern int cuNewColouredCubesVolumeFromVolDat(out uint result, StringBuilder foldername, uint blockSize, uint baseNodeSize);
+	public static extern int cuNewColouredCubesVolumeFromVolDat(StringBuilder foldername, uint blockSize, uint baseNodeSize, out uint result);
 	[DllImport ("CubiquityC")]
 	public static extern int cuUpdateVolume(uint volumeHandle);
 	[DllImport ("CubiquityC")]
@@ -28,29 +28,29 @@ public class CubiquityDLL
 	
 	// Octree functions
 	[DllImport ("CubiquityC")]
-	public static extern int cuHasRootOctreeNode(out uint result, uint volumeHandle);
+	public static extern int cuHasRootOctreeNode(uint volumeHandle, out uint result);
 	[DllImport ("CubiquityC")]
-	public static extern int cuGetRootOctreeNode(out uint result, uint volumeHandle);
+	public static extern int cuGetRootOctreeNode(uint volumeHandle,out uint result);
 	[DllImport ("CubiquityC")]
-	public static extern int cuHasChildNode(out uint result, uint nodeHandle, uint childX, uint childY, uint childZ);
+	public static extern int cuHasChildNode(uint nodeHandle, uint childX, uint childY, uint childZ, out uint result);
 	[DllImport ("CubiquityC")]
-	public static extern int cuGetChildNode(out uint result, uint nodeHandle, uint childX, uint childY, uint childZ);
+	public static extern int cuGetChildNode(uint nodeHandle, uint childX, uint childY, uint childZ, out uint result);
 	[DllImport ("CubiquityC")]
-	public static extern int cuNodeHasMesh(out uint result, uint nodeHandle);
+	public static extern int cuNodeHasMesh(uint nodeHandle, out uint result);
 	[DllImport ("CubiquityC")]
 	public static extern int cuGetNodePosition(uint nodeHandle, out int x, out int y, out int z);
 	[DllImport ("CubiquityC")]
-	public static extern int cuGetMeshLastUpdated(out uint result, uint nodeHandle);
+	public static extern int cuGetMeshLastUpdated(uint nodeHandle, out uint result);
 	
 	// Mesh functions
 	[DllImport ("CubiquityC")]
-	public static extern int cuGetNoOfVertices(out uint result, uint octreeNodeHandle);
+	public static extern int cuGetNoOfVertices(uint octreeNodeHandle, out uint result);
 	[DllImport ("CubiquityC")]
-	public static extern int cuGetNoOfIndices(out uint result, uint octreeNodeHandle);
+	public static extern int cuGetNoOfIndices(uint octreeNodeHandle, out uint result);
 	[DllImport ("CubiquityC")]
-	public static extern int cuGetVertices(out IntPtr result, uint octreeNodeHandle);
+	public static extern int cuGetVertices(uint octreeNodeHandle, out IntPtr result);
 	[DllImport ("CubiquityC")]
-	public static extern int cuGetIndices(out IntPtr result, uint octreeNodeHandle);
+	public static extern int cuGetIndices(uint octreeNodeHandle, out IntPtr result);
 	
 	// Clock functions
 	[DllImport ("CubiquityC")]
@@ -58,5 +58,5 @@ public class CubiquityDLL
 	
 	// Raycasting functions
 	[DllImport ("CubiquityC")]
-	public static extern int cuPickVoxel(out uint result, uint volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, out int resultX, out int resultY, out int resultZ);
+	public static extern int cuPickVoxel(uint volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, out int resultX, out int resultY, out int resultZ, out uint result);
 }

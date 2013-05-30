@@ -103,7 +103,7 @@ OctreeNode<Colour>* getNodeFromHandle(uint32_t nodeHandle)
 ////////////////////////////////////////////////////////////////////////////////
 // Volume functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API int32_t cuNewColouredCubesVolume(uint32_t* result, int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, uint32_t blockSize, uint32_t baseNodeSize)
+CUBIQUITYC_API int32_t cuNewColouredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, uint32_t blockSize, uint32_t baseNodeSize, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
@@ -127,7 +127,7 @@ CUBIQUITYC_API int32_t cuNewColouredCubesVolume(uint32_t* result, int32_t lowerX
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuNewColouredCubesVolumeFromVolDat(uint32_t* result, const char* volDatToImport, uint32_t blockSize, uint32_t baseNodeSize)
+CUBIQUITYC_API int32_t cuNewColouredCubesVolumeFromVolDat(const char* volDatToImport, uint32_t blockSize, uint32_t baseNodeSize, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
@@ -205,7 +205,7 @@ CUBIQUITYC_API int32_t cuSetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, i
 ////////////////////////////////////////////////////////////////////////////////
 // Octree functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API int32_t cuHasRootOctreeNode(uint32_t* result, uint32_t volumeHandle)
+CUBIQUITYC_API int32_t cuHasRootOctreeNode(uint32_t volumeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
@@ -223,7 +223,7 @@ CUBIQUITYC_API int32_t cuHasRootOctreeNode(uint32_t* result, uint32_t volumeHand
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuGetRootOctreeNode(uint32_t* result, uint32_t volumeHandle)
+CUBIQUITYC_API int32_t cuGetRootOctreeNode(uint32_t volumeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
@@ -238,7 +238,7 @@ CUBIQUITYC_API int32_t cuGetRootOctreeNode(uint32_t* result, uint32_t volumeHand
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuHasChildNode(uint32_t* result, uint32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ)
+CUBIQUITYC_API int32_t cuHasChildNode(uint32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
@@ -256,7 +256,7 @@ CUBIQUITYC_API int32_t cuHasChildNode(uint32_t* result, uint32_t nodeHandle, uin
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuGetChildNode(uint32_t* result, uint32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ)
+CUBIQUITYC_API int32_t cuGetChildNode(uint32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
@@ -274,7 +274,7 @@ CUBIQUITYC_API int32_t cuGetChildNode(uint32_t* result, uint32_t nodeHandle, uin
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuNodeHasMesh(uint32_t* result, uint32_t nodeHandle)
+CUBIQUITYC_API int32_t cuNodeHasMesh(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
@@ -297,7 +297,7 @@ CUBIQUITYC_API int32_t cuGetNodePosition(uint32_t nodeHandle, int32_t* x, int32_
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuGetMeshLastUpdated(uint32_t* result, uint32_t nodeHandle)
+CUBIQUITYC_API int32_t cuGetMeshLastUpdated(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
@@ -310,7 +310,7 @@ CUBIQUITYC_API int32_t cuGetMeshLastUpdated(uint32_t* result, uint32_t nodeHandl
 ////////////////////////////////////////////////////////////////////////////////
 // Mesh functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API int32_t cuGetNoOfVertices(uint32_t* result, uint32_t nodeHandle)
+CUBIQUITYC_API int32_t cuGetNoOfVertices(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
@@ -323,7 +323,7 @@ CUBIQUITYC_API int32_t cuGetNoOfVertices(uint32_t* result, uint32_t nodeHandle)
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuGetNoOfIndices(uint32_t* result, uint32_t nodeHandle)
+CUBIQUITYC_API int32_t cuGetNoOfIndices(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
@@ -336,7 +336,7 @@ CUBIQUITYC_API int32_t cuGetNoOfIndices(uint32_t* result, uint32_t nodeHandle)
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuGetVertices(float** result, uint32_t nodeHandle)
+CUBIQUITYC_API int32_t cuGetVertices(uint32_t nodeHandle, float** result)
 {
 	OPEN_C_INTERFACE
 
@@ -357,7 +357,7 @@ CUBIQUITYC_API int32_t cuGetVertices(float** result, uint32_t nodeHandle)
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuGetIndices(uint32_t** result, uint32_t nodeHandle)
+CUBIQUITYC_API int32_t cuGetIndices(uint32_t nodeHandle, uint32_t** result)
 {
 	OPEN_C_INTERFACE
 
@@ -390,7 +390,7 @@ CUBIQUITYC_API int32_t cuGetCurrentTime(uint32_t* result)
 ////////////////////////////////////////////////////////////////////////////////
 // Raycasting functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API int32_t cuPickVoxel(uint32_t* result, uint32_t volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, int32_t* resultX, int32_t* resultY, int32_t* resultZ)
+CUBIQUITYC_API int32_t cuPickVoxel(uint32_t volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, int32_t* resultX, int32_t* resultY, int32_t* resultZ, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
