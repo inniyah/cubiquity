@@ -47,8 +47,7 @@ public class GameLogic : MonoBehaviour
 		Ray ray = Camera.main.ScreenPointToRay(new Vector3(mousePos.x, mousePos.y, 0));
 		Vector3 dir = ray.direction * 1000.0f;
 		int resultX, resultY, resultZ;
-		uint hit = 42;
-		CubiquityDLL.cuPickVoxel((uint)colouredCubesVolume.volumeHandle, ray.origin.x, ray.origin.y, ray.origin.z, dir.x, dir.y, dir.z, out resultX, out resultY, out resultZ, out hit);
+		uint hit = CubiquityDLL.PickVoxel((uint)colouredCubesVolume.volumeHandle, ray.origin.x, ray.origin.y, ray.origin.z, dir.x, dir.y, dir.z, out resultX, out resultY, out resultZ);
 		
 		//Debug.Log ("Hit = " + hit);
 		if(hit == 1)

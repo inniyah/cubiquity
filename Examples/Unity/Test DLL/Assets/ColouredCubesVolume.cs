@@ -36,8 +36,7 @@ public class ColouredCubesVolume : MonoBehaviour
 		
 		colouredCubesMaterial = new Material(Shader.Find("ColouredCubesVolume"));
 			
-		uint currentTime;
-		CubiquityDLL.cuGetCurrentTime(out currentTime);
+		uint currentTime = CubiquityDLL.GetCurrentTime();
         Debug.Log("In performAwake(): Timestamp = " + currentTime);
 
         if (volumeHandle == -1)
@@ -177,8 +176,7 @@ public class ColouredCubesVolume : MonoBehaviour
 				//mr.renderer.material.shader = Shader.Find("ColouredCubesVolume");
 			}
 			
-			uint currentTime;
-			CubiquityDLL.cuGetCurrentTime(out currentTime);
+			uint currentTime = CubiquityDLL.GetCurrentTime();
 			octreeNodeData.meshLastSyncronised = (int)(currentTime);
 		}		
 		
@@ -251,15 +249,12 @@ public class ColouredCubesVolume : MonoBehaviour
 	
 	Mesh BuildMeshFromNodeHandle(uint nodeHandle)
 	{
-		uint noOfVertices;
-		CubiquityDLL.cuGetNoOfVertices(nodeHandle, out noOfVertices);
+		uint noOfVertices = CubiquityDLL.GetNoOfVertices(nodeHandle);
 		//Debug.Log("No of vertices = " + noOfVertices + " at " + Time.time);
-		uint noOfIndices;
-		CubiquityDLL.cuGetNoOfIndices(nodeHandle, out noOfIndices);
+		uint noOfIndices = CubiquityDLL.GetNoOfIndices(nodeHandle);
 		//Debug.Log("No of indices = " + noOfIndices + " at " + Time.time);
 		
-		IntPtr ptrResultVerts;
-		CubiquityDLL.cuGetVertices(nodeHandle, out ptrResultVerts);
+		IntPtr ptrResultVerts = CubiquityDLL.GetVertices(nodeHandle);
 		
 		// Load the results into a managed array. 
 		uint floatsPerVert = 4;
@@ -280,8 +275,7 @@ public class ColouredCubesVolume : MonoBehaviour
 		
 		//Build a mesh procedurally
 		
-		IntPtr ptrResultIndices;
-		CubiquityDLL.cuGetIndices(nodeHandle, out ptrResultIndices);
+		IntPtr ptrResultIndices = CubiquityDLL.GetIndices(nodeHandle);
 		
 		// Load the results into a managed array.
         int[] resultIndices = new int[noOfIndices]; //Should be unsigned!

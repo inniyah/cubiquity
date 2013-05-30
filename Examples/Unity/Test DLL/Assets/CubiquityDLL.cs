@@ -129,23 +129,62 @@ public class CubiquityDLL
 	// Mesh functions
 	////////////////////////////////////////////////////////////////////////////////
 	[DllImport ("CubiquityC")]
-	public static extern int cuGetNoOfVertices(uint octreeNodeHandle, out uint result);
+	private static extern int cuGetNoOfVertices(uint octreeNodeHandle, out uint result);
+	public static uint GetNoOfVertices(uint octreeNodeHandle)
+	{
+		uint result;
+		Validate(cuGetNoOfVertices(octreeNodeHandle, out result));
+		return result;
+	}
+	
 	[DllImport ("CubiquityC")]
-	public static extern int cuGetNoOfIndices(uint octreeNodeHandle, out uint result);
+	private static extern int cuGetNoOfIndices(uint octreeNodeHandle, out uint result);
+	public static uint GetNoOfIndices(uint octreeNodeHandle)
+	{
+		uint result;
+		Validate(cuGetNoOfIndices(octreeNodeHandle, out result));
+		return result;
+	}
+	
 	[DllImport ("CubiquityC")]
-	public static extern int cuGetVertices(uint octreeNodeHandle, out IntPtr result);
+	private static extern int cuGetVertices(uint octreeNodeHandle, out IntPtr result);
+	public static IntPtr GetVertices(uint octreeNodeHandle)
+	{
+		IntPtr result;
+		Validate(cuGetVertices(octreeNodeHandle, out result));
+		return result;
+	}
+	
 	[DllImport ("CubiquityC")]
-	public static extern int cuGetIndices(uint octreeNodeHandle, out IntPtr result);
+	private static extern int cuGetIndices(uint octreeNodeHandle, out IntPtr result);
+	public static IntPtr GetIndices(uint octreeNodeHandle)
+	{
+		IntPtr result;
+		Validate(cuGetIndices(octreeNodeHandle, out result));
+		return result;
+	}
 	
 	////////////////////////////////////////////////////////////////////////////////
 	// Clock functions
 	////////////////////////////////////////////////////////////////////////////////
 	[DllImport ("CubiquityC")]
-	public static extern int cuGetCurrentTime(out uint result);
+	private static extern int cuGetCurrentTime(out uint result);
+	public static uint GetCurrentTime()
+	{
+		uint result;
+		Validate(cuGetCurrentTime(out result));
+		return result;
+	}
 	
 	////////////////////////////////////////////////////////////////////////////////
 	// Raycasting functions
 	////////////////////////////////////////////////////////////////////////////////
 	[DllImport ("CubiquityC")]
-	public static extern int cuPickVoxel(uint volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, out int resultX, out int resultY, out int resultZ, out uint result);
+	private static extern int cuPickVoxel(uint volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, out int resultX, out int resultY, out int resultZ, out uint result);
+	public static uint PickVoxel(uint volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, out int resultX, out int resultY, out int resultZ)
+	{
+		uint result;
+		Validate(cuPickVoxel(volumeHandle, rayStartX, rayStartY, rayStartZ, rayDirX, rayDirY, rayDirZ, out resultX, out resultY, out resultZ, out result));
+		return result;
+	}
 }
