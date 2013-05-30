@@ -74,6 +74,16 @@ void decodeNodeHandle(uint32_t nodeHandle, uint32_t* volumePart, uint32_t* nodeP
 	*nodePart = nodeHandle & 0x0000FFFF;
 }
 
+void validateVolumeHandle(uint32_t volumeHandle)
+{
+	if((volumeHandle >= gColouredCubesVolumes.size()) || (gColouredCubesVolumes[volumeHandle] == 0))
+	{
+		std::stringstream ss;
+		ss << "Volume handle '" << volumeHandle << "' is not valid";
+		POLYVOX_THROW(std::invalid_argument, ss.str());
+	}
+}
+
 ColouredCubesVolume* getVolumeFromHandle(uint32_t volumeHandle)
 {
 	return gColouredCubesVolumes[volumeHandle];
@@ -156,6 +166,8 @@ CUBIQUITYC_API int32_t cuDeleteColouredCubesVolume(uint32_t volumeHandle)
 	logTrace() << "In cuDeleteColouredCubesVolume()";
 
 	OPEN_C_INTERFACE
+
+	validateVolumeHandle(volumeHandle);
 
 	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
 	delete volume;
