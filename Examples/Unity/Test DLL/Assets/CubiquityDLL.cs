@@ -4,7 +4,7 @@ using System.Text;
 
 public class CubiquityDLL
 {
-	public static void Validate(int returnCode)
+	private static void Validate(int returnCode)
 	{
 		if(returnCode < 0)
 		{
@@ -12,19 +12,54 @@ public class CubiquityDLL
 		}
 	}
 	
+	////////////////////////////////////////////////////////////////////////////////
 	// Volume functions
+	////////////////////////////////////////////////////////////////////////////////
 	[DllImport ("CubiquityC")]
-	public static extern int cuNewColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, uint blockSize, uint baseNodeSize, out uint result);
+	private static extern int cuNewColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, uint blockSize, uint baseNodeSize, out uint result);
+	public static uint NewColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, uint blockSize, uint baseNodeSize)
+	{
+		uint result;
+		Validate(cuNewColouredCubesVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize, out result));
+		return result;
+	}
+	
 	[DllImport ("CubiquityC")]
-	public static extern int cuNewColouredCubesVolumeFromVolDat(StringBuilder foldername, uint blockSize, uint baseNodeSize, out uint result);
+	private static extern int cuNewColouredCubesVolumeFromVolDat(StringBuilder foldername, uint blockSize, uint baseNodeSize, out uint result);	
+	public static uint NewColouredCubesVolumeFromVolDat(StringBuilder foldername, uint blockSize, uint baseNodeSize)
+	{
+		uint result;
+		Validate(cuNewColouredCubesVolumeFromVolDat(foldername, blockSize, baseNodeSize, out result));
+		return result;
+	}
+	
 	[DllImport ("CubiquityC")]
-	public static extern int cuUpdateVolume(uint volumeHandle);
+	private static extern int cuUpdateVolume(uint volumeHandle);
+	public static void UpdateVolume(uint volumeHandle)
+	{
+		Validate(cuUpdateVolume(volumeHandle));
+	}
+	
 	[DllImport ("CubiquityC")]
-	public static extern int cuGetVoxel(uint volumeHandle, int x, int y, int z, out byte red, out byte green, out byte blue, out byte alpha);
+	private static extern int cuGetVoxel(uint volumeHandle, int x, int y, int z, out byte red, out byte green, out byte blue, out byte alpha);	
+	public static void GetVoxel(uint volumeHandle, int x, int y, int z, out byte red, out byte green, out byte blue, out byte alpha)
+	{		
+		Validate(cuGetVoxel(volumeHandle, x, y, z, out red, out green, out blue, out alpha));
+	}
+	
 	[DllImport ("CubiquityC")]
-	public static extern int cuSetVoxel(uint volumeHandle, int x, int y, int z, byte red, byte green, byte blue, byte alpha);
+	private static extern int cuSetVoxel(uint volumeHandle, int x, int y, int z, byte red, byte green, byte blue, byte alpha);
+	public static void SetVoxel(uint volumeHandle, int x, int y, int z, byte red, byte green, byte blue, byte alpha)
+	{
+		Validate(cuSetVoxel(volumeHandle, x, y, z, red, green, blue, alpha));
+	}
+	
 	[DllImport ("CubiquityC")]
-	public static extern int cuDeleteColouredCubesVolume(uint volumeHandle);
+	private static extern int cuDeleteColouredCubesVolume(uint volumeHandle);
+	public static void DeleteColouredCubesVolume(uint volumeHandle)
+	{
+		Validate(cuDeleteColouredCubesVolume(volumeHandle));
+	}
 	
 	// Octree functions
 	[DllImport ("CubiquityC")]

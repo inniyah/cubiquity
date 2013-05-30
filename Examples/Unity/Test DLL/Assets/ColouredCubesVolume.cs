@@ -42,8 +42,7 @@ public class ColouredCubesVolume : MonoBehaviour
 
         if (volumeHandle == -1)
         {
-			uint volHand;
-            CubiquityDLL.cuNewColouredCubesVolumeFromVolDat(new StringBuilder("C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/"), 64, 64, out volHand);
+			uint volHand = CubiquityDLL.NewColouredCubesVolumeFromVolDat(new StringBuilder("C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/"), 64, 64);
 			volumeHandle = (int)volHand;
             Debug.Log("Created volume: handle = " + volumeHandle);
         }
@@ -85,7 +84,7 @@ public class ColouredCubesVolume : MonoBehaviour
 	{
 		//Debug.Log ("performUpdate");
 		counter++;
-		CubiquityDLL.cuUpdateVolume((uint)volumeHandle);
+		CubiquityDLL.UpdateVolume((uint)volumeHandle);
 		
 		uint hasRootNode;
 		CubiquityDLL.cuHasRootOctreeNode((uint)volumeHandle, out hasRootNode);
@@ -126,7 +125,7 @@ public class ColouredCubesVolume : MonoBehaviour
 	public void OnDestroy()
 	{
 		Debug.Log("Deleting volume with handle = " + volumeHandle);
-		CubiquityDLL.cuDeleteColouredCubesVolume((uint)volumeHandle);
+		CubiquityDLL.DeleteColouredCubesVolume((uint)volumeHandle);
 	}
 	
 	public Color32 GetVoxel(int x, int y, int z)
@@ -134,7 +133,7 @@ public class ColouredCubesVolume : MonoBehaviour
 		Color32 color = new Color32();
 		if(volumeHandle > -1)
 		{
-			CubiquityDLL.cuGetVoxel((uint)volumeHandle, x, y, z, out color.r, out color.g, out color.b, out color.a);
+			CubiquityDLL.GetVoxel((uint)volumeHandle, x, y, z, out color.r, out color.g, out color.b, out color.a);
 		}
 		return color;
 	}
@@ -144,7 +143,7 @@ public class ColouredCubesVolume : MonoBehaviour
 		if(volumeHandle > -1)
 		{
 			byte alpha = color.a > 127 ? (byte)255 : (byte)0; // Threshold the alpha until we support transparency.
-			CubiquityDLL.cuSetVoxel((uint)volumeHandle, x, y, z, color.r, color.g, color.b, alpha);
+			CubiquityDLL.SetVoxel((uint)volumeHandle, x, y, z, color.r, color.g, color.b, alpha);
 		}
 	}
 	
