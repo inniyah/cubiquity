@@ -19,12 +19,6 @@ public class ColouredCubesVolume : MonoBehaviour
 	public int volumeHandle = -1;
 	public GameObject rootGameObject;
 	
-	public uint Width = 128;
-	public uint Height = 128;
-	public uint Depth = 128;
-	
-	public static int counter = 0;
-	
 	public Material colouredCubesMaterial;
 	
 	public void performAwake()
@@ -82,7 +76,6 @@ public class ColouredCubesVolume : MonoBehaviour
 	public void performUpdate()
 	{
 		//Debug.Log ("performUpdate");
-		counter++;
 		CubiquityDLL.UpdateVolume((uint)volumeHandle);
 		
 		if(CubiquityDLL.HasRootOctreeNode((uint)volumeHandle) == 1)
