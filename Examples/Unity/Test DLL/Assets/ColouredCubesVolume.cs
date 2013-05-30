@@ -86,13 +86,9 @@ public class ColouredCubesVolume : MonoBehaviour
 		counter++;
 		CubiquityDLL.UpdateVolume((uint)volumeHandle);
 		
-		uint hasRootNode;
-		CubiquityDLL.cuHasRootOctreeNode((uint)volumeHandle, out hasRootNode);
-		
-		if(hasRootNode == 1)
+		if(CubiquityDLL.HasRootOctreeNode((uint)volumeHandle) == 1)
 		{		
-			uint rootNodeHandle;
-			CubiquityDLL.cuGetRootOctreeNode((uint)volumeHandle, out rootNodeHandle);
+			uint rootNodeHandle = CubiquityDLL.GetRootOctreeNode((uint)volumeHandle);
 		
 			if(rootGameObject == null)
 			{
@@ -149,8 +145,7 @@ public class ColouredCubesVolume : MonoBehaviour
 	
 	public void syncNode(uint nodeHandle, GameObject gameObjectToSync)
 	{
-		uint meshLastUpdated;
-		CubiquityDLL.cuGetMeshLastUpdated(nodeHandle, out meshLastUpdated);		
+		uint meshLastUpdated = CubiquityDLL.GetMeshLastUpdated(nodeHandle);		
 		OctreeNodeData octreeNodeData = (OctreeNodeData)(gameObjectToSync.GetComponent<OctreeNodeData>());
 		
 		//Debug.Log ("In syncNode: meshLastSyncronised = " + octreeNodeData.meshLastSyncronised + ", meshLastUpdated = " + meshLastUpdated);
@@ -159,9 +154,7 @@ public class ColouredCubesVolume : MonoBehaviour
 		{
 			Debug.Log("Mesh data is out of date");
 			
-			uint nodeHasMesh;
-			CubiquityDLL.cuNodeHasMesh(nodeHandle, out nodeHasMesh);
-			if(nodeHasMesh == 1)
+			if(CubiquityDLL.NodeHasMesh(nodeHandle) == 1)
 			{				
 				Mesh mesh = BuildMeshFromNodeHandle(nodeHandle);	
 				Debug.Log("Built mesh - now attaching");
@@ -196,13 +189,10 @@ public class ColouredCubesVolume : MonoBehaviour
 			{
 				for(uint x = 0; x < 2; x++)
 				{
-					uint hasChildNodeHandle;
-					CubiquityDLL.cuHasChildNode(nodeHandle, x, y, z, out hasChildNodeHandle);
-					if(hasChildNodeHandle == 1)
+					if(CubiquityDLL.HasChildNode(nodeHandle, x, y, z) == 1)
 					{					
 					
-						uint childNodeHandle;
-						CubiquityDLL.cuGetChildNode(nodeHandle, x, y, z, out childNodeHandle);					
+						uint childNodeHandle = CubiquityDLL.GetChildNode(nodeHandle, x, y, z);					
 						
 						GameObject childGameObject = octreeNodeData.GetChild(x,y,z);
 						
@@ -225,7 +215,7 @@ public class ColouredCubesVolume : MonoBehaviour
 	GameObject BuildGameObjectFromNodeHandle(uint nodeHandle, GameObject parentGameObject)
 	{
 		int xPos, yPos, zPos;
-		CubiquityDLL.cuGetNodePosition(nodeHandle, out xPos, out yPos, out zPos);
+		CubiquityDLL.GetNodePosition(nodeHandle, out xPos, out yPos, out zPos);
 		
 		StringBuilder name = new StringBuilder("(" + xPos + ", " + yPos + ", " + zPos + ")");
 		
