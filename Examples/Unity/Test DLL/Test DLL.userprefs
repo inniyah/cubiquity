@@ -1,6 +1,16 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Editor\ColouredCubesVolumeEditor.cs">
+    <Files>
+      <File FileName="Assets\ColouredCubesVolume.cs" Line="185" Column="4" />
+      <File FileName="Assets\Cubiquity.cs" Line="1" Column="1" />
+      <File FileName="Assets\CubiquityException.cs" Line="1" Column="1" />
+      <File FileName="Assets\CubiquityDLL.cs" Line="184" Column="30" />
+      <File FileName="Assets\GameLogic.cs" Line="1" Column="1" />
+      <File FileName="Assets\OctreeNodeData.cs" Line="1" Column="1" />
+      <File FileName="Assets\Editor\ColouredCubesVolumeEditor.cs" Line="47" Column="29" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

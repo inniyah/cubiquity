@@ -51,35 +51,40 @@ public:
 	}
 };
 
+const int TotalHandleBits = 32;
+const int VolumeHandleBits = 3;
+const int MaxVolumeHandle = (0x01 << VolumeHandleBits) - 1;
+const int VolumeHandleShift = TotalHandleBits - VolumeHandleBits - 1;
+
+const int NodeHandleBits = 16; // Set this properly later.
+const int NodeHandleMask = (0x01 << NodeHandleBits) - 1;
+const int MaxNodeHandle = (0x01 << NodeHandleBits) - 1;
+
 // The single global instance of the above class.
 EntryAndExitPoints gEntryAndExitPoints;
 
 std::vector<ColouredCubesVolume*> gColouredCubesVolumes;
 
-uint32_t encodeNodeHandle(uint32_t volumeHandle, uint32_t nodeHandle)
-{
-	if((volumeHandle >= 8) || (nodeHandle >= 65536))
-	{
-		return -1;
-	}
-
-	volumeHandle = volumeHandle << 28;
-	return volumeHandle | nodeHandle;
-}
-
-void decodeNodeHandle(uint32_t nodeHandle, uint32_t* volumePart, uint32_t* nodePart)
-{
-	// Validation needed?
-	*volumePart = nodeHandle >> 28;
-	*nodePart = nodeHandle & 0x0000FFFF;
-}
-
 void validateVolumeHandle(uint32_t volumeHandle)
 {
-	if((volumeHandle >= gColouredCubesVolumes.size()) || (gColouredCubesVolumes[volumeHandle] == 0))
+	if(volumeHandle > MaxVolumeHandle)
 	{
 		std::stringstream ss;
-		ss << "Volume handle '" << volumeHandle << "' is not valid";
+		ss << "Volume handle'" << volumeHandle << "' exceeds the maximum permitted value of '" << MaxVolumeHandle << "'";
+		POLYVOX_THROW(std::invalid_argument, ss.str());
+	}
+
+	if(volumeHandle >= gColouredCubesVolumes.size())
+	{
+		std::stringstream ss;
+		ss << "Volume handle'" << volumeHandle << "' is outside volume array bounds";
+		POLYVOX_THROW(std::invalid_argument, ss.str());
+	}
+
+	if(gColouredCubesVolumes[volumeHandle] == 0) 
+	{
+		std::stringstream ss;
+		ss << "Volume handle'" << volumeHandle << "' is valid but the corresponding volume pointer is null";
 		POLYVOX_THROW(std::invalid_argument, ss.str());
 	}
 }
@@ -89,11 +94,36 @@ ColouredCubesVolume* getVolumeFromHandle(uint32_t volumeHandle)
 	return gColouredCubesVolumes[volumeHandle];
 }
 
+void validateDecodedNodeHandle(uint32_t decodedNodeHandle)
+{
+	if(decodedNodeHandle > MaxNodeHandle)
+	{
+		std::stringstream ss;
+		ss << "Decoded Node handle'" << decodedNodeHandle << "' exceeds the maximum permitted value of '" << MaxNodeHandle << "'";
+		POLYVOX_THROW(std::invalid_argument, ss.str());
+	}
+}
+
+uint32_t encodeNodeHandle(uint32_t volumeHandle, uint32_t nodeHandle)
+{
+	volumeHandle = volumeHandle << VolumeHandleShift;
+	return volumeHandle | nodeHandle;
+}
+
+void decodeNodeHandle(uint32_t nodeHandle, uint32_t* volumePart, uint32_t* nodePart)
+{
+	*volumePart = nodeHandle >> VolumeHandleShift;
+	*nodePart = nodeHandle & NodeHandleMask;
+}
+
 OctreeNode<Colour>* getNodeFromHandle(uint32_t nodeHandle)
 {
 	uint32_t volumePart;
 	uint32_t nodePart;
 	decodeNodeHandle(nodeHandle, &volumePart, &nodePart);
+
+	validateVolumeHandle(volumePart);
+	validateDecodedNodeHandle(nodePart);
 
 	ColouredCubesVolume* volume = gColouredCubesVolumes[volumePart];
 	OctreeNode<Colour>* node = volume->getOctree()->getNodeFromIndex(nodePart);
@@ -227,9 +257,13 @@ CUBIQUITYC_API int32_t cuGetRootOctreeNode(uint32_t volumeHandle, uint32_t* resu
 {
 	OPEN_C_INTERFACE
 
+	validateVolumeHandle(volumeHandle);
 	ColouredCubesVolume* volume = gColouredCubesVolumes[volumeHandle];
+
+
 	OctreeNode<Colour>* node = volume->getRootOctreeNode();
 	uint32_t nodeHandle = node->mSelf;
+	validateDecodedNodeHandle(nodeHandle);
 
 	uint32_t combinedHandle = encodeNodeHandle(volumeHandle, nodeHandle);
 
