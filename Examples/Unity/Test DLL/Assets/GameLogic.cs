@@ -42,20 +42,22 @@ public class GameLogic : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		Vector2 mousePos = Input.mousePosition;
-
-		Ray ray = Camera.main.ScreenPointToRay(new Vector3(mousePos.x, mousePos.y, 0));
-		Vector3 dir = ray.direction * 1000.0f;
-		int resultX, resultY, resultZ;
-		uint hit = CubiquityDLL.PickVoxel((uint)colouredCubesVolume.volumeHandle, ray.origin.x, ray.origin.y, ray.origin.z, dir.x, dir.y, dir.z, out resultX, out resultY, out resultZ);
-		
-		//Debug.Log ("Hit = " + hit);
-		if(hit == 1)
+		if(colouredCubesVolume.hasVolumeHandle)
 		{
-			//Debug.Log("Hit " +resultX + " " + resultY + " " + resultZ);			
-			gun.transform.LookAt(new Vector3(resultX, resultY, resultZ));
+			Vector2 mousePos = Input.mousePosition;
+	
+			Ray ray = Camera.main.ScreenPointToRay(new Vector3(mousePos.x, mousePos.y, 0));
+			Vector3 dir = ray.direction * 1000.0f;
+			int resultX, resultY, resultZ;
+			uint hit = CubiquityDLL.PickVoxel((uint)colouredCubesVolume.volumeHandle, ray.origin.x, ray.origin.y, ray.origin.z, dir.x, dir.y, dir.z, out resultX, out resultY, out resultZ);
+			
+			//Debug.Log ("Hit = " + hit);
+			if(hit == 1)
+			{
+				//Debug.Log("Hit " +resultX + " " + resultY + " " + resultZ);			
+				gun.transform.LookAt(new Vector3(resultX, resultY, resultZ));
+			}
 		}
-
 	}
 	
 	void DrawCuboid(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, Color32 color)

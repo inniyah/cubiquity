@@ -78,20 +78,23 @@ public class ColouredCubesVolume : MonoBehaviour
 	public void performUpdate()
 	{
 		//Debug.Log ("performUpdate");
-		CubiquityDLL.UpdateVolume((uint)volumeHandle);
-		
-		if(CubiquityDLL.HasRootOctreeNode((uint)volumeHandle) == 1)
-		{		
-			uint rootNodeHandle = CubiquityDLL.GetRootOctreeNode((uint)volumeHandle);
-		
-			if(rootGameObject == null)
-			{
-				Debug.Log ("Creating Root GameObject");
-				
-				rootGameObject = BuildGameObjectFromNodeHandle(rootNodeHandle, gameObject);	
-				//rootGameObject = new GameObject("My GameObject");
+		if(hasVolumeHandle)
+		{
+			CubiquityDLL.UpdateVolume((uint)volumeHandle);
+			
+			if(CubiquityDLL.HasRootOctreeNode((uint)volumeHandle) == 1)
+			{		
+				uint rootNodeHandle = CubiquityDLL.GetRootOctreeNode((uint)volumeHandle);
+			
+				if(rootGameObject == null)
+				{
+					Debug.Log ("Creating Root GameObject");
+					
+					rootGameObject = BuildGameObjectFromNodeHandle(rootNodeHandle, gameObject);	
+					//rootGameObject = new GameObject("My GameObject");
+				}
+				syncNode(rootNodeHandle, rootGameObject);
 			}
-			syncNode(rootNodeHandle, rootGameObject);
 		}
 	}
 	
