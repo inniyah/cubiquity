@@ -11,13 +11,10 @@ public class OctreeNodeData : MonoBehaviour
 	void Awake()
 	{
 		//meshLastSyncronised = 0;
-		Debug.Log ("Mesh last syncronised = " + meshLastSyncronised);
-		hideFlags = HideFlags.HideAndDontSave;
 	}
 	
 	public void OnEnable()
 	{
-		hideFlags = HideFlags.HideAndDontSave;
 	}
 	
 	// Update is called once per frame

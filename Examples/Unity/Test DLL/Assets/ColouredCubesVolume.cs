@@ -29,8 +29,7 @@ public class ColouredCubesVolume : MonoBehaviour
 		
 		colouredCubesMaterial = new Material(Shader.Find("ColouredCubesVolume"));
 			
-		uint currentTime = CubiquityDLL.GetCurrentTime();
-        Debug.Log("In Initialize(): Timestamp = " + currentTime);
+        Debug.Log("In ColouredCubesVolume.Initialize()");
 
         if (hasVolumeHandle == false)
         {
@@ -41,10 +40,8 @@ public class ColouredCubesVolume : MonoBehaviour
         }
         else
         {
-            Debug.Log("Volume already exists");
-        }
-		//volumeHandle = CubiquityDLL.cuNewColouredCubesVolume(0, 0, 0, (int)Width - 1, (int)Height - 1, (int)Depth - 1, 64, 64);
-		
+            Debug.Log("ERROR - VOLUMR HANDLE ALREADY EXISTS");
+        }		
 	}
 	
 	public void deleteGameObject(GameObject gameObjectToDelete)
@@ -98,7 +95,7 @@ public class ColouredCubesVolume : MonoBehaviour
 	
 	public void Shutdown()
 	{
-		Debug.Log("Deleting volume with handle = " + volumeHandle);
+		Debug.Log("In ColouredCubesVolume.Shutdown()");
 		
 		CubiquityDLL.DeleteColouredCubesVolume((uint)volumeHandle);
 		volumeHandle = 0;
@@ -156,16 +153,11 @@ public class ColouredCubesVolume : MonoBehaviour
 		uint meshLastUpdated = CubiquityDLL.GetMeshLastUpdated(nodeHandle);		
 		OctreeNodeData octreeNodeData = (OctreeNodeData)(gameObjectToSync.GetComponent<OctreeNodeData>());
 		
-		//Debug.Log ("In syncNode: meshLastSyncronised = " + octreeNodeData.meshLastSyncronised + ", meshLastUpdated = " + meshLastUpdated);
-		
 		if(octreeNodeData.meshLastSyncronised < meshLastUpdated)
-		{
-			Debug.Log("Mesh data is out of date");
-			
+		{			
 			if(CubiquityDLL.NodeHasMesh(nodeHandle) == 1)
 			{				
-				Mesh mesh = BuildMeshFromNodeHandle(nodeHandle);	
-				Debug.Log("Built mesh - now attaching");
+				Mesh mesh = BuildMeshFromNodeHandle(nodeHandle);
 		
 		        MeshFilter mf = (MeshFilter)gameObjectToSync.GetComponent(typeof(MeshFilter));
 		        MeshRenderer mr = (MeshRenderer)gameObjectToSync.GetComponent(typeof(MeshRenderer));
@@ -204,9 +196,7 @@ public class ColouredCubesVolume : MonoBehaviour
 						GameObject childGameObject = octreeNodeData.GetChild(x,y,z);
 						
 						if(childGameObject == null)
-						{						
-							Debug.Log("Creating child");
-							
+						{							
 							childGameObject = BuildGameObjectFromNodeHandle(childNodeHandle, gameObjectToSync);
 							
 							octreeNodeData.SetChild(x, y, z, childGameObject);
@@ -232,14 +222,10 @@ public class ColouredCubesVolume : MonoBehaviour
 		newGameObject.AddComponent<MeshRenderer>();
 		newGameObject.AddComponent<MeshCollider>();
 		
-		//newGameObject.hideFlags = HideFlags.HideInHierarchy;
-		
 		OctreeNodeData octreeNodeData = newGameObject.GetComponent<OctreeNodeData>();
 		octreeNodeData.lowerCorner = new Vector3(xPos, yPos, zPos);
 		
 		newGameObject.transform.parent = parentGameObject.transform;
-		
-		//Vector3 translation = new Vector3(xPos, yPos, zPos);
 		
 		if(parentGameObject != gameObject)
 		{
@@ -251,17 +237,13 @@ public class ColouredCubesVolume : MonoBehaviour
 			newGameObject.transform.localPosition = octreeNodeData.lowerCorner;
 		}
 		
-		//newGameObject.hideFlags = HideFlags.HideAndDontSave;
-		
 		return newGameObject;
 	}
 	
 	Mesh BuildMeshFromNodeHandle(uint nodeHandle)
 	{
 		uint noOfVertices = CubiquityDLL.GetNoOfVertices(nodeHandle);
-		//Debug.Log("No of vertices = " + noOfVertices + " at " + Time.time);
 		uint noOfIndices = CubiquityDLL.GetNoOfIndices(nodeHandle);
-		//Debug.Log("No of indices = " + noOfIndices + " at " + Time.time);
 		
 		IntPtr ptrResultVerts = CubiquityDLL.GetVertices(nodeHandle);
 		

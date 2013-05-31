@@ -30,7 +30,6 @@ public class Bullet : MonoBehaviour
 		
 		if(color.a > 127)
 		{
-			//Debug.Log ("HIT VOXEL");
 			for(int z = zPos - 2; z < zPos + 2; z++)
 			{
 				for(int y = yPos - 2; y < yPos + 2; y++)

@@ -22,7 +22,7 @@ public class ColouredCubesVolumeEditor : Editor
 	// Use this for initialization
 	void OnEnable()
 	{
-		Debug.Log ("Enabling ColouredCubesVolumeEditor");
+		Debug.Log ("ColouredCubesVolumeEditor.OnEnable()");
 		/*voxelTerrainObject = GameObject.Find("Voxel Terrain");
 		colouredCubesVolume = voxelTerrainObject.GetComponent<ColouredCubesVolume>();*/
 		
@@ -33,7 +33,7 @@ public class ColouredCubesVolumeEditor : Editor
 	
 	void OnDisable()
 	{
-		Debug.Log ("Disabling ColouredCubesVolumeEditor");
+		Debug.Log ("ColouredCubesVolumeEditor.OnDisable()");
 		/*voxelTerrainObject = GameObject.Find("Voxel Terrain");
 		colouredCubesVolume = voxelTerrainObject.GetComponent<ColouredCubesVolume>();*/
 		
