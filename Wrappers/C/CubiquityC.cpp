@@ -315,7 +315,12 @@ CUBIQUITYC_API int32_t cuGetChildNode(uint32_t nodeHandle, uint32_t childX, uint
 	}
 
 	uint32_t decodedNodeHandle = child->mSelf;
-	*result = decodedNodeHandle;
+
+	uint32_t volumeHandle;
+	uint32_t dummy;
+	decodeNodeHandle(nodeHandle, &volumeHandle, &dummy);
+
+	*result = encodeNodeHandle(volumeHandle, decodedNodeHandle);
 
 	CLOSE_C_INTERFACE
 }
