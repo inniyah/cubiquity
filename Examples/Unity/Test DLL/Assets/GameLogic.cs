@@ -41,7 +41,7 @@ public class GameLogic : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if(colouredCubesVolume.hasVolumeHandle)
+		if(colouredCubesVolume.volumeHandle != null)
 		{
 			Vector2 mousePos = Input.mousePosition;
 	
