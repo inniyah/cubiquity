@@ -12,10 +12,10 @@ public struct MyVertex
 	public UInt32 colour;
 }
 
+[ExecuteInEditMode]
 public class ColouredCubesVolume : MonoBehaviour
 {
 	public uint? volumeHandle = null;
-	//public bool hasVolumeHandle = false;
 	public GameObject rootGameObject;
 	
 	public Material colouredCubesMaterial;
@@ -96,14 +96,18 @@ public class ColouredCubesVolume : MonoBehaviour
 	{
 		Debug.Log("In ColouredCubesVolume.Shutdown()");
 		
-		CubiquityDLL.DeleteColouredCubesVolume(volumeHandle.Value);
-		volumeHandle = null;
+		if(volumeHandle.HasValue)
+		{
+			CubiquityDLL.DeleteColouredCubesVolume(volumeHandle.Value);
+			volumeHandle = null;
 		
-		deleteGameObject(rootGameObject);
+			deleteGameObject(rootGameObject);
+		}
 	}
 	
 	void Awake()
 	{
+		Debug.Log ("ColouredCubesVolume.Awake()");
 		Initialize();
 	}
 	
@@ -121,6 +125,7 @@ public class ColouredCubesVolume : MonoBehaviour
 	
 	public void OnDestroy()
 	{
+		Debug.Log ("ColouredCubesVolume.OnDestroy()");
 		Shutdown();
 	}
 	
@@ -210,7 +215,7 @@ public class ColouredCubesVolume : MonoBehaviour
 	GameObject BuildGameObjectFromNodeHandle(uint nodeHandle, GameObject parentGameObject)
 	{
 		int xPos, yPos, zPos;
-		Debug.Log("Getting position for node handle = " + nodeHandle);
+		//Debug.Log("Getting position for node handle = " + nodeHandle);
 		CubiquityDLL.GetNodePosition(nodeHandle, out xPos, out yPos, out zPos);
 		
 		StringBuilder name = new StringBuilder("(" + xPos + ", " + yPos + ", " + zPos + ")");
