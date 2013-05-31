@@ -154,19 +154,25 @@ CUBIQUITYC_API int32_t cuNewColouredCubesVolume(int32_t lowerX, int32_t lowerY, 
 	ColouredCubesVolume* volume = new ColouredCubesVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), blockSize, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 
-	//Replace an existing entry if it has been deleted.
+	// Replace an existing entry if it has been deleted.
+	bool foundEmptySlot = false;
 	for(uint32_t ct = 0; ct < gColouredCubesVolumes.size(); ct++)
 	{
 		if(gColouredCubesVolumes[ct] == 0)
 		{
 			gColouredCubesVolumes[ct] = volume;
-			*result = ct;
+			*result =  ct;
+			foundEmptySlot = true;
+			break;
 		}
 	}
 
 	//Otherwise append a new entry.
-	gColouredCubesVolumes.push_back(volume);
-	*result = gColouredCubesVolumes.size() - 1;
+	if(!foundEmptySlot)
+	{
+		gColouredCubesVolumes.push_back(volume);
+		*result = gColouredCubesVolumes.size() - 1;
+	}
 
 	CLOSE_C_INTERFACE
 }
@@ -177,19 +183,26 @@ CUBIQUITYC_API int32_t cuNewColouredCubesVolumeFromVolDat(const char* volDatToIm
 
 	ColouredCubesVolume* volume = importVolDat<ColouredCubesVolume>(volDatToImport, blockSize, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
-	//Replace an existing entry if it has been deleted.
+	
+	// Replace an existing entry if it has been deleted.
+	bool foundEmptySlot = false;
 	for(uint32_t ct = 0; ct < gColouredCubesVolumes.size(); ct++)
 	{
 		if(gColouredCubesVolumes[ct] == 0)
 		{
 			gColouredCubesVolumes[ct] = volume;
 			*result =  ct;
+			foundEmptySlot = true;
+			break;
 		}
 	}
 
 	//Otherwise append a new entry.
-	gColouredCubesVolumes.push_back(volume);
-	*result = gColouredCubesVolumes.size() - 1;
+	if(!foundEmptySlot)
+	{
+		gColouredCubesVolumes.push_back(volume);
+		*result = gColouredCubesVolumes.size() - 1;
+	}
 
 	CLOSE_C_INTERFACE
 }
@@ -207,7 +220,7 @@ CUBIQUITYC_API int32_t cuUpdateVolume(uint32_t volumeHandle)
 
 CUBIQUITYC_API int32_t cuDeleteColouredCubesVolume(uint32_t volumeHandle)
 {
-	logTrace() << "In cuDeleteColouredCubesVolume()";
+	logTrace() << "In cuDeleteColouredCubesVolume() - deleting volume handle '" << volumeHandle << "'";
 
 	OPEN_C_INTERFACE
 
