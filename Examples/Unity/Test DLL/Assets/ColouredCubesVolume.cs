@@ -31,16 +31,21 @@ public class ColouredCubesVolume : MonoBehaviour
 			
         Debug.Log("In ColouredCubesVolume.Initialize()");
 
-        if (volumeHandle.HasValue == false)
-        {
-			uint volHand = CubiquityDLL.NewColouredCubesVolumeFromVolDat(new StringBuilder("C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/"), 64, 64);
-			volumeHandle = volHand;
-            Debug.Log("Created volume: handle = " + volumeHandle);
-        }
-        else
-        {
-            Debug.Log("ERROR - VOLUMR HANDLE ALREADY EXISTS");
-        }		
+		//volumeHandle = CubiquityDLL.NewColouredCubesVolumeFromVolDat(new StringBuilder("C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/"), 64, 64);	
+		
+		volumeHandle = CubiquityDLL.NewColouredCubesVolume(0, 0, 0, 127, 31, 127, 64, 64);
+		
+		Color32 lightGrey = new Color32(192, 192, 192, 255);
+		for(int z = 0; z < 128; z++)
+		{
+			for(int y = 0; y < 8; y++)
+			{
+				for(int x = 0; x < 128; x++)
+				{
+					SetVoxel(x, y, z, lightGrey);
+				}
+			}
+		}
 	}
 	
 	public void deleteGameObject(GameObject gameObjectToDelete)
