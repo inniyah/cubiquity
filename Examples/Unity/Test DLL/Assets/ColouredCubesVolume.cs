@@ -212,6 +212,7 @@ public class ColouredCubesVolume : MonoBehaviour
 	GameObject BuildGameObjectFromNodeHandle(uint nodeHandle, GameObject parentGameObject)
 	{
 		int xPos, yPos, zPos;
+		Debug.Log("Getting position for node handle = " + nodeHandle);
 		CubiquityDLL.GetNodePosition(nodeHandle, out xPos, out yPos, out zPos);
 		
 		StringBuilder name = new StringBuilder("(" + xPos + ", " + yPos + ", " + zPos + ")");
