@@ -14,18 +14,32 @@ public class ColouredCubesVolumeEditor : Editor
 		GameObject VoxelTerrainRoot = new GameObject("Voxel Terrain");
 		VoxelTerrainRoot.AddComponent<ColouredCubesVolume>();
 		
-		ColouredCubesVolume colouredCubesVolume = VoxelTerrainRoot.GetComponent<ColouredCubesVolume>();
-		colouredCubesVolume.performAwake();
-		colouredCubesVolume.performUpdate();
+		/*ColouredCubesVolume colouredCubesVolume = VoxelTerrainRoot.GetComponent<ColouredCubesVolume>();
+		colouredCubesVolume.Initialize();
+		colouredCubesVolume.performUpdate();*/
     }
 	
 	// Use this for initialization
-	/*void OnEnable()
+	void OnEnable()
 	{
 		Debug.Log ("Enabling ColouredCubesVolumeEditor");
-		voxelTerrainObject = GameObject.Find("Voxel Terrain");
-		colouredCubesVolume = voxelTerrainObject.GetComponent<ColouredCubesVolume>();
-	}*/
+		/*voxelTerrainObject = GameObject.Find("Voxel Terrain");
+		colouredCubesVolume = voxelTerrainObject.GetComponent<ColouredCubesVolume>();*/
+		
+		ColouredCubesVolume colouredCubesVolume = (ColouredCubesVolume)target;
+		colouredCubesVolume.Initialize();
+		colouredCubesVolume.performUpdate();
+	}
+	
+	void OnDisable()
+	{
+		Debug.Log ("Disabling ColouredCubesVolumeEditor");
+		/*voxelTerrainObject = GameObject.Find("Voxel Terrain");
+		colouredCubesVolume = voxelTerrainObject.GetComponent<ColouredCubesVolume>();*/
+		
+		ColouredCubesVolume colouredCubesVolume = (ColouredCubesVolume)target;
+		colouredCubesVolume.Shutdown();
+	}
 	
     void OnSceneGUI()
     {

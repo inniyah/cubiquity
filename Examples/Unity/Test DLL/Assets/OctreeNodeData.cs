@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-[System.Serializable]
 public class OctreeNodeData : MonoBehaviour
 {
 	public int meshLastSyncronised;

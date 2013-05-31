@@ -4,7 +4,6 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using System.Text;
 
-[System.Serializable]
 public struct MyVertex 
 {
 	public float x;
@@ -13,7 +12,6 @@ public struct MyVertex
 	public UInt32 colour;
 }
 
-[System.Serializable]
 public class ColouredCubesVolume : MonoBehaviour
 {
 	public uint volumeHandle = 0;
@@ -22,7 +20,7 @@ public class ColouredCubesVolume : MonoBehaviour
 	
 	public Material colouredCubesMaterial;
 	
-	public void performAwake()
+	public void Initialize()
 	{		
 		if(rootGameObject != null)
 		{
@@ -32,7 +30,7 @@ public class ColouredCubesVolume : MonoBehaviour
 		colouredCubesMaterial = new Material(Shader.Find("ColouredCubesVolume"));
 			
 		uint currentTime = CubiquityDLL.GetCurrentTime();
-        Debug.Log("In performAwake(): Timestamp = " + currentTime);
+        Debug.Log("In Initialize(): Timestamp = " + currentTime);
 
         if (hasVolumeHandle == false)
         {
@@ -52,7 +50,7 @@ public class ColouredCubesVolume : MonoBehaviour
 	public void deleteGameObject(GameObject gameObjectToDelete)
 	{
 		MeshFilter mf = (MeshFilter)gameObjectToDelete.GetComponent(typeof(MeshFilter));
-		Destroy(mf.mesh);
+		DestroyImmediate(mf.sharedMesh);
 		
 		OctreeNodeData octreeNodeData = gameObjectToDelete.GetComponent<OctreeNodeData>();
 		
@@ -72,7 +70,7 @@ public class ColouredCubesVolume : MonoBehaviour
 			}
 		}
 		
-		Destroy(gameObjectToDelete);
+		DestroyImmediate(gameObjectToDelete);
 	}
 	
 	public void performUpdate()
@@ -98,9 +96,20 @@ public class ColouredCubesVolume : MonoBehaviour
 		}
 	}
 	
+	public void Shutdown()
+	{
+		Debug.Log("Deleting volume with handle = " + volumeHandle);
+		
+		CubiquityDLL.DeleteColouredCubesVolume((uint)volumeHandle);
+		volumeHandle = 0;
+		hasVolumeHandle = false;
+		
+		deleteGameObject(rootGameObject);
+	}
+	
 	void Awake()
 	{
-		performAwake();
+		Initialize();
 	}
 	
 	// Use this for initialization
@@ -117,10 +126,7 @@ public class ColouredCubesVolume : MonoBehaviour
 	
 	public void OnDestroy()
 	{
-		Debug.Log("Deleting volume with handle = " + volumeHandle);
-		CubiquityDLL.DeleteColouredCubesVolume((uint)volumeHandle);
-		volumeHandle = 0;
-		hasVolumeHandle = false;
+		Shutdown();
 	}
 	
 	public Color32 GetVoxel(int x, int y, int z)

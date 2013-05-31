@@ -1,7 +1,6 @@
 using UnityEngine;
 using System.Collections;
 
-[System.Serializable]
 public class TankController : MonoBehaviour
 {
 	public float Speed = 50;
