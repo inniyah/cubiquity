@@ -129,6 +129,8 @@ void decodeNodeHandle(uint32_t encodedNodeHandle, uint32_t* volumeHandle, uint32
 {
 	*volumeHandle = encodedNodeHandle >> VolumeHandleShift;
 	*decodedNodeHandle = encodedNodeHandle & NodeHandleMask;
+
+	validateDecodedNodeHandle(*volumeHandle, *decodedNodeHandle);
 }
 
 OctreeNode<Colour>* getNodeFromEncodedHandle(uint32_t encodedNodeHandle)
@@ -249,7 +251,7 @@ CUBIQUITYC_API int32_t cuHasRootOctreeNode(uint32_t volumeHandle, uint32_t* resu
 {
 	OPEN_C_INTERFACE
 
-	ColouredCubesVolume* volume = gColouredCubesVolumes[volumeHandle];
+	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
 	OctreeNode<Colour>* node = volume->getRootOctreeNode();
 	if(node)
 	{
@@ -267,15 +269,17 @@ CUBIQUITYC_API int32_t cuGetRootOctreeNode(uint32_t volumeHandle, uint32_t* resu
 {
 	OPEN_C_INTERFACE
 
-	ColouredCubesVolume* volume = gColouredCubesVolumes[volumeHandle];
-
-
+	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
 	OctreeNode<Colour>* node = volume->getRootOctreeNode();
-	uint32_t nodeHandle = node->mSelf;
 
-	uint32_t combinedHandle = encodeNodeHandle(volumeHandle, nodeHandle);
+	if(!node)
+	{
+		POLYVOX_THROW(PolyVox::invalid_operation, "No root node exists! Please check this with cuHasChildNode() first");
+	}
 
-	*result = combinedHandle;
+	uint32_t decodedNodeHandle = node->mSelf;
+
+	*result = encodeNodeHandle(volumeHandle, decodedNodeHandle);
 
 	CLOSE_C_INTERFACE
 }
