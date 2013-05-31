@@ -65,7 +65,7 @@ EntryAndExitPoints gEntryAndExitPoints;
 
 std::vector<ColouredCubesVolume*> gColouredCubesVolumes;
 
-ColouredCubesVolume* getVolumeFromHandle(uint32_t volumeHandle)
+void validateVolumeHandle(uint32_t volumeHandle)
 {
 	if(volumeHandle > MaxVolumeHandle)
 	{
@@ -87,11 +87,15 @@ ColouredCubesVolume* getVolumeFromHandle(uint32_t volumeHandle)
 		ss << "Volume handle'" << volumeHandle << "' is valid but the corresponding volume pointer is null";
 		POLYVOX_THROW(std::invalid_argument, ss.str());
 	}
+}
 
+ColouredCubesVolume* getVolumeFromHandle(uint32_t volumeHandle)
+{
+	validateVolumeHandle(volumeHandle);
 	return gColouredCubesVolumes[volumeHandle];
 }
 
-void validateDecodedNodeHandle(uint32_t decodedNodeHandle)
+void validateDecodedNodeHandle(uint32_t volumeHandle, uint32_t decodedNodeHandle)
 {
 	if(decodedNodeHandle > MaxNodeHandle)
 	{
@@ -99,18 +103,32 @@ void validateDecodedNodeHandle(uint32_t decodedNodeHandle)
 		ss << "Decoded Node handle'" << decodedNodeHandle << "' exceeds the maximum permitted value of '" << MaxNodeHandle << "'";
 		POLYVOX_THROW(std::invalid_argument, ss.str());
 	}
+
+	// Get the volume (also validates the volume handle)
+	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+
+	// Check the node really exists in the volume
+	OctreeNode<Colour>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
+	if(!node)
+	{
+		std::stringstream ss;
+		ss << "Decoded Node handle'" << decodedNodeHandle << "' is does not reference a valid node.";
+		POLYVOX_THROW(std::invalid_argument, ss.str());
+	}
 }
 
-uint32_t encodeNodeHandle(uint32_t volumeHandle, uint32_t nodeHandle)
+uint32_t encodeNodeHandle(uint32_t volumeHandle, uint32_t decodedNodeHandle)
 {
-	volumeHandle = volumeHandle << VolumeHandleShift;
-	return volumeHandle | nodeHandle;
+	validateDecodedNodeHandle(volumeHandle, decodedNodeHandle);
+
+	uint32_t shiftedVolumeHandle = volumeHandle << VolumeHandleShift;
+	return shiftedVolumeHandle | decodedNodeHandle;
 }
 
-void decodeNodeHandle(uint32_t nodeHandle, uint32_t* volumePart, uint32_t* nodePart)
+void decodeNodeHandle(uint32_t encodedNodeHandle, uint32_t* volumeHandle, uint32_t* decodedNodeHandle)
 {
-	*volumePart = nodeHandle >> VolumeHandleShift;
-	*nodePart = nodeHandle & NodeHandleMask;
+	*volumeHandle = encodedNodeHandle >> VolumeHandleShift;
+	*decodedNodeHandle = encodedNodeHandle & NodeHandleMask;
 }
 
 OctreeNode<Colour>* getNodeFromEncodedHandle(uint32_t encodedNodeHandle)
@@ -254,7 +272,6 @@ CUBIQUITYC_API int32_t cuGetRootOctreeNode(uint32_t volumeHandle, uint32_t* resu
 
 	OctreeNode<Colour>* node = volume->getRootOctreeNode();
 	uint32_t nodeHandle = node->mSelf;
-	validateDecodedNodeHandle(nodeHandle);
 
 	uint32_t combinedHandle = encodeNodeHandle(volumeHandle, nodeHandle);
 
