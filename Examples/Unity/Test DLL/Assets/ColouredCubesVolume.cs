@@ -14,7 +14,7 @@ public struct MyVertex
 
 public class ColouredCubesVolume : MonoBehaviour
 {
-	public object volumeHandle = null;
+	public uint? volumeHandle = null;
 	//public bool hasVolumeHandle = false;
 	public GameObject rootGameObject;
 	
@@ -31,7 +31,7 @@ public class ColouredCubesVolume : MonoBehaviour
 			
         Debug.Log("In ColouredCubesVolume.Initialize()");
 
-        if (volumeHandle == null)
+        if (volumeHandle.HasValue == false)
         {
 			uint volHand = CubiquityDLL.NewColouredCubesVolumeFromVolDat(new StringBuilder("C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/"), 64, 64);
 			volumeHandle = volHand;
@@ -72,13 +72,13 @@ public class ColouredCubesVolume : MonoBehaviour
 	public void performUpdate()
 	{
 		//Debug.Log ("performUpdate");
-		if(volumeHandle != null)
+		if(volumeHandle.HasValue)
 		{
-			CubiquityDLL.UpdateVolume((uint)volumeHandle);
+			CubiquityDLL.UpdateVolume(volumeHandle.Value);
 			
-			if(CubiquityDLL.HasRootOctreeNode((uint)volumeHandle) == 1)
+			if(CubiquityDLL.HasRootOctreeNode(volumeHandle.Value) == 1)
 			{		
-				uint rootNodeHandle = CubiquityDLL.GetRootOctreeNode((uint)volumeHandle);
+				uint rootNodeHandle = CubiquityDLL.GetRootOctreeNode(volumeHandle.Value);
 			
 				if(rootGameObject == null)
 				{
@@ -96,7 +96,7 @@ public class ColouredCubesVolume : MonoBehaviour
 	{
 		Debug.Log("In ColouredCubesVolume.Shutdown()");
 		
-		CubiquityDLL.DeleteColouredCubesVolume((uint)volumeHandle);
+		CubiquityDLL.DeleteColouredCubesVolume(volumeHandle.Value);
 		volumeHandle = null;
 		
 		deleteGameObject(rootGameObject);
@@ -127,21 +127,21 @@ public class ColouredCubesVolume : MonoBehaviour
 	public Color32 GetVoxel(int x, int y, int z)
 	{
 		Color32 color = new Color32();
-		if(volumeHandle != null)
+		if(volumeHandle.HasValue)
 		{
-			CubiquityDLL.GetVoxel((uint)volumeHandle, x, y, z, out color.r, out color.g, out color.b, out color.a);
+			CubiquityDLL.GetVoxel(volumeHandle.Value, x, y, z, out color.r, out color.g, out color.b, out color.a);
 		}
 		return color;
 	}
 	
 	public void SetVoxel(int x, int y, int z, Color32 color)
 	{
-		if(volumeHandle != null)
+		if(volumeHandle.HasValue)
 		{
 			if(x >= 0 && y >= 0 && z >= 0 && x < 128 && y < 32 && z < 128) // FIX THESE VALUES!
 			{
 				byte alpha = color.a > 127 ? (byte)255 : (byte)0; // Threshold the alpha until we support transparency.
-				CubiquityDLL.SetVoxel((uint)volumeHandle, x, y, z, color.r, color.g, color.b, alpha);
+				CubiquityDLL.SetVoxel(volumeHandle.Value, x, y, z, color.r, color.g, color.b, alpha);
 			}
 		}
 	}
