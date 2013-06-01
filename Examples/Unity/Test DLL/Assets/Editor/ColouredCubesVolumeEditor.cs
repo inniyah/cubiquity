@@ -11,6 +11,12 @@ public class ColouredCubesVolumeEditor : Editor
 	[MenuItem("Cubiqity/New Colored Cubes Volume")]
     static void Create()
     {
+		if(GameObject.Find("Voxel Terrain") != null)
+		{
+			Debug.LogError("A voxel terrain already exists - you (currently) can't create another one.");
+			return;
+		}
+		
 		GameObject VoxelTerrainRoot = new GameObject("Voxel Terrain");
 		VoxelTerrainRoot.AddComponent<ColouredCubesVolume>();
 		
