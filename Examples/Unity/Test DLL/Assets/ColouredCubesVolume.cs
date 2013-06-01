@@ -12,6 +12,7 @@ public struct MyVertex
 	public UInt32 colour;
 }
 
+[ExecuteInEditMode]
 public class ColouredCubesVolume : MonoBehaviour
 {
 	public uint? volumeHandle = null;
@@ -49,35 +50,9 @@ public class ColouredCubesVolume : MonoBehaviour
 		}
 	}
 	
-	public void deleteGameObject(GameObject gameObjectToDelete)
+	public void Synchronize()
 	{
-		MeshFilter mf = (MeshFilter)gameObjectToDelete.GetComponent(typeof(MeshFilter));
-		DestroyImmediate(mf.sharedMesh);
-		
-		OctreeNodeData octreeNodeData = gameObjectToDelete.GetComponent<OctreeNodeData>();
-		
-		//Now delete any children
-		for(uint z = 0; z < 2; z++)
-		{
-			for(uint y = 0; y < 2; y++)
-			{
-				for(uint x = 0; x < 2; x++)
-				{
-					GameObject childObject = octreeNodeData.GetChild(x, y, z);
-					if(childObject != null)
-					{
-						deleteGameObject(childObject);
-					}
-				}
-			}
-		}
-		
-		DestroyImmediate(gameObjectToDelete);
-	}
-	
-	public void performUpdate()
-	{
-		//Debug.Log ("performUpdate");
+		//Debug.Log ("Synchronize");
 		if(volumeHandle.HasValue)
 		{
 			CubiquityDLL.UpdateVolume(volumeHandle.Value);
@@ -111,6 +86,32 @@ public class ColouredCubesVolume : MonoBehaviour
 		}
 	}
 	
+	public void deleteGameObject(GameObject gameObjectToDelete)
+	{
+		MeshFilter mf = (MeshFilter)gameObjectToDelete.GetComponent(typeof(MeshFilter));
+		DestroyImmediate(mf.sharedMesh);
+		
+		OctreeNodeData octreeNodeData = gameObjectToDelete.GetComponent<OctreeNodeData>();
+		
+		//Now delete any children
+		for(uint z = 0; z < 2; z++)
+		{
+			for(uint y = 0; y < 2; y++)
+			{
+				for(uint x = 0; x < 2; x++)
+				{
+					GameObject childObject = octreeNodeData.GetChild(x, y, z);
+					if(childObject != null)
+					{
+						deleteGameObject(childObject);
+					}
+				}
+			}
+		}
+		
+		DestroyImmediate(gameObjectToDelete);
+	}
+	
 	void Awake()
 	{
 		Debug.Log ("ColouredCubesVolume.Awake()");
@@ -126,7 +127,7 @@ public class ColouredCubesVolume : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		performUpdate();
+		Synchronize();
 	}
 	
 	public void OnDestroy()

@@ -16,16 +16,16 @@ public class ColouredCubesVolumeEditor : Editor
 		
 		/*ColouredCubesVolume colouredCubesVolume = VoxelTerrainRoot.GetComponent<ColouredCubesVolume>();
 		colouredCubesVolume.Initialize();
-		colouredCubesVolume.performUpdate();*/
+		colouredCubesVolume.Synchronize();*/
     }
 	
-	void OnEnable()
+	/*void OnEnable()
 	{
 		Debug.Log ("ColouredCubesVolumeEditor.OnEnable()");
 		
 		ColouredCubesVolume colouredCubesVolume = (ColouredCubesVolume)target;
 		colouredCubesVolume.Initialize();
-		colouredCubesVolume.performUpdate();
+		colouredCubesVolume.Synchronize();
 	}
 	
 	void OnDisable()
@@ -34,7 +34,7 @@ public class ColouredCubesVolumeEditor : Editor
 		
 		ColouredCubesVolume colouredCubesVolume = (ColouredCubesVolume)target;
 		colouredCubesVolume.Shutdown();
-	}
+	}*/
 	
     void OnSceneGUI()
     {
@@ -43,7 +43,7 @@ public class ColouredCubesVolumeEditor : Editor
 		
 		if(colouredCubesVolume)
 		{			
-			colouredCubesVolume.performUpdate();
+			colouredCubesVolume.Synchronize();
 		}
 		
         if (Event.current.type == EventType.MouseDown)
