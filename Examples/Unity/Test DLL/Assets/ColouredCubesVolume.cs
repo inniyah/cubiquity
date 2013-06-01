@@ -15,7 +15,7 @@ public struct MyVertex
 [ExecuteInEditMode]
 public class ColouredCubesVolume : MonoBehaviour
 {
-	public uint? volumeHandle = null;
+	internal uint? volumeHandle = null;
 	private GameObject rootGameObject;
 	
 	public void Initialize()
