@@ -12,17 +12,21 @@ public struct MyVertex
 	public UInt32 colour;
 }
 
-[ExecuteInEditMode]
 public class ColouredCubesVolume : MonoBehaviour
 {
 	public uint? volumeHandle = null;
-	public GameObject rootGameObject;
+	private GameObject rootGameObject;
 	
 	public void Initialize()
 	{		
-		if(rootGameObject != null)
+		/*if(rootGameObject != null)
 		{
 			deleteGameObject(rootGameObject);
+		}*/
+		
+		foreach(Transform child in transform)
+		{
+			DestroyImmediate(child.gameObject);
 		}
 			
         Debug.Log("In ColouredCubesVolume.Initialize()");

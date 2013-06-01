@@ -19,7 +19,7 @@ public class ColouredCubesVolumeEditor : Editor
 		colouredCubesVolume.performUpdate();*/
     }
 	
-	/*void OnEnable()
+	void OnEnable()
 	{
 		Debug.Log ("ColouredCubesVolumeEditor.OnEnable()");
 		
@@ -34,7 +34,7 @@ public class ColouredCubesVolumeEditor : Editor
 		
 		ColouredCubesVolume colouredCubesVolume = (ColouredCubesVolume)target;
 		colouredCubesVolume.Shutdown();
-	}*/
+	}
 	
     void OnSceneGUI()
     {
