@@ -30,8 +30,6 @@ public class ColouredCubesVolume : MonoBehaviour
 			//Deleting while in a loop - is this valid?
 			DestroyImmediate(child.gameObject);
 		}
-			
-        Debug.Log("In ColouredCubesVolume.Initialize()");
 
 		// Use the Cubiquity dll to allocate some volume data
 		volumeHandle = CubiquityDLL.NewColouredCubesVolume(0, 0, 0, 127, 31, 127, 64, 64);
@@ -52,7 +50,6 @@ public class ColouredCubesVolume : MonoBehaviour
 	
 	public void Synchronize()
 	{
-		//Debug.Log ("Synchronize");
 		if(volumeHandle.HasValue)
 		{
 			CubiquityDLL.UpdateVolume(volumeHandle.Value);
@@ -62,11 +59,8 @@ public class ColouredCubesVolume : MonoBehaviour
 				uint rootNodeHandle = CubiquityDLL.GetRootOctreeNode(volumeHandle.Value);
 			
 				if(rootGameObject == null)
-				{
-					Debug.Log ("Creating Root GameObject");
-					
+				{					
 					rootGameObject = BuildGameObjectFromNodeHandle(rootNodeHandle, gameObject);	
-					//rootGameObject = new GameObject("My GameObject");
 				}
 				syncNode(rootNodeHandle, rootGameObject);
 			}
