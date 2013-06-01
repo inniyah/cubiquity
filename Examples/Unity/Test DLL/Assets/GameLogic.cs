@@ -6,6 +6,7 @@ public class GameLogic : MonoBehaviour
 	public ColouredCubesVolume colouredCubesVolume;
 	public GameObject gun;
 	
+	// Initialization
 	void Awake()
 	{
 		GameObject voxelTerrainObject = GameObject.Find("Voxel Terrain");
@@ -16,6 +17,7 @@ public class GameLogic : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
+		// Create some physics objects for testing.
 		for(uint x = 12; x < 128; x += 20)
 		{
 			for(uint z = 12; z < 128; z += 20)
@@ -27,8 +29,7 @@ public class GameLogic : MonoBehaviour
 			}
 		}
 		
-		//DrawCuboid(0, 0, 0, (int)colouredCubesVolume.Width - 1, 8, (int)colouredCubesVolume.Depth, Color.gray);
-		
+		// Add some wall to our arena		
 		DrawCuboid (0, 8, 0, 127, 24, 5, Color.red);
 		DrawCuboid (0, 8, 122, 127, 24, 127, Color.red);
 		
@@ -39,24 +40,24 @@ public class GameLogic : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		if(colouredCubesVolume.volumeHandle.HasValue)
+		// Build a ray based on the current mouse position
+		Vector2 mousePos = Input.mousePosition;
+		Ray ray = Camera.main.ScreenPointToRay(new Vector3(mousePos.x, mousePos.y, 0));
+		Vector3 dir = ray.direction * 1000.0f; //The maximum distance out ray will be cast.
+		
+		
+		// Perform the raycasting. If there's a hit the position will be stored in these ints.
+		int resultX, resultY, resultZ;
+		bool hit = Cubiquity.PickVoxel(colouredCubesVolume, ray.origin.x, ray.origin.y, ray.origin.z, dir.x, dir.y, dir.z, out resultX, out resultY, out resultZ);
+		
+		if(hit)
 		{
-			Vector2 mousePos = Input.mousePosition;
-	
-			Ray ray = Camera.main.ScreenPointToRay(new Vector3(mousePos.x, mousePos.y, 0));
-			Vector3 dir = ray.direction * 1000.0f;
-			int resultX, resultY, resultZ;
-			bool hit = Cubiquity.PickVoxel(colouredCubesVolume, ray.origin.x, ray.origin.y, ray.origin.z, dir.x, dir.y, dir.z, out resultX, out resultY, out resultZ);
-			
-			//Debug.Log ("Hit = " + hit);
-			if(hit)
-			{
-				//Debug.Log("Hit " +resultX + " " + resultY + " " + resultZ);			
-				gun.transform.LookAt(new Vector3(resultX, resultY, resultZ));
-			}
+			// If the mouse if over a voxel then turn the turret to face it.	
+			gun.transform.LookAt(new Vector3(resultX, resultY, resultZ));
 		}
 	}
 	
+	// Draws a cuboid of coloured voxels into our volume.
 	void DrawCuboid(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, Color32 color)
 	{
 		for(int z = lowerZ; z <= upperZ; z++)
