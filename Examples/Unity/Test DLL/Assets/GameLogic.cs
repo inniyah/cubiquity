@@ -3,14 +3,12 @@ using System.Collections;
 
 public class GameLogic : MonoBehaviour
 {
-	//uint frameCounter;
-	public GameObject voxelTerrainObject;
 	public ColouredCubesVolume colouredCubesVolume;
 	public GameObject gun;
 	
 	void Awake()
 	{
-		voxelTerrainObject = GameObject.Find("Voxel Terrain");
+		GameObject voxelTerrainObject = GameObject.Find("Voxel Terrain");
 		colouredCubesVolume = voxelTerrainObject.GetComponent<ColouredCubesVolume>();
 		gun = GameObject.Find("Gun");
 	}

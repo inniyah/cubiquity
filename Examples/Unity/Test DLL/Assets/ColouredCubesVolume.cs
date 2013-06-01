@@ -18,23 +18,24 @@ public class ColouredCubesVolume : MonoBehaviour
 	private GameObject rootGameObject;
 	
 	public void Initialize()
-	{		
-		/*if(rootGameObject != null)
-		{
-			deleteGameObject(rootGameObject);
-		}*/
-		
+	{	
+		// I don't understand why we need to do this. If it's a new oject it shouldn't have any children,
+		// or if it's a reused object the children should have been removed by Shutdown(). But when switching
+		// from editor mode to play mode the children don't seem to be removed properly.
 		foreach(Transform child in transform)
 		{
+			Debug.Log("Removing existing child from game object.");
+			
+			//Deleting while in a loop - is this valid?
 			DestroyImmediate(child.gameObject);
 		}
 			
         Debug.Log("In ColouredCubesVolume.Initialize()");
 
-		//volumeHandle = CubiquityDLL.NewColouredCubesVolumeFromVolDat(new StringBuilder("C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/"), 64, 64);	
-		
+		// Use the Cubiquity dll to allocate some volume data
 		volumeHandle = CubiquityDLL.NewColouredCubesVolume(0, 0, 0, 127, 31, 127, 64, 64);
 		
+		// Set some voxels to solid so the user can see the volume they just created.
 		Color32 lightGrey = new Color32(192, 192, 192, 255);
 		for(int z = 0; z < 128; z++)
 		{
