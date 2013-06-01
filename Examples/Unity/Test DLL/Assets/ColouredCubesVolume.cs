@@ -18,16 +18,12 @@ public class ColouredCubesVolume : MonoBehaviour
 	public uint? volumeHandle = null;
 	public GameObject rootGameObject;
 	
-	public Material colouredCubesMaterial;
-	
 	public void Initialize()
 	{		
 		if(rootGameObject != null)
 		{
 			deleteGameObject(rootGameObject);
 		}
-		
-		colouredCubesMaterial = new Material(Shader.Find("ColouredCubesVolume"));
 			
         Debug.Log("In ColouredCubesVolume.Initialize()");
 
@@ -179,7 +175,7 @@ public class ColouredCubesVolume : MonoBehaviour
 		        mf.sharedMesh = mesh;
 				mc.sharedMesh = mesh;
 				
-				mr.material = colouredCubesMaterial;
+				mr.material = new Material(Shader.Find("ColouredCubesVolume"));
 				
 				//mc.material.bounciness = 1.0f;				
 				//mr.renderer.material.shader = Shader.Find("ColouredCubesVolume");
