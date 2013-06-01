@@ -43,7 +43,7 @@ public:
 	{
 		// Note that we can't actually write to the log from this entry point
 		// code as the global Boost.Log source might nothave been created yet.
-		setLogVerbosity(LogLevels::Trace);
+		setLogVerbosity(LogLevels::Info);
 	}
 
 	~EntryAndExitPoints()
