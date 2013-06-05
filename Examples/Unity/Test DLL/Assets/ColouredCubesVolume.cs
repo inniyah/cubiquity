@@ -15,6 +15,8 @@ public struct MyVertex
 [ExecuteInEditMode]
 public class ColouredCubesVolume : MonoBehaviour
 {
+	public string folderName;
+	
 	internal uint? volumeHandle = null;
 	private GameObject rootGameObject;
 	
@@ -32,17 +34,24 @@ public class ColouredCubesVolume : MonoBehaviour
 		}
 
 		// Use the Cubiquity dll to allocate some volume data
-		volumeHandle = CubiquityDLL.NewColouredCubesVolume(0, 0, 0, 127, 31, 127, 64, 64);
-		
-		// Set some voxels to solid so the user can see the volume they just created.
-		Color32 lightGrey = new Color32(192, 192, 192, 255);
-		for(int z = 0; z < 128; z++)
+		if((folderName != null) && (folderName != ""))
 		{
-			for(int y = 0; y < 8; y++)
+			volumeHandle = CubiquityDLL.NewColouredCubesVolumeFromVolDat(folderName, 64, 64);
+		}
+		else
+		{
+			volumeHandle = CubiquityDLL.NewColouredCubesVolume(0, 0, 0, 127, 31, 127, 64, 64);
+			
+			// Set some voxels to solid so the user can see the volume they just created.
+			Color32 lightGrey = new Color32(192, 192, 192, 255);
+			for(int z = 0; z < 128; z++)
 			{
-				for(int x = 0; x < 128; x++)
+				for(int y = 0; y < 8; y++)
 				{
-					SetVoxel(x, y, z, lightGrey);
+					for(int x = 0; x < 128; x++)
+					{
+						SetVoxel(x, y, z, lightGrey);
+					}
 				}
 			}
 		}
@@ -106,17 +115,17 @@ public class ColouredCubesVolume : MonoBehaviour
 		DestroyImmediate(gameObjectToDelete);
 	}
 	
-	void Awake()
+	void Start()
 	{
 		Debug.Log ("ColouredCubesVolume.Awake()");
 		Initialize();
 	}
 	
 	// Use this for initialization
-	void Start()
+	/*void Start()
 	{		
 		
-	}
+	}*/
 	
 	// Update is called once per frame
 	void Update()

@@ -30,11 +30,11 @@ public class GameLogic : MonoBehaviour
 		}
 		
 		// Add some wall to our arena		
-		DrawCuboid (0, 8, 0, 127, 24, 5, Color.red);
+		/*DrawCuboid (0, 8, 0, 127, 24, 5, Color.red);
 		DrawCuboid (0, 8, 122, 127, 24, 127, Color.red);
 		
 		DrawCuboid (0, 8, 0, 5, 24, 127, Color.green);		
-		DrawCuboid (122, 8, 0, 127, 24, 127, Color.green);
+		DrawCuboid (122, 8, 0, 127, 24, 127, Color.green);*/
 	}
 	
 	// Update is called once per frame

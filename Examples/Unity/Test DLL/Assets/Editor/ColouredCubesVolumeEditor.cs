@@ -8,8 +8,8 @@ public class ColouredCubesVolumeEditor : Editor
 	//GameObject voxelTerrainObject;
 	//ColouredCubesVolume colouredCubesVolume;
 	
-	[MenuItem("Cubiqity/New Colored Cubes Volume")]
-    static void Create()
+	[MenuItem("Cubiqity/Create Empty Colored Cubes Volume")]
+    static void CreateEmpty()
     {
 		if(GameObject.Find("Voxel Terrain") != null)
 		{
@@ -20,8 +20,29 @@ public class ColouredCubesVolumeEditor : Editor
 		GameObject VoxelTerrainRoot = new GameObject("Voxel Terrain");
 		VoxelTerrainRoot.AddComponent<ColouredCubesVolume>();
 		
-		/*ColouredCubesVolume colouredCubesVolume = VoxelTerrainRoot.GetComponent<ColouredCubesVolume>();
-		colouredCubesVolume.Initialize();
+		//ColouredCubesVolume colouredCubesVolume = VoxelTerrainRoot.GetComponent<ColouredCubesVolume>();
+		//colouredCubesVolume.folderName = "C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/";
+		
+		/*colouredCubesVolume.Initialize();
+		colouredCubesVolume.Synchronize();*/
+    }
+	
+	[MenuItem("Cubiqity/Import Colored Cubes Volume from VolDat")]
+    static void ImportFromVolDat()
+    {
+		if(GameObject.Find("Voxel Terrain") != null)
+		{
+			Debug.LogError("A voxel terrain already exists - you (currently) can't create another one.");
+			return;
+		}
+		
+		GameObject VoxelTerrainRoot = new GameObject("Voxel Terrain");
+		VoxelTerrainRoot.AddComponent<ColouredCubesVolume>();
+		
+		ColouredCubesVolume colouredCubesVolume = VoxelTerrainRoot.GetComponent<ColouredCubesVolume>();
+		colouredCubesVolume.folderName = "C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/";
+		
+		/*colouredCubesVolume.Initialize();
 		colouredCubesVolume.Synchronize();*/
     }
 	
