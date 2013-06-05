@@ -4,10 +4,7 @@ using System.Collections;
 
 [CustomEditor(typeof(ColouredCubesVolume))]
 public class ColouredCubesVolumeEditor : Editor
-{ 
-	//GameObject voxelTerrainObject;
-	//ColouredCubesVolume colouredCubesVolume;
-	
+{ 	
 	[MenuItem("Cubiqity/Create Empty Colored Cubes Volume")]
     static void CreateEmpty()
     {
@@ -19,12 +16,6 @@ public class ColouredCubesVolumeEditor : Editor
 		
 		GameObject VoxelTerrainRoot = new GameObject("Voxel Terrain");
 		VoxelTerrainRoot.AddComponent<ColouredCubesVolume>();
-		
-		//ColouredCubesVolume colouredCubesVolume = VoxelTerrainRoot.GetComponent<ColouredCubesVolume>();
-		//colouredCubesVolume.folderName = "C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/";
-		
-		/*colouredCubesVolume.Initialize();
-		colouredCubesVolume.Synchronize();*/
     }
 	
 	[MenuItem("Cubiqity/Import Colored Cubes Volume from VolDat")]
@@ -41,9 +32,6 @@ public class ColouredCubesVolumeEditor : Editor
 		
 		ColouredCubesVolume colouredCubesVolume = VoxelTerrainRoot.GetComponent<ColouredCubesVolume>();
 		colouredCubesVolume.folderName = "C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/";
-		
-		/*colouredCubesVolume.Initialize();
-		colouredCubesVolume.Synchronize();*/
     }
 	
 	/*void OnEnable()
@@ -62,45 +50,4 @@ public class ColouredCubesVolumeEditor : Editor
 		ColouredCubesVolume colouredCubesVolume = (ColouredCubesVolume)target;
 		colouredCubesVolume.Shutdown();
 	}*/
-	
-    void OnSceneGUI()
-    {
-		Debug.Log ("OnSceneGUI");
-		/*ColouredCubesVolume colouredCubesVolume = (ColouredCubesVolume)target;
-		
-		if(colouredCubesVolume)
-		{			
-			colouredCubesVolume.Synchronize();
-		}
-		
-        if (Event.current.type == EventType.MouseDown)
-        {
-			Vector2 mousePos = Event.current.mousePosition;
-            Ray ray = Camera.current.ScreenPointToRay(new Vector3(mousePos.x, Camera.current.pixelHeight - mousePos.y, 0));
-			
-			Vector3 dir = ray.direction * 1000.0f;
-			int resultX, resultY, resultZ;
-			int hit = CubiquityDLL.cuPickVoxel((uint)((ColouredCubesVolume)target).volumeHandle, ray.origin.x, ray.origin.y, ray.origin.z, dir.x, dir.y, dir.z, out resultX, out resultY, out resultZ);
-			
-			if(hit == 1)
-			{
-				Debug.Log("Hit " +resultX + " " + resultY + " " + resultZ);
-				
-				for(int z = resultZ - 10; z < resultZ + 10; z++)
-				{
-					for(int y = resultY - 10; y < resultY + 10; y++)
-					{
-						for(int x = resultX - 10; x < resultX + 10; x++)
-						{
-							colouredCubesVolume.SetVoxel(x, y, z, new Color32(0,0,0,0));
-						}
-					}
-				}
-			}
-			else
-			{
-				Debug.Log("Miss");
-			}
-        }*/
-    }
 }
