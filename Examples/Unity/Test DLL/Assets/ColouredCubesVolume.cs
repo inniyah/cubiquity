@@ -295,15 +295,11 @@ public class ColouredCubesVolume : MonoBehaviour
         mesh.Clear();		
 		
         Vector3[] vertices = new Vector3[resultVertLength / 4];
-		Vector3[] normals = new Vector3[resultVertLength / 4];
-		Vector4[] tangents = new Vector4[resultVertLength / 4];
 		Vector2[] uv = new Vector2[resultVertLength / 4];
 		for(int ct = 0; ct < resultVertLength / 4; ct++)
 		{
 			//vertices[ct] = new Vector3(resultVertices[ct * 4 + 0], resultVertices[ct * 4 + 1], resultVertices[ct * 4 + 2]);
 			vertices[ct] = new Vector3(myVertices[ct].x, myVertices[ct].y, myVertices[ct].z);
-			normals[ct] = new Vector3(0.0f, 0.0f, 1.0f); // Dummy normals required by Unity
-			tangents[ct] = new Vector4(1.0f, 0.0f, 0.0f, 1.0f); // Dummy tangents required by Unity
 			
 			UInt32 colour = (UInt32)myVertices[ct].colour;
 			UInt32 red = (UInt32)((colour >> 0) & 0xF) * 16;
@@ -319,8 +315,6 @@ public class ColouredCubesVolume : MonoBehaviour
 			//uv[ct] = new Vector2(0.0f, 0.0f);
 		}
 		mesh.vertices = vertices; 
-		mesh.normals = normals;
-		mesh.tangents = tangents;
 		mesh.triangles = resultIndices;
 		mesh.uv = uv;
 		
