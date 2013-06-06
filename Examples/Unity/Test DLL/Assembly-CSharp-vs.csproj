@@ -55,6 +55,7 @@
      <Compile Include="Assets\Region.cs" />
      <Compile Include="Assets\ShowBounds.cs" />
      <Compile Include="Assets\TankController.cs" />
+     <None Include="Assets\Resources\ColoredCubesVolume.shader" />
      <None Include="Assets\Resources\ColouredCubesVolume.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
