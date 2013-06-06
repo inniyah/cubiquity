@@ -5,7 +5,6 @@
 Shader "ColoredCubesVolume"
 {
    Properties {
-      _Color ("Diffuse Material Color", Color) = (1,1,1,1) 
       _SpecColor ("Specular Material Color", Color) = (1,1,1,1) 
       _Shininess ("Shininess", Float) = 10
    }
@@ -23,7 +22,6 @@ Shader "ColoredCubesVolume"
          #pragma only_renderers d3d9
  
          // User-specified properties
-         uniform float4 _Color; 
          uniform float4 _SpecColor; 
          uniform float _Shininess;
  
@@ -47,8 +45,42 @@ Shader "ColoredCubesVolume"
          struct vertexOutput {
             float4 pos : SV_POSITION;
             float4 posWorld : TEXCOORD0;
+            float4 colour : COLOR;
             //float3 normalDir : TEXCOORD1;
          };
+         
+		float3 unpackPosition(float packedPosition)
+		{	
+			// Store the input in each component
+			float3 packedVec = float3(packedPosition, packedPosition, packedPosition);
+		
+			// Convert each component to a value in the range 0-255      	
+			float3 result = floor(packedVec / float3(65536.0, 256.0, 1.0));	      	
+			float3 shiftedResult = float3(0.0, result.rg) * 256.0;	
+			result -= shiftedResult;
+			
+			result -= float3(0.5, 0.5, 0.5);
+		
+			// Return the result	
+			return result;
+		}
+		
+		float3 floatToRGB(float inputVal)
+		{	
+			// Store the input in each component
+			float3 inputVec = float3(inputVal, inputVal, inputVal);
+		
+			// Convert each component to a value in the range 0-255      	
+			float3 result = floor(inputVec / float3(65536.0, 256.0, 1.0));	      	
+			float3 shiftedResult = float3(0.0, result.rg) * 256.0;	
+			result -= shiftedResult;
+		
+			// Convert to range 0-1
+			result /= 255.0;
+		
+			// Return the result	
+			return result;
+		}
  
          vertexOutput vert(vertexInput input) 
          {
@@ -58,10 +90,14 @@ Shader "ColoredCubesVolume"
             float4x4 modelMatrixInverse = _World2Object; 
                // multiplication with unity_Scale.w is unnecessary 
                // because we normalize transformed vectors
+               
+            float4 unpackedPos = float4(unpackPosition(input.vertex.x), 1.0f);
+            
+            output.colour = float4(floatToRGB(input.vertex.y), 1.0f);
  
-            output.posWorld = mul(modelMatrix, input.vertex);
+            output.posWorld = mul(modelMatrix, unpackedPos);
             //output.normalDir = normalize(float3(mul(float4(input.normal, 0.0), modelMatrixInverse)));
-            output.pos = mul(UNITY_MATRIX_MVP, input.vertex);
+            output.pos = mul(UNITY_MATRIX_MVP, unpackedPos);
             return output;
          }
  
@@ -92,10 +128,10 @@ Shader "ColoredCubesVolume"
             }
  
             float3 ambientLighting = 
-               float3(UNITY_LIGHTMODEL_AMBIENT) * float3(_Color);
+               float3(UNITY_LIGHTMODEL_AMBIENT) * float3(input.colour.rgb);
  
             float3 diffuseReflection = 
-               attenuation * float3(_LightColor0) * float3(_Color)
+               attenuation * float3(_LightColor0) * float3(input.colour.rgb)
                * max(0.0, dot(normalDirection, lightDirection));
  
             float3 specularReflection;

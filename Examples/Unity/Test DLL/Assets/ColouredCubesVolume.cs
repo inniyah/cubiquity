@@ -254,6 +254,22 @@ public class ColouredCubesVolume : MonoBehaviour
 		return newGameObject;
 	}
 	
+	float packPosition(float x, float y, float z)
+	{
+		x += 0.5f;
+		y += 0.5f;
+		z += 0.5f;
+		
+		if((x < 0.0f) || (x > 100.0f))
+		{
+			Debug.Log ("x is " + x);
+		}
+		
+		float result = x * 65536.0f + y * 256.0f + z;
+		
+		return result;
+	}
+	
 	Mesh BuildMeshFromNodeHandle(uint nodeHandle)
 	{
 		uint noOfVertices = CubiquityDLL.GetNoOfVertices(nodeHandle);
@@ -298,9 +314,6 @@ public class ColouredCubesVolume : MonoBehaviour
 		Vector2[] uv = new Vector2[resultVertLength / 4];
 		for(int ct = 0; ct < resultVertLength / 4; ct++)
 		{
-			//vertices[ct] = new Vector3(resultVertices[ct * 4 + 0], resultVertices[ct * 4 + 1], resultVertices[ct * 4 + 2]);
-			vertices[ct] = new Vector3(myVertices[ct].x, myVertices[ct].y, myVertices[ct].z);
-			
 			UInt32 colour = (UInt32)myVertices[ct].colour;
 			UInt32 red = (UInt32)((colour >> 0) & 0xF) * 16;
 			UInt32 green = (UInt32)((colour >> 4) & 0xF) * 16;
@@ -308,6 +321,13 @@ public class ColouredCubesVolume : MonoBehaviour
 			//UInt32 alpha = (UInt32)((colour >> 12) & 0xF) * 16;
 			
 			float colourAsFloat = (float)(red * 65536 + green * 256 + blue);
+			
+			//vertices[ct] = new Vector3(resultVertices[ct * 4 + 0], resultVertices[ct * 4 + 1], resultVertices[ct * 4 + 2]);			
+			//vertices[ct] = new Vector3(myVertices[ct].x, myVertices[ct].y, myVertices[ct].z);
+			
+			float packedPosition = packPosition(myVertices[ct].x, myVertices[ct].y, myVertices[ct].z);
+			vertices[ct] = new Vector3(packedPosition, colourAsFloat, 0.0f);
+			
 			
 			//float colourAsFloat = (float)green / 15.0f;
 			
@@ -317,6 +337,9 @@ public class ColouredCubesVolume : MonoBehaviour
 		mesh.vertices = vertices; 
 		mesh.triangles = resultIndices;
 		mesh.uv = uv;
+		
+		// FIXME - Get proper bounds
+		mesh.bounds = new Bounds(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(500.0f, 500.0f, 500.0f));
 		
 		return mesh;
 	}
