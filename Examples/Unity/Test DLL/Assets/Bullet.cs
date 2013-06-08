@@ -47,6 +47,24 @@ public class Bullet : MonoBehaviour
 	
 	void OnCollisionEnter(Collision collision)
 	{
-		Debug.Log("Collision!");
+		int xPos = (int)transform.position.x;
+		int yPos = (int)transform.position.y;
+		int zPos = (int)transform.position.z;
+		
+		Color32 color = colouredCubesVolume.GetVoxel(xPos, yPos, zPos);
+		
+
+		for(int z = zPos - 2; z < zPos + 2; z++)
+		{
+			for(int y = yPos - 2; y < yPos + 2; y++)
+			{
+				for(int x = xPos - 2; x < xPos + 2; x++)
+				{
+					colouredCubesVolume.SeparateVoxel(x, y, z);
+				}
+			}
+		}
+		
+		Object.Destroy(this.gameObject);
 	}
 }
