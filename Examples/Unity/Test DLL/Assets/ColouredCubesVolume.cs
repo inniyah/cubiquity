@@ -280,46 +280,11 @@ public class ColouredCubesVolume : MonoBehaviour
 	void BuildMeshFromNodeHandle(uint nodeHandle, out Mesh renderingMesh, out Mesh physicsMesh)
 	{
 		// At some point I should read this: http://forum.unity3d.com/threads/5687-C-plugin-pass-arrays-from-C
+
 		
-		uint noOfIndices = CubiquityDLL.GetNoOfIndices(nodeHandle);		
-		IntPtr ptrIndices = CubiquityDLL.GetIndices(nodeHandle);
+		int[] indices = CubiquityDLL.GetIndices(nodeHandle);
 		
-		// Load the results into a managed array.
-        int[] resultIndices = new int[noOfIndices]; //Should be unsigned!
-        Marshal.Copy(ptrIndices
-            , resultIndices
-            , 0
-            , (int)noOfIndices);
-		
-		//uint noOfVertices = CubiquityDLL.GetNoOfVertices(nodeHandle);	
-		
-		/*CubiquityVertex[] cubiquityVertices = new CubiquityVertex[noOfVertices];
-		
-		CubiquityDLL.GetVertices(nodeHandle, out cubiquityVertices);*/
-		
-		CubiquityVertex[] cubiquityVertices = CubiquityDLL.GetVertices(nodeHandle);
-		
-		/*IntPtr ptrVertices = CubiquityDLL.GetVertices(nodeHandle);
-		
-		// Load the results into a managed array. 
-		uint floatsPerVert = 4;
-		int resultVertLength = (int)(noOfVertices * floatsPerVert);
-        float[] resultVertices = new float[resultVertLength];
-        Marshal.Copy(ptrVertices
-            , resultVertices
-            , 0
-            , resultVertLength);
-		
-		CubiquityVertex[] myVertices = new CubiquityVertex[noOfVertices];
-		
-		for (int i = 0; i < noOfVertices; i++)
-    	{
-			myVertices[i] = (CubiquityVertex)Marshal.PtrToStructure(ptrVertices, typeof(CubiquityVertex));
-			ptrVertices = new IntPtr(ptrVertices.ToInt64() + Marshal.SizeOf(typeof(CubiquityVertex)));
-		}
-		
-		//Build a mesh procedurally*/
-		
+		CubiquityVertex[] cubiquityVertices = CubiquityDLL.GetVertices(nodeHandle);		
 		
 		
 		renderingMesh = new Mesh();		
@@ -347,13 +312,13 @@ public class ColouredCubesVolume : MonoBehaviour
 
 		}
 		renderingMesh.vertices = vertices; 
-		renderingMesh.triangles = resultIndices;
+		renderingMesh.triangles = indices;
 		
 		// FIXME - Get proper bounds
 		renderingMesh.bounds = new Bounds(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(500.0f, 500.0f, 500.0f));
 		
 		physicsMesh.vertices = physicsVertices;
-		physicsMesh.triangles = resultIndices;
+		physicsMesh.triangles = indices;
 
 	}
 }

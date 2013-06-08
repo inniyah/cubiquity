@@ -128,17 +128,21 @@ public class CubiquityDLL
 	////////////////////////////////////////////////////////////////////////////////
 	// Mesh functions
 	////////////////////////////////////////////////////////////////////////////////
-	
-	
 	[DllImport ("CubiquityC")]
 	private static extern int cuGetNoOfIndices(uint octreeNodeHandle, out uint result);
-	public static uint GetNoOfIndices(uint octreeNodeHandle)
+	[DllImport ("CubiquityC")]
+	private static extern int cuGetIndices(uint octreeNodeHandle, out int[] result);
+	public static int[] GetIndices(uint octreeNodeHandle)
 	{
-		uint result;
-		Validate(cuGetNoOfIndices(octreeNodeHandle, out result));
+		uint noOfIndices;
+		Validate(cuGetNoOfIndices(octreeNodeHandle, out noOfIndices));
+		
+		int[] result = new int[noOfIndices];
+		Validate(cuGetIndices(octreeNodeHandle, out result));
+		
 		return result;
 	}
-	
+		
 	[DllImport ("CubiquityC")]
 	private static extern int cuGetNoOfVertices(uint octreeNodeHandle, out uint result);
 	[DllImport ("CubiquityC")]
@@ -152,15 +156,6 @@ public class CubiquityDLL
 		CubiquityVertex[] result = new CubiquityVertex[noOfVertices];
 		Validate(cuGetVertices(octreeNodeHandle, out result));
 		
-		return result;
-	}
-	
-	[DllImport ("CubiquityC")]
-	private static extern int cuGetIndices(uint octreeNodeHandle, out IntPtr result);
-	public static IntPtr GetIndices(uint octreeNodeHandle)
-	{
-		IntPtr result;
-		Validate(cuGetIndices(octreeNodeHandle, out result));
 		return result;
 	}
 	
