@@ -261,18 +261,24 @@ public class ColouredCubesVolume : MonoBehaviour
 		return newGameObject;
 	}
 	
-	float packPosition(float x, float y, float z)
+	float packPosition(Vector3 position)
 	{
-		x += 0.5f;
-		y += 0.5f;
-		z += 0.5f;
+		position.x += 0.5f;
+		position.y += 0.5f;
+		position.z += 0.5f;
 		
-		if((x < 0.0f) || (x > 100.0f))
-		{
-			Debug.Log ("x is " + x);
-		}
+		float result = position.x * 65536.0f + position.y * 256.0f + position.z;
 		
-		float result = x * 65536.0f + y * 256.0f + z;
+		return result;
+	}
+	
+	float packColor(UInt32 color)
+	{
+		UInt32 red = (UInt32)((color >> 0) & 0xF) * 16;
+		UInt32 green = (UInt32)((color >> 4) & 0xF) * 16;
+		UInt32 blue = (UInt32)((color >> 8) & 0xF) * 16;
+		
+		float result = (float)(red * 65536 + green * 256 + blue);
 		
 		return result;
 	}
@@ -280,38 +286,37 @@ public class ColouredCubesVolume : MonoBehaviour
 	void BuildMeshFromNodeHandle(uint nodeHandle, out Mesh renderingMesh, out Mesh physicsMesh)
 	{
 		// At some point I should read this: http://forum.unity3d.com/threads/5687-C-plugin-pass-arrays-from-C
-
 		
-		int[] indices = CubiquityDLL.GetIndices(nodeHandle);
-		
-		CubiquityVertex[] cubiquityVertices = CubiquityDLL.GetVertices(nodeHandle);		
-		
+		int[] indices = CubiquityDLL.GetIndices(nodeHandle);		
+		CubiquityVertex[] cubiquityVertices = CubiquityDLL.GetVertices(nodeHandle);			
 		
 		renderingMesh = new Mesh();		
 		physicsMesh = new Mesh();
 		
-		Vector3[] physicsVertices = new Vector3[cubiquityVertices.Length];
+		Vector3[] physicsVertices = new Vector3[cubiquityVertices.Length];		
+        Vector3[] renderingVertices = new Vector3[cubiquityVertices.Length];
 		
-        Vector3[] vertices = new Vector3[cubiquityVertices.Length];
 		for(int ct = 0; ct < cubiquityVertices.Length; ct++)
 		{
 			UInt32 colour = (UInt32)cubiquityVertices[ct].colour;
-			UInt32 red = (UInt32)((colour >> 0) & 0xF) * 16;
+			/*UInt32 red = (UInt32)((colour >> 0) & 0xF) * 16;
 			UInt32 green = (UInt32)((colour >> 4) & 0xF) * 16;
 			UInt32 blue = (UInt32)((colour >> 8) & 0xF) * 16;
-			//UInt32 alpha = (UInt32)((colour >> 12) & 0xF) * 16;
 			
-			float colourAsFloat = (float)(red * 65536 + green * 256 + blue);
+			float colourAsFloat = (float)(red * 65536 + green * 256 + blue);*/
 			
-			//vertices[ct] = new Vector3(resultVertices[ct * 4 + 0], resultVertices[ct * 4 + 1], resultVertices[ct * 4 + 2]);			
-			physicsVertices[ct] = new Vector3(cubiquityVertices[ct].x, cubiquityVertices[ct].y, cubiquityVertices[ct].z);
+			float packedColor = packColor(colour);
 			
-			float packedPosition = packPosition(cubiquityVertices[ct].x, cubiquityVertices[ct].y, cubiquityVertices[ct].z);
+			Vector3 position = new Vector3(cubiquityVertices[ct].x, cubiquityVertices[ct].y, cubiquityVertices[ct].z);
+					
+			physicsVertices[ct] = position;
 			
-			vertices[ct] = new Vector3(packedPosition, colourAsFloat, 0.0f);
+			float packedPosition = packPosition(position);
+			
+			renderingVertices[ct] = new Vector3(packedPosition, packedColor, 0.0f);
 
 		}
-		renderingMesh.vertices = vertices; 
+		renderingMesh.vertices = renderingVertices; 
 		renderingMesh.triangles = indices;
 		
 		// FIXME - Get proper bounds
