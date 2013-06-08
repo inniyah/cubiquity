@@ -6,6 +6,8 @@ public class TankController : MonoBehaviour
 	public float Speed = 50;
 	public float TurnSpeed = 2;
 	
+	private bool isMouseDown;
+	
 	public GameObject gun;
 	
 	void Awake()
@@ -30,16 +32,25 @@ public class TankController : MonoBehaviour
 		
 		if (Input.GetMouseButton(0))
         {
-			//Debug.Log("Got mouse down!");
-			GameObject bullet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
-			bullet.AddComponent<Bullet>();			
-			
-			bullet.transform.position = gun.transform.position;
-			bullet.transform.rotation = gun.transform.rotation;
-			
-			bullet.transform.Translate(0.0f, 0.0f, 3.0f, Space.Self);
-			
-			Object.Destroy(bullet, 5.0f);
+			if(!isMouseDown) // The flag is not set so the mouse has only just gone down. (i.e. a click).
+			{
+				//Debug.Log("Got mouse down!");
+				GameObject bullet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+				bullet.AddComponent<Bullet>();			
+				
+				bullet.transform.position = gun.transform.position;
+				bullet.transform.rotation = gun.transform.rotation;
+				
+				bullet.transform.Translate(0.0f, 0.0f, 3.0f, Space.Self);
+				
+				Object.Destroy(bullet, 5.0f);
+				
+				isMouseDown = true;
+			}
+		}
+		else
+		{
+			isMouseDown = false;
 		}
 	}
 }
