@@ -12,7 +12,7 @@ public struct CubiquityVertex
 	public float x;
 	public float y;
 	public float z;
-	public UInt32 colour;
+	public uint colour;
 	#pragma warning restore 0649
 }
 
@@ -272,11 +272,11 @@ public class ColouredCubesVolume : MonoBehaviour
 		return result;
 	}
 	
-	float packColor(UInt32 color)
+	float packColor(uint color)
 	{
-		UInt32 red = (UInt32)((color >> 0) & 0xF) * 16;
-		UInt32 green = (UInt32)((color >> 4) & 0xF) * 16;
-		UInt32 blue = (UInt32)((color >> 8) & 0xF) * 16;
+		uint red = (uint)((color >> 0) & 0xF) * 16;
+		uint green = (uint)((color >> 4) & 0xF) * 16;
+		uint blue = (uint)((color >> 8) & 0xF) * 16;
 		
 		float result = (float)(red * 65536 + green * 256 + blue);
 		
@@ -298,24 +298,17 @@ public class ColouredCubesVolume : MonoBehaviour
 		
 		for(int ct = 0; ct < cubiquityVertices.Length; ct++)
 		{
-			UInt32 colour = (UInt32)cubiquityVertices[ct].colour;
-			/*UInt32 red = (UInt32)((colour >> 0) & 0xF) * 16;
-			UInt32 green = (UInt32)((colour >> 4) & 0xF) * 16;
-			UInt32 blue = (UInt32)((colour >> 8) & 0xF) * 16;
-			
-			float colourAsFloat = (float)(red * 65536 + green * 256 + blue);*/
-			
-			float packedColor = packColor(colour);
-			
 			Vector3 position = new Vector3(cubiquityVertices[ct].x, cubiquityVertices[ct].y, cubiquityVertices[ct].z);
-					
-			physicsVertices[ct] = position;
+			UInt32 colour = cubiquityVertices[ct].colour;
 			
 			float packedPosition = packPosition(position);
-			
+			float packedColor = packColor(colour);
+					
+			physicsVertices[ct] = position;			
 			renderingVertices[ct] = new Vector3(packedPosition, packedColor, 0.0f);
 
 		}
+		
 		renderingMesh.vertices = renderingVertices; 
 		renderingMesh.triangles = indices;
 		
