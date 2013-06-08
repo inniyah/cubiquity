@@ -147,12 +147,12 @@ public class CubiquityDLL
 	}
 	
 	[DllImport ("CubiquityC")]
-	private static extern int cuGetVertices(uint octreeNodeHandle, out IntPtr result);
-	public static IntPtr GetVertices(uint octreeNodeHandle)
+	private static extern int cuGetVertices(uint octreeNodeHandle, out CubiquityVertex[] result);
+	public static void GetVertices(uint octreeNodeHandle, out CubiquityVertex[] result)
 	{
-		IntPtr result;
+		//IntPtr result;
 		Validate(cuGetVertices(octreeNodeHandle, out result));
-		return result;
+		//return result;
 	}
 	
 	[DllImport ("CubiquityC")]

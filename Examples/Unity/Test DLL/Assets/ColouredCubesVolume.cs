@@ -4,21 +4,21 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using System.Text;
 
+public struct CubiquityVertex 
+{
+	// Disable 'Field ... is never assigned to'
+	// warnings as this structure is just for interop
+	#pragma warning disable 0649
+	public float x;
+	public float y;
+	public float z;
+	public UInt32 colour;
+	#pragma warning restore 0649
+}
+
 [ExecuteInEditMode]
 public class ColouredCubesVolume : MonoBehaviour
-{
-	private struct CubiquityVertex 
-	{
-		// Disable 'Field ... is never assigned to'
-		// warnings as this structure is just for interop
-		#pragma warning disable 0649
-		public float x;
-		public float y;
-		public float z;
-		public UInt32 colour;
-		#pragma warning restore 0649
-	}
-	
+{	
 	public string folderName;
 	
 	internal uint? volumeHandle = null;
@@ -279,6 +279,8 @@ public class ColouredCubesVolume : MonoBehaviour
 	
 	void BuildMeshFromNodeHandle(uint nodeHandle, out Mesh renderingMesh, out Mesh physicsMesh)
 	{
+		// At some point I should read this: http://forum.unity3d.com/threads/5687-C-plugin-pass-arrays-from-C
+		
 		uint noOfIndices = CubiquityDLL.GetNoOfIndices(nodeHandle);		
 		IntPtr ptrIndices = CubiquityDLL.GetIndices(nodeHandle);
 		
@@ -289,8 +291,13 @@ public class ColouredCubesVolume : MonoBehaviour
             , 0
             , (int)noOfIndices);
 		
-		uint noOfVertices = CubiquityDLL.GetNoOfVertices(nodeHandle);		
-		IntPtr ptrVertices = CubiquityDLL.GetVertices(nodeHandle);
+		uint noOfVertices = CubiquityDLL.GetNoOfVertices(nodeHandle);	
+		
+		CubiquityVertex[] cubiquityVertices = new CubiquityVertex[noOfVertices];
+		
+		CubiquityDLL.GetVertices(nodeHandle, out cubiquityVertices);
+		
+		/*IntPtr ptrVertices = CubiquityDLL.GetVertices(nodeHandle);
 		
 		// Load the results into a managed array. 
 		uint floatsPerVert = 4;
@@ -309,19 +316,19 @@ public class ColouredCubesVolume : MonoBehaviour
 			ptrVertices = new IntPtr(ptrVertices.ToInt64() + Marshal.SizeOf(typeof(CubiquityVertex)));
 		}
 		
-		//Build a mesh procedurally
+		//Build a mesh procedurally*/
 		
 		
 		
 		renderingMesh = new Mesh();		
 		physicsMesh = new Mesh();
 		
-		Vector3[] physicsVertices = new Vector3[resultVertLength / 4];
+		Vector3[] physicsVertices = new Vector3[noOfVertices];
 		
-        Vector3[] vertices = new Vector3[resultVertLength / 4];
-		for(int ct = 0; ct < resultVertLength / 4; ct++)
+        Vector3[] vertices = new Vector3[noOfVertices];
+		for(int ct = 0; ct < noOfVertices; ct++)
 		{
-			UInt32 colour = (UInt32)myVertices[ct].colour;
+			UInt32 colour = (UInt32)cubiquityVertices[ct].colour;
 			UInt32 red = (UInt32)((colour >> 0) & 0xF) * 16;
 			UInt32 green = (UInt32)((colour >> 4) & 0xF) * 16;
 			UInt32 blue = (UInt32)((colour >> 8) & 0xF) * 16;
@@ -330,9 +337,9 @@ public class ColouredCubesVolume : MonoBehaviour
 			float colourAsFloat = (float)(red * 65536 + green * 256 + blue);
 			
 			//vertices[ct] = new Vector3(resultVertices[ct * 4 + 0], resultVertices[ct * 4 + 1], resultVertices[ct * 4 + 2]);			
-			physicsVertices[ct] = new Vector3(myVertices[ct].x, myVertices[ct].y, myVertices[ct].z);
+			physicsVertices[ct] = new Vector3(cubiquityVertices[ct].x, cubiquityVertices[ct].y, cubiquityVertices[ct].z);
 			
-			float packedPosition = packPosition(myVertices[ct].x, myVertices[ct].y, myVertices[ct].z);
+			float packedPosition = packPosition(cubiquityVertices[ct].x, cubiquityVertices[ct].y, cubiquityVertices[ct].z);
 			
 			vertices[ct] = new Vector3(packedPosition, colourAsFloat, 0.0f);
 
