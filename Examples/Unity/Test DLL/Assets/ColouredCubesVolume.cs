@@ -291,11 +291,13 @@ public class ColouredCubesVolume : MonoBehaviour
             , 0
             , (int)noOfIndices);
 		
-		uint noOfVertices = CubiquityDLL.GetNoOfVertices(nodeHandle);	
+		//uint noOfVertices = CubiquityDLL.GetNoOfVertices(nodeHandle);	
 		
-		CubiquityVertex[] cubiquityVertices = new CubiquityVertex[noOfVertices];
+		/*CubiquityVertex[] cubiquityVertices = new CubiquityVertex[noOfVertices];
 		
-		CubiquityDLL.GetVertices(nodeHandle, out cubiquityVertices);
+		CubiquityDLL.GetVertices(nodeHandle, out cubiquityVertices);*/
+		
+		CubiquityVertex[] cubiquityVertices = CubiquityDLL.GetVertices(nodeHandle);
 		
 		/*IntPtr ptrVertices = CubiquityDLL.GetVertices(nodeHandle);
 		
@@ -323,10 +325,10 @@ public class ColouredCubesVolume : MonoBehaviour
 		renderingMesh = new Mesh();		
 		physicsMesh = new Mesh();
 		
-		Vector3[] physicsVertices = new Vector3[noOfVertices];
+		Vector3[] physicsVertices = new Vector3[cubiquityVertices.Length];
 		
-        Vector3[] vertices = new Vector3[noOfVertices];
-		for(int ct = 0; ct < noOfVertices; ct++)
+        Vector3[] vertices = new Vector3[cubiquityVertices.Length];
+		for(int ct = 0; ct < cubiquityVertices.Length; ct++)
 		{
 			UInt32 colour = (UInt32)cubiquityVertices[ct].colour;
 			UInt32 red = (UInt32)((colour >> 0) & 0xF) * 16;
