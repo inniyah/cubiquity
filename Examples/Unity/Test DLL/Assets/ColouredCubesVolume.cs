@@ -170,7 +170,10 @@ public class ColouredCubesVolume : MonoBehaviour
 		{			
 			if(CubiquityDLL.NodeHasMesh(nodeHandle) == 1)
 			{				
-				Mesh mesh = BuildMeshFromNodeHandle(nodeHandle);
+				Mesh mesh;
+				Mesh physicsMesh;
+				
+				BuildMeshFromNodeHandle(nodeHandle, out mesh, out physicsMesh);
 		
 		        MeshFilter mf = (MeshFilter)gameObjectToSync.GetComponent(typeof(MeshFilter));
 		        MeshRenderer mr = (MeshRenderer)gameObjectToSync.GetComponent(typeof(MeshRenderer));
@@ -182,7 +185,7 @@ public class ColouredCubesVolume : MonoBehaviour
 				}
 				
 		        mf.sharedMesh = mesh;
-				mc.sharedMesh = mesh;
+				mc.sharedMesh = physicsMesh;
 				
 				mr.material = new Material(Shader.Find("ColoredCubesVolume"));
 				
@@ -270,7 +273,7 @@ public class ColouredCubesVolume : MonoBehaviour
 		return result;
 	}
 	
-	Mesh BuildMeshFromNodeHandle(uint nodeHandle)
+	void BuildMeshFromNodeHandle(uint nodeHandle, out Mesh mesh, out Mesh physicsMesh)
 	{
 		uint noOfVertices = CubiquityDLL.GetNoOfVertices(nodeHandle);
 		uint noOfIndices = CubiquityDLL.GetNoOfIndices(nodeHandle);
@@ -305,10 +308,13 @@ public class ColouredCubesVolume : MonoBehaviour
             , 0
             , (int)noOfIndices);
 		
-		Mesh mesh = new Mesh();
-        mesh.name = "testMesh";
-
+		mesh = new Mesh();
+        //mesh.name = "testMesh";
         mesh.Clear();		
+		
+		physicsMesh = new Mesh();
+		
+		Vector3[] physicsVertices = new Vector3[resultVertLength / 4];
 		
         Vector3[] vertices = new Vector3[resultVertLength / 4];
 		Vector2[] uv = new Vector2[resultVertLength / 4];
@@ -323,7 +329,7 @@ public class ColouredCubesVolume : MonoBehaviour
 			float colourAsFloat = (float)(red * 65536 + green * 256 + blue);
 			
 			//vertices[ct] = new Vector3(resultVertices[ct * 4 + 0], resultVertices[ct * 4 + 1], resultVertices[ct * 4 + 2]);			
-			//vertices[ct] = new Vector3(myVertices[ct].x, myVertices[ct].y, myVertices[ct].z);
+			physicsVertices[ct] = new Vector3(myVertices[ct].x, myVertices[ct].y, myVertices[ct].z);
 			
 			float packedPosition = packPosition(myVertices[ct].x, myVertices[ct].y, myVertices[ct].z);
 			vertices[ct] = new Vector3(packedPosition, colourAsFloat, 0.0f);
@@ -341,6 +347,9 @@ public class ColouredCubesVolume : MonoBehaviour
 		// FIXME - Get proper bounds
 		mesh.bounds = new Bounds(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(500.0f, 500.0f, 500.0f));
 		
-		return mesh;
+		physicsMesh.vertices = physicsVertices;
+		physicsMesh.triangles = resultIndices;
+		
+		//return mesh;
 	}
 }
