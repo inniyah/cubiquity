@@ -20,9 +20,9 @@ public class Bullet : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		transform.Translate(0.0f, 0.0f, 1.0f, Space.Self);
+		//transform.Translate(0.0f, 0.0f, 1.0f, Space.Self);
 		
-		int xPos = (int)transform.position.x;
+		/*int xPos = (int)transform.position.x;
 		int yPos = (int)transform.position.y;
 		int zPos = (int)transform.position.z;
 		
@@ -42,6 +42,11 @@ public class Bullet : MonoBehaviour
 			}
 			
 			Object.Destroy(this.gameObject);
-		}
+		}*/
+	}
+	
+	void OnCollisionEnter(Collision collision)
+	{
+		Debug.Log("Collision!");
 	}
 }
