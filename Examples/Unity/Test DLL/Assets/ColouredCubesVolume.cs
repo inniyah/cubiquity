@@ -4,17 +4,21 @@ using System.Collections;
 using System.Runtime.InteropServices;
 using System.Text;
 
-public struct MyVertex 
-{
-	public float x;
-	public float y;
-	public float z;
-	public UInt32 colour;
-}
-
 [ExecuteInEditMode]
 public class ColouredCubesVolume : MonoBehaviour
 {
+	private struct CubiquityVertex 
+	{
+		// Disable 'Field ... is never assigned to'
+		// warnings as this structure is just for interop
+		#pragma warning disable 0649
+		public float x;
+		public float y;
+		public float z;
+		public UInt32 colour;
+		#pragma warning restore 0649
+	}
+	
 	public string folderName;
 	
 	internal uint? volumeHandle = null;
@@ -170,10 +174,10 @@ public class ColouredCubesVolume : MonoBehaviour
 		{			
 			if(CubiquityDLL.NodeHasMesh(nodeHandle) == 1)
 			{				
-				Mesh mesh;
+				Mesh renderingMesh;
 				Mesh physicsMesh;
 				
-				BuildMeshFromNodeHandle(nodeHandle, out mesh, out physicsMesh);
+				BuildMeshFromNodeHandle(nodeHandle, out renderingMesh, out physicsMesh);
 		
 		        MeshFilter mf = (MeshFilter)gameObjectToSync.GetComponent(typeof(MeshFilter));
 		        MeshRenderer mr = (MeshRenderer)gameObjectToSync.GetComponent(typeof(MeshRenderer));
@@ -184,7 +188,7 @@ public class ColouredCubesVolume : MonoBehaviour
 					DestroyImmediate(mf.sharedMesh);
 				}
 				
-		        mf.sharedMesh = mesh;
+		        mf.sharedMesh = renderingMesh;
 				mc.sharedMesh = physicsMesh;
 				
 				mr.material = new Material(Shader.Find("ColoredCubesVolume"));
@@ -273,51 +277,48 @@ public class ColouredCubesVolume : MonoBehaviour
 		return result;
 	}
 	
-	void BuildMeshFromNodeHandle(uint nodeHandle, out Mesh mesh, out Mesh physicsMesh)
+	void BuildMeshFromNodeHandle(uint nodeHandle, out Mesh renderingMesh, out Mesh physicsMesh)
 	{
-		uint noOfVertices = CubiquityDLL.GetNoOfVertices(nodeHandle);
-		uint noOfIndices = CubiquityDLL.GetNoOfIndices(nodeHandle);
+		uint noOfIndices = CubiquityDLL.GetNoOfIndices(nodeHandle);		
+		IntPtr ptrIndices = CubiquityDLL.GetIndices(nodeHandle);
 		
-		IntPtr ptrResultVerts = CubiquityDLL.GetVertices(nodeHandle);
+		// Load the results into a managed array.
+        int[] resultIndices = new int[noOfIndices]; //Should be unsigned!
+        Marshal.Copy(ptrIndices
+            , resultIndices
+            , 0
+            , (int)noOfIndices);
+		
+		uint noOfVertices = CubiquityDLL.GetNoOfVertices(nodeHandle);		
+		IntPtr ptrVertices = CubiquityDLL.GetVertices(nodeHandle);
 		
 		// Load the results into a managed array. 
 		uint floatsPerVert = 4;
 		int resultVertLength = (int)(noOfVertices * floatsPerVert);
         float[] resultVertices = new float[resultVertLength];
-        Marshal.Copy(ptrResultVerts
+        Marshal.Copy(ptrVertices
             , resultVertices
             , 0
             , resultVertLength);
 		
-		MyVertex[] myVertices = new MyVertex[noOfVertices];
+		CubiquityVertex[] myVertices = new CubiquityVertex[noOfVertices];
 		
 		for (int i = 0; i < noOfVertices; i++)
     	{
-			myVertices[i] = (MyVertex)Marshal.PtrToStructure(ptrResultVerts, typeof(MyVertex));
-			ptrResultVerts = new IntPtr(ptrResultVerts.ToInt64() + Marshal.SizeOf(typeof(MyVertex)));
+			myVertices[i] = (CubiquityVertex)Marshal.PtrToStructure(ptrVertices, typeof(CubiquityVertex));
+			ptrVertices = new IntPtr(ptrVertices.ToInt64() + Marshal.SizeOf(typeof(CubiquityVertex)));
 		}
 		
 		//Build a mesh procedurally
 		
-		IntPtr ptrResultIndices = CubiquityDLL.GetIndices(nodeHandle);
 		
-		// Load the results into a managed array.
-        int[] resultIndices = new int[noOfIndices]; //Should be unsigned!
-        Marshal.Copy(ptrResultIndices
-            , resultIndices
-            , 0
-            , (int)noOfIndices);
 		
-		mesh = new Mesh();
-        //mesh.name = "testMesh";
-        mesh.Clear();		
-		
+		renderingMesh = new Mesh();		
 		physicsMesh = new Mesh();
 		
 		Vector3[] physicsVertices = new Vector3[resultVertLength / 4];
 		
         Vector3[] vertices = new Vector3[resultVertLength / 4];
-		Vector2[] uv = new Vector2[resultVertLength / 4];
 		for(int ct = 0; ct < resultVertLength / 4; ct++)
 		{
 			UInt32 colour = (UInt32)myVertices[ct].colour;
@@ -332,24 +333,18 @@ public class ColouredCubesVolume : MonoBehaviour
 			physicsVertices[ct] = new Vector3(myVertices[ct].x, myVertices[ct].y, myVertices[ct].z);
 			
 			float packedPosition = packPosition(myVertices[ct].x, myVertices[ct].y, myVertices[ct].z);
+			
 			vertices[ct] = new Vector3(packedPosition, colourAsFloat, 0.0f);
-			
-			
-			//float colourAsFloat = (float)green / 15.0f;
-			
-			uv[ct] = new Vector2(colourAsFloat, colourAsFloat);
-			//uv[ct] = new Vector2(0.0f, 0.0f);
+
 		}
-		mesh.vertices = vertices; 
-		mesh.triangles = resultIndices;
-		mesh.uv = uv;
+		renderingMesh.vertices = vertices; 
+		renderingMesh.triangles = resultIndices;
 		
 		// FIXME - Get proper bounds
-		mesh.bounds = new Bounds(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(500.0f, 500.0f, 500.0f));
+		renderingMesh.bounds = new Bounds(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(500.0f, 500.0f, 500.0f));
 		
 		physicsMesh.vertices = physicsVertices;
 		physicsMesh.triangles = resultIndices;
-		
-		//return mesh;
+
 	}
 }
