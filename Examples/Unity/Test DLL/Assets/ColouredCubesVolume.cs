@@ -295,11 +295,11 @@ public class ColouredCubesVolume : MonoBehaviour
 	
 	float packColor(uint color)
 	{
-		uint red = (uint)((color >> 0) & 0xF) * 16;
-		uint green = (uint)((color >> 4) & 0xF) * 16;
-		uint blue = (uint)((color >> 8) & 0xF) * 16;
+		uint red = (uint)((color >> 0) & 0xF);
+		uint green = (uint)((color >> 4) & 0xF);
+		uint blue = (uint)((color >> 8) & 0xF);
 		
-		float result = (float)(red * 65536 + green * 256 + blue);
+		float result = (float)(red * 256 + green * 16 + blue);
 		
 		return result;
 	}
