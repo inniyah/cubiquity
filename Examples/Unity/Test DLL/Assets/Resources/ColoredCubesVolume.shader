@@ -184,6 +184,9 @@ Shader "ColoredCubesVolume"
             // http://forum.unity3d.com/threads/33955-Why-is-ambient-light-at-half-strength?p=220635&viewfull=1#post220635
             diffuseReflection *= 2.0f;
             specularReflection *= 2.0f;
+            
+            // It seems we need to double ambient as well? I'm not sure this is expected...
+            ambientLighting *= 2.0f;
  
             return float4(ambientLighting + diffuseReflection 
                + specularReflection, 1.0);
