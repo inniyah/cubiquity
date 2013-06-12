@@ -49,18 +49,27 @@ public class Bullet : MonoBehaviour
 	{
 		int xPos = (int)transform.position.x;
 		int yPos = (int)transform.position.y;
-		int zPos = (int)transform.position.z;
+		int zPos = (int)transform.position.z;	
 		
-		Color32 color = colouredCubesVolume.GetVoxel(xPos, yPos, zPos);
-		
-
+		Color32 emptyVoxelColor = new Color32(0, 0, 0, 0);
+			
 		for(int z = zPos - 2; z < zPos + 2; z++)
 		{
 			for(int y = yPos - 2; y < yPos + 2; y++)
 			{
 				for(int x = xPos - 2; x < xPos + 2; x++)
 				{
-					colouredCubesVolume.SeparateVoxel(x, y, z);
+					Color32 color = colouredCubesVolume.GetVoxel(x, y, z);
+					if(color.a > 127)
+					{					
+						colouredCubesVolume.SetVoxel(x, y, z, emptyVoxelColor);
+						
+						GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+						cube.AddComponent<Rigidbody>();
+						cube.transform.position = new Vector3(x, y, z);
+						cube.transform.localScale = new Vector3(0.99f, 0.99f, 0.99f);
+						cube.renderer.material.color = color;
+					}
 				}
 			}
 		}

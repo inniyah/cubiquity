@@ -165,27 +165,6 @@ public class ColouredCubesVolume : MonoBehaviour
 		}
 	}
 	
-	public void SeparateVoxel(int x, int y, int z)
-	{
-		if(volumeHandle.HasValue)
-		{
-			if(x >= 0 && y >= 0 && z >= 0 && x < 128 && y < 32 && z < 128) // FIX THESE VALUES!
-			{
-				Color32 color = GetVoxel(x, y, z);
-				if(color.a > 127)
-				{					
-					CubiquityDLL.SetVoxel(volumeHandle.Value, x, y, z, 0, 0, 0, 0);
-					
-					GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-					cube.AddComponent<Rigidbody>();
-					cube.transform.position = new Vector3(x, y, z);
-					cube.transform.localScale = new Vector3(0.99f, 0.99f, 0.99f);
-					cube.renderer.material.color = color;
-				}
-			}
-		}
-	}
-	
 	public void syncNode(uint nodeHandle, GameObject gameObjectToSync)
 	{
 		uint meshLastUpdated = CubiquityDLL.GetMeshLastUpdated(nodeHandle);		
