@@ -20,32 +20,67 @@ public class Bullet : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		//transform.Translate(0.0f, 0.0f, 1.0f, Space.Self);
+		float bulletSpeed = 100.0f;
+		transform.Translate(0.0f, 0.0f, Time.deltaTime * bulletSpeed, Space.Self);
 		
-		/*int xPos = (int)transform.position.x;
+		int xPos = (int)transform.position.x;
 		int yPos = (int)transform.position.y;
 		int zPos = (int)transform.position.z;
 		
-		Color32 color = colouredCubesVolume.GetVoxel(xPos, yPos, zPos);
+		Vector3 pos = new Vector3(xPos, yPos, zPos);
 		
-		if(color.a > 127)
+		Color32 centerColor = colouredCubesVolume.GetVoxel(xPos, yPos, zPos);
+		
+		if(centerColor.a > 127)
 		{
-			for(int z = zPos - 2; z < zPos + 2; z++)
+			Debug.Log ("Impact!");
+			for(int z = zPos - 5; z < zPos + 5; z++)
 			{
-				for(int y = yPos - 2; y < yPos + 2; y++)
+				for(int y = yPos - 5; y < yPos + 5; y++)
 				{
-					for(int x = xPos - 2; x < xPos + 2; x++)
-					{
-						colouredCubesVolume.SetVoxel(x, y, z, new Color32(0,0,0,0));
+					for(int x = xPos - 5; x < xPos + 5; x++)
+					{					
+						int xDiff = x - xPos;
+						int yDiff = y - yPos;
+						int zDiff = z - zPos;
+						
+						int distSquared = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff;
+						
+						if(distSquared < 25)
+						{	
+							Color32 color = colouredCubesVolume.GetVoxel(x, y, z);				
+							
+							if(color.a > 127)
+							{
+								colouredCubesVolume.SetVoxel(x, y, z, new Color32(0,0,0,0));
+							
+								if(distSquared > 16)
+								{
+									//if((x+y+z)% 2 == 0)
+									{
+										GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
+										cube.AddComponent<Rigidbody>();
+										cube.transform.position = new Vector3(x, y, z);
+										cube.transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
+										cube.renderer.material.color = color;
+										
+										Vector3 explosionForce = cube.transform.position - pos;
+										
+										cube.rigidbody.AddTorque(12.0f, 21.3f, 13.4f);
+										cube.rigidbody.AddForce(explosionForce.normalized * 100.0f);
+									}
+								}
+							}
+						}
 					}
 				}
 			}
 			
 			Object.Destroy(this.gameObject);
-		}*/
+		}
 	}
 	
-	void OnCollisionEnter(Collision collision)
+	/*void OnCollisionEnter(Collision collision)
 	{
 		//Vector3 explosionCentre = transform.position + (rigidbody.velocity * 1.0f);
 		
@@ -76,7 +111,7 @@ public class Bullet : MonoBehaviour
 						GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 						cube.AddComponent<Rigidbody>();
 						cube.transform.position = new Vector3(x, y, z);
-						cube.transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
+						cube.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
 						cube.renderer.material.color = color;						
 						
 						cube.rigidbody.AddTorque(12.0f, 21.3f, 13.4f);
@@ -87,5 +122,5 @@ public class Bullet : MonoBehaviour
 		}
 		
 		Object.Destroy(this.gameObject);
-	}
+	}*/
 }

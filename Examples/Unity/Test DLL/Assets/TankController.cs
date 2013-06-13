@@ -37,7 +37,7 @@ public class TankController : MonoBehaviour
 				//Debug.Log("Got mouse down!");
 				GameObject bullet = GameObject.CreatePrimitive(PrimitiveType.Sphere);
 				bullet.AddComponent<Bullet>();	
-				bullet.AddComponent<Rigidbody>();
+				//bullet.AddComponent<Rigidbody>();
 				//bullet.AddComponent<Collider>();
 				
 				bullet.transform.position = gun.transform.position;
@@ -45,7 +45,9 @@ public class TankController : MonoBehaviour
 				
 				bullet.transform.Translate(0.0f, 0.0f, 3.0f, Space.Self);
 				
-				bullet.rigidbody.AddForce(gun.transform.forward * 50.0f,ForceMode.Impulse);
+				//bullet.rigidbody.collisionDetectionMode = CollisionDetectionMode.ContinuousDynamic;
+				
+				//bullet.rigidbody.AddForce(gun.transform.forward * 100.0f,ForceMode.Impulse);
 				
 				Object.Destroy(bullet, 5.0f);
 				
