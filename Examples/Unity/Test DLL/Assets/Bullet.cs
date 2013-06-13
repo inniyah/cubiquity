@@ -77,6 +77,7 @@ public class Bullet : MonoBehaviour
 									{
 										GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 										cube.AddComponent<Rigidbody>();
+										cube.AddComponent<SeparatedVoxel>();
 										cube.transform.position = new Vector3(x, y, z);
 										cube.transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
 										cube.renderer.material.color = color;
@@ -91,6 +92,8 @@ public class Bullet : MonoBehaviour
 										
 										cube.rigidbody.AddTorque(xTorque, yTorque, zTorque);
 										cube.rigidbody.AddForce((explosionForce.normalized + up) * 100.0f);
+										
+										//Object.Destroy(cube, 5.0f);
 									}
 								}
 							}

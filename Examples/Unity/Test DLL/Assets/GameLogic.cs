@@ -18,7 +18,7 @@ public class GameLogic : MonoBehaviour
 	void Start()
 	{
 		// Create some physics objects for testing.
-		for(uint x = 12; x < 128; x += 20)
+		/*for(uint x = 12; x < 128; x += 20)
 		{
 			for(uint z = 12; z < 128; z += 20)
 			{
@@ -27,7 +27,7 @@ public class GameLogic : MonoBehaviour
 				cube.transform.position = new Vector3(x, 30, z);
 				cube.transform.RotateAround(new Vector3(x, 12, z), x);
 			}
-		}
+		}*/
 		
 		// Add some wall to our arena		
 		/*DrawCuboid (0, 8, 0, 127, 24, 5, Color.red);

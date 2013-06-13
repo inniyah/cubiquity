@@ -53,6 +53,7 @@
      <Compile Include="Assets\IntVector3.cs" />
      <Compile Include="Assets\OctreeNodeData.cs" />
      <Compile Include="Assets\Region.cs" />
+     <Compile Include="Assets\SeparatedVoxel.cs" />
      <Compile Include="Assets\ShowBounds.cs" />
      <Compile Include="Assets\TankController.cs" />
      <None Include="Assets\Resources\ColoredCubesVolume.shader" />
