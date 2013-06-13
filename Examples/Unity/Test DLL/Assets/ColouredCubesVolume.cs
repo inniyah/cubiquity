@@ -153,6 +153,37 @@ public class ColouredCubesVolume : MonoBehaviour
 		return color;
 	}
 	
+	public bool IsSurfaceVoxel(int x, int y, int z)
+	{
+		if(volumeHandle.HasValue)
+		{
+			Color32 color = new Color32();
+			
+			CubiquityDLL.GetVoxel(volumeHandle.Value, x, y, z, out color.r, out color.g, out color.b, out color.a);
+			if(color.a < 127) return false;
+			
+			CubiquityDLL.GetVoxel(volumeHandle.Value, x + 1, y, z, out color.r, out color.g, out color.b, out color.a);
+			if(color.a < 127) return true;
+			
+			CubiquityDLL.GetVoxel(volumeHandle.Value, x - 1, y, z, out color.r, out color.g, out color.b, out color.a);
+			if(color.a < 127) return true;
+			
+			CubiquityDLL.GetVoxel(volumeHandle.Value, x, y + 1, z, out color.r, out color.g, out color.b, out color.a);
+			if(color.a < 127) return true;
+			
+			CubiquityDLL.GetVoxel(volumeHandle.Value, x, y - 1, z, out color.r, out color.g, out color.b, out color.a);
+			if(color.a < 127) return true;
+			
+			CubiquityDLL.GetVoxel(volumeHandle.Value, x, y, z + 1, out color.r, out color.g, out color.b, out color.a);
+			if(color.a < 127) return true;
+			
+			CubiquityDLL.GetVoxel(volumeHandle.Value, x, y, z - 1, out color.r, out color.g, out color.b, out color.a);
+			if(color.a < 127) return true;
+		}
+		
+		return false;
+	}
+	
 	public void SetVoxel(int x, int y, int z, Color32 color)
 	{
 		if(volumeHandle.HasValue)
