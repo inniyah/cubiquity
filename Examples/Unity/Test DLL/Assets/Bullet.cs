@@ -27,13 +27,22 @@ public class Bullet : MonoBehaviour
 		int yPos = (int)transform.position.y;
 		int zPos = (int)transform.position.z;
 		
-		Vector3 pos = new Vector3(xPos, yPos, zPos);
+		
 		
 		Color32 centerColor = colouredCubesVolume.GetVoxel(xPos, yPos, zPos);
 		
 		if(centerColor.a > 127)
 		{
 			Debug.Log ("Impact!");
+			
+			transform.Translate(0.0f, 0.0f, 2.0f, Space.Self);
+		
+			xPos = (int)transform.position.x;
+			yPos = (int)transform.position.y;
+			zPos = (int)transform.position.z;
+			
+			Vector3 pos = new Vector3(xPos, yPos, zPos);
+			
 			for(int z = zPos - 5; z < zPos + 5; z++)
 			{
 				for(int y = yPos - 5; y < yPos + 5; y++)
@@ -54,7 +63,7 @@ public class Bullet : MonoBehaviour
 							{
 								colouredCubesVolume.SetVoxel(x, y, z, new Color32(0,0,0,0));
 							
-								if(distSquared > 16)
+								//if(distSquared > 12)
 								{
 									//if((x+y+z)% 2 == 0)
 									{
