@@ -5,6 +5,9 @@ public class GameLogic : MonoBehaviour
 {
 	public ColouredCubesVolume colouredCubesVolume;
 	public GameObject gun;
+	public GameObject mainCamera;
+	public float cameraDistance = 10.0f;
+	public GameObject tank;
 	
 	// Initialization
 	void Awake()
@@ -12,6 +15,8 @@ public class GameLogic : MonoBehaviour
 		GameObject voxelTerrainObject = GameObject.Find("Voxel Terrain");
 		colouredCubesVolume = voxelTerrainObject.GetComponent<ColouredCubesVolume>();
 		gun = GameObject.Find("Gun");
+		mainCamera = GameObject.Find("Main Camera");
+		tank = GameObject.Find("Tank");
 	}
 
 	// Use this for initialization
@@ -39,7 +44,15 @@ public class GameLogic : MonoBehaviour
 	
 	// Update is called once per frame
 	void Update()
-	{
+	{		
+		cameraDistance -= Input.GetAxis("Mouse ScrollWheel");
+		
+		//mainCamera.transform = tank.transform;
+		//mainCamera.transform.Translate(0.0, 5.0f, 5.0f, Space.Self);
+		mainCamera.transform.localPosition = new Vector3(0.0f, cameraDistance * cameraDistance, -cameraDistance);
+		mainCamera.transform.LookAt(tank.transform.position + new Vector3(0.0f, 0.0f, -10.0f));
+		//Debug.Log (tank.transform.position);
+		
 		// Build a ray based on the current mouse position
 		Vector2 mousePos = Input.mousePosition;
 		Ray ray = Camera.main.ScreenPointToRay(new Vector3(mousePos.x, mousePos.y, 0));
