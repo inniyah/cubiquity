@@ -8,6 +8,7 @@ public class GameLogic : MonoBehaviour
 	public GameObject mainCamera;
 	public float cameraDistance = 10.0f;
 	public GameObject tank;
+	public GameObject cameraTarget;
 	
 	// Initialization
 	void Awake()
@@ -17,6 +18,7 @@ public class GameLogic : MonoBehaviour
 		gun = GameObject.Find("Gun");
 		mainCamera = GameObject.Find("Main Camera");
 		tank = GameObject.Find("Tank");
+		cameraTarget = GameObject.Find ("CameraTarget");
 	}
 
 	// Use this for initialization
@@ -50,7 +52,10 @@ public class GameLogic : MonoBehaviour
 		//mainCamera.transform = tank.transform;
 		//mainCamera.transform.Translate(0.0, 5.0f, 5.0f, Space.Self);
 		mainCamera.transform.localPosition = new Vector3(0.0f, cameraDistance * cameraDistance, -cameraDistance);
-		mainCamera.transform.LookAt(tank.transform.position + new Vector3(0.0f, 0.0f, -10.0f));
+		mainCamera.transform.LookAt(cameraTarget.transform);
+		
+		//mainCamera.transform.rotation = Quaternion.Slerp( mainCamera.transform.rotation, Quaternion.LookRotation( cameraTarget.transform.position - mainCamera.transform.position ), Time.deltaTime );
+		
 		//Debug.Log (tank.transform.position);
 		
 		// Build a ray based on the current mouse position
