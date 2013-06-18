@@ -6,7 +6,7 @@ public class GameLogic : MonoBehaviour
 	public ColouredCubesVolume colouredCubesVolume;
 	public GameObject gun;
 	public GameObject mainCamera;
-	public float cameraDistance = 10.0f;
+	public float cameraDistance = 1.0f;
 	public GameObject tank;
 	public GameObject cameraTarget;
 	

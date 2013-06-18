@@ -222,7 +222,7 @@ public class ColouredCubesVolume : MonoBehaviour
 		        mf.sharedMesh = renderingMesh;
 				mc.sharedMesh = physicsMesh;
 				
-				mr.material = new Material(Shader.Find("ColoredCubesVolume"));
+				mr.material = new Material(Shader.Find("ColouredCubesVolume"));
 				mr.material.SetVector("_SpecColor", new Vector4(0.2f, 0.2f, 0.2f, 1.0f));
 				
 				//mc.material.bounciness = 1.0f;				
