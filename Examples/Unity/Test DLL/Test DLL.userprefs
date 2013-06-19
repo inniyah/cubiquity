@@ -1,10 +1,11 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Resources\ColouredCubesVolume.shader">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Resources\ColoredCubesVolume.shader">
     <Files>
-      <File FileName="Assets\Resources\ColouredCubesVolume.shader" Line="88" Column="45" />
-      <File FileName="Assets\ColouredCubesVolume.cs" Line="225" Column="50" />
-      <File FileName="Assets\Resources\ColoredCubesVolume.shader" Line="122" Column="70" />
+      <File FileName="Assets\Resources\TestShader.shader" Line="18" Column="34" />
+      <File FileName="Assets\ColouredCubesVolume.cs" Line="339" Column="26" />
+      <File FileName="Assets\Resources\ColouredCubesVolume.shader" Line="1" Column="1" />
+      <File FileName="Assets\Resources\ColoredCubesVolume.shader" Line="44" Column="12" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
