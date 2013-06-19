@@ -222,7 +222,7 @@ public class ColouredCubesVolume : MonoBehaviour
 		        mf.sharedMesh = renderingMesh;
 				mc.sharedMesh = physicsMesh;
 				
-				mr.material = new Material(Shader.Find("TestShader"));
+				mr.material = new Material(Shader.Find("ColouredCubesVolume"));
 				//mr.material.SetVector("_SpecColor", new Vector4(0.2f, 0.2f, 0.2f, 1.0f));
 				
 				//mc.material.bounciness = 1.0f;				
@@ -327,26 +327,20 @@ public class ColouredCubesVolume : MonoBehaviour
 		
 		Vector3[] physicsVertices = new Vector3[cubiquityVertices.Length];		
         Vector3[] renderingVertices = new Vector3[cubiquityVertices.Length];
-		Vector3[] renderingNormals = new Vector3[cubiquityVertices.Length];
-		Vector4[] renderingTangents = new Vector4[cubiquityVertices.Length];
 		
 		for(int ct = 0; ct < cubiquityVertices.Length; ct++)
 		{
 			Vector3 position = new Vector3(cubiquityVertices[ct].x, cubiquityVertices[ct].y, cubiquityVertices[ct].z);
 			UInt32 colour = cubiquityVertices[ct].colour;
 			
-			//float packedPosition = packPosition(position);
-			//float packedColor = packColor(colour);
+			float packedPosition = packPosition(position);
+			float packedColor = packColor(colour);
 					
 			physicsVertices[ct] = position;			
-			renderingVertices[ct] = position;
-			renderingNormals[ct] = new Vector3(0.0f, 0.0f, 1.0f); // Dummy normals required by Unity
-			renderingTangents[ct] = new Vector4(1.0f, 0.0f, 0.0f, 1.0f); // Dummy tangents required by Unity
+			renderingVertices[ct] = new Vector3(packedPosition, packedColor, 0.0f);
 		}
 		
 		renderingMesh.vertices = renderingVertices; 
-		//renderingMesh.normals = renderingNormals;
-		//renderingMesh.tangents = renderingTangents;
 		renderingMesh.triangles = indices;
 		
 		// FIXME - Get proper bounds

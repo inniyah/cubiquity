@@ -78,6 +78,10 @@ Shader "ColouredCubesVolume"
       	float4 unpackedColor = float4(floatToRGB(v.vertex.y), 1.0f);
       	
       	v.vertex = unpackedPosition;
+      	
+      	v.normal = float3 (0.0f, 0.0f, 1.0f);
+
+    v.tangent = float4 (1.0f, 0.0f, 0.0f, 1.0f);
       
           UNITY_INITIALIZE_OUTPUT(Input,o);
           
