@@ -223,7 +223,7 @@ public class ColouredCubesVolume : MonoBehaviour
 				mc.sharedMesh = physicsMesh;
 				
 				mr.material = new Material(Shader.Find("TestShader"));
-				mr.material.SetVector("_SpecColor", new Vector4(0.2f, 0.2f, 0.2f, 1.0f));
+				//mr.material.SetVector("_SpecColor", new Vector4(0.2f, 0.2f, 0.2f, 1.0f));
 				
 				//mc.material.bounciness = 1.0f;				
 				//mr.renderer.material.shader = Shader.Find("ColouredCubesVolume");
@@ -345,8 +345,8 @@ public class ColouredCubesVolume : MonoBehaviour
 		}
 		
 		renderingMesh.vertices = renderingVertices; 
-		renderingMesh.normals = renderingNormals;
-		renderingMesh.tangents = renderingTangents;
+		//renderingMesh.normals = renderingNormals;
+		//renderingMesh.tangents = renderingTangents;
 		renderingMesh.triangles = indices;
 		
 		// FIXME - Get proper bounds
