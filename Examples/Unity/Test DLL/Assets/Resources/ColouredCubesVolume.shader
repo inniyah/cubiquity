@@ -32,7 +32,7 @@ Shader "ColouredCubesVolume"
 			return result;
 		}
       
-      float3 floatToRGB(float inputVal)
+      float3 unpackColor(float inputVal)
 		{	
 			// Store the input in each component
 			float3 inputVec = float3(inputVal, inputVal, inputVal);
@@ -74,16 +74,16 @@ Shader "ColouredCubesVolume"
       
       void vert (inout appdata_full v, out Input o)
       {
+      	UNITY_INITIALIZE_OUTPUT(Input,o);
       	float4 unpackedPosition = float4(unpackPosition(v.vertex.x), 1.0f);
-      	float4 unpackedColor = float4(floatToRGB(v.vertex.y), 1.0f);
+      	float4 unpackedColor = float4(unpackColor(v.vertex.y), 1.0f);
       	
       	v.vertex = unpackedPosition;
       	
       	v.normal = float3 (0.0f, 0.0f, 1.0f);
 
-    v.tangent = float4 (1.0f, 0.0f, 0.0f, 1.0f);
-      
-          UNITY_INITIALIZE_OUTPUT(Input,o);
+    v.tangent = float4 (1.0f, 0.0f, 0.0f, 1.0f);     
+          
           
           o.modelPos = v.vertex;
           
