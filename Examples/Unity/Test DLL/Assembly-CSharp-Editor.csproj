@@ -45,8 +45,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Editor\ColouredCubesVolumeEditor.cs" />
-     <None Include="Assets\Resources\TestShader.shader" />
-     <None Include="Assets\Resources\ColoredCubesVolume.shader" />
+     <None Include="Assets\Resources\ColoredCubesVolumeUtilities.cginc" />
      <None Include="Assets\Resources\ColouredCubesVolume.shader" />
  <Reference Include="UnityEditor.Graphs">
  <HintPath>C:\Program Files (x86)\Unity\Editor\Data\Managed\UnityEditor.Graphs.dll</HintPath>
