@@ -31,7 +31,7 @@ public class ColouredCubesVolumeEditor : Editor
 		VoxelTerrainRoot.AddComponent<ColouredCubesVolume>();
 		
 		ColouredCubesVolume colouredCubesVolume = VoxelTerrainRoot.GetComponent<ColouredCubesVolume>();
-		colouredCubesVolume.folderName = "C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/";
+		colouredCubesVolume.folderName = "Assets/Resources/VoxeliensTerrain/";
     }
 	
 	/*void OnEnable()
