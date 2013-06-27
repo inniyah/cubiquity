@@ -1,0 +1,8 @@
+Version = 1.0
+Width = 128
+Height = 128
+SliceCount = 32
+SliceExtension = png
+ComponentCount = 4
+ComponentType = u
+ComponentSize = 8

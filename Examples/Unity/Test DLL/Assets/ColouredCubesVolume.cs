@@ -20,6 +20,7 @@ public struct CubiquityVertex
 public class ColouredCubesVolume : MonoBehaviour
 {	
 	public string folderName;
+	public bool UseCollisionMesh = true;
 	
 	internal uint? volumeHandle = null;
 	private GameObject rootGameObject;
@@ -40,11 +41,11 @@ public class ColouredCubesVolume : MonoBehaviour
 		// Use the Cubiquity dll to allocate some volume data
 		if((folderName != null) && (folderName != ""))
 		{
-			volumeHandle = CubiquityDLL.NewColouredCubesVolumeFromVolDat(folderName, 64, 64);
+			volumeHandle = CubiquityDLL.NewColouredCubesVolumeFromVolDat(folderName, 64, 16);
 		}
 		else
 		{
-			volumeHandle = CubiquityDLL.NewColouredCubesVolume(0, 0, 0, 127, 31, 127, 64, 64);
+			volumeHandle = CubiquityDLL.NewColouredCubesVolume(0, 0, 0, 127, 31, 127, 64, 16);
 			
 			// Set some voxels to solid so the user can see the volume they just created.
 			Color32 lightGrey = new Color32(192, 192, 192, 255);
@@ -212,21 +213,21 @@ public class ColouredCubesVolume : MonoBehaviour
 		
 		        MeshFilter mf = (MeshFilter)gameObjectToSync.GetComponent(typeof(MeshFilter));
 		        MeshRenderer mr = (MeshRenderer)gameObjectToSync.GetComponent(typeof(MeshRenderer));
-				MeshCollider mc = (MeshCollider)gameObjectToSync.GetComponent(typeof(MeshCollider));
 				
 				if(mf.sharedMesh != null)
 				{
 					DestroyImmediate(mf.sharedMesh);
 				}
 				
-		        mf.sharedMesh = renderingMesh;
-				mc.sharedMesh = physicsMesh;
+		        mf.sharedMesh = renderingMesh;				
 				
-				mr.material = new Material(Shader.Find("ColoredCubesVolume"));
-				mr.material.SetVector("_SpecColor", new Vector4(0.2f, 0.2f, 0.2f, 1.0f));
+				mr.material = new Material(Shader.Find("ColouredCubesVolume"));
 				
-				//mc.material.bounciness = 1.0f;				
-				//mr.renderer.material.shader = Shader.Find("ColouredCubesVolume");
+				if(UseCollisionMesh)
+				{
+					MeshCollider mc = (MeshCollider)gameObjectToSync.GetComponent(typeof(MeshCollider));
+					mc.sharedMesh = physicsMesh;
+				}
 			}
 			
 			uint currentTime = CubiquityDLL.GetCurrentTime();
@@ -319,36 +320,47 @@ public class ColouredCubesVolume : MonoBehaviour
 	{
 		// At some point I should read this: http://forum.unity3d.com/threads/5687-C-plugin-pass-arrays-from-C
 		
+		// Create rendering and possible collision meshes.
+		renderingMesh = new Mesh();		
+		physicsMesh = UseCollisionMesh ? new Mesh() : null;
+		
+		// Get the data from Cubiquity.
 		int[] indices = CubiquityDLL.GetIndices(nodeHandle);		
 		CubiquityVertex[] cubiquityVertices = CubiquityDLL.GetVertices(nodeHandle);			
 		
-		renderingMesh = new Mesh();		
-		physicsMesh = new Mesh();
-		
-		Vector3[] physicsVertices = new Vector3[cubiquityVertices.Length];		
-        Vector3[] renderingVertices = new Vector3[cubiquityVertices.Length];
+		// Create the arrays which we'll copy the data to.
+        Vector3[] renderingVertices = new Vector3[cubiquityVertices.Length];		
+		Vector3[] physicsVertices = UseCollisionMesh ? new Vector3[cubiquityVertices.Length] : null;
 		
 		for(int ct = 0; ct < cubiquityVertices.Length; ct++)
 		{
+			// Get the vertex data from Cubiquity.
 			Vector3 position = new Vector3(cubiquityVertices[ct].x, cubiquityVertices[ct].y, cubiquityVertices[ct].z);
 			UInt32 colour = cubiquityVertices[ct].colour;
 			
+			// Pack it for efficient vertex buffer usage.
 			float packedPosition = packPosition(position);
 			float packedColor = packColor(colour);
-					
-			physicsVertices[ct] = position;			
-			renderingVertices[ct] = new Vector3(packedPosition, packedColor, 0.0f);
-
+				
+			// Copy it to the arrays.
+			renderingVertices[ct] = new Vector3(packedPosition, packedColor, 0.0f);			
+			if(UseCollisionMesh)
+			{
+				physicsVertices[ct] = position;
+			}
 		}
 		
+		// Assign vertex data to the meshes.
 		renderingMesh.vertices = renderingVertices; 
 		renderingMesh.triangles = indices;
 		
 		// FIXME - Get proper bounds
 		renderingMesh.bounds = new Bounds(new Vector3(0.0f, 0.0f, 0.0f), new Vector3(500.0f, 500.0f, 500.0f));
 		
-		physicsMesh.vertices = physicsVertices;
-		physicsMesh.triangles = indices;
-
+		if(UseCollisionMesh)
+		{
+			physicsMesh.vertices = physicsVertices;
+			physicsMesh.triangles = indices;
+		}
 	}
 }
