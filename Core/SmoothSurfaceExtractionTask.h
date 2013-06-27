@@ -44,7 +44,7 @@ namespace Cubiquity
 					int32_t sy = (dy - dstRegion.getLowerCorner().getY()) * factor + srcRegion.getLowerCorner().getY();
 					int32_t sz = (dz - dstRegion.getLowerCorner().getZ()) * factor + srcRegion.getLowerCorner().getZ();
 
-					const MultiMaterial& srcVoxel = srcVolume->getVoxelWithWrapping(sx,sy,sz);
+					const MultiMaterial& srcVoxel = srcVolume->getVoxel<WrapModes::Border>(sx,sy,sz);
 					dstVolume->setVoxelAt(dx,dy,dz,srcVoxel);
 				}
 			}

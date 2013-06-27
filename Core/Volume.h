@@ -32,7 +32,7 @@ namespace Cubiquity
 		uint32_t getDepth(void) const { return mPolyVoxVolume->getDepth(); }
 		const Region& getEnclosingRegion(void) const { return mPolyVoxVolume->getEnclosingRegion(); }
 		// Note this adds a border rather than calling straight through.
-		VoxelType getVoxelAt(int32_t x, int32_t y, int32_t z) { return mPolyVoxVolume->getVoxelWithWrapping(x, y, z, ::PolyVox::WrapModes::Border, VoxelType()); }
+		VoxelType getVoxelAt(int32_t x, int32_t y, int32_t z) { return mPolyVoxVolume->getVoxel<::PolyVox::WrapModes::Border>(x, y, z, VoxelType()); }
 
 		// Octree access
 		Octree<VoxelType>* getOctree(void) { return mOctree; };

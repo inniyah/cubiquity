@@ -66,9 +66,6 @@
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Compressor.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\ConstVolumeProxy.h">
-      <Filter>PolyVox</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\CubicSurfaceExtractor.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
@@ -218,6 +215,12 @@
     </ClInclude>
     <ClInclude Include="Logging.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\FilePager.h">
+      <Filter>PolyVox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Pager.h">
+      <Filter>PolyVox</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

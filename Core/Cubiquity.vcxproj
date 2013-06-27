@@ -17,12 +17,12 @@
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\AStarPathfinder.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\BaseVolume.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Compressor.h" />
-    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\ConstVolumeProxy.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\CubicSurfaceExtractor.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\CubicSurfaceExtractorWithNormals.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\DefaultIsQuadNeeded.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\DefaultMarchingCubesController.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Density.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\FilePager.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\GradientEstimators.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\AStarPathfinderImpl.h" />
@@ -44,6 +44,7 @@
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Material.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\MaterialDensityPair.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\MinizCompressor.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Pager.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\PolyVoxForwardDeclarations.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\RawVolume.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Raycast.h" />
