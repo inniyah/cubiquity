@@ -16,14 +16,14 @@ namespace Cubiquity
 	class GameplayVolumeSerialisation
 	{
 	public:
-		static void gameplayExportColourSlices(GameplayColouredCubesVolume* volume, const char* folderName)
+		static void gameplayExportColourSlices(GameplayColouredCubesVolume* volume, const char* pageFolder)
 		{
-			exportVolDat<ColouredCubesVolume>(volume->getCubiquityVolume(), folderName);
+			exportVolDat<ColouredCubesVolume>(volume->getCubiquityVolume(), pageFolder);
 		}
 
-		static void gameplayExportSmoothSlices(GameplaySmoothTerrainVolume* volume, const char* folderName)
+		static void gameplayExportSmoothSlices(GameplaySmoothTerrainVolume* volume, const char* pageFolder)
 		{
-			exportVolDat<SmoothTerrainVolume>(volume->getCubiquityVolume(), folderName);
+			exportVolDat<SmoothTerrainVolume>(volume->getCubiquityVolume(), pageFolder);
 		}
 	};
 }

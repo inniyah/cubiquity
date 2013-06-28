@@ -13,13 +13,13 @@ using namespace PolyVox;
 
 namespace Cubiquity
 {
-	GameplayColouredCubesVolume::GameplayColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int baseNodeSize, const char* folderName)
-		:GameplayVolume<ColouredCubesVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, baseNodeSize, folderName)
+	GameplayColouredCubesVolume::GameplayColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int baseNodeSize, const char* pageFolder)
+		:GameplayVolume<ColouredCubesVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, baseNodeSize, pageFolder)
 	{
 		initialiseOctree();
 	}
 
-	GameplayColouredCubesVolume::GameplayColouredCubesVolume(const char* dataToLoad, unsigned int baseNodeSize, const char* folderName)
+	GameplayColouredCubesVolume::GameplayColouredCubesVolume(const char* dataToLoad, unsigned int baseNodeSize, const char* pageFolder)
 		:GameplayVolume<ColouredCubesVolume>()
 	{
 		// Check whether the provided data is a file or a directory
@@ -33,7 +33,7 @@ namespace Cubiquity
 		{
 			// For now we assume it's VolDat. Leter on we should check for
 			// Volume.idx and load raw Cubiquity data instead if necessary.
-			mCubiquityVolume = importVolDat<ColouredCubesVolume>(dataToLoad, baseNodeSize, folderName);
+			mCubiquityVolume = importVolDat<ColouredCubesVolume>(dataToLoad, baseNodeSize, pageFolder);
 		}
 
 		initialiseOctree();

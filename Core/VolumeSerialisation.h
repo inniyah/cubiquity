@@ -47,13 +47,13 @@ namespace Cubiquity
 	void voxelToPixel(Colour& voxelData, uint8_t* pixelData, uint32_t componentCount);
 	void voxelToPixel(MultiMaterial& voxelData, uint8_t* pixelData, uint32_t componentCount);
 
-	ColouredCubesVolume* importVxl(const std::string& filename, const std::string& folderName);
+	ColouredCubesVolume* importVxl(const std::string& filename, const std::string& pageFolder);
 
 	// --------------------------------------------------
 	// Imports data in the VolDat format.
 	// --------------------------------------------------
 	template <typename CubiquityVolumeType>
-	CubiquityVolumeType* importVolDat(std::string folder, uint32_t baseNodeSize, const std::string& folderName)
+	CubiquityVolumeType* importVolDat(std::string folder, uint32_t baseNodeSize, const std::string& pageFolder)
 	{
 		std::string indexFileName(folder);
 		indexFileName = indexFileName + "Volume.idx";
@@ -67,7 +67,7 @@ namespace Cubiquity
 
 		// When importing we treat 'y' as up because the Gameplay physics engine makes some
 		// assumptions about this. This means we need to swap the 'y' and 'slice' indices.
-		CubiquityVolumeType* volume = new CubiquityVolumeType(Region(0, 0, 0, volumeWidth - 1, sliceCount - 1, volumeHeight - 1), baseNodeSize, folderName);
+		CubiquityVolumeType* volume = new CubiquityVolumeType(Region(0, 0, 0, volumeWidth - 1, sliceCount - 1, volumeHeight - 1), baseNodeSize, pageFolder);
 
 		// Now iterate over each slice and import the data.
 		for(int slice = 0; slice < sliceCount; slice++)
