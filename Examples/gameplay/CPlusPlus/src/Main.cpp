@@ -179,14 +179,14 @@ void MeshGame::initialize()
 #ifdef TERRAIN_SMOOTH
 	//mVolume = GameplaySmoothTerrainVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
 	//mVolume = GameplayVolumeSerialisation::gameplayImportSmoothSlices("../../SliceData/SmoothVoxeliensTerrain/");
-	mVolume = GameplaySmoothTerrainVolume::create("../../SliceData/SmoothVoxeliensTerrain/", 32, 32);
+	mVolume = GameplaySmoothTerrainVolume::create("../../SliceData/SmoothVoxeliensTerrain/", 32, "");
 	mVolumeEditor = new GameplaySmoothTerrainVolumeEditor(mVolume);
 #endif
 #ifdef TERRAIN_CUBIC
 	//mVolume = GameplayColouredCubesVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
 	//mVolume = GameplayVolumeSerialisation::gameplayImportColourSlices("../../SliceData/VoxeliensTerrain/");
 	//mVolume = GameplayVolumeSerialisation::gameplayImportVxl("C:\\code\\cubiquity\\Examples\\gameplay\\Lua\\res\\Capitol.vxl");
-	mVolume = GameplayColouredCubesVolume::create("../../SliceData/VoxeliensTerrain/", 32, 32);
+	mVolume = GameplayColouredCubesVolume::create("../../SliceData/VoxeliensTerrain/", 32, "");
 	//mVolume = GameplayColouredCubesVolume::create("C:\\code\\cubiquity\\Tools\\FractalGenerator\\FractalGenerator\\output\\");
 	//mVolume = GameplayColouredCubesVolume::create("C:\\code\\cubiquity\\Examples\\gameplay\\Lua\\res\\Capitol.vxl");
 

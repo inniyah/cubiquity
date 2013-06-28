@@ -11,13 +11,13 @@ using namespace PolyVox;
 namespace Cubiquity
 {
 
-	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int blockSize, unsigned int baseNodeSize)
-		:GameplayVolume<SmoothTerrainVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize)
+	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int baseNodeSize, const char* folderName)
+		:GameplayVolume<SmoothTerrainVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, baseNodeSize, folderName)
 	{
 		initialiseOctree();
 	}
 
-	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(const char* dataToLoad, unsigned int blockSize, unsigned int baseNodeSize)
+	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(const char* dataToLoad, unsigned int baseNodeSize, const char* folderName)
 	{
 		// Check whether the provided data is a file or a directory
 		FILE* file = fopen(dataToLoad, "rb");
@@ -31,7 +31,7 @@ namespace Cubiquity
 		{
 			// For now we assume it's VolDat. Leter on we should check for
 			// Volume.idx and load raw Cubiquity data instead if necessary.
-			mCubiquityVolume = importVolDat<SmoothTerrainVolume>(dataToLoad, blockSize, baseNodeSize);
+			mCubiquityVolume = importVolDat<SmoothTerrainVolume>(dataToLoad, baseNodeSize, folderName);
 		}
 
 		initialiseOctree();

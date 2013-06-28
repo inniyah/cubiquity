@@ -9,8 +9,8 @@ using namespace PolyVox;
 
 namespace Cubiquity
 {
-	ColouredCubesVolume::ColouredCubesVolume(const Region& region, unsigned int blockSize, unsigned int baseNodeSize)
-		:Volume<Colour>(region, blockSize, OctreeConstructionModes::BoundVoxels, baseNodeSize)
+	ColouredCubesVolume::ColouredCubesVolume(const Region& region, unsigned int baseNodeSize, const std::string& folderName)
+		:Volume<Colour>(region, OctreeConstructionModes::BoundVoxels, baseNodeSize, folderName)
 	{
 	}
 

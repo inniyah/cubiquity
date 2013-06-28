@@ -18,7 +18,7 @@
 namespace Cubiquity
 {
 	template <typename VoxelType>
-	Volume<VoxelType>::Volume(const Region& region, uint32_t blockSize, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize)
+	Volume<VoxelType>::Volume(const Region& region, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize, const std::string& folderName)
 		:mPolyVoxVolume(0)
 		,mOctree(0)
 	{

@@ -405,7 +405,7 @@ int lua_GameplayColouredCubesVolume_static_create(lua_State* state)
             {
                 if ((lua_type(state, 1) == LUA_TSTRING || lua_type(state, 1) == LUA_TNIL) &&
                     lua_type(state, 2) == LUA_TNUMBER &&
-                    lua_type(state, 3) == LUA_TNUMBER)
+                    (lua_type(state, 3) == LUA_TSTRING || lua_type(state, 3) == LUA_TNIL))
                 {
                     // Get parameter 1 off the stack.
                     const char* param1 = ScriptUtil::getString(1, false);
@@ -414,7 +414,7 @@ int lua_GameplayColouredCubesVolume_static_create(lua_State* state)
                     unsigned int param2 = (unsigned int)luaL_checkunsigned(state, 2);
 
                     // Get parameter 3 off the stack.
-                    unsigned int param3 = (unsigned int)luaL_checkunsigned(state, 3);
+                    const char* param3 = ScriptUtil::getString(3, false);
 
                     void* returnPtr = (void*)GameplayColouredCubesVolume::create(param1, param2, param3);
                     if (returnPtr)
@@ -449,7 +449,7 @@ int lua_GameplayColouredCubesVolume_static_create(lua_State* state)
                     lua_type(state, 5) == LUA_TNUMBER &&
                     lua_type(state, 6) == LUA_TNUMBER &&
                     lua_type(state, 7) == LUA_TNUMBER &&
-                    lua_type(state, 8) == LUA_TNUMBER)
+                    (lua_type(state, 8) == LUA_TSTRING || lua_type(state, 8) == LUA_TNIL))
                 {
                     // Get parameter 1 off the stack.
                     int param1 = (int)luaL_checkint(state, 1);
@@ -473,7 +473,7 @@ int lua_GameplayColouredCubesVolume_static_create(lua_State* state)
                     unsigned int param7 = (unsigned int)luaL_checkunsigned(state, 7);
 
                     // Get parameter 8 off the stack.
-                    unsigned int param8 = (unsigned int)luaL_checkunsigned(state, 8);
+                    const char* param8 = ScriptUtil::getString(8, false);
 
                     void* returnPtr = (void*)GameplayColouredCubesVolume::create(param1, param2, param3, param4, param5, param6, param7, param8);
                     if (returnPtr)

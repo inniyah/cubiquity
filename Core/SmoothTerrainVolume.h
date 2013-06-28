@@ -10,7 +10,7 @@ namespace Cubiquity
 	{
 
 	public:
-		SmoothTerrainVolume(const Region& region, unsigned int blockSize, unsigned int baseNodeSize);
+		SmoothTerrainVolume(const Region& region, unsigned int baseNodeSize, const std::string& folderName);
 
 		virtual void update(const Vector3F& viewPosition, float lodThreshold);
 		void updateMeshImpl(OctreeNode< VoxelType >* octreeNode);

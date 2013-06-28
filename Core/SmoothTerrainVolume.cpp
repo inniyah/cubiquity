@@ -12,8 +12,8 @@ using namespace PolyVox;
 
 namespace Cubiquity
 {
-	SmoothTerrainVolume::SmoothTerrainVolume(const Region& region, unsigned int blockSize, unsigned int baseNodeSize)
-		:Volume<MultiMaterial>(region, blockSize, OctreeConstructionModes::BoundCells, baseNodeSize)
+	SmoothTerrainVolume::SmoothTerrainVolume(const Region& region, unsigned int baseNodeSize, const std::string& folderName)
+		:Volume<MultiMaterial>(region, OctreeConstructionModes::BoundCells, baseNodeSize, folderName)
 	{
 	}
 
