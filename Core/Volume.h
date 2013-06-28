@@ -55,6 +55,9 @@ namespace Cubiquity
 
 	private:
 		::PolyVox::LargeVolume<VoxelType>* mPolyVoxVolume;
+		::PolyVox::MinizCompressor* m_pCompressor;
+		::PolyVox::FilePager<VoxelType>* m_pFilePager;
+
 		Octree<VoxelType>* mOctree;
 
 		// Friend functions

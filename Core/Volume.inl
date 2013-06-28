@@ -1,5 +1,7 @@
+#include "PolyVoxCore/FilePager.h"
 #include "PolyVoxCore/LowPassFilter.h"
 #include "PolyVoxCore/MaterialDensityPair.h"
+#include "PolyVoxCore/MinizCompressor.h"
 #include "PolyVoxCore/Raycast.h"
 #include "PolyVoxCore/VolumeResampler.h"
 
@@ -26,7 +28,13 @@ namespace Cubiquity
 		POLYVOX_ASSERT(region.getHeightInVoxels() > 0, "All volume dimensions must be greater than zero");
 		POLYVOX_ASSERT(region.getDepthInVoxels() > 0, "All volume dimensions must be greater than zero");
 	
-		mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region);
+		m_pCompressor = new MinizCompressor;
+		m_pFilePager = new FilePager<VoxelType>("./");
+
+		mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pCompressor, m_pFilePager, 64);
+
+		mPolyVoxVolume->setMaxNumberOfBlocksInMemory(256);
+		mPolyVoxVolume->setMaxNumberOfUncompressedBlocks(128);
 
 		mOctree = new Octree<VoxelType>(this, octreeConstructionMode, baseNodeSize);
 
