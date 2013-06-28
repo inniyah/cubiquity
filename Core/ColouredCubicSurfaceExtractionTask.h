@@ -14,14 +14,14 @@ namespace Cubiquity
 	class ColouredCubicSurfaceExtractionTask : public Task
 	{
 	public:
-		ColouredCubicSurfaceExtractionTask(OctreeNode< Colour >* octreeNode, ::PolyVox::SimpleVolume<Colour>* polyVoxVolume);
+		ColouredCubicSurfaceExtractionTask(OctreeNode< Colour >* octreeNode, ::PolyVox::LargeVolume<Colour>* polyVoxVolume);
 		~ColouredCubicSurfaceExtractionTask();
 
 		void process(void);
 
 	public:
 		OctreeNode< Colour >* mOctreeNode;
-		::PolyVox::SimpleVolume<Colour>* mPolyVoxVolume;
+		::PolyVox::LargeVolume<Colour>* mPolyVoxVolume;
 		::PolyVox::SurfaceMesh<::PolyVox::PositionMaterial<Colour> >* mPolyVoxMesh;
 		Timestamp mProcessingStartedTimestamp;
 	};

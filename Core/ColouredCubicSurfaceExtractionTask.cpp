@@ -5,7 +5,7 @@
 
 #include "PolyVoxCore/CubicSurfaceExtractor.h"
 #include "PolyVoxCore/RawVolume.h"
-#include "PolyVoxCore/SimpleVolume.h"
+#include "PolyVoxCore/LargeVolume.h"
 
 #include <limits>
 
@@ -13,7 +13,7 @@ using namespace PolyVox;
 
 namespace Cubiquity
 {
-	ColouredCubicSurfaceExtractionTask::ColouredCubicSurfaceExtractionTask(OctreeNode< Colour >* octreeNode, ::PolyVox::SimpleVolume<Colour>* polyVoxVolume)
+	ColouredCubicSurfaceExtractionTask::ColouredCubicSurfaceExtractionTask(OctreeNode< Colour >* octreeNode, ::PolyVox::LargeVolume<Colour>* polyVoxVolume)
 		:Task()
 		,mOctreeNode(octreeNode)
 		,mPolyVoxVolume(polyVoxVolume)
@@ -42,7 +42,7 @@ namespace Cubiquity
 
 		if(downScaleFactor == 1) 
 		{
-			::PolyVox::CubicSurfaceExtractor< ::PolyVox::SimpleVolume<Colour>, ColouredCubesIsQuadNeeded > surfaceExtractor(mPolyVoxVolume, mOctreeNode->mRegion, mPolyVoxMesh, ::PolyVox::WrapModes::Border, Colour(), true, isQuadNeeded);
+			::PolyVox::CubicSurfaceExtractor< ::PolyVox::LargeVolume<Colour>, ColouredCubesIsQuadNeeded > surfaceExtractor(mPolyVoxVolume, mOctreeNode->mRegion, mPolyVoxMesh, ::PolyVox::WrapModes::Border, Colour(), true, isQuadNeeded);
 			surfaceExtractor.execute();
 		}
 		else if(downScaleFactor == 2)

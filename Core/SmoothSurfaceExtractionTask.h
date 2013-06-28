@@ -10,7 +10,7 @@ namespace Cubiquity
 	class SmoothSurfaceExtractionTask : public Task
 	{
 	public:
-		SmoothSurfaceExtractionTask(OctreeNode< MultiMaterial >* octreeNode, ::PolyVox::SimpleVolume< typename MultiMaterialMarchingCubesController::MaterialType >* polyVoxVolume);
+		SmoothSurfaceExtractionTask(OctreeNode< MultiMaterial >* octreeNode, ::PolyVox::LargeVolume< typename MultiMaterialMarchingCubesController::MaterialType >* polyVoxVolume);
 		~SmoothSurfaceExtractionTask();
 
 		void process(void);
@@ -19,13 +19,13 @@ namespace Cubiquity
 
 	public:
 		OctreeNode< MultiMaterial >* mOctreeNode;
-		::PolyVox::SimpleVolume<typename MultiMaterialMarchingCubesController::MaterialType>* mPolyVoxVolume;
+		::PolyVox::LargeVolume<typename MultiMaterialMarchingCubesController::MaterialType>* mPolyVoxVolume;
 		::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType> >* mPolyVoxMesh;
 		Timestamp mProcessingStartedTimestamp;
 	};
 
-	void recalculateMaterials(::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* mesh, const Vector3F& meshOffset, ::PolyVox::SimpleVolume<MultiMaterial>* volume);
-	MultiMaterial getInterpolatedValue(::PolyVox::SimpleVolume<MultiMaterial>* volume, const Vector3F& position);
+	void recalculateMaterials(::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* mesh, const Vector3F& meshOffset, ::PolyVox::LargeVolume<MultiMaterial>* volume);
+	MultiMaterial getInterpolatedValue(::PolyVox::LargeVolume<MultiMaterial>* volume, const Vector3F& position);
 
 	template< typename SrcPolyVoxVolumeType, typename DstPolyVoxVolumeType>
 	void resampleVolume(uint32_t factor, SrcPolyVoxVolumeType* srcVolume, const Region& srcRegion, DstPolyVoxVolumeType* dstVolume, const Region& dstRegion)

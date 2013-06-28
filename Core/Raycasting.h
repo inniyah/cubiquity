@@ -61,7 +61,7 @@ namespace Cubiquity
 		{
 		}
 
-		bool operator()(const ::PolyVox::SimpleVolume<Colour>::Sampler& sampler)
+		bool operator()(const ::PolyVox::LargeVolume<Colour>::Sampler& sampler)
 		{
 			mLastPos = sampler.getPosition();
 

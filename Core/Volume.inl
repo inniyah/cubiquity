@@ -26,7 +26,7 @@ namespace Cubiquity
 		POLYVOX_ASSERT(region.getHeightInVoxels() > 0, "All volume dimensions must be greater than zero");
 		POLYVOX_ASSERT(region.getDepthInVoxels() > 0, "All volume dimensions must be greater than zero");
 	
-		mPolyVoxVolume = new ::PolyVox::SimpleVolume<VoxelType>(region);
+		mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region);
 
 		mOctree = new Octree<VoxelType>(this, octreeConstructionMode, baseNodeSize);
 
