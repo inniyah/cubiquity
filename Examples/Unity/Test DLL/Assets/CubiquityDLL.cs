@@ -16,20 +16,20 @@ public class CubiquityDLL
 	// Volume functions
 	////////////////////////////////////////////////////////////////////////////////
 	[DllImport ("CubiquityC")]
-	private static extern int cuNewColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, uint blockSize, uint baseNodeSize, out uint result);
-	public static uint NewColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, uint blockSize, uint baseNodeSize)
+	private static extern int cuNewColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, uint baseNodeSize, StringBuilder pageFolder, out uint result);
+	public static uint NewColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, uint baseNodeSize, string pageFolder)
 	{
 		uint result;
-		Validate(cuNewColouredCubesVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, blockSize, baseNodeSize, out result));
+		Validate(cuNewColouredCubesVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, baseNodeSize, new StringBuilder(pageFolder), out result));
 		return result;
 	}
 	
 	[DllImport ("CubiquityC")]
-	private static extern int cuNewColouredCubesVolumeFromVolDat(StringBuilder foldername, uint blockSize, uint baseNodeSize, out uint result);	
-	public static uint NewColouredCubesVolumeFromVolDat(string foldername, uint blockSize, uint baseNodeSize)
+	private static extern int cuNewColouredCubesVolumeFromVolDat(StringBuilder foldername, uint baseNodeSize, StringBuilder pageFolder, out uint result);	
+	public static uint NewColouredCubesVolumeFromVolDat(string foldername, uint baseNodeSize, string pageFolder)
 	{
 		uint result;
-		Validate(cuNewColouredCubesVolumeFromVolDat(new StringBuilder(foldername), blockSize, baseNodeSize, out result));
+		Validate(cuNewColouredCubesVolumeFromVolDat(new StringBuilder(foldername), baseNodeSize, new StringBuilder(pageFolder), out result));
 		return result;
 	}
 	
