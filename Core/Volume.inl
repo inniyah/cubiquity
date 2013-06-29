@@ -82,6 +82,9 @@ namespace Cubiquity
 	Volume<VoxelType>::~Volume()
 	{
 		logTrace() << "Entering ~Volume()";
+
+		delete mPolyVoxVolume;
+
 		logTrace() << "Exiting ~Volume()";
 	}
 

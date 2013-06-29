@@ -128,6 +128,8 @@ namespace Cubiquity
 
 		~GameplayVolume()
 		{
+			delete mCubiquityVolume;
+			mCubiquityVolume = 0;
 		}
 
 		void initialiseOctree(void);
