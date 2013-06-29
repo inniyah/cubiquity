@@ -1,4 +1,3 @@
-#include "PolyVoxCore/FilePager.h"
 #include "PolyVoxCore/LowPassFilter.h"
 #include "PolyVoxCore/MaterialDensityPair.h"
 #include "PolyVoxCore/MinizCompressor.h"
@@ -12,7 +11,7 @@
 #include "Logging.h"
 #include "MainThreadTaskProcessor.h"
 #include "MultiMaterial.h"
-
+#include "OverrideFilePager.h"
 #include "Raycasting.h"
 
 #include <boost/filesystem.hpp>
@@ -26,7 +25,7 @@ namespace Cubiquity
 	Volume<VoxelType>::Volume(const Region& region, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize, const std::string& pageFolder)
 		:mPolyVoxVolume(0)
 		,m_pCompressor(0)
-		,m_pFilePager(0)
+		,m_pOverrideFilePager(0)
 		,mOctree(0)
 	{
 		logTrace() << "Entering Volume(" << region << ",...)";
@@ -39,7 +38,7 @@ namespace Cubiquity
 
 		if(pageFolder.size() != 0)
 		{
-			m_pFilePager = new FilePager<VoxelType>(pageFolder);
+			m_pOverrideFilePager = new OverrideFilePager<VoxelType>(pageFolder);
 		}
 		else
 		{
@@ -64,11 +63,11 @@ namespace Cubiquity
 			}*/
 
 			logInfo() << "No page folder was provided, using current working directory as temporary storage";
-			m_pFilePager = new FilePager<VoxelType>("./");
+			m_pOverrideFilePager = new OverrideFilePager<VoxelType>("./");
 		}
 		
 
-		mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pCompressor, m_pFilePager, 64);
+		mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pCompressor, m_pOverrideFilePager, 64);
 
 		mPolyVoxVolume->setMaxNumberOfBlocksInMemory(256);
 		mPolyVoxVolume->setMaxNumberOfUncompressedBlocks(128);
@@ -83,7 +82,9 @@ namespace Cubiquity
 	{
 		logTrace() << "Entering ~Volume()";
 
-		delete mPolyVoxVolume;
+		// NOTE: We should really delete the volume here, but the background task processor might still be using it.
+		// We need a way to shut that down, or maybe smart pointers can help here. Just fluch until we have a better fix.
+		mPolyVoxVolume->flushAll();
 
 		logTrace() << "Exiting ~Volume()";
 	}

@@ -69,6 +69,7 @@
     <ClInclude Include="MultiMaterial.h" />
     <ClInclude Include="Octree.h" />
     <ClInclude Include="OctreeNode.h" />
+    <ClInclude Include="OverrideFilePager.h" />
     <ClInclude Include="Raycasting.h" />
     <ClInclude Include="Region.h" />
     <ClInclude Include="SmoothSurfaceExtractionTask.h" />
@@ -112,6 +113,7 @@
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.inl" />
     <None Include="Octree.inl" />
     <None Include="OctreeNode.inl" />
+    <None Include="OverrideFilePager.inl" />
     <None Include="Volume.inl" />
   </ItemGroup>
   <ItemGroup>

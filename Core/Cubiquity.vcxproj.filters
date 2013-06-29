@@ -222,6 +222,9 @@
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Pager.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
+    <ClInclude Include="OverrideFilePager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.inl">
@@ -312,6 +315,9 @@
       <Filter>Core</Filter>
     </None>
     <None Include="Volume.inl">
+      <Filter>Core</Filter>
+    </None>
+    <None Include="OverrideFilePager.inl">
       <Filter>Core</Filter>
     </None>
   </ItemGroup>
