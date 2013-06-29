@@ -43,8 +43,11 @@ namespace Cubiquity
 		}
 		else
 		{
+			// Note: The code below crashes in gameplay when trying to use Boost filesystem. It is
+			// probably related to this issue: https://github.com/blackberry/GamePlay/issues/919
+			// For no we just use the current folder instead.
 			// Create a random folder name
-			srand(static_cast<unsigned int>(time(NULL)));
+			/*srand(static_cast<unsigned int>(time(NULL)));
 			std::stringstream ss;
 			ss << "./page_data_" << rand() << "/";
 			logInfo() << "No page folder was provided, using '" << ss.str() << "' as temporary storage";
@@ -58,7 +61,10 @@ namespace Cubiquity
 			else
 			{
 				POLYVOX_THROW(std::runtime_error, "Failed to create temporary folder for page data");
-			}
+			}*/
+
+			logInfo() << "No page folder was provided, using current working directory as temporary storage";
+			m_pFilePager = new FilePager<VoxelType>("./");
 		}
 		
 

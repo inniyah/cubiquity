@@ -45,7 +45,7 @@ function initialize()
 	local volumeHeight = 32
 	local volumeDepth = 128
 
-	_colouredCubesVolume = GameplayColouredCubesVolume.create("../../SliceData/VoxeliensTerrain/", 32, "./");
+	_colouredCubesVolume = GameplayColouredCubesVolume.create("../../SliceData/VoxeliensTerrain/", 32, "");
 	--_colouredCubesVolume = GameplayColouredCubesVolume.create("C:\\code\\cubiquity\\Examples\\gameplay\\Lua\\res\\Capitol.vxl");
 
     -- Load font
