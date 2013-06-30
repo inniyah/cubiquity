@@ -5,12 +5,12 @@ using System.Collections.Generic;
 public class Bullet : MonoBehaviour
 {
 	public GameObject voxelTerrainObject;
-	public ColoredCubesVolume colouredCubesVolume;
+	public ColoredCubesVolume coloredCubesVolume;
 	
 	void Awake()
 	{
 		voxelTerrainObject = GameObject.Find("Voxel Terrain");
-		colouredCubesVolume = voxelTerrainObject.GetComponent<ColoredCubesVolume>();
+		coloredCubesVolume = voxelTerrainObject.GetComponent<ColoredCubesVolume>();
 	}
 
 	// Use this for initialization
@@ -30,7 +30,7 @@ public class Bullet : MonoBehaviour
 		
 		
 		
-		Color32 centerColor = colouredCubesVolume.GetVoxel(xPos, yPos, zPos);
+		Color32 centerColor = coloredCubesVolume.GetVoxel(xPos, yPos, zPos);
 		
 		if(centerColor.a > 127)
 		{
@@ -60,12 +60,12 @@ public class Bullet : MonoBehaviour
 						
 						if(distSquared < 25)
 						{	
-							Color32 color = colouredCubesVolume.GetVoxel(x, y, z);				
+							Color32 color = coloredCubesVolume.GetVoxel(x, y, z);				
 							
 							if(color.a > 127)
 							{
-								bool isSurfaceVoxel = colouredCubesVolume.IsSurfaceVoxel(x, y, z); //Save this before we clear the voxel.
-								//colouredCubesVolume.SetVoxel(x, y, z, new Color32(0,0,0,0));
+								bool isSurfaceVoxel = coloredCubesVolume.IsSurfaceVoxel(x, y, z); //Save this before we clear the voxel.
+								//coloredCubesVolume.SetVoxel(x, y, z, new Color32(0,0,0,0));
 								
 								IntVector3 voxel = new IntVector3(x, y, z);
 								voxelsToDelete.Add(voxel);
@@ -104,7 +104,7 @@ public class Bullet : MonoBehaviour
 			
 			foreach (IntVector3 voxel in voxelsToDelete) // Loop through List with foreach
 			{
-			    colouredCubesVolume.SetVoxel(voxel.x, voxel.y, voxel.z, new Color32(0,0,0,0));
+			    coloredCubesVolume.SetVoxel(voxel.x, voxel.y, voxel.z, new Color32(0,0,0,0));
 			}
 			
 			Object.Destroy(this.gameObject);
@@ -134,10 +134,10 @@ public class Bullet : MonoBehaviour
 			{
 				for(int x = xPos - 2; x < xPos + 2; x++)
 				{
-					Color32 color = colouredCubesVolume.GetVoxel(x, y, z);
+					Color32 color = coloredCubesVolume.GetVoxel(x, y, z);
 					if(color.a > 127)
 					{					
-						colouredCubesVolume.SetVoxel(x, y, z, emptyVoxelColor);
+						coloredCubesVolume.SetVoxel(x, y, z, emptyVoxelColor);
 						
 						GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 						cube.AddComponent<Rigidbody>();

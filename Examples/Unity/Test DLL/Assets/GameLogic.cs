@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GameLogic : MonoBehaviour
 {
-	public ColoredCubesVolume colouredCubesVolume;
+	public ColoredCubesVolume coloredCubesVolume;
 	public GameObject gun;
 	public GameObject mainCamera;
 	public float cameraDistance = 1.0f;
@@ -14,7 +14,7 @@ public class GameLogic : MonoBehaviour
 	void Awake()
 	{
 		GameObject voxelTerrainObject = GameObject.Find("Voxel Terrain");
-		colouredCubesVolume = voxelTerrainObject.GetComponent<ColoredCubesVolume>();
+		coloredCubesVolume = voxelTerrainObject.GetComponent<ColoredCubesVolume>();
 		gun = GameObject.Find("Gun");
 		mainCamera = GameObject.Find("Main Camera");
 		tank = GameObject.Find("Tank");
@@ -66,7 +66,7 @@ public class GameLogic : MonoBehaviour
 		
 		// Perform the raycasting. If there's a hit the position will be stored in these ints.
 		int resultX, resultY, resultZ;
-		bool hit = Cubiquity.PickVoxel(colouredCubesVolume, ray.origin.x, ray.origin.y, ray.origin.z, dir.x, dir.y, dir.z, out resultX, out resultY, out resultZ);
+		bool hit = Cubiquity.PickVoxel(coloredCubesVolume, ray.origin.x, ray.origin.y, ray.origin.z, dir.x, dir.y, dir.z, out resultX, out resultY, out resultZ);
 		
 		if(hit)
 		{
@@ -75,7 +75,7 @@ public class GameLogic : MonoBehaviour
 		}
 	}
 	
-	// Draws a cuboid of coloured voxels into our volume.
+	// Draws a cuboid of colored voxels into our volume.
 	void DrawCuboid(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, Color32 color)
 	{
 		for(int z = lowerZ; z <= upperZ; z++)
@@ -84,7 +84,7 @@ public class GameLogic : MonoBehaviour
 			{
 				for(int x = lowerX; x <= upperX; x++)
 				{
-					colouredCubesVolume.SetVoxel(x, y, z, color);
+					coloredCubesVolume.SetVoxel(x, y, z, color);
 				}
 			}
 		}

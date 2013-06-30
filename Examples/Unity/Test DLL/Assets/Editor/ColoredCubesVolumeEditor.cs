@@ -17,8 +17,8 @@ public class ColoredCubesVolumeEditor : Editor
 		GameObject VoxelTerrainRoot = new GameObject("Voxel Terrain");
 		VoxelTerrainRoot.AddComponent<ColoredCubesVolume>();
 		
-		ColoredCubesVolume colouredCubesVolume = VoxelTerrainRoot.GetComponent<ColoredCubesVolume>();
-		colouredCubesVolume.pageFolder = "D:/temp/voldata";
+		ColoredCubesVolume coloredCubesVolume = VoxelTerrainRoot.GetComponent<ColoredCubesVolume>();
+		coloredCubesVolume.pageFolder = "D:/temp/voldata";
     }
 	
 	[MenuItem("Cubiqity/Import Colored Cubes Volume from VolDat")]
@@ -33,24 +33,24 @@ public class ColoredCubesVolumeEditor : Editor
 		GameObject VoxelTerrainRoot = new GameObject("Voxel Terrain");
 		VoxelTerrainRoot.AddComponent<ColoredCubesVolume>();
 		
-		ColoredCubesVolume colouredCubesVolume = VoxelTerrainRoot.GetComponent<ColoredCubesVolume>();
-		colouredCubesVolume.folderName = "Assets/Resources/VoxeliensTerrain/";
+		ColoredCubesVolume coloredCubesVolume = VoxelTerrainRoot.GetComponent<ColoredCubesVolume>();
+		coloredCubesVolume.folderName = "Assets/Resources/VoxeliensTerrain/";
     }
 	
 	/*void OnEnable()
 	{
 		Debug.Log ("ColoredCubesVolumeEditor.OnEnable()");
 		
-		ColoredCubesVolume colouredCubesVolume = (ColoredCubesVolume)target;
-		colouredCubesVolume.Initialize();
-		colouredCubesVolume.Synchronize();
+		ColoredCubesVolume coloredCubesVolume = (ColoredCubesVolume)target;
+		coloredCubesVolume.Initialize();
+		coloredCubesVolume.Synchronize();
 	}
 	
 	void OnDisable()
 	{
 		Debug.Log ("ColoredCubesVolumeEditor.OnDisable()");
 		
-		ColoredCubesVolume colouredCubesVolume = (ColoredCubesVolume)target;
-		colouredCubesVolume.Shutdown();
+		ColoredCubesVolume coloredCubesVolume = (ColoredCubesVolume)target;
+		coloredCubesVolume.Shutdown();
 	}*/
 }
