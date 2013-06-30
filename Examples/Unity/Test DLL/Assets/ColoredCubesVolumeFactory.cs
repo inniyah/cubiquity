@@ -3,15 +3,9 @@ using System.Collections;
 
 public class ColoredCubesVolumeFactory
 {
-	public static GameObject CreateVolume(Region region, string pageFolder, uint baseNodeSize)
-	{
-		if(GameObject.Find("Voxel Terrain") != null)
-		{
-			Debug.LogError("A voxel terrain already exists - you (currently) can't create another one.");
-			return null;
-		}
-		
-		GameObject VoxelTerrainRoot = new GameObject("Voxel Terrain");
+	public static GameObject CreateVolume(string name, Region region, string pageFolder, uint baseNodeSize)
+	{		
+		GameObject VoxelTerrainRoot = new GameObject(name);
 		VoxelTerrainRoot.AddComponent<ColoredCubesVolume>();
 		
 		ColoredCubesVolume coloredCubesVolume = VoxelTerrainRoot.GetComponent<ColoredCubesVolume>();
@@ -22,15 +16,9 @@ public class ColoredCubesVolumeFactory
 		return VoxelTerrainRoot;
 	}
 	
-	public static GameObject CreateVolumeFromVolDat(string voldatFolder, string pageFolder, uint baseNodeSize)
-	{
-		if(GameObject.Find("Voxel Terrain") != null)
-		{
-			Debug.LogError("A voxel terrain already exists - you (currently) can't create another one.");
-			return null;
-		}
-		
-		GameObject VoxelTerrainRoot = new GameObject("Voxel Terrain");
+	public static GameObject CreateVolumeFromVolDat(string name, string voldatFolder, string pageFolder, uint baseNodeSize)
+	{		
+		GameObject VoxelTerrainRoot = new GameObject(name);
 		VoxelTerrainRoot.AddComponent<ColoredCubesVolume>();
 		
 		ColoredCubesVolume coloredCubesVolume = VoxelTerrainRoot.GetComponent<ColoredCubesVolume>();
