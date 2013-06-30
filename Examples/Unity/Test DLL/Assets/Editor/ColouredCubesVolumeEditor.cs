@@ -16,6 +16,9 @@ public class ColouredCubesVolumeEditor : Editor
 		
 		GameObject VoxelTerrainRoot = new GameObject("Voxel Terrain");
 		VoxelTerrainRoot.AddComponent<ColouredCubesVolume>();
+		
+		ColouredCubesVolume colouredCubesVolume = VoxelTerrainRoot.GetComponent<ColouredCubesVolume>();
+		colouredCubesVolume.pageFolder = "D:/temp/voldata";
     }
 	
 	[MenuItem("Cubiqity/Import Colored Cubes Volume from VolDat")]
