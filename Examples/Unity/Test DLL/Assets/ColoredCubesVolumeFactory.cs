@@ -3,7 +3,7 @@ using System.Collections;
 
 public class ColoredCubesVolumeFactory
 {
-	public static GameObject CreateVolume(Region region, uint baseNodeSize, string pageFolder)
+	public static GameObject CreateVolume(Region region, string pageFolder, uint baseNodeSize)
 	{
 		if(GameObject.Find("Voxel Terrain") != null)
 		{
@@ -22,7 +22,7 @@ public class ColoredCubesVolumeFactory
 		return VoxelTerrainRoot;
 	}
 	
-	public static GameObject CreateVolumeFromVolDat(string voldatFolder, uint baseNodeSize, string pageFolder)
+	public static GameObject CreateVolumeFromVolDat(string voldatFolder, string pageFolder, uint baseNodeSize)
 	{
 		if(GameObject.Find("Voxel Terrain") != null)
 		{

@@ -53,7 +53,7 @@ namespace Cubiquity
 	// Imports data in the VolDat format.
 	// --------------------------------------------------
 	template <typename CubiquityVolumeType>
-	CubiquityVolumeType* importVolDat(std::string folder, uint32_t baseNodeSize, const std::string& pageFolder)
+	CubiquityVolumeType* importVolDat(std::string folder, const std::string& pageFolder, uint32_t baseNodeSize)
 	{
 		std::string indexFileName(folder);
 		indexFileName = indexFileName + "Volume.idx";
@@ -67,7 +67,7 @@ namespace Cubiquity
 
 		// When importing we treat 'y' as up because the Gameplay physics engine makes some
 		// assumptions about this. This means we need to swap the 'y' and 'slice' indices.
-		CubiquityVolumeType* volume = new CubiquityVolumeType(Region(0, 0, 0, volumeWidth - 1, sliceCount - 1, volumeHeight - 1), baseNodeSize, pageFolder);
+		CubiquityVolumeType* volume = new CubiquityVolumeType(Region(0, 0, 0, volumeWidth - 1, sliceCount - 1, volumeHeight - 1), pageFolder, baseNodeSize);
 
 		// Now iterate over each slice and import the data.
 		for(int slice = 0; slice < sliceCount; slice++)

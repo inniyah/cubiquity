@@ -44,11 +44,11 @@ public class ColoredCubesVolume : MonoBehaviour
 		// Use the Cubiquity dll to allocate some volume data
 		if((voldatFolder != null) && (voldatFolder != ""))
 		{
-			volumeHandle = CubiquityDLL.NewColoredCubesVolumeFromVolDat(voldatFolder, 16, pageFolder);
+			volumeHandle = CubiquityDLL.NewColoredCubesVolumeFromVolDat(voldatFolder, pageFolder, 16);
 		}
 		else
 		{
-			volumeHandle = CubiquityDLL.NewColoredCubesVolume(0, 0, 0, 127, 31, 127, 16, pageFolder);
+			volumeHandle = CubiquityDLL.NewColoredCubesVolume(0, 0, 0, 127, 31, 127, pageFolder, 16);
 			
 			// Set some voxels to solid so the user can see the volume they just created.
 			Color32 lightGrey = new Color32(192, 192, 192, 255);

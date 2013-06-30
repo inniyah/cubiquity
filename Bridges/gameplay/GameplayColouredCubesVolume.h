@@ -22,9 +22,9 @@ namespace Cubiquity
 		 *
 		 * @script{create}
 		 */
-		static GameplayColouredCubesVolume* create(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int baseNodeSize, const char* pageFolder)
+		static GameplayColouredCubesVolume* create(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize)
 		{
-			GameplayColouredCubesVolume* volume = new GameplayColouredCubesVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, baseNodeSize, pageFolder);
+			GameplayColouredCubesVolume* volume = new GameplayColouredCubesVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, pageFolder, baseNodeSize);
 			return volume;
 		}
 
@@ -33,9 +33,9 @@ namespace Cubiquity
 		 *
 		 * @script{create}
 		 */
-		static GameplayColouredCubesVolume* create(const char* dataToLoad, unsigned int baseNodeSize, const char* pageFolder)
+		static GameplayColouredCubesVolume* create(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize)
 		{
-			GameplayColouredCubesVolume* volume = new GameplayColouredCubesVolume(dataToLoad, baseNodeSize, pageFolder);
+			GameplayColouredCubesVolume* volume = new GameplayColouredCubesVolume(dataToLoad, pageFolder, baseNodeSize);
 			return volume;
 		}
 
@@ -56,12 +56,12 @@ namespace Cubiquity
 		 * Text here...
 		 * @script{ignore}
 		 */
-		GameplayColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int baseNodeSize, const char* pageFolder);
+		GameplayColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize);
 		/**
 		 * Text here...
 		 * @script{ignore}
 		 */
-		GameplayColouredCubesVolume(const char* dataToLoad, unsigned int baseNodeSize, const char* pageFolder);
+		GameplayColouredCubesVolume(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize);
 		virtual ~GameplayColouredCubesVolume();
 
 	private:

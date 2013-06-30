@@ -48,7 +48,7 @@ namespace Cubiquity
 		virtual void update(const Vector3F& viewPosition, float lodThreshold);
 
 	protected:
-		Volume(const Region& region, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize, const std::string& pageFolder);
+		Volume(const Region& region, const std::string& pageFolder, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize);
 		~Volume();
 
 		Volume& operator=(const Volume&);

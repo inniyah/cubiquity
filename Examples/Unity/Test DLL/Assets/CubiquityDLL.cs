@@ -16,20 +16,20 @@ public class CubiquityDLL
 	// Volume functions
 	////////////////////////////////////////////////////////////////////////////////
 	[DllImport ("CubiquityC")]
-	private static extern int cuNewColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, uint baseNodeSize, StringBuilder pageFolder, out uint result);
-	public static uint NewColoredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, uint baseNodeSize, string pageFolder)
+	private static extern int cuNewColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, StringBuilder pageFolder, uint baseNodeSize, out uint result);
+	public static uint NewColoredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, string pageFolder, uint baseNodeSize)
 	{
 		uint result;
-		Validate(cuNewColouredCubesVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, baseNodeSize, new StringBuilder(pageFolder), out result));
+		Validate(cuNewColouredCubesVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, new StringBuilder(pageFolder), baseNodeSize, out result));
 		return result;
 	}
 	
 	[DllImport ("CubiquityC")]
-	private static extern int cuNewColouredCubesVolumeFromVolDat(StringBuilder voldatFolder, uint baseNodeSize, StringBuilder pageFolder, out uint result);	
-	public static uint NewColoredCubesVolumeFromVolDat(string voldatFolder, uint baseNodeSize, string pageFolder)
+	private static extern int cuNewColouredCubesVolumeFromVolDat(StringBuilder voldatFolder, StringBuilder pageFolder, uint baseNodeSize, out uint result);	
+	public static uint NewColoredCubesVolumeFromVolDat(string voldatFolder, string pageFolder, uint baseNodeSize)
 	{
 		uint result;
-		Validate(cuNewColouredCubesVolumeFromVolDat(new StringBuilder(voldatFolder), baseNodeSize, new StringBuilder(pageFolder), out result));
+		Validate(cuNewColouredCubesVolumeFromVolDat(new StringBuilder(voldatFolder), new StringBuilder(pageFolder), baseNodeSize, out result));
 		return result;
 	}
 	

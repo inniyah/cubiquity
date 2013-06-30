@@ -147,11 +147,11 @@ OctreeNode<Colour>* getNodeFromEncodedHandle(uint32_t encodedNodeHandle)
 ////////////////////////////////////////////////////////////////////////////////
 // Volume functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API int32_t cuNewColouredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, uint32_t baseNodeSize, const char* pageFolder, uint32_t* result)
+CUBIQUITYC_API int32_t cuNewColouredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pageFolder, uint32_t baseNodeSize, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	ColouredCubesVolume* volume = new ColouredCubesVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), baseNodeSize, pageFolder);
+	ColouredCubesVolume* volume = new ColouredCubesVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pageFolder, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 
 	// Replace an existing entry if it has been deleted.
@@ -177,11 +177,11 @@ CUBIQUITYC_API int32_t cuNewColouredCubesVolume(int32_t lowerX, int32_t lowerY, 
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuNewColouredCubesVolumeFromVolDat(const char* volDatToImport, uint32_t baseNodeSize, const char* pageFolder, uint32_t* result)
+CUBIQUITYC_API int32_t cuNewColouredCubesVolumeFromVolDat(const char* volDatToImport, const char* pageFolder, uint32_t baseNodeSize, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	ColouredCubesVolume* volume = importVolDat<ColouredCubesVolume>(volDatToImport, baseNodeSize, pageFolder);
+	ColouredCubesVolume* volume = importVolDat<ColouredCubesVolume>(volDatToImport, pageFolder, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 	
 	// Replace an existing entry if it has been deleted.

@@ -126,7 +126,7 @@ namespace Cubiquity
 
 	ColouredCubesVolume* importVxl(const std::string& filename, const std::string& pageFolder)
 	{
-		ColouredCubesVolume* result = new ColouredCubesVolume(Region(0, 0, 0, 511, 63, 511), 64, pageFolder);
+		ColouredCubesVolume* result = new ColouredCubesVolume(Region(0, 0, 0, 511, 63, 511), pageFolder, 64);
 
 		FILE* inputFile = fopen(filename.c_str(), "rb");
 		POLYVOX_ASSERT(inputFile, "Failed to open input file!");

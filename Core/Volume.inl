@@ -22,7 +22,7 @@
 namespace Cubiquity
 {
 	template <typename VoxelType>
-	Volume<VoxelType>::Volume(const Region& region, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize, const std::string& pageFolder)
+	Volume<VoxelType>::Volume(const Region& region, const std::string& pageFolder, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize)
 		:mPolyVoxVolume(0)
 		,m_pCompressor(0)
 		,m_pOverrideFilePager(0)

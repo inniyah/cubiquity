@@ -21,9 +21,9 @@ namespace Cubiquity
 		 *
 		 * @script{create}
 		 */
-		static GameplaySmoothTerrainVolume* create(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int baseNodeSize, const char* pageFolder)
+		static GameplaySmoothTerrainVolume* create(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize)
 		{
-			GameplaySmoothTerrainVolume* volume = new GameplaySmoothTerrainVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, baseNodeSize, pageFolder);
+			GameplaySmoothTerrainVolume* volume = new GameplaySmoothTerrainVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, pageFolder, baseNodeSize);
 			return volume;
 		}
 
@@ -32,9 +32,9 @@ namespace Cubiquity
 		 *
 		 * @script{create}
 		 */
-		static GameplaySmoothTerrainVolume* create(const char* dataToLoad, unsigned int baseNodeSize, const char* pageFolder)
+		static GameplaySmoothTerrainVolume* create(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize)
 		{
-			GameplaySmoothTerrainVolume* volume = new GameplaySmoothTerrainVolume(dataToLoad, baseNodeSize, pageFolder);
+			GameplaySmoothTerrainVolume* volume = new GameplaySmoothTerrainVolume(dataToLoad, pageFolder, baseNodeSize);
 			return volume;
 		}
 
@@ -47,8 +47,8 @@ namespace Cubiquity
 		void performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold);
 
 	protected:
-		GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, unsigned int baseNodeSize, const char* pageFolder);
-		GameplaySmoothTerrainVolume(const char* dataToLoad, unsigned int baseNodeSiz, const char* pageFoldere);
+		GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize);
+		GameplaySmoothTerrainVolume(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize);
 		virtual ~GameplaySmoothTerrainVolume();
 
 	private:
