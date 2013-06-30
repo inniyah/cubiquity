@@ -186,7 +186,8 @@ void MeshGame::initialize()
 	//mVolume = GameplayColouredCubesVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
 	//mVolume = GameplayVolumeSerialisation::gameplayImportColourSlices("../../SliceData/VoxeliensTerrain/");
 	//mVolume = GameplayVolumeSerialisation::gameplayImportVxl("C:\\code\\cubiquity\\Examples\\gameplay\\Lua\\res\\Capitol.vxl");
-	mVolume = GameplayColouredCubesVolume::create("../../SliceData/VoxeliensTerrain/", 32, "");
+	mVolume = GameplayColouredCubesVolume::create("../../SliceData/VoxeliensTerrain/", 32, "./");
+	//mVolume = GameplayColouredCubesVolume::create("../../SliceData/VoxeliensTerrain/", 32, "./");
 	//mVolume = GameplayColouredCubesVolume::create("C:\\code\\cubiquity\\Tools\\FractalGenerator\\FractalGenerator\\output\\");
 	//mVolume = GameplayColouredCubesVolume::create("C:\\code\\cubiquity\\Examples\\gameplay\\Lua\\res\\Capitol.vxl");
 
