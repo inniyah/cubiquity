@@ -27,7 +27,9 @@ namespace Cubiquity
 		virtual void pageIn(const Region& region, PolyVox::Block<VoxelType>* pBlockData);
 		virtual void pageOut(const Region& region, PolyVox::Block<VoxelType>* pBlockData);
 
-	protected:
+	private:
+		void ensureDirectoryExists(const std::string& folderName);
+
 		std::string m_strFolderName;
 		std::string m_strOverrideFolderName;
 	};

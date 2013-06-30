@@ -63,6 +63,7 @@
     <ClInclude Include="ColouredCubicSurfaceExtractionTask.h" />
     <ClInclude Include="ConcurrentQueue.h" />
     <ClInclude Include="CubiquityForwardDeclarations.h" />
+    <ClInclude Include="FileSystem.h" />
     <ClInclude Include="Impl\VolumePrivateAccessor.h" />
     <ClInclude Include="Logging.h" />
     <ClInclude Include="MainThreadTaskProcessor.h" />
@@ -132,6 +133,7 @@
     <ClCompile Include="Colour.cpp" />
     <ClCompile Include="ColouredCubesVolume.cpp" />
     <ClCompile Include="ColouredCubicSurfaceExtractionTask.cpp" />
+    <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="Logging.cpp" />
     <ClCompile Include="MainThreadTaskProcessor.cpp" />
     <ClCompile Include="MultiMaterial.cpp" />

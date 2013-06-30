@@ -1,3 +1,5 @@
+#include "FileSystem.h"
+
 namespace Cubiquity
 {
 	/// Constructor
@@ -6,10 +8,22 @@ namespace Cubiquity
 		:Pager<VoxelType>()
 		,m_strFolderName(strFolderName)
 	{
-		m_strFolderName = strFolderName + "/";
-		m_strOverrideFolderName = strFolderName + "/override/";
+		logDebug() << "Creating OverrideFilePager with folder '" << m_strFolderName << "'";
 
-		// TODO: We should create the directories if they don't exist.
+		// Validate the folder name
+		POLYVOX_THROW_IF(m_strFolderName.empty(), std::invalid_argument, "You must provide a folder name for the OverrideFilePager");
+		if((m_strFolderName.back() != '/') && (m_strFolderName.back() != '\\'))
+		{
+			logWarning() << "Folder name " << m_strFolderName << " is missing a trailing '/' or '\\'. Please to provide this to avoid confusion!";
+			m_strFolderName.append("/");
+		}
+
+		// The folder where the override data is stored.
+		m_strOverrideFolderName = strFolderName + "override/";
+
+		// Make sure the folders exist, creating them if necessary.
+		ensureDirectoryExists(m_strFolderName);
+		ensureDirectoryExists(m_strOverrideFolderName);
 	}
 
 	/// Destructor
@@ -118,5 +132,26 @@ namespace Cubiquity
 		}
 
 		fclose(pFile);
+	}
+
+	template <typename VoxelType>
+	void OverrideFilePager<VoxelType>::ensureDirectoryExists(const std::string& folderName)
+	{
+		if(directoryExists(folderName))
+		{
+			logDebug() << "Directory '" << folderName << "' already exists.";
+			return;
+		}
+
+		if(createDirectory(folderName))
+		{
+			logDebug() << "Directory '" << folderName << "' has been created.";
+		}
+		else
+		{
+			std::stringstream ss;
+			ss << "Directory '" << folderName << "' does not exist and could not be created";
+			POLYVOX_THROW(std::runtime_error, ss.str());
+		}
 	}
 }
