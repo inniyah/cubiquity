@@ -19,9 +19,11 @@ public struct CubiquityVertex
 [ExecuteInEditMode]
 public class ColoredCubesVolume : MonoBehaviour
 {	
-	public string folderName;
+	public string voldatFolder;
 	public string pageFolder;
+	public uint baseNodeSize;
 	public bool UseCollisionMesh = true;
+	public Region region;
 	
 	internal uint? volumeHandle = null;
 	private GameObject rootGameObject;
@@ -40,9 +42,9 @@ public class ColoredCubesVolume : MonoBehaviour
 		}
 
 		// Use the Cubiquity dll to allocate some volume data
-		if((folderName != null) && (folderName != ""))
+		if((voldatFolder != null) && (voldatFolder != ""))
 		{
-			volumeHandle = CubiquityDLL.NewColoredCubesVolumeFromVolDat(folderName, 16, pageFolder);
+			volumeHandle = CubiquityDLL.NewColoredCubesVolumeFromVolDat(voldatFolder, 16, pageFolder);
 		}
 		else
 		{

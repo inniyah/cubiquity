@@ -46,6 +46,7 @@
   <ItemGroup>
      <Compile Include="Assets\Bullet.cs" />
      <Compile Include="Assets\ColoredCubesVolume.cs" />
+     <Compile Include="Assets\ColoredCubesVolumeFactory.cs" />
      <Compile Include="Assets\Cubiquity.cs" />
      <Compile Include="Assets\CubiquityDLL.cs" />
      <Compile Include="Assets\CubiquityException.cs" />

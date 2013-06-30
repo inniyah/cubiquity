@@ -25,11 +25,11 @@ public class CubiquityDLL
 	}
 	
 	[DllImport ("CubiquityC")]
-	private static extern int cuNewColouredCubesVolumeFromVolDat(StringBuilder foldername, uint baseNodeSize, StringBuilder pageFolder, out uint result);	
-	public static uint NewColoredCubesVolumeFromVolDat(string foldername, uint baseNodeSize, string pageFolder)
+	private static extern int cuNewColouredCubesVolumeFromVolDat(StringBuilder voldatFolder, uint baseNodeSize, StringBuilder pageFolder, out uint result);	
+	public static uint NewColoredCubesVolumeFromVolDat(string voldatFolder, uint baseNodeSize, string pageFolder)
 	{
 		uint result;
-		Validate(cuNewColouredCubesVolumeFromVolDat(new StringBuilder(foldername), baseNodeSize, new StringBuilder(pageFolder), out result));
+		Validate(cuNewColouredCubesVolumeFromVolDat(new StringBuilder(voldatFolder), baseNodeSize, new StringBuilder(pageFolder), out result));
 		return result;
 	}
 	
