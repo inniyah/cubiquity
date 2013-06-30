@@ -6,6 +6,7 @@ namespace Cubiquity
 		:Pager<VoxelType>()
 		,m_strFolderName(strFolderName)
 	{
+		m_strFolderName = strFolderName + "/";
 		m_strOverrideFolderName = strFolderName + "/override/";
 
 		// TODO: We should create the directories if they don't exist.
@@ -31,7 +32,7 @@ namespace Cubiquity
 			FILE* pFile = fopen(filename.c_str(), "rb");
 			if(pFile)
 			{
-				logTrace() << "Paging in data for " << region;
+				logTrace() << "Paging in override data for " << region << " from " << m_strOverrideFolderName;
 
 				fseek(pFile, 0L, SEEK_END);
 				size_t fileSizeInBytes = ftell(pFile);
@@ -48,8 +49,8 @@ namespace Cubiquity
 				}
 
 				fclose(pFile);
-			}
-			return;
+				return;
+			}			
 		}
 
 		// Load from normal folder
@@ -58,7 +59,7 @@ namespace Cubiquity
 			FILE* pFile = fopen(filename.c_str(), "rb");
 			if(pFile)
 			{
-				logTrace() << "Paging in data for " << region;
+				logTrace() << "Paging in original data for " << region << " from " << m_strFolderName;
 
 				fseek(pFile, 0L, SEEK_END);
 				size_t fileSizeInBytes = ftell(pFile);
@@ -75,8 +76,8 @@ namespace Cubiquity
 				}
 
 				fclose(pFile);
+				return;
 			}
-			return;
 		}
 		
 		// No data found
