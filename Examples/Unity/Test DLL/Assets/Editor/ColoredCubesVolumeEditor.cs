@@ -2,8 +2,8 @@ using UnityEngine;
 using UnityEditor;
 using System.Collections;
 
-[CustomEditor(typeof(ColouredCubesVolume))]
-public class ColouredCubesVolumeEditor : Editor
+[CustomEditor(typeof(ColoredCubesVolume))]
+public class ColoredCubesVolumeEditor : Editor
 { 	
 	[MenuItem("Cubiqity/Create Empty Colored Cubes Volume")]
     static void CreateEmpty()
@@ -15,9 +15,9 @@ public class ColouredCubesVolumeEditor : Editor
 		}
 		
 		GameObject VoxelTerrainRoot = new GameObject("Voxel Terrain");
-		VoxelTerrainRoot.AddComponent<ColouredCubesVolume>();
+		VoxelTerrainRoot.AddComponent<ColoredCubesVolume>();
 		
-		ColouredCubesVolume colouredCubesVolume = VoxelTerrainRoot.GetComponent<ColouredCubesVolume>();
+		ColoredCubesVolume colouredCubesVolume = VoxelTerrainRoot.GetComponent<ColoredCubesVolume>();
 		colouredCubesVolume.pageFolder = "D:/temp/voldata";
     }
 	
@@ -31,26 +31,26 @@ public class ColouredCubesVolumeEditor : Editor
 		}
 		
 		GameObject VoxelTerrainRoot = new GameObject("Voxel Terrain");
-		VoxelTerrainRoot.AddComponent<ColouredCubesVolume>();
+		VoxelTerrainRoot.AddComponent<ColoredCubesVolume>();
 		
-		ColouredCubesVolume colouredCubesVolume = VoxelTerrainRoot.GetComponent<ColouredCubesVolume>();
+		ColoredCubesVolume colouredCubesVolume = VoxelTerrainRoot.GetComponent<ColoredCubesVolume>();
 		colouredCubesVolume.folderName = "Assets/Resources/VoxeliensTerrain/";
     }
 	
 	/*void OnEnable()
 	{
-		Debug.Log ("ColouredCubesVolumeEditor.OnEnable()");
+		Debug.Log ("ColoredCubesVolumeEditor.OnEnable()");
 		
-		ColouredCubesVolume colouredCubesVolume = (ColouredCubesVolume)target;
+		ColoredCubesVolume colouredCubesVolume = (ColoredCubesVolume)target;
 		colouredCubesVolume.Initialize();
 		colouredCubesVolume.Synchronize();
 	}
 	
 	void OnDisable()
 	{
-		Debug.Log ("ColouredCubesVolumeEditor.OnDisable()");
+		Debug.Log ("ColoredCubesVolumeEditor.OnDisable()");
 		
-		ColouredCubesVolume colouredCubesVolume = (ColouredCubesVolume)target;
+		ColoredCubesVolume colouredCubesVolume = (ColoredCubesVolume)target;
 		colouredCubesVolume.Shutdown();
 	}*/
 }

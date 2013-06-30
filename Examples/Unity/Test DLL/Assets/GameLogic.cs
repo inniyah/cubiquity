@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GameLogic : MonoBehaviour
 {
-	public ColouredCubesVolume colouredCubesVolume;
+	public ColoredCubesVolume colouredCubesVolume;
 	public GameObject gun;
 	public GameObject mainCamera;
 	public float cameraDistance = 1.0f;
@@ -14,7 +14,7 @@ public class GameLogic : MonoBehaviour
 	void Awake()
 	{
 		GameObject voxelTerrainObject = GameObject.Find("Voxel Terrain");
-		colouredCubesVolume = voxelTerrainObject.GetComponent<ColouredCubesVolume>();
+		colouredCubesVolume = voxelTerrainObject.GetComponent<ColoredCubesVolume>();
 		gun = GameObject.Find("Gun");
 		mainCamera = GameObject.Find("Main Camera");
 		tank = GameObject.Find("Tank");

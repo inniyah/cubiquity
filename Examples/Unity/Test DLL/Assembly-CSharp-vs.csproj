@@ -45,7 +45,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Bullet.cs" />
-     <Compile Include="Assets\ColouredCubesVolume.cs" />
+     <Compile Include="Assets\ColoredCubesVolume.cs" />
      <Compile Include="Assets\Cubiquity.cs" />
      <Compile Include="Assets\CubiquityDLL.cs" />
      <Compile Include="Assets\CubiquityException.cs" />
@@ -57,7 +57,7 @@
      <Compile Include="Assets\ShowBounds.cs" />
      <Compile Include="Assets\TankController.cs" />
      <None Include="Assets\Resources\ColoredCubesVolumeUtilities.cginc" />
-     <None Include="Assets\Resources\ColouredCubesVolume.shader" />
+     <None Include="Assets\Resources\ColoredCubesVolume.shader" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

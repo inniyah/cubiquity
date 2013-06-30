@@ -1,4 +1,4 @@
-Shader "ColouredCubesVolume"
+Shader "ColoredCubesVolume"
 {	
     SubShader
     {

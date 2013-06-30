@@ -17,7 +17,7 @@ public struct CubiquityVertex
 }
 
 [ExecuteInEditMode]
-public class ColouredCubesVolume : MonoBehaviour
+public class ColoredCubesVolume : MonoBehaviour
 {	
 	public string folderName;
 	public string pageFolder;
@@ -42,11 +42,11 @@ public class ColouredCubesVolume : MonoBehaviour
 		// Use the Cubiquity dll to allocate some volume data
 		if((folderName != null) && (folderName != ""))
 		{
-			volumeHandle = CubiquityDLL.NewColouredCubesVolumeFromVolDat(folderName, 16, pageFolder);
+			volumeHandle = CubiquityDLL.NewColoredCubesVolumeFromVolDat(folderName, 16, pageFolder);
 		}
 		else
 		{
-			volumeHandle = CubiquityDLL.NewColouredCubesVolume(0, 0, 0, 127, 31, 127, 16, pageFolder);
+			volumeHandle = CubiquityDLL.NewColoredCubesVolume(0, 0, 0, 127, 31, 127, 16, pageFolder);
 			
 			// Set some voxels to solid so the user can see the volume they just created.
 			Color32 lightGrey = new Color32(192, 192, 192, 255);
@@ -84,11 +84,11 @@ public class ColouredCubesVolume : MonoBehaviour
 	
 	public void Shutdown()
 	{
-		Debug.Log("In ColouredCubesVolume.Shutdown()");
+		Debug.Log("In ColoredCubesVolume.Shutdown()");
 		
 		if(volumeHandle.HasValue)
 		{
-			CubiquityDLL.DeleteColouredCubesVolume(volumeHandle.Value);
+			CubiquityDLL.DeleteColoredCubesVolume(volumeHandle.Value);
 			volumeHandle = null;
 		
 			deleteGameObject(rootGameObject);
@@ -123,7 +123,7 @@ public class ColouredCubesVolume : MonoBehaviour
 	
 	void Start()
 	{
-		Debug.Log ("ColouredCubesVolume.Awake()");
+		Debug.Log ("ColoredCubesVolume.Awake()");
 		Initialize();
 	}
 	
@@ -141,7 +141,7 @@ public class ColouredCubesVolume : MonoBehaviour
 	
 	public void OnDestroy()
 	{
-		Debug.Log ("ColouredCubesVolume.OnDestroy()");
+		Debug.Log ("ColoredCubesVolume.OnDestroy()");
 		Shutdown();
 	}
 	
@@ -222,7 +222,7 @@ public class ColouredCubesVolume : MonoBehaviour
 				
 		        mf.sharedMesh = renderingMesh;				
 				
-				mr.material = new Material(Shader.Find("ColouredCubesVolume"));
+				mr.material = new Material(Shader.Find("ColoredCubesVolume"));
 				
 				if(UseCollisionMesh)
 				{

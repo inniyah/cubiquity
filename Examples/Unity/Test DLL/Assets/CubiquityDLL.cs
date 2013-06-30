@@ -17,7 +17,7 @@ public class CubiquityDLL
 	////////////////////////////////////////////////////////////////////////////////
 	[DllImport ("CubiquityC")]
 	private static extern int cuNewColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, uint baseNodeSize, StringBuilder pageFolder, out uint result);
-	public static uint NewColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, uint baseNodeSize, string pageFolder)
+	public static uint NewColoredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, uint baseNodeSize, string pageFolder)
 	{
 		uint result;
 		Validate(cuNewColouredCubesVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, baseNodeSize, new StringBuilder(pageFolder), out result));
@@ -26,7 +26,7 @@ public class CubiquityDLL
 	
 	[DllImport ("CubiquityC")]
 	private static extern int cuNewColouredCubesVolumeFromVolDat(StringBuilder foldername, uint baseNodeSize, StringBuilder pageFolder, out uint result);	
-	public static uint NewColouredCubesVolumeFromVolDat(string foldername, uint baseNodeSize, string pageFolder)
+	public static uint NewColoredCubesVolumeFromVolDat(string foldername, uint baseNodeSize, string pageFolder)
 	{
 		uint result;
 		Validate(cuNewColouredCubesVolumeFromVolDat(new StringBuilder(foldername), baseNodeSize, new StringBuilder(pageFolder), out result));
@@ -56,7 +56,7 @@ public class CubiquityDLL
 	
 	[DllImport ("CubiquityC")]
 	private static extern int cuDeleteColouredCubesVolume(uint volumeHandle);
-	public static void DeleteColouredCubesVolume(uint volumeHandle)
+	public static void DeleteColoredCubesVolume(uint volumeHandle)
 	{
 		Validate(cuDeleteColouredCubesVolume(volumeHandle));
 	}

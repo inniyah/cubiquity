@@ -5,12 +5,12 @@ using System.Collections.Generic;
 public class Bullet : MonoBehaviour
 {
 	public GameObject voxelTerrainObject;
-	public ColouredCubesVolume colouredCubesVolume;
+	public ColoredCubesVolume colouredCubesVolume;
 	
 	void Awake()
 	{
 		voxelTerrainObject = GameObject.Find("Voxel Terrain");
-		colouredCubesVolume = voxelTerrainObject.GetComponent<ColouredCubesVolume>();
+		colouredCubesVolume = voxelTerrainObject.GetComponent<ColoredCubesVolume>();
 	}
 
 	// Use this for initialization
