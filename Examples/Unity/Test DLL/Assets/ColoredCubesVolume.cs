@@ -48,15 +48,15 @@ public class ColoredCubesVolume : MonoBehaviour
 		}
 		else
 		{
-			volumeHandle = CubiquityDLL.NewColoredCubesVolume(0, 0, 0, 127, 31, 127, pageFolder, 16);
+			volumeHandle = CubiquityDLL.NewColoredCubesVolume(region.lowerCorner.x, region.lowerCorner.y, region.lowerCorner.z, region.upperCorner.x, region.upperCorner.y, region.upperCorner.z,pageFolder, 16);
 			
 			// Set some voxels to solid so the user can see the volume they just created.
 			Color32 lightGrey = new Color32(192, 192, 192, 255);
-			for(int z = 0; z < 128; z++)
+			for(int z = 0; z <= region.upperCorner.z; z++)
 			{
 				for(int y = 0; y < 8; y++)
 				{
-					for(int x = 0; x < 128; x++)
+					for(int x = 0; x <= region.upperCorner.x; x++)
 					{
 						SetVoxel(x, y, z, lightGrey);
 					}

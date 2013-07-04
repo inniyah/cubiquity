@@ -7,35 +7,36 @@ public class CreateColoredCubesVolumeWizard : ScriptableWizard
 	private bool createFromImagesPressed = false;
 	private bool createFromHeightmapPressed = false;
 	
-	private int lowerX = 255;
-	private int lowerY = 255;
-	private int lowerZ = 255;
+	private int lowerX = 0;
+	private int lowerY = 0;
+	private int lowerZ = 0;
 	
 	private int upperX = 255;
 	private int upperY = 255;
 	private int upperZ = 255;
 	
-	private string pageFolder = "Enter path here...";
+	private string pageFolder = "D:/temp/voldata/";
     
-    [MenuItem ("GameObject/Create Other/Create Colored Cubes Volume/Empty Volume")]
+    [MenuItem ("GameObject/Create Other/Create Colored Cubes Volume")]
     static void CreateWizard () {
-        ScriptableWizard.DisplayWizard<CreateColoredCubesVolumeWizard>("Create Empty Colored Cubes Volume", "Create", "Cancel");
+        ScriptableWizard.DisplayWizard<CreateColoredCubesVolumeWizard>("Create Colored Cubes Volume");
         //If you don't want to use the secondary button simply leave it out:
         //ScriptableWizard.DisplayWizard<WizardCreateLight>("Create Light", "Create");
     }
 	
-    void OnWizardCreate ()
+	void OnCreatePressed()
 	{
-    }  
+		Debug.Log("Creating volume");
+		if(createEmptyPressed)
+		{
+			CreateEmptyVolume();
+		}
+	}
 	
-    void OnWizardUpdate ()
+	void OnCancelPressed()
 	{
-    }   
-    
-    void OnWizardOtherButton ()
-	{
-        Close ();
-    }
+		Debug.Log("Cancelling");
+	}
 	
 	void OnGUI()
 	{
@@ -90,5 +91,48 @@ public class CreateColoredCubesVolumeWizard : ScriptableWizard
 				createFromHeightmapPressed = true;
 			}
 		EditorGUILayout.EndHorizontal();
+		
+		GUILayout.Space(50); // A space before the create/cancel buttons
+		
+		EditorGUILayout.BeginHorizontal();
+			EditorGUILayout.Space();
+			if(GUILayout.Button("Create volume", GUILayout.Width(128)))
+			{
+				OnCreatePressed ();
+			}
+			GUILayout.Space(50);
+			if(GUILayout.Button("Cancel", GUILayout.Width(128)))
+			{
+				OnCancelPressed ();
+			}
+			EditorGUILayout.Space();
+		EditorGUILayout.EndHorizontal();
+	}
+	
+	void CreateEmptyVolume()
+	{
+		if(GameObject.Find("Voxel Terrain") != null)
+		{
+			Debug.LogError("A voxel terrain already exists - you (currently) can't create another one.");
+		}
+		
+		GameObject voxelGameObject = ColoredCubesVolumeFactory.CreateVolume("Voxel Terrain", new Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pageFolder, 16);
+		ColoredCubesVolume coloredCubesVolume = voxelGameObject.GetComponent<ColoredCubesVolume>();
+		
+		// Call Initialize so we can start drawing into the volume right away.
+		/*coloredCubesVolume.Initialize();
+		const int floorDepth = 4;
+		Color32 floorColor = new Color32(192, 192, 192, 255);
+		
+		for(int z = lowerZ; z <= upperZ; z++)
+		{
+			for(int y = lowerY; y <= lowerY + floorDepth; y++)
+			{
+				for(int x = lowerX; x <= upperX; x++)
+				{
+					coloredCubesVolume.SetVoxel(x, y, z, floorColor);
+				}
+			}
+		}*/
 	}
 }

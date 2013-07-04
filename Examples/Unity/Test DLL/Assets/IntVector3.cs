@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+[System.Serializable]
 public class IntVector3
 {
 	public int x;
