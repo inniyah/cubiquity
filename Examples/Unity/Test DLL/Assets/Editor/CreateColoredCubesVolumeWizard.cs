@@ -6,6 +6,16 @@ public class CreateColoredCubesVolumeWizard : ScriptableWizard
     private bool createEmptyPressed = true;
 	private bool createFromImagesPressed = false;
 	private bool createFromHeightmapPressed = false;
+	
+	private int lowerX = 255;
+	private int lowerY = 255;
+	private int lowerZ = 255;
+	
+	private int upperX = 255;
+	private int upperY = 255;
+	private int upperZ = 255;
+	
+	private string pageFolder = "Enter path here...";
     
     [MenuItem ("GameObject/Create Other/Create Colored Cubes Volume/Empty Volume")]
     static void CreateWizard () {
@@ -29,25 +39,56 @@ public class CreateColoredCubesVolumeWizard : ScriptableWizard
 	
 	void OnGUI()
 	{
-		if(GUILayout.Toggle (createEmptyPressed, "Create empty volume", "button"))
-		{
-			createEmptyPressed = true;
-			createFromImagesPressed = false;
-			createFromHeightmapPressed = false;
-		}
+		EditorGUILayout.BeginHorizontal();	
+			GUILayout.Space(120);
+			EditorGUILayout.TextField("Save location:", pageFolder);
+			if(GUILayout.Button("..."))
+			{
+				pageFolder = EditorUtility.SaveFolderPanel("Choose save location for volume data", "C:/", "");
+			}
+		EditorGUILayout.EndHorizontal();
 		
-		if(GUILayout.Toggle (createFromImagesPressed, "Create volume from images", "button"))
-		{
-			createEmptyPressed = false;
-			createFromImagesPressed = true;
-			createFromHeightmapPressed = false;
-		}
+		EditorGUILayout.BeginHorizontal();	
+			GUILayout.Space(20);
 		
-		if(GUILayout.Toggle (createFromHeightmapPressed, "Create empty volume", "button"))
-		{
-			createEmptyPressed = false;
-			createFromImagesPressed = false;
-			createFromHeightmapPressed = true;
-		}
+			if(GUILayout.Toggle (createEmptyPressed, "Create empty\nvolume", "button", GUILayout.Width (100), GUILayout.Height (100)))
+			{
+				createEmptyPressed = true;
+				createFromImagesPressed = false;
+				createFromHeightmapPressed = false;
+			}
+		
+			EditorGUILayout.BeginVertical();
+				lowerX = EditorGUILayout.IntField("Lower X bound", lowerX);
+				lowerY = EditorGUILayout.IntField("Lower Y bound", lowerY);
+				lowerZ = EditorGUILayout.IntField("Lower Z bound", lowerZ);
+			EditorGUILayout.EndVertical();
+		
+			EditorGUILayout.BeginVertical();
+				upperX = EditorGUILayout.IntField("Upper X bound", upperX);
+				upperY = EditorGUILayout.IntField("Upper Y bound", upperY);
+				upperZ = EditorGUILayout.IntField("Upper Z bound", upperZ);
+			EditorGUILayout.EndVertical();
+		EditorGUILayout.EndHorizontal();
+		
+		EditorGUILayout.BeginHorizontal();
+			GUILayout.Space(20);
+			if(GUILayout.Toggle (createFromImagesPressed, "Create volume\nfrom images", "button", GUILayout.Width (100), GUILayout.Height (100)))
+			{
+				createEmptyPressed = false;
+				createFromImagesPressed = true;
+				createFromHeightmapPressed = false;
+			}
+		EditorGUILayout.EndHorizontal();
+		
+		EditorGUILayout.BeginHorizontal();
+			GUILayout.Space(20);
+			if(GUILayout.Toggle (createFromHeightmapPressed, "Create volume\nfrom heightmap", "button", GUILayout.Width (100), GUILayout.Height (100)))
+			{
+				createEmptyPressed = false;
+				createFromImagesPressed = false;
+				createFromHeightmapPressed = true;
+			}
+		EditorGUILayout.EndHorizontal();
 	}
 }
