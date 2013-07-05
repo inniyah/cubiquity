@@ -26,6 +26,8 @@ public class CreateColoredCubesVolumeWizard : ScriptableWizard
 	
 	void OnCreatePressed()
 	{
+		Close();
+		
 		Debug.Log("Creating volume");
 		if(createEmptyPressed)
 		{
@@ -36,6 +38,7 @@ public class CreateColoredCubesVolumeWizard : ScriptableWizard
 	void OnCancelPressed()
 	{
 		Debug.Log("Cancelling");
+		Close ();
 	}
 	
 	void OnGUI()
