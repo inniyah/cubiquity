@@ -30,37 +30,40 @@ public class ColoredCubesVolume : MonoBehaviour
 	
 	public void Initialize()
 	{	
-		// I don't understand why we need to do this. If it's a new oject it shouldn't have any children,
-		// or if it's a reused object the children should have been removed by Shutdown(). But when switching
-		// from editor mode to play mode the children don't seem to be removed properly.
-		foreach(Transform child in transform)
+		if(volumeHandle == null)
 		{
-			Debug.Log("Removing existing child from game object.");
-			
-			//Deleting while in a loop - is this valid?
-			DestroyImmediate(child.gameObject);
-		}
-
-		// Use the Cubiquity dll to allocate some volume data
-		if((voldatFolder != null) && (voldatFolder != ""))
-		{
-			volumeHandle = CubiquityDLL.NewColoredCubesVolumeFromVolDat(voldatFolder, pageFolder, 16);
-		}
-		else
-		{
-			volumeHandle = CubiquityDLL.NewColoredCubesVolume(region.lowerCorner.x, region.lowerCorner.y, region.lowerCorner.z, region.upperCorner.x, region.upperCorner.y, region.upperCorner.z,pageFolder, 16);
-			
-			// Set some voxels to solid so the user can see the volume they just created.
-			Color32 lightGrey = new Color32(192, 192, 192, 255);
-			for(int z = 0; z <= region.upperCorner.z; z++)
+			// I don't understand why we need to do this. If it's a new oject it shouldn't have any children,
+			// or if it's a reused object the children should have been removed by Shutdown(). But when switching
+			// from editor mode to play mode the children don't seem to be removed properly.
+			foreach(Transform child in transform)
 			{
-				for(int y = 0; y < 8; y++)
+				Debug.Log("Removing existing child from game object.");
+				
+				//Deleting while in a loop - is this valid?
+				DestroyImmediate(child.gameObject);
+			}
+	
+			// Use the Cubiquity dll to allocate some volume data
+			if((voldatFolder != null) && (voldatFolder != ""))
+			{
+				volumeHandle = CubiquityDLL.NewColoredCubesVolumeFromVolDat(voldatFolder, pageFolder, 16);
+			}
+			else
+			{
+				volumeHandle = CubiquityDLL.NewColoredCubesVolume(region.lowerCorner.x, region.lowerCorner.y, region.lowerCorner.z, region.upperCorner.x, region.upperCorner.y, region.upperCorner.z,pageFolder, 16);
+				
+				// Set some voxels to solid so the user can see the volume they just created.
+				/*Color32 lightGrey = new Color32(192, 192, 192, 255);
+				for(int z = 0; z <= region.upperCorner.z; z++)
 				{
-					for(int x = 0; x <= region.upperCorner.x; x++)
+					for(int y = 0; y < 8; y++)
 					{
-						SetVoxel(x, y, z, lightGrey);
+						for(int x = 0; x <= region.upperCorner.x; x++)
+						{
+							SetVoxel(x, y, z, lightGrey);
+						}
 					}
-				}
+				}*/
 			}
 		}
 	}
@@ -141,9 +144,9 @@ public class ColoredCubesVolume : MonoBehaviour
 		Synchronize();
 	}
 	
-	public void OnDestroy()
+	public void OnDisable()
 	{
-		Debug.Log ("ColoredCubesVolume.OnDestroy()");
+		Debug.Log ("ColoredCubesVolume.OnDisable()");
 		Shutdown();
 	}
 	

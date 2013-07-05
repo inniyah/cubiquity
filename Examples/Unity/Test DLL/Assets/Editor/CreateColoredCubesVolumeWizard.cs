@@ -123,7 +123,7 @@ public class CreateColoredCubesVolumeWizard : ScriptableWizard
 		ColoredCubesVolume coloredCubesVolume = voxelGameObject.GetComponent<ColoredCubesVolume>();
 		
 		// Call Initialize so we can start drawing into the volume right away.
-		/*coloredCubesVolume.Initialize();
+		coloredCubesVolume.Initialize();
 		const int floorDepth = 4;
 		Color32 floorColor = new Color32(192, 192, 192, 255);
 		
@@ -136,6 +136,6 @@ public class CreateColoredCubesVolumeWizard : ScriptableWizard
 					coloredCubesVolume.SetVoxel(x, y, z, floorColor);
 				}
 			}
-		}*/
+		}
 	}
 }
