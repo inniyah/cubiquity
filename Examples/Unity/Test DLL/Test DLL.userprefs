@@ -3,7 +3,12 @@
   <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="C:\Code\cubiquity\Examples\Unity\Test DLL\Assets\ColoredCubesVolume.cs" line="52" />
+      <Catchpoint exceptionName="CubiquityException" />
+      <Catchpoint exceptionName="UnityEngine.MissingComponentException" />
+      <Catchpoint exceptionName="UnityEngine.MissingReferenceException" />
+      <Catchpoint exceptionName="UnityEngine.PlayerPrefsException" />
+      <Catchpoint exceptionName="UnityEngine.UnassignedReferenceException" />
+      <Catchpoint exceptionName="UnityEngine.UnityException" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

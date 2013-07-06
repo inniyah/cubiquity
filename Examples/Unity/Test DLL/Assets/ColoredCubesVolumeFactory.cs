@@ -13,6 +13,8 @@ public class ColoredCubesVolumeFactory
 		coloredCubesVolume.baseNodeSize = baseNodeSize;
 		coloredCubesVolume.pageFolder = pageFolder;
 		
+		coloredCubesVolume.Initialize();
+		
 		return VoxelTerrainRoot;
 	}
 	
@@ -25,6 +27,8 @@ public class ColoredCubesVolumeFactory
 		coloredCubesVolume.voldatFolder = voldatFolder;
 		coloredCubesVolume.baseNodeSize = baseNodeSize;
 		coloredCubesVolume.pageFolder = pageFolder;
+		
+		coloredCubesVolume.Initialize();
 		
 		return VoxelTerrainRoot;
 	}

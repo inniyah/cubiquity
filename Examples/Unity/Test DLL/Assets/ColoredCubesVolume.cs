@@ -19,16 +19,16 @@ public struct CubiquityVertex
 [ExecuteInEditMode]
 public class ColoredCubesVolume : MonoBehaviour
 {	
-	public string pageFolder;
-	public uint baseNodeSize;
+	public string pageFolder = null;
+	public uint baseNodeSize = 0;
 	public bool UseCollisionMesh = true;
-	public Region region;
+	public Region region = null;
 	
 	internal string voldatFolder;
 	internal uint? volumeHandle = null;
 	private GameObject rootGameObject;
 	
-	public void Initialize()
+	internal void Initialize()
 	{	
 		if(volumeHandle == null)
 		{
@@ -50,8 +50,10 @@ public class ColoredCubesVolume : MonoBehaviour
 				int lowerX, lowerY, lowerZ, upperX, upperY, upperZ;
 				CubiquityDLL.GetEnclosingRegion(volumeHandle.Value, out lowerX, out lowerY, out lowerZ, out upperX, out upperY, out upperZ);
 				region = new Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
+				
+				voldatFolder = null;
 			}
-			else
+			else if(region != null)
 			{
 				volumeHandle = CubiquityDLL.NewColoredCubesVolume(region.lowerCorner.x, region.lowerCorner.y, region.lowerCorner.z, region.upperCorner.x, region.upperCorner.y, region.upperCorner.z,pageFolder, 16);
 			}
@@ -86,14 +88,14 @@ public class ColoredCubesVolume : MonoBehaviour
 			CubiquityDLL.DeleteColoredCubesVolume(volumeHandle.Value);
 			volumeHandle = null;
 		
-			deleteGameObject(rootGameObject);
+			//deleteGameObject(rootGameObject);
 		}
 	}
 	
 	public void deleteGameObject(GameObject gameObjectToDelete)
 	{
 		MeshFilter mf = (MeshFilter)gameObjectToDelete.GetComponent(typeof(MeshFilter));
-		DestroyImmediate(mf.sharedMesh);
+		Destroy(mf.sharedMesh);
 		
 		OctreeNodeData octreeNodeData = gameObjectToDelete.GetComponent<OctreeNodeData>();
 		
@@ -113,12 +115,12 @@ public class ColoredCubesVolume : MonoBehaviour
 			}
 		}
 		
-		DestroyImmediate(gameObjectToDelete);
+		Destroy(gameObjectToDelete);
 	}
 	
-	void Start()
+	void OnEnable()
 	{
-		Debug.Log ("ColoredCubesVolume.Awake()");
+		Debug.Log ("ColoredCubesVolume.OnEnable()");
 		Initialize();
 	}
 	
