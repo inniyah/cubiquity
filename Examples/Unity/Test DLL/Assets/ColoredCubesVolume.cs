@@ -158,7 +158,11 @@ public class ColoredCubesVolume : MonoBehaviour
 	public void OnDisable()
 	{
 		Debug.Log ("ColoredCubesVolume.OnDisable()");
-		Shutdown(true);
+		
+		// We only save if we are in editor mode, not if we are playing.
+		bool saveChanges = !Application.isPlaying;
+		
+		Shutdown(saveChanges);
 	}
 	
 	public Color32 GetVoxel(int x, int y, int z)
