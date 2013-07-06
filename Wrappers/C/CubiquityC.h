@@ -20,6 +20,7 @@ extern "C"
 	CUBIQUITYC_API int32_t cuUpdateVolume(uint32_t volumeHandle);
 	CUBIQUITYC_API int32_t cuDeleteColouredCubesVolume(uint32_t volumeHandle);
 
+	CUBIQUITYC_API int32_t cuGetEnclosingRegion(uint32_t volumeHandle, int32_t* lowerX, int32_t* lowerY, int32_t* lowerZ, int32_t* upperX, int32_t* upperY, int32_t* upperZ);
 	CUBIQUITYC_API int32_t cuGetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, uint8_t* red, uint8_t* green, uint8_t* blue, uint8_t* alpha);
 	CUBIQUITYC_API int32_t cuSetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha);
 

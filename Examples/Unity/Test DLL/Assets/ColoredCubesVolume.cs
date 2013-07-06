@@ -19,12 +19,12 @@ public struct CubiquityVertex
 [ExecuteInEditMode]
 public class ColoredCubesVolume : MonoBehaviour
 {	
-	public string voldatFolder;
 	public string pageFolder;
 	public uint baseNodeSize;
 	public bool UseCollisionMesh = true;
 	public Region region;
 	
+	internal string voldatFolder;
 	internal uint? volumeHandle = null;
 	private GameObject rootGameObject;
 	
@@ -47,23 +47,13 @@ public class ColoredCubesVolume : MonoBehaviour
 			if((voldatFolder != null) && (voldatFolder != ""))
 			{
 				volumeHandle = CubiquityDLL.NewColoredCubesVolumeFromVolDat(voldatFolder, pageFolder, 16);
+				int lowerX, lowerY, lowerZ, upperX, upperY, upperZ;
+				CubiquityDLL.GetEnclosingRegion(volumeHandle.Value, out lowerX, out lowerY, out lowerZ, out upperX, out upperY, out upperZ);
+				region = new Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
 			}
 			else
 			{
 				volumeHandle = CubiquityDLL.NewColoredCubesVolume(region.lowerCorner.x, region.lowerCorner.y, region.lowerCorner.z, region.upperCorner.x, region.upperCorner.y, region.upperCorner.z,pageFolder, 16);
-				
-				// Set some voxels to solid so the user can see the volume they just created.
-				/*Color32 lightGrey = new Color32(192, 192, 192, 255);
-				for(int z = 0; z <= region.upperCorner.z; z++)
-				{
-					for(int y = 0; y < 8; y++)
-					{
-						for(int x = 0; x <= region.upperCorner.x; x++)
-						{
-							SetVoxel(x, y, z, lightGrey);
-						}
-					}
-				}*/
 			}
 		}
 	}
