@@ -1,6 +1,7 @@
 using UnityEngine;
 using System;
 using System.Collections;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -79,7 +80,7 @@ public class ColoredCubesVolume : MonoBehaviour
 		}
 	}
 	
-	public void Shutdown()
+	public void Shutdown(bool saveChanges)
 	{
 		Debug.Log("In ColoredCubesVolume.Shutdown()");
 		
@@ -89,6 +90,24 @@ public class ColoredCubesVolume : MonoBehaviour
 			volumeHandle = null;
 		
 			//deleteGameObject(rootGameObject);
+		}
+		
+		// Now that we've destroyed the volume handle, and volume data will have been paged into the override folder. This
+		// includes any potential changes to the volume. If the user wanted to save this then copy it to the main page folder
+		if(saveChanges)
+		{
+			foreach(var file in Directory.GetFiles(pageFolder + "/override"))
+			{
+				File.Copy(file, Path.Combine(pageFolder, Path.GetFileName(file)), true);
+			}
+		}
+		
+		// Delete all the data in override
+		// FIXME - Should probably check for a file extension.
+		System.IO.DirectoryInfo overrideDirectory = new DirectoryInfo(pageFolder + "/override");
+		foreach (FileInfo file in overrideDirectory.GetFiles())
+		{
+			file.Delete();
 		}
 	}
 	
@@ -139,7 +158,7 @@ public class ColoredCubesVolume : MonoBehaviour
 	public void OnDisable()
 	{
 		Debug.Log ("ColoredCubesVolume.OnDisable()");
-		Shutdown();
+		Shutdown(true);
 	}
 	
 	public Color32 GetVoxel(int x, int y, int z)

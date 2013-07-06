@@ -33,6 +33,10 @@ public class CreateColoredCubesVolumeWizard : ScriptableWizard
 		{
 			CreateEmptyVolume();
 		}
+		else if(createFromImagesPressed)
+		{
+			CreateFromImages();
+		}
 	}
 	
 	void OnCancelPressed()
@@ -137,5 +141,10 @@ public class CreateColoredCubesVolumeWizard : ScriptableWizard
 				}
 			}
 		}
+	}
+	
+	void CreateFromImages()
+	{
+		ColoredCubesVolumeFactory.CreateVolumeFromVolDat("Voxel Terrain", "Assets/Resources/VoxeliensTerrain/", pageFolder, 16);
 	}
 }
