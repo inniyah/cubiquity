@@ -25,8 +25,12 @@ public class ColoredCubesVolume : MonoBehaviour
 	public bool UseCollisionMesh = true;
 	public Region region = null;
 	
+	[System.NonSerialized]
 	internal string voldatFolder;
+	[System.NonSerialized]
 	internal uint? volumeHandle = null;
+	
+	[System.NonSerialized]
 	private GameObject rootGameObject;
 	
 	internal void Initialize()
@@ -36,13 +40,13 @@ public class ColoredCubesVolume : MonoBehaviour
 			// I don't understand why we need to do this. If it's a new oject it shouldn't have any children,
 			// or if it's a reused object the children should have been removed by Shutdown(). But when switching
 			// from editor mode to play mode the children don't seem to be removed properly.
-			foreach(Transform child in transform)
+			/*foreach(Transform child in transform)
 			{
 				Debug.Log("Removing existing child from game object.");
 				
 				//Deleting while in a loop - is this valid?
 				DestroyImmediate(child.gameObject);
-			}
+			}*/
 	
 			// Use the Cubiquity dll to allocate some volume data
 			if((voldatFolder != null) && (voldatFolder != ""))
@@ -88,8 +92,21 @@ public class ColoredCubesVolume : MonoBehaviour
 		{
 			CubiquityDLL.DeleteColoredCubesVolume(volumeHandle.Value);
 			volumeHandle = null;
+		}
 		
-			//deleteGameObject(rootGameObject);
+		/*if(rootGameObject)
+		{
+			deleteGameObject(rootGameObject);
+		}*/
+		
+		//rootGameObject = null;
+		
+		foreach(Transform child in transform)
+		{
+			Debug.Log("Removing existing child from game object.");
+			
+			//Deleting while in a loop - is this valid?
+			DestroyImmediate(child.gameObject);
 		}
 		
 		// Now that we've destroyed the volume handle, and volume data will have been paged into the override folder. This
@@ -113,28 +130,36 @@ public class ColoredCubesVolume : MonoBehaviour
 	
 	public void deleteGameObject(GameObject gameObjectToDelete)
 	{
-		MeshFilter mf = (MeshFilter)gameObjectToDelete.GetComponent(typeof(MeshFilter));
-		Destroy(mf.sharedMesh);
+		//MeshFilter mf = (MeshFilter)gameObjectToDelete.GetComponent(typeof(MeshFilter));
+		//DestroyImmediate(mf.sharedMesh);
 		
 		OctreeNodeData octreeNodeData = gameObjectToDelete.GetComponent<OctreeNodeData>();
 		
-		//Now delete any children
-		for(uint z = 0; z < 2; z++)
+		if(octreeNodeData)
 		{
-			for(uint y = 0; y < 2; y++)
+			//Now delete any children
+			for(uint z = 0; z < 2; z++)
 			{
-				for(uint x = 0; x < 2; x++)
+				for(uint y = 0; y < 2; y++)
 				{
-					GameObject childObject = octreeNodeData.GetChild(x, y, z);
-					if(childObject != null)
+					for(uint x = 0; x < 2; x++)
 					{
-						deleteGameObject(childObject);
+						GameObject childObject = octreeNodeData.GetChild(x, y, z);
+						if(childObject != null)
+						{
+							deleteGameObject(childObject);
+						}
 					}
 				}
 			}
 		}
 		
-		Destroy(gameObjectToDelete);
+		//Destroy(gameObjectToDelete);
+		//gameObjectToDelete.transform.parent = null;
+		if(gameObjectToDelete)
+		{
+			DestroyImmediate(gameObjectToDelete);
+		}
 	}
 	
 	void OnEnable()
@@ -312,6 +337,8 @@ public class ColoredCubesVolume : MonoBehaviour
 		{
 			newGameObject.transform.localPosition = octreeNodeData.lowerCorner;
 		}
+		
+		newGameObject.hideFlags = HideFlags.DontSave;
 		
 		return newGameObject;
 	}

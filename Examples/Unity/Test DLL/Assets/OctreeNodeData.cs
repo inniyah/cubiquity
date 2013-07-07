@@ -3,8 +3,11 @@ using System.Collections;
 
 public class OctreeNodeData : MonoBehaviour
 {
+	[System.NonSerialized]
 	public int meshLastSyncronised;
+	[System.NonSerialized]
 	public Vector3 lowerCorner;
+	[System.NonSerialized]
 	public GameObject[,,] children;
 	
 	// Use this for initialization
