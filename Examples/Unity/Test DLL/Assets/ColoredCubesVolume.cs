@@ -77,7 +77,7 @@ public class ColoredCubesVolume : MonoBehaviour
 			
 				if(rootGameObject == null)
 				{					
-					rootGameObject = BuildGameObjectFromNodeHandle(rootNodeHandle, gameObject);	
+					rootGameObject = BuildGameObjectFromNodeHandle(rootNodeHandle, null);	
 				}
 				syncNode(rootNodeHandle, rootGameObject);
 			}
@@ -94,20 +94,20 @@ public class ColoredCubesVolume : MonoBehaviour
 			volumeHandle = null;
 		}
 		
-		/*if(rootGameObject)
+		if(rootGameObject)
 		{
 			deleteGameObject(rootGameObject);
-		}*/
+		}
 		
 		//rootGameObject = null;
 		
-		foreach(Transform child in transform)
+		/*foreach(Transform child in transform)
 		{
 			Debug.Log("Removing existing child from game object.");
 			
 			//Deleting while in a loop - is this valid?
 			DestroyImmediate(child.gameObject);
-		}
+		}*/
 		
 		// Now that we've destroyed the volume handle, and volume data will have been paged into the override folder. This
 		// includes any potential changes to the volume. If the user wanted to save this then copy it to the main page folder
@@ -326,10 +326,10 @@ public class ColoredCubesVolume : MonoBehaviour
 		OctreeNodeData octreeNodeData = newGameObject.GetComponent<OctreeNodeData>();
 		octreeNodeData.lowerCorner = new Vector3(xPos, yPos, zPos);
 		
-		newGameObject.transform.parent = parentGameObject.transform;
-		
-		if(parentGameObject != gameObject)
+		if(parentGameObject)
 		{
+			newGameObject.transform.parent = parentGameObject.transform;
+			
 			Vector3 parentLowerCorner = parentGameObject.GetComponent<OctreeNodeData>().lowerCorner;
 			newGameObject.transform.localPosition = octreeNodeData.lowerCorner - parentLowerCorner;
 		}
