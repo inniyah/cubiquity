@@ -20,21 +20,38 @@ public struct CubiquityVertex
 [ExecuteInEditMode]
 public class ColoredCubesVolume : MonoBehaviour
 {	
+	// This folder (and the 'overflow' subfolder) is used
+	// as storage for data which doesn't fit in memory.
 	public string pageFolder = null;
+	
+	// The side length of an extracted mesh for the most detailed LOD.
+	// Bigger values mean fewer batches but slower surface extraction.
 	public uint baseNodeSize = 0;
+	
+	// Determines whether collision data is generated as well as a
+	// renderable mesh. This does not apply when in the Unity editor.
 	public bool UseCollisionMesh = true;
+	
+	// The extents (dimensions in voxels) of the volume.
 	public Region region = null;
 	
+	// If this is set then we import image slices from this path.
 	[System.NonSerialized]
 	internal string voldatFolder;
+	
+	// If set, this identifies the volume to the Cubiquity DLL. It can
+	// be tested against null to find if the volume is currently valid.
 	[System.NonSerialized]
 	internal uint? volumeHandle = null;
 	
+	// This corresponds to the root OctreeNode in Cubiquity.
 	[System.NonSerialized]
 	private GameObject rootGameObject;
 	
 	internal void Initialize()
 	{	
+		// This function might get called multiple times. E.g the user might call it striaght after crating the volume (so
+		// they can add some initial data to the volume) and it might then get called again by OnEnable(). Handle this safely.
 		if(volumeHandle == null)
 		{
 			// I don't understand why we need to do this. If it's a new oject it shouldn't have any children,
