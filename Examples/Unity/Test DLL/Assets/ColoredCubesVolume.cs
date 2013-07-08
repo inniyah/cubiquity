@@ -26,7 +26,8 @@ public class ColoredCubesVolume : MonoBehaviour
 	
 	// The side length of an extracted mesh for the most detailed LOD.
 	// Bigger values mean fewer batches but slower surface extraction.
-	public uint baseNodeSize = 0;
+	// For some reason Unity won't serialize uints so it's stored as int.
+	public int baseNodeSize = 0;
 	
 	// Determines whether collision data is generated as well as a
 	// renderable mesh. This does not apply when in the Unity editor.
@@ -58,7 +59,7 @@ public class ColoredCubesVolume : MonoBehaviour
 			if((voldatFolder != null) && (voldatFolder != ""))
 			{
 				// Ask Cubiquity to create a volume from the VolDat data.
-				volumeHandle = CubiquityDLL.NewColoredCubesVolumeFromVolDat(voldatFolder, pageFolder, 16);
+				volumeHandle = CubiquityDLL.NewColoredCubesVolumeFromVolDat(voldatFolder, pageFolder, (uint)baseNodeSize);
 				
 				// The user didn't specify a region as this is determined by the size of
 				// the VolDat data, so we have to pull this information back from Cubiquity.
@@ -75,7 +76,7 @@ public class ColoredCubesVolume : MonoBehaviour
 			{
 				// Create an empty region of the desired size.
 				volumeHandle = CubiquityDLL.NewColoredCubesVolume(region.lowerCorner.x, region.lowerCorner.y, region.lowerCorner.z,
-					region.upperCorner.x, region.upperCorner.y, region.upperCorner.z,pageFolder, 16);
+					region.upperCorner.x, region.upperCorner.y, region.upperCorner.z,pageFolder, (uint)baseNodeSize);
 			}
 		}
 	}

@@ -123,7 +123,7 @@ public class CreateColoredCubesVolumeWizard : ScriptableWizard
 			Debug.LogError("A voxel terrain already exists - you (currently) can't create another one.");
 		}
 		
-		GameObject voxelGameObject = ColoredCubesVolumeFactory.CreateVolume("Voxel Terrain", new Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pageFolder, 16);
+		GameObject voxelGameObject = ColoredCubesVolumeFactory.CreateVolume("Voxel Terrain", new Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pageFolder);
 		ColoredCubesVolume coloredCubesVolume = voxelGameObject.GetComponent<ColoredCubesVolume>();
 		
 		// Call Initialize so we can start drawing into the volume right away.
@@ -145,6 +145,6 @@ public class CreateColoredCubesVolumeWizard : ScriptableWizard
 	
 	void CreateFromImages()
 	{
-		ColoredCubesVolumeFactory.CreateVolumeFromVolDat("Voxel Terrain", "Assets/Resources/VoxeliensTerrain/", pageFolder, 16);
+		ColoredCubesVolumeFactory.CreateVolumeFromVolDat("Voxel Terrain", "Assets/Resources/VoxeliensTerrain/", pageFolder);
 	}
 }

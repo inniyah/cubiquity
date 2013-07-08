@@ -3,7 +3,7 @@ using System.Collections;
 
 public class ColoredCubesVolumeFactory
 {
-	private static uint DefaultBaseNodeSize = 16;
+	private static uint DefaultBaseNodeSize = 32;
 	
 	public static GameObject CreateVolume(string name, Region region, string pageFolder)
 	{
@@ -20,7 +20,7 @@ public class ColoredCubesVolumeFactory
 		
 		ColoredCubesVolume coloredCubesVolume = VoxelTerrainRoot.GetComponent<ColoredCubesVolume>();
 		coloredCubesVolume.region = region;
-		coloredCubesVolume.baseNodeSize = baseNodeSize;
+		coloredCubesVolume.baseNodeSize = (int)baseNodeSize;
 		coloredCubesVolume.pageFolder = pageFolder;
 		
 		coloredCubesVolume.Initialize();
@@ -43,7 +43,7 @@ public class ColoredCubesVolumeFactory
 		
 		ColoredCubesVolume coloredCubesVolume = VoxelTerrainRoot.GetComponent<ColoredCubesVolume>();
 		coloredCubesVolume.voldatFolder = voldatFolder;
-		coloredCubesVolume.baseNodeSize = baseNodeSize;
+		coloredCubesVolume.baseNodeSize = (int)baseNodeSize;
 		coloredCubesVolume.pageFolder = pageFolder;
 		
 		coloredCubesVolume.Initialize();
