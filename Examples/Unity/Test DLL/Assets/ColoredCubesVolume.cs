@@ -53,31 +53,29 @@ public class ColoredCubesVolume : MonoBehaviour
 		// This function might get called multiple times. E.g the user might call it striaght after crating the volume (so
 		// they can add some initial data to the volume) and it might then get called again by OnEnable(). Handle this safely.
 		if(volumeHandle == null)
-		{
-			// I don't understand why we need to do this. If it's a new oject it shouldn't have any children,
-			// or if it's a reused object the children should have been removed by Shutdown(). But when switching
-			// from editor mode to play mode the children don't seem to be removed properly.
-			/*foreach(Transform child in transform)
-			{
-				Debug.Log("Removing existing child from game object.");
-				
-				//Deleting while in a loop - is this valid?
-				DestroyImmediate(child.gameObject);
-			}*/
-	
-			// Use the Cubiquity dll to allocate some volume data
+		{	
+			// If the voldatFolder is set then we initialize the volume with the suplpied data.
 			if((voldatFolder != null) && (voldatFolder != ""))
 			{
+				// Ask Cubiquity to create a volume from the VolDat data.
 				volumeHandle = CubiquityDLL.NewColoredCubesVolumeFromVolDat(voldatFolder, pageFolder, 16);
+				
+				// The user didn't specify a region as this is determined by the size of
+				// the VolDat data, so we have to pull this information back from Cubiquity.
 				int lowerX, lowerY, lowerZ, upperX, upperY, upperZ;
 				CubiquityDLL.GetEnclosingRegion(volumeHandle.Value, out lowerX, out lowerY, out lowerZ, out upperX, out upperY, out upperZ);
 				region = new Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
 				
+				// Set this to null so we don't import this data again. When the volume is shutdown the
+				// data is flushed to the page folder, and when the volume is reinitialised the data will
+				// be loaded from the page folder as with a normal volume. So there is no need to reimport.
 				voldatFolder = null;
 			}
 			else if(region != null)
 			{
-				volumeHandle = CubiquityDLL.NewColoredCubesVolume(region.lowerCorner.x, region.lowerCorner.y, region.lowerCorner.z, region.upperCorner.x, region.upperCorner.y, region.upperCorner.z,pageFolder, 16);
+				// Create an empty region of the desired size.
+				volumeHandle = CubiquityDLL.NewColoredCubesVolume(region.lowerCorner.x, region.lowerCorner.y, region.lowerCorner.z,
+					region.upperCorner.x, region.upperCorner.y, region.upperCorner.z,pageFolder, 16);
 			}
 		}
 	}

@@ -3,6 +3,13 @@ using System.Collections;
 
 public class ColoredCubesVolumeFactory
 {
+	private static uint DefaultBaseNodeSize = 16;
+	
+	public static GameObject CreateVolume(string name, Region region, string pageFolder)
+	{
+		return CreateVolume (name, region, pageFolder, DefaultBaseNodeSize);
+	}
+	
 	public static GameObject CreateVolume(string name, Region region, string pageFolder, uint baseNodeSize)
 	{		
 		// Make sure the page folder exists
@@ -19,6 +26,11 @@ public class ColoredCubesVolumeFactory
 		coloredCubesVolume.Initialize();
 		
 		return VoxelTerrainRoot;
+	}
+	
+	public static GameObject CreateVolumeFromVolDat(string name, string voldatFolder, string pageFolder)
+	{
+		return CreateVolumeFromVolDat(name, voldatFolder, pageFolder, DefaultBaseNodeSize);
 	}
 	
 	public static GameObject CreateVolumeFromVolDat(string name, string voldatFolder, string pageFolder, uint baseNodeSize)
