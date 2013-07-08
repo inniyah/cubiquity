@@ -108,73 +108,29 @@ public class ColoredCubesVolume : MonoBehaviour
 		{
 			CubiquityDLL.DeleteColoredCubesVolume(volumeHandle.Value);
 			volumeHandle = null;
-		}
-		
-		if(rootGameObject)
-		{
-			deleteGameObject(rootGameObject);
-		}
-		
-		//rootGameObject = null;
-		
-		/*foreach(Transform child in transform)
-		{
-			Debug.Log("Removing existing child from game object.");
 			
-			//Deleting while in a loop - is this valid?
-			DestroyImmediate(child.gameObject);
-		}*/
-		
-		// Now that we've destroyed the volume handle, and volume data will have been paged into the override folder. This
-		// includes any potential changes to the volume. If the user wanted to save this then copy it to the main page folder
-		if(saveChanges)
-		{
-			foreach(var file in Directory.GetFiles(pageFolder + "/override"))
+			// Now that we've destroyed the volume handle, and volume data will have been paged into the override folder. This
+			// includes any potential changes to the volume. If the user wanted to save this then copy it to the main page folder
+			if(saveChanges)
 			{
-				File.Copy(file, Path.Combine(pageFolder, Path.GetFileName(file)), true);
-			}
-		}
-		
-		// Delete all the data in override
-		// FIXME - Should probably check for a file extension.
-		System.IO.DirectoryInfo overrideDirectory = new DirectoryInfo(pageFolder + "/override");
-		foreach (FileInfo file in overrideDirectory.GetFiles())
-		{
-			file.Delete();
-		}
-	}
-	
-	public void deleteGameObject(GameObject gameObjectToDelete)
-	{
-		//MeshFilter mf = (MeshFilter)gameObjectToDelete.GetComponent(typeof(MeshFilter));
-		//DestroyImmediate(mf.sharedMesh);
-		
-		OctreeNodeData octreeNodeData = gameObjectToDelete.GetComponent<OctreeNodeData>();
-		
-		if(octreeNodeData)
-		{
-			//Now delete any children
-			for(uint z = 0; z < 2; z++)
-			{
-				for(uint y = 0; y < 2; y++)
+				foreach(var file in Directory.GetFiles(pageFolder + "/override"))
 				{
-					for(uint x = 0; x < 2; x++)
-					{
-						GameObject childObject = octreeNodeData.GetChild(x, y, z);
-						if(childObject != null)
-						{
-							deleteGameObject(childObject);
-						}
-					}
+					File.Copy(file, Path.Combine(pageFolder, Path.GetFileName(file)), true);
 				}
 			}
-		}
-		
-		//Destroy(gameObjectToDelete);
-		//gameObjectToDelete.transform.parent = null;
-		if(gameObjectToDelete)
-		{
-			DestroyImmediate(gameObjectToDelete);
+			
+			// Delete all the data in override
+			// FIXME - Should probably check for a file extension.
+			System.IO.DirectoryInfo overrideDirectory = new DirectoryInfo(pageFolder + "/override");
+			foreach (FileInfo file in overrideDirectory.GetFiles())
+			{
+				file.Delete();
+			}
+			
+			// Game objects in our tree are created with the 'DontSave' flag set, and according to the Unity docs this means
+			// we have to destroy them manually. In the case of 'Destroy' the Unity docs explicitally say that it will destroy
+			// transform children as well, so I'm assuming DestroyImmediate has the same behaviour.
+			DestroyImmediate(rootGameObject);
 		}
 	}
 	
