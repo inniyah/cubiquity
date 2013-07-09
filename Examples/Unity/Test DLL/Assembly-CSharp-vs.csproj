@@ -57,6 +57,7 @@
      <Compile Include="Assets\Region.cs" />
      <Compile Include="Assets\RotateTurret.cs" />
      <Compile Include="Assets\SeparatedVoxel.cs" />
+     <Compile Include="Assets\Shell.cs" />
      <Compile Include="Assets\ShowBounds.cs" />
      <Compile Include="Assets\TankController.cs" />
      <None Include="Assets\Resources\ColoredCubesVolumeUtilities.cginc" />

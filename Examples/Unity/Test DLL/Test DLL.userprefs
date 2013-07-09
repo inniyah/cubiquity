@@ -1,11 +1,15 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\RotateTurret.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Bullet.cs">
     <Files>
-      <File FileName="Assets\ElevateCannon.cs" Line="35" Column="20" />
-      <File FileName="Assets\RotateTurret.cs" Line="35" Column="15" />
+      <File FileName="Assets\Panther\Demo Scene\MoveTank.js" Line="1" Column="1" />
+      <File FileName="Assets\ElevateCannon.cs" Line="1" Column="1" />
+      <File FileName="Assets\RotateTurret.cs" Line="1" Column="1" />
       <File FileName="Assets\TankController.cs" Line="1" Column="1" />
       <File FileName="Assets\GameLogic.cs" Line="1" Column="1" />
+      <File FileName="Assets\Panther\Demo Scene\Ball.js" Line="26" Column="10" />
+      <File FileName="Assets\Shell.cs" Line="35" Column="23" />
+      <File FileName="Assets\Bullet.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
