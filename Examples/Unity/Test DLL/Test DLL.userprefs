@@ -1,39 +1,8 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\ColoredCubesVolume.cs">
-    <Files>
-      <File FileName="Assets\ColoredCubesVolume.cs" Line="111" Column="4" />
-      <File FileName="Assets\CubiquityException.cs" Line="1" Column="1" />
-      <File FileName="Assets\CubiquityDLL.cs" Line="1" Column="1" />
-      <File FileName="Assets\ColoredCubesVolumeFactory.cs" Line="10" Column="13" />
-      <File FileName="Assets\Editor\CreateColoredCubesVolumeWizard.cs" Line="1" Column="1" />
-    </Files>
-    <Pads>
-      <Pad Id="ProjectPad">
-        <State expanded="True">
-          <Node name="Assembly-CSharp" expanded="True">
-            <Node name="Assets" expanded="True">
-              <Node name="ColoredCubesVolume.cs" selected="True" />
-            </Node>
-          </Node>
-          <Node name="Assembly-CSharp-Editor" expanded="True">
-            <Node name="Assets" expanded="True">
-              <Node name="Editor" expanded="True" />
-            </Node>
-          </Node>
-        </State>
-      </Pad>
-    </Pads>
-  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.Workspace />
+  <MonoDevelop.Ide.Workbench />
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Catchpoint exceptionName="CubiquityException" />
-      <Catchpoint exceptionName="UnityEngine.MissingComponentException" />
-      <Catchpoint exceptionName="UnityEngine.MissingReferenceException" />
-      <Catchpoint exceptionName="UnityEngine.PlayerPrefsException" />
-      <Catchpoint exceptionName="UnityEngine.UnassignedReferenceException" />
-      <Catchpoint exceptionName="UnityEngine.UnityException" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>
