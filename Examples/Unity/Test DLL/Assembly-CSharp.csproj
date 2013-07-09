@@ -50,6 +50,7 @@
      <Compile Include="Assets\Cubiquity.cs" />
      <Compile Include="Assets\CubiquityDLL.cs" />
      <Compile Include="Assets\CubiquityException.cs" />
+     <Compile Include="Assets\ElevateCannon.cs" />
      <Compile Include="Assets\GameLogic.cs" />
      <Compile Include="Assets\IntVector3.cs" />
      <Compile Include="Assets\OctreeNodeData.cs" />
