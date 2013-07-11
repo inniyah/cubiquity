@@ -145,6 +145,6 @@ public class CreateColoredCubesVolumeWizard : ScriptableWizard
 	
 	void CreateFromImages()
 	{
-		ColoredCubesVolumeFactory.CreateVolumeFromVolDat("Voxel Terrain", "Assets/Resources/VoxeliensTerrain/", pageFolder);
+		ColoredCubesVolumeFactory.CreateVolumeFromVolDat("Voxel Terrain", "D:\\temp\\mytest", pageFolder);
 	}
 }
