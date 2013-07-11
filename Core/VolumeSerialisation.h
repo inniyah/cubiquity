@@ -55,6 +55,12 @@ namespace Cubiquity
 	template <typename CubiquityVolumeType>
 	CubiquityVolumeType* importVolDat(std::string folder, const std::string& pageFolder, uint32_t baseNodeSize)
 	{
+		if((folder.back() != '/') && (folder.back() != '\\'))
+		{
+			logWarning() << "Folder name " << folder << " is missing a trailing '/' or '\\'. Please to provide this to avoid confusion!";
+			folder.append("/");
+		}
+
 		std::string indexFileName(folder);
 		indexFileName = indexFileName + "Volume.idx";
 		std::map<std::string, std::string> index = parseIndexFile(indexFileName);
