@@ -185,17 +185,17 @@ void MeshGame::initialize()
 #ifdef TERRAIN_CUBIC
 	//mVolume = GameplayColouredCubesVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
 	//mVolume = GameplayVolumeSerialisation::gameplayImportColourSlices("../../SliceData/VoxeliensTerrain/");
-	//mVolume = GameplayVolumeSerialisation::gameplayImportVxl("C:\\code\\cubiquity\\Examples\\gameplay\\Lua\\res\\Capitol.vxl");
-	mVolume = GameplayColouredCubesVolume::create("../../SliceData/VoxeliensTerrain/", "./", 32);
+	//mVolume = GameplayVolumeSerialisation::gameplayImportVxl("D:\\Google Drive\\VolumesOfFun\\VolumeData\\Industry.vxl");
+	//mVolume = GameplayColouredCubesVolume::create("../../SliceData/VoxeliensTerrain/", "./", 32);
 	//mVolume = GameplayColouredCubesVolume::create("../../SliceData/VoxeliensTerrain/", 32, "./");
 	//mVolume = GameplayColouredCubesVolume::create("C:\\code\\cubiquity\\Tools\\FractalGenerator\\FractalGenerator\\output\\");
-	//mVolume = GameplayColouredCubesVolume::create("C:\\code\\cubiquity\\Examples\\gameplay\\Lua\\res\\Capitol.vxl");
+	mVolume = GameplayColouredCubesVolume::create("D:\\Google Drive\\VolumesOfFun\\VolumeData\\Industry.vxl", "D:\\temp\\voldata\\", 16);
 
 	mVolumeEditor = 0;
 #endif
 
 	//GameplayVolumeSerialisation::gameplayExportSmoothSlices(mVolume, "C:\\temp\\output");
-	//GameplayVolumeSerialisation::gameplayExportColourSlices(mVolume, "C:/temp/mytest/");
+	//GameplayVolumeSerialisation::gameplayExportColourSlices(mVolume, "D:/temp/mytest/");
 
 	_cameraPositionNode->setTranslation(mVolume->getWidth() / 2.0f, mVolume->getHeight(), mVolume->getDepth());
 
