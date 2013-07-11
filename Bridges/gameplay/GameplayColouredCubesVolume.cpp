@@ -27,7 +27,7 @@ namespace Cubiquity
 		if(file)
 		{
 			// For now we assume it's .vxl
-			mCubiquityVolume = importVxl(dataToLoad, "");
+			mCubiquityVolume = importVxl(dataToLoad, pageFolder);
 		}
 		else
 		{
