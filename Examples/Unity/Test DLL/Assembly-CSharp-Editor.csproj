@@ -47,6 +47,7 @@
      <Compile Include="Assets\Editor\ColoredCubesVolumeEditor.cs" />
      <Compile Include="Assets\Editor\CreateColoredCubesVolumeWizard.cs" />
      <None Include="Assets\Resources\ColoredCubesVolumeUtilities.cginc" />
+     <None Include="Assets\Detonator Explosion Framework\Resources\Detonator\Textures\HeatDistort.shader" />
      <None Include="Assets\Resources\ColoredCubesVolume.shader" />
  <Reference Include="UnityEditor.Graphs">
  <HintPath>C:\Program Files (x86)\Unity\Editor\Data\Managed\UnityEditor.Graphs.dll</HintPath>
