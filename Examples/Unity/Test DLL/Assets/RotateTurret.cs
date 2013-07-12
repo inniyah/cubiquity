@@ -27,12 +27,12 @@ public class RotateTurret : MonoBehaviour
 		
 		if(hit)
 		{
-			Vector3 toTarget = new Vector3(resultX, resultY, resultZ) - transform.position;			
-			Quaternion q = Quaternion.FromToRotation(hingeJoint.connectedBody.transform.forward, toTarget);
-			
-			JointSpring spr = hingeJoint.spring;
-			spr.targetPosition = q.eulerAngles.y;
-			hingeJoint.spring = spr;
+			// If the mouse if over a voxel then turn the turret to face it.	
+			transform.LookAt(new Vector3(resultX, resultY, resultZ));
+			Vector3 euler = transform.eulerAngles;
+			euler.x = 0;
+			euler.z = 0;
+			transform.eulerAngles = euler;
 		}
 	}
 }
