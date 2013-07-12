@@ -27,27 +27,11 @@ public class ElevateCannon : MonoBehaviour
 		
 		if(hit)
 		{
-			// If the mouse if over a voxel then turn the turret to face it.	
-			/*transform.LookAt(new Vector3(resultX, resultY, resultZ));
-			Vector3 euler = transform.eulerAngles;
-			euler.y = 0;
-			euler.z = 0;
-			transform.localEulerAngles = euler;*/
-			
-			Vector3 toTarget = new Vector3(resultX, resultY, resultZ) - transform.position;
-			toTarget.x = 0.0f;
-			
-			float dotProd = Vector3.Dot(toTarget, hingeJoint.connectedBody.transform.right);
-			
-			float angle = Vector3.Angle(hingeJoint.connectedBody.transform.forward, toTarget);
-			
-			/*if(dotProd > 0.0f)
-			{
-				angle = -angle;
-			}*/
+			Vector3 toTarget = new Vector3(resultX, resultY, resultZ) - transform.position;			
+			Quaternion q = Quaternion.FromToRotation(/*hingeJoint.connectedBody.transform.forward*/ new Vector3(0.0f, 0.0f, 1.0f) , toTarget);
 			
 			JointSpring spr = hingeJoint.spring;
-			spr.targetPosition = angle;
+			spr.targetPosition = q.eulerAngles.x;
 			hingeJoint.spring = spr;
 		}
 	}
