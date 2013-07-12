@@ -4,6 +4,8 @@ using System.Collections;
 public class RotateTurret : MonoBehaviour
 {
 	public ColoredCubesVolume coloredCubesVolume;
+	
+	private float rotationSpeed = 60.0f;
 
 	// Use this for initialization
 	void Start ()
@@ -26,13 +28,24 @@ public class RotateTurret : MonoBehaviour
 		bool hit = Cubiquity.PickVoxel(coloredCubesVolume, ray.origin.x, ray.origin.y, ray.origin.z, dir.x, dir.y, dir.z, out resultX, out resultY, out resultZ);
 		
 		if(hit)
-		{
+		{						
+			Quaternion currentRotation = transform.rotation;
+			Quaternion desiredRotation = Quaternion.LookRotation(new Vector3(resultX, resultY, resultZ) - transform.position);
+			
+			Vector3 angles = desiredRotation.eulerAngles;
+			angles.x = 0.0f;
+			angles.z = 0.0f;
+			
+			desiredRotation.eulerAngles = angles;
+			
+			transform.rotation = Quaternion.RotateTowards(currentRotation, desiredRotation, rotationSpeed * Time.deltaTime);
+			
 			// If the mouse if over a voxel then turn the turret to face it.	
-			transform.LookAt(new Vector3(resultX, resultY, resultZ));
+			/*transform.LookAt(new Vector3(resultX, resultY, resultZ));
 			Vector3 euler = transform.eulerAngles;
 			euler.x = 0;
 			euler.z = 0;
-			transform.eulerAngles = euler;
+			transform.eulerAngles = euler;*/
 		}
 	}
 }
