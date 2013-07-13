@@ -31,14 +31,25 @@ public class RotateTurret : MonoBehaviour
 		{						
 			Quaternion currentRotation = transform.rotation;
 			Quaternion desiredRotation = Quaternion.LookRotation(new Vector3(resultX, resultY, resultZ) - transform.position);
+			//transform.rotation = desiredRotation;
 			
-			Vector3 angles = desiredRotation.eulerAngles;
+			transform.rotation = Quaternion.RotateTowards(currentRotation, desiredRotation, rotationSpeed * Time.deltaTime);
+			
+			Vector3 localAngles = transform.localRotation.eulerAngles;
+			localAngles.x = 0.0f;
+			localAngles.z = 0.0f;
+			
+			Quaternion localRot = Quaternion.Euler(localAngles);
+			
+			transform.localRotation = localRot;
+			
+			/*Vector3 angles = desiredRotation.eulerAngles;
 			angles.x = 0.0f;
 			angles.z = 0.0f;
 			
 			desiredRotation.eulerAngles = angles;
 			
-			transform.rotation = Quaternion.RotateTowards(currentRotation, desiredRotation, rotationSpeed * Time.deltaTime);
+			transform.rotation = Quaternion.RotateTowards(currentRotation, desiredRotation, rotationSpeed * Time.deltaTime);*/
 			
 			// If the mouse if over a voxel then turn the turret to face it.	
 			/*transform.LookAt(new Vector3(resultX, resultY, resultZ));
