@@ -5,7 +5,9 @@ public class ElevateCannon : MonoBehaviour
 {
 	public ColoredCubesVolume coloredCubesVolume;
 	
-	private float elevationSpeed = 60.0f;
+	public float elevationSpeed = 60.0f;
+	public float maxElevationAngle = 45.0f;
+	public float minElevationAngle = -5.0f;
 
 	// Use this for initialization
 	void Start ()
@@ -40,18 +42,20 @@ public class ElevateCannon : MonoBehaviour
 			localAngles.z = 0.0f;	
 			Debug.Log (localAngles.x);
 			
-			// Also limit the amount of elevation.
+			// Also limit the amount of elevation. The 'if' condistion seems a bit inelegant but the wrap
+			// around from 360 to 0 happens right in front of the tank. Again, there may be a better way.
 			if(localAngles.x > 180.0f)
 			{
-				localAngles.x = Mathf.Max(localAngles.x, 360.0f - 45.0f);
+				// In this case the cannon is elevated.
+				localAngles.x = Mathf.Max(localAngles.x, 360.0f - maxElevationAngle);
 			}
 			else
 			{
-				localAngles.x = Mathf.Min(localAngles.x, 5.0f);
+				// In this case the cannon is pointing down.
+				localAngles.x = Mathf.Min(localAngles.x, -minElevationAngle);
 			}
-			//localAngles.x = Mathf.Min(localAngles.x, 45.0f);
-			//localAngles.x = Mathf.Max(localAngles.x, -5.0f);
 			
+			// Apply the restrictyed rotation.
 			transform.localRotation = Quaternion.Euler(localAngles);
 		}
 	}

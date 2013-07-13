@@ -37,7 +37,9 @@ public class RotateTurret : MonoBehaviour
 			// Now lock the turret to only have rotation in one direction (maybe there's a better way?)
 			Vector3 localAngles = transform.localRotation.eulerAngles;
 			localAngles.x = 0.0f;
-			localAngles.z = 0.0f;			
+			localAngles.z = 0.0f;
+			
+			// Apply the restrictyed rotation.
 			transform.localRotation = Quaternion.Euler(localAngles);			
 		}
 	}
