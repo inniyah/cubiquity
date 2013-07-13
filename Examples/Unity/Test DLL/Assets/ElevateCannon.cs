@@ -28,24 +28,31 @@ public class ElevateCannon : MonoBehaviour
 		bool hit = Cubiquity.PickVoxel(coloredCubesVolume, ray.origin.x, ray.origin.y, ray.origin.z, dir.x, dir.y, dir.z, out resultX, out resultY, out resultZ);
 		
 		if(hit)
-		{
-			/*Quaternion currentRotation = transform.rotation;
-			Quaternion desiredRotation = Quaternion.LookRotation(new Vector3(resultX, resultY, resultZ) - transform.position);
+		{			
+			// Rotate the turrent to point in the desired direction
+			Quaternion currentRotation = transform.rotation;
+			Quaternion desiredRotation = Quaternion.LookRotation(new Vector3(resultX, resultY, resultZ) - transform.position);			
+			transform.rotation = Quaternion.RotateTowards(currentRotation, desiredRotation, elevationSpeed * Time.deltaTime);
 			
-			Vector3 angles = desiredRotation.eulerAngles;
-			//angles.y = 0.0f;
-			//angles.z = 0.0f;
+			// Now lock the turret to only have rotation in one direction (maybe there's a better way?)
+			Vector3 localAngles = transform.localRotation.eulerAngles;
+			localAngles.y = 0.0f;
+			localAngles.z = 0.0f;	
+			Debug.Log (localAngles.x);
 			
-			desiredRotation.eulerAngles = angles;
+			// Also limit the amount of elevation.
+			if(localAngles.x > 180.0f)
+			{
+				localAngles.x = Mathf.Max(localAngles.x, 360.0f - 45.0f);
+			}
+			else
+			{
+				localAngles.x = Mathf.Min(localAngles.x, 5.0f);
+			}
+			//localAngles.x = Mathf.Min(localAngles.x, 45.0f);
+			//localAngles.x = Mathf.Max(localAngles.x, -5.0f);
 			
-			transform.localRotation = Quaternion.RotateTowards(currentRotation, desiredRotation, elevationSpeed * Time.deltaTime);*/
-			
-			// If the mouse if over a voxel then turn the turret to face it.	
-			transform.LookAt(new Vector3(resultX, resultY, resultZ));
-			Vector3 euler = transform.eulerAngles;
-			euler.y = 0;
-			euler.z = 0;
-			transform.localEulerAngles = euler;
+			transform.localRotation = Quaternion.Euler(localAngles);
 		}
 	}
 }

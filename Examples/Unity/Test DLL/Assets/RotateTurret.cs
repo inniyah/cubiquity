@@ -28,35 +28,17 @@ public class RotateTurret : MonoBehaviour
 		bool hit = Cubiquity.PickVoxel(coloredCubesVolume, ray.origin.x, ray.origin.y, ray.origin.z, dir.x, dir.y, dir.z, out resultX, out resultY, out resultZ);
 		
 		if(hit)
-		{						
+		{		
+			// Rotate the turrent to point in the desired direction
 			Quaternion currentRotation = transform.rotation;
-			Quaternion desiredRotation = Quaternion.LookRotation(new Vector3(resultX, resultY, resultZ) - transform.position);
-			//transform.rotation = desiredRotation;
-			
+			Quaternion desiredRotation = Quaternion.LookRotation(new Vector3(resultX, resultY, resultZ) - transform.position);			
 			transform.rotation = Quaternion.RotateTowards(currentRotation, desiredRotation, rotationSpeed * Time.deltaTime);
 			
+			// Now lock the turret to only have rotation in one direction (maybe there's a better way?)
 			Vector3 localAngles = transform.localRotation.eulerAngles;
 			localAngles.x = 0.0f;
-			localAngles.z = 0.0f;
-			
-			Quaternion localRot = Quaternion.Euler(localAngles);
-			
-			transform.localRotation = localRot;
-			
-			/*Vector3 angles = desiredRotation.eulerAngles;
-			angles.x = 0.0f;
-			angles.z = 0.0f;
-			
-			desiredRotation.eulerAngles = angles;
-			
-			transform.rotation = Quaternion.RotateTowards(currentRotation, desiredRotation, rotationSpeed * Time.deltaTime);*/
-			
-			// If the mouse if over a voxel then turn the turret to face it.	
-			/*transform.LookAt(new Vector3(resultX, resultY, resultZ));
-			Vector3 euler = transform.eulerAngles;
-			euler.x = 0;
-			euler.z = 0;
-			transform.eulerAngles = euler;*/
+			localAngles.z = 0.0f;			
+			transform.localRotation = Quaternion.Euler(localAngles);			
 		}
 	}
 }
