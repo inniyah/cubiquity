@@ -50,7 +50,7 @@ function Update ()
 	
 	
 	// Fire!
-	if (Input.GetButtonDown("Fire1")) {
+	if ((GUIUtility.hotControl == 0) && (Input.GetButtonDown("Fire1"))) {
 		// make fire effect.
 		Instantiate(fireEffect, spawnPoint.position, spawnPoint.rotation);
 		
