@@ -111,6 +111,7 @@ public class Shell : MonoBehaviour
 									cube.transform.position = new Vector3(x, y, z);
 									cube.transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
 									cube.renderer.material.color = color;
+									cube.layer = LayerMask.NameToLayer("Cube");
 									
 									Vector3 explosionForce = cube.transform.position - pos;
 									
