@@ -64,9 +64,7 @@
      <Compile Include="Assets\Detonator Explosion Framework\System\DetonatorSound.cs" />
      <Compile Include="Assets\Detonator Explosion Framework\System\DetonatorSparks.cs" />
      <Compile Include="Assets\Detonator Explosion Framework\System\DetonatorSpray.cs" />
-     <Compile Include="Assets\DriveTank.cs" />
      <Compile Include="Assets\ElevateCannon.cs" />
-     <Compile Include="Assets\GameLogic.cs" />
      <Compile Include="Assets\IntVector3.cs" />
      <Compile Include="Assets\OctreeNodeData.cs" />
      <Compile Include="Assets\Region.cs" />
