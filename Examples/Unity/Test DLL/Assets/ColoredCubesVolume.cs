@@ -59,7 +59,7 @@ public class ColoredCubesVolume : MonoBehaviour
 			if((voldatFolder != null) && (voldatFolder != ""))
 			{
 				// Ask Cubiquity to create a volume from the VolDat data.
-				volumeHandle = CubiquityDLL.NewColoredCubesVolumeFromVolDat(voldatFolder, pageFolder, (uint)baseNodeSize);
+				volumeHandle = CubiquityDLL.NewColoredCubesVolumeFromVolDat(voldatFolder, "Cubiquity/Volumes/" + pageFolder + "/", (uint)baseNodeSize);
 				
 				// The user didn't specify a region as this is determined by the size of
 				// the VolDat data, so we have to pull this information back from Cubiquity.
@@ -76,7 +76,7 @@ public class ColoredCubesVolume : MonoBehaviour
 			{
 				// Create an empty region of the desired size.
 				volumeHandle = CubiquityDLL.NewColoredCubesVolume(region.lowerCorner.x, region.lowerCorner.y, region.lowerCorner.z,
-					region.upperCorner.x, region.upperCorner.y, region.upperCorner.z,pageFolder, (uint)baseNodeSize);
+					region.upperCorner.x, region.upperCorner.y, region.upperCorner.z, "Cubiquity/Volumes/" + pageFolder + "/", (uint)baseNodeSize);
 			}
 		}
 	}
@@ -113,15 +113,15 @@ public class ColoredCubesVolume : MonoBehaviour
 			// includes any potential changes to the volume. If the user wanted to save this then copy it to the main page folder
 			if(saveChanges)
 			{
-				foreach(var file in Directory.GetFiles(pageFolder + "/override"))
+				foreach(var file in Directory.GetFiles("Cubiquity/Volumes/" + pageFolder + "/override"))
 				{
-					File.Copy(file, Path.Combine(pageFolder, Path.GetFileName(file)), true);
+					File.Copy(file, Path.Combine("Cubiquity/Volumes/" + pageFolder + "/", Path.GetFileName(file)), true);
 				}
 			}
 			
 			// Delete all the data in override
 			// FIXME - Should probably check for a file extension.
-			System.IO.DirectoryInfo overrideDirectory = new DirectoryInfo(pageFolder + "/override");
+			System.IO.DirectoryInfo overrideDirectory = new DirectoryInfo("Cubiquity/Volumes/" + pageFolder + "/override");
 			foreach (FileInfo file in overrideDirectory.GetFiles())
 			{
 				file.Delete();
