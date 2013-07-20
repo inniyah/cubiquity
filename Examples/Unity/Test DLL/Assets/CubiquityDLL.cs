@@ -16,20 +16,20 @@ public class CubiquityDLL
 	// Volume functions
 	////////////////////////////////////////////////////////////////////////////////
 	[DllImport ("CubiquityC")]
-	private static extern int cuNewColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, StringBuilder pageFolder, uint baseNodeSize, out uint result);
-	public static uint NewColoredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, string pageFolder, uint baseNodeSize)
+	private static extern int cuNewColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, StringBuilder datasetName, uint baseNodeSize, out uint result);
+	public static uint NewColoredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, string datasetName, uint baseNodeSize)
 	{
 		uint result;
-		Validate(cuNewColouredCubesVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, new StringBuilder(pageFolder), baseNodeSize, out result));
+		Validate(cuNewColouredCubesVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, new StringBuilder(datasetName), baseNodeSize, out result));
 		return result;
 	}
 	
 	[DllImport ("CubiquityC")]
-	private static extern int cuNewColouredCubesVolumeFromVolDat(StringBuilder voldatFolder, StringBuilder pageFolder, uint baseNodeSize, out uint result);	
-	public static uint NewColoredCubesVolumeFromVolDat(string voldatFolder, string pageFolder, uint baseNodeSize)
+	private static extern int cuNewColouredCubesVolumeFromVolDat(StringBuilder voldatFolder, StringBuilder datasetName, uint baseNodeSize, out uint result);	
+	public static uint NewColoredCubesVolumeFromVolDat(string voldatFolder, string datasetName, uint baseNodeSize)
 	{
 		uint result;
-		Validate(cuNewColouredCubesVolumeFromVolDat(new StringBuilder(voldatFolder), new StringBuilder(pageFolder), baseNodeSize, out result));
+		Validate(cuNewColouredCubesVolumeFromVolDat(new StringBuilder(voldatFolder), new StringBuilder(datasetName), baseNodeSize, out result));
 		return result;
 	}
 	

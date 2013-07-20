@@ -15,7 +15,7 @@ public class CreateColoredCubesVolumeWizard : ScriptableWizard
 	private int upperY = 255;
 	private int upperZ = 255;
 	
-	private string pageFolder = "D:/temp/voldata/";
+	private string datasetName = "D:/temp/voldata/";
     
     [MenuItem ("GameObject/Create Other/Create Colored Cubes Volume")]
     static void CreateWizard () {
@@ -49,10 +49,10 @@ public class CreateColoredCubesVolumeWizard : ScriptableWizard
 	{
 		EditorGUILayout.BeginHorizontal();	
 			GUILayout.Space(120);
-			EditorGUILayout.TextField("Save location:", pageFolder);
+			EditorGUILayout.TextField("Save location:", datasetName);
 			if(GUILayout.Button("..."))
 			{
-				pageFolder = EditorUtility.SaveFolderPanel("Choose save location for volume data", "C:/", "");
+				datasetName = EditorUtility.SaveFolderPanel("Choose save location for volume data", "C:/", "");
 			}
 		EditorGUILayout.EndHorizontal();
 		
@@ -123,7 +123,7 @@ public class CreateColoredCubesVolumeWizard : ScriptableWizard
 			Debug.LogError("A voxel terrain already exists - you (currently) can't create another one.");
 		}
 		
-		GameObject voxelGameObject = ColoredCubesVolumeFactory.CreateVolume("Voxel Terrain", new Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pageFolder);
+		GameObject voxelGameObject = ColoredCubesVolumeFactory.CreateVolume("Voxel Terrain", new Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), datasetName);
 		ColoredCubesVolume coloredCubesVolume = voxelGameObject.GetComponent<ColoredCubesVolume>();
 		
 		// Call Initialize so we can start drawing into the volume right away.
@@ -145,6 +145,6 @@ public class CreateColoredCubesVolumeWizard : ScriptableWizard
 	
 	void CreateFromImages()
 	{
-		ColoredCubesVolumeFactory.CreateVolumeFromVolDat("Voxel Terrain", "D:\\temp\\mytest", pageFolder);
+		ColoredCubesVolumeFactory.CreateVolumeFromVolDat("Voxel Terrain", "D:\\temp\\mytest", datasetName);
 	}
 }
