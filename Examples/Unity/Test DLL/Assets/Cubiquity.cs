@@ -4,7 +4,7 @@ using System.Collections;
 public static class Cubiquity
 {
 	// This is the relative path to where the volumes are stored on disk.
-	public const string pathToData = "Cubiquity/Volumes/";
+	public const string pathToData = "Volumes/";
 	
 	public static bool PickVoxel(ColoredCubesVolume volume, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, out int resultX, out int resultY, out int resultZ)
 	{

@@ -36,7 +36,8 @@ public class CreateEmptyColoredCubesVolumeWizard : ScriptableWizard
 				string selectedFolder = EditorUtility.SaveFolderPanel("Create or choose and empty folder for the volume data", Cubiquity.pathToData, "");
 				
 				Uri selectedUri = new Uri(selectedFolder);
-				Uri executableUri = new Uri(Application.dataPath + "/..");
+				Uri assetUrl = new Uri(Application.dataPath);
+				Uri executableUri = new Uri(assetUrl, ".");
 				Uri relativeUri = executableUri.MakeRelativeUri(selectedUri);
 			
 				datasetName = Uri.UnescapeDataString(relativeUri.ToString());
