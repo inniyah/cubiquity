@@ -14,7 +14,6 @@ public class SeparatedVoxel : MonoBehaviour
 	{	
 		creationTime = Time.time;
 		
-		Random random = new Random();
 		lifeTime = Random.Range(8.0f, 12.0f);
 	}
 	
