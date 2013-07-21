@@ -33,14 +33,16 @@ public class CreateEmptyColoredCubesVolumeWizard : ScriptableWizard
 			EditorGUILayout.TextField("Folder name:", datasetName);
 			if(GUILayout.Button("..."))
 			{
-				string selectedFolder = EditorUtility.SaveFolderPanel("Create or choose and empty folder for the volume data", Cubiquity.pathToData, "");
+				string selectedFolderAsString = EditorUtility.SaveFolderPanel("Create or choose and empty folder for the volume data", Cubiquity.pathToData, "");
 				
-				Uri selectedUri = new Uri(selectedFolder);
-				Uri assetUrl = new Uri(Application.dataPath);
-				Uri executableUri = new Uri(assetUrl, ".");
+				DirectoryInfo assetDirInfo = new DirectoryInfo(Application.dataPath);
+				DirectoryInfo executableDirInfo = assetDirInfo.Parent;
+			
+				Uri executableUri = new Uri(executableDirInfo.FullName + Path.DirectorySeparatorChar);
+				Uri selectedUri = new Uri(selectedFolderAsString);
 				Uri relativeUri = executableUri.MakeRelativeUri(selectedUri);
 			
-				datasetName = Uri.UnescapeDataString(relativeUri.ToString());
+				datasetName = relativeUri.ToString();
 			}
 			GUILayout.Space(20);
 		EditorGUILayout.EndHorizontal();
