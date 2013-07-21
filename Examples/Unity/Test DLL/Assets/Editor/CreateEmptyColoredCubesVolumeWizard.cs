@@ -7,13 +7,9 @@ using System.IO;
 
 public class CreateEmptyColoredCubesVolumeWizard : ScriptableWizard
 {
-	private int lowerX = 0;
-	private int lowerY = 0;
-	private int lowerZ = 0;
-	
-	private int upperX = 255;
-	private int upperY = 255;
-	private int upperZ = 255;
+	private int width = 256;
+	private int height = 256;
+	private int depth = 64;
 	
 	private string datasetName = "New Volume";
 	
@@ -21,17 +17,31 @@ public class CreateEmptyColoredCubesVolumeWizard : ScriptableWizard
     static void CreateWizard ()
 	{
         ScriptableWizard.DisplayWizard<CreateEmptyColoredCubesVolumeWizard>("Create Empty Colored Cubes Volume");
-        //If you don't want to use the secondary button simply leave it out:
-        //ScriptableWizard.DisplayWizard<WizardCreateLight>("Create Light", "Create");
+
     }
 	
 	void OnGUI()
 	{
-		EditorGUILayout.LabelField("Some text explaining about the folder...");
-		EditorGUILayout.BeginHorizontal();	
+		GUIStyle labelWrappingStyle = new GUIStyle(GUI.skin.label);
+		labelWrappingStyle.wordWrap = true;
+		
+		GUIStyle rightAlignmentStyle = new GUIStyle(GUI.skin.textField);
+		rightAlignmentStyle.alignment = TextAnchor.MiddleRight;
+		
+		EditorGUILayout.BeginHorizontal();
 			GUILayout.Space(20);
-			EditorGUILayout.TextField("Folder name:", datasetName);
-			if(GUILayout.Button("..."))
+			EditorGUILayout.LabelField("Cubiquity volumes are not Unity3D assets and they do not belong in the 'Assets' folder. " +
+				"Please choose or create an empty folder inside the 'Volumes' folder.", labelWrappingStyle);
+			GUILayout.Space(20);
+		EditorGUILayout.EndHorizontal();
+		
+		GUILayout.Space(20);
+		
+		EditorGUILayout.BeginHorizontal();	
+			GUILayout.Space(50);
+			EditorGUILayout.LabelField("Folder name:", GUILayout.Width(80));
+			EditorGUILayout.TextField("", datasetName);
+			if(GUILayout.Button("Select folder...", GUILayout.Width(120)))
 			{
 				string selectedFolderAsString = EditorUtility.SaveFolderPanel("Create or choose and empty folder for the volume data", Cubiquity.pathToData, "");
 				
@@ -49,20 +59,25 @@ public class CreateEmptyColoredCubesVolumeWizard : ScriptableWizard
 		
 		GUILayout.Space(20);
 		
-		EditorGUILayout.LabelField("Some text explaining about the dimensions...");
-		EditorGUILayout.BeginHorizontal();	
-			GUILayout.Space(20);		
-			EditorGUILayout.BeginVertical();
-				lowerX = EditorGUILayout.IntField("Lower X bound", lowerX);
-				lowerY = EditorGUILayout.IntField("Lower Y bound", lowerY);
-				lowerZ = EditorGUILayout.IntField("Lower Z bound", lowerZ);
-			EditorGUILayout.EndVertical();
+		EditorGUILayout.BeginHorizontal();
+			GUILayout.Space(20);
+			EditorGUILayout.LabelField("Set the volume dimensions below.", labelWrappingStyle);
+			GUILayout.Space(20);
+		EditorGUILayout.EndHorizontal();
 		
-			EditorGUILayout.BeginVertical();
-				upperX = EditorGUILayout.IntField("Upper X bound", upperX);
-				upperY = EditorGUILayout.IntField("Upper Y bound", upperY);
-				upperZ = EditorGUILayout.IntField("Upper Z bound", upperZ);
-			EditorGUILayout.EndVertical();
+		GUILayout.Space(20);
+		
+		EditorGUILayout.BeginHorizontal();	
+			GUILayout.Space(50);
+			EditorGUILayout.LabelField("Width:", GUILayout.Width(50));
+			width = EditorGUILayout.IntField("", width, GUILayout.Width(40));
+			GUILayout.Space(20);
+			EditorGUILayout.LabelField("Height:", GUILayout.Width(50));
+			height = EditorGUILayout.IntField("", height, GUILayout.Width(40));
+			GUILayout.Space(20);
+			EditorGUILayout.LabelField("Depth:", GUILayout.Width(50));
+			depth = EditorGUILayout.IntField("", depth, GUILayout.Width(40));
+			GUILayout.FlexibleSpace();
 		EditorGUILayout.EndHorizontal();
 		
 		GUILayout.Space(50); // A space before the create/cancel buttons
@@ -93,26 +108,4 @@ public class CreateEmptyColoredCubesVolumeWizard : ScriptableWizard
 		Debug.Log("Cancelling");
 		Close ();
 	}
-	
-	/// <summary>
-    /// Creates a relative path from one file or folder to another.
-    /// </summary>
-    /// <param name="fromPath">Contains the directory that defines the start of the relative path.</param>
-    /// <param name="toPath">Contains the path that defines the endpoint of the relative path.</param>
-    /// <param name="dontEscape">Boolean indicating whether to add uri safe escapes to the relative path</param>
-    /// <returns>The relative path from the start directory to the end path.</returns>
-    /// <exception cref="ArgumentNullException"></exception>
-    public String MakeRelativePath(String fromPath, String toPath)
-    {
-        if (String.IsNullOrEmpty(fromPath)) throw new ArgumentNullException("fromPath");
-        if (String.IsNullOrEmpty(toPath))   throw new ArgumentNullException("toPath");
-
-        Uri fromUri = new Uri(fromPath);
-        Uri toUri = new Uri(toPath);
-
-        Uri relativeUri = fromUri.MakeRelativeUri(toUri);
-        String relativePath = Uri.UnescapeDataString(relativeUri.ToString());
-
-        return relativePath.Replace('/', Path.DirectorySeparatorChar);
-    }
 }
