@@ -39,7 +39,7 @@ public class CreateEmptyColoredCubesVolumeWizard : ScriptableWizard
 			GUILayout.Space(20);
 		EditorGUILayout.EndHorizontal();
 		
-		GUILayout.Space(20);
+		GUILayout.Space(10);
 		
 		EditorGUILayout.BeginHorizontal();	
 			GUILayout.Space(50);
@@ -61,7 +61,7 @@ public class CreateEmptyColoredCubesVolumeWizard : ScriptableWizard
 			GUILayout.Space(20);
 		EditorGUILayout.EndHorizontal();
 		
-		GUILayout.Space(20);
+		GUILayout.Space(10);
 		
 		EditorGUILayout.BeginHorizontal();
 			GUILayout.Space(20);
@@ -69,7 +69,7 @@ public class CreateEmptyColoredCubesVolumeWizard : ScriptableWizard
 			GUILayout.Space(20);
 		EditorGUILayout.EndHorizontal();
 		
-		GUILayout.Space(20);
+		GUILayout.Space(10);
 		
 		EditorGUILayout.BeginHorizontal();	
 			GUILayout.Space(50);
@@ -84,7 +84,7 @@ public class CreateEmptyColoredCubesVolumeWizard : ScriptableWizard
 			GUILayout.FlexibleSpace();
 		EditorGUILayout.EndHorizontal();
 		
-		GUILayout.Space(20);
+		GUILayout.Space(10);
 		
 		EditorGUILayout.BeginHorizontal();
 			GUILayout.Space(20);
@@ -92,7 +92,7 @@ public class CreateEmptyColoredCubesVolumeWizard : ScriptableWizard
 				"If you do not do this then you will not see the volume until you add some voxels through code.", labelWrappingStyle);
 		EditorGUILayout.EndHorizontal();
 		
-		GUILayout.Space(20);
+		GUILayout.Space(10);
 		
 		EditorGUILayout.BeginHorizontal();
 			GUILayout.Space(50);
@@ -108,7 +108,7 @@ public class CreateEmptyColoredCubesVolumeWizard : ScriptableWizard
 			GUILayout.FlexibleSpace();
 		EditorGUILayout.EndHorizontal();
 		
-		GUILayout.Space(50); // A space before the create/cancel buttons
+		GUILayout.Space(20); // A space before the create/cancel buttons
 		
 		EditorGUILayout.BeginHorizontal();
 			EditorGUILayout.Space();
