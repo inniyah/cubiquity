@@ -7,11 +7,15 @@ using System.IO;
 
 public class CreateEmptyColoredCubesVolumeWizard : ScriptableWizard
 {
+	private string datasetName = "New Volume";
+	
 	private int width = 256;
 	private int height = 256;
 	private int depth = 64;
 	
-	private string datasetName = "New Volume";
+	private bool createFloor = true;
+	
+	private int floorThickness = 8;
 	
 	[MenuItem ("GameObject/Create Other/Colored Cubes Volume/Create Empty Colored Cubes Volume...")]
     static void CreateWizard ()
@@ -61,7 +65,7 @@ public class CreateEmptyColoredCubesVolumeWizard : ScriptableWizard
 		
 		EditorGUILayout.BeginHorizontal();
 			GUILayout.Space(20);
-			EditorGUILayout.LabelField("Set the volume dimensions below.", labelWrappingStyle);
+			EditorGUILayout.LabelField("Set the volume dimensions below. Please note that the values cannot exceed 256 in any dimension.", labelWrappingStyle);
 			GUILayout.Space(20);
 		EditorGUILayout.EndHorizontal();
 		
@@ -77,6 +81,30 @@ public class CreateEmptyColoredCubesVolumeWizard : ScriptableWizard
 			GUILayout.Space(20);
 			EditorGUILayout.LabelField("Depth:", GUILayout.Width(50));
 			depth = EditorGUILayout.IntField("", depth, GUILayout.Width(40));
+			GUILayout.FlexibleSpace();
+		EditorGUILayout.EndHorizontal();
+		
+		GUILayout.Space(20);
+		
+		EditorGUILayout.BeginHorizontal();
+			GUILayout.Space(20);
+			EditorGUILayout.LabelField("You can set the first few layers of your new volume to be filled with a solid color. " +
+				"If you do not do this then you will not see the volume until you add some voxels through code.", labelWrappingStyle);
+		EditorGUILayout.EndHorizontal();
+		
+		GUILayout.Space(20);
+		
+		EditorGUILayout.BeginHorizontal();
+			GUILayout.Space(50);
+			EditorGUILayout.LabelField("Create floor", GUILayout.Width(80));
+			createFloor = EditorGUILayout.Toggle("", createFloor, GUILayout.Width(20));
+			GUILayout.FlexibleSpace();
+		EditorGUILayout.EndHorizontal();
+		
+		EditorGUILayout.BeginHorizontal();
+			GUILayout.Space(80);
+			EditorGUILayout.LabelField("Floor thickness:", GUILayout.Width(100));
+			floorThickness = EditorGUILayout.IntField("", floorThickness, GUILayout.Width(40));
 			GUILayout.FlexibleSpace();
 		EditorGUILayout.EndHorizontal();
 		
