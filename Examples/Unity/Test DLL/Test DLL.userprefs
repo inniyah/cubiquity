@@ -4,8 +4,8 @@
     <Files>
       <File FileName="Assets\OctreeNodeData.cs" Line="1" Column="1" />
       <File FileName="Assets\SeparatedVoxel.cs" Line="1" Column="1" />
-      <File FileName="Assets\Editor\CreateColoredCubesVolumeWizard.cs" Line="62" Column="100" />
-      <File FileName="Assets\Editor\CreateEmptyColoredCubesVolumeWizard.cs" Line="116" Column="5" />
+      <File FileName="Assets\Editor\CreateColoredCubesVolumeWizard.cs" Line="1" Column="1" />
+      <File FileName="Assets\Editor\CreateEmptyColoredCubesVolumeWizard.cs" Line="111" Column="20" />
       <File FileName="Assets\ColoredCubesVolume.cs" Line="1" Column="1" />
       <File FileName="Assets\Cubiquity.cs" Line="1" Column="1" />
     </Files>
