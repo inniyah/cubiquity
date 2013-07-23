@@ -10,8 +10,8 @@ public class CreateEmptyColoredCubesVolumeWizard : ScriptableWizard
 	private string datasetName = "New Volume";
 	
 	private int width = 256;
-	private int height = 256;
-	private int depth = 64;
+	private int height = 64;
+	private int depth = 256;
 	
 	private bool createFloor = true;
 	
@@ -51,10 +51,11 @@ public class CreateEmptyColoredCubesVolumeWizard : ScriptableWizard
 				
 				DirectoryInfo assetDirInfo = new DirectoryInfo(Application.dataPath);
 				DirectoryInfo executableDirInfo = assetDirInfo.Parent;
+				DirectoryInfo volumeDirInfo = new DirectoryInfo(executableDirInfo.FullName + Path.DirectorySeparatorChar + Cubiquity.pathToData);
 			
-				Uri executableUri = new Uri(executableDirInfo.FullName + Path.DirectorySeparatorChar);
+				Uri volumeUri = new Uri(volumeDirInfo.FullName + Path.DirectorySeparatorChar);
 				Uri selectedUri = new Uri(selectedFolderAsString);
-				Uri relativeUri = executableUri.MakeRelativeUri(selectedUri);
+				Uri relativeUri = volumeUri.MakeRelativeUri(selectedUri);
 			
 				datasetName = relativeUri.ToString();
 			}
@@ -129,6 +130,32 @@ public class CreateEmptyColoredCubesVolumeWizard : ScriptableWizard
 	{
 		Close();		
 		Debug.Log("Creating volume");
+		
+		if(GameObject.Find("Voxel Terrain") != null)
+		{
+			Debug.LogError("A voxel terrain already exists - you (currently) can't create another one.");
+		}
+		
+		GameObject voxelGameObject = ColoredCubesVolumeFactory.CreateVolume("Voxel Terrain", new Region(0, 0, 0, width-1, height-1, depth-1), datasetName);
+		ColoredCubesVolume coloredCubesVolume = voxelGameObject.GetComponent<ColoredCubesVolume>();
+		
+		// Call Initialize so we can start drawing into the volume right away.
+		//coloredCubesVolume.Initialize();
+		if(createFloor)
+		{
+			Color32 floorColor = new Color32(192, 192, 192, 255);
+			
+			for(int z = 0; z <= depth-1; z++)
+			{
+				for(int y = 0; y < floorThickness; y++)
+				{
+					for(int x = 0; x <= width-1; x++)
+					{
+						coloredCubesVolume.SetVoxel(x, y, z, floorColor);
+					}
+				}
+			}
+		}
 	}
 	
 	void OnCancelPressed()

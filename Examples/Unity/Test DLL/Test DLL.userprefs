@@ -2,12 +2,12 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Editor\CreateEmptyColoredCubesVolumeWizard.cs">
     <Files>
-      <File FileName="Assets\OctreeNodeData.cs" Line="1" Column="1" />
-      <File FileName="Assets\SeparatedVoxel.cs" Line="1" Column="1" />
-      <File FileName="Assets\Editor\CreateColoredCubesVolumeWizard.cs" Line="1" Column="1" />
-      <File FileName="Assets\Editor\CreateEmptyColoredCubesVolumeWizard.cs" Line="111" Column="20" />
+      <File FileName="Assets\Editor\CreateEmptyColoredCubesVolumeWizard.cs" Line="14" Column="25" />
+      <File FileName="Assets\ColoredCubesVolumeFactory.cs" Line="1" Column="1" />
+      <File FileName="Assets\Resources\ColoredCubesVolume.shader" Line="1" Column="1" />
       <File FileName="Assets\ColoredCubesVolume.cs" Line="1" Column="1" />
       <File FileName="Assets\Cubiquity.cs" Line="1" Column="1" />
+      <File FileName="Assets\Editor\CreateColoredCubesVolumeWizard.cs" Line="143" Column="4" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
