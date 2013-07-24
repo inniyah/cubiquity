@@ -1,0 +1,111 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="res">
+    </Filter>
+    <Filter Include="src">
+    </Filter>
+    <Filter Include="Bridges">
+      <UniqueIdentifier>{f8e65de5-abc2-4986-bf95-c6c253052700}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bridges\Impl">
+      <UniqueIdentifier>{ac3ce3e0-53e5-47d3-b935-047e706aed9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Bridges\Lua">
+      <UniqueIdentifier>{3c8dc86d-b2f5-416a-8ea8-56a02500ff92}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="game.config" />
+    <None Include="icon.png" />
+    <None Include="bar-descriptor.xml" />
+    <None Include="res\game.lua">
+      <Filter>res</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Main.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Bridges\gameplay\Impl\ExtraNodeData.h">
+      <Filter>Bridges\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Bridges\gameplay\Impl\GameplayVolume.h">
+      <Filter>Bridges\Impl</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Bridges\gameplay\Lua\lua_all_bindings.h">
+      <Filter>Bridges\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Bridges\gameplay\Lua\lua_GameplayColouredCubesVolume.h">
+      <Filter>Bridges\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Bridges\gameplay\Lua\lua_GameplayRaycasting.h">
+      <Filter>Bridges\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Bridges\gameplay\Lua\lua_GameplaySmoothTerrainVolume.h">
+      <Filter>Bridges\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Bridges\gameplay\Lua\lua_GameplaySmoothTerrainVolumeEditor.h">
+      <Filter>Bridges\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Bridges\gameplay\Lua\lua_GameplayVolumeSerialisation.h">
+      <Filter>Bridges\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Bridges\gameplay\Lua\lua_Global.h">
+      <Filter>Bridges\Lua</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Bridges\gameplay\GameplayColouredCubesVolume.h">
+      <Filter>Bridges</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Bridges\gameplay\GameplayRaycasting.h">
+      <Filter>Bridges</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Bridges\gameplay\GameplaySmoothTerrainVolume.h">
+      <Filter>Bridges</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Bridges\gameplay\GameplaySmoothTerrainVolumeEditor.h">
+      <Filter>Bridges</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\Bridges\gameplay\GameplayVolumeSerialisation.h">
+      <Filter>Bridges</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Main.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Bridges\gameplay\Lua\lua_all_bindings.cpp">
+      <Filter>Bridges\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Bridges\gameplay\Lua\lua_GameplayColouredCubesVolume.cpp">
+      <Filter>Bridges\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Bridges\gameplay\Lua\lua_GameplayRaycasting.cpp">
+      <Filter>Bridges\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Bridges\gameplay\Lua\lua_GameplaySmoothTerrainVolume.cpp">
+      <Filter>Bridges\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Bridges\gameplay\Lua\lua_GameplaySmoothTerrainVolumeEditor.cpp">
+      <Filter>Bridges\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Bridges\gameplay\Lua\lua_GameplayVolumeSerialisation.cpp">
+      <Filter>Bridges\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Bridges\gameplay\Lua\lua_Global.cpp">
+      <Filter>Bridges\Lua</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Bridges\gameplay\GameplayColouredCubesVolume.cpp">
+      <Filter>Bridges</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Bridges\gameplay\GameplayRaycasting.cpp">
+      <Filter>Bridges</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Bridges\gameplay\GameplaySmoothTerrainVolume.cpp">
+      <Filter>Bridges</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\Bridges\gameplay\GameplaySmoothTerrainVolumeEditor.cpp">
+      <Filter>Bridges</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
