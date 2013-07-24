@@ -29,6 +29,8 @@ function initialize()
     -- Display splash screen for at least 1 second.
     -- ScreenDisplayer.start("drawSplash", 1000)
 
+	FileSystem.setResourcePath("C:/Code/cubiquity/CubiquityForGameplay/")
+
 	local game = Game.getInstance()
 
 	wPressed = false
@@ -45,8 +47,8 @@ function initialize()
 	local volumeHeight = 32
 	local volumeDepth = 128
 
-	_colouredCubesVolume = GameplayColouredCubesVolume.create("../../SliceData/VoxeliensTerrain/", "./", 32);
-	--_colouredCubesVolume = GameplayColouredCubesVolume.create("C:\\code\\cubiquity\\Examples\\gameplay\\Lua\\res\\Capitol.vxl");
+	_colouredCubesVolume = GameplayColouredCubesVolume.create("C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain", "./", 32)
+	--_colouredCubesVolume = GameplayColouredCubesVolume.create("C:\\code\\cubiquity\\Examples\\gameplay\\Lua\\res\\Capitol.vxl")
 
     -- Load font
     _font = Font.create("res/Fonts/arial40.gpb")
