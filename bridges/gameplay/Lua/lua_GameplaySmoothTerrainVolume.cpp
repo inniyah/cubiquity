@@ -141,17 +141,17 @@ int lua_GameplaySmoothTerrainVolume_static_create(lua_State* state)
             do
             {
                 if ((lua_type(state, 1) == LUA_TSTRING || lua_type(state, 1) == LUA_TNIL) &&
-                    lua_type(state, 2) == LUA_TNUMBER &&
-                    (lua_type(state, 3) == LUA_TSTRING || lua_type(state, 3) == LUA_TNIL))
+                    (lua_type(state, 2) == LUA_TSTRING || lua_type(state, 2) == LUA_TNIL) &&
+                    lua_type(state, 3) == LUA_TNUMBER)
                 {
                     // Get parameter 1 off the stack.
                     const char* param1 = ScriptUtil::getString(1, false);
 
                     // Get parameter 2 off the stack.
-                    unsigned int param2 = (unsigned int)luaL_checkunsigned(state, 2);
+                    const char* param2 = ScriptUtil::getString(2, false);
 
                     // Get parameter 3 off the stack.
-                    const char* param3 = ScriptUtil::getString(3, false);
+                    unsigned int param3 = (unsigned int)luaL_checkunsigned(state, 3);
 
                     void* returnPtr = (void*)GameplaySmoothTerrainVolume::create(param1, param2, param3);
                     if (returnPtr)
@@ -185,8 +185,8 @@ int lua_GameplaySmoothTerrainVolume_static_create(lua_State* state)
                     lua_type(state, 4) == LUA_TNUMBER &&
                     lua_type(state, 5) == LUA_TNUMBER &&
                     lua_type(state, 6) == LUA_TNUMBER &&
-                    lua_type(state, 7) == LUA_TNUMBER &&
-                    (lua_type(state, 8) == LUA_TSTRING || lua_type(state, 8) == LUA_TNIL))
+                    (lua_type(state, 7) == LUA_TSTRING || lua_type(state, 7) == LUA_TNIL) &&
+                    lua_type(state, 8) == LUA_TNUMBER)
                 {
                     // Get parameter 1 off the stack.
                     int param1 = (int)luaL_checkint(state, 1);
@@ -207,10 +207,10 @@ int lua_GameplaySmoothTerrainVolume_static_create(lua_State* state)
                     int param6 = (int)luaL_checkint(state, 6);
 
                     // Get parameter 7 off the stack.
-                    unsigned int param7 = (unsigned int)luaL_checkunsigned(state, 7);
+                    const char* param7 = ScriptUtil::getString(7, false);
 
                     // Get parameter 8 off the stack.
-                    const char* param8 = ScriptUtil::getString(8, false);
+                    unsigned int param8 = (unsigned int)luaL_checkunsigned(state, 8);
 
                     void* returnPtr = (void*)GameplaySmoothTerrainVolume::create(param1, param2, param3, param4, param5, param6, param7, param8);
                     if (returnPtr)
