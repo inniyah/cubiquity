@@ -189,7 +189,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;_DEBUG;_WINDOWS;GAMEPLAY_MEM_LEAK_DETECTION;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:/code/GamePlay/external-deps/lua/include;C:/code/GamePlay/external-deps/bullet/include;C:/code/GamePlay/gameplay/src;C:/code/GamePlay/external-deps/openal/include/AL;C:/code/GamePlay/external-deps/oggvorbis/include;C:/code/GamePlay/external-deps/libpng/include;C:/code/GamePlay/external-deps/zlib/include;C:/code/GamePlay/external-deps/glew/include;C:\code\polyvox\library\PolyVoxCore\include;C:\code\cubiquity\Core;C:\code\cubiquity\Bridges\gameplay;C:\code\GamePlay\gameplay\src\lua;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:/code/GamePlay/external-deps/lua/include;C:/code/GamePlay/external-deps/bullet/include;C:/code/GamePlay/gameplay/src;C:/code/GamePlay/external-deps/openal/include/AL;C:/code/GamePlay/external-deps/oggvorbis/include;C:/code/GamePlay/external-deps/libpng/include;C:/code/GamePlay/external-deps/zlib/include;C:/code/GamePlay/external-deps/glew/include;C:\code\polyvox\library\PolyVoxCore\include;C:\code\cubiquity\Core;C:\code\cubiquity\CubiquityForGameplay\Bridge;C:\code\GamePlay\gameplay\src\lua</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <ShowIncludes>false</ShowIncludes>
       <PreprocessToFile>false</PreprocessToFile>
@@ -255,7 +255,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;_CRT_SECURE_NO_WARNINGS;NDEBUG;_WINDOWS;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>C:/code/GamePlay/external-deps/lua/include;C:/code/GamePlay/external-deps/bullet/include;C:/code/GamePlay/gameplay/src;C:/code/GamePlay/external-deps/openal/include/AL;C:/code/GamePlay/external-deps/oggvorbis/include;C:/code/GamePlay/external-deps/libpng/include;C:/code/GamePlay/external-deps/zlib/include;C:/code/GamePlay/external-deps/glew/include;C:\code\polyvox\library\PolyVoxCore\include;C:\code\cubiquity\Core;C:\code\cubiquity\Bridges\gameplay;C:\code\GamePlay\gameplay\src\lua;C:\Program Files (x86)\boost\boost_1_54_0</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:/code/GamePlay/external-deps/lua/include;C:/code/GamePlay/external-deps/bullet/include;C:/code/GamePlay/gameplay/src;C:/code/GamePlay/external-deps/openal/include/AL;C:/code/GamePlay/external-deps/oggvorbis/include;C:/code/GamePlay/external-deps/libpng/include;C:/code/GamePlay/external-deps/zlib/include;C:/code/GamePlay/external-deps/glew/include;C:\code\polyvox\library\PolyVoxCore\include;C:\code\cubiquity\Core;C:\code\cubiquity\CubiquityForGameplay\Bridge;C:\code\GamePlay\gameplay\src\lua;C:\Program Files (x86)\boost\boost_1_54_0</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
