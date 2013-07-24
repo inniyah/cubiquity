@@ -66,8 +66,15 @@ namespace Cubiquity
 			m_pOverrideFilePager = new OverrideFilePager<VoxelType>("./");
 		}
 		
-
-		mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pCompressor, m_pOverrideFilePager, 64);
+		//FIXME - This should be decided based on the Octree type but instead be in diffferent volume constructors
+		if(octreeConstructionMode == OctreeConstructionMode::BoundCells) // Smooth terrain
+		{
+			mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pCompressor, m_pOverrideFilePager, 32);
+		}
+		else // Cubic terrain
+		{
+			mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pCompressor, m_pOverrideFilePager, 64);
+		}
 
 		mPolyVoxVolume->setMaxNumberOfBlocksInMemory(256);
 		mPolyVoxVolume->setMaxNumberOfUncompressedBlocks(128);
