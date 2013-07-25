@@ -172,6 +172,46 @@ namespace Cubiquity
 			return sum;
 		}
 
+		// This function attempts to adjust the values of the different materials so that they sum to
+		// the required value. It does this while attempting to preserve the existing material ratios.
+		/*void setSumOfMaterials(uint32_t targetSum)
+		{
+			uint32_t initialSum = getSumOfMaterials();
+
+			if(initialSum == 0)
+			{
+			}
+			else
+			{
+				float scaleFactor = static_cast<float>(targetSum) / static_cast<float>(initialSum);
+				PolyVox::Vector<NoOfMaterials, float> ideal = *this;
+				ideal *= scaleFactor;
+				*this = ideal;
+			}
+		}*/
+
+		void clampSumOfMaterials(void)
+		{
+			uint32_t initialSum = getSumOfMaterials();
+			if(initialSum > getMaxMaterialValue())
+			{
+				uint32_t excess = initialSum - getMaxMaterialValue();
+				uint32_t nextMatToReduce = 0;
+				while(excess)
+				{
+					uint32_t material = getMaterial(nextMatToReduce);
+					material--;
+					setMaterial(nextMatToReduce, material);
+
+					excess--;
+					nextMatToReduce++;
+					nextMatToReduce %= NoOfMaterials;
+				}
+			}
+
+			POLYVOX_ASSERT(getSumOfMaterials() <= getMaxMaterialValue(), "MultiMaterial::clampSum() failed to perform clamping");
+		}
+
 	public:
 		StorageType mMaterials;
 	};

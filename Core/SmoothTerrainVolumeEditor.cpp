@@ -252,6 +252,10 @@ namespace Cubiquity
 						result.setMaterial(matIndex, average);
 						mSmoothingVolume->setVoxel(x, y, z, result);
 					}
+
+					MultiMaterial result = mSmoothingVolume->getVoxelAt(x, y, z);
+					result.clampSumOfMaterials();
+					mSmoothingVolume->setVoxel(x, y, z, result);
 				}
 			}
 		}
