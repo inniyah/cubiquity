@@ -21,7 +21,8 @@ namespace Cubiquity
 	{
 		Vector3F v3dCentre(centre.x, centre.y, centre.z);
 		// '0' is a dummy as the smooth operations smooths *all* materials
-		edit(v3dCentre, radius, 0, EditActions::Smooth, timeElapsedInSeconds, amount, smoothBias);
+		//edit(v3dCentre, radius, 0, EditActions::Smooth, timeElapsedInSeconds, amount, smoothBias);
+		smoothVolume(v3dCentre, radius);
 	}
 
 	void GameplaySmoothTerrainVolumeEditor::addMaterial(const gameplay::Vector3& centre, float radius, uint32_t materialToAdd, float timeElapsedInSeconds, float amount)

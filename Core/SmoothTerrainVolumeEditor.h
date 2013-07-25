@@ -32,6 +32,8 @@ namespace Cubiquity
 		void subtractFromMaterial(uint8_t amountToAdd, MultiMaterial& material);
 		void edit(const Vector3F& centre, float radius, uint32_t materialToUse, EditAction editAction, float timeElapsedInSeconds, float amount, float smoothBias);
 
+		void smoothVolume(const Vector3F& centre, float radius);
+
 		::PolyVox::RawVolume<MultiMaterial>* mSmoothingVolume;
 	};
 }

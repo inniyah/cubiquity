@@ -185,6 +185,89 @@ namespace Cubiquity
 		mSmoothTerrainVolume->markAsModified(region, needsImmediateUpdate ? UpdatePriorities::Immediate : UpdatePriorities::Background);
 	}
 
+	void SmoothTerrainVolumeEditor::smoothVolume(const Vector3F& centre, float radius)
+	{
+		int firstX = static_cast<int>(std::floor(centre.getX() - radius));
+		int firstY = static_cast<int>(std::floor(centre.getY() - radius));
+		int firstZ = static_cast<int>(std::floor(centre.getZ() - radius));
+
+		int lastX = static_cast<int>(std::ceil(centre.getX() + radius));
+		int lastY = static_cast<int>(std::ceil(centre.getY() + radius));
+		int lastZ = static_cast<int>(std::ceil(centre.getZ() + radius));
+
+		float radiusSquared = radius * radius;
+
+		//Check bounds.
+		firstX = std::max(firstX,mSmoothTerrainVolume->getEnclosingRegion().getLowerCorner().getX());
+		firstY = std::max(firstY,mSmoothTerrainVolume->getEnclosingRegion().getLowerCorner().getY());
+		firstZ = std::max(firstZ,mSmoothTerrainVolume->getEnclosingRegion().getLowerCorner().getZ());
+
+		lastX = std::min(lastX,mSmoothTerrainVolume->getEnclosingRegion().getUpperCorner().getX());
+		lastY = std::min(lastY,mSmoothTerrainVolume->getEnclosingRegion().getUpperCorner().getY());
+		lastZ = std::min(lastZ,mSmoothTerrainVolume->getEnclosingRegion().getUpperCorner().getZ());
+
+		Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
+
+		// Make sure our temporary target exists, and create it if not.
+		if(!mSmoothingVolume)
+		{
+			mSmoothingVolume = new ::PolyVox::RawVolume<MultiMaterial>(region);
+		}
+		else
+		{
+			// If if does exist then make sure it's the right size.
+			if(mSmoothingVolume->getEnclosingRegion() != region)
+			{
+				delete mSmoothingVolume;
+				mSmoothingVolume = new ::PolyVox::RawVolume<MultiMaterial>(region);
+			}
+		}
+
+		for(int z = firstZ; z <= lastZ; ++z)
+		{
+			for(int y = firstY; y <= lastY; ++y)
+			{
+				for(int x = firstX; x <= lastX; ++x)
+				{					
+					for(uint32_t matIndex = 0; matIndex < MultiMaterial::getNoOfMaterials(); matIndex++)
+					{
+						uint32_t sum = 0;
+
+						sum += mSmoothTerrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
+						sum += mSmoothTerrainVolume->getVoxelAt(x+1, y, z).getMaterial(matIndex);
+						sum += mSmoothTerrainVolume->getVoxelAt(x-1, y, z).getMaterial(matIndex);
+						sum += mSmoothTerrainVolume->getVoxelAt(x, y+1, z).getMaterial(matIndex);
+						sum += mSmoothTerrainVolume->getVoxelAt(x, y-1, z).getMaterial(matIndex);
+						sum += mSmoothTerrainVolume->getVoxelAt(x, y, z+1).getMaterial(matIndex);
+						sum += mSmoothTerrainVolume->getVoxelAt(x, y, z-1).getMaterial(matIndex);
+
+						uint32_t average = sum / 7;
+						uint32_t rem = sum % 7;
+						//if(rem > 3)
+						{
+							average++;
+						}
+
+						MultiMaterial result = mSmoothingVolume->getVoxelAt(x, y, z);
+						result.setMaterial(matIndex, average);
+						mSmoothingVolume->setVoxel(x, y, z, result);
+					}
+				}
+			}
+		}
+
+		for(int z = firstZ; z <= lastZ; ++z)
+		{
+			for(int y = firstY; y <= lastY; ++y)
+			{
+				for(int x = firstX; x <= lastX; ++x)
+				{
+					mSmoothTerrainVolume->setVoxelAt(x, y, z, mSmoothingVolume->getVoxelAt(x, y, z));
+				}
+			}
+		}
+	}
+
 	void SmoothTerrainVolumeEditor::subtractFromMaterial(uint8_t amountToAdd, MultiMaterial& material)
 	{
 		uint32_t indexToRemoveFrom = 0; //FIXME - start somewhere random
