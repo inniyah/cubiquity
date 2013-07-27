@@ -68,7 +68,7 @@ namespace Cubiquity
 			}
 
 			// We might not need to do this at float precision, it should be tested again.
-			::PolyVox::LowPassFilter< ::PolyVox::LargeVolume<MultiMaterial>, ::PolyVox::RawVolume<MultiMaterial>, ::PolyVox::Vector<4, float> > lowPassFilter(getPolyVoxVolumeFrom(mSmoothTerrainVolume), region, mSmoothingVolume, region, 3);
+			::PolyVox::LowPassFilter< ::PolyVox::POLYVOX_VOLUME<MultiMaterial>, ::PolyVox::RawVolume<MultiMaterial>, ::PolyVox::Vector<4, float> > lowPassFilter(getPolyVoxVolumeFrom(mSmoothTerrainVolume), region, mSmoothingVolume, region, 3);
 			lowPassFilter.execute();
 		}
 
@@ -253,9 +253,9 @@ namespace Cubiquity
 						mSmoothingVolume->setVoxel(x, y, z, result);
 					}
 
-					MultiMaterial result = mSmoothingVolume->getVoxelAt(x, y, z);
+					/*MultiMaterial result = mSmoothingVolume->getVoxelAt(x, y, z);
 					result.clampSumOfMaterials();
-					mSmoothingVolume->setVoxel(x, y, z, result);
+					mSmoothingVolume->setVoxel(x, y, z, result);*/
 				}
 			}
 		}
@@ -266,10 +266,12 @@ namespace Cubiquity
 			{
 				for(int x = firstX; x <= lastX; ++x)
 				{
-					mSmoothTerrainVolume->setVoxelAt(x, y, z, mSmoothingVolume->getVoxelAt(x, y, z));
+					mSmoothTerrainVolume->setVoxelAt(x, y, z, mSmoothingVolume->getVoxelAt(x, y, z), UpdatePriorities::DontUpdate);
 				}
 			}
 		}
+
+		mSmoothTerrainVolume->markAsModified(region, UpdatePriorities::Background);
 	}
 
 	void SmoothTerrainVolumeEditor::subtractFromMaterial(uint8_t amountToAdd, MultiMaterial& material)

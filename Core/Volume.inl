@@ -24,8 +24,10 @@ namespace Cubiquity
 	template <typename VoxelType>
 	Volume<VoxelType>::Volume(const Region& region, const std::string& pageFolder, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize)
 		:mPolyVoxVolume(0)
+#ifdef USE_LARGE_VOLUME
 		,m_pCompressor(0)
 		,m_pOverrideFilePager(0)
+#endif
 		,mOctree(0)
 	{
 		logTrace() << "Entering Volume(" << region << ",...)";
@@ -34,6 +36,7 @@ namespace Cubiquity
 		POLYVOX_ASSERT(region.getHeightInVoxels() > 0, "All volume dimensions must be greater than zero");
 		POLYVOX_ASSERT(region.getDepthInVoxels() > 0, "All volume dimensions must be greater than zero");
 	
+#ifdef USE_LARGE_VOLUME
 		m_pCompressor = new MinizCompressor;
 
 		if(pageFolder.size() != 0)
@@ -69,15 +72,27 @@ namespace Cubiquity
 		//FIXME - This should be decided based on the Octree type but instead be in diffferent volume constructors
 		if(octreeConstructionMode == OctreeConstructionMode::BoundCells) // Smooth terrain
 		{
-			mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pCompressor, m_pOverrideFilePager, 32);
+			mPolyVoxVolume = new ::PolyVox::POLYVOX_VOLUME<VoxelType>(region, m_pCompressor, m_pOverrideFilePager, 32);
 		}
 		else // Cubic terrain
 		{
-			mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pCompressor, m_pOverrideFilePager, 64);
+			mPolyVoxVolume = new ::PolyVox::POLYVOX_VOLUME<VoxelType>(region, m_pCompressor, m_pOverrideFilePager, 64);
 		}
 
-		mPolyVoxVolume->setMaxNumberOfBlocksInMemory(256);
-		mPolyVoxVolume->setMaxNumberOfUncompressedBlocks(128);
+		mPolyVoxVolume->setMaxNumberOfBlocksInMemory(100000000);
+		mPolyVoxVolume->setMaxNumberOfUncompressedBlocks(1000000);
+
+#else
+		//FIXME - This should be decided based on the Octree type but instead be in diffferent volume constructors
+		if(octreeConstructionMode == OctreeConstructionMode::BoundCells) // Smooth terrain
+		{
+			mPolyVoxVolume = new ::PolyVox::POLYVOX_VOLUME<VoxelType>(region, 32);
+		}
+		else // Cubic terrain
+		{
+			mPolyVoxVolume = new ::PolyVox::POLYVOX_VOLUME<VoxelType>(region, 64);
+		}
+#endif
 
 		mOctree = new Octree<VoxelType>(this, octreeConstructionMode, baseNodeSize);
 
@@ -91,7 +106,9 @@ namespace Cubiquity
 
 		// NOTE: We should really delete the volume here, but the background task processor might still be using it.
 		// We need a way to shut that down, or maybe smart pointers can help here. Just flush until we have a better fix.
+#ifdef USE_LARGE_VOLUME
 		mPolyVoxVolume->flushAll();
+#endif
 
 		logTrace() << "Exiting ~Volume()";
 	}

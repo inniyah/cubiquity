@@ -10,7 +10,14 @@
 #include "PolyVoxCore/Array.h"
 #include "PolyVoxCore/Material.h"
 #include "PolyVoxCore/RawVolume.h"
+
+#ifdef USE_LARGE_VOLUME
 #include "PolyVoxCore/LargeVolume.h"
+#else
+#include "PolyVoxCore/SimpleVolume.h"
+#endif
+
+
 #include "PolyVoxCore/CubicSurfaceExtractor.h"
 #include "PolyVoxCore/MarchingCubesSurfaceExtractor.h"
 
@@ -18,7 +25,7 @@ namespace Cubiquity
 {
 	// Forward declaration for private volume accessor
 	template <typename VoxelType>
-	::PolyVox::LargeVolume<VoxelType>* getPolyVoxVolumeFrom(Volume<VoxelType>* cubiquityVolume);
+	::PolyVox::POLYVOX_VOLUME<VoxelType>* getPolyVoxVolumeFrom(Volume<VoxelType>* cubiquityVolume);
 
 	template <typename _VoxelType>
 	class Volume
@@ -54,9 +61,12 @@ namespace Cubiquity
 		Volume& operator=(const Volume&);
 
 	private:
-		::PolyVox::LargeVolume<VoxelType>* mPolyVoxVolume;
+		::PolyVox::POLYVOX_VOLUME<VoxelType>* mPolyVoxVolume;
+
+#ifdef USE_LARGE_VOLUME
 		::PolyVox::MinizCompressor* m_pCompressor;
 		OverrideFilePager<VoxelType>* m_pOverrideFilePager;
+#endif
 
 		Octree<VoxelType>* mOctree;
 
@@ -65,11 +75,11 @@ namespace Cubiquity
 		friend class OctreeNode<VoxelType>;
 		// This one provides a way for other Cubiquity code to access the PolyVox::Volume without letting user code do it. To enforce this we
 		// actually want a nested namespace, but it seems VS2010 has problems with that. See here: http://stackoverflow.com/q/16307836/2337254
-		friend ::PolyVox::LargeVolume<VoxelType>* getPolyVoxVolumeFrom<>(Volume<VoxelType>* cubiquityVolume);
+		friend ::PolyVox::POLYVOX_VOLUME<VoxelType>* getPolyVoxVolumeFrom<>(Volume<VoxelType>* cubiquityVolume);
 	};
 
 	template <typename VoxelType>
-	::PolyVox::LargeVolume<VoxelType>* getPolyVoxVolumeFrom(Volume<VoxelType>* cubiquityVolume)
+	::PolyVox::POLYVOX_VOLUME<VoxelType>* getPolyVoxVolumeFrom(Volume<VoxelType>* cubiquityVolume)
 	{
 		return cubiquityVolume->mPolyVoxVolume;
 	}

@@ -12,7 +12,7 @@ using namespace PolyVox;
 
 namespace Cubiquity
 {
-	SmoothSurfaceExtractionTask::SmoothSurfaceExtractionTask(OctreeNode< MultiMaterial >* octreeNode, ::PolyVox::LargeVolume<typename MultiMaterialMarchingCubesController::MaterialType>* polyVoxVolume)
+	SmoothSurfaceExtractionTask::SmoothSurfaceExtractionTask(OctreeNode< MultiMaterial >* octreeNode, ::PolyVox::POLYVOX_VOLUME<typename MultiMaterialMarchingCubesController::MaterialType>* polyVoxVolume)
 		:Task()
 		,mOctreeNode(octreeNode)
 		,mPolyVoxVolume(polyVoxVolume)
@@ -44,7 +44,7 @@ namespace Cubiquity
 		if(lodLevel == 0)
 		{
 			//SurfaceMesh<PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > > mesh;
-			::PolyVox::MarchingCubesSurfaceExtractor< ::PolyVox::LargeVolume<MultiMaterial>, MultiMaterialMarchingCubesController > surfaceExtractor(mPolyVoxVolume, region, resultMesh, ::PolyVox::WrapModes::Border, MultiMaterial(0), controller);
+			::PolyVox::MarchingCubesSurfaceExtractor< ::PolyVox::POLYVOX_VOLUME<MultiMaterial>, MultiMaterialMarchingCubesController > surfaceExtractor(mPolyVoxVolume, region, resultMesh, ::PolyVox::WrapModes::Border, MultiMaterial(0), controller);
 			surfaceExtractor.execute();
 		}
 		else
@@ -81,7 +81,7 @@ namespace Cubiquity
 		}
 	}
 
-	void recalculateMaterials(::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* mesh, const Vector3F& meshOffset,  ::PolyVox::LargeVolume<MultiMaterial>* volume)
+	void recalculateMaterials(::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* mesh, const Vector3F& meshOffset,  ::PolyVox::POLYVOX_VOLUME<MultiMaterial>* volume)
 	{
 		std::vector< PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >& vertices = mesh->getRawVertexData();
 		for(uint32_t ct = 0; ct < vertices.size(); ct++)
@@ -105,9 +105,9 @@ namespace Cubiquity
 	}
 
 
-	MultiMaterial getInterpolatedValue(::PolyVox::LargeVolume<MultiMaterial>* volume, const Vector3F& position)
+	MultiMaterial getInterpolatedValue(::PolyVox::POLYVOX_VOLUME<MultiMaterial>* volume, const Vector3F& position)
 	{
-		::PolyVox::LargeVolume<MultiMaterial>::Sampler sampler(volume);
+		::PolyVox::POLYVOX_VOLUME<MultiMaterial>::Sampler sampler(volume);
 
 		int32_t iLowerX = ::PolyVox::roundTowardsNegInf(position.getX());
 		int32_t iLowerY = ::PolyVox::roundTowardsNegInf(position.getY());
