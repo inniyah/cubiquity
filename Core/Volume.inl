@@ -70,7 +70,7 @@ namespace Cubiquity
 		}
 		
 		//FIXME - This should be decided based on the Octree type but instead be in diffferent volume constructors
-		if(octreeConstructionMode == OctreeConstructionMode::BoundCells) // Smooth terrain
+		if(octreeConstructionMode == OctreeConstructionModes::BoundCells) // Smooth terrain
 		{
 			mPolyVoxVolume = new ::PolyVox::POLYVOX_VOLUME<VoxelType>(region, m_pCompressor, m_pOverrideFilePager, 32);
 		}
@@ -84,7 +84,7 @@ namespace Cubiquity
 
 #else
 		//FIXME - This should be decided based on the Octree type but instead be in diffferent volume constructors
-		if(octreeConstructionMode == OctreeConstructionMode::BoundCells) // Smooth terrain
+		if(octreeConstructionMode == OctreeConstructionModes::BoundCells) // Smooth terrain
 		{
 			mPolyVoxVolume = new ::PolyVox::POLYVOX_VOLUME<VoxelType>(region, 32);
 		}
