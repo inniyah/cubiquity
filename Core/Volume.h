@@ -38,14 +38,15 @@ namespace Cubiquity
 		uint32_t getHeight(void) const { return mPolyVoxVolume->getHeight(); }
 		uint32_t getDepth(void) const { return mPolyVoxVolume->getDepth(); }
 		const Region& getEnclosingRegion(void) const { return mPolyVoxVolume->getEnclosingRegion(); }
+
 		// Note this adds a border rather than calling straight through.
-		VoxelType getVoxelAt(int32_t x, int32_t y, int32_t z) { return mPolyVoxVolume->getVoxel<::PolyVox::WrapModes::Border>(x, y, z, VoxelType()); }
+		VoxelType getVoxelAt(int32_t x, int32_t y, int32_t z) const;
 
 		// Octree access
 		Octree<VoxelType>* getOctree(void) { return mOctree; };
 		OctreeNode<VoxelType>* getRootOctreeNode(void) { return mOctree->getRootNode(); }
 
-		// Set voxel doesn't just pass straight through, it also marks the voxel as modified.
+		// Set voxel doesn't just pass straight through, it also validates the position and marks the voxel as modified.
 		void setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, UpdatePriority updatePriority = UpdatePriorities::Background);
 
 		// Marks a region as mdified so it will be regenerated later.

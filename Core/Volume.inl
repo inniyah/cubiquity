@@ -32,9 +32,12 @@ namespace Cubiquity
 	{
 		logTrace() << "Entering Volume(" << region << ",...)";
 
-		POLYVOX_ASSERT(region.getWidthInVoxels() > 0, "All volume dimensions must be greater than zero");
+		/*POLYVOX_ASSERT(region.getWidthInVoxels() > 0, "All volume dimensions must be greater than zero");
 		POLYVOX_ASSERT(region.getHeightInVoxels() > 0, "All volume dimensions must be greater than zero");
-		POLYVOX_ASSERT(region.getDepthInVoxels() > 0, "All volume dimensions must be greater than zero");
+		POLYVOX_ASSERT(region.getDepthInVoxels() > 0, "All volume dimensions must be greater than zero");*/
+		POLYVOX_THROW_IF(region.getWidthInVoxels() == 0, std::invalid_argument, "Volume width must be greater than zero");
+		POLYVOX_THROW_IF(region.getHeightInVoxels() == 0, std::invalid_argument, "Volume height must be greater than zero");
+		POLYVOX_THROW_IF(region.getDepthInVoxels() == 0, std::invalid_argument, "Volume depth must be greater than zero");
 	
 #ifdef USE_LARGE_VOLUME
 		m_pCompressor = new MinizCompressor;
@@ -114,28 +117,31 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
+	VoxelType Volume<VoxelType>::getVoxelAt(int32_t x, int32_t y, int32_t z) const
+	{
+		// Border value is returned for invalid position
+		return mPolyVoxVolume->getVoxel<::PolyVox::WrapModes::Border>(x, y, z, VoxelType());
+	}
+
+	template <typename VoxelType>
 	void Volume<VoxelType>::setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, UpdatePriority updatePriority)
 	{
-		if(mPolyVoxVolume->getEnclosingRegion().containsPoint(x, y, z))
+		// Validate the voxel position
+		POLYVOX_THROW_IF(mPolyVoxVolume->getEnclosingRegion().containsPoint(x, y, z) == false,
+			std::invalid_argument, "Attempted to write to a voxel which is outside of the volume");
+
+		mPolyVoxVolume->setVoxelAt(x, y, z, value);
+		if(updatePriority != UpdatePriorities::DontUpdate)
 		{
-			mPolyVoxVolume->setVoxelAt(x, y, z, value);
-			if(updatePriority != UpdatePriorities::DontUpdate)
-			{
-				mOctree->markDataAsModified(x, y, z, Clock::getTimestamp(), updatePriority);
-			}
-		}
-		else
-		{
-			std::stringstream ss;
-			ss << "Attempted to write to voxel (" << x << ", " << y << ", " << z << ") which is outside of volume";
-			throw std::out_of_range(ss.str());
+			mOctree->markDataAsModified(x, y, z, Clock::getTimestamp(), updatePriority);
 		}
 	}
 
 	template <typename VoxelType>
 	void Volume<VoxelType>::markAsModified(const Region& region, UpdatePriority updatePriority)
 	{
-		POLYVOX_ASSERT(updatePriority != UpdatePriorities::DontUpdate, "You cannot mark as modified yet request no update");
+		POLYVOX_THROW_IF(updatePriority == UpdatePriorities::DontUpdate, std::invalid_argument, "You cannot mark as modified yet request no update");
+
 		mOctree->markDataAsModified(region, Clock::getTimestamp(), updatePriority);
 	}
 

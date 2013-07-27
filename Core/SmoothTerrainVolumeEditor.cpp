@@ -246,6 +246,9 @@ namespace Cubiquity
 						//if(rem > 3)
 						{
 							average++;
+							average++;
+							average++;
+							average++;
 						}
 
 						MultiMaterial result = mSmoothingVolume->getVoxelAt(x, y, z);
@@ -253,9 +256,9 @@ namespace Cubiquity
 						mSmoothingVolume->setVoxel(x, y, z, result);
 					}
 
-					/*MultiMaterial result = mSmoothingVolume->getVoxelAt(x, y, z);
+					MultiMaterial result = mSmoothingVolume->getVoxelAt(x, y, z);
 					result.clampSumOfMaterials();
-					mSmoothingVolume->setVoxel(x, y, z, result);*/
+					mSmoothingVolume->setVoxel(x, y, z, result);
 				}
 			}
 		}
@@ -271,7 +274,7 @@ namespace Cubiquity
 			}
 		}
 
-		mSmoothTerrainVolume->markAsModified(region, UpdatePriorities::Background);
+		mSmoothTerrainVolume->markAsModified(region, UpdatePriorities::Immediate);
 	}
 
 	void SmoothTerrainVolumeEditor::subtractFromMaterial(uint8_t amountToAdd, MultiMaterial& material)
