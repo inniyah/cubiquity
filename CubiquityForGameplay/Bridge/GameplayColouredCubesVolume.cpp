@@ -39,6 +39,14 @@ namespace Cubiquity
 		initialiseOctree();
 	}
 
+	GameplayColouredCubesVolume::GameplayColouredCubesVolume(const char* heightmapFileName, const char* colormapFileName, const char* pageFolder, unsigned int baseNodeSize)
+		:GameplayVolume<ColouredCubesVolume>()
+	{
+		mCubiquityVolume = importHeightmap(heightmapFileName, colormapFileName, pageFolder, baseNodeSize);
+
+		initialiseOctree();
+	}
+
 	GameplayColouredCubesVolume::~GameplayColouredCubesVolume()
 	{
 	}

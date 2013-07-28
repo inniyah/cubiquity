@@ -49,6 +49,8 @@ namespace Cubiquity
 
 	ColouredCubesVolume* importVxl(const std::string& filename, const std::string& pageFolder);
 
+	ColouredCubesVolume* importHeightmap(const std::string& heightmapFileName, const std::string& colormapFileName, const std::string& pageFolder, uint32_t baseNodeSize);
+
 	// --------------------------------------------------
 	// Imports data in the VolDat format.
 	// --------------------------------------------------

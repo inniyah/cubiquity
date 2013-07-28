@@ -226,4 +226,59 @@ namespace Cubiquity
 
 		return result;
 	}
+
+	ColouredCubesVolume* importHeightmap(const std::string& heightmapFileName, const std::string& colormapFileName, const std::string& pageFolder, uint32_t baseNodeSize)
+	{
+		int heightmapWidth = 0, heightmapHeight = 0, heightmapChannels;
+		unsigned char *heightmapData = stbi_load(heightmapFileName.c_str(), &heightmapWidth, &heightmapHeight, &heightmapChannels, 0);
+		POLYVOX_THROW_IF(heightmapData == NULL, ios_base::failure, "Failed to load heightmap");
+
+		int colormapWidth = 0, colormapHeight = 0, colormapChannels;
+		unsigned char *colormapData = stbi_load(colormapFileName.c_str(), &colormapWidth, &colormapHeight, &colormapChannels, 0);
+		POLYVOX_THROW_IF(colormapData == NULL, ios_base::failure, "Failed to load colormap");
+		POLYVOX_THROW_IF(colormapChannels  < 3, std::invalid_argument, "Colormap must be a color image (three or four color channels)");
+
+		POLYVOX_THROW_IF(heightmapWidth != colormapWidth, std::invalid_argument, "Heightmap and colormap must have the same width");
+		POLYVOX_THROW_IF(heightmapHeight != colormapHeight, std::invalid_argument, "Heightmap and colormap must have the same height");
+
+		//Create the volume
+		int volumeWidth = heightmapWidth;
+		int volumeHeight = heightmapHeight;
+		int volumeDepth = 256; //Assume 8-bit heightmap
+
+		// When importing we treat 'y' as up because the Gameplay physics engine makes some
+		// assumptions about this. This means we need to swap the 'y' and 'slice' indices.
+		ColouredCubesVolume* volume = new ColouredCubesVolume(Region(0, 0, 0, volumeWidth - 1, volumeDepth - 1, volumeHeight - 1), pageFolder, baseNodeSize);
+
+		// Now iterate over each pixel.
+		for(int x = 0; x < volumeWidth; x++)
+		{
+			for(int y = 0; y < volumeHeight; y++)
+			{
+				unsigned char *heightmapPixel = heightmapData + (y * heightmapWidth + x) * heightmapChannels;
+				unsigned char *colormapPixel = colormapData + (y * colormapWidth + x) * colormapChannels;
+
+				for(int z = 0; z < volumeDepth; z++)
+				{
+					if(z <= *heightmapPixel)
+					{
+						unsigned char red = *(colormapPixel);
+						unsigned char green = *(colormapPixel+1);
+						unsigned char blue = *(colormapPixel+2);
+						// Note y and z are swapped again
+						volume->setVoxelAt(x, z, y, Colour(red, green, blue, 255), UpdatePriorities::DontUpdate);
+					}
+					else
+					{
+						// Note y and z are swapped again
+						volume->setVoxelAt(x, z, y, Colour(0, 0, 0, 0), UpdatePriorities::DontUpdate);
+					}
+				}
+			}
+		}
+
+		volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Background);
+
+		return volume;
+	}
 }

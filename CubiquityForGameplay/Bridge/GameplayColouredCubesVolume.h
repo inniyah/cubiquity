@@ -39,6 +39,17 @@ namespace Cubiquity
 			return volume;
 		}
 
+		/**
+		 * Creates a new GameplayColouredCubesVolume.
+		 *
+		 * @script{create}
+		 */
+		static GameplayColouredCubesVolume* create(const char* heightmapFileName, const char* colormapFileName, const char* pageFolder, unsigned int baseNodeSize)
+		{
+			GameplayColouredCubesVolume* volume = new GameplayColouredCubesVolume(heightmapFileName, colormapFileName, pageFolder, baseNodeSize);
+			return volume;
+		}
+
 		// Ugly hack, as luagen can't see the base class implementation of this function (probably it can't handle templated base classes)
 		gameplay::Node* getRootNodeForLua(int dummyParamForLuagen)
 		{
@@ -62,6 +73,11 @@ namespace Cubiquity
 		 * @script{ignore}
 		 */
 		GameplayColouredCubesVolume(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize);
+		/**
+		 * Text here...
+		 * @script{ignore}
+		 */
+		GameplayColouredCubesVolume(const char* heightmapFileName, const char* colormapFileName, const char* pageFolder, unsigned int baseNodeSize);
 		virtual ~GameplayColouredCubesVolume();
 
 	private:
