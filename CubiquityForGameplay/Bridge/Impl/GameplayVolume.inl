@@ -35,6 +35,10 @@ namespace Cubiquity
 				PhysicsCollisionShape::Definition physDef = buildCollisionObjectFromPolyVoxMesh(octreeNode->mPolyVoxMesh);
 				PhysicsRigidBody::Parameters groundParams;
 				groundParams.mass = 0.0f;
+
+				// From docs: A kinematic collision object is an object that is not simulated by the physics system and instead has its transform driven manually.
+				// I'm not exactly clear how this differs from static, but this kinematic flag is used in Node::getWorldMatrix() to decide whether to use hierarchy.
+				groundParams.kinematic = true;
 				gameplayOctreeNode->mGameplayNode->setCollisionObject(PhysicsCollisionObject::RIGID_BODY, physDef, &groundParams);
 			}	
 			else
