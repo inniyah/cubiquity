@@ -253,14 +253,14 @@ namespace Cubiquity
 			// If the node was rendered last frame then this update is probably the result of an editing operation, rather than
 			// the node only just becoming visible. For editing operations it is important to process them immediatly so that we
 			// don't see temporary cracks in the mesh as different parts up updated at different times.
-			if(node->mExtractOnMainThread) //This flag should still be set from last frame.
+			//if(node->mExtractOnMainThread) //This flag should still be set from last frame.
 			{
 				// We're going to process immediatly, but the completed task will still get queued in the finished
 				// queue, and we want to make sure it's the first out. So we still set a priority and make it high.
 				node->mLastSurfaceExtractionTask->mPriority = (std::numeric_limits<uint32_t>::max)();
 				gMainThreadTaskProcessor.addTask(node->mLastSurfaceExtractionTask);
 			}
-			else
+			/*else
 			{
 				// Note: tasks get sorted by their distance from the camera at the time they are added. If we
 				// want to account for the camera moving then we would have to sort the task queue each frame.
@@ -268,7 +268,7 @@ namespace Cubiquity
 				float distance = (viewPosition - regionCentre).length(); //We don't use distance squared to keep the values smaller
 				node->mLastSurfaceExtractionTask->mPriority = (std::numeric_limits<uint32_t>::max)() - static_cast<uint32_t>(distance);
 				gBackgroundTaskProcessor.addTask(node->mLastSurfaceExtractionTask);
-			}
+			}*/
 
 			// Clear this flag otherwise this node will always be done on the main thread.
 			node->mExtractOnMainThread = false;
