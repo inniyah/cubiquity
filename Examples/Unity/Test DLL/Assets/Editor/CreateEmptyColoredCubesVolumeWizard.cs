@@ -21,7 +21,6 @@ public class CreateEmptyColoredCubesVolumeWizard : ScriptableWizard
     static void CreateWizard ()
 	{
         ScriptableWizard.DisplayWizard<CreateEmptyColoredCubesVolumeWizard>("Create Empty Colored Cubes Volume");
-
     }
 	
 	void OnGUI()

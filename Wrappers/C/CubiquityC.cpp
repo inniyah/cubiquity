@@ -207,6 +207,36 @@ CUBIQUITYC_API int32_t cuNewColouredCubesVolumeFromVolDat(const char* volDatToIm
 	CLOSE_C_INTERFACE
 }
 
+CUBIQUITYC_API int32_t cuNewColouredCubesVolumeFromHeightmap(const char* heightmapFileName, const char* colormapFileName, const char* pageFolder, uint32_t baseNodeSize, uint32_t* result)
+{
+	OPEN_C_INTERFACE
+
+	ColouredCubesVolume* volume = importHeightmap(heightmapFileName, colormapFileName, pageFolder, baseNodeSize);
+	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
+	
+	// Replace an existing entry if it has been deleted.
+	bool foundEmptySlot = false;
+	for(uint32_t ct = 0; ct < gColouredCubesVolumes.size(); ct++)
+	{
+		if(gColouredCubesVolumes[ct] == 0)
+		{
+			gColouredCubesVolumes[ct] = volume;
+			*result =  ct;
+			foundEmptySlot = true;
+			break;
+		}
+	}
+
+	//Otherwise append a new entry.
+	if(!foundEmptySlot)
+	{
+		gColouredCubesVolumes.push_back(volume);
+		*result = gColouredCubesVolumes.size() - 1;
+	}
+
+	CLOSE_C_INTERFACE
+}
+
 CUBIQUITYC_API int32_t cuUpdateVolume(uint32_t volumeHandle)
 {
 	OPEN_C_INTERFACE

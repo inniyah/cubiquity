@@ -34,6 +34,15 @@ public class CubiquityDLL
 	}
 	
 	[DllImport ("CubiquityC")]
+	private static extern int cuNewColouredCubesVolumeFromHeightmap(StringBuilder heightmapFileName, StringBuilder colormapFileName, StringBuilder datasetName, uint baseNodeSize, out uint result);	
+	public static uint NewColoredCubesVolumeFromHeightmap(string heightmapFileName, string colormapFileName, string datasetName, uint baseNodeSize)
+	{
+		uint result;
+		Validate(cuNewColouredCubesVolumeFromHeightmap(new StringBuilder(heightmapFileName), new StringBuilder(colormapFileName), new StringBuilder(datasetName), baseNodeSize, out result));
+		return result;
+	}
+	
+	[DllImport ("CubiquityC")]
 	private static extern int cuUpdateVolume(uint volumeHandle);
 	public static void UpdateVolume(uint volumeHandle)
 	{

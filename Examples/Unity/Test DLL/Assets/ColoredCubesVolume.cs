@@ -40,6 +40,11 @@ public class ColoredCubesVolume : MonoBehaviour
 	[System.NonSerialized]
 	internal string voldatFolder;
 	
+	// If this is set then we import from this heightmap and colormap
+	[System.NonSerialized]
+	internal string heightmapFileName;
+	internal string colormapFileName;
+	
 	// If set, this identifies the volume to the Cubiquity DLL. It can
 	// be tested against null to find if the volume is currently valid.
 	[System.NonSerialized]
@@ -60,6 +65,23 @@ public class ColoredCubesVolume : MonoBehaviour
 			{
 				// Ask Cubiquity to create a volume from the VolDat data.
 				volumeHandle = CubiquityDLL.NewColoredCubesVolumeFromVolDat(voldatFolder, Cubiquity.pathToData + datasetName + "/", (uint)baseNodeSize);
+				
+				// The user didn't specify a region as this is determined by the size of
+				// the VolDat data, so we have to pull this information back from Cubiquity.
+				int lowerX, lowerY, lowerZ, upperX, upperY, upperZ;
+				CubiquityDLL.GetEnclosingRegion(volumeHandle.Value, out lowerX, out lowerY, out lowerZ, out upperX, out upperY, out upperZ);
+				region = new Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
+				
+				// Set this to null so we don't import this data again. When the volume is shutdown the
+				// data is flushed to the page folder, and when the volume is reinitialised the data will
+				// be loaded from the page folder as with a normal volume. So there is no need to reimport.
+				voldatFolder = null;
+			}
+			// Otherwise see if we can initialise from a heightmap
+			else if((heightmapFileName != null) && (heightmapFileName != "") && (colormapFileName != null) && (colormapFileName != ""))
+			{
+				// Ask Cubiquity to create a volume from the VolDat data.
+				volumeHandle = CubiquityDLL.NewColoredCubesVolumeFromHeightmap(heightmapFileName, colormapFileName, Cubiquity.pathToData + datasetName + "/", (uint)baseNodeSize);
 				
 				// The user didn't specify a region as this is determined by the size of
 				// the VolDat data, so we have to pull this information back from Cubiquity.
