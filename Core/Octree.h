@@ -14,6 +14,8 @@
 
 namespace Cubiquity
 {
+	const uint32_t HighestMeshLevel = 2;
+
 	namespace OctreeConstructionModes
 	{
 		enum OctreeConstructionMode
@@ -63,7 +65,7 @@ namespace Cubiquity
 
 				float projectedSize = diagonalLength / distance;
 
-				bool processChildren = ((projectedSize > mLodThreshold) || (octreeNode->mHeight > 2)); //subtree height check prevents building LODs for node near the root.
+				bool processChildren = ((projectedSize > mLodThreshold) || (octreeNode->mHeight > HighestMeshLevel)); //subtree height check prevents building LODs for node near the root.
 
 				if(processChildren)
 				{
