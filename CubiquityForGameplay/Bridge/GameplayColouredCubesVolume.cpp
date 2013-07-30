@@ -14,13 +14,16 @@ using namespace PolyVox;
 namespace Cubiquity
 {
 	GameplayColouredCubesVolume::GameplayColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize)
-		:GameplayVolume<ColouredCubesVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, pageFolder, baseNodeSize)
 	{
-		initialiseOctree();
+		mCubiquityVolume = new ColouredCubesVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pageFolder, baseNodeSize);
+
+		GP_ASSERT(mCubiquityVolume);
+		GP_ASSERT(mCubiquityVolume->getRootOctreeNode());
+
+		mRootGameplayOctreeNode = new GameplayOctreeNode< Colour >(mCubiquityVolume->getRootOctreeNode(), 0);
 	}
 
 	GameplayColouredCubesVolume::GameplayColouredCubesVolume(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize)
-		:GameplayVolume<ColouredCubesVolume>()
 	{
 		// Check whether the provided data is a file or a directory
 		FILE* file = fopen(dataToLoad, "rb");
@@ -36,15 +39,20 @@ namespace Cubiquity
 			mCubiquityVolume = importVolDat<ColouredCubesVolume>(dataToLoad, pageFolder, baseNodeSize);
 		}
 
-		initialiseOctree();
+		GP_ASSERT(mCubiquityVolume);
+		GP_ASSERT(mCubiquityVolume->getRootOctreeNode());
+
+		mRootGameplayOctreeNode = new GameplayOctreeNode< Colour >(mCubiquityVolume->getRootOctreeNode(), 0);
 	}
 
 	GameplayColouredCubesVolume::GameplayColouredCubesVolume(const char* heightmapFileName, const char* colormapFileName, const char* pageFolder, unsigned int baseNodeSize)
-		:GameplayVolume<ColouredCubesVolume>()
 	{
 		mCubiquityVolume = importHeightmap(heightmapFileName, colormapFileName, pageFolder, baseNodeSize);
 
-		initialiseOctree();
+		GP_ASSERT(mCubiquityVolume);
+		GP_ASSERT(mCubiquityVolume->getRootOctreeNode());
+
+		mRootGameplayOctreeNode = new GameplayOctreeNode< Colour >(mCubiquityVolume->getRootOctreeNode(), 0);
 	}
 
 	GameplayColouredCubesVolume::~GameplayColouredCubesVolume()
@@ -64,10 +72,10 @@ namespace Cubiquity
 		}
 	}
 
-	gameplay::Model* GameplayColouredCubesVolume::buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< typename VoxelTraits<typename CubiquityVolumeType::VoxelType>::VertexType>* polyVoxMesh)
+	gameplay::Model* GameplayColouredCubesVolume::buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PositionMaterial<Colour> >* polyVoxMesh)
 	{
 		//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
-		const std::vector<PositionMaterial<Colour> >& vecVertices = polyVoxMesh->getVertices();
+		const std::vector< PositionMaterial<Colour> >& vecVertices = polyVoxMesh->getVertices();
 		const float* pVerticesConst = reinterpret_cast<const float*>(&vecVertices[0]);
 		float* pVertices = const_cast<float*>(pVerticesConst);
 
@@ -137,5 +145,104 @@ namespace Cubiquity
 	void GameplayColouredCubesVolume::markAsModified(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, int updatePriority)
 	{
 		mCubiquityVolume->markAsModified(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), static_cast<UpdatePriority>(updatePriority));
+	}
+
+	void GameplayColouredCubesVolume::syncNode(OctreeNode< Colour >* octreeNode, GameplayOctreeNode< Colour >* gameplayOctreeNode)
+	{
+		if(gameplayOctreeNode->mMeshLastSyncronised < octreeNode->mMeshLastUpdated)
+		{
+			if(octreeNode->mPolyVoxMesh)
+			{
+				// Set up the renderable mesh
+				Model* model = buildModelFromPolyVoxMesh(octreeNode->mPolyVoxMesh);
+				model->setMaterial("res/Materials/ColouredCubicTerrain.material");
+
+				gameplayOctreeNode->mGameplayNode->setModel(model);
+				SAFE_RELEASE(model);
+
+				// Set up the collision mesh
+				PhysicsCollisionShape::Definition physDef = buildCollisionObjectFromPolyVoxMesh(octreeNode->mPolyVoxMesh);
+				PhysicsRigidBody::Parameters groundParams;
+				groundParams.mass = 0.0f;
+
+				// From docs: A kinematic collision object is an object that is not simulated by the physics system and instead has its transform driven manually.
+				// I'm not exactly clear how this differs from static, but this kinematic flag is used in Node::getWorldMatrix() to decide whether to use hierarchy.
+				groundParams.kinematic = true;
+				gameplayOctreeNode->mGameplayNode->setCollisionObject(PhysicsCollisionObject::RIGID_BODY, physDef, &groundParams);
+			}	
+			else
+			{
+				gameplayOctreeNode->mGameplayNode->setModel(0);
+				gameplayOctreeNode->mGameplayNode->setCollisionObject(PhysicsCollisionObject::NONE);
+			}
+
+			gameplayOctreeNode->mMeshLastSyncronised = Clock::getTimestamp();
+		}
+
+		if(octreeNode->mRenderThisNode)
+		{
+			gameplayOctreeNode->mGameplayNode->setTag("RenderThisNode", "t");
+		}
+		else
+		{
+			gameplayOctreeNode->mGameplayNode->setTag("RenderThisNode", "f");
+		}
+
+		for(int iz = 0; iz < 2; iz++)
+		{
+			for(int iy = 0; iy < 2; iy++)
+			{
+				for(int ix = 0; ix < 2; ix++)
+				{
+					OctreeNode< Colour >* childOctreeNode = octreeNode->getChildNode(ix, iy, iz);
+					if(childOctreeNode)
+					{
+						GameplayOctreeNode< Colour >* childGameplayOctreeNode = gameplayOctreeNode->mChildren[ix][iy][iz];
+
+						if(childGameplayOctreeNode == 0)
+						{
+							childGameplayOctreeNode = new GameplayOctreeNode< Colour >(childOctreeNode, gameplayOctreeNode);
+							gameplayOctreeNode->mChildren[ix][iy][iz] = childGameplayOctreeNode;							
+						}
+
+						syncNode(childOctreeNode, childGameplayOctreeNode);
+					}
+					else
+					{
+						// If the child doesn't exist in the cubiquity  octree then make sure it doesn't exist in the gameplay octree.
+						if(gameplayOctreeNode->mChildren[ix][iy][iz])
+						{
+							delete gameplayOctreeNode->mChildren[ix][iy][iz];
+							gameplayOctreeNode->mChildren[ix][iy][iz] = 0;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	gameplay::PhysicsCollisionShape::Definition GameplayColouredCubesVolume::buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< ::PolyVox::PositionMaterial<Colour> >* polyVoxMesh)
+	{
+		//Now set up the physics
+		const std::vector< ::PolyVox::PositionMaterial<Colour> >& vecVertices = polyVoxMesh->getVertices();
+		const std::vector<unsigned int>& vecIndices = polyVoxMesh->getIndices();
+		float* vertexData = new float[polyVoxMesh->getVertices().size() * 3];
+
+		unsigned int* physicsIndices = new unsigned int [vecIndices.size()];
+		for(uint32_t ct = 0; ct < vecIndices.size(); ct++)
+		{
+			physicsIndices[ct] = vecIndices[ct];
+		}
+
+		float* ptr = vertexData;
+		for(uint32_t i = 0; i < vecVertices.size(); i++)
+		{
+			// Position stored in x,y,z components.
+			*ptr = vecVertices[i].getPosition().getX(); ptr++;
+			*ptr = vecVertices[i].getPosition().getY(); ptr++;
+			*ptr = vecVertices[i].getPosition().getZ(); ptr++;
+		}
+
+		return PhysicsCollisionShape::custom(vertexData, polyVoxMesh->getVertices().size(), physicsIndices, vecIndices.size());
 	}
 }

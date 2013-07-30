@@ -79,7 +79,7 @@ namespace Cubiquity
 		GameplayOctreeNode* mChildren[2][2][2];
 	};
 
-	template <typename _CubiquityVolumeType>
+	/*template <typename _CubiquityVolumeType>
 	class GameplayVolume : public gameplay::Ref
 	{
 	public:
@@ -144,7 +144,7 @@ namespace Cubiquity
 
 		CubiquityVolumeType* mCubiquityVolume;
 		GameplayOctreeNode< typename CubiquityVolumeType::VoxelType >* mRootGameplayOctreeNode;
-	};
+	};*/
 }
 
 #include "GameplayVolume.inl"

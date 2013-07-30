@@ -13,7 +13,7 @@ namespace Cubiquity
 	/**
 	 * A volume containing smooth terrain.
 	 */
-	class GameplaySmoothTerrainVolume : public GameplayVolume<SmoothTerrainVolume>
+	class GameplaySmoothTerrainVolume : public gameplay::Ref
 	{
 	public:
 		/**
@@ -38,13 +38,43 @@ namespace Cubiquity
 			return volume;
 		}
 
-		// Ugly hack, as luagen can't see the base class implementation of this function (probably it can't handle templated base classes)
-		gameplay::Node* getRootNodeForLua(int dummyParamForLuagen)
+		gameplay::Node* getRootNode(void)
 		{
-			return GameplayVolume<SmoothTerrainVolume>::getRootNode();
+			return mRootGameplayOctreeNode->mGameplayNode;
 		}
 
+		//Not sure I like exposing this one... should make some functions/classes friends instead?
+		SmoothTerrainVolume* getCubiquityVolume(void)
+		{
+			return mCubiquityVolume;
+		}
+
+		uint32_t getWidth(void)
+		{
+			return mCubiquityVolume->getWidth();
+		}
+
+		uint32_t getHeight(void)
+		{
+			return mCubiquityVolume->getHeight();
+		}
+
+		uint32_t getDepth(void)
+		{
+			return mCubiquityVolume->getDepth();
+		}
+
+		// Ugly hack, as luagen can't see the base class implementation of this function (probably it can't handle templated base classes)
+		/*gameplay::Node* getRootNodeForLua(int dummyParamForLuagen)
+		{
+			return mRootGameplayOctreeNode->mGameplayNode;
+		}*/
+
 		void performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold);
+
+		gameplay::PhysicsCollisionShape::Definition buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< ::PolyVox::PositionMaterialNormal< MultiMaterial > >* polyVoxMesh);
+
+		void syncNode(OctreeNode< MultiMaterial >* octreeNode, GameplayOctreeNode< MultiMaterial >* gameplayOctreeNode);
 
 	protected:
 		GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize);
@@ -53,7 +83,10 @@ namespace Cubiquity
 
 	private:
 
-		gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< typename VoxelTraits<typename CubiquityVolumeType::VoxelType>::VertexType>* polyVoxMesh);
+		gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< ::PolyVox::PositionMaterialNormal< MultiMaterial > >* polyVoxMesh);
+
+		SmoothTerrainVolume* mCubiquityVolume;
+		GameplayOctreeNode< MultiMaterial >* mRootGameplayOctreeNode;
 	};
 }
 

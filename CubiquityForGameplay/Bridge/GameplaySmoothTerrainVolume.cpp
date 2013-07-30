@@ -12,9 +12,10 @@ namespace Cubiquity
 {
 
 	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize)
-		:GameplayVolume<SmoothTerrainVolume>(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, pageFolder, baseNodeSize)
 	{
-		initialiseOctree();
+		mCubiquityVolume = new SmoothTerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pageFolder, baseNodeSize);
+
+		mRootGameplayOctreeNode = new GameplayOctreeNode< MultiMaterial >(mCubiquityVolume->getRootOctreeNode(), 0);
 	}
 
 	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize)
@@ -34,7 +35,7 @@ namespace Cubiquity
 			mCubiquityVolume = importVolDat<SmoothTerrainVolume>(dataToLoad, pageFolder, baseNodeSize);
 		}
 
-		initialiseOctree();
+		mRootGameplayOctreeNode = new GameplayOctreeNode< MultiMaterial >(mCubiquityVolume->getRootOctreeNode(), 0);
 	}
 
 	GameplaySmoothTerrainVolume::~GameplaySmoothTerrainVolume()
@@ -54,10 +55,10 @@ namespace Cubiquity
 		}
 	}
 
-	gameplay::Model* GameplaySmoothTerrainVolume::buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< typename VoxelTraits<typename CubiquityVolumeType::VoxelType>::VertexType>* polyVoxMesh)
+	gameplay::Model* GameplaySmoothTerrainVolume::buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< ::PolyVox::PositionMaterialNormal< MultiMaterial > >* polyVoxMesh)
 	{
 		//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
-		const std::vector<PositionMaterialNormal<MultiMaterialMarchingCubesController::MaterialType> >& vecVertices = polyVoxMesh->getVertices();
+		const std::vector< ::PolyVox::PositionMaterialNormal< MultiMaterial > >& vecVertices = polyVoxMesh->getVertices();
 		const float* pVerticesConst = reinterpret_cast<const float*>(&vecVertices[0]);
 		float* pVertices = const_cast<float*>(pVerticesConst);
 
@@ -118,5 +119,104 @@ namespace Cubiquity
 		SAFE_RELEASE(mesh);
 
 		return model;
-	}	
+	}
+
+	void GameplaySmoothTerrainVolume::syncNode(OctreeNode< MultiMaterial >* octreeNode, GameplayOctreeNode< MultiMaterial >* gameplayOctreeNode)
+	{
+		if(gameplayOctreeNode->mMeshLastSyncronised < octreeNode->mMeshLastUpdated)
+		{
+			if(octreeNode->mPolyVoxMesh)
+			{
+				// Set up the renderable mesh
+				Model* model = buildModelFromPolyVoxMesh(octreeNode->mPolyVoxMesh);
+				model->setMaterial("res/Materials/SmoothTerrain.material");
+
+				gameplayOctreeNode->mGameplayNode->setModel(model);
+				SAFE_RELEASE(model);
+
+				// Set up the collision mesh
+				PhysicsCollisionShape::Definition physDef = buildCollisionObjectFromPolyVoxMesh(octreeNode->mPolyVoxMesh);
+				PhysicsRigidBody::Parameters groundParams;
+				groundParams.mass = 0.0f;
+
+				// From docs: A kinematic collision object is an object that is not simulated by the physics system and instead has its transform driven manually.
+				// I'm not exactly clear how this differs from static, but this kinematic flag is used in Node::getWorldMatrix() to decide whether to use hierarchy.
+				groundParams.kinematic = true;
+				gameplayOctreeNode->mGameplayNode->setCollisionObject(PhysicsCollisionObject::RIGID_BODY, physDef, &groundParams);
+			}	
+			else
+			{
+				gameplayOctreeNode->mGameplayNode->setModel(0);
+				gameplayOctreeNode->mGameplayNode->setCollisionObject(PhysicsCollisionObject::NONE);
+			}
+
+			gameplayOctreeNode->mMeshLastSyncronised = Clock::getTimestamp();
+		}
+
+		if(octreeNode->mRenderThisNode)
+		{
+			gameplayOctreeNode->mGameplayNode->setTag("RenderThisNode", "t");
+		}
+		else
+		{
+			gameplayOctreeNode->mGameplayNode->setTag("RenderThisNode", "f");
+		}
+
+		for(int iz = 0; iz < 2; iz++)
+		{
+			for(int iy = 0; iy < 2; iy++)
+			{
+				for(int ix = 0; ix < 2; ix++)
+				{
+					OctreeNode< MultiMaterial >* childOctreeNode = octreeNode->getChildNode(ix, iy, iz);
+					if(childOctreeNode)
+					{
+						GameplayOctreeNode< MultiMaterial >* childGameplayOctreeNode = gameplayOctreeNode->mChildren[ix][iy][iz];
+
+						if(childGameplayOctreeNode == 0)
+						{
+							childGameplayOctreeNode = new GameplayOctreeNode< MultiMaterial >(childOctreeNode, gameplayOctreeNode);
+							gameplayOctreeNode->mChildren[ix][iy][iz] = childGameplayOctreeNode;							
+						}
+
+						syncNode(childOctreeNode, childGameplayOctreeNode);
+					}
+					else
+					{
+						// If the child doesn't exist in the cubiquity  octree then make sure it doesn't exist in the gameplay octree.
+						if(gameplayOctreeNode->mChildren[ix][iy][iz])
+						{
+							delete gameplayOctreeNode->mChildren[ix][iy][iz];
+							gameplayOctreeNode->mChildren[ix][iy][iz] = 0;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	gameplay::PhysicsCollisionShape::Definition GameplaySmoothTerrainVolume::buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< ::PolyVox::PositionMaterialNormal< MultiMaterial > >* polyVoxMesh)
+	{
+		//Now set up the physics
+		const std::vector< ::PolyVox::PositionMaterialNormal< MultiMaterial > >& vecVertices = polyVoxMesh->getVertices();
+		const std::vector<unsigned int>& vecIndices = polyVoxMesh->getIndices();
+		float* vertexData = new float[polyVoxMesh->getVertices().size() * 3];
+
+		unsigned int* physicsIndices = new unsigned int [vecIndices.size()];
+		for(uint32_t ct = 0; ct < vecIndices.size(); ct++)
+		{
+			physicsIndices[ct] = vecIndices[ct];
+		}
+
+		float* ptr = vertexData;
+		for(uint32_t i = 0; i < vecVertices.size(); i++)
+		{
+			// Position stored in x,y,z components.
+			*ptr = vecVertices[i].getPosition().getX(); ptr++;
+			*ptr = vecVertices[i].getPosition().getY(); ptr++;
+			*ptr = vecVertices[i].getPosition().getZ(); ptr++;
+		}
+
+		return PhysicsCollisionShape::custom(vertexData, polyVoxMesh->getVertices().size(), physicsIndices, vecIndices.size());
+	}
 }

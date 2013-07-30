@@ -1,6 +1,6 @@
 namespace Cubiquity
 {
-	template <typename CubiquityVolumeType>
+	/*template <typename CubiquityVolumeType>
 	void GameplayVolume<CubiquityVolumeType>::initialiseOctree(void)
 	{
 		GP_ASSERT(mCubiquityVolume);
@@ -9,9 +9,9 @@ namespace Cubiquity
 		mRootGameplayOctreeNode = new GameplayOctreeNode< typename CubiquityVolumeType::VoxelType >(mCubiquityVolume->getRootOctreeNode(), 0);
 
 		
-	}
+	}*/
 
-	template <typename CubiquityVolumeType>
+	/*template <typename CubiquityVolumeType>
 	void GameplayVolume<CubiquityVolumeType>::syncNode(OctreeNode< typename CubiquityVolumeType::VoxelType >* octreeNode, GameplayOctreeNode< typename CubiquityVolumeType::VoxelType >* gameplayOctreeNode)
 	{
 		if(gameplayOctreeNode->mMeshLastSyncronised < octreeNode->mMeshLastUpdated)
@@ -116,5 +116,5 @@ namespace Cubiquity
 		}
 
 		return PhysicsCollisionShape::custom(vertexData, polyVoxMesh->getVertices().size(), physicsIndices, vecIndices.size());
-	}
+	}*/
 }
