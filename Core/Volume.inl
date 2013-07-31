@@ -40,7 +40,7 @@ namespace Cubiquity
 		POLYVOX_THROW_IF(region.getDepthInVoxels() == 0, std::invalid_argument, "Volume depth must be greater than zero");
 	
 #ifdef USE_LARGE_VOLUME
-		m_pCompressor = new MinizCompressor;
+		m_pCompressor = new ::PolyVox::MinizCompressor;
 
 		if(pageFolder.size() != 0)
 		{

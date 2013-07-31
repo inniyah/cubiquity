@@ -33,6 +33,9 @@ namespace Cubiquity
 	public:
 		typedef _VoxelType VoxelType;
 
+		Volume(const Region& region, const std::string& pageFolder, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize);
+		~Volume();
+
 		// These functions just forward to the underlying PolyVox volume.
 		uint32_t getWidth(void) const { return mPolyVoxVolume->getWidth(); }
 		uint32_t getHeight(void) const { return mPolyVoxVolume->getHeight(); }
@@ -55,13 +58,9 @@ namespace Cubiquity
 		// Should be called before rendering a frame to update the meshes and octree structure.
 		virtual void update(const Vector3F& viewPosition, float lodThreshold);
 
-	protected:
-		Volume(const Region& region, const std::string& pageFolder, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize);
-		~Volume();
-
+	private:
 		Volume& operator=(const Volume&);
 
-	private:
 		::PolyVox::POLYVOX_VOLUME<VoxelType>* mPolyVoxVolume;
 
 #ifdef USE_LARGE_VOLUME

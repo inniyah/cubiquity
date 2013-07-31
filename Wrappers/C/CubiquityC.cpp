@@ -151,7 +151,7 @@ CUBIQUITYC_API int32_t cuNewColouredCubesVolume(int32_t lowerX, int32_t lowerY, 
 {
 	OPEN_C_INTERFACE
 
-	ColouredCubesVolume* volume = new ColouredCubesVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pageFolder, baseNodeSize);
+	ColouredCubesVolume* volume = createColoredCubesVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pageFolder, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 
 	// Replace an existing entry if it has been deleted.
@@ -181,7 +181,7 @@ CUBIQUITYC_API int32_t cuNewColouredCubesVolumeFromVolDat(const char* volDatToIm
 {
 	OPEN_C_INTERFACE
 
-	ColouredCubesVolume* volume = importVolDat<ColouredCubesVolume>(volDatToImport, pageFolder, baseNodeSize);
+	ColouredCubesVolume* volume = importVolDat< ColouredCubesVolumeImpl >(volDatToImport, pageFolder, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 	
 	// Replace an existing entry if it has been deleted.
@@ -510,7 +510,7 @@ CUBIQUITYC_API int32_t cuPickVoxel(uint32_t volumeHandle, float rayStartX, float
 	Vector3F v3dDirection(rayDirX, rayDirY, rayDirZ);
 
 	ColouredCubesRaycastTestFunctor raycastTestFunctor;
-	PolyVox::RaycastResult myResult = PolyVox::raycastWithDirection(getPolyVoxVolumeFrom(volume), v3dStart, v3dDirection, raycastTestFunctor);
+	PolyVox::RaycastResult myResult = PolyVox::raycastWithDirection(volume->_getPolyVoxVolume(), v3dStart, v3dDirection, raycastTestFunctor);
 	if(myResult == ::PolyVox::RaycastResults::Interupted)
 	{
 		//result = gameplay::Vector3(raycastTestFunctor.mLastPos.getX(), raycastTestFunctor.mLastPos.getY(), raycastTestFunctor.mLastPos.getZ());

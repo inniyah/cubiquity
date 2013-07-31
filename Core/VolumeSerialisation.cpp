@@ -126,7 +126,7 @@ namespace Cubiquity
 
 	ColouredCubesVolume* importVxl(const std::string& filename, const std::string& pageFolder)
 	{
-		ColouredCubesVolume* result = new ColouredCubesVolume(Region(0, 0, 0, 511, 63, 511), pageFolder, 64);
+		ColouredCubesVolume* result = new ColouredCubesVolumeImpl(Region(0, 0, 0, 511, 63, 511), pageFolder, 64);
 
 		FILE* inputFile = fopen(filename.c_str(), "rb");
 		POLYVOX_ASSERT(inputFile, "Failed to open input file!");
@@ -248,7 +248,7 @@ namespace Cubiquity
 
 		// When importing we treat 'y' as up because the Gameplay physics engine makes some
 		// assumptions about this. This means we need to swap the 'y' and 'slice' indices.
-		ColouredCubesVolume* volume = new ColouredCubesVolume(Region(0, 0, 0, volumeWidth - 1, volumeDepth - 1, volumeHeight - 1), pageFolder, baseNodeSize);
+		ColouredCubesVolume* volume = new ColouredCubesVolumeImpl(Region(0, 0, 0, volumeWidth - 1, volumeDepth - 1, volumeHeight - 1), pageFolder, baseNodeSize);
 
 		// Now iterate over each pixel.
 		for(int x = 0; x < volumeWidth; x++)

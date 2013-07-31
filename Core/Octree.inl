@@ -23,7 +23,7 @@ namespace Cubiquity
 
 		POLYVOX_ASSERT(::PolyVox::isPowerOf2(mBaseNodeSize), "Node size must be a power of two");
 
-		uint32_t largestVolumeDimension = std::max(mRegionToCover.getWidthInVoxels(), std::max(mRegionToCover.getHeightInVoxels(), mRegionToCover.getDepthInVoxels()));
+		uint32_t largestVolumeDimension = (std::max)(mRegionToCover.getWidthInVoxels(), (std::max)(mRegionToCover.getHeightInVoxels(), mRegionToCover.getDepthInVoxels()));
 		if(mOctreeConstructionMode == OctreeConstructionModes::BoundCells)
 		{
 			largestVolumeDimension--;
@@ -31,7 +31,7 @@ namespace Cubiquity
 
 		uint32_t octreeTargetSize = ::PolyVox::upperPowerOfTwo(largestVolumeDimension);
 
-		uint8_t maxHeightOfTree = logBase2((octreeTargetSize) / mBaseNodeSize) + 1;
+		uint8_t maxHeightOfTree = ::PolyVox::logBase2((octreeTargetSize) / mBaseNodeSize) + 1;
 
 		uint32_t regionToCoverWidth = (mOctreeConstructionMode == OctreeConstructionModes::BoundCells) ? mRegionToCover.getWidthInCells() : mRegionToCover.getWidthInVoxels();
 		uint32_t regionToCoverHeight = (mOctreeConstructionMode == OctreeConstructionModes::BoundCells) ? mRegionToCover.getHeightInCells() : mRegionToCover.getHeightInVoxels();

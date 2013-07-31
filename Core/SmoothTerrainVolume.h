@@ -13,7 +13,7 @@ namespace Cubiquity
 		SmoothTerrainVolume(const Region& region, const std::string& pageFolder, unsigned int baseNodeSize);
 
 		virtual void update(const Vector3F& viewPosition, float lodThreshold);
-		void updateMeshImpl(OctreeNode< VoxelType >* octreeNode);
+
 	};
 }
 

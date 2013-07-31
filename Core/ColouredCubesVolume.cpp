@@ -9,13 +9,18 @@ using namespace PolyVox;
 
 namespace Cubiquity
 {
-	ColouredCubesVolume::ColouredCubesVolume(const Region& region, const std::string& pageFolder, unsigned int baseNodeSize)
+	ColouredCubesVolume* createColoredCubesVolume(const Region& region, const std::string& pageFolder, unsigned int baseNodeSize)
+	{
+		return new ColouredCubesVolumeImpl(region, pageFolder, baseNodeSize);
+	}
+
+	/*ColouredCubesVolumeImpl::ColouredCubesVolumeImpl(const Region& region, const std::string& pageFolder, unsigned int baseNodeSize)
 		:Volume<Colour>(region, pageFolder, OctreeConstructionModes::BoundVoxels, baseNodeSize)
 	{
 	}
 
-	void ColouredCubesVolume::update(const Vector3F& viewPosition, float lodThreshold)
+	void ColouredCubesVolumeImpl::update(const Vector3F& viewPosition, float lodThreshold)
 	{
 		Volume<Colour>::update(viewPosition, lodThreshold);
-	}
+	}*/
 }
