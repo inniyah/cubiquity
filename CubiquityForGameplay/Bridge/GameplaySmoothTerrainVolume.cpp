@@ -13,7 +13,7 @@ namespace Cubiquity
 
 	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize)
 	{
-		mCubiquityVolume = new SmoothTerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pageFolder, baseNodeSize);
+		mCubiquityVolume = createSmoothTerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pageFolder, baseNodeSize);
 
 		mRootGameplayOctreeNode = new GameplayOctreeNode< MultiMaterial >(mCubiquityVolume->getRootOctreeNode(), 0);
 	}
@@ -32,7 +32,7 @@ namespace Cubiquity
 		{
 			// For now we assume it's VolDat. Leter on we should check for
 			// Volume.idx and load raw Cubiquity data instead if necessary.
-			mCubiquityVolume = importVolDat<SmoothTerrainVolume>(dataToLoad, pageFolder, baseNodeSize);
+			mCubiquityVolume = importVolDat<SmoothTerrainVolumeImpl>(dataToLoad, pageFolder, baseNodeSize);
 		}
 
 		mRootGameplayOctreeNode = new GameplayOctreeNode< MultiMaterial >(mCubiquityVolume->getRootOctreeNode(), 0);
