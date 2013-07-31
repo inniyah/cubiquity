@@ -12,7 +12,12 @@ using namespace PolyVox;
 
 namespace Cubiquity
 {
-	SmoothTerrainVolume::SmoothTerrainVolume(const Region& region, const std::string& pageFolder, unsigned int baseNodeSize)
+	SmoothTerrainVolume* createSmoothTerrainVolume(const Region& region, const std::string& pageFolder, unsigned int baseNodeSize)
+	{
+		return new SmoothTerrainVolumeImpl(region, pageFolder, baseNodeSize);
+	}
+
+	/*SmoothTerrainVolume::SmoothTerrainVolume(const Region& region, const std::string& pageFolder, unsigned int baseNodeSize)
 		:Volume<MultiMaterial>(region, pageFolder, OctreeConstructionModes::BoundCells, baseNodeSize)
 	{
 	}
@@ -20,5 +25,5 @@ namespace Cubiquity
 	void SmoothTerrainVolume::update(const Vector3F& viewPosition, float lodThreshold)
 	{
 		Volume<typename MultiMaterialMarchingCubesController::MaterialType>::update(viewPosition, lodThreshold);
-	}
+	}*/
 }

@@ -68,7 +68,7 @@ namespace Cubiquity
 			}
 
 			// We might not need to do this at float precision, it should be tested again.
-			::PolyVox::LowPassFilter< ::PolyVox::POLYVOX_VOLUME<MultiMaterial>, ::PolyVox::RawVolume<MultiMaterial>, ::PolyVox::Vector<4, float> > lowPassFilter(getPolyVoxVolumeFrom(mSmoothTerrainVolume), region, mSmoothingVolume, region, 3);
+			::PolyVox::LowPassFilter< ::PolyVox::POLYVOX_VOLUME<MultiMaterial>, ::PolyVox::RawVolume<MultiMaterial>, ::PolyVox::Vector<4, float> > lowPassFilter(getPolyVoxVolumeFrom(&(dynamic_cast<SmoothTerrainVolumeImpl*>(mSmoothTerrainVolume)->mCubiquityVolume)), region, mSmoothingVolume, region, 3);
 			lowPassFilter.execute();
 		}
 
