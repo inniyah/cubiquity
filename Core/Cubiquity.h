@@ -10,9 +10,6 @@ namespace Cubiquity
 	class ColouredCubesVolume
 	{
 	public:
-		//Hack!
-		typedef Colour VoxelType;
-
 		virtual int32_t getLowerX(void) const = 0;
 		virtual int32_t getUpperX(void) const = 0;
 		virtual int32_t getLowerY(void) const = 0;
@@ -34,22 +31,16 @@ namespace Cubiquity
 		// Set voxel doesn't just pass straight through, it also validates the position and marks the voxel as modified.
 		virtual void setVoxelAt(int32_t x, int32_t y, int32_t z, Colour value, UpdatePriority updatePriority = UpdatePriorities::Background) = 0;
 
-		// Marks a region as mdified so it will be regenerated later.
+		// Marks a region as modified so it will be regenerated later.
 		virtual void markAsModified(const Region& region, UpdatePriority updatePriority = UpdatePriorities::Background) = 0;
 
 		// Should be called before rendering a frame to update the meshes and octree structure.
 		virtual void update(const Vector3F& viewPosition, float lodThreshold) = 0;
-
-		//HACK!
-		virtual ::PolyVox::POLYVOX_VOLUME<Colour>* _getPolyVoxVolume(void) = 0;
 	};
 
 	class SmoothTerrainVolume
 	{
 	public:
-		//Hack!
-		typedef MultiMaterial VoxelType;
-
 		virtual int32_t getLowerX(void) const = 0;
 		virtual int32_t getUpperX(void) const = 0;
 		virtual int32_t getLowerY(void) const = 0;
@@ -71,14 +62,11 @@ namespace Cubiquity
 		// Set voxel doesn't just pass straight through, it also validates the position and marks the voxel as modified.
 		virtual void setVoxelAt(int32_t x, int32_t y, int32_t z, MultiMaterial value, UpdatePriority updatePriority = UpdatePriorities::Background) = 0;
 
-		// Marks a region as mdified so it will be regenerated later.
+		// Marks a region as modified so it will be regenerated later.
 		virtual void markAsModified(const Region& region, UpdatePriority updatePriority = UpdatePriorities::Background) = 0;
 
 		// Should be called before rendering a frame to update the meshes and octree structure.
 		virtual void update(const Vector3F& viewPosition, float lodThreshold) = 0;
-
-		//HACK!
-		virtual ::PolyVox::POLYVOX_VOLUME<MultiMaterial>* _getPolyVoxVolume(void) = 0;
 	};
 }
 

@@ -18,12 +18,12 @@ namespace Cubiquity
 	public:
 		static void gameplayExportColourSlices(GameplayColouredCubesVolume* volume, const char* voldatFolder)
 		{
-			exportVolDat<ColouredCubesVolume>(volume->getCubiquityVolume(), voldatFolder);
+			exportVolDat<ColouredCubesVolumeImpl>(dynamic_cast<ColouredCubesVolumeImpl*>(volume->getCubiquityVolume()), voldatFolder);
 		}
 
 		static void gameplayExportSmoothSlices(GameplaySmoothTerrainVolume* volume, const char* voldatFolder)
 		{
-			exportVolDat<SmoothTerrainVolume>(volume->getCubiquityVolume(), voldatFolder);
+			exportVolDat<SmoothTerrainVolumeImpl>(dynamic_cast<SmoothTerrainVolumeImpl*>(volume->getCubiquityVolume()), voldatFolder);
 		}
 	};
 }

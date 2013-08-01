@@ -10,6 +10,8 @@ namespace Cubiquity
 	class SmoothTerrainVolumeImpl : public SmoothTerrainVolume
 	{
 	public:
+		typedef MultiMaterial VoxelType;
+
 		SmoothTerrainVolumeImpl(const Region& region, const std::string& pageFolder, unsigned int baseNodeSize)
 			:mCubiquityVolume(region, pageFolder, OctreeConstructionModes::BoundCells, baseNodeSize) {}
 
@@ -36,7 +38,7 @@ namespace Cubiquity
 		// Set voxel doesn't just pass straight through, it also validates the position and marks the voxel as modified.
 		virtual void setVoxelAt(int32_t x, int32_t y, int32_t z, MultiMaterial value, UpdatePriority updatePriority = UpdatePriorities::Background) {mCubiquityVolume.setVoxelAt(x, y, z, value, updatePriority); }
 
-		// Marks a region as mdified so it will be regenerated later.
+		// Marks a region as modified so it will be regenerated later.
 		virtual void markAsModified(const Region& region, UpdatePriority updatePriority = UpdatePriorities::Background) {mCubiquityVolume.markAsModified(region, updatePriority);}
 
 		// Should be called before rendering a frame to update the meshes and octree structure.
