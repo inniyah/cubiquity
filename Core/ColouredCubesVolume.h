@@ -43,8 +43,8 @@ namespace Cubiquity
 		// Should be called before rendering a frame to update the meshes and octree structure.
 		virtual void update(const Vector3F& viewPosition, float lodThreshold) {mCubiquityVolume.update(viewPosition, lodThreshold);}
 
-		//HACK!
-		virtual ::PolyVox::POLYVOX_VOLUME<Colour>* _getPolyVoxVolume(void) {return getPolyVoxVolumeFrom<Colour>(&mCubiquityVolume); }
+		// This one's a bit of a hack... direct access to underlying PolyVox volume
+		virtual ::PolyVox::POLYVOX_VOLUME<Colour>* _getPolyVoxVolume(void) {return mCubiquityVolume._getPolyVoxVolume(); }
 
 	private:
 		Volume<Colour> mCubiquityVolume;

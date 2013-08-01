@@ -504,7 +504,7 @@ CUBIQUITYC_API int32_t cuPickVoxel(uint32_t volumeHandle, float rayStartX, float
 {
 	OPEN_C_INTERFACE
 
-	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+	ColouredCubesVolumeImpl* volume = getVolumeFromHandle(volumeHandle);
 
 	Vector3F v3dStart(rayStartX, rayStartY, rayStartZ);
 	Vector3F v3dDirection(rayDirX, rayDirY, rayDirZ);

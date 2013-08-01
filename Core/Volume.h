@@ -23,10 +23,6 @@
 
 namespace Cubiquity
 {
-	// Forward declaration for private volume accessor
-	template <typename VoxelType>
-	::PolyVox::POLYVOX_VOLUME<VoxelType>* getPolyVoxVolumeFrom(Volume<VoxelType>* cubiquityVolume);
-
 	template <typename _VoxelType>
 	class Volume
 	{
@@ -44,6 +40,9 @@ namespace Cubiquity
 
 		// Note this adds a border rather than calling straight through.
 		VoxelType getVoxelAt(int32_t x, int32_t y, int32_t z) const;
+
+		// This one's a bit of a hack... direct access to underlying PolyVox volume
+		::PolyVox::POLYVOX_VOLUME<VoxelType>* _getPolyVoxVolume(void) const { return mPolyVoxVolume; }
 
 		// Octree access
 		Octree<VoxelType>* getOctree(void) { return mOctree; };
@@ -73,16 +72,7 @@ namespace Cubiquity
 		// Friend functions
 		friend class Octree<VoxelType>;
 		friend class OctreeNode<VoxelType>;
-		// This one provides a way for other Cubiquity code to access the PolyVox::Volume without letting user code do it. To enforce this we
-		// actually want a nested namespace, but it seems VS2010 has problems with that. See here: http://stackoverflow.com/q/16307836/2337254
-		friend ::PolyVox::POLYVOX_VOLUME<VoxelType>* getPolyVoxVolumeFrom<>(Volume<VoxelType>* cubiquityVolume);
 	};
-
-	template <typename VoxelType>
-	::PolyVox::POLYVOX_VOLUME<VoxelType>* getPolyVoxVolumeFrom(Volume<VoxelType>* cubiquityVolume)
-	{
-		return cubiquityVolume->mPolyVoxVolume;
-	}
 }
 
 #include "Volume.inl"
