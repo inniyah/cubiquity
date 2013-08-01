@@ -1,48 +1,24 @@
 #ifndef SMOOTHTERRAINVOLUME_H_
 #define SMOOTHTERRAINVOLUME_H_
 
+#include "Cubiquity.h"
 #include "CubiquityForwardDeclarations.h"
 #include "Volume.h"
 
 namespace Cubiquity
 {
-	class SmoothTerrainVolume
-	{
-	public:
-		//Hack!
-		typedef MultiMaterial VoxelType;
-
-		// These functions just forward to the underlying PolyVox volume.
-		virtual uint32_t getWidth(void) const = 0;
-		virtual uint32_t getHeight(void) const = 0;
-		virtual uint32_t getDepth(void) const = 0;
-		virtual const Region& getEnclosingRegion(void) const = 0;
-
-		// Note this adds a border rather than calling straight through.
-		virtual MultiMaterial getVoxelAt(int32_t x, int32_t y, int32_t z) const = 0;
-
-		// Octree access
-		virtual Octree<MultiMaterial>* getOctree(void) = 0;
-		virtual OctreeNode<MultiMaterial>* getRootOctreeNode(void) = 0;
-
-		// Set voxel doesn't just pass straight through, it also validates the position and marks the voxel as modified.
-		virtual void setVoxelAt(int32_t x, int32_t y, int32_t z, MultiMaterial value, UpdatePriority updatePriority = UpdatePriorities::Background) = 0;
-
-		// Marks a region as mdified so it will be regenerated later.
-		virtual void markAsModified(const Region& region, UpdatePriority updatePriority = UpdatePriorities::Background) = 0;
-
-		// Should be called before rendering a frame to update the meshes and octree structure.
-		virtual void update(const Vector3F& viewPosition, float lodThreshold) = 0;
-
-		//HACK!
-		virtual ::PolyVox::POLYVOX_VOLUME<MultiMaterial>* _getPolyVoxVolume(void) = 0;
-	};
-
 	class SmoothTerrainVolumeImpl : public SmoothTerrainVolume
 	{
 	public:
 		SmoothTerrainVolumeImpl(const Region& region, const std::string& pageFolder, unsigned int baseNodeSize)
 			:mCubiquityVolume(region, pageFolder, OctreeConstructionModes::BoundCells, baseNodeSize) {}
+
+		virtual int32_t getLowerX(void) const { return mCubiquityVolume.getEnclosingRegion().getLowerX(); }
+		virtual int32_t getUpperX(void) const { return mCubiquityVolume.getEnclosingRegion().getUpperX(); }
+		virtual int32_t getLowerY(void) const { return mCubiquityVolume.getEnclosingRegion().getLowerY(); }
+		virtual int32_t getUpperY(void) const { return mCubiquityVolume.getEnclosingRegion().getUpperY(); }
+		virtual int32_t getLowerZ(void) const { return mCubiquityVolume.getEnclosingRegion().getLowerZ(); }
+		virtual int32_t getUpperZ(void) const { return mCubiquityVolume.getEnclosingRegion().getUpperZ(); }
 
 		// These functions just forward to the underlying PolyVox volume.
 		virtual uint32_t getWidth(void) const {return mCubiquityVolume.getWidth();}

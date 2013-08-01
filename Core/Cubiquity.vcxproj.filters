@@ -228,6 +228,9 @@
     <ClInclude Include="FileSystem.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Cubiquity.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.inl">

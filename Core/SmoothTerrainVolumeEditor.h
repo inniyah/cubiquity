@@ -9,10 +9,10 @@ namespace Cubiquity
 	class SmoothTerrainVolumeEditor
 	{
 	public:
-		SmoothTerrainVolumeEditor(SmoothTerrainVolume* volume);
+		SmoothTerrainVolumeEditor(SmoothTerrainVolumeImpl* volume);
 		~SmoothTerrainVolumeEditor();
 
-		SmoothTerrainVolume* mSmoothTerrainVolume;
+		SmoothTerrainVolumeImpl* mSmoothTerrainVolume;
 
 	protected:
 		class EditActions

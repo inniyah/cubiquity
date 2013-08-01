@@ -63,7 +63,7 @@ const int MaxNodeHandle = (0x01 << NodeHandleBits) - 1;
 // The single global instance of the above class.
 EntryAndExitPoints gEntryAndExitPoints;
 
-std::vector<ColouredCubesVolume*> gColouredCubesVolumes;
+std::vector<ColouredCubesVolumeImpl*> gColouredCubesVolumes;
 
 void validateVolumeHandle(uint32_t volumeHandle)
 {
@@ -89,7 +89,7 @@ void validateVolumeHandle(uint32_t volumeHandle)
 	}
 }
 
-ColouredCubesVolume* getVolumeFromHandle(uint32_t volumeHandle)
+ColouredCubesVolumeImpl* getVolumeFromHandle(uint32_t volumeHandle)
 {
 	validateVolumeHandle(volumeHandle);
 	return gColouredCubesVolumes[volumeHandle];
@@ -105,7 +105,7 @@ void validateDecodedNodeHandle(uint32_t volumeHandle, uint32_t decodedNodeHandle
 	}
 
 	// Get the volume (also validates the volume handle)
-	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+	ColouredCubesVolumeImpl* volume = getVolumeFromHandle(volumeHandle);
 
 	// Check the node really exists in the volume
 	OctreeNode<Colour>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
@@ -151,7 +151,7 @@ CUBIQUITYC_API int32_t cuNewColouredCubesVolume(int32_t lowerX, int32_t lowerY, 
 {
 	OPEN_C_INTERFACE
 
-	ColouredCubesVolume* volume = createColoredCubesVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pageFolder, baseNodeSize);
+	ColouredCubesVolumeImpl* volume = new ColouredCubesVolumeImpl(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pageFolder, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 
 	// Replace an existing entry if it has been deleted.
@@ -181,7 +181,7 @@ CUBIQUITYC_API int32_t cuNewColouredCubesVolumeFromVolDat(const char* volDatToIm
 {
 	OPEN_C_INTERFACE
 
-	ColouredCubesVolume* volume = importVolDat< ColouredCubesVolumeImpl >(volDatToImport, pageFolder, baseNodeSize);
+	ColouredCubesVolumeImpl* volume = importVolDat< ColouredCubesVolumeImpl >(volDatToImport, pageFolder, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 	
 	// Replace an existing entry if it has been deleted.
@@ -211,7 +211,7 @@ CUBIQUITYC_API int32_t cuNewColouredCubesVolumeFromHeightmap(const char* heightm
 {
 	OPEN_C_INTERFACE
 
-	ColouredCubesVolume* volume = importHeightmap(heightmapFileName, colormapFileName, pageFolder, baseNodeSize);
+	ColouredCubesVolumeImpl* volume = importHeightmap(heightmapFileName, colormapFileName, pageFolder, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 	
 	// Replace an existing entry if it has been deleted.
@@ -267,7 +267,7 @@ CUBIQUITYC_API int32_t cuGetEnclosingRegion(uint32_t volumeHandle, int32_t* lowe
 {
 	OPEN_C_INTERFACE
 
-	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+	ColouredCubesVolumeImpl* volume = getVolumeFromHandle(volumeHandle);
 	const Region& region = volume->getEnclosingRegion();
 	*lowerX = region.getLowerCorner().getX();
 	*lowerY = region.getLowerCorner().getY();

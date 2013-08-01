@@ -62,6 +62,7 @@
     <ClInclude Include="ColouredCubesVolume.h" />
     <ClInclude Include="ColouredCubicSurfaceExtractionTask.h" />
     <ClInclude Include="ConcurrentQueue.h" />
+    <ClInclude Include="Cubiquity.h" />
     <ClInclude Include="CubiquityForwardDeclarations.h" />
     <ClInclude Include="FileSystem.h" />
     <ClInclude Include="Impl\VolumePrivateAccessor.h" />

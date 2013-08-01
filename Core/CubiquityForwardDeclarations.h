@@ -12,6 +12,7 @@ namespace Cubiquity
 	class ColouredCubesIsQuadNeeded;
 
 	class ColouredCubesVolume;
+	class ColouredCubesVolumeImpl;
 
 	class ColouredCubicSurfaceExtractionTask;
 
@@ -33,6 +34,7 @@ namespace Cubiquity
 	class SmoothSurfaceExtractionTask;
 
 	class SmoothTerrainVolume;
+	class SmoothTerrainVolumeImpl;
 
 	class SmoothTerrainVolumeEditor;
 

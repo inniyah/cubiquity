@@ -6,7 +6,7 @@ using namespace PolyVox;
 
 namespace Cubiquity
 {
-	SmoothTerrainVolumeEditor::SmoothTerrainVolumeEditor(SmoothTerrainVolume* volume)
+	SmoothTerrainVolumeEditor::SmoothTerrainVolumeEditor(SmoothTerrainVolumeImpl* volume)
 		:mSmoothTerrainVolume(volume)
 		,mSmoothingVolume(0)
 	{

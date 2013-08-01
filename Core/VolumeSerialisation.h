@@ -23,11 +23,11 @@ namespace Cubiquity
 	std::map<std::string, std::string> parseIndexFile(const std::string& filename);
 	void convertStringToInt(const std::string& str, int& i);
 
-	ColouredCubesVolume* importColouredSlices(std::string folder);
-	void exportSlices(ColouredCubesVolume* volume, std::string folder);
+	ColouredCubesVolumeImpl* importColouredSlices(std::string folder);
+	void exportSlices(ColouredCubesVolumeImpl* volume, std::string folder);
 
-	SmoothTerrainVolume* importSmoothSlices(std::string folder);
-	void exportSlices(SmoothTerrainVolume* volume, std::string folder);
+	SmoothTerrainVolumeImpl* importSmoothSlices(std::string folder);
+	void exportSlices(SmoothTerrainVolumeImpl* volume, std::string folder);
 
 	template <typename VoxelType>
 	void pixelToVoxel(uint8_t* pixelData, VoxelType& voxelData, uint32_t componentCount)
@@ -47,9 +47,9 @@ namespace Cubiquity
 	void voxelToPixel(Colour& voxelData, uint8_t* pixelData, uint32_t componentCount);
 	void voxelToPixel(MultiMaterial& voxelData, uint8_t* pixelData, uint32_t componentCount);
 
-	ColouredCubesVolume* importVxl(const std::string& filename, const std::string& pageFolder);
+	ColouredCubesVolumeImpl* importVxl(const std::string& filename, const std::string& pageFolder);
 
-	ColouredCubesVolume* importHeightmap(const std::string& heightmapFileName, const std::string& colormapFileName, const std::string& pageFolder, uint32_t baseNodeSize);
+	ColouredCubesVolumeImpl* importHeightmap(const std::string& heightmapFileName, const std::string& colormapFileName, const std::string& pageFolder, uint32_t baseNodeSize);
 
 	// --------------------------------------------------
 	// Imports data in the VolDat format.
