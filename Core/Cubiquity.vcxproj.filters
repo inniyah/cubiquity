@@ -18,9 +18,6 @@
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\AStarPathfinderImpl.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Block.h">
-      <Filter>PolyVox</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\CompilerCapabilities.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
@@ -118,9 +115,6 @@
       <Filter>PolyVox</Filter>
     </ClInclude>
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Region.h">
-      <Filter>PolyVox</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\RLECompressor.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\SimpleVolume.h">
@@ -231,12 +225,30 @@
     <ClInclude Include="Cubiquity.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Timer.h">
+      <Filter>PolyVox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Block.h">
+      <Filter>PolyVox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\BlockCompressor.h">
+      <Filter>PolyVox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\CompressedBlock.h">
+      <Filter>PolyVox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\MinizBlockCompressor.h">
+      <Filter>PolyVox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\RLEBlockCompressor.h">
+      <Filter>PolyVox</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\UncompressedBlock.h">
+      <Filter>PolyVox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.inl">
-      <Filter>PolyVox</Filter>
-    </None>
-    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Block.inl">
       <Filter>PolyVox</Filter>
     </None>
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\SubArray.inl">
@@ -290,9 +302,6 @@
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Raycast.inl">
       <Filter>PolyVox</Filter>
     </None>
-    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\RLECompressor.inl">
-      <Filter>PolyVox</Filter>
-    </None>
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\SimpleVolume.inl">
       <Filter>PolyVox</Filter>
     </None>
@@ -325,6 +334,18 @@
     </None>
     <None Include="OverrideFilePager.inl">
       <Filter>Core</Filter>
+    </None>
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\CompressedBlock.inl">
+      <Filter>PolyVox</Filter>
+    </None>
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\MinizBlockCompressor.inl">
+      <Filter>PolyVox</Filter>
+    </None>
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\RLEBlockCompressor.inl">
+      <Filter>PolyVox</Filter>
+    </None>
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\UncompressedBlock.inl">
+      <Filter>PolyVox</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -399,6 +420,9 @@
     </ClCompile>
     <ClCompile Include="FileSystem.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\Timer.cpp">
+      <Filter>PolyVox</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

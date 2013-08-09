@@ -1,10 +1,10 @@
 #ifndef GAMEPLAYSMOOTHTERRAINVOLUME_H_
 #define GAMEPLAYSMOOTHTERRAINVOLUME_H_
 
+#include "gameplay.h" //Would rather have this last, but it's being upset by Timer.h including Windows.h
+
 #include "SmoothTerrainVolume.h"
 #include "SmoothSurfaceExtractionTask.h"
-
-#include "gameplay.h"
 
 #include "Impl/GameplayVolume.h"
 

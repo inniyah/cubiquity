@@ -63,7 +63,7 @@ namespace Cubiquity
 		::PolyVox::POLYVOX_VOLUME<VoxelType>* mPolyVoxVolume;
 
 #ifdef USE_LARGE_VOLUME
-		::PolyVox::MinizCompressor* m_pCompressor;
+		::PolyVox::MinizBlockCompressor<VoxelType>* m_pCompressor;
 		OverrideFilePager<VoxelType>* m_pOverrideFilePager;
 #endif
 

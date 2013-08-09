@@ -1,6 +1,8 @@
 #ifndef MESHGAME_H_
 #define MESHGAME_H_
 
+#include "gameplay.h" //Would rather have this last, but it's being upset by Timer.h including Windows.h
+
 #include "Colour.h"
 #include "MultiMaterial.h"
 
@@ -8,15 +10,13 @@
 #include "GameplaySmoothTerrainVolume.h"
 #include "GameplaySmoothTerrainVolumeEditor.h"
 
-#include "gameplay.h"
-
 #include <bitset>
 
 using namespace gameplay;
 using namespace Cubiquity; // Bad!
 
-#define TERRAIN_SMOOTH
-//#define TERRAIN_CUBIC
+//#define TERRAIN_SMOOTH
+#define TERRAIN_CUBIC
 
 /**
  * Sample game for rendering a scene with a model/mesh.

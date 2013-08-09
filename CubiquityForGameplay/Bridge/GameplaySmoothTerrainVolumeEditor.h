@@ -1,10 +1,10 @@
 #ifndef GAMEPLAY_SMOOTHTERRAINVOLUMEDATA_H_
 #define GAMEPLAY_SMOOTHTERRAINVOLUMEDATA_H_
 
+#include "gameplay.h" //Would rather have this last, but it's being upset by Timer.h including Windows.h
+
 #include "GameplaySmoothTerrainVolume.h"
 #include "SmoothTerrainVolumeEditor.h"
-
-#include "gameplay.h"
 
 namespace Cubiquity
 {

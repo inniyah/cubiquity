@@ -31,10 +31,9 @@ namespace Cubiquity
 	OverrideFilePager<VoxelType>::~OverrideFilePager() {};
 
 	template <typename VoxelType>
-	void OverrideFilePager<VoxelType>::pageIn(const Region& region, PolyVox::Block<VoxelType>* pBlockData)
+	void OverrideFilePager<VoxelType>::pageIn(const Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData)
 	{
 		POLYVOX_ASSERT(pBlockData, "Attempting to page in NULL block");
-		POLYVOX_ASSERT(pBlockData->hasUncompressedData() == false, "Block should not have uncompressed data");
 
 		std::stringstream ss;
 		ss << region.getLowerX() << "_" << region.getLowerY() << "_" << region.getLowerZ() << "_"
@@ -54,7 +53,7 @@ namespace Cubiquity
 				
 				uint8_t* buffer = new uint8_t[fileSizeInBytes];
 				fread(buffer, sizeof(uint8_t), fileSizeInBytes, pFile);
-				pBlockData->setCompressedData(buffer, fileSizeInBytes);
+				pBlockData->setData(buffer, fileSizeInBytes);
 				delete[] buffer;
 
 				if(ferror(pFile))
@@ -81,7 +80,7 @@ namespace Cubiquity
 				
 				uint8_t* buffer = new uint8_t[fileSizeInBytes];
 				fread(buffer, sizeof(uint8_t), fileSizeInBytes, pFile);
-				pBlockData->setCompressedData(buffer, fileSizeInBytes);
+				pBlockData->setData(buffer, fileSizeInBytes);
 				delete[] buffer;
 
 				if(ferror(pFile))
@@ -102,10 +101,9 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void OverrideFilePager<VoxelType>::pageOut(const Region& region, PolyVox::Block<VoxelType>* pBlockData)
+	void OverrideFilePager<VoxelType>::pageOut(const Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData)
 	{
 		POLYVOX_ASSERT(pBlockData, "Attempting to page out NULL block");
-		POLYVOX_ASSERT(pBlockData->hasUncompressedData() == false, "Block should not have uncompressed data");
 
 		logTrace() << "Paging out data for " << region;
 
@@ -124,7 +122,7 @@ namespace Cubiquity
 			POLYVOX_THROW(std::runtime_error, "Unable to open file to write out block data.");
 		}
 
-		fwrite(pBlockData->getCompressedData(), sizeof(uint8_t), pBlockData->getCompressedDataLength(), pFile);
+		fwrite(pBlockData->getData(), sizeof(uint8_t), pBlockData->getDataSizeInBytes(), pFile);
 
 		if(ferror(pFile))
 		{

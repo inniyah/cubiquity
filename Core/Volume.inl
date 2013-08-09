@@ -1,6 +1,6 @@
 #include "PolyVoxCore/LowPassFilter.h"
 #include "PolyVoxCore/MaterialDensityPair.h"
-#include "PolyVoxCore/MinizCompressor.h"
+#include "PolyVoxCore/MinizBlockCompressor.h"
 #include "PolyVoxCore/Raycast.h"
 #include "PolyVoxCore/VolumeResampler.h"
 
@@ -40,7 +40,7 @@ namespace Cubiquity
 		POLYVOX_THROW_IF(region.getDepthInVoxels() == 0, std::invalid_argument, "Volume depth must be greater than zero");
 	
 #ifdef USE_LARGE_VOLUME
-		m_pCompressor = new ::PolyVox::MinizCompressor;
+		m_pCompressor = new ::PolyVox::MinizBlockCompressor<VoxelType>;
 
 		if(pageFolder.size() != 0)
 		{

@@ -24,8 +24,8 @@ namespace Cubiquity
 		/// Destructor
 		virtual ~OverrideFilePager();
 
-		virtual void pageIn(const Region& region, PolyVox::Block<VoxelType>* pBlockData);
-		virtual void pageOut(const Region& region, PolyVox::Block<VoxelType>* pBlockData);
+		virtual void pageIn(const Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData);
+		virtual void pageOut(const Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData);
 
 	private:
 		void ensureDirectoryExists(const std::string& folderName);

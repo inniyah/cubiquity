@@ -3,7 +3,7 @@
 #include "Clock.h"
 #include "VolumeSerialisation.h"
 
-#include "gameplay.h"
+#include "gameplay.h" //Would rather have this last, but it's being upset by Timer.h including Windows.h
 
 using namespace gameplay;
 using namespace PolyVox;

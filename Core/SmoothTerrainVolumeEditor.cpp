@@ -38,13 +38,13 @@ namespace Cubiquity
 		float radiusSquared = radius * radius;
 
 		//Check bounds.
-		firstX = std::max(firstX,mSmoothTerrainVolume->getEnclosingRegion().getLowerCorner().getX());
-		firstY = std::max(firstY,mSmoothTerrainVolume->getEnclosingRegion().getLowerCorner().getY());
-		firstZ = std::max(firstZ,mSmoothTerrainVolume->getEnclosingRegion().getLowerCorner().getZ());
+		firstX = (std::max)(firstX,mSmoothTerrainVolume->getEnclosingRegion().getLowerCorner().getX());
+		firstY = (std::max)(firstY,mSmoothTerrainVolume->getEnclosingRegion().getLowerCorner().getY());
+		firstZ = (std::max)(firstZ,mSmoothTerrainVolume->getEnclosingRegion().getLowerCorner().getZ());
 
-		lastX = std::min(lastX,mSmoothTerrainVolume->getEnclosingRegion().getUpperCorner().getX());
-		lastY = std::min(lastY,mSmoothTerrainVolume->getEnclosingRegion().getUpperCorner().getY());
-		lastZ = std::min(lastZ,mSmoothTerrainVolume->getEnclosingRegion().getUpperCorner().getZ());
+		lastX = (std::min)(lastX,mSmoothTerrainVolume->getEnclosingRegion().getUpperCorner().getX());
+		lastY = (std::min)(lastY,mSmoothTerrainVolume->getEnclosingRegion().getUpperCorner().getY());
+		lastZ = (std::min)(lastZ,mSmoothTerrainVolume->getEnclosingRegion().getUpperCorner().getZ());
 
 		Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
 
@@ -198,13 +198,13 @@ namespace Cubiquity
 		float radiusSquared = radius * radius;
 
 		//Check bounds.
-		firstX = std::max(firstX,mSmoothTerrainVolume->getEnclosingRegion().getLowerCorner().getX());
-		firstY = std::max(firstY,mSmoothTerrainVolume->getEnclosingRegion().getLowerCorner().getY());
-		firstZ = std::max(firstZ,mSmoothTerrainVolume->getEnclosingRegion().getLowerCorner().getZ());
+		firstX = (std::max)(firstX,mSmoothTerrainVolume->getEnclosingRegion().getLowerCorner().getX());
+		firstY = (std::max)(firstY,mSmoothTerrainVolume->getEnclosingRegion().getLowerCorner().getY());
+		firstZ = (std::max)(firstZ,mSmoothTerrainVolume->getEnclosingRegion().getLowerCorner().getZ());
 
-		lastX = std::min(lastX,mSmoothTerrainVolume->getEnclosingRegion().getUpperCorner().getX());
-		lastY = std::min(lastY,mSmoothTerrainVolume->getEnclosingRegion().getUpperCorner().getY());
-		lastZ = std::min(lastZ,mSmoothTerrainVolume->getEnclosingRegion().getUpperCorner().getZ());
+		lastX = (std::min)(lastX,mSmoothTerrainVolume->getEnclosingRegion().getUpperCorner().getX());
+		lastY = (std::min)(lastY,mSmoothTerrainVolume->getEnclosingRegion().getUpperCorner().getY());
+		lastZ = (std::min)(lastZ,mSmoothTerrainVolume->getEnclosingRegion().getUpperCorner().getZ());
 
 		Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
 

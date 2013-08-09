@@ -1,9 +1,10 @@
 #ifndef GAMEPLAYCOLOUREDCUBESVOLUME_H_
 #define GAMEPLAYCOLOUREDCUBESVOLUME_H_
 
+#include "gameplay.h" //Would rather have this last, but it's being upset by Timer.h including Windows.h
+
 #include "ColouredCubesVolume.h"
 
-#include "gameplay.h"
 #include "Slider.h"
 
 #include "Impl/GameplayVolume.h"
