@@ -246,6 +246,9 @@
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\UncompressedBlock.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Picking.h">
+      <Filter>PolyVox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.inl">
@@ -345,6 +348,9 @@
       <Filter>PolyVox</Filter>
     </None>
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\UncompressedBlock.inl">
+      <Filter>PolyVox</Filter>
+    </None>
+    <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Picking.inl">
       <Filter>PolyVox</Filter>
     </None>
   </ItemGroup>
