@@ -430,5 +430,8 @@
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\Timer.cpp">
       <Filter>PolyVox</Filter>
     </ClCompile>
+    <ClCompile Include="Raycasting.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

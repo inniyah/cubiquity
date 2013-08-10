@@ -148,6 +148,7 @@
     <ClCompile Include="Logging.cpp" />
     <ClCompile Include="MainThreadTaskProcessor.cpp" />
     <ClCompile Include="MultiMaterial.cpp" />
+    <ClCompile Include="Raycasting.cpp" />
     <ClCompile Include="SmoothSurfaceExtractionTask.cpp" />
     <ClCompile Include="SmoothTerrainVolume.cpp" />
     <ClCompile Include="SmoothTerrainVolumeEditor.cpp" />

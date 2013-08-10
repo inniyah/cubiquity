@@ -1,6 +1,7 @@
 #ifndef CUBIQUITYRAYCASTING_H_
 #define CUBIQUITYRAYCASTING_H_
 
+#include "Cubiquity.h"
 #include "Colour.h"
 #include "MultiMaterial.h"
 
@@ -128,6 +129,8 @@ namespace Cubiquity
 
 		return ::PolyVox::RaycastResults::Completed;
 	}
+
+	bool pickFirstSolidVoxel(ColouredCubesVolume* colouredCubesVolume, float startX, float startY, float startZ, float dirAndLengthX, float dirAndLengthY, float dirAndLengthZ, int32_t* resultX, int32_t* resultY, int32_t* resultZ);
 }
 
 #endif //CUBIQUITYRAYCASTING_H_

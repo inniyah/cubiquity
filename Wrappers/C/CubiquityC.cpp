@@ -506,6 +506,15 @@ CUBIQUITYC_API int32_t cuPickVoxel(uint32_t volumeHandle, float rayStartX, float
 
 	ColouredCubesVolumeImpl* volume = getVolumeFromHandle(volumeHandle);
 
+	/*if(pickFirstSolidVoxel(volume, rayStartX, rayStartY, rayStartZ, rayDirX, rayDirY, rayDirZ, resultX, resultY, resultZ))
+	{
+		*result = 1;
+	}
+	else
+	{
+		*result = 0;
+	}*/
+
 	Vector3F v3dStart(rayStartX, rayStartY, rayStartZ);
 	Vector3F v3dDirection(rayDirX, rayDirY, rayDirZ);
 
