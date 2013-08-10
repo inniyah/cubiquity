@@ -183,7 +183,10 @@ namespace Cubiquity
 
 		OctreeNode<VoxelType>* node = mNodes[index];
 
-		if(node->mRegion.containsPoint(x, y, z, -1)) //FIXME - Think if we really need this border.
+		Region dilatedRegion = node->mRegion;
+		dilatedRegion.grow(1); //FIXME - Think if we really need this dilation?
+
+		if(dilatedRegion.containsPoint(x, y, z))
 		{
 			//mIsMeshUpToDate = false;
 			node->mDataLastModified = newTimeStamp;
