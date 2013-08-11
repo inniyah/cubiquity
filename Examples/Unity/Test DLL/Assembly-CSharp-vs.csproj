@@ -67,6 +67,7 @@
      <Compile Include="Assets\ElevateCannon.cs" />
      <Compile Include="Assets\HUD.cs" />
      <Compile Include="Assets\IntVector3.cs" />
+     <Compile Include="Assets\MoveTank.cs" />
      <Compile Include="Assets\OctreeNodeData.cs" />
      <Compile Include="Assets\Region.cs" />
      <Compile Include="Assets\RotateTurret.cs" />
