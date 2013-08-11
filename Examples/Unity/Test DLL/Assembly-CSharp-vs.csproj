@@ -46,11 +46,14 @@
   <ItemGroup>
      <Compile Include="Assets\Bullet.cs" />
      <Compile Include="Assets\CameraController.cs" />
-     <Compile Include="Assets\ColoredCubesVolume.cs" />
-     <Compile Include="Assets\ColoredCubesVolumeFactory.cs" />
-     <Compile Include="Assets\Cubiquity.cs" />
-     <Compile Include="Assets\CubiquityDLL.cs" />
-     <Compile Include="Assets\CubiquityException.cs" />
+     <Compile Include="Assets\Cubiquity\ColoredCubesVolume.cs" />
+     <Compile Include="Assets\Cubiquity\ColoredCubesVolumeFactory.cs" />
+     <Compile Include="Assets\Cubiquity\Cubiquity.cs" />
+     <Compile Include="Assets\Cubiquity\CubiquityDLL.cs" />
+     <Compile Include="Assets\Cubiquity\CubiquityException.cs" />
+     <Compile Include="Assets\Cubiquity\IntVector3.cs" />
+     <Compile Include="Assets\Cubiquity\OctreeNodeData.cs" />
+     <Compile Include="Assets\Cubiquity\Region.cs" />
      <Compile Include="Assets\Examples\Dependancies\Detonator Explosion Framework\System\Detonator.cs" />
      <Compile Include="Assets\Examples\Dependancies\Detonator Explosion Framework\System\DetonatorBurstEmitter.cs" />
      <Compile Include="Assets\Examples\Dependancies\Detonator Explosion Framework\System\DetonatorCloudRing.cs" />
@@ -68,9 +71,6 @@
      <Compile Include="Assets\Examples\Dependancies\Tank\MoveTank.cs" />
      <Compile Include="Assets\Examples\Dependancies\Tank\RotateTurret.cs" />
      <Compile Include="Assets\HUD.cs" />
-     <Compile Include="Assets\IntVector3.cs" />
-     <Compile Include="Assets\OctreeNodeData.cs" />
-     <Compile Include="Assets\Region.cs" />
      <Compile Include="Assets\SeparatedVoxel.cs" />
      <Compile Include="Assets\Shell.cs" />
      <Compile Include="Assets\ShowBounds.cs" />

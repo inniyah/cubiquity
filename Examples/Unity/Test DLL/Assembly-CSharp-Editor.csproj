@@ -44,10 +44,10 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Editor\ColoredCubesVolumeEditor.cs" />
-     <Compile Include="Assets\Editor\CreateColoredCubesVolumeFromHeightmapWizard.cs" />
-     <Compile Include="Assets\Editor\CreateColoredCubesVolumeWizard.cs" />
-     <Compile Include="Assets\Editor\CreateEmptyColoredCubesVolumeWizard.cs" />
+     <Compile Include="Assets\Editor\Cubiquity\ColoredCubesVolumeEditor.cs" />
+     <Compile Include="Assets\Editor\Cubiquity\CreateColoredCubesVolumeFromHeightmapWizard.cs" />
+     <Compile Include="Assets\Editor\Cubiquity\CreateColoredCubesVolumeWizard.cs" />
+     <Compile Include="Assets\Editor\Cubiquity\CreateEmptyColoredCubesVolumeWizard.cs" />
      <None Include="Assets\Resources\ColoredCubesVolumeUtilities.cginc" />
      <None Include="Assets\Examples\Dependancies\Detonator Explosion Framework\Resources\Detonator\Textures\HeatDistort.shader" />
      <None Include="Assets\Resources\ColoredCubesVolume.shader" />
