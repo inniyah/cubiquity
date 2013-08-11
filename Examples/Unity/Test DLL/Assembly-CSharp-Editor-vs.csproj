@@ -49,7 +49,7 @@
      <Compile Include="Assets\Editor\CreateColoredCubesVolumeWizard.cs" />
      <Compile Include="Assets\Editor\CreateEmptyColoredCubesVolumeWizard.cs" />
      <None Include="Assets\Resources\ColoredCubesVolumeUtilities.cginc" />
-     <None Include="Assets\Detonator Explosion Framework\Resources\Detonator\Textures\HeatDistort.shader" />
+     <None Include="Assets\Examples\Dependancies\Detonator Explosion Framework\Resources\Detonator\Textures\HeatDistort.shader" />
      <None Include="Assets\Resources\ColoredCubesVolume.shader" />
  <Reference Include="Assembly-UnityScript">
  <HintPath>Library\ScriptAssemblies\Assembly-UnityScript.dll</HintPath>
