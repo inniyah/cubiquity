@@ -15,6 +15,8 @@ namespace Cubiquity
 		SmoothTerrainVolumeImpl(const Region& region, const std::string& pageFolder, unsigned int baseNodeSize)
 			:mCubiquityVolume(region, pageFolder, OctreeConstructionModes::BoundCells, baseNodeSize) {}
 
+		virtual ~SmoothTerrainVolumeImpl() {}
+
 		virtual int32_t getLowerX(void) const { return mCubiquityVolume.getEnclosingRegion().getLowerX(); }
 		virtual int32_t getUpperX(void) const { return mCubiquityVolume.getEnclosingRegion().getUpperX(); }
 		virtual int32_t getLowerY(void) const { return mCubiquityVolume.getEnclosingRegion().getLowerY(); }

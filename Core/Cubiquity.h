@@ -10,6 +10,8 @@ namespace Cubiquity
 	class ColouredCubesVolume
 	{
 	public:
+		virtual ~ColouredCubesVolume() {};
+
 		virtual int32_t getLowerX(void) const = 0;
 		virtual int32_t getUpperX(void) const = 0;
 		virtual int32_t getLowerY(void) const = 0;
@@ -41,6 +43,8 @@ namespace Cubiquity
 	class SmoothTerrainVolume
 	{
 	public:
+		virtual ~SmoothTerrainVolume() {};
+
 		virtual int32_t getLowerX(void) const = 0;
 		virtual int32_t getUpperX(void) const = 0;
 		virtual int32_t getLowerY(void) const = 0;

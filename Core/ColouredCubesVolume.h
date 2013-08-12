@@ -16,6 +16,8 @@ namespace Cubiquity
 		ColouredCubesVolumeImpl(const Region& region, const std::string& pageFolder, unsigned int baseNodeSize)
 			:mCubiquityVolume(region, pageFolder, OctreeConstructionModes::BoundVoxels, baseNodeSize) {}
 
+		virtual ~ColouredCubesVolumeImpl() {}
+
 		virtual int32_t getLowerX(void) const { return mCubiquityVolume.getEnclosingRegion().getLowerX(); }
 		virtual int32_t getUpperX(void) const { return mCubiquityVolume.getEnclosingRegion().getUpperX(); }
 		virtual int32_t getLowerY(void) const { return mCubiquityVolume.getEnclosingRegion().getLowerY(); }
