@@ -35,7 +35,7 @@ public class ColoredCubesVolumeEditor : Editor
 			{
 				// Perform the raycasting. If there's a hit the position will be stored in these ints.
 				int resultX, resultY, resultZ;
-				bool hit = Cubiquity.PickVoxel(coloredCubesVolume, ray.origin.x, ray.origin.y, ray.origin.z, dir.x, dir.y, dir.z, out resultX, out resultY, out resultZ);
+				bool hit = Cubiquity.PickLastEmptyVoxel(coloredCubesVolume, ray.origin.x, ray.origin.y, ray.origin.z, dir.x, dir.y, dir.z, out resultX, out resultY, out resultZ);
 				
 				if(hit)
 				{

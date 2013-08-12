@@ -500,32 +500,32 @@ CUBIQUITYC_API int32_t cuGetCurrentTime(uint32_t* result)
 ////////////////////////////////////////////////////////////////////////////////
 // Raycasting functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API int32_t cuPickVoxel(uint32_t volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, int32_t* resultX, int32_t* resultY, int32_t* resultZ, uint32_t* result)
+CUBIQUITYC_API int32_t cuPickFirstSolidVoxel(uint32_t volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, int32_t* resultX, int32_t* resultY, int32_t* resultZ, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
 	ColouredCubesVolumeImpl* volume = getVolumeFromHandle(volumeHandle);
 
-	/*if(pickFirstSolidVoxel(volume, rayStartX, rayStartY, rayStartZ, rayDirX, rayDirY, rayDirZ, resultX, resultY, resultZ))
+	if(pickFirstSolidVoxel(volume, rayStartX, rayStartY, rayStartZ, rayDirX, rayDirY, rayDirZ, resultX, resultY, resultZ))
 	{
 		*result = 1;
 	}
 	else
 	{
 		*result = 0;
-	}*/
+	}
 
-	Vector3F v3dStart(rayStartX, rayStartY, rayStartZ);
-	Vector3F v3dDirection(rayDirX, rayDirY, rayDirZ);
+	CLOSE_C_INTERFACE
+}
 
-	ColouredCubesRaycastTestFunctor raycastTestFunctor;
-	PolyVox::RaycastResult myResult = PolyVox::raycastWithDirection(volume->_getPolyVoxVolume(), v3dStart, v3dDirection, raycastTestFunctor);
-	if(myResult == ::PolyVox::RaycastResults::Interupted)
+CUBIQUITYC_API int32_t cuPickLastEmptyVoxel(uint32_t volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, int32_t* resultX, int32_t* resultY, int32_t* resultZ, uint32_t* result)
+{
+	OPEN_C_INTERFACE
+
+	ColouredCubesVolumeImpl* volume = getVolumeFromHandle(volumeHandle);
+
+	if(pickLastEmptyVoxel(volume, rayStartX, rayStartY, rayStartZ, rayDirX, rayDirY, rayDirZ, resultX, resultY, resultZ))
 	{
-		//result = gameplay::Vector3(raycastTestFunctor.mLastPos.getX(), raycastTestFunctor.mLastPos.getY(), raycastTestFunctor.mLastPos.getZ());
-		*resultX = raycastTestFunctor.mLastPos.getX() + 0.5f;
-		*resultY = raycastTestFunctor.mLastPos.getY() + 0.5f;
-		*resultZ = raycastTestFunctor.mLastPos.getZ() + 0.5f;
 		*result = 1;
 	}
 	else
