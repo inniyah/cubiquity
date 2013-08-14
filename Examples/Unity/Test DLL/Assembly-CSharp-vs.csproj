@@ -46,6 +46,7 @@
   <ItemGroup>
      <Compile Include="Assets\Bullet.cs" />
      <Compile Include="Assets\CameraController.cs" />
+     <Compile Include="Assets\CameraScript.cs" />
      <Compile Include="Assets\ColoredCubesVolume.cs" />
      <Compile Include="Assets\ColoredCubesVolumeFactory.cs" />
      <Compile Include="Assets\Cubiquity.cs" />
@@ -78,9 +79,6 @@
      <None Include="Assets\Detonator Explosion Framework\Resources\Detonator\Textures\HeatDistort.shader" />
      <None Include="Assets\sky5X\README.txt" />
      <None Include="Assets\Resources\ColoredCubesVolume.shader" />
- <Reference Include="Assembly-UnityScript-firstpass">
- <HintPath>Library\ScriptAssemblies\Assembly-UnityScript-firstpass.dll</HintPath>
- </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
