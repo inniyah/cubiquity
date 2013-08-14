@@ -54,6 +54,22 @@ public class ColoredCubesVolume : MonoBehaviour
 	[System.NonSerialized]
 	private GameObject rootGameObject;
 	
+	void OnDrawGizmos()
+	{
+		int width = (region.upperCorner.x - region.lowerCorner.x) + 1;
+		int height = (region.upperCorner.y - region.lowerCorner.y) + 1;
+		int depth = (region.upperCorner.z - region.lowerCorner.z) + 1;
+		float offsetX = width / 2;
+		float offsetY = height / 2;
+		float offsetZ = depth / 2;
+		
+		// The origin is at the centre of a voxel, but we want this box to start at the corner of the voxel
+		Vector3 halfVoxelOffset = new Vector3(0.5f, 0.5f, 0.5f);
+		
+        Gizmos.color = new Color(1.0f, 0.0f, 0.0f, 0.0f);
+		Gizmos.DrawCube (transform.position - halfVoxelOffset + new Vector3(offsetX, offsetY, offsetZ), new Vector3 (width, height, depth));
+    }
+	
 	internal void Initialize()
 	{	
 		// This function might get called multiple times. E.g the user might call it striaght after crating the volume (so
