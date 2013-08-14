@@ -76,7 +76,12 @@
      <Compile Include="Assets\TankController.cs" />
      <None Include="Assets\Resources\ColoredCubesVolumeUtilities.cginc" />
      <None Include="Assets\Detonator Explosion Framework\Resources\Detonator\Textures\HeatDistort.shader" />
+     <None Include="Assets\sky5X\README.txt" />
      <None Include="Assets\Resources\ColoredCubesVolume.shader" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-UnityScript-firstpass.unityproj">
+      <Project>{F1C53F77-FAD6-EC6B-5630-FCFDF33EB24C}</Project>      <Name>Assembly-UnityScript-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
