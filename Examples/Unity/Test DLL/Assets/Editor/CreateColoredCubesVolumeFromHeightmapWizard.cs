@@ -40,7 +40,7 @@ public class CreateColoredCubesVolumeFromHeightmapWizard : ScriptableWizard
 			Debug.LogError("A voxel terrain already exists - you (currently) can't create another one.");
 		}
 		
-		GameObject voxelGameObject = ColoredCubesVolumeFactory.CreateVolumeFromHeightmap("Voxel Terrain", "D:/temp/height.png", "D:/temp/color.png", "test");
+		ColoredCubesVolumeFactory.CreateVolumeFromHeightmap("Voxel Terrain", "D:/temp/height.png", "D:/temp/color.png", "test");
 		//ColoredCubesVolume coloredCubesVolume = voxelGameObject.GetComponent<ColoredCubesVolume>();
 	}
 	

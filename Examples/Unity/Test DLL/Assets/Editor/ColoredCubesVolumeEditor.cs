@@ -13,13 +13,6 @@ public class ColoredCubesVolumeEditor : Editor
 	
 	Color paintColor = Color.white;
 	
-	static bool forceSelect = false;
-	static int forceSelectFrame = 0;
-	
-	static int myFrameCount = 0;
-	
-	//private double lastTime = 0.0;
-	
 	public void OnEnable()
 	{
 	    coloredCubesVolume = target as ColoredCubesVolume;
@@ -92,7 +85,7 @@ public class ColoredCubesVolumeEditor : Editor
 		}
 		else if ( e.type == EventType.Layout )
 	    {
-	       //somehow this allows e.Use() to actually function and block mouse input
+	       // See: http://answers.unity3d.com/questions/303248/how-to-paint-objects-in-the-editor.html
 	       HandleUtility.AddDefaultControl( GUIUtility.GetControlID( GetHashCode(), FocusType.Passive ) );
 	    }
 		
