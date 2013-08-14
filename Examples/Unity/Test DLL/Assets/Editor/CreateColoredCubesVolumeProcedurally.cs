@@ -110,9 +110,11 @@ public class CreateColoredCubesVolumeProcedurally : ScriptableWizard
 		GameObject voxelGameObject = ColoredCubesVolumeFactory.CreateVolume("Voxel Terrain", new Region(0, 0, 0, width-1, height-1, depth-1), datasetName);
 		ColoredCubesVolume coloredCubesVolume = voxelGameObject.GetComponent<ColoredCubesVolume>();
 
+		Color32 brown = new Color32(200, 100, 0, 255);
+		Color32 green = new Color32(0, 255, 0, 255);
+		Color32 blue = new Color32(0, 0, 255, 255);
+		Color32 grey = new Color32(128, 128, 128, 255);
 		Color32 white = new Color32(255, 255, 255, 255);
-		Debug.Log ("Perlin = " + Mathf.PerlinNoise(4.5f,5.6f));
-		Debug.Log ("Perlin = " + Mathf.PerlinNoise(3.2f,7.9f));
 		
 		
 		for(int z = 0; z <= depth-1; z++)
@@ -137,18 +139,30 @@ public class CreateColoredCubesVolumeProcedurally : ScriptableWizard
 				
 				int terrainHeight = (int)(perlinValue * height);
 				
-				int minTerrainHeight = height / 3;
+				int seaLevel = (int)(height * 0.4f);
+				int snowLevel = (int)(height * 0.6f);
 				
-				if(terrainHeight < minTerrainHeight)
+				/*if(terrainHeight < minTerrainHeight)
 				{
 					terrainHeight = minTerrainHeight;
-				}
+				}*/
 				
 				for(int y = 0; y <= height-1; y++)
 				{
 					if(y < terrainHeight)
 					{
-						coloredCubesVolume.SetVoxel(x, y, z, white);
+						if(y < snowLevel)
+						{
+							coloredCubesVolume.SetVoxel(x, y, z, grey);
+						}
+						else
+						{
+							coloredCubesVolume.SetVoxel(x, y, z, white);
+						}
+					}
+					else if(y < seaLevel)
+					{
+						coloredCubesVolume.SetVoxel(x, y, z, blue);
 					}
 				}
 			}
