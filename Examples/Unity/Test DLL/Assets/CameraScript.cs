@@ -3,22 +3,27 @@ using System.Collections;
 
 public class CameraScript : MonoBehaviour
 {
-    public float sensitivityX = 15F;
-    public float sensitivityY = 15F;
+    public float mouseSensitivity = 15.0f;
  
-    public float minimumX = -360F;
-    public float maximumX = 360F;
- 
-    public float minimumY = -60F;
-    public float maximumY = 60F;
+    public float lookUpLimit = 60.0f;
+	public float lookDownLimit = -60.0f;
 	
-	float rotationY = 0F;
+	float yRotation = 0F;
+	
+	float Speed = 1.0f;
 	
     void Update ()
     {     
-        float rotationX = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * sensitivityX;    
-        rotationY += Input.GetAxis("Mouse Y") * sensitivityY;
-        rotationY = Mathf.Clamp (rotationY, minimumY, maximumY); 
-        transform.localEulerAngles = new Vector3(-rotationY, rotationX, 0);
+		if(Input.GetMouseButton(1))
+		{
+	        float xRotation = transform.localEulerAngles.y + Input.GetAxis("Mouse X") * mouseSensitivity;    
+	        yRotation += Input.GetAxis("Mouse Y") * mouseSensitivity;
+	        yRotation = Mathf.Clamp (yRotation, lookDownLimit, lookUpLimit); 
+	        transform.localEulerAngles = new Vector3(-yRotation, xRotation, 0);
+			
+			float vertical = Input.GetAxis("Vertical");
+			float horizontal = Input.GetAxis("Horizontal");
+			transform.Translate(horizontal * Speed, 0, vertical * Speed);
+		}
     }
 }
