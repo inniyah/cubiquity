@@ -47,6 +47,7 @@
      <Compile Include="Assets\Bullet.cs" />
      <Compile Include="Assets\CameraController.cs" />
      <Compile Include="Assets\CameraScript.cs" />
+     <Compile Include="Assets\ClickToDestroy.cs" />
      <Compile Include="Assets\ColoredCubesVolume.cs" />
      <Compile Include="Assets\ColoredCubesVolumeFactory.cs" />
      <Compile Include="Assets\Cubiquity.cs" />

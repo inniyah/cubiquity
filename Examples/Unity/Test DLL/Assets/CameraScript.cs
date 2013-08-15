@@ -12,7 +12,12 @@ public class CameraScript : MonoBehaviour
 	
 	float Speed = 1.0f;
 	
-    void Update ()
+	void Start()
+	{
+		yRotation = -transform.localEulerAngles.x;
+	}
+	
+    void Update()
     {     
 		if(Input.GetMouseButton(1))
 		{
