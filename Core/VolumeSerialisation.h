@@ -58,7 +58,7 @@ namespace Cubiquity
 	template <typename CubiquityVolumeType>
 	CubiquityVolumeType* importVolDat(std::string folder, const std::string& pageFolder, uint32_t baseNodeSize)
 	{
-		logInfo() << "Importing images from '" << pageFolder << "'";
+		logInfo() << "Importing images from '" << folder << "' and into '" << pageFolder << "'";
 		if((folder.back() != '/') && (folder.back() != '\\'))
 		{
 			//logWarning() << "Folder name " << folder << " is missing a trailing '/' or '\\'. Please to provide this to avoid confusion!";
@@ -72,7 +72,7 @@ namespace Cubiquity
 		// Identify all relevant images
 		uint32_t image = 0;
 		bool foundImage = false;
-		std::list<std::string> imageFilenames;
+		std::vector<std::string> imageFilenames;
 		do
 		{
 			foundImage = false;
@@ -116,16 +116,7 @@ namespace Cubiquity
 		// Make sure it opened sucessfully
 		POLYVOX_THROW_IF(sliceData == NULL, std::runtime_error, "Failed to open first image");
 
-		std::string indexFileName(folder);
-		indexFileName = indexFileName + "Volume.idx";
-		std::map<std::string, std::string> index = parseIndexFile(indexFileName);
-
 		//Create the volume
-		/*int volumeWidth;    convertStringToInt(index["Width"], volumeWidth);
-		int volumeHeight;   convertStringToInt(index["Height"], volumeHeight);
-		int sliceCount;     convertStringToInt(index["SliceCount"], sliceCount);
-		int componentCount; convertStringToInt(index["ComponentCount"], componentCount);*/
-
 		// When importing we treat 'y' as up because the Gameplay physics engine makes some
 		// assumptions about this. This means we need to swap the 'y' and 'slice' indices.
 		CubiquityVolumeType* volume = new CubiquityVolumeType(Region(0, 0, 0, volumeWidth - 1, sliceCount - 1, volumeHeight - 1), pageFolder, baseNodeSize);
@@ -133,15 +124,11 @@ namespace Cubiquity
 		// Now iterate over each slice and import the data.
 		for(int slice = 0; slice < sliceCount; slice++)
 		{
-			std::stringstream ss;
-			ss << folder << std::setfill('0') << std::setw(6) << slice << "." << index["SliceExtension"];
-			std::string imageFileName = ss.str();
-
 			int imageWidth = 0, imageHeight = 0, imageChannels;
-			unsigned char *sliceData = stbi_load(imageFileName.c_str(), &imageWidth, &imageHeight, &imageChannels, 0);
-			assert(imageWidth == volumeWidth);
-			assert(imageHeight == volumeHeight);
-			//assert(imageChannels == componentCount);
+			unsigned char *sliceData = stbi_load(imageFilenames[slice].c_str(), &imageWidth, &imageHeight, &imageChannels, 0);
+
+			POLYVOX_THROW_IF(imageWidth != volumeWidth, std::runtime_error, "All images are not the same width!");
+			POLYVOX_THROW_IF(imageHeight != volumeHeight, std::runtime_error, "All images are not the same height!");
 
 			// Now iterate over each pixel.
 			for(int x = 0; x < imageWidth; x++)
