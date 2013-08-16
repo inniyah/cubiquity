@@ -7,7 +7,7 @@ public class Shell : MonoBehaviour
 	public float speed = 50;
 
 	public float range = 400;
-
+	 
 	public GameObject ExploPtcl;
 
 	private float dist;
