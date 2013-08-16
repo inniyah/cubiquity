@@ -58,7 +58,7 @@ public class CreateColoredCubesVolumeFromImagesWizard : ScriptableWizard
 		EditorGUILayout.BeginHorizontal();
 			GUILayout.Space(20);
 			EditorGUILayout.LabelField("Please choose a folder containing the images you wish to import. Images should all " + 
-				"be the same size, should be numbered sequentially, and should be in .jpg or .png format.", labelWrappingStyle);
+				"be the same size, should be numbered sequentially from '0', and should be in .png (recommended), .jpg, or .bmp format.", labelWrappingStyle);
 			GUILayout.Space(20);
 		EditorGUILayout.EndHorizontal();
 		

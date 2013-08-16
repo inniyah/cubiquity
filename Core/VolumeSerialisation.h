@@ -17,6 +17,7 @@
 
 #include <climits>
 #include <map>
+#include <string>
 
 namespace Cubiquity
 {
@@ -57,11 +58,52 @@ namespace Cubiquity
 	template <typename CubiquityVolumeType>
 	CubiquityVolumeType* importVolDat(std::string folder, const std::string& pageFolder, uint32_t baseNodeSize)
 	{
+		logInfo() << "Importing images from '" << pageFolder << "'";
 		if((folder.back() != '/') && (folder.back() != '\\'))
 		{
-			logWarning() << "Folder name " << folder << " is missing a trailing '/' or '\\'. Please to provide this to avoid confusion!";
+			//logWarning() << "Folder name " << folder << " is missing a trailing '/' or '\\'. Please to provide this to avoid confusion!";
 			folder.append("/");
 		}
+
+		// Slightly hacky way to initialise vector: http://stackoverflow.com/a/8906577
+		std::string extsArray[] = { "png", "PNG", "jpg", "JPG", "jpeg", "JPEG", "bmp", "BMP" };
+		std::vector<std::string> extensions(std::begin(extsArray), std::end(extsArray));
+
+		// Identify all relevant images
+		uint32_t image = 0;
+		bool foundImage = false;
+		std::list<std::string> imageFilenames;
+		do
+		{
+			foundImage = false;
+
+			// Note: The number of leading zeros may not be the same for all files. e.g. 009.png and 010.png.
+			// The total number of chaachters may also be different - e.g. 1.png and 324.png.
+			for(uint32_t leadingZeros = 0; (leadingZeros < 10) && (foundImage == false) ; leadingZeros++)
+			{
+				std::stringstream filenameBase;
+				filenameBase << std::setfill('0') << std::setw(leadingZeros) << image;
+
+				//for(std::string ext : extensions)
+				for(auto extIter = extensions.begin(); extIter != extensions.end(); extIter++)
+				{
+					std::string filename = folder + filenameBase.str() + "." + *(extIter);
+
+					// Using 'C' file IO due to Gameplay3D issues.
+					FILE* fp;
+					fp = fopen(filename.c_str(), "rb");
+					if(fp)
+					{
+						logDebug() << "Found image '" << filename << "' for import";
+						imageFilenames.push_back(filename);
+						foundImage = true;
+						break;
+					}
+				}
+			}
+
+			image++;
+		}while(foundImage);
 
 		std::string indexFileName(folder);
 		indexFileName = indexFileName + "Volume.idx";

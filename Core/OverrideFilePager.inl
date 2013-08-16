@@ -14,7 +14,7 @@ namespace Cubiquity
 		POLYVOX_THROW_IF(m_strFolderName.empty(), std::invalid_argument, "You must provide a folder name for the OverrideFilePager");
 		if((m_strFolderName.back() != '/') && (m_strFolderName.back() != '\\'))
 		{
-			logWarning() << "Folder name " << m_strFolderName << " is missing a trailing '/' or '\\'. Please to provide this to avoid confusion!";
+			//logWarning() << "Folder name " << m_strFolderName << " is missing a trailing '/' or '\\'. Please to provide this to avoid confusion!";
 			m_strFolderName.append("/");
 		}
 
