@@ -103,17 +103,28 @@ namespace Cubiquity
 			}
 
 			image++;
-		}while(foundImage);
+		} while(foundImage);
+
+		// Make sure at least one image was found.
+		uint32_t sliceCount = imageFilenames.size();
+		POLYVOX_THROW_IF(sliceCount == 0, std::invalid_argument, "No images found in provided folder");
+
+		// Open the first image to determine the width and height
+		int volumeWidth = 0, volumeHeight = 0, noOfChannels;
+		unsigned char *sliceData = stbi_load((*(imageFilenames.begin())).c_str(), &volumeWidth, &volumeHeight, &noOfChannels, 0);
+
+		// Make sure it opened sucessfully
+		POLYVOX_THROW_IF(sliceData == NULL, std::runtime_error, "Failed to open first image");
 
 		std::string indexFileName(folder);
 		indexFileName = indexFileName + "Volume.idx";
 		std::map<std::string, std::string> index = parseIndexFile(indexFileName);
 
 		//Create the volume
-		int volumeWidth;    convertStringToInt(index["Width"], volumeWidth);
+		/*int volumeWidth;    convertStringToInt(index["Width"], volumeWidth);
 		int volumeHeight;   convertStringToInt(index["Height"], volumeHeight);
 		int sliceCount;     convertStringToInt(index["SliceCount"], sliceCount);
-		int componentCount; convertStringToInt(index["ComponentCount"], componentCount);
+		int componentCount; convertStringToInt(index["ComponentCount"], componentCount);*/
 
 		// When importing we treat 'y' as up because the Gameplay physics engine makes some
 		// assumptions about this. This means we need to swap the 'y' and 'slice' indices.
@@ -130,7 +141,7 @@ namespace Cubiquity
 			unsigned char *sliceData = stbi_load(imageFileName.c_str(), &imageWidth, &imageHeight, &imageChannels, 0);
 			assert(imageWidth == volumeWidth);
 			assert(imageHeight == volumeHeight);
-			assert(imageChannels == componentCount);
+			//assert(imageChannels == componentCount);
 
 			// Now iterate over each pixel.
 			for(int x = 0; x < imageWidth; x++)
@@ -140,7 +151,7 @@ namespace Cubiquity
 					unsigned char *pixel = sliceData + (y * imageWidth + x) * imageChannels;
 
 					CubiquityVolumeType::VoxelType voxel;
-					pixelToVoxel(pixel, voxel, componentCount);
+					pixelToVoxel(pixel, voxel, imageChannels);
 
 					// When importing we treat 'y' as up because the Gameplay physics engine makes some
 					// assumptions about this. This means we need to swap the 'y' and 'slice' indices.
