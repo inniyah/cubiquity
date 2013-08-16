@@ -77,7 +77,7 @@ public class Bullet : MonoBehaviour
 									{
 										GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 										cube.AddComponent<Rigidbody>();
-										cube.AddComponent<SeparatedVoxel>();
+										cube.AddComponent<FadeOutGameObject>();
 										cube.transform.position = new Vector3(x, y, z);
 										cube.transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
 										cube.renderer.material.color = color;

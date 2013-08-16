@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class SeparatedVoxel : MonoBehaviour
+public class FadeOutGameObject : MonoBehaviour
 {
 	private float creationTime;
 	private float lifeTime = 10.0f;

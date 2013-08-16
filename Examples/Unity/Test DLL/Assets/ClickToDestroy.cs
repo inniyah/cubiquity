@@ -70,43 +70,50 @@ public class ClickToDestroy : MonoBehaviour
 	{
 		// Initialise outside the loop, but we'll use it later.
 		Vector3 pos = new Vector3(xPos, yPos, zPos);
+		int rangeSquared = range * range;
 		
-		
+		// Later on we will be deleting some voxels, but we'll also be looking at the neighbours of a voxel.
+		// This interaction can have some unexpected results, so it is best to first make a list of voxels we
+		// want to delete and then delete them later in a separate pass.
 		List<IntVector3> voxelsToDelete = new List<IntVector3>();
 		
+		// Iterage over every voxel in a cubic region defined by the received position (the center) and
+		// the range. It is quite possible that this will be hundreds or even thousands of voxels.
 		for(int z = zPos - range; z < zPos + range; z++)
 		{
 			for(int y = yPos - range; y < yPos + range; y++)
 			{
 				for(int x = xPos - range; x < xPos + range; x++)
-				{					
-					int xDiff = x - xPos;
-					int yDiff = y - yPos;
-					int zDiff = z - zPos;
+				{			
+					// Compute the distance from the current voxel to the center of our explosion.
+					int xDistance = x - xPos;
+					int yDistance = y - yPos;
+					int zDistance = z - zPos;
 					
-					int rangeSquared = range * range;
-					int distSquared = xDiff * xDiff + yDiff * yDiff + zDiff * zDiff;
+					// Working with squared distances avoids costly square root operations.
+					int distSquared = xDistance * xDistance + yDistance * yDistance + zDistance * zDistance;
 					
+					// We're iterating over a cubic region, but we want our explosion to be spherical. Therefore 
+					// we only further consider voxels which are within the required range of our explosion center. 
+					// The corners of the cubic region we are iterating over will fail the following test.
 					if(distSquared < rangeSquared)
 					{	
+						// Get the current color of the voxel
 						Color32 color = coloredCubesVolume.GetVoxel(x, y, z);				
 						
+						// Check the alpha to determine whether the voxel is visible. 
 						if(color.a > 127)
 						{
-							bool isSurfaceVoxel = coloredCubesVolume.IsSurfaceVoxel(x, y, z); //Save this before we clear the voxel.
-							//coloredCubesVolume.SetVoxel(x, y, z, new Color32(0,0,0,0));
+							bool isSurfaceVoxel = coloredCubesVolume.IsSurfaceVoxel(x, y, z);
 							
 							IntVector3 voxel = new IntVector3(x, y, z);
 							voxelsToDelete.Add(voxel);
-						
-							//if(distSquared > 12)
-							{
-								//if((x+y+z)% 2 == 0)
+
 								if(isSurfaceVoxel)
 								{
 									GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
 									cube.AddComponent<Rigidbody>();
-									cube.AddComponent<SeparatedVoxel>();
+									cube.AddComponent<FadeOutGameObject>();
 									cube.transform.position = new Vector3(x, y, z);
 									cube.transform.localScale = new Vector3(0.9f, 0.9f, 0.9f);
 									cube.renderer.material.color = color;
@@ -124,10 +131,7 @@ public class ClickToDestroy : MonoBehaviour
 									
 									cube.rigidbody.AddTorque(xTorque, yTorque, zTorque);
 									cube.rigidbody.AddForce((explosionForce.normalized + up) * 100.0f);
-									
-									//Object.Destroy(cube, 5.0f);
 								}
-							}
 						}
 					}
 				}

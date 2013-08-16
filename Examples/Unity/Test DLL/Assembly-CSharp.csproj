@@ -67,12 +67,12 @@
      <Compile Include="Assets\Detonator Explosion Framework\System\DetonatorSparks.cs" />
      <Compile Include="Assets\Detonator Explosion Framework\System\DetonatorSpray.cs" />
      <Compile Include="Assets\ElevateCannon.cs" />
+     <Compile Include="Assets\FadeOutGameObject.cs" />
      <Compile Include="Assets\HUD.cs" />
      <Compile Include="Assets\IntVector3.cs" />
      <Compile Include="Assets\OctreeNodeData.cs" />
      <Compile Include="Assets\Region.cs" />
      <Compile Include="Assets\RotateTurret.cs" />
-     <Compile Include="Assets\SeparatedVoxel.cs" />
      <Compile Include="Assets\Shell.cs" />
      <Compile Include="Assets\ShowBounds.cs" />
      <Compile Include="Assets\TankController.cs" />
