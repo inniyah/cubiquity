@@ -5,18 +5,16 @@ using System;
 using System.Collections;
 using System.IO;
 
-public class CreateColoredCubesVolumeProcedurally : ScriptableWizard
+public class CreateColoredCubesVolumeFromImagesWizard : ScriptableWizard
 {
 	private string datasetName = "New Volume";
 	
-	private int width = 256;
-	private int height = 64;
-	private int depth = 256;
+	private string imageFolder = "";
 	
-	[MenuItem ("GameObject/Create Other/Colored Cubes Volume/Create Colored Cubes Volume Procedurally...")]
+	[MenuItem ("GameObject/Create Other/Colored Cubes Volume/Create Colored Cubes Volume From Images...")]
     static void CreateWizard ()
 	{
-        ScriptableWizard.DisplayWizard<CreateColoredCubesVolumeProcedurally>("Create Colored Cubes Volume Procedurally");
+        ScriptableWizard.DisplayWizard<CreateColoredCubesVolumeFromImagesWizard>("Create Colored Cubes Volume From Images");
     }
 	
 	void OnGUI()
@@ -57,28 +55,23 @@ public class CreateColoredCubesVolumeProcedurally : ScriptableWizard
 			GUILayout.Space(20);
 		EditorGUILayout.EndHorizontal();
 		
-		GUILayout.Space(10);
-		
 		EditorGUILayout.BeginHorizontal();
 			GUILayout.Space(20);
-			EditorGUILayout.LabelField("Set the volume dimensions below. Please note that the values cannot exceed 256 in any dimension.", labelWrappingStyle);
+			EditorGUILayout.LabelField("Please choose a folder containing the images you wish to import. Images should all " + 
+				"be the same size, should be numbered sequentially, and should be in .jpg or .png format.", labelWrappingStyle);
 			GUILayout.Space(20);
 		EditorGUILayout.EndHorizontal();
-		
-		GUILayout.Space(10);
 		
 		EditorGUILayout.BeginHorizontal();	
 			GUILayout.Space(50);
-			EditorGUILayout.LabelField("Width:", GUILayout.Width(50));
-			width = EditorGUILayout.IntField("", width, GUILayout.Width(40));
+			EditorGUILayout.LabelField("Image folder:", GUILayout.Width(80));
+			EditorGUILayout.TextField("", imageFolder);
+			if(GUILayout.Button("Select folder...", GUILayout.Width(120)))
+			{
+				imageFolder = EditorUtility.SaveFolderPanel("Please choose a folder containing the images you wish to import.", "", "");
+			}
 			GUILayout.Space(20);
-			EditorGUILayout.LabelField("Height:", GUILayout.Width(50));
-			height = EditorGUILayout.IntField("", height, GUILayout.Width(40));
-			GUILayout.Space(20);
-			EditorGUILayout.LabelField("Depth:", GUILayout.Width(50));
-			depth = EditorGUILayout.IntField("", depth, GUILayout.Width(40));
-			GUILayout.FlexibleSpace();
-		EditorGUILayout.EndHorizontal();
+		EditorGUILayout.EndHorizontal();	
 		
 		GUILayout.Space(20); // A space before the create/cancel buttons
 		
@@ -107,66 +100,8 @@ public class CreateColoredCubesVolumeProcedurally : ScriptableWizard
 			Debug.LogError("A voxel terrain already exists - you (currently) can't create another one.");
 		}
 		
-		GameObject voxelGameObject = ColoredCubesVolumeFactory.CreateVolume("Voxel Terrain", new Region(0, 0, 0, width-1, height-1, depth-1), datasetName);
-		ColoredCubesVolume coloredCubesVolume = voxelGameObject.GetComponent<ColoredCubesVolume>();
-
-		Color32 brown = new Color32(200, 100, 0, 255);
-		Color32 green = new Color32(0, 255, 0, 255);
-		Color32 blue = new Color32(0, 0, 255, 255);
-		Color32 grey = new Color32(128, 128, 128, 255);
-		Color32 white = new Color32(255, 255, 255, 255);
-		
-		
-		for(int z = 0; z <= depth-1; z++)
-		{
-			for(int x = 0; x <= width-1; x++)
-			{
-				float scale = 0.03f;
-				float strength = 1.0f;
-				int noOfOctaves = 3;
-				float perlinValue = 0.0f;
-				float normalizationFactor = 0.0f;
-				for(int octave = 0; octave < noOfOctaves; octave++)
-				{
-					perlinValue += Mathf.PerlinNoise(x * scale, z * scale) * strength;
-					normalizationFactor += strength;
-					
-					scale *= 2.0f;
-					strength *= 0.5f;
-				}
-				
-				perlinValue /= normalizationFactor;				
-				
-				int terrainHeight = (int)(perlinValue * height);
-				
-				int seaLevel = (int)(height * 0.4f);
-				int snowLevel = (int)(height * 0.6f);
-				
-				/*if(terrainHeight < minTerrainHeight)
-				{
-					terrainHeight = minTerrainHeight;
-				}*/
-				
-				for(int y = 0; y <= height-1; y++)
-				{
-					if(y < terrainHeight)
-					{
-						if(y < snowLevel)
-						{
-							coloredCubesVolume.SetVoxel(x, y, z, grey);
-						}
-						else
-						{
-							coloredCubesVolume.SetVoxel(x, y, z, white);
-						}
-					}
-					else if(y < seaLevel)
-					{
-						coloredCubesVolume.SetVoxel(x, y, z, blue);
-					}
-				}
-			}
-		}
+		//GameObject voxelGameObject = ColoredCubesVolumeFactory.CreateVolume("Voxel Terrain", new Region(0, 0, 0, width-1, height-1, depth-1), datasetName);
+		GameObject voxelGameObject = ColoredCubesVolumeFactory.CreateVolumeFromVolDat("Voxel Terrain", imageFolder, datasetName);
 	}
 	
 	void OnCancelPressed()

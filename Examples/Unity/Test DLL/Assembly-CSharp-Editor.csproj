@@ -46,9 +46,10 @@
   <ItemGroup>
      <Compile Include="Assets\Editor\ColoredCubesVolumeEditor.cs" />
      <Compile Include="Assets\Editor\CreateColoredCubesVolumeFromHeightmapWizard.cs" />
-     <Compile Include="Assets\Editor\CreateColoredCubesVolumeProcedurally.cs" />
+     <Compile Include="Assets\Editor\CreateColoredCubesVolumeFromImagesWizard.cs" />
      <Compile Include="Assets\Editor\CreateColoredCubesVolumeWizard.cs" />
      <Compile Include="Assets\Editor\CreateEmptyColoredCubesVolumeWizard.cs" />
+     <Compile Include="Assets\Editor\CreateProceduralColoredCubesVolumeWizard.cs" />
      <None Include="Assets\Resources\ColoredCubesVolumeUtilities.cginc" />
      <None Include="Assets\Detonator Explosion Framework\Resources\Detonator\Textures\HeatDistort.shader" />
      <None Include="Assets\sky5X\README.txt" />
