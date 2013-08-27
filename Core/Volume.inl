@@ -32,12 +32,6 @@ namespace Cubiquity
 	{
 		logTrace() << "Entering Volume(" << region << ",...)";
 
-		// Throw an exception if the requested volume dimensions exceed those allowed by the license
-		int32_t maxVolumeSize = 256;
-		POLYVOX_THROW_IF(region.getWidthInVoxels() > maxVolumeSize, std::invalid_argument, "Volume width exceeds maximum permitted size");
-		POLYVOX_THROW_IF(region.getHeightInVoxels() > maxVolumeSize, std::invalid_argument, "Volume width exceeds maximum permitted size");
-		POLYVOX_THROW_IF(region.getDepthInVoxels() > maxVolumeSize, std::invalid_argument, "Volume width exceeds maximum permitted size");
-
 		/*POLYVOX_ASSERT(region.getWidthInVoxels() > 0, "All volume dimensions must be greater than zero");
 		POLYVOX_ASSERT(region.getHeightInVoxels() > 0, "All volume dimensions must be greater than zero");
 		POLYVOX_ASSERT(region.getDepthInVoxels() > 0, "All volume dimensions must be greater than zero");*/
