@@ -249,6 +249,9 @@
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Picking.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
+    <ClInclude Include="SmoothTerrainVolumeSculpting.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.inl">
@@ -431,6 +434,9 @@
       <Filter>PolyVox</Filter>
     </ClCompile>
     <ClCompile Include="Raycasting.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="SmoothTerrainVolumeSculpting.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
