@@ -122,7 +122,7 @@ ColouredCubesVolumeImpl* getVolumeFromHandle(uint32_t volumeHandle)
 
 SmoothTerrainVolumeImpl* getVolumeFromHandleMC(uint32_t volumeHandle)
 {
-	validateVolumeHandle(volumeHandle);
+	validateVolumeHandleMC(volumeHandle);
 	return gSmoothTerrainVolumes[volumeHandle];
 }
 
@@ -253,6 +253,8 @@ CUBIQUITYC_API int32_t cuNewColouredCubesVolume(int32_t lowerX, int32_t lowerY, 
 		gColouredCubesVolumes.push_back(volume);
 		*result = gColouredCubesVolumes.size() - 1;
 	}
+
+	logTrace() << "Created new colored cubes volume in slot " << *result;
 
 	CLOSE_C_INTERFACE
 }
@@ -412,6 +414,8 @@ CUBIQUITYC_API int32_t cuNewSmoothTerrainVolume(int32_t lowerX, int32_t lowerY, 
 		*result = gSmoothTerrainVolumes.size() - 1;
 	}
 
+	logTrace() << "Creatd new smooth volume in slot " << *result;
+
 	CLOSE_C_INTERFACE
 }
 
@@ -468,7 +472,7 @@ CUBIQUITYC_API int32_t cuGetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y,
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuSetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, uint32_t index, uint8_t value)
+CUBIQUITYC_API int32_t cuSetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, uint32_t index, uint8_t value)
 {
 	OPEN_C_INTERFACE
 
