@@ -1,5 +1,6 @@
 #include "Raycasting.h"
 #include "ColouredCubesVolume.h"
+#include "SmoothTerrainVolume.h"
 
 #include "PolyVoxCore/Picking.h"
 
@@ -47,5 +48,24 @@ namespace Cubiquity
 		{
 			return false;
 		}
+	}
+
+	bool pickTerrainSurface(SmoothTerrainVolume* smoothTerrainVolume, float startX, float startY, float startZ, float dirAndLengthX, float dirAndLengthY, float dirAndLengthZ, float* resultX, float* resultY, float* resultZ)
+	{
+		Vector3F v3dStart(startX, startY, startZ);
+		Vector3F v3dDirection(dirAndLengthX, dirAndLengthY, dirAndLengthZ);
+		//v3dDirection *= length;
+
+		RaycastTestFunctor<MultiMaterial> raycastTestFunctor;
+		::PolyVox::RaycastResult myResult = smoothRaycastWithDirection(dynamic_cast<SmoothTerrainVolumeImpl*>(smoothTerrainVolume)->_getPolyVoxVolume(), v3dStart, v3dDirection, raycastTestFunctor, 0.5f);
+		if(myResult == ::PolyVox::RaycastResults::Interupted)
+		{
+			*resultX = raycastTestFunctor.mLastPos.getX();
+			*resultY = raycastTestFunctor.mLastPos.getY();
+			*resultZ = raycastTestFunctor.mLastPos.getZ();
+			return true;
+		}
+
+		return false;
 	}
 }

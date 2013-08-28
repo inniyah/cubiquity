@@ -896,3 +896,21 @@ CUBIQUITYC_API int32_t cuPickLastEmptyVoxel(uint32_t volumeHandle, float rayStar
 
 	CLOSE_C_INTERFACE
 }
+
+CUBIQUITYC_API int32_t cuPickTerrainSurface(uint32_t volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, float* resultX, float* resultY, float* resultZ, uint32_t* result)
+{
+	OPEN_C_INTERFACE
+
+	SmoothTerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
+
+	if(pickTerrainSurface(volume, rayStartX, rayStartY, rayStartZ, rayDirX, rayDirY, rayDirZ, resultX, resultY, resultZ))
+	{
+		*result = 1;
+	}
+	else
+	{
+		*result = 0;
+	}
+
+	CLOSE_C_INTERFACE
+}
