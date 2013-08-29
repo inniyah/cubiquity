@@ -31,13 +31,22 @@ namespace Cubiquity
 
 		::PolyVox::RawVolume<MultiMaterial> mSmoothingVolume(region);
 
-
 		for(int z = firstZ; z <= lastZ; ++z)
 		{
 			for(int y = firstY; y <= lastY; ++y)
 			{
 				for(int x = firstX; x <= lastX; ++x)
 				{					
+					Vector3F pos(x, y, z);
+					float distFromCentre = (centre - pos).length(); //Should use squared length?
+					float invDistFromCenter = radius - distFromCentre;
+					if(invDistFromCenter < 0.0f)
+					{
+						invDistFromCenter = 0.0f;
+					}
+
+					int32_t amountToAdd = static_cast<int32_t>(invDistFromCenter + 0.5f);
+
 					for(uint32_t matIndex = 0; matIndex < MultiMaterial::getNoOfMaterials(); matIndex++)
 					{
 						uint32_t sum = 0;
@@ -52,13 +61,15 @@ namespace Cubiquity
 
 						uint32_t average = sum / 7;
 						uint32_t rem = sum % 7;
-						//if(rem > 3)
+						if(rem > 3)
 						{
 							average++;
+							/*average++;
 							average++;
-							average++;
-							average++;
+							average++;*/
 						}
+
+						average += amountToAdd;
 
 						MultiMaterial result = mSmoothingVolume.getVoxelAt(x, y, z);
 						result.setMaterial(matIndex, average);
