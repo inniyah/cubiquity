@@ -8,6 +8,7 @@
 #include "Logging.h"
 #include "OctreeNode.h"
 #include "Raycasting.h"
+#include "SmoothTerrainVolumeSculpting.h"
 #include "VolumeSerialisation.h"
 
 #include <vector>
@@ -911,6 +912,17 @@ CUBIQUITYC_API int32_t cuPickTerrainSurface(uint32_t volumeHandle, float rayStar
 	{
 		*result = 0;
 	}
+
+	CLOSE_C_INTERFACE
+}
+
+CUBIQUITYC_API int32_t cuSculptSmoothTerrainVolume(uint32_t volumeHandle, float centerX, float centerY, float centerZ, float radius)
+{
+	OPEN_C_INTERFACE
+
+	SmoothTerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
+
+	sculptSmoothTerrainVolume(volume, Vector3F(centerX, centerY, centerZ), radius);
 
 	CLOSE_C_INTERFACE
 }

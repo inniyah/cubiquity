@@ -71,4 +71,7 @@ extern "C"
 	CUBIQUITYC_API int32_t cuPickLastEmptyVoxel(uint32_t volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, int32_t* resultX, int32_t* resultY, int32_t* resultZ, uint32_t* result);
 
 	CUBIQUITYC_API int32_t cuPickTerrainSurface(uint32_t volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, float* resultX, float* resultY, float* resultZ, uint32_t* result);
+
+	// Editing functions
+	CUBIQUITYC_API int32_t cuSculptSmoothTerrainVolume(uint32_t volumeHandle, float centerX, float centerY, float centerZ, float radius);
 }
