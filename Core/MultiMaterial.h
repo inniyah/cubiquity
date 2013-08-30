@@ -200,10 +200,16 @@ namespace Cubiquity
 				while(excess)
 				{
 					uint32_t material = getMaterial(nextMatToReduce);
-					material--;
-					setMaterial(nextMatToReduce, material);
 
-					excess--;
+					// Don't reduce if it's aready zero - it will wrap around and become big.
+					if(material > 0)
+					{
+						material--;
+						setMaterial(nextMatToReduce, material);
+
+						excess--;
+					}
+
 					nextMatToReduce++;
 					nextMatToReduce %= NoOfMaterials;
 				}
