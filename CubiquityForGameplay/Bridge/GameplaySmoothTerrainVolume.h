@@ -21,9 +21,9 @@ namespace Cubiquity
 		 *
 		 * @script{create}
 		 */
-		static GameplaySmoothTerrainVolume* create(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize)
+		static GameplaySmoothTerrainVolume* create(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize, bool createFloor, unsigned int floorDepth)
 		{
-			GameplaySmoothTerrainVolume* volume = new GameplaySmoothTerrainVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, pageFolder, baseNodeSize);
+			GameplaySmoothTerrainVolume* volume = new GameplaySmoothTerrainVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, pageFolder, baseNodeSize, createFloor, floorDepth);
 			return volume;
 		}
 
@@ -77,7 +77,7 @@ namespace Cubiquity
 		void syncNode(OctreeNode< MultiMaterial >* octreeNode, GameplayOctreeNode< MultiMaterial >* gameplayOctreeNode);
 
 	protected:
-		GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize);
+		GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize, bool createFloor, unsigned int floorDepth);
 		GameplaySmoothTerrainVolume(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize);
 		virtual ~GameplaySmoothTerrainVolume();
 

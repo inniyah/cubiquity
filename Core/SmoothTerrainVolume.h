@@ -62,7 +62,7 @@ namespace Cubiquity
 		Volume<MultiMaterial> mCubiquityVolume;
 	};
 
-	SmoothTerrainVolume* createSmoothTerrainVolume(const Region& region, const std::string& pageFolder, unsigned int baseNodeSize);
+	SmoothTerrainVolume* createSmoothTerrainVolume(const Region& region, const std::string& pageFolder, unsigned int baseNodeSize, bool createFloor = true, uint32_t floorDepth = 8);
 }
 
 #endif //SMOOTHTERRAINVOLUME_H_

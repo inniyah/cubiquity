@@ -11,9 +11,9 @@ using namespace PolyVox;
 namespace Cubiquity
 {
 
-	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize)
+	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize, bool createFloor, unsigned int floorDepth)
 	{
-		mCubiquityVolume = createSmoothTerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pageFolder, baseNodeSize);
+		mCubiquityVolume = createSmoothTerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pageFolder, baseNodeSize, createFloor, floorDepth);
 
 		mRootGameplayOctreeNode = new GameplayOctreeNode< MultiMaterial >(mCubiquityVolume->getRootOctreeNode(), 0);
 	}
