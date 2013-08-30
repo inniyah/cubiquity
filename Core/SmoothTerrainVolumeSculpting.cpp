@@ -70,6 +70,7 @@ namespace Cubiquity
 						}
 
 						average += amountToAdd;
+						average = (std::min)(average, MultiMaterial::getMaxMaterialValue());
 
 						MultiMaterial result = mSmoothingVolume.getVoxelAt(x, y, z);
 						result.setMaterial(matIndex, average);
