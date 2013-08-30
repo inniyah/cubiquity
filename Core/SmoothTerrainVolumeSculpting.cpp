@@ -51,6 +51,8 @@ namespace Cubiquity
 					{
 						uint32_t sum = 0;
 
+						uint32_t original = smoothTerrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
+
 						sum += smoothTerrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
 						sum += smoothTerrainVolume->getVoxelAt(x+1, y, z).getMaterial(matIndex);
 						sum += smoothTerrainVolume->getVoxelAt(x-1, y, z).getMaterial(matIndex);
@@ -64,13 +66,11 @@ namespace Cubiquity
 						if(rem > 3)
 						{
 							average++;
-							/*average++;
-							average++;
-							average++;*/
 						}
 
 						average += amountToAdd;
 						average = (std::min)(average, MultiMaterial::getMaxMaterialValue());
+						average = (std::max)(average, original); // For some reason matieral gets slightly eroded unless we use this.
 
 						MultiMaterial result = mSmoothingVolume.getVoxelAt(x, y, z);
 						result.setMaterial(matIndex, average);
