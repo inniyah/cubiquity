@@ -79,13 +79,16 @@ namespace Cubiquity
 			*ptr = vecVertices[i].getPosition().getZ(); ptr++;
 			*ptr = 1.0;  ptr++;
 
-			// Material values range from 0 - getMaxMaterialValue() for each voxel. At the position
-			// of the isosurface materials are not at their full intensity (they are at roughly half
-			// because that's where the theshold is). We need to normalise the values to thier full range.
+			// Material values range from 0 - getMaxMaterialValue() for each voxel. At the position of the isosurface materials are not at their
+			// full intensity (they are at roughly half because that's where the theshold is). In theory the components should sum to 128 and we
+			// should be able to divide by that to get material components summing to 1.0, but in practice we have found this doesn't quite work.
+			// Full normalization seems to be required (and maybe this should be done inside Cubiquity) but we can investigate more in the future.
 			Vector<4, float> matAsVec = vecVertices[i].getMaterial();
-			if(matAsVec.lengthSquared() > 0.001f)
+			//matAsVec /= 128.0f;
+			float sum = matAsVec.getElement(0) + matAsVec.getElement(1) + matAsVec.getElement(2) + matAsVec.getElement(3);
+			if(sum > 0.001) // Avoid divide by zero
 			{
-				matAsVec.normalise();
+				matAsVec /= sum;
 			}
 
 			*ptr = matAsVec.getElement(0); ptr++;
