@@ -8,7 +8,7 @@ namespace Cubiquity
 {
 	void sculptSmoothTerrainVolume(SmoothTerrainVolumeImpl* smoothTerrainVolume, const Vector3F& centre, float radius)
 	{
-		float height = -5.0f;
+		float height = 1.0f;
 		float standardDeviation = 3.0f;
 
 		// Values for Gaussian function: https://en.wikipedia.org/wiki/Gaussian_function
@@ -73,35 +73,33 @@ namespace Cubiquity
 						sum += smoothTerrainVolume->getVoxelAt(x, y, z+1).getMaterial(matIndex);
 						sum += smoothTerrainVolume->getVoxelAt(x, y, z-1).getMaterial(matIndex);
 
-						int32_t average = sum / 7;
-						int32_t rem = sum % 7;
-						if(rem > 3)
-						{
-							average++;
-						}
+						float fAverage = static_cast<float>(sum) / 7.0f;
 
-						//average += amountToAdd;
+						fAverage *= (1.0f + gaussian);
+						//fAverage += gaussian;
+
+						int32_t iAverage = static_cast<int32_t>(fAverage + 0.5f);
 
 						
 
-						if(height >= 0.0f)
+						/*if(height >= 0.0f)
 						{
-							average = (std::max)(average, original); // For some reason matieral gets slightly eroded unless we use this.
+							average = (std::max)(average, original); // For some reason material gets slightly eroded unless we use this.
 						}
 						if(height <= 0.0f)
 						{
 							average++;
 							average++;
 							average++;
-							average = (std::min)(average, original); // For some reason matieral gets slightly dilated unless we use this.
-						}
+							average = (std::min)(average, original); // For some reason material gets slightly dilated unless we use this.
+						}*/
 
 						// Prevent wrapping around.
-						average = (std::min)(average, static_cast<int32_t>(MultiMaterial::getMaxMaterialValue()));
-						average = (std::max)(average, 0);
+						iAverage = (std::min)(iAverage, static_cast<int32_t>(MultiMaterial::getMaxMaterialValue()));
+						iAverage = (std::max)(iAverage, 0);
 
 						MultiMaterial result = mSmoothingVolume.getVoxelAt(x, y, z);
-						result.setMaterial(matIndex, average);
+						result.setMaterial(matIndex, iAverage);
 						mSmoothingVolume.setVoxel(x, y, z, result);
 					}
 
