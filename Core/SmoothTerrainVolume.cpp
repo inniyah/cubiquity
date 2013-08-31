@@ -22,7 +22,11 @@ namespace Cubiquity
 			{
 				for(int32_t y = region.getLowerY(); y < region.getLowerY() + floorDepth; y++)
 				{
-					int32_t density = 128 - y + floorDepth;
+					int32_t density = 128 - (y + floorDepth);
+					density *= 16;
+					density = (std::min)(density, static_cast<int32_t>(MultiMaterial::getMaxMaterialValue()));
+					density = (std::max)(density, 0);
+
 					for(int32_t z = region.getLowerZ(); z <= region.getUpperZ(); z++)
 					{
 						MultiMaterial material;
