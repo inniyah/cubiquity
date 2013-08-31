@@ -22,10 +22,11 @@ namespace Cubiquity
 			{
 				for(int32_t y = region.getLowerY(); y < region.getLowerY() + floorDepth; y++)
 				{
+					int32_t density = 128 - y + floorDepth;
 					for(int32_t z = region.getLowerZ(); z <= region.getUpperZ(); z++)
 					{
 						MultiMaterial material;
-						material.setMaterial(0, MultiMaterial::getMaxMaterialValue());
+						material.setMaterial(0, density);
 						smoothTerrainVolume->setVoxelAt(x, y, z, material, UpdatePriorities::DontUpdate);
 					}
 				}

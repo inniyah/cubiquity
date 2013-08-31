@@ -8,6 +8,17 @@ namespace Cubiquity
 {
 	void sculptSmoothTerrainVolume(SmoothTerrainVolumeImpl* smoothTerrainVolume, const Vector3F& centre, float radius)
 	{
+		float height = 3.0f;
+		float standardDeviation = 3.0f;
+
+		// Values for Gaussian function: https://en.wikipedia.org/wiki/Gaussian_function
+		float a = height;
+		//float b = 0.0f;
+		float c = standardDeviation;
+		float cc2 = 2.0f*c*c;
+
+		radius = c * 3.0f;
+
 		int firstX = static_cast<int>(std::floor(centre.getX() - radius));
 		int firstY = static_cast<int>(std::floor(centre.getY() - radius));
 		int firstZ = static_cast<int>(std::floor(centre.getZ() - radius));
@@ -38,22 +49,22 @@ namespace Cubiquity
 				for(int x = firstX; x <= lastX; ++x)
 				{					
 					Vector3F pos(x, y, z);
-					float distFromCentre = (centre - pos).length(); //Should use squared length?
-					float invDistFromCenter = radius - distFromCentre;
-					if(invDistFromCenter < 0.0f)
-					{
-						invDistFromCenter = 0.0f;
-					}
+					float distFromCentreSquared = (centre - pos).lengthSquared();
 
-					invDistFromCenter *= invDistFromCenter;
 
-					int32_t amountToAdd = static_cast<int32_t>(invDistFromCenter + 0.5f);
+					// From Wikipedia: https://en.wikipedia.org/wiki/Gaussian_function
+					// Gaussian funtion f(x) = a*exp(-((x-b)*(x-b) / (2*c*c)))
+					// For us, 'b' is zero, which leaves 'x*x' on top. 'x' is the distance
+					// from the centre so we can put the squared distance on top.
+					float gaussian = a*exp(-(distFromCentreSquared / cc2));
+
+					int32_t amountToAdd = static_cast<int32_t>(gaussian + 0.5f);
 
 					for(uint32_t matIndex = 0; matIndex < MultiMaterial::getNoOfMaterials(); matIndex++)
 					{
 						uint32_t original = smoothTerrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
 
-						if(amountToAdd > 0)
+						//if(amountToAdd > 0)
 						{
 							uint32_t sum = 0;
 							sum += smoothTerrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
@@ -71,6 +82,8 @@ namespace Cubiquity
 								average++;
 							}
 
+							//uint32_t average = original;
+
 							average += amountToAdd;
 							average = (std::min)(average, MultiMaterial::getMaxMaterialValue());
 							average = (std::max)(average, original); // For some reason matieral gets slightly eroded unless we use this.
@@ -79,12 +92,12 @@ namespace Cubiquity
 							result.setMaterial(matIndex, average);
 							mSmoothingVolume.setVoxel(x, y, z, result);
 						}
-						else
+						/*else
 						{
 							MultiMaterial result = mSmoothingVolume.getVoxelAt(x, y, z);
 							result.setMaterial(matIndex, original);
 							mSmoothingVolume.setVoxel(x, y, z, result);
-						}
+						}*/
 					}
 
 					MultiMaterial result = mSmoothingVolume.getVoxelAt(x, y, z);
