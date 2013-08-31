@@ -150,7 +150,7 @@ void MeshGame::initialize()
 	_light = Light::createDirectional(Vector3(0.75, 0.75, 0.75));
 	_lightNode = Node::create();
 	_lightNode->setLight(_light);
-	_lightNode->setTranslation(0.0f, 100.0f, 0.0f);
+	_lightNode->setTranslation(70.0f, 100.0f, 50.0f);
 	pointNodeAtTarget(_lightNode, Vector3(0.0f, 0.0f, 0.0f));
 	_scene->addNode(_lightNode);
 
@@ -181,7 +181,7 @@ void MeshGame::initialize()
 	//mVolume = GameplayVolumeSerialisation::gameplayImportSmoothSlices("../../SliceData/SmoothVoxeliensTerrain/");
 	
 	mVolume = GameplaySmoothTerrainVolume::create("C:/Code/cubiquity/Examples/SliceData/SmoothVoxeliensTerrain/", "./", 32);
-	//mVolume = GameplaySmoothTerrainVolume::create(0, 0, 0, 127, 31, 127, "C:/temp/volume", 32, true, 8);
+	//mVolume = GameplaySmoothTerrainVolume::create(0, 0, 0, 127, 31, 127, "C:/temp/volume", 32, true, 16);
 	mVolumeEditor = new GameplaySmoothTerrainVolumeEditor(mVolume);
 #endif
 #ifdef TERRAIN_CUBIC

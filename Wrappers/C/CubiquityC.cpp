@@ -916,13 +916,13 @@ CUBIQUITYC_API int32_t cuPickTerrainSurface(uint32_t volumeHandle, float rayStar
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuSculptSmoothTerrainVolume(uint32_t volumeHandle, float centerX, float centerY, float centerZ, float radius)
+CUBIQUITYC_API int32_t cuSculptSmoothTerrainVolume(uint32_t volumeHandle, float centerX, float centerY, float centerZ, float amount, float brushRadius)
 {
 	OPEN_C_INTERFACE
 
 	SmoothTerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
 
-	sculptSmoothTerrainVolume(volume, Vector3F(centerX, centerY, centerZ), radius);
+	sculptSmoothTerrainVolume(volume, Vector3F(centerX, centerY, centerZ), amount, brushRadius);
 
 	CLOSE_C_INTERFACE
 }

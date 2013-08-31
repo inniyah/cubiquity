@@ -6,28 +6,21 @@ using namespace PolyVox;
 
 namespace Cubiquity
 {
-	void sculptSmoothTerrainVolume(SmoothTerrainVolumeImpl* smoothTerrainVolume, const Vector3F& centre, float radius)
+	void sculptSmoothTerrainVolume(SmoothTerrainVolumeImpl* smoothTerrainVolume, const Vector3F& centre, float amount, float brushRadius)
 	{
-		float height = 1.0f;
-		float standardDeviation = 3.0f;
-
 		// Values for Gaussian function: https://en.wikipedia.org/wiki/Gaussian_function
-		float a = height;
+		float a = amount;
 		//float b = 0.0f;
-		float c = standardDeviation;
+		float c = brushRadius / 3.0f;
 		float cc2 = 2.0f*c*c;
 
-		radius = c * 3.0f;
+		int firstX = static_cast<int>(std::floor(centre.getX() - brushRadius));
+		int firstY = static_cast<int>(std::floor(centre.getY() - brushRadius));
+		int firstZ = static_cast<int>(std::floor(centre.getZ() - brushRadius));
 
-		int firstX = static_cast<int>(std::floor(centre.getX() - radius));
-		int firstY = static_cast<int>(std::floor(centre.getY() - radius));
-		int firstZ = static_cast<int>(std::floor(centre.getZ() - radius));
-
-		int lastX = static_cast<int>(std::ceil(centre.getX() + radius));
-		int lastY = static_cast<int>(std::ceil(centre.getY() + radius));
-		int lastZ = static_cast<int>(std::ceil(centre.getZ() + radius));
-
-		float radiusSquared = radius * radius;
+		int lastX = static_cast<int>(std::ceil(centre.getX() + brushRadius));
+		int lastY = static_cast<int>(std::ceil(centre.getY() + brushRadius));
+		int lastZ = static_cast<int>(std::ceil(centre.getZ() + brushRadius));
 
 		//Check bounds.
 		firstX = (std::max)(firstX,smoothTerrainVolume->getEnclosingRegion().getLowerCorner().getX());
@@ -82,16 +75,13 @@ namespace Cubiquity
 
 						
 
-						/*if(height >= 0.0f)
+						/*if(amount >= 0.0f)
 						{
-							average = (std::max)(average, original); // For some reason material gets slightly eroded unless we use this.
+							iAverage = (std::max)(iAverage, original); // For some reason material gets slightly eroded unless we use this.
 						}
-						if(height <= 0.0f)
+						if(amount <= 0.0f)
 						{
-							average++;
-							average++;
-							average++;
-							average = (std::min)(average, original); // For some reason material gets slightly dilated unless we use this.
+							iAverage = (std::min)(iAverage, original); // For some reason material gets slightly dilated unless we use this.
 						}*/
 
 						// Prevent wrapping around.
