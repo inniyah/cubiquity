@@ -274,7 +274,7 @@ void MeshGame::update(float elapsedTime)
 		}
 		if(mSmoothButton->isSelected())
 		{
-			mVolumeEditor->smooth(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue(), mSmoothBiasSlider->getValue());
+			mVolumeEditor->smooth(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mTimeBetweenUpdatesInSeconds, mSmoothBiasSlider->getValue(), mBrushIntensitySlider->getValue());
 		}
 		if(mAddButton->isSelected())
 		{

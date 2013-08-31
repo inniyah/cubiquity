@@ -6,7 +6,7 @@
 
 namespace Cubiquity
 {
-	void sculptSmoothTerrainVolume(SmoothTerrainVolumeImpl* smoothTerrainVolume, const Vector3F& centre, float amount, float brushRadius);
+	void sculptSmoothTerrainVolume(SmoothTerrainVolumeImpl* smoothTerrainVolume, const Vector3F& centre, float brushRadius, float speed);
 }
 
 #endif //CUBIQUITY_SMOOTHTERRAINVOLUMESCULPTING_H

@@ -6,10 +6,10 @@ using namespace PolyVox;
 
 namespace Cubiquity
 {
-	void sculptSmoothTerrainVolume(SmoothTerrainVolumeImpl* smoothTerrainVolume, const Vector3F& centre, float amount, float brushRadius)
+	void sculptSmoothTerrainVolume(SmoothTerrainVolumeImpl* smoothTerrainVolume, const Vector3F& centre, float brushRadius, float speed)
 	{
 		// Values for Gaussian function: https://en.wikipedia.org/wiki/Gaussian_function
-		float a = amount;
+		float a = speed;
 		//float b = 0.0f;
 		float c = brushRadius / 3.0f;
 		float cc2 = 2.0f*c*c;
@@ -75,11 +75,11 @@ namespace Cubiquity
 
 						
 
-						/*if(amount >= 0.0f)
+						/*if(speed >= 0.0f)
 						{
 							iAverage = (std::max)(iAverage, original); // For some reason material gets slightly eroded unless we use this.
 						}
-						if(amount <= 0.0f)
+						if(speed <= 0.0f)
 						{
 							iAverage = (std::min)(iAverage, original); // For some reason material gets slightly dilated unless we use this.
 						}*/
