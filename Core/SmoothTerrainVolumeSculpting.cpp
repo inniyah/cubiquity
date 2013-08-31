@@ -58,7 +58,7 @@ namespace Cubiquity
 						int32_t original = smoothTerrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
 
 						int32_t sum = 0;
-						sum += smoothTerrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
+						sum += (smoothTerrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex) * 16);
 						sum += smoothTerrainVolume->getVoxelAt(x+1, y, z).getMaterial(matIndex);
 						sum += smoothTerrainVolume->getVoxelAt(x-1, y, z).getMaterial(matIndex);
 						sum += smoothTerrainVolume->getVoxelAt(x, y+1, z).getMaterial(matIndex);
@@ -66,7 +66,7 @@ namespace Cubiquity
 						sum += smoothTerrainVolume->getVoxelAt(x, y, z+1).getMaterial(matIndex);
 						sum += smoothTerrainVolume->getVoxelAt(x, y, z-1).getMaterial(matIndex);
 
-						float fAverage = static_cast<float>(sum) / 7.0f;
+						float fAverage = static_cast<float>(sum) / 22.0f;
 
 						fAverage *= (1.0f + gaussian);
 						//fAverage += gaussian;
@@ -86,7 +86,7 @@ namespace Cubiquity
 
 						// Prevent wrapping around.
 						iAverage = (std::min)(iAverage, static_cast<int32_t>(MultiMaterial::getMaxMaterialValue()));
-						iAverage = (std::max)(iAverage, 0);
+						iAverage = (std::max)(iAverage, 1);
 
 						MultiMaterial result = mSmoothingVolume.getVoxelAt(x, y, z);
 						result.setMaterial(matIndex, iAverage);

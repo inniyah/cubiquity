@@ -122,7 +122,7 @@ void MeshGame::initialize()
 	mSphereNode = Node::create();
 	mSphereNode->setModel(model);
 	float scale = mBrushSizeSlider->getValue();
-	mSphereNode->setScale(scale, scale, scale);
+	mSphereNode->setScale(0.5f, 0.5f, 0.5f);
 	_scene->addNode(mSphereNode);
 
 	//Create some physics object for testing.
@@ -180,8 +180,8 @@ void MeshGame::initialize()
 	//mVolume = GameplaySmoothTerrainVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
 	//mVolume = GameplayVolumeSerialisation::gameplayImportSmoothSlices("../../SliceData/SmoothVoxeliensTerrain/");
 	
-	mVolume = GameplaySmoothTerrainVolume::create("C:/Code/cubiquity/Examples/SliceData/SmoothVoxeliensTerrain/", "./", 32);
-	//mVolume = GameplaySmoothTerrainVolume::create(0, 0, 0, 127, 31, 127, "C:/temp/volume", 32, true, 16);
+	//mVolume = GameplaySmoothTerrainVolume::create("C:/Code/cubiquity/Examples/SliceData/SmoothVoxeliensTerrain/", "./", 32);
+	mVolume = GameplaySmoothTerrainVolume::create(0, 0, 0, 127, 31, 127, "C:/temp/volume", 32, true, 16);
 	mVolumeEditor = new GameplaySmoothTerrainVolumeEditor(mVolume);
 #endif
 #ifdef TERRAIN_CUBIC
@@ -372,7 +372,7 @@ void MeshGame::controlEvent(Control* control, EventType evt)
 				float scale = mBrushSizeSlider->getValue();
 				if(mSphereNode)
 				{
-					mSphereNode->setScale(scale, scale, scale);
+					mSphereNode->setScale(0.5f, 0.5f, 0.5f);
 				}
 			}
 		}
