@@ -122,7 +122,7 @@ void MeshGame::initialize()
 	mSphereNode = Node::create();
 	mSphereNode->setModel(model);
 	float scale = mBrushSizeSlider->getValue();
-	mSphereNode->setScale(0.5f, 0.5f, 0.5f);
+	mSphereNode->setScale(scale, scale, scale);
 	_scene->addNode(mSphereNode);
 
 	//Create some physics object for testing.
@@ -262,7 +262,9 @@ void MeshGame::update(float elapsedTime)
 	Vector3 intersection;
 	if(GameplayRaycasting::gameplayRaycast(mVolume, ray, 200.0f, intersection))
 	{
-		mSphereNode->setTranslation(intersection);
+		/*dir.normalize();
+		dir *= 2.0f;*/
+		mSphereNode->setTranslation(intersection/* + dir*/);
 	}
 
 #ifdef TERRAIN_SMOOTH
@@ -372,7 +374,7 @@ void MeshGame::controlEvent(Control* control, EventType evt)
 				float scale = mBrushSizeSlider->getValue();
 				if(mSphereNode)
 				{
-					mSphereNode->setScale(0.5f, 0.5f, 0.5f);
+					mSphereNode->setScale(scale, scale, scale);
 				}
 			}
 		}

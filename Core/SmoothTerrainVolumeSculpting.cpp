@@ -200,6 +200,8 @@ namespace Cubiquity
 							normal.normalise();
 						}
 
+						normal = normal * gaussian;
+
 						Vector3F samplePoint = pos - normal;
 
 						int32_t sample = getInterpolatedValue(smoothTerrainVolume->_getPolyVoxVolume(), samplePoint).getMaterial(matIndex);
@@ -224,7 +226,7 @@ namespace Cubiquity
 
 						int32_t iAverage = (std::max)(original, sample);
 
-						iAverage = lerp(original, iAverage, gaussian);
+						//iAverage = lerp(original, iAverage, gaussian);
 
 						
 

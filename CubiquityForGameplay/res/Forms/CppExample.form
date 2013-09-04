@@ -189,7 +189,7 @@ form particleEditor
             style = noBorder
             size = 150, 50
             orientation = HORIZONTAL
-            min = -1.0
+            min = 0.01
             max = 1.0
             value = 0.5
             step = 0.01
