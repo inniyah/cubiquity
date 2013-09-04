@@ -153,18 +153,18 @@ namespace Cubiquity
 					Vector3F pos(x, y, z);
 					float distFromCentreSquared = (centre - pos).lengthSquared();
 
-					Vector3F vecFromCentre = pos - centre;
+					/*Vector3F vecFromCentre = pos - centre;
 					float oldLength = vecFromCentre.length();
 					if(oldLength > 0.0001f)
 					{
 						float newLength = max(oldLength - 1.0f, 0.0f);
 						vecFromCentre /= oldLength;
 						vecFromCentre *= newLength;
-					}
+					}*/	
 
-					Vector3F samplePoint = centre + vecFromCentre;
+					//Vector3F samplePoint = centre + vecFromCentre;
 
-					MultiMaterial sample = getInterpolatedValue(smoothTerrainVolume->_getPolyVoxVolume(), samplePoint);
+					//MultiMaterial sample = getInterpolatedValue(smoothTerrainVolume->_getPolyVoxVolume(), samplePoint);
 
 
 					// From Wikipedia: https://en.wikipedia.org/wiki/Gaussian_function
@@ -179,8 +179,33 @@ namespace Cubiquity
 					{
 						int32_t original = smoothTerrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
 
-						uint32_t sum = 0;
-						sum += (smoothTerrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex) * 16);
+						float voxel1nx = static_cast<float>(smoothTerrainVolume->getVoxelAt(x-1, y, z).getMaterial(matIndex));
+						float voxel1px = static_cast<float>(smoothTerrainVolume->getVoxelAt(x+1, y, z).getMaterial(matIndex));
+
+						float voxel1ny = static_cast<float>(smoothTerrainVolume->getVoxelAt(x, y-1, z).getMaterial(matIndex));
+						float voxel1py = static_cast<float>(smoothTerrainVolume->getVoxelAt(x, y+1, z).getMaterial(matIndex));
+
+						float voxel1nz = static_cast<float>(smoothTerrainVolume->getVoxelAt(x, y, z-1).getMaterial(matIndex));
+						float voxel1pz = static_cast<float>(smoothTerrainVolume->getVoxelAt(x, y, z+1).getMaterial(matIndex));
+
+						Vector3DFloat normal
+						(
+							voxel1nx - voxel1px,
+							voxel1ny - voxel1py,
+							voxel1nz - voxel1pz
+						);
+
+						if(normal.length() > 0.001)
+						{
+							normal.normalise();
+						}
+
+						Vector3F samplePoint = pos - normal;
+
+						int32_t sample = getInterpolatedValue(smoothTerrainVolume->_getPolyVoxVolume(), samplePoint).getMaterial(matIndex);
+
+						/*int32_t sum = 0;
+						sum += (smoothTerrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex) * 16);*/
 						/*sum += smoothTerrainVolume->getVoxelAt(x+1, y, z).getMaterial(matIndex);
 						sum += smoothTerrainVolume->getVoxelAt(x-1, y, z).getMaterial(matIndex);
 						sum += smoothTerrainVolume->getVoxelAt(x, y+1, z).getMaterial(matIndex);
@@ -195,7 +220,11 @@ namespace Cubiquity
 
 						int32_t iAverage = static_cast<int32_t>(fAverage + 0.5f);*/
 
-						int32_t iAverage = (std::max)(sum, sample.getMaterial(matIndex));
+						
+
+						int32_t iAverage = (std::max)(original, sample);
+
+						iAverage = lerp(original, iAverage, gaussian);
 
 						
 
