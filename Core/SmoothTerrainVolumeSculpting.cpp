@@ -224,7 +224,9 @@ namespace Cubiquity
 
 						
 
-						int32_t iAverage = (std::max)(original, sample);
+						//int32_t iAverage = (std::max)(original, sample);
+
+						int32_t iAverage = sample;
 
 						//iAverage = lerp(original, iAverage, gaussian);
 
