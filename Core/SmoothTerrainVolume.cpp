@@ -22,13 +22,17 @@ namespace Cubiquity
 			{
 				for(int32_t y = region.getLowerY(); y < region.getUpperY(); y++)
 				{
+					// Density decreases with increasing y, to create a floor rather than ceiling
 					int32_t density = -y;
+					// Add the offset to move the floor to the desired level
 					density += floorDepth;
+					// 'Compress' the density field so that it changes more quickly
+					// from fully empty to fully solid (over one a few voxels)
 					density *= 64;
-					density += 128;
+					// Account for the threshold not being at zero
+					density += MultiMaterial::getMaxMaterialValue() / 2;
 
-					/*int32_t density = 128 - (y + floorDepth);
-					density *= 16;*/
+					//Clamp resulting density
 					density = (std::min)(density, static_cast<int32_t>(MultiMaterial::getMaxMaterialValue()));
 					density = (std::max)(density, 0);
 
