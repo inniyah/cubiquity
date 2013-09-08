@@ -8,7 +8,7 @@
 #include "Logging.h"
 #include "OctreeNode.h"
 #include "Raycasting.h"
-#include "SmoothTerrainVolumeSculpting.h"
+#include "SmoothTerrainVolumeEditor.h"
 #include "VolumeSerialisation.h"
 
 #include <vector>

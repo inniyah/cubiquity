@@ -1,6 +1,6 @@
 #include "GameplaySmoothTerrainVolumeEditor.h"
 
-#include "SmoothTerrainVolumeSculpting.h"
+#include "SmoothTerrainVolumeEditor.h"
 
 namespace Cubiquity
 {
@@ -19,25 +19,24 @@ namespace Cubiquity
 		edit(v3dCentre, radius, materialToPaintWith, EditActions::Paint, timeElapsedInSeconds,amount, 0.0f);
 	}
 
-	void GameplaySmoothTerrainVolumeEditor::smooth(const gameplay::Vector3& centre, float radius, float timeElapsedInSeconds, float smoothBias, float speed)
+	void GameplaySmoothTerrainVolumeEditor::smooth(const gameplay::Vector3& centre, float radius, float timeElapsedInSeconds, float smoothBias, float amount)
 	{
 		Vector3F v3dCentre(centre.x, centre.y, centre.z);
 		// '0' is a dummy as the smooth operations smooths *all* materials
 		//edit(v3dCentre, radius, 0, EditActions::Smooth, timeElapsedInSeconds, amount, smoothBias);
 		//smoothVolume(v3dCentre, radius);
-		sculptSmoothTerrainVolume(mSmoothTerrainVolume, v3dCentre, radius, speed);
+		blurSmoothTerrainVolume(mSmoothTerrainVolume, v3dCentre, radius, amount);
 	}
 
 	void GameplaySmoothTerrainVolumeEditor::addMaterial(const gameplay::Vector3& centre, float radius, uint32_t materialToAdd, float timeElapsedInSeconds, float amount)
 	{
 		Vector3F v3dCentre(centre.x, centre.y, centre.z);
-		edit(v3dCentre, radius, materialToAdd, EditActions::Add, timeElapsedInSeconds, amount, 0.0f);
+		sculptSmoothTerrainVolume(mSmoothTerrainVolume, v3dCentre, radius, amount);
 	}
 
 	void GameplaySmoothTerrainVolumeEditor::subtractMaterial(const gameplay::Vector3& centre, float radius, float timeElapsedInSeconds, float amount)
 	{
 		Vector3F v3dCentre(centre.x, centre.y, centre.z);
-		// '0' is a dummy as the subtract operations reduces *all* materials
-		edit(v3dCentre, radius, 0, EditActions::Subtract, timeElapsedInSeconds, amount, 0.0f);
+		sculptSmoothTerrainVolume(mSmoothTerrainVolume, v3dCentre, radius, amount * -1.0f);
 	}
 }

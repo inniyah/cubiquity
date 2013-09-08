@@ -36,6 +36,9 @@ namespace Cubiquity
 
 		::PolyVox::RawVolume<MultiMaterial>* mSmoothingVolume;
 	};
+
+	void sculptSmoothTerrainVolume(SmoothTerrainVolumeImpl* smoothTerrainVolume, const Vector3F& centre, float brushRadius, float amount);
+	void blurSmoothTerrainVolume(SmoothTerrainVolumeImpl* smoothTerrainVolume, const Vector3F& centre, float brushRadius, float amount);
 }
 
 #endif //SMOOTHTERRAINVOLUMEEDITOR_H_

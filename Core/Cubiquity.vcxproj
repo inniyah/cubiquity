@@ -83,7 +83,6 @@
     <ClInclude Include="SmoothSurfaceExtractionTask.h" />
     <ClInclude Include="SmoothTerrainVolume.h" />
     <ClInclude Include="SmoothTerrainVolumeEditor.h" />
-    <ClInclude Include="SmoothTerrainVolumeSculpting.h" />
     <ClInclude Include="Task.h" />
     <ClInclude Include="TaskProcessor.h" />
     <ClInclude Include="UpdatePriorities.h" />
@@ -153,7 +152,6 @@
     <ClCompile Include="SmoothSurfaceExtractionTask.cpp" />
     <ClCompile Include="SmoothTerrainVolume.cpp" />
     <ClCompile Include="SmoothTerrainVolumeEditor.cpp" />
-    <ClCompile Include="SmoothTerrainVolumeSculpting.cpp" />
     <ClCompile Include="Task.cpp" />
     <ClCompile Include="VolumeSerialisation.cpp" />
   </ItemGroup>
