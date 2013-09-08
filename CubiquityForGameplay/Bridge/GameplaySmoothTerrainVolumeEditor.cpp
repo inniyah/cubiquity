@@ -5,8 +5,8 @@
 namespace Cubiquity
 {
 	GameplaySmoothTerrainVolumeEditor::GameplaySmoothTerrainVolumeEditor(GameplaySmoothTerrainVolume* volume)
-		:SmoothTerrainVolumeEditor(dynamic_cast<SmoothTerrainVolumeImpl*>(volume->getCubiquityVolume()))
 	{
+		mSmoothTerrainVolume = dynamic_cast<SmoothTerrainVolumeImpl*>(volume->getCubiquityVolume());
 	}
 
 	GameplaySmoothTerrainVolumeEditor::~GameplaySmoothTerrainVolumeEditor()

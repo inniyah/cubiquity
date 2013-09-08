@@ -11,7 +11,7 @@ namespace Cubiquity
 	/**
 	 * Just a dummy comment for now, so that gameplay-luagen will wrap this class.
 	 */
-	class GameplaySmoothTerrainVolumeEditor : public SmoothTerrainVolumeEditor
+	class GameplaySmoothTerrainVolumeEditor
 	{
 	public:
 		GameplaySmoothTerrainVolumeEditor(GameplaySmoothTerrainVolume* volume);
@@ -21,6 +21,9 @@ namespace Cubiquity
 		void smooth(const gameplay::Vector3& centre, float radius, float timeElapsedInSeconds, float amount, float smoothBias);
 		void addMaterial(const gameplay::Vector3& centre, float radius, uint32_t materialToAdd, float timeElapsedInSeconds, float amount);
 		void subtractMaterial(const gameplay::Vector3& centre, float radius, float timeElapsedInSeconds, float amount);
+
+	private:
+		SmoothTerrainVolumeImpl* mSmoothTerrainVolume;
 	};
 }
 #endif //GAMEPLAY_SMOOTHTERRAINVOLUMEDATA_H_
