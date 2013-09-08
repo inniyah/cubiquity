@@ -613,4 +613,111 @@ namespace Cubiquity
 
 		smoothTerrainVolume->markAsModified(region, UpdatePriorities::Immediate);
 	}
+
+	void addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial& material)
+	{
+		uint32_t indexToRemoveFrom = 0; //FIXME - start somewhere random
+		uint32_t iterationWithNoRemovals = 0;
+		while(amountToAdd > 0)
+		{
+			if(indexToRemoveFrom != index)
+			{
+				if(material.getMaterial(indexToRemoveFrom) > 0)
+				{
+					material.setMaterial(index, material.getMaterial(index) + 1);
+					material.setMaterial(indexToRemoveFrom, material.getMaterial(indexToRemoveFrom) - 1);
+					amountToAdd--;
+					iterationWithNoRemovals = 0;
+				}
+				else
+				{
+					iterationWithNoRemovals++;
+				}
+			}
+			else
+			{
+				iterationWithNoRemovals++;
+			}
+
+			if(iterationWithNoRemovals == MultiMaterial::getNoOfMaterials())
+			{
+				break;
+			}
+
+			indexToRemoveFrom++;
+			indexToRemoveFrom %= MultiMaterial::getNoOfMaterials();
+		}
+	}
+
+	void paintSmoothTerrainVolume(SmoothTerrainVolumeImpl* smoothTerrainVolume, const Vector3F& centre, float brushRadius, uint32_t materialIndex, float amount)
+	{
+		// Values for Gaussian function: https://en.wikipedia.org/wiki/Gaussian_function
+		float a = amount;
+		//float b = 0.0f;
+		float c = brushRadius / 3.0f; // 3 standard deviations covers most of the range.
+		float cc2 = 2.0f*c*c;
+
+		int firstX = static_cast<int>(std::floor(centre.getX() - brushRadius));
+		int firstY = static_cast<int>(std::floor(centre.getY() - brushRadius));
+		int firstZ = static_cast<int>(std::floor(centre.getZ() - brushRadius));
+
+		int lastX = static_cast<int>(std::ceil(centre.getX() + brushRadius));
+		int lastY = static_cast<int>(std::ceil(centre.getY() + brushRadius));
+		int lastZ = static_cast<int>(std::ceil(centre.getZ() + brushRadius));
+
+		//Check bounds.
+		firstX = (std::max)(firstX,smoothTerrainVolume->getEnclosingRegion().getLowerCorner().getX());
+		firstY = (std::max)(firstY,smoothTerrainVolume->getEnclosingRegion().getLowerCorner().getY());
+		firstZ = (std::max)(firstZ,smoothTerrainVolume->getEnclosingRegion().getLowerCorner().getZ());
+
+		lastX = (std::min)(lastX,smoothTerrainVolume->getEnclosingRegion().getUpperCorner().getX());
+		lastY = (std::min)(lastY,smoothTerrainVolume->getEnclosingRegion().getUpperCorner().getY());
+		lastZ = (std::min)(lastZ,smoothTerrainVolume->getEnclosingRegion().getUpperCorner().getZ());
+
+		Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
+
+		//::PolyVox::RawVolume<MultiMaterial> mSmoothingVolume(region);
+
+		for(int z = firstZ; z <= lastZ; ++z)
+		{
+			for(int y = firstY; y <= lastY; ++y)
+			{
+				for(int x = firstX; x <= lastX; ++x)
+				{					
+					Vector3F pos(x, y, z);
+					float distFromCentreSquared = (centre - pos).lengthSquared();
+
+					// From Wikipedia: https://en.wikipedia.org/wiki/Gaussian_function
+					// Gaussian funtion f(x) = a*exp(-((x-b)*(x-b) / (2*c*c)))
+					// For us, 'b' is zero, which leaves 'x*x' on top. 'x' is the distance
+					// from the centre so we can put the squared distance on top.
+					float gaussian = a*exp(-(distFromCentreSquared / cc2));
+
+					float fAmmountToAdd = gaussian * MultiMaterial::getMaxMaterialValue();
+
+					int32_t amountToAdd = static_cast<int32_t>(fAmmountToAdd + 0.5f);
+
+
+					MultiMaterial voxel = smoothTerrainVolume->getVoxelAt(x, y, z);
+					addToMaterial(materialIndex, amountToAdd, voxel);
+					voxel.clampSumOfMaterials();
+					smoothTerrainVolume->setVoxelAt(x, y, z, voxel);
+					
+				}
+			}
+		}
+
+		/*for(int z = firstZ; z <= lastZ; ++z)
+		{
+			for(int y = firstY; y <= lastY; ++y)
+			{
+				for(int x = firstX; x <= lastX; ++x)
+				{
+					smoothTerrainVolume->setVoxelAt(x, y, z, mSmoothingVolume.getVoxelAt(x, y, z), UpdatePriorities::DontUpdate);
+				}
+			}
+		}*/
+
+		smoothTerrainVolume->markAsModified(region, UpdatePriorities::Immediate);
+	}
 }
