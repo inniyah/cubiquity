@@ -916,13 +916,35 @@ CUBIQUITYC_API int32_t cuPickTerrainSurface(uint32_t volumeHandle, float rayStar
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuSculptSmoothTerrainVolume(uint32_t volumeHandle, float centerX, float centerY, float centerZ, float brushRadius, float speed)
+CUBIQUITYC_API int32_t cuSculptSmoothTerrainVolume(uint32_t volumeHandle, float centerX, float centerY, float centerZ, float brushRadius, float amount)
 {
 	OPEN_C_INTERFACE
 
 	SmoothTerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
 
-	sculptSmoothTerrainVolume(volume, Vector3F(centerX, centerY, centerZ), brushRadius, speed);
+	sculptSmoothTerrainVolume(volume, Vector3F(centerX, centerY, centerZ), brushRadius, amount);
+
+	CLOSE_C_INTERFACE
+}
+
+CUBIQUITYC_API int32_t cuBlurSmoothTerrainVolume(uint32_t volumeHandle, float centerX, float centerY, float centerZ, float brushRadius, float amount)
+{
+	OPEN_C_INTERFACE
+
+	SmoothTerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
+
+	blurSmoothTerrainVolume(volume, Vector3F(centerX, centerY, centerZ), brushRadius, amount);
+
+	CLOSE_C_INTERFACE
+}
+
+CUBIQUITYC_API int32_t cuPaintSmoothTerrainVolume(uint32_t volumeHandle, float centerX, float centerY, float centerZ, float brushRadius, uint32_t materialIndex, float amount)
+{
+	OPEN_C_INTERFACE
+
+	SmoothTerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
+
+	paintSmoothTerrainVolume(volume, Vector3F(centerX, centerY, centerZ), brushRadius, materialIndex, amount);
 
 	CLOSE_C_INTERFACE
 }
