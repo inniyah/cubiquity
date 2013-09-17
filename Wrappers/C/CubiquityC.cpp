@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "CubiquityC.h"
 
+#include "Brush.h"
 #include "ColouredCubesVolume.h"
 #include "Logging.h"
 #include "OctreeNode.h"
@@ -922,7 +923,7 @@ CUBIQUITYC_API int32_t cuSculptSmoothTerrainVolume(uint32_t volumeHandle, float 
 
 	SmoothTerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
 
-	sculptSmoothTerrainVolume(volume, Vector3F(centerX, centerY, centerZ), brushRadius, amount);
+	sculptSmoothTerrainVolume(volume, Vector3F(centerX, centerY, centerZ), Brush(brushRadius, brushRadius, amount));
 
 	CLOSE_C_INTERFACE
 }

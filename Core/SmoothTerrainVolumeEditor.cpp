@@ -1,5 +1,6 @@
 #include "SmoothTerrainVolumeEditor.h"
 
+#include "Brush.h"
 #include "SmoothSurfaceExtractionTask.h" // FIXME - Shouldn't need this here.
 #include "SmoothTerrainVolume.h"
 
@@ -7,21 +8,21 @@ using namespace PolyVox;
 
 namespace Cubiquity
 {
-	void sculptSmoothTerrainVolume(SmoothTerrainVolumeImpl* smoothTerrainVolume, const Vector3F& centre, float brushRadius, float amount)
+	void sculptSmoothTerrainVolume(SmoothTerrainVolumeImpl* smoothTerrainVolume, const Vector3F& centre, const Brush& brush)
 	{
 		// Values for Gaussian function: https://en.wikipedia.org/wiki/Gaussian_function
-		float a = amount;
+		float a = brush.opacity();
 		//float b = 0.0f;
-		float c = brushRadius / 3.0f; // 3 standard deviations covers most of the range.
+		float c = brush.outerRadius() / 3.0f; // 3 standard deviations covers most of the range.
 		float cc2 = 2.0f*c*c;
 
-		int firstX = static_cast<int>(std::floor(centre.getX() - brushRadius));
-		int firstY = static_cast<int>(std::floor(centre.getY() - brushRadius));
-		int firstZ = static_cast<int>(std::floor(centre.getZ() - brushRadius));
+		int firstX = static_cast<int>(std::floor(centre.getX() - brush.outerRadius()));
+		int firstY = static_cast<int>(std::floor(centre.getY() - brush.outerRadius()));
+		int firstZ = static_cast<int>(std::floor(centre.getZ() - brush.outerRadius()));
 
-		int lastX = static_cast<int>(std::ceil(centre.getX() + brushRadius));
-		int lastY = static_cast<int>(std::ceil(centre.getY() + brushRadius));
-		int lastZ = static_cast<int>(std::ceil(centre.getZ() + brushRadius));
+		int lastX = static_cast<int>(std::ceil(centre.getX() + brush.outerRadius()));
+		int lastY = static_cast<int>(std::ceil(centre.getY() + brush.outerRadius()));
+		int lastZ = static_cast<int>(std::ceil(centre.getZ() + brush.outerRadius()));
 
 		//Check bounds.
 		firstX = (std::max)(firstX,smoothTerrainVolume->getEnclosingRegion().getLowerCorner().getX());

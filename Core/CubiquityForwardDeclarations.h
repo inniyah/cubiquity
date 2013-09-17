@@ -5,6 +5,7 @@
 
 namespace Cubiquity
 {
+	class Brush;
 	class Clock;
 
 	class Colour;

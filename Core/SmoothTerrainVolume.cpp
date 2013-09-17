@@ -38,8 +38,10 @@ namespace Cubiquity
 
 					for(int32_t z = region.getLowerZ(); z <= region.getUpperZ(); z++)
 					{
+						uint32_t index = 0;
+						//index = (x / 16 + z / 16) % 2; //Checkerboard for testing
 						MultiMaterial material;
-						material.setMaterial(0, density);
+						material.setMaterial(index, density);
 						smoothTerrainVolume->setVoxelAt(x, y, z, material, UpdatePriorities::DontUpdate);
 					}
 				}

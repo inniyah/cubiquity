@@ -1,5 +1,6 @@
 #include "GameplaySmoothTerrainVolumeEditor.h"
 
+#include "Brush.h"
 #include "SmoothTerrainVolumeEditor.h"
 
 namespace Cubiquity
@@ -32,12 +33,14 @@ namespace Cubiquity
 	void GameplaySmoothTerrainVolumeEditor::addMaterial(const gameplay::Vector3& centre, float radius, uint32_t materialToAdd, float timeElapsedInSeconds, float amount)
 	{
 		Vector3F v3dCentre(centre.x, centre.y, centre.z);
-		sculptSmoothTerrainVolume(mSmoothTerrainVolume, v3dCentre, radius, amount);
+		Brush brush(radius, radius, amount);
+		sculptSmoothTerrainVolume(mSmoothTerrainVolume, v3dCentre, brush);
 	}
 
 	void GameplaySmoothTerrainVolumeEditor::subtractMaterial(const gameplay::Vector3& centre, float radius, float timeElapsedInSeconds, float amount)
 	{
 		Vector3F v3dCentre(centre.x, centre.y, centre.z);
-		sculptSmoothTerrainVolume(mSmoothTerrainVolume, v3dCentre, radius, amount * -1.0f);
+		Brush brush(radius, radius, amount * -1.0f);
+		sculptSmoothTerrainVolume(mSmoothTerrainVolume, v3dCentre, brush);
 	}
 }

@@ -63,6 +63,7 @@
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VolumeResampler.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.h" />
     <ClInclude Include="BackgroundTaskProcessor.h" />
+    <ClInclude Include="Brush.h" />
     <ClInclude Include="Clock.h" />
     <ClInclude Include="Colour.h" />
     <ClInclude Include="ColouredCubesVolume.h" />
@@ -140,6 +141,7 @@
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Region.cpp" />
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\VertexTypes.cpp" />
     <ClCompile Include="BackgroundTaskProcessor.cpp" />
+    <ClCompile Include="Brush.cpp" />
     <ClCompile Include="Clock.cpp" />
     <ClCompile Include="Colour.cpp" />
     <ClCompile Include="ColouredCubesVolume.cpp" />
