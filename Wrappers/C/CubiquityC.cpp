@@ -917,35 +917,35 @@ CUBIQUITYC_API int32_t cuPickTerrainSurface(uint32_t volumeHandle, float rayStar
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuSculptSmoothTerrainVolume(uint32_t volumeHandle, float centerX, float centerY, float centerZ, float brushRadius, float amount)
+CUBIQUITYC_API int32_t cuSculptSmoothTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushRadius, float opacity)
 {
 	OPEN_C_INTERFACE
 
 	SmoothTerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
 
-	sculptSmoothTerrainVolume(volume, Vector3F(centerX, centerY, centerZ), Brush(brushRadius, brushRadius, amount));
+	sculptSmoothTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushRadius, brushRadius, opacity));
 
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuBlurSmoothTerrainVolume(uint32_t volumeHandle, float centerX, float centerY, float centerZ, float brushRadius, float amount)
+CUBIQUITYC_API int32_t cuBlurSmoothTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushRadius, float opacity)
 {
 	OPEN_C_INTERFACE
 
 	SmoothTerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
 
-	blurSmoothTerrainVolume(volume, Vector3F(centerX, centerY, centerZ), Brush(brushRadius, brushRadius, amount));
+	blurSmoothTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushRadius, brushRadius, opacity));
 
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuPaintSmoothTerrainVolume(uint32_t volumeHandle, float centerX, float centerY, float centerZ, float brushRadius, uint32_t materialIndex, float amount)
+CUBIQUITYC_API int32_t cuPaintSmoothTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushRadius, float opacity, uint32_t materialIndex)
 {
 	OPEN_C_INTERFACE
 
 	SmoothTerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
 
-	paintSmoothTerrainVolume(volume, Vector3F(centerX, centerY, centerZ), Brush(brushRadius, brushRadius, amount), materialIndex);
+	paintSmoothTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushRadius, brushRadius, opacity), materialIndex);
 
 	CLOSE_C_INTERFACE
 }

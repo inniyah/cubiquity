@@ -92,7 +92,8 @@ private:
 	Button* mMat3Button;
 
 	Slider* mLod1StartSlider;
-	Slider* mBrushSizeSlider;
+	Slider* mBrushInnerRadiusSlider;
+	Slider* mBrushOuterRadiusSlider;
 	Slider* mBrushIntensitySlider;
 	Slider* mSmoothBiasSlider;
 

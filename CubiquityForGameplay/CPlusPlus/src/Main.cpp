@@ -94,7 +94,8 @@ void MeshGame::initialize()
 	mMat3Button = (Button*)mForm->getControl("Mat3Button");
 
 	mLod1StartSlider = (Slider*)mForm->getControl("Lod1StartSlider");
-	mBrushSizeSlider = (Slider*)mForm->getControl("BrushSizeSlider");
+	mBrushInnerRadiusSlider = (Slider*)mForm->getControl("BrushInnerRadiusSlider");
+	mBrushOuterRadiusSlider = (Slider*)mForm->getControl("BrushOuterRadiusSlider");
 	mBrushIntensitySlider = (Slider*)mForm->getControl("BrushIntensitySlider");
 	mSmoothBiasSlider = (Slider*)mForm->getControl("SmoothBiasSlider");
 
@@ -121,7 +122,7 @@ void MeshGame::initialize()
 	model->setMaterial("res/Materials/VertexColouredMesh.material");
 	mSphereNode = Node::create();
 	mSphereNode->setModel(model);
-	float scale = mBrushSizeSlider->getValue();
+	float scale = mBrushOuterRadiusSlider->getValue();
 	mSphereNode->setScale(scale, scale, scale);
 	_scene->addNode(mSphereNode);
 
@@ -272,19 +273,19 @@ void MeshGame::update(float elapsedTime)
 	{		 
 		if(mPaintButton->isSelected())
 		{
-			mVolumeEditor->applyPaint(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
+			mVolumeEditor->applyPaint(mSphereNode->getTranslation(), mBrushInnerRadiusSlider->getValue(), mBrushOuterRadiusSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
 		}
 		if(mSmoothButton->isSelected())
 		{
-			mVolumeEditor->smooth(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mTimeBetweenUpdatesInSeconds, mSmoothBiasSlider->getValue(), mBrushIntensitySlider->getValue());
+			mVolumeEditor->smooth(mSphereNode->getTranslation(), mBrushInnerRadiusSlider->getValue(), mBrushOuterRadiusSlider->getValue(), mTimeBetweenUpdatesInSeconds, mSmoothBiasSlider->getValue(), mBrushIntensitySlider->getValue());
 		}
 		if(mAddButton->isSelected())
 		{
-			mVolumeEditor->addMaterial(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
+			mVolumeEditor->addMaterial(mSphereNode->getTranslation(), mBrushInnerRadiusSlider->getValue(), mBrushOuterRadiusSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
 		}
 		if(mSubtractButton->isSelected())
 		{
-			mVolumeEditor->subtractMaterial(mSphereNode->getTranslation(), mBrushSizeSlider->getValue(), mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
+			mVolumeEditor->subtractMaterial(mSphereNode->getTranslation(), mBrushInnerRadiusSlider->getValue(), mBrushOuterRadiusSlider->getValue(), mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
 		}
 	}
 #endif
@@ -369,9 +370,9 @@ void MeshGame::controlEvent(Control* control, EventType evt)
 		}
 		case Listener::VALUE_CHANGED:
 		{
-			if(control == mBrushSizeSlider)
+			if(control == mBrushOuterRadiusSlider)
 			{
-				float scale = mBrushSizeSlider->getValue();
+				float scale = mBrushOuterRadiusSlider->getValue();
 				if(mSphereNode)
 				{
 					mSphereNode->setScale(scale, scale, scale);
