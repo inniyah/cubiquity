@@ -934,7 +934,7 @@ CUBIQUITYC_API int32_t cuBlurSmoothTerrainVolume(uint32_t volumeHandle, float ce
 
 	SmoothTerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
 
-	blurSmoothTerrainVolume(volume, Vector3F(centerX, centerY, centerZ), brushRadius, amount);
+	blurSmoothTerrainVolume(volume, Vector3F(centerX, centerY, centerZ), Brush(brushRadius, brushRadius, amount));
 
 	CLOSE_C_INTERFACE
 }
@@ -945,7 +945,7 @@ CUBIQUITYC_API int32_t cuPaintSmoothTerrainVolume(uint32_t volumeHandle, float c
 
 	SmoothTerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
 
-	paintSmoothTerrainVolume(volume, Vector3F(centerX, centerY, centerZ), brushRadius, materialIndex, amount);
+	paintSmoothTerrainVolume(volume, Vector3F(centerX, centerY, centerZ), Brush(brushRadius, brushRadius, amount), materialIndex);
 
 	CLOSE_C_INTERFACE
 }
