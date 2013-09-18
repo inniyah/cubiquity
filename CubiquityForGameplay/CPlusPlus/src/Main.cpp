@@ -96,8 +96,7 @@ void MeshGame::initialize()
 	mLod1StartSlider = (Slider*)mForm->getControl("Lod1StartSlider");
 	mBrushInnerRadiusSlider = (Slider*)mForm->getControl("BrushInnerRadiusSlider");
 	mBrushOuterRadiusSlider = (Slider*)mForm->getControl("BrushOuterRadiusSlider");
-	mBrushIntensitySlider = (Slider*)mForm->getControl("BrushIntensitySlider");
-	mSmoothBiasSlider = (Slider*)mForm->getControl("SmoothBiasSlider");
+	mBrushOpacitySlider = (Slider*)mForm->getControl("BrushOpacitySlider");
 
 	mWireframeCheckBox = (CheckBox*)mForm->getControl("WireframeCheckBox");
 
@@ -273,19 +272,19 @@ void MeshGame::update(float elapsedTime)
 	{		 
 		if(mPaintButton->isSelected())
 		{
-			mVolumeEditor->applyPaint(mSphereNode->getTranslation(), mBrushInnerRadiusSlider->getValue(), mBrushOuterRadiusSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
+			mVolumeEditor->applyPaint(mSphereNode->getTranslation(), mBrushInnerRadiusSlider->getValue(), mBrushOuterRadiusSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushOpacitySlider->getValue());
 		}
 		if(mSmoothButton->isSelected())
 		{
-			mVolumeEditor->smooth(mSphereNode->getTranslation(), mBrushInnerRadiusSlider->getValue(), mBrushOuterRadiusSlider->getValue(), mTimeBetweenUpdatesInSeconds, mSmoothBiasSlider->getValue(), mBrushIntensitySlider->getValue());
+			mVolumeEditor->smooth(mSphereNode->getTranslation(), mBrushInnerRadiusSlider->getValue(), mBrushOuterRadiusSlider->getValue(), mTimeBetweenUpdatesInSeconds, mBrushOpacitySlider->getValue());
 		}
 		if(mAddButton->isSelected())
 		{
-			mVolumeEditor->addMaterial(mSphereNode->getTranslation(), mBrushInnerRadiusSlider->getValue(), mBrushOuterRadiusSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
+			mVolumeEditor->addMaterial(mSphereNode->getTranslation(), mBrushInnerRadiusSlider->getValue(), mBrushOuterRadiusSlider->getValue(), mSelectedMaterial, mTimeBetweenUpdatesInSeconds, mBrushOpacitySlider->getValue());
 		}
 		if(mSubtractButton->isSelected())
 		{
-			mVolumeEditor->subtractMaterial(mSphereNode->getTranslation(), mBrushInnerRadiusSlider->getValue(), mBrushOuterRadiusSlider->getValue(), mTimeBetweenUpdatesInSeconds, mBrushIntensitySlider->getValue());
+			mVolumeEditor->subtractMaterial(mSphereNode->getTranslation(), mBrushInnerRadiusSlider->getValue(), mBrushOuterRadiusSlider->getValue(), mTimeBetweenUpdatesInSeconds, mBrushOpacitySlider->getValue());
 		}
 	}
 #endif

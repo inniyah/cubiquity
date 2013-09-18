@@ -196,14 +196,14 @@ form particleEditor
             consumeInputEvents = false
         }
         
-        label titleBrushIntensity
+        label titleBrushOpacity
         {
             style = title
             size = 150, 30
-            text = Brush Intensity
+            text = Brush Opacity
         }
         
-        slider BrushIntensitySlider
+        slider BrushOpacitySlider
         {
             style = noBorder
             size = 150, 50
@@ -211,25 +211,6 @@ form particleEditor
             min = -1.0
             max = 1.0
             value = 0.5
-            step = 0.01
-            consumeInputEvents = false
-        }
-        
-        label titleSmoothBias
-        {
-            style = title
-            size = 150, 30
-            text = Smooth Bias
-        }
-        
-        slider SmoothBiasSlider
-        {
-            style = noBorder
-            size = 150, 50
-            orientation = HORIZONTAL
-            min = -0.25
-            max = 0.75
-            value = 0.25
             step = 0.01
             consumeInputEvents = false
         }

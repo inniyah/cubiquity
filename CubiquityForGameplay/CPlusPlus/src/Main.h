@@ -94,8 +94,7 @@ private:
 	Slider* mLod1StartSlider;
 	Slider* mBrushInnerRadiusSlider;
 	Slider* mBrushOuterRadiusSlider;
-	Slider* mBrushIntensitySlider;
-	Slider* mSmoothBiasSlider;
+	Slider* mBrushOpacitySlider;
 
 	CheckBox* mWireframeCheckBox;
 

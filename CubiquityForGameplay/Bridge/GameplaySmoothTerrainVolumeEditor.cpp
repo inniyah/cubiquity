@@ -22,12 +22,9 @@ namespace Cubiquity
 		paintSmoothTerrainVolume(mSmoothTerrainVolume, v3dCentre, brush, materialToPaintWith);
 	}
 
-	void GameplaySmoothTerrainVolumeEditor::smooth(const gameplay::Vector3& centre, float innerRadius, float outerRadius, float timeElapsedInSeconds, float smoothBias, float amount)
+	void GameplaySmoothTerrainVolumeEditor::smooth(const gameplay::Vector3& centre, float innerRadius, float outerRadius, float timeElapsedInSeconds, float amount)
 	{
 		Vector3F v3dCentre(centre.x, centre.y, centre.z);
-		// '0' is a dummy as the smooth operations smooths *all* materials
-		//edit(v3dCentre, radius, 0, EditActions::Smooth, timeElapsedInSeconds, amount, smoothBias);
-		//smoothVolume(v3dCentre, radius);
 		Brush brush(innerRadius, outerRadius, amount);
 		blurSmoothTerrainVolume(mSmoothTerrainVolume, v3dCentre, brush);
 	}
