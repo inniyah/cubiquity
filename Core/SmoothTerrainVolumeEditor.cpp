@@ -8,14 +8,20 @@ using namespace PolyVox;
 
 namespace Cubiquity
 {
+	//Note: It would be nice if this function took length squared instead of length.
+	float computeBrushIntensity(const Brush& brush, float distFromCenter)
+	{
+		float lerpFactor = (distFromCenter - brush.innerRadius()) / (brush.outerRadius() - brush.innerRadius());
+		float result = lerp(1.0f, 0.0f, lerpFactor);
+
+		result = (std::min)(result, 1.0f);
+		result = (std::max)(result, 0.0f);
+
+		return result * brush.opacity();
+	}
+
 	void sculptSmoothTerrainVolume(SmoothTerrainVolumeImpl* smoothTerrainVolume, const Vector3F& centre, const Brush& brush)
 	{
-		// Values for Gaussian function: https://en.wikipedia.org/wiki/Gaussian_function
-		float a = brush.opacity();
-		//float b = 0.0f;
-		float c = brush.outerRadius() / 3.0f; // 3 standard deviations covers most of the range.
-		float cc2 = 2.0f*c*c;
-
 		int firstX = static_cast<int>(std::floor(centre.getX() - brush.outerRadius()));
 		int firstY = static_cast<int>(std::floor(centre.getY() - brush.outerRadius()));
 		int firstZ = static_cast<int>(std::floor(centre.getZ() - brush.outerRadius()));
@@ -45,14 +51,11 @@ namespace Cubiquity
 				{					
 					Vector3F pos(x, y, z);
 					float distFromCentreSquared = (centre - pos).lengthSquared();
+					float distFromCentre = (centre - pos).length();
 
-					// From Wikipedia: https://en.wikipedia.org/wiki/Gaussian_function
-					// Gaussian funtion f(x) = a*exp(-((x-b)*(x-b) / (2*c*c)))
-					// For us, 'b' is zero, which leaves 'x*x' on top. 'x' is the distance
-					// from the centre so we can put the squared distance on top.
-					float gaussian = a*exp(-(distFromCentreSquared / cc2));
+					float intensity = computeBrushIntensity(brush, distFromCentre);
 
-					int32_t amountToAdd = static_cast<int32_t>(gaussian + 0.5f);
+					int32_t amountToAdd = static_cast<int32_t>(intensity + 0.5f);
 
 					for(uint32_t matIndex = 0; matIndex < MultiMaterial::getNoOfMaterials(); matIndex++)
 					{
@@ -79,7 +82,7 @@ namespace Cubiquity
 							normal.normalise();
 						}
 
-						normal = normal * gaussian;
+						normal = normal * intensity;
 
 						Vector3F samplePoint = pos - normal;
 
@@ -119,12 +122,6 @@ namespace Cubiquity
 
 	void blurSmoothTerrainVolume(SmoothTerrainVolumeImpl* smoothTerrainVolume, const Vector3F& centre, const Brush& brush)
 	{
-		// Values for Gaussian function: https://en.wikipedia.org/wiki/Gaussian_function
-		float a = brush.opacity();
-		//float b = 0.0f;
-		float c = brush.outerRadius() / 3.0f;
-		float cc2 = 2.0f*c*c;
-
 		int firstX = static_cast<int>(std::floor(centre.getX() - brush.outerRadius()));
 		int firstY = static_cast<int>(std::floor(centre.getY() - brush.outerRadius()));
 		int firstZ = static_cast<int>(std::floor(centre.getZ() - brush.outerRadius()));
@@ -153,16 +150,11 @@ namespace Cubiquity
 				for(int x = firstX; x <= lastX; ++x)
 				{					
 					Vector3F pos(x, y, z);
-					float distFromCentreSquared = (centre - pos).lengthSquared();
+					float distFromCentre = (centre - pos).length();
 
+					float intensity = computeBrushIntensity(brush, distFromCentre);
 
-					// From Wikipedia: https://en.wikipedia.org/wiki/Gaussian_function
-					// Gaussian funtion f(x) = a*exp(-((x-b)*(x-b) / (2*c*c)))
-					// For us, 'b' is zero, which leaves 'x*x' on top. 'x' is the distance
-					// from the centre so we can put the squared distance on top.
-					float gaussian = a*exp(-(distFromCentreSquared / cc2));
-
-					int32_t amountToAdd = static_cast<int32_t>(gaussian + 0.5f);
+					int32_t amountToAdd = static_cast<int32_t>(intensity + 0.5f);
 
 					for(uint32_t matIndex = 0; matIndex < MultiMaterial::getNoOfMaterials(); matIndex++)
 					{
@@ -179,7 +171,7 @@ namespace Cubiquity
 
 						float fAverage = static_cast<float>(sum) / 7.0f;
 
-						float fLerped = lerp(static_cast<float>(original), fAverage, gaussian);
+						float fLerped = lerp(static_cast<float>(original), fAverage, intensity);
 
 						int32_t iLerped = static_cast<int32_t>(fLerped + 0.5f);
 
@@ -250,12 +242,6 @@ namespace Cubiquity
 
 	void paintSmoothTerrainVolume(SmoothTerrainVolumeImpl* smoothTerrainVolume, const Vector3F& centre, const Brush& brush, uint32_t materialIndex)
 	{
-		// Values for Gaussian function: https://en.wikipedia.org/wiki/Gaussian_function
-		float a = brush.opacity();
-		//float b = 0.0f;
-		float c = brush.outerRadius() / 3.0f; // 3 standard deviations covers most of the range.
-		float cc2 = 2.0f*c*c;
-
 		int firstX = static_cast<int>(std::floor(centre.getX() - brush.outerRadius()));
 		int firstY = static_cast<int>(std::floor(centre.getY() - brush.outerRadius()));
 		int firstZ = static_cast<int>(std::floor(centre.getZ() - brush.outerRadius()));
@@ -284,15 +270,10 @@ namespace Cubiquity
 				for(int x = firstX; x <= lastX; ++x)
 				{					
 					Vector3F pos(x, y, z);
-					float distFromCentreSquared = (centre - pos).lengthSquared();
+					float distFromCentre = (centre - pos).length();
+					float intensity = computeBrushIntensity(brush, distFromCentre);
 
-					// From Wikipedia: https://en.wikipedia.org/wiki/Gaussian_function
-					// Gaussian funtion f(x) = a*exp(-((x-b)*(x-b) / (2*c*c)))
-					// For us, 'b' is zero, which leaves 'x*x' on top. 'x' is the distance
-					// from the centre so we can put the squared distance on top.
-					float gaussian = a*exp(-(distFromCentreSquared / cc2));
-
-					float fAmmountToAdd = gaussian * MultiMaterial::getMaxMaterialValue();
+					float fAmmountToAdd = intensity * MultiMaterial::getMaxMaterialValue();
 
 					int32_t amountToAdd = static_cast<int32_t>(fAmmountToAdd + 0.5f);
 
