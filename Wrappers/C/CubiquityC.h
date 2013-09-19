@@ -73,7 +73,7 @@ extern "C"
 	CUBIQUITYC_API int32_t cuPickTerrainSurface(uint32_t volumeHandle, float rayStartX, float rayStartY, float rayStartZ, float rayDirX, float rayDirY, float rayDirZ, float* resultX, float* resultY, float* resultZ, uint32_t* result);
 
 	// Editing functions
-	CUBIQUITYC_API int32_t cuSculptSmoothTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushRadius, float opacity);
-	CUBIQUITYC_API int32_t cuBlurSmoothTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushRadius, float opacity);
-	CUBIQUITYC_API int32_t cuPaintSmoothTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushRadius, float opacity, uint32_t materialIndex);
+	CUBIQUITYC_API int32_t cuSculptSmoothTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushInnerRadius, float brushOuterRadius, float opacity);
+	CUBIQUITYC_API int32_t cuBlurSmoothTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushInnerRadius, float brushOuterRadius, float opacity);
+	CUBIQUITYC_API int32_t cuPaintSmoothTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushInnerRadius, float brushOuterRadius, float opacity, uint32_t materialIndex);
 }

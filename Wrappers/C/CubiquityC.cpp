@@ -917,35 +917,35 @@ CUBIQUITYC_API int32_t cuPickTerrainSurface(uint32_t volumeHandle, float rayStar
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuSculptSmoothTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushRadius, float opacity)
+CUBIQUITYC_API int32_t cuSculptSmoothTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushInnerRadius, float brushOuterRadius, float opacity)
 {
 	OPEN_C_INTERFACE
 
 	SmoothTerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
 
-	sculptSmoothTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushRadius, brushRadius, opacity));
+	sculptSmoothTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushInnerRadius, brushOuterRadius, opacity));
 
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuBlurSmoothTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushRadius, float opacity)
+CUBIQUITYC_API int32_t cuBlurSmoothTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushInnerRadius, float brushOuterRadius, float opacity)
 {
 	OPEN_C_INTERFACE
 
 	SmoothTerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
 
-	blurSmoothTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushRadius, brushRadius, opacity));
+	blurSmoothTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushInnerRadius, brushOuterRadius, opacity));
 
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuPaintSmoothTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushRadius, float opacity, uint32_t materialIndex)
+CUBIQUITYC_API int32_t cuPaintSmoothTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushInnerRadius, float brushOuterRadius, float opacity, uint32_t materialIndex)
 {
 	OPEN_C_INTERFACE
 
 	SmoothTerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
 
-	paintSmoothTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushRadius, brushRadius, opacity), materialIndex);
+	paintSmoothTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushInnerRadius, brushOuterRadius, opacity), materialIndex);
 
 	CLOSE_C_INTERFACE
 }
