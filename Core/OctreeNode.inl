@@ -79,6 +79,10 @@ namespace Cubiquity
 	template <typename VoxelType>
 	void OctreeNode<VoxelType>::updateFromCompletedTask(typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* completedTask)
 	{
+		// Delete the old mesh first.
+		delete mPolyVoxMesh;
+
+		// Assign a new on if available
 		if(completedTask->mPolyVoxMesh->getNoOfIndices() > 0)
 		{
 			mPolyVoxMesh = completedTask->mPolyVoxMesh;
