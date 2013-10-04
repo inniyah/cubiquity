@@ -40,6 +40,8 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	std::cout << noOfVertices << " " << noOfIndices << std::endl;
 
+	cuDeleteColouredCubesVolume(volumeID);
+
 	/*for(unsigned int ct = 0; ct < noOfIndices; ct++)
 	{   
 		tstringstream stros;    
