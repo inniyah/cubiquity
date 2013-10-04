@@ -143,8 +143,12 @@ void MeshGame::initialize()
 			PhysicsRigidBody::Parameters boxParams;
 			boxParams.mass = 10.0f;
 			objectNode->setCollisionObject(PhysicsCollisionObject::RIGID_BODY, PhysicsCollisionShape::box(), &boxParams);
+
+			SAFE_RELEASE(objectModel);
+			SAFE_RELEASE(objectNode);
 		}
 	}
+	SAFE_RELEASE(boxBundle);
 
     // Find the light node
 	_light = Light::createDirectional(Vector3(0.75, 0.75, 0.75));
@@ -214,6 +218,7 @@ void MeshGame::finalize()
     SAFE_RELEASE(_font);
     SAFE_RELEASE(_scene);
 	SAFE_RELEASE(mVolume);
+	SAFE_RELEASE(mForm);
 }
 
 void MeshGame::update(float elapsedTime)
