@@ -40,6 +40,7 @@ namespace Cubiquity
 
 	GameplaySmoothTerrainVolume::~GameplaySmoothTerrainVolume()
 	{
+		delete mRootGameplayOctreeNode;
 		delete mCubiquityVolume;
 	}
 
