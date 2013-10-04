@@ -145,6 +145,8 @@ namespace Cubiquity
 					volume->setVoxelAt(x, slice, y, voxel, UpdatePriorities::DontUpdate);
 				}
 			}
+
+			stbi_image_free(sliceData);
 		}
 
 		volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Background);
