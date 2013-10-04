@@ -116,6 +116,9 @@ namespace Cubiquity
 		// Make sure it opened sucessfully
 		POLYVOX_THROW_IF(sliceData == NULL, std::runtime_error, "Failed to open first image");
 
+		//Close it straight away - we only wanted to find the dimensions.
+		stbi_image_free(sliceData);
+
 		//Create the volume
 		// When importing we treat 'y' as up because the Gameplay physics engine makes some
 		// assumptions about this. This means we need to swap the 'y' and 'slice' indices.

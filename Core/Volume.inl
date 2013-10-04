@@ -115,6 +115,10 @@ namespace Cubiquity
 		mPolyVoxVolume->flushAll();
 #endif
 
+		//delete mPolyVoxVolume;
+		//delete m_pCompressor;
+		//delete m_pOverrideFilePager;
+
 		logTrace() << "Exiting ~Volume()";
 	}
 
