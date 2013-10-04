@@ -107,6 +107,8 @@ namespace Cubiquity
 	{
 		logTrace() << "Entering ~Volume()";
 
+		delete mOctree;
+
 		// NOTE: We should really delete the volume here, but the background task processor might still be using it.
 		// We need a way to shut that down, or maybe smart pointers can help here. Just flush until we have a better fix.
 #ifdef USE_LARGE_VOLUME

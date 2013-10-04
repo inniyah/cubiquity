@@ -43,6 +43,7 @@ namespace Cubiquity
 	template <typename VoxelType>
 	OctreeNode<VoxelType>::~OctreeNode()
 	{
+		delete mPolyVoxMesh;
 	}
 
 	template <typename VoxelType>
@@ -81,6 +82,7 @@ namespace Cubiquity
 	{
 		// Delete the old mesh first.
 		delete mPolyVoxMesh;
+		mPolyVoxMesh = 0;
 
 		// Assign a new on if available
 		if(completedTask->mPolyVoxMesh->getNoOfIndices() > 0)

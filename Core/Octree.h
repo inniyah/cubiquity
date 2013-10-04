@@ -105,6 +105,7 @@ namespace Cubiquity
 		static const uint16_t InvalidNodeIndex = 0xFFFF;
 
 		Octree(Volume<VoxelType>* volume, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize);
+		~Octree();
 
 		template<typename VisitorType>
 		void acceptVisitor(VisitorType visitor) { visitNode(mRootNodeIndex, visitor); }

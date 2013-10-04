@@ -69,6 +69,15 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
+	Octree<VoxelType>::~Octree()
+	{
+		for(uint32_t ct = 0; ct < mNodes.size(); ct++)
+		{
+			delete mNodes[ct];
+		}
+	}
+
+	template <typename VoxelType>
 	uint16_t Octree<VoxelType>::createNode(Region region, uint16_t parent)
 	{
 		OctreeNode< VoxelType >* node = new OctreeNode< VoxelType >(region, parent, this);

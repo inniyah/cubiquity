@@ -40,6 +40,7 @@ namespace Cubiquity
 
 	GameplaySmoothTerrainVolume::~GameplaySmoothTerrainVolume()
 	{
+		delete mCubiquityVolume;
 	}
 
 	void GameplaySmoothTerrainVolume::performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold)
