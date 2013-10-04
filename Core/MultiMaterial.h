@@ -131,7 +131,7 @@ namespace Cubiquity
 			// Move the required bits into the least significant bits of result.
 			StorageType result = mMaterials >> (BitsPerMaterial * index);
 
-			// Build a mask containing all '0''s except for the least significant bits (which are '1's).
+			// Build a mask containing all '0's except for the least significant bits (which are '1's).
 			StorageType mask = (std::numeric_limits<StorageType>::max)(); //Set to all '1's
 			mask = mask << BitsPerMaterial; // Insert the required number of '0's for the lower bits
 			mask = ~mask; // And invert

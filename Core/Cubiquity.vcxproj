@@ -47,7 +47,6 @@
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Material.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\MaterialDensityPair.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\MinizBlockCompressor.h" />
-    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\MinizCompressor.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Pager.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Picking.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\PolyVoxForwardDeclarations.h" />
@@ -133,11 +132,11 @@
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\AStarPathfinder.cpp" />
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\ErrorHandling.cpp" />
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\MarchingCubesTables.cpp" />
+    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\MinizWrapper.cpp" />
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\RandomUnitVectors.cpp" />
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\RandomVectors.cpp" />
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\Timer.cpp" />
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\Utility.cpp" />
-    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\MinizCompressor.cpp" />
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Region.cpp" />
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\VertexTypes.cpp" />
     <ClCompile Include="BackgroundTaskProcessor.cpp" />

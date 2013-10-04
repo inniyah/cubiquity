@@ -102,9 +102,6 @@
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\MaterialDensityPair.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\MinizCompressor.h">
-      <Filter>PolyVox</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\PolyVoxForwardDeclarations.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
@@ -379,9 +376,6 @@
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\AStarPathfinder.cpp">
       <Filter>PolyVox</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\MinizCompressor.cpp">
-      <Filter>PolyVox</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Region.cpp">
       <Filter>PolyVox</Filter>
     </ClCompile>
@@ -438,6 +432,9 @@
     </ClCompile>
     <ClCompile Include="Brush.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\MinizWrapper.cpp">
+      <Filter>PolyVox</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
