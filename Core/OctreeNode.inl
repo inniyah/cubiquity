@@ -88,6 +88,7 @@ namespace Cubiquity
 		if(completedTask->mPolyVoxMesh->getNoOfIndices() > 0)
 		{
 			mPolyVoxMesh = completedTask->mPolyVoxMesh;
+			completedTask->mOwnMesh = false; // So the task doesn't delete the mesh
 		}
 
 		setMeshLastUpdated(Clock::getTimestamp());

@@ -22,6 +22,10 @@ namespace Cubiquity
 		::PolyVox::POLYVOX_VOLUME<typename MultiMaterialMarchingCubesController::MaterialType>* mPolyVoxVolume;
 		::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType> >* mPolyVoxMesh;
 		Timestamp mProcessingStartedTimestamp;
+
+		// Whether the task owns the mesh, or whether it has been passed to
+		// the OctreeNode. Should probably switch this to use a smart pointer.
+		bool mOwnMesh;
 	};
 
 	void recalculateMaterials(::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* mesh, const Vector3F& meshOffset, ::PolyVox::POLYVOX_VOLUME<MultiMaterial>* volume);

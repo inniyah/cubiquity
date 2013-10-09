@@ -18,12 +18,18 @@ namespace Cubiquity
 		,mPolyVoxVolume(polyVoxVolume)
 		,mPolyVoxMesh(0)
 		,mProcessingStartedTimestamp((std::numeric_limits<Timestamp>::max)())
+		,mOwnMesh(false)
 	{
 	}
 
 	SmoothSurfaceExtractionTask::~SmoothSurfaceExtractionTask()
 	{
-		//Should delete mesh here?
+		if(mOwnMesh)
+		{
+			delete mPolyVoxMesh;
+			mPolyVoxMesh = 0;
+			mOwnMesh = false;
+		}
 	}
 
 	void SmoothSurfaceExtractionTask::process(void)
@@ -31,6 +37,7 @@ namespace Cubiquity
 		mProcessingStartedTimestamp = Clock::getTimestamp();
 		//Extract the surface
 		mPolyVoxMesh = new ::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >;
+		mOwnMesh = true;
 
 		generateSmoothMesh(mOctreeNode->mRegion, mOctreeNode->mHeight, mPolyVoxMesh);
 

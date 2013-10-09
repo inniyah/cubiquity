@@ -19,12 +19,18 @@ namespace Cubiquity
 		,mPolyVoxVolume(polyVoxVolume)
 		,mPolyVoxMesh(0)
 		,mProcessingStartedTimestamp((std::numeric_limits<Timestamp>::max)())
+		,mOwnMesh(false)
 	{
 	}
 
 	ColouredCubicSurfaceExtractionTask::~ColouredCubicSurfaceExtractionTask()
 	{
-		//Should delete mesh here?
+		if(mOwnMesh)
+		{
+			delete mPolyVoxMesh;
+			mPolyVoxMesh = 0;
+			mOwnMesh = false;
+		}
 	}
 
 	void ColouredCubicSurfaceExtractionTask::process(void)
@@ -35,6 +41,7 @@ namespace Cubiquity
 
 		//Extract the surface
 		mPolyVoxMesh = new ::PolyVox::SurfaceMesh<::PolyVox::PositionMaterial<Colour> >;
+		mOwnMesh = true;
 
 		uint32_t downScaleFactor = 0x0001 << mOctreeNode->mHeight;
 

@@ -24,6 +24,10 @@ namespace Cubiquity
 		::PolyVox::POLYVOX_VOLUME<Colour>* mPolyVoxVolume;
 		::PolyVox::SurfaceMesh<::PolyVox::PositionMaterial<Colour> >* mPolyVoxMesh;
 		Timestamp mProcessingStartedTimestamp;
+
+		// Whether the task owns the mesh, or whether it has been passed to
+		// the OctreeNode. Should probably switch this to use a smart pointer.
+		bool mOwnMesh;
 	};
 
 	template< typename SrcPolyVoxVolumeType, typename DstPolyVoxVolumeType>
