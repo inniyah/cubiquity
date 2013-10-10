@@ -83,6 +83,7 @@
     <ClInclude Include="SmoothSurfaceExtractionTask.h" />
     <ClInclude Include="SmoothTerrainVolume.h" />
     <ClInclude Include="SmoothTerrainVolumeEditor.h" />
+    <ClInclude Include="SQLitePager.h" />
     <ClInclude Include="Task.h" />
     <ClInclude Include="TaskProcessor.h" />
     <ClInclude Include="UpdatePriorities.h" />
@@ -122,6 +123,7 @@
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Vector.inl" />
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VolumeResampler.inl" />
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.inl" />
+    <None Include="ColouredCubicSurfaceExtractionTask.cpp.bak" />
     <None Include="Octree.inl" />
     <None Include="OctreeNode.inl" />
     <None Include="OverrideFilePager.inl" />
@@ -153,6 +155,7 @@
     <ClCompile Include="SmoothSurfaceExtractionTask.cpp" />
     <ClCompile Include="SmoothTerrainVolume.cpp" />
     <ClCompile Include="SmoothTerrainVolumeEditor.cpp" />
+    <ClCompile Include="SQLitePager.cpp" />
     <ClCompile Include="Task.cpp" />
     <ClCompile Include="VolumeSerialisation.cpp" />
   </ItemGroup>

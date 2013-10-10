@@ -249,6 +249,9 @@
     <ClInclude Include="Brush.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="SQLitePager.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.inl">
@@ -353,6 +356,9 @@
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Picking.inl">
       <Filter>PolyVox</Filter>
     </None>
+    <None Include="ColouredCubicSurfaceExtractionTask.cpp.bak">
+      <Filter>Core</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\ErrorHandling.cpp">
@@ -435,6 +441,9 @@
     </ClCompile>
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\MinizWrapper.cpp">
       <Filter>PolyVox</Filter>
+    </ClCompile>
+    <ClCompile Include="SQLitePager.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
