@@ -57,5 +57,8 @@
     <ClCompile Include="..\Bridge\GameplaySmoothTerrainVolumeEditor.cpp">
       <Filter>Bridge</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\Core\SQLite\sqlite3.c">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

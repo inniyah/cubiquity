@@ -28,7 +28,7 @@ namespace Cubiquity
 
 	private:
 
-		sqlite3* db;
+		sqlite3* pDatabase;
 	};
 }
 

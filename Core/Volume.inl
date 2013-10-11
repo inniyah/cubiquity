@@ -43,6 +43,8 @@ namespace Cubiquity
 #ifdef USE_LARGE_VOLUME
 		m_pCompressor = new ::PolyVox::MinizBlockCompressor<VoxelType>;
 
+		SQLitePager<VoxelType>* sqlitePager = new SQLitePager<VoxelType>("test.vol");
+
 		if(pageFolder.size() != 0)
 		{
 			m_pOverrideFilePager = new OverrideFilePager<VoxelType>(pageFolder);

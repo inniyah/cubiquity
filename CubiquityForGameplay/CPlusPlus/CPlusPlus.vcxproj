@@ -319,6 +319,7 @@
     <None Include="icon.png" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\Core\SQLite\sqlite3.c" />
     <ClCompile Include="..\Bridge\GameplayColouredCubesVolume.cpp" />
     <ClCompile Include="..\Bridge\GameplayRaycasting.cpp" />
     <ClCompile Include="..\Bridge\GameplaySmoothTerrainVolume.cpp" />
