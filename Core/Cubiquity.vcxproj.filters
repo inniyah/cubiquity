@@ -10,6 +10,9 @@
     <Filter Include="Core\Impl">
       <UniqueIdentifier>{1da4ee1e-0f5a-4edd-b71f-b3554a21e0f7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\sqlite">
+      <UniqueIdentifier>{5191d98b-456f-4742-bb8d-70924ff28683}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.h">
@@ -252,6 +255,9 @@
     <ClInclude Include="SQLitePager.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="sqlite\sqlite3.h">
+      <Filter>Core\sqlite</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.inl">
@@ -444,6 +450,9 @@
     </ClCompile>
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\MinizWrapper.cpp">
       <Filter>PolyVox</Filter>
+    </ClCompile>
+    <ClCompile Include="sqlite\sqlite3.c">
+      <Filter>Core\sqlite</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
