@@ -29,7 +29,7 @@ namespace Cubiquity
 			throw std::runtime_error(ss.str().c_str());
 		}
 
-		// Now build the prepared stements
+		// Now build the prepared statements
 		const char* insertQuery = "INSERT INTO Blocks (Region, Data) VALUES (?, ?)";
 		rc = sqlite3_prepare_v2(pDatabase, insertQuery, -1, &pInsertBlockStatement, NULL);
 		if(rc != SQLITE_OK)
@@ -37,11 +37,13 @@ namespace Cubiquity
 			throw std::runtime_error("Failed to prepare insert statement");
 		}
 
-		const char* selectQuery = "SELECT Block FROM Blocks WHERE Region = '%@'";
+		const char* selectQuery = "SELECT Data FROM Blocks WHERE Region = ?";
 		rc = sqlite3_prepare_v2(pDatabase, selectQuery, -1, &pSelectBlockStatement, NULL);
 		if(rc != SQLITE_OK)
 		{
-			throw std::runtime_error("Failed to prepare select statement");
+			std::stringstream ss;
+			ss << "Failed to prepare select statement. Message was: \"" << sqlite3_errmsg(pDatabase) << "\"";
+			throw std::runtime_error(ss.str().c_str());
 		}
 
 	}
@@ -64,6 +66,7 @@ namespace Cubiquity
 
 		// Based on: http://stackoverflow.com/a/5308188
 		sqlite3_reset(pSelectBlockStatement);
+		sqlite3_bind_text(pSelectBlockStatement, 1, ss.str().c_str(), -1, SQLITE_TRANSIENT);
 		if(sqlite3_step(pSelectBlockStatement) == SQLITE_ROW)
         {
 			// Indices are zero because our select statement only returned one column?
