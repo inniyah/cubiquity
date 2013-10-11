@@ -127,6 +127,7 @@
     <None Include="Octree.inl" />
     <None Include="OctreeNode.inl" />
     <None Include="OverrideFilePager.inl" />
+    <None Include="SQLitePager.inl" />
     <None Include="Volume.inl" />
   </ItemGroup>
   <ItemGroup>
@@ -155,7 +156,6 @@
     <ClCompile Include="SmoothSurfaceExtractionTask.cpp" />
     <ClCompile Include="SmoothTerrainVolume.cpp" />
     <ClCompile Include="SmoothTerrainVolumeEditor.cpp" />
-    <ClCompile Include="SQLitePager.cpp" />
     <ClCompile Include="Task.cpp" />
     <ClCompile Include="VolumeSerialisation.cpp" />
   </ItemGroup>

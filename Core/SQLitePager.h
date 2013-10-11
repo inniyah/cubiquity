@@ -15,4 +15,6 @@ namespace Cubiquity
 	};
 }
 
+#include "SQLitePager.inl"
+
 #endif //__CUBIQUITY_SQLITE_PAGER_H__

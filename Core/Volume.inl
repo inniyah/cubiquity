@@ -13,6 +13,7 @@
 #include "MultiMaterial.h"
 #include "OverrideFilePager.h"
 #include "Raycasting.h"
+#include "SQLitePager.h"
 
 #include <boost/filesystem.hpp>
 

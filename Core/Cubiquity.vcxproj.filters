@@ -359,6 +359,9 @@
     <None Include="ColouredCubicSurfaceExtractionTask.cpp.bak">
       <Filter>Core</Filter>
     </None>
+    <None Include="SQLitePager.inl">
+      <Filter>Core</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\ErrorHandling.cpp">
@@ -441,9 +444,6 @@
     </ClCompile>
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\MinizWrapper.cpp">
       <Filter>PolyVox</Filter>
-    </ClCompile>
-    <ClCompile Include="SQLitePager.cpp">
-      <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
