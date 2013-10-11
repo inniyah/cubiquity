@@ -30,6 +30,7 @@ namespace Cubiquity
 
 		sqlite3* pDatabase;
 		sqlite3_stmt* pInsertBlockStatement;
+		sqlite3_stmt* pSelectBlockStatement;
 	};
 }
 

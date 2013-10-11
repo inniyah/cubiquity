@@ -37,6 +37,13 @@ namespace Cubiquity
 			throw std::runtime_error("Failed to prepare insert statement");
 		}
 
+		const char* selectQuery = "SELECT Block FROM Blocks WHERE Region = '%@'";
+		rc = sqlite3_prepare_v2(pDatabase, selectQuery, -1, &pSelectBlockStatement, NULL);
+		if(rc != SQLITE_OK)
+		{
+			throw std::runtime_error("Failed to prepare select statement");
+		}
+
 	}
 
 	/// Destructor
@@ -50,6 +57,20 @@ namespace Cubiquity
 	void SQLitePager<VoxelType>::pageIn(const Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData)
 	{
 		POLYVOX_ASSERT(pBlockData, "Attempting to page in NULL block");
+
+		std::stringstream ss;
+		ss << region.getLowerX() << "_" << region.getLowerY() << "_" << region.getLowerZ() << "_"
+				<< region.getUpperX() << "_" << region.getUpperY() << "_" << region.getUpperZ();
+
+		// Based on: http://stackoverflow.com/a/5308188
+		sqlite3_reset(pSelectBlockStatement);
+		if(sqlite3_step(pSelectBlockStatement) == SQLITE_ROW)
+        {
+			// Indices are zero because our select statement only returned one column?
+            int length = sqlite3_column_bytes(pSelectBlockStatement, 0);
+            const void* data = sqlite3_column_blob(pSelectBlockStatement, 0);
+			pBlockData->setData(static_cast<const uint8_t*>(data), length);
+        }
 	}
 
 	template <typename VoxelType>
@@ -63,6 +84,7 @@ namespace Cubiquity
 		ss << region.getLowerX() << "_" << region.getLowerY() << "_" << region.getLowerZ() << "_"
 				<< region.getUpperX() << "_" << region.getUpperY() << "_" << region.getUpperZ();
 
+		// Based on: http://stackoverflow.com/a/5308188
 		//sqlite3_bind_int(pInsertBlockStatement, 1, 12);
 		sqlite3_reset(pInsertBlockStatement);
 		sqlite3_bind_text(pInsertBlockStatement, 1, ss.str().c_str(), -1, SQLITE_TRANSIENT);
