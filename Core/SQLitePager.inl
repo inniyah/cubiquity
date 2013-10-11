@@ -30,8 +30,8 @@ namespace Cubiquity
 		}
 
 		// Now build the prepared statements
-		const char* insertQuery = "INSERT INTO Blocks (Region, Data) VALUES (?, ?)";
-		rc = sqlite3_prepare_v2(pDatabase, insertQuery, -1, &pInsertBlockStatement, NULL);
+		const char* insertQuery = "REPLACE INTO Blocks (Region, Data) VALUES (?, ?)";
+		rc = sqlite3_prepare_v2(pDatabase, insertQuery, -1, &pReplaceBlockStatement, NULL);
 		if(rc != SQLITE_OK)
 		{
 			throw std::runtime_error("Failed to prepare insert statement");
@@ -88,10 +88,10 @@ namespace Cubiquity
 				<< region.getUpperX() << "_" << region.getUpperY() << "_" << region.getUpperZ();
 
 		// Based on: http://stackoverflow.com/a/5308188
-		//sqlite3_bind_int(pInsertBlockStatement, 1, 12);
-		sqlite3_reset(pInsertBlockStatement);
-		sqlite3_bind_text(pInsertBlockStatement, 1, ss.str().c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_blob(pInsertBlockStatement, 2, static_cast<const void*>(pBlockData->getData()), pBlockData->getDataSizeInBytes(), SQLITE_TRANSIENT);
-		sqlite3_step(pInsertBlockStatement);
+		//sqlite3_bind_int(pReplaceBlockStatement, 1, 12);
+		sqlite3_reset(pReplaceBlockStatement);
+		sqlite3_bind_text(pReplaceBlockStatement, 1, ss.str().c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_blob(pReplaceBlockStatement, 2, static_cast<const void*>(pBlockData->getData()), pBlockData->getDataSizeInBytes(), SQLITE_TRANSIENT);
+		sqlite3_step(pReplaceBlockStatement);
 	}
 }
