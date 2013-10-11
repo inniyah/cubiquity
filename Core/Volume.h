@@ -65,6 +65,7 @@ namespace Cubiquity
 #ifdef USE_LARGE_VOLUME
 		::PolyVox::MinizBlockCompressor<VoxelType>* m_pCompressor;
 		OverrideFilePager<VoxelType>* m_pOverrideFilePager;
+		SQLitePager<VoxelType>* m_pSQLitePager;
 #endif
 
 		Octree<VoxelType>* mOctree;

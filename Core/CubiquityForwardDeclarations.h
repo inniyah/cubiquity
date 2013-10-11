@@ -39,6 +39,9 @@ namespace Cubiquity
 
 	class SmoothTerrainVolumeEditor;
 
+	template <typename VoxelType>
+	class SQLitePager;
+
 	class Task;
 	class TaskProcessor;
 

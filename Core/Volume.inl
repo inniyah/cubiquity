@@ -43,7 +43,7 @@ namespace Cubiquity
 #ifdef USE_LARGE_VOLUME
 		m_pCompressor = new ::PolyVox::MinizBlockCompressor<VoxelType>;
 
-		SQLitePager<VoxelType>* sqlitePager = new SQLitePager<VoxelType>("test.vol");
+		m_pSQLitePager = new SQLitePager<VoxelType>("test.vol");
 
 		if(pageFolder.size() != 0)
 		{
@@ -78,11 +78,11 @@ namespace Cubiquity
 		//FIXME - This should be decided based on the Octree type but instead be in diffferent volume constructors
 		if(octreeConstructionMode == OctreeConstructionModes::BoundCells) // Smooth terrain
 		{
-			mPolyVoxVolume = new ::PolyVox::POLYVOX_VOLUME<VoxelType>(region, m_pCompressor, m_pOverrideFilePager, 32);
+			mPolyVoxVolume = new ::PolyVox::POLYVOX_VOLUME<VoxelType>(region, m_pCompressor, m_pSQLitePager, 32);
 		}
 		else // Cubic terrain
 		{
-			mPolyVoxVolume = new ::PolyVox::POLYVOX_VOLUME<VoxelType>(region, m_pCompressor, m_pOverrideFilePager, 64);
+			mPolyVoxVolume = new ::PolyVox::POLYVOX_VOLUME<VoxelType>(region, m_pCompressor, m_pSQLitePager, 64);
 		}
 
 		mPolyVoxVolume->setMaxNumberOfBlocksInMemory(100000000);
@@ -121,6 +121,8 @@ namespace Cubiquity
 		//delete mPolyVoxVolume;
 		//delete m_pCompressor;
 		//delete m_pOverrideFilePager;
+
+		delete m_pSQLitePager;
 
 		logTrace() << "Exiting ~Volume()";
 	}

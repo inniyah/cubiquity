@@ -15,9 +15,9 @@ namespace Cubiquity
 			throw std::runtime_error(ss.str().c_str());
 		}
 
-		char* sql = "CREATE TABLE BLOCKS("  \
-         "ID INT PRIMARY KEY     NOT NULL," \
-         "DATA         BLOB );";
+		char* sql = "CREATE TABLE IF NOT EXISTS Blocks("  \
+         "Region TEXT UNIQUE," \
+         "Data         BLOB );";
 
 		char* pErrorMsg = 0;
 		rc = sqlite3_exec(pDatabase, sql, 0, 0, &pErrorMsg);
@@ -28,6 +28,15 @@ namespace Cubiquity
 			sqlite3_free(pErrorMsg);
 			throw std::runtime_error(ss.str().c_str());
 		}
+
+		// Now build the prepared stements
+		const char* insertQuery = "INSERT INTO Blocks (Region, Data) VALUES (?, ?)";
+		rc = sqlite3_prepare_v2(pDatabase, insertQuery, -1, &pInsertBlockStatement, NULL);
+		if(rc != SQLITE_OK)
+		{
+			throw std::runtime_error("Failed to prepare insert statement");
+		}
+
 	}
 
 	/// Destructor
@@ -50,6 +59,14 @@ namespace Cubiquity
 
 		logTrace() << "Paging out data for " << region;
 
-		
+		std::stringstream ss;
+		ss << region.getLowerX() << "_" << region.getLowerY() << "_" << region.getLowerZ() << "_"
+				<< region.getUpperX() << "_" << region.getUpperY() << "_" << region.getUpperZ();
+
+		//sqlite3_bind_int(pInsertBlockStatement, 1, 12);
+		sqlite3_reset(pInsertBlockStatement);
+		sqlite3_bind_text(pInsertBlockStatement, 1, ss.str().c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_blob(pInsertBlockStatement, 2, static_cast<const void*>(pBlockData->getData()), pBlockData->getDataSizeInBytes(), SQLITE_TRANSIENT);
+		sqlite3_step(pInsertBlockStatement);
 	}
 }
