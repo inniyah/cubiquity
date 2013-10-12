@@ -1,3 +1,5 @@
+#include "PolyVoxCore/Impl/Utility.h"
+
 namespace Cubiquity
 {
 	/// Constructor
@@ -15,9 +17,7 @@ namespace Cubiquity
 			throw std::runtime_error(ss.str().c_str());
 		}
 
-		char* sql = "CREATE TABLE IF NOT EXISTS Blocks("  \
-         "Region TEXT UNIQUE," \
-         "Data         BLOB );";
+		char* sql = "CREATE TABLE IF NOT EXISTS Blocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);";
 
 		char* pErrorMsg = 0;
 		rc = sqlite3_exec(pDatabase, sql, 0, 0, &pErrorMsg);
@@ -64,9 +64,29 @@ namespace Cubiquity
 		ss << region.getLowerX() << "_" << region.getLowerY() << "_" << region.getLowerZ() << "_"
 				<< region.getUpperX() << "_" << region.getUpperY() << "_" << region.getUpperZ();
 
+		uint32_t x = static_cast<uint32_t>(region.getLowerX());
+		uint32_t y = static_cast<uint32_t>(region.getLowerY());
+		uint32_t z = static_cast<uint32_t>(region.getLowerZ());
+
+		x = rol(x);
+		y = rol(y);
+		z = rol(z);
+
+		uint64_t x64 = x;
+		uint64_t y64 = y;
+		uint64_t z64 = z;
+
+		x64 = x64 << 42;
+		y64 = y64 << 21;
+
+		uint64_t result = x64 ^ y64 ^ z64;
+
+		sqlite3_int64 key = static_cast<sqlite3_int64>(result);
+		
 		// Based on: http://stackoverflow.com/a/5308188
 		sqlite3_reset(pSelectBlockStatement);
-		sqlite3_bind_text(pSelectBlockStatement, 1, ss.str().c_str(), -1, SQLITE_TRANSIENT);
+		//sqlite3_bind_text(pSelectBlockStatement, 1, ss.str().c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int64(pSelectBlockStatement, 1, key);
 		if(sqlite3_step(pSelectBlockStatement) == SQLITE_ROW)
         {
 			// Indices are zero because our select statement only returned one column?
@@ -87,10 +107,30 @@ namespace Cubiquity
 		ss << region.getLowerX() << "_" << region.getLowerY() << "_" << region.getLowerZ() << "_"
 				<< region.getUpperX() << "_" << region.getUpperY() << "_" << region.getUpperZ();
 
+		uint32_t x = static_cast<uint32_t>(region.getLowerX());
+		uint32_t y = static_cast<uint32_t>(region.getLowerY());
+		uint32_t z = static_cast<uint32_t>(region.getLowerZ());
+
+		x = rol(x);
+		y = rol(y);
+		z = rol(z);
+
+		uint64_t x64 = x;
+		uint64_t y64 = y;
+		uint64_t z64 = z;
+
+		x64 = x64 << 42;
+		y64 = y64 << 21;
+
+		uint64_t result = x64 ^ y64 ^ z64;
+
+		sqlite3_int64 key = static_cast<sqlite3_int64>(result);
+
 		// Based on: http://stackoverflow.com/a/5308188
 		//sqlite3_bind_int(pReplaceBlockStatement, 1, 12);
 		sqlite3_reset(pReplaceBlockStatement);
-		sqlite3_bind_text(pReplaceBlockStatement, 1, ss.str().c_str(), -1, SQLITE_TRANSIENT);
+		//sqlite3_bind_text(pReplaceBlockStatement, 1, ss.str().c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int64(pReplaceBlockStatement, 1, key);
 		sqlite3_bind_blob(pReplaceBlockStatement, 2, static_cast<const void*>(pBlockData->getData()), pBlockData->getDataSizeInBytes(), SQLITE_TRANSIENT);
 		sqlite3_step(pReplaceBlockStatement);
 	}

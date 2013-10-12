@@ -32,6 +32,14 @@ namespace Cubiquity
 		sqlite3_stmt* pReplaceBlockStatement;
 		sqlite3_stmt* pSelectBlockStatement;
 	};
+
+	// From http://stackoverflow.com/a/776550
+	// Should only be used on unsigned types.
+	template <typename T> 
+	T rol(T val)
+	{
+		return (val << 1) | (val >> (sizeof(T)*CHAR_BIT-1));
+	}
 }
 
 #include "SQLitePager.inl"
