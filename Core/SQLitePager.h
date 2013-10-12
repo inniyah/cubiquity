@@ -23,8 +23,8 @@ namespace Cubiquity
 		/// Destructor
 		virtual ~SQLitePager();
 
-		virtual void pageIn(const Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData);
-		virtual void pageOut(const Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData);
+		virtual void pageIn(const PolyVox::Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData);
+		virtual void pageOut(const PolyVox::Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData);
 
 	private:
 
@@ -33,13 +33,12 @@ namespace Cubiquity
 		sqlite3_stmt* pSelectBlockStatement;
 	};
 
-	// From http://stackoverflow.com/a/776550
-	// Should only be used on unsigned types.
+	// Utility function to perform bit rotation.
 	template <typename T> 
-	T rol(T val)
-	{
-		return (val << 1) | (val >> (sizeof(T)*CHAR_BIT-1));
-	}
+	T rotateLeft(T val);
+
+	// Allows us to use a Region as a key in the SQLite database.
+	uint64_t regionToKey(const PolyVox::Region& region);
 }
 
 #include "SQLitePager.inl"

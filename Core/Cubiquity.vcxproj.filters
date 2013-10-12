@@ -454,5 +454,8 @@
     <ClCompile Include="sqlite\sqlite3.c">
       <Filter>Core\sqlite</Filter>
     </ClCompile>
+    <ClCompile Include="SQLitePager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>

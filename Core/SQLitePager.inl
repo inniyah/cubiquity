@@ -2,6 +2,14 @@
 
 namespace Cubiquity
 {
+	// From http://stackoverflow.com/a/776550
+	// Should only be used on unsigned types.
+	template <typename T> 
+	T rotateLeft(T val)
+	{
+		return (val << 1) | (val >> (sizeof(T)*CHAR_BIT-1));
+	}
+
 	/// Constructor
 	template <typename VoxelType>
 	SQLitePager<VoxelType>::SQLitePager(const std::string& dbName)
@@ -56,7 +64,7 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void SQLitePager<VoxelType>::pageIn(const Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData)
+	void SQLitePager<VoxelType>::pageIn(const PolyVox::Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData)
 	{
 		POLYVOX_ASSERT(pBlockData, "Attempting to page in NULL block");
 
@@ -64,24 +72,7 @@ namespace Cubiquity
 		ss << region.getLowerX() << "_" << region.getLowerY() << "_" << region.getLowerZ() << "_"
 				<< region.getUpperX() << "_" << region.getUpperY() << "_" << region.getUpperZ();
 
-		uint32_t x = static_cast<uint32_t>(region.getLowerX());
-		uint32_t y = static_cast<uint32_t>(region.getLowerY());
-		uint32_t z = static_cast<uint32_t>(region.getLowerZ());
-
-		x = rol(x);
-		y = rol(y);
-		z = rol(z);
-
-		uint64_t x64 = x;
-		uint64_t y64 = y;
-		uint64_t z64 = z;
-
-		x64 = x64 << 42;
-		y64 = y64 << 21;
-
-		uint64_t result = x64 ^ y64 ^ z64;
-
-		sqlite3_int64 key = static_cast<sqlite3_int64>(result);
+		int64_t key = regionToKey(region);
 		
 		// Based on: http://stackoverflow.com/a/5308188
 		sqlite3_reset(pSelectBlockStatement);
@@ -97,7 +88,7 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void SQLitePager<VoxelType>::pageOut(const Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData)
+	void SQLitePager<VoxelType>::pageOut(const PolyVox::Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData)
 	{
 		POLYVOX_ASSERT(pBlockData, "Attempting to page out NULL block");
 
@@ -107,24 +98,7 @@ namespace Cubiquity
 		ss << region.getLowerX() << "_" << region.getLowerY() << "_" << region.getLowerZ() << "_"
 				<< region.getUpperX() << "_" << region.getUpperY() << "_" << region.getUpperZ();
 
-		uint32_t x = static_cast<uint32_t>(region.getLowerX());
-		uint32_t y = static_cast<uint32_t>(region.getLowerY());
-		uint32_t z = static_cast<uint32_t>(region.getLowerZ());
-
-		x = rol(x);
-		y = rol(y);
-		z = rol(z);
-
-		uint64_t x64 = x;
-		uint64_t y64 = y;
-		uint64_t z64 = z;
-
-		x64 = x64 << 42;
-		y64 = y64 << 21;
-
-		uint64_t result = x64 ^ y64 ^ z64;
-
-		sqlite3_int64 key = static_cast<sqlite3_int64>(result);
+		int64_t key = regionToKey(region);
 
 		// Based on: http://stackoverflow.com/a/5308188
 		//sqlite3_bind_int(pReplaceBlockStatement, 1, 12);

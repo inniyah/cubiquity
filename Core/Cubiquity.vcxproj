@@ -157,6 +157,7 @@
     <ClCompile Include="SmoothSurfaceExtractionTask.cpp" />
     <ClCompile Include="SmoothTerrainVolume.cpp" />
     <ClCompile Include="SmoothTerrainVolumeEditor.cpp" />
+    <ClCompile Include="SQLitePager.cpp" />
     <ClCompile Include="sqlite\sqlite3.c" />
     <ClCompile Include="Task.cpp" />
     <ClCompile Include="VolumeSerialisation.cpp" />
