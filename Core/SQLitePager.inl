@@ -15,15 +15,28 @@ namespace Cubiquity
 	SQLitePager<VoxelType>::SQLitePager(const std::string& dbName)
 		:Pager<VoxelType>()
 	{
-		logDebug() << "Creating SQLitePager from '" << dbName << "'";
+		logInfo() << "Creating SQLitePager from '" << dbName << "'";
 		
-		int rc = sqlite3_open(dbName.c_str(), &pDatabase);
+		// Open the database if it already exists.
+		int rc = sqlite3_open_v2(dbName.c_str(), &pDatabase, SQLITE_OPEN_READWRITE, NULL);
 		if(rc != SQLITE_OK)
 		{
-			std::stringstream ss;
-			ss << "Failed to open SQLite database. Message was: \"" << sqlite3_errmsg(pDatabase) << "\"";
-			throw std::runtime_error(ss.str().c_str());
+			logInfo() << "Failed to open '" << dbName << "'. Error message was: \"" << sqlite3_errmsg(pDatabase) << "\"";
+
+			// If we failed, then try again but this time allow it to be created.
+			logInfo() << "Attempting to create '" << dbName << "'";
+			rc = sqlite3_open_v2(dbName.c_str(), &pDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
+			if(rc != SQLITE_OK)
+			{
+				// If we failed to create it as well then we give up
+				std::stringstream ss;
+				ss << "Failed to create '" << dbName << "'. Error message was: \"" << sqlite3_errmsg(pDatabase) << "\"";
+				throw std::runtime_error(ss.str().c_str());
+			}
+			logInfo() << "Successfully created'" << dbName << "'";
 		}
+		logInfo() << "Successfully opened'" << dbName << "'";
+
 
 		char* sql = "CREATE TABLE IF NOT EXISTS Blocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);";
 
