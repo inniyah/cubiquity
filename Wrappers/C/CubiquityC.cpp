@@ -387,6 +387,26 @@ CUBIQUITYC_API int32_t cuSetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, i
 	CLOSE_C_INTERFACE
 }
 
+CUBIQUITYC_API int32_t cuAcceptOverrideBlocks(uint32_t volumeHandle)
+{
+	OPEN_C_INTERFACE
+
+	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+	volume->acceptOverrideBlocks();
+	
+	CLOSE_C_INTERFACE
+}
+
+CUBIQUITYC_API int32_t cuDiscardOverrideBlocks(uint32_t volumeHandle)
+{
+	OPEN_C_INTERFACE
+
+	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+	volume->discardOverrideBlocks();
+	
+	CLOSE_C_INTERFACE
+}
+
 //--------------------------------------------------------------------------------
 
 CUBIQUITYC_API int32_t cuNewSmoothTerrainVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pageFolder, uint32_t baseNodeSize, uint32_t createFloor, uint32_t floorDepth, uint32_t* result)
@@ -482,6 +502,26 @@ CUBIQUITYC_API int32_t cuSetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y,
 	MultiMaterial& material = volume->getVoxelAt(x, y, z);
 	material.setMaterial(index, value);
 	volume->setVoxelAt(x, y, z, material, UpdatePriorities::Immediate);
+	
+	CLOSE_C_INTERFACE
+}
+
+CUBIQUITYC_API int32_t cuAcceptOverrideBlocksMC(uint32_t volumeHandle)
+{
+	OPEN_C_INTERFACE
+
+	SmoothTerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	volume->acceptOverrideBlocks();
+	
+	CLOSE_C_INTERFACE
+}
+
+CUBIQUITYC_API int32_t cuDiscardOverrideBlocksMC(uint32_t volumeHandle)
+{
+	OPEN_C_INTERFACE
+
+	SmoothTerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	volume->discardOverrideBlocks();
 	
 	CLOSE_C_INTERFACE
 }

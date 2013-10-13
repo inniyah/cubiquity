@@ -36,6 +36,9 @@ namespace Cubiquity
 		// Marks a region as modified so it will be regenerated later.
 		virtual void markAsModified(const Region& region, UpdatePriority updatePriority = UpdatePriorities::Background) = 0;
 
+		virtual void acceptOverrideBlocks(void) = 0;
+		virtual void discardOverrideBlocks(void) = 0;
+
 		// Should be called before rendering a frame to update the meshes and octree structure.
 		virtual void update(const Vector3F& viewPosition, float lodThreshold) = 0;
 	};
@@ -68,6 +71,9 @@ namespace Cubiquity
 
 		// Marks a region as modified so it will be regenerated later.
 		virtual void markAsModified(const Region& region, UpdatePriority updatePriority = UpdatePriorities::Background) = 0;
+
+		virtual void acceptOverrideBlocks(void) = 0;
+		virtual void discardOverrideBlocks(void) = 0;
 
 		// Should be called before rendering a frame to update the meshes and octree structure.
 		virtual void update(const Vector3F& viewPosition, float lodThreshold) = 0;
