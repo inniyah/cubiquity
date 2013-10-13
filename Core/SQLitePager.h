@@ -29,8 +29,12 @@ namespace Cubiquity
 	private:
 
 		sqlite3* mDatabase;
-		sqlite3_stmt* mInsertOrReplaceBlockStatement;
+
 		sqlite3_stmt* mSelectBlockStatement;
+		sqlite3_stmt* mSelectOverrideBlockStatement;
+		
+		sqlite3_stmt* mInsertOrReplaceBlockStatement;
+		sqlite3_stmt* mInsertOrReplaceOverrideBlockStatement;
 	};
 
 	// Utility function to perform bit rotation.

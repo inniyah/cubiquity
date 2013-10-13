@@ -65,23 +65,39 @@ namespace Cubiquity
 			throw std::runtime_error(ss.str().c_str());
 		}
 
-		// Now build the prepared statements
-		const char* insertOrReplaceBlockQuery = "INSERT OR REPLACE INTO Blocks (Region, Data) VALUES (?, ?)";
-		rc = sqlite3_prepare_v2(mDatabase, insertOrReplaceBlockQuery, -1, &mInsertOrReplaceBlockStatement, NULL);
-		if(rc != SQLITE_OK)
-		{
-			throw std::runtime_error("Failed to prepare insert statement");
-		}
-
-		const char* selectQuery = "SELECT Data FROM Blocks WHERE Region = ?";
-		rc = sqlite3_prepare_v2(mDatabase, selectQuery, -1, &mSelectBlockStatement, NULL);
+		// Now build the 'insert or replace' prepared statements
+		rc = sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceBlockStatement, NULL);
 		if(rc != SQLITE_OK)
 		{
 			std::stringstream ss;
-			ss << "Failed to prepare select statement. Message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
+			ss << "Failed to prepare 'INSERT OR REPLACE INTO Blocks...' statement. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
 			throw std::runtime_error(ss.str().c_str());
 		}
 
+		rc = sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO OverrideBlocks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceOverrideBlockStatement, NULL);
+		if(rc != SQLITE_OK)
+		{
+			std::stringstream ss;
+			ss << "Failed to prepare 'INSERT OR REPLACE INTO OverrideBlocks...' statement. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
+			throw std::runtime_error(ss.str().c_str());
+		}
+
+		// Now build the 'select' prepared statements
+		rc = sqlite3_prepare_v2(mDatabase, "SELECT Data FROM Blocks WHERE Region = ?", -1, &mSelectBlockStatement, NULL);
+		if(rc != SQLITE_OK)
+		{
+			std::stringstream ss;
+			ss << "Failed to prepare 'SELECT Data FROM Blocks...' statement. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
+			throw std::runtime_error(ss.str().c_str());
+		}
+
+		rc = sqlite3_prepare_v2(mDatabase, "SELECT Data FROM OverrideBlocks WHERE Region = ?", -1, &mSelectOverrideBlockStatement, NULL);
+		if(rc != SQLITE_OK)
+		{
+			std::stringstream ss;
+			ss << "Failed to prepare 'SELECT Data FROM OverrideBlocks...' statement. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
+			throw std::runtime_error(ss.str().c_str());
+		}
 	}
 
 	/// Destructor
@@ -96,23 +112,32 @@ namespace Cubiquity
 	{
 		POLYVOX_ASSERT(pBlockData, "Attempting to page in NULL block");
 
-		std::stringstream ss;
-		ss << region.getLowerX() << "_" << region.getLowerY() << "_" << region.getLowerZ() << "_"
-				<< region.getUpperX() << "_" << region.getUpperY() << "_" << region.getUpperZ();
-
 		int64_t key = regionToKey(region);
-		
+
+		// First we try and read the data from the OverrideBlocks table
 		// Based on: http://stackoverflow.com/a/5308188
-		sqlite3_reset(mSelectBlockStatement);
-		//sqlite3_bind_text(mSelectBlockStatement, 1, ss.str().c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int64(mSelectBlockStatement, 1, key);
-		if(sqlite3_step(mSelectBlockStatement) == SQLITE_ROW)
+		sqlite3_reset(mSelectOverrideBlockStatement);
+		sqlite3_bind_int64(mSelectOverrideBlockStatement, 1, key);
+		if(sqlite3_step(mSelectOverrideBlockStatement) == SQLITE_ROW)
         {
-			// Indices are zero because our select statement only returned one column?
-            int length = sqlite3_column_bytes(mSelectBlockStatement, 0);
-            const void* data = sqlite3_column_blob(mSelectBlockStatement, 0);
+			// I think the last index is zero because our select statement only returned one column.
+            int length = sqlite3_column_bytes(mSelectOverrideBlockStatement, 0);
+            const void* data = sqlite3_column_blob(mSelectOverrideBlockStatement, 0);
 			pBlockData->setData(static_cast<const uint8_t*>(data), length);
         }
+		else
+		{
+			// In this case the block data wasn't found in the override table, so we go to the real Blocks table.
+			sqlite3_reset(mSelectBlockStatement);
+			sqlite3_bind_int64(mSelectBlockStatement, 1, key);
+			if(sqlite3_step(mSelectBlockStatement) == SQLITE_ROW)
+			{
+				// I think the last index is zero because our select statement only returned one column.
+				int length = sqlite3_column_bytes(mSelectBlockStatement, 0);
+				const void* data = sqlite3_column_blob(mSelectBlockStatement, 0);
+				pBlockData->setData(static_cast<const uint8_t*>(data), length);
+			}
+		}
 	}
 
 	template <typename VoxelType>
@@ -122,18 +147,12 @@ namespace Cubiquity
 
 		logTrace() << "Paging out data for " << region;
 
-		std::stringstream ss;
-		ss << region.getLowerX() << "_" << region.getLowerY() << "_" << region.getLowerZ() << "_"
-				<< region.getUpperX() << "_" << region.getUpperY() << "_" << region.getUpperZ();
-
 		int64_t key = regionToKey(region);
 
 		// Based on: http://stackoverflow.com/a/5308188
-		//sqlite3_bind_int(mInsertOrReplaceBlockStatement, 1, 12);
-		sqlite3_reset(mInsertOrReplaceBlockStatement);
-		//sqlite3_bind_text(mInsertOrReplaceBlockStatement, 1, ss.str().c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int64(mInsertOrReplaceBlockStatement, 1, key);
-		sqlite3_bind_blob(mInsertOrReplaceBlockStatement, 2, static_cast<const void*>(pBlockData->getData()), pBlockData->getDataSizeInBytes(), SQLITE_TRANSIENT);
-		sqlite3_step(mInsertOrReplaceBlockStatement);
+		sqlite3_reset(mInsertOrReplaceOverrideBlockStatement);
+		sqlite3_bind_int64(mInsertOrReplaceOverrideBlockStatement, 1, key);
+		sqlite3_bind_blob(mInsertOrReplaceOverrideBlockStatement, 2, static_cast<const void*>(pBlockData->getData()), pBlockData->getDataSizeInBytes(), SQLITE_TRANSIENT);
+		sqlite3_step(mInsertOrReplaceOverrideBlockStatement);
 	}
 }
