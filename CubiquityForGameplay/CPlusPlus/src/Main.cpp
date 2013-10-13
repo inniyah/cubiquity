@@ -197,7 +197,7 @@ void MeshGame::initialize()
 	//mVolume = GameplayColouredCubesVolume::create("C:\\code\\cubiquity\\Tools\\FractalGenerator\\FractalGenerator\\output\\");
 	//mVolume = GameplayColouredCubesVolume::create("D:\\Google Drive\\VolumesOfFun\\VolumeData\\Industry.vxl", "D:\\temp\\voldata\\", 16);
 
-	mVolume = GameplayColouredCubesVolume::create("C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/", "./", 32);
+	mVolume = GameplayColouredCubesVolume::create("C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/", "VoxeliensTerrain.vol", 32);
 
 	mVolumeEditor = 0;
 #endif
