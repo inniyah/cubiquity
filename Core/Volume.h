@@ -29,7 +29,7 @@ namespace Cubiquity
 	public:
 		typedef _VoxelType VoxelType;
 
-		Volume(const Region& region, const std::string& pageFolder, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize);
+		Volume(const Region& region, const std::string& filename, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize);
 		~Volume();
 
 		// These functions just forward to the underlying PolyVox volume.
@@ -67,7 +67,6 @@ namespace Cubiquity
 
 #ifdef USE_LARGE_VOLUME
 		::PolyVox::MinizBlockCompressor<VoxelType>* m_pCompressor;
-		OverrideFilePager<VoxelType>* m_pOverrideFilePager;
 		SQLitePager<VoxelType>* m_pSQLitePager;
 #endif
 

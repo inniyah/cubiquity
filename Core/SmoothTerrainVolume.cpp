@@ -12,9 +12,9 @@ using namespace PolyVox;
 
 namespace Cubiquity
 {
-	SmoothTerrainVolume* createSmoothTerrainVolume(const Region& region, const std::string& pageFolder, unsigned int baseNodeSize, bool createFloor, uint32_t floorDepth)
+	SmoothTerrainVolume* createSmoothTerrainVolume(const Region& region, const std::string& filename, unsigned int baseNodeSize, bool createFloor, uint32_t floorDepth)
 	{
-		SmoothTerrainVolumeImpl* smoothTerrainVolume = new SmoothTerrainVolumeImpl(region, pageFolder, baseNodeSize);
+		SmoothTerrainVolumeImpl* smoothTerrainVolume = new SmoothTerrainVolumeImpl(region, filename, baseNodeSize);
 
 		if(createFloor)
 		{
@@ -53,8 +53,8 @@ namespace Cubiquity
 		return smoothTerrainVolume;
 	}
 
-	/*SmoothTerrainVolume::SmoothTerrainVolume(const Region& region, const std::string& pageFolder, unsigned int baseNodeSize)
-		:Volume<MultiMaterial>(region, pageFolder, OctreeConstructionModes::BoundCells, baseNodeSize)
+	/*SmoothTerrainVolume::SmoothTerrainVolume(const Region& region, const std::string& filename, unsigned int baseNodeSize)
+		:Volume<MultiMaterial>(region, filename, OctreeConstructionModes::BoundCells, baseNodeSize)
 	{
 	}
 

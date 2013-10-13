@@ -13,8 +13,8 @@ namespace Cubiquity
 	public:
 		typedef Colour VoxelType;
 
-		ColouredCubesVolumeImpl(const Region& region, const std::string& pageFolder, unsigned int baseNodeSize)
-			:mCubiquityVolume(region, pageFolder, OctreeConstructionModes::BoundVoxels, baseNodeSize)
+		ColouredCubesVolumeImpl(const Region& region, const std::string& filename, unsigned int baseNodeSize)
+			:mCubiquityVolume(region, filename, OctreeConstructionModes::BoundVoxels, baseNodeSize)
 		{
 			// Throw an exception if the requested volume dimensions exceed those allowed by the license. Actually the
 			// volume has already been constructed at this point, so we're just destroying it again. Might be nice if
@@ -66,7 +66,7 @@ namespace Cubiquity
 		Volume<Colour> mCubiquityVolume;
 	};
 
-	ColouredCubesVolume* createColoredCubesVolume(const Region& region, const std::string& pageFolder, unsigned int baseNodeSize);
+	ColouredCubesVolume* createColoredCubesVolume(const Region& region, const std::string& filename, unsigned int baseNodeSize);
 }
 
 #endif //COLOUREDCUBESVOLUME_H_

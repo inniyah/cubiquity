@@ -12,8 +12,8 @@ namespace Cubiquity
 	public:
 		typedef MultiMaterial VoxelType;
 
-		SmoothTerrainVolumeImpl(const Region& region, const std::string& pageFolder, unsigned int baseNodeSize)
-			:mCubiquityVolume(region, pageFolder, OctreeConstructionModes::BoundCells, baseNodeSize)
+		SmoothTerrainVolumeImpl(const Region& region, const std::string& filename, unsigned int baseNodeSize)
+			:mCubiquityVolume(region, filename, OctreeConstructionModes::BoundCells, baseNodeSize)
 		{
 			// Throw an exception if the requested volume dimensions exceed those allowed by the license. Actually the
 			// volume has already been constructed at this point, so we're just destroying it again. Might be nice if
@@ -65,7 +65,7 @@ namespace Cubiquity
 		Volume<MultiMaterial> mCubiquityVolume;
 	};
 
-	SmoothTerrainVolume* createSmoothTerrainVolume(const Region& region, const std::string& pageFolder, unsigned int baseNodeSize, bool createFloor = true, uint32_t floorDepth = 8);
+	SmoothTerrainVolume* createSmoothTerrainVolume(const Region& region, const std::string& filename, unsigned int baseNodeSize, bool createFloor = true, uint32_t floorDepth = 8);
 }
 
 #endif //SMOOTHTERRAINVOLUME_H_

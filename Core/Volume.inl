@@ -23,11 +23,11 @@
 namespace Cubiquity
 {
 	template <typename VoxelType>
-	Volume<VoxelType>::Volume(const Region& region, const std::string& pageFolder, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize)
+	Volume<VoxelType>::Volume(const Region& region, const std::string& filename, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize)
 		:mPolyVoxVolume(0)
 #ifdef USE_LARGE_VOLUME
 		,m_pCompressor(0)
-		,m_pOverrideFilePager(0)
+		,m_pSQLitePager(0)
 #endif
 		,mOctree(0)
 	{
@@ -39,43 +39,15 @@ namespace Cubiquity
 		POLYVOX_THROW_IF(region.getWidthInVoxels() == 0, std::invalid_argument, "Volume width must be greater than zero");
 		POLYVOX_THROW_IF(region.getHeightInVoxels() == 0, std::invalid_argument, "Volume height must be greater than zero");
 		POLYVOX_THROW_IF(region.getDepthInVoxels() == 0, std::invalid_argument, "Volume depth must be greater than zero");
+
+		POLYVOX_THROW_IF(filename.size() == 0, std::invalid_argument, "A valid filename must be provided");
 	
 #ifdef USE_LARGE_VOLUME
 		m_pCompressor = new ::PolyVox::MinizBlockCompressor<VoxelType>;
 
-		m_pSQLitePager = new SQLitePager<VoxelType>("test.vol");
-
-		if(pageFolder.size() != 0)
-		{
-			m_pOverrideFilePager = new OverrideFilePager<VoxelType>(pageFolder);
-		}
-		else
-		{
-			// Note: The code below crashes in gameplay when trying to use Boost filesystem. It is
-			// probably related to this issue: https://github.com/blackberry/GamePlay/issues/919
-			// For no we just use the current folder instead.
-			// Create a random folder name
-			/*srand(static_cast<unsigned int>(time(NULL)));
-			std::stringstream ss;
-			ss << "./page_data_" << rand() << "/";
-			logInfo() << "No page folder was provided, using '" << ss.str() << "' as temporary storage";
-
-			// Create the folder
-			boost::filesystem::path dir(ss.str());
-			if (boost::filesystem::create_directory(dir))
-			{
-				m_pFilePager = new FilePager<VoxelType>(ss.str());
-			}
-			else
-			{
-				POLYVOX_THROW(std::runtime_error, "Failed to create temporary folder for page data");
-			}*/
-
-			logInfo() << "No page folder was provided, using current working directory as temporary storage";
-			m_pOverrideFilePager = new OverrideFilePager<VoxelType>("./");
-		}
+		m_pSQLitePager = new SQLitePager<VoxelType>(filename);
 		
-		//FIXME - This should be decided based on the Octree type but instead be in diffferent volume constructors
+		//FIXME - This should not be decided based on the Octree type but instead be in different volume constructors
 		if(octreeConstructionMode == OctreeConstructionModes::BoundCells) // Smooth terrain
 		{
 			mPolyVoxVolume = new ::PolyVox::POLYVOX_VOLUME<VoxelType>(region, m_pCompressor, m_pSQLitePager, 32);
@@ -89,7 +61,7 @@ namespace Cubiquity
 		mPolyVoxVolume->setMaxNumberOfUncompressedBlocks(1000000);
 
 #else
-		//FIXME - This should be decided based on the Octree type but instead be in diffferent volume constructors
+		//FIXME - This should not be decided based on the Octree type but instead be in different volume constructors
 		if(octreeConstructionMode == OctreeConstructionModes::BoundCells) // Smooth terrain
 		{
 			mPolyVoxVolume = new ::PolyVox::POLYVOX_VOLUME<VoxelType>(region, 32);
@@ -120,7 +92,6 @@ namespace Cubiquity
 
 		//delete mPolyVoxVolume;
 		//delete m_pCompressor;
-		//delete m_pOverrideFilePager;
 
 		m_pSQLitePager->acceptOverrideBlocks();
 		delete m_pSQLitePager;

@@ -124,11 +124,11 @@ namespace Cubiquity
 		}
 	}
 
-	ColouredCubesVolumeImpl* importVxl(const std::string& filename, const std::string& pageFolder)
+	ColouredCubesVolumeImpl* importVxl(const std::string& vxlFilename, const std::string& volumeFilename)
 	{
-		ColouredCubesVolumeImpl* result = new ColouredCubesVolumeImpl(Region(0, 0, 0, 511, 63, 511), pageFolder, 64);
+		ColouredCubesVolumeImpl* result = new ColouredCubesVolumeImpl(Region(0, 0, 0, 511, 63, 511), volumeFilename, 64);
 
-		FILE* inputFile = fopen(filename.c_str(), "rb");
+		FILE* inputFile = fopen(vxlFilename.c_str(), "rb");
 		POLYVOX_ASSERT(inputFile, "Failed to open input file!");
 
 		// Determine input file's size.
@@ -227,7 +227,7 @@ namespace Cubiquity
 		return result;
 	}
 
-	ColouredCubesVolumeImpl* importHeightmap(const std::string& heightmapFileName, const std::string& colormapFileName, const std::string& pageFolder, uint32_t baseNodeSize)
+	ColouredCubesVolumeImpl* importHeightmap(const std::string& heightmapFileName, const std::string& colormapFileName, const std::string& volumeFilename, uint32_t baseNodeSize)
 	{
 		int heightmapWidth = 0, heightmapHeight = 0, heightmapChannels;
 		unsigned char *heightmapData = stbi_load(heightmapFileName.c_str(), &heightmapWidth, &heightmapHeight, &heightmapChannels, 0);
@@ -248,7 +248,7 @@ namespace Cubiquity
 
 		// When importing we treat 'y' as up because the Gameplay physics engine makes some
 		// assumptions about this. This means we need to swap the 'y' and 'slice' indices.
-		ColouredCubesVolumeImpl* volume = new ColouredCubesVolumeImpl(Region(0, 0, 0, volumeWidth - 1, volumeDepth - 1, volumeHeight - 1), pageFolder, baseNodeSize);
+		ColouredCubesVolumeImpl* volume = new ColouredCubesVolumeImpl(Region(0, 0, 0, volumeWidth - 1, volumeDepth - 1, volumeHeight - 1), volumeFilename, baseNodeSize);
 
 		// Now iterate over each pixel.
 		for(int x = 0; x < volumeWidth; x++)

@@ -48,17 +48,17 @@ namespace Cubiquity
 	void voxelToPixel(Colour& voxelData, uint8_t* pixelData, uint32_t componentCount);
 	void voxelToPixel(MultiMaterial& voxelData, uint8_t* pixelData, uint32_t componentCount);
 
-	ColouredCubesVolumeImpl* importVxl(const std::string& filename, const std::string& pageFolder);
+	ColouredCubesVolumeImpl* importVxl(const std::string& vxlFfilename, const std::string& volumeFilename);
 
-	ColouredCubesVolumeImpl* importHeightmap(const std::string& heightmapFileName, const std::string& colormapFileName, const std::string& pageFolder, uint32_t baseNodeSize);
+	ColouredCubesVolumeImpl* importHeightmap(const std::string& heightmapFileName, const std::string& colormapFileName, const std::string& volumeFilename, uint32_t baseNodeSize);
 
 	// --------------------------------------------------
 	// Imports data in the VolDat format.
 	// --------------------------------------------------
 	template <typename CubiquityVolumeType>
-	CubiquityVolumeType* importVolDat(std::string folder, const std::string& pageFolder, uint32_t baseNodeSize)
+	CubiquityVolumeType* importVolDat(std::string folder, const std::string& volumeFilename, uint32_t baseNodeSize)
 	{
-		logInfo() << "Importing images from '" << folder << "' and into '" << pageFolder << "'";
+		logInfo() << "Importing images from '" << folder << "' and into '" << volumeFilename << "'";
 		if((folder.back() != '/') && (folder.back() != '\\'))
 		{
 			//logWarning() << "Folder name " << folder << " is missing a trailing '/' or '\\'. Please to provide this to avoid confusion!";
@@ -122,7 +122,7 @@ namespace Cubiquity
 		//Create the volume
 		// When importing we treat 'y' as up because the Gameplay physics engine makes some
 		// assumptions about this. This means we need to swap the 'y' and 'slice' indices.
-		CubiquityVolumeType* volume = new CubiquityVolumeType(Region(0, 0, 0, volumeWidth - 1, sliceCount - 1, volumeHeight - 1), pageFolder, baseNodeSize);
+		CubiquityVolumeType* volume = new CubiquityVolumeType(Region(0, 0, 0, volumeWidth - 1, sliceCount - 1, volumeHeight - 1), volumeFilename, baseNodeSize);
 
 		// Now iterate over each slice and import the data.
 		for(int slice = 0; slice < sliceCount; slice++)
