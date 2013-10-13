@@ -26,6 +26,9 @@ namespace Cubiquity
 		virtual void pageIn(const PolyVox::Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData);
 		virtual void pageOut(const PolyVox::Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData);
 
+		void acceptOverrideBlocks(void);
+		void discardOverrideBlocks(void);
+
 	private:
 
 		sqlite3* mDatabase;

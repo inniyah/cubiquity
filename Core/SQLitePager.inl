@@ -155,4 +155,40 @@ namespace Cubiquity
 		sqlite3_bind_blob(mInsertOrReplaceOverrideBlockStatement, 2, static_cast<const void*>(pBlockData->getData()), pBlockData->getDataSizeInBytes(), SQLITE_TRANSIENT);
 		sqlite3_step(mInsertOrReplaceOverrideBlockStatement);
 	}
+
+	template <typename VoxelType>
+	void SQLitePager<VoxelType>::acceptOverrideBlocks(void)
+	{
+		int rc = 0; // SQLite return code
+		char* pErrorMsg = 0; // SQLite error message
+
+		rc = sqlite3_exec(mDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) SELECT Region, Data from OverrideBlocks;", 0, 0, &pErrorMsg);
+		if(rc != SQLITE_OK)
+		{
+			std::stringstream ss;
+			ss << "Failed to drop 'OverrideBlocks' table. Message was: \"" << pErrorMsg << "\"";
+			sqlite3_free(pErrorMsg);
+			throw std::runtime_error(ss.str().c_str());
+		}
+
+		// The override blocks have been copied accross so we
+		// can now discard the contents of the override table.
+		discardOverrideBlocks();
+	}
+
+	template <typename VoxelType>
+	void SQLitePager<VoxelType>::discardOverrideBlocks(void)
+	{
+		int rc = 0; // SQLite return code
+		char* pErrorMsg = 0; // SQLite error message
+
+		rc = sqlite3_exec(mDatabase, "DELETE FROM OverrideBlocks;", 0, 0, &pErrorMsg);
+		if(rc != SQLITE_OK)
+		{
+			std::stringstream ss;
+			ss << "Failed to delete contents of 'OverrideBlocks' table. Message was: \"" << pErrorMsg << "\"";
+			sqlite3_free(pErrorMsg);
+			throw std::runtime_error(ss.str().c_str());
+		}
+	}
 }

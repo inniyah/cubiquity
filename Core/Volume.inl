@@ -122,6 +122,7 @@ namespace Cubiquity
 		//delete m_pCompressor;
 		//delete m_pOverrideFilePager;
 
+		m_pSQLitePager->acceptOverrideBlocks();
 		delete m_pSQLitePager;
 
 		logTrace() << "Exiting ~Volume()";
