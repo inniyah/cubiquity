@@ -2,6 +2,8 @@
 
 #include "PolyVoxCore/Region.h"
 
+#include "Logging.h"
+
 namespace Cubiquity
 {
 	// This function encodes a Region as a 64-bit integer so that it can be used as a key to access block data in the SQLite database.
@@ -34,5 +36,14 @@ namespace Cubiquity
 
 		// Return the combined value
 		return x64 ^ y64 ^ z64;
+	}
+
+	void finalizeStatementWithLogging(sqlite3_stmt* statement)
+	{
+		int rc = sqlite3_finalize(statement);
+		if(rc != SQLITE_OK)
+		{
+			logWarning() << "Failed to finalize statement. Error message was: \"" << sqlite3_errstr(rc) << "\"";
+		}
 	}
 }

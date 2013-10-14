@@ -46,6 +46,8 @@ namespace Cubiquity
 
 	// Allows us to use a Region as a key in the SQLite database.
 	uint64_t regionToKey(const PolyVox::Region& region);
+
+	void finalizeStatementWithLogging(sqlite3_stmt* statement);
 }
 
 #include "SQLitePager.inl"
