@@ -177,12 +177,6 @@
     <ClInclude Include="SmoothSurfaceExtractionTask.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="SmoothTerrainVolume.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="SmoothTerrainVolumeEditor.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Task.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -257,6 +251,12 @@
     </ClInclude>
     <ClInclude Include="sqlite\sqlite3.h">
       <Filter>Core\sqlite</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainVolume.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="TerrainVolumeEditor.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -421,12 +421,6 @@
     <ClCompile Include="SmoothSurfaceExtractionTask.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="SmoothTerrainVolume.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="SmoothTerrainVolumeEditor.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="Task.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -455,6 +449,12 @@
       <Filter>Core\sqlite</Filter>
     </ClCompile>
     <ClCompile Include="SQLitePager.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainVolume.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="TerrainVolumeEditor.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>

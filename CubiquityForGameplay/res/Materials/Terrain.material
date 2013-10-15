@@ -1,12 +1,12 @@
-material SmoothTerrain
+material Terrain
 {
     technique
     {
         pass
         {
             // shaders
-            vertexShader = res/Materials/Shaders/SmoothTerrain.vert
-            fragmentShader = res/Materials/Shaders/SmoothTerrain.frag
+            vertexShader = res/Materials/Shaders/Terrain.vert
+            fragmentShader = res/Materials/Shaders/Terrain.frag
             
             // uniforms
             u_worldMatrix = WORLD_MATRIX

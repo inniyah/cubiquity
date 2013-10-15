@@ -1,5 +1,5 @@
-#ifndef SMOOTHTERRAINVOLUME_H_
-#define SMOOTHTERRAINVOLUME_H_
+#ifndef TERRAINVOLUME_H_
+#define TERRAINVOLUME_H_
 
 #include "Cubiquity.h"
 #include "CubiquityForwardDeclarations.h"
@@ -7,12 +7,12 @@
 
 namespace Cubiquity
 {
-	class SmoothTerrainVolumeImpl : public SmoothTerrainVolume
+	class TerrainVolumeImpl : public TerrainVolume
 	{
 	public:
 		typedef MultiMaterial VoxelType;
 
-		SmoothTerrainVolumeImpl(const Region& region, const std::string& filename, unsigned int baseNodeSize)
+		TerrainVolumeImpl(const Region& region, const std::string& filename, unsigned int baseNodeSize)
 			:mCubiquityVolume(region, filename, OctreeConstructionModes::BoundCells, baseNodeSize)
 		{
 			// Throw an exception if the requested volume dimensions exceed those allowed by the license. Actually the
@@ -24,7 +24,7 @@ namespace Cubiquity
 			POLYVOX_THROW_IF(region.getDepthInVoxels() > maxVolumeSize, std::invalid_argument, "Volume width exceeds maximum permitted size");
 		}
 
-		virtual ~SmoothTerrainVolumeImpl() {}
+		virtual ~TerrainVolumeImpl() {}
 
 		virtual int32_t getLowerX(void) const { return mCubiquityVolume.getEnclosingRegion().getLowerX(); }
 		virtual int32_t getUpperX(void) const { return mCubiquityVolume.getEnclosingRegion().getUpperX(); }
@@ -65,7 +65,7 @@ namespace Cubiquity
 		Volume<MultiMaterial> mCubiquityVolume;
 	};
 
-	SmoothTerrainVolume* createSmoothTerrainVolume(const Region& region, const std::string& filename, unsigned int baseNodeSize, bool createFloor = true, uint32_t floorDepth = 8);
+	TerrainVolume* createTerrainVolume(const Region& region, const std::string& filename, unsigned int baseNodeSize, bool createFloor = true, uint32_t floorDepth = 8);
 }
 
-#endif //SMOOTHTERRAINVOLUME_H_
+#endif //TERRAINVOLUME_H_

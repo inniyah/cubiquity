@@ -3,7 +3,7 @@
 
 #include "ColouredCubesVolume.h"
 #include "CubiquityForwardDeclarations.h"
-#include "SmoothTerrainVolume.h"
+#include "TerrainVolume.h"
 #include "UpdatePriorities.h"
 
 #include "PolyVoxCore\Impl\ErrorHandling.h"
@@ -27,8 +27,8 @@ namespace Cubiquity
 	ColouredCubesVolumeImpl* importColouredSlices(std::string folder);
 	void exportSlices(ColouredCubesVolumeImpl* volume, std::string folder);
 
-	SmoothTerrainVolumeImpl* importSmoothSlices(std::string folder);
-	void exportSlices(SmoothTerrainVolumeImpl* volume, std::string folder);
+	TerrainVolumeImpl* importSmoothSlices(std::string folder);
+	void exportSlices(TerrainVolumeImpl* volume, std::string folder);
 
 	template <typename VoxelType>
 	void pixelToVoxel(uint8_t* pixelData, VoxelType& voxelData, uint32_t componentCount)

@@ -5,7 +5,7 @@
 #include "VolumeSerialisation.h"
 
 #include "GameplayColouredCubesVolume.h"
-#include "GameplaySmoothTerrainVolume.h"
+#include "GameplayTerrainVolume.h"
 
 namespace Cubiquity
 {
@@ -21,9 +21,9 @@ namespace Cubiquity
 			exportVolDat<ColouredCubesVolumeImpl>(dynamic_cast<ColouredCubesVolumeImpl*>(volume->getCubiquityVolume()), voldatFolder);
 		}
 
-		static void gameplayExportSmoothSlices(GameplaySmoothTerrainVolume* volume, const char* voldatFolder)
+		static void gameplayExportSmoothSlices(GameplayTerrainVolume* volume, const char* voldatFolder)
 		{
-			exportVolDat<SmoothTerrainVolumeImpl>(dynamic_cast<SmoothTerrainVolumeImpl*>(volume->getCubiquityVolume()), voldatFolder);
+			exportVolDat<TerrainVolumeImpl>(dynamic_cast<TerrainVolumeImpl*>(volume->getCubiquityVolume()), voldatFolder);
 		}
 	};
 }

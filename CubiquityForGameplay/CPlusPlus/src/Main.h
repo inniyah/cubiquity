@@ -7,8 +7,8 @@
 #include "MultiMaterial.h"
 
 #include "GameplayColouredCubesVolume.h"
-#include "GameplaySmoothTerrainVolume.h"
-#include "GameplaySmoothTerrainVolumeEditor.h"
+#include "GameplayTerrainVolume.h"
+#include "GameplayTerrainVolumeEditor.h"
 
 #include <bitset>
 
@@ -102,10 +102,10 @@ private:
 
 	uint32_t mSelectedMaterial;
 
-	GameplaySmoothTerrainVolumeEditor* mVolumeEditor;
+	GameplayTerrainVolumeEditor* mVolumeEditor;
 
 #ifdef TERRAIN_SMOOTH
-	GameplaySmoothTerrainVolume* mVolume;
+	GameplayTerrainVolume* mVolume;
 #endif
 
 #ifdef TERRAIN_CUBIC

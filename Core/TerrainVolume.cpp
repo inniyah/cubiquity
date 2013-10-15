@@ -1,4 +1,4 @@
-#include "SmoothTerrainVolume.h"
+#include "TerrainVolume.h"
 
 #include "Clock.h"
 #include "MultiMaterial.h"
@@ -12,9 +12,9 @@ using namespace PolyVox;
 
 namespace Cubiquity
 {
-	SmoothTerrainVolume* createSmoothTerrainVolume(const Region& region, const std::string& filename, unsigned int baseNodeSize, bool createFloor, uint32_t floorDepth)
+	TerrainVolume* createTerrainVolume(const Region& region, const std::string& filename, unsigned int baseNodeSize, bool createFloor, uint32_t floorDepth)
 	{
-		SmoothTerrainVolumeImpl* smoothTerrainVolume = new SmoothTerrainVolumeImpl(region, filename, baseNodeSize);
+		TerrainVolumeImpl* terrainVolume = new TerrainVolumeImpl(region, filename, baseNodeSize);
 
 		if(createFloor)
 		{
@@ -42,7 +42,7 @@ namespace Cubiquity
 						//index = (x / 16 + z / 16) % 2; //Checkerboard for testing
 						MultiMaterial material;
 						material.setMaterial(index, density);
-						smoothTerrainVolume->setVoxelAt(x, y, z, material, UpdatePriorities::DontUpdate);
+						terrainVolume->setVoxelAt(x, y, z, material, UpdatePriorities::DontUpdate);
 					}
 				}
 			}
@@ -50,15 +50,15 @@ namespace Cubiquity
 			// We don't need to mark the volume as modified after writing the floor because it's a new volume.
 		}
 
-		return smoothTerrainVolume;
+		return terrainVolume;
 	}
 
-	/*SmoothTerrainVolume::SmoothTerrainVolume(const Region& region, const std::string& filename, unsigned int baseNodeSize)
+	/*TerrainVolume::TerrainVolume(const Region& region, const std::string& filename, unsigned int baseNodeSize)
 		:Volume<MultiMaterial>(region, filename, OctreeConstructionModes::BoundCells, baseNodeSize)
 	{
 	}
 
-	void SmoothTerrainVolume::update(const Vector3F& viewPosition, float lodThreshold)
+	void TerrainVolume::update(const Vector3F& viewPosition, float lodThreshold)
 	{
 		Volume<typename MultiMaterialMarchingCubesController::MaterialType>::update(viewPosition, lodThreshold);
 	}*/

@@ -81,7 +81,7 @@ namespace Cubiquity
 	// Also, should we handle computing the exact intersection point? Repeatedly bisect the last
 	// two points, of perform interpolation between them? Maybe user code could perform such interpolation?
 	template<typename PolyVoxVolumeType, typename Callback>
-	::PolyVox::RaycastResult smoothRaycastWithDirection(PolyVoxVolumeType* polyVoxVolume, const Vector3F& v3dStart, const Vector3F& v3dDirectionAndLength, Callback& callback, float fStepSize = 1.0f)
+	::PolyVox::RaycastResult terrainRaycastWithDirection(PolyVoxVolumeType* polyVoxVolume, const Vector3F& v3dStart, const Vector3F& v3dDirectionAndLength, Callback& callback, float fStepSize = 1.0f)
 	{		
 		POLYVOX_ASSERT(fStepSize > 0.0f, "Raycast step size must be greater than zero");
 		uint32_t mMaxNoOfSteps = static_cast<uint32_t>(v3dDirectionAndLength.length() / fStepSize);
@@ -133,7 +133,7 @@ namespace Cubiquity
 	bool pickFirstSolidVoxel(ColouredCubesVolume* colouredCubesVolume, float startX, float startY, float startZ, float dirAndLengthX, float dirAndLengthY, float dirAndLengthZ, int32_t* resultX, int32_t* resultY, int32_t* resultZ);
 	bool pickLastEmptyVoxel(ColouredCubesVolume* colouredCubesVolume, float startX, float startY, float startZ, float dirAndLengthX, float dirAndLengthY, float dirAndLengthZ, int32_t* resultX, int32_t* resultY, int32_t* resultZ);
 
-	bool pickTerrainSurface(SmoothTerrainVolume* smoothTerrainVolume, float startX, float startY, float startZ, float dirAndLengthX, float dirAndLengthY, float dirAndLengthZ, float* resultX, float* resultY, float* resultZ);
+	bool pickTerrainSurface(TerrainVolume* terrainVolume, float startX, float startY, float startZ, float dirAndLengthX, float dirAndLengthY, float dirAndLengthZ, float* resultX, float* resultY, float* resultZ);
 }
 
 #endif //CUBIQUITYRAYCASTING_H_

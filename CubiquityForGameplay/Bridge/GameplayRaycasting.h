@@ -2,7 +2,7 @@
 #define GAMEPLAYRAYCASTING_H_
 
 #include "GameplayColouredCubesVolume.h"
-#include "GameplaySmoothTerrainVolume.h"
+#include "GameplayTerrainVolume.h"
 
 namespace Cubiquity
 {
@@ -14,7 +14,7 @@ namespace Cubiquity
 	{
 	public:
 		static bool gameplayRaycast(GameplayColouredCubesVolume* volume, gameplay::Ray ray, float distance, gameplay::Vector3& result);
-		static bool gameplayRaycast(GameplaySmoothTerrainVolume* volume, gameplay::Ray ray, float distance, gameplay::Vector3& result);
+		static bool gameplayRaycast(GameplayTerrainVolume* volume, gameplay::Ray ray, float distance, gameplay::Vector3& result);
 	};
 }
 

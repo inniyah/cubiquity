@@ -1,9 +1,9 @@
-#ifndef GAMEPLAYSMOOTHTERRAINVOLUME_H_
-#define GAMEPLAYSMOOTHTERRAINVOLUME_H_
+#ifndef GAMEPLAYTERRAINVOLUME_H_
+#define GAMEPLAYTERRAINVOLUME_H_
 
 #include "gameplay.h" //Would rather have this last, but it's being upset by Timer.h including Windows.h
 
-#include "SmoothTerrainVolume.h"
+#include "TerrainVolume.h"
 #include "SmoothSurfaceExtractionTask.h"
 
 #include "Impl/GameplayVolume.h"
@@ -13,28 +13,28 @@ namespace Cubiquity
 	/**
 	 * A volume containing smooth terrain.
 	 */
-	class GameplaySmoothTerrainVolume : public gameplay::Ref
+	class GameplayTerrainVolume : public gameplay::Ref
 	{
 	public:
 		/**
-		 * Creates a new GameplaySmoothTerrainVolume.
+		 * Creates a new GameplayTerrainVolume.
 		 *
 		 * @script{create}
 		 */
-		static GameplaySmoothTerrainVolume* create(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize, bool createFloor, unsigned int floorDepth)
+		static GameplayTerrainVolume* create(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize, bool createFloor, unsigned int floorDepth)
 		{
-			GameplaySmoothTerrainVolume* volume = new GameplaySmoothTerrainVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, pageFolder, baseNodeSize, createFloor, floorDepth);
+			GameplayTerrainVolume* volume = new GameplayTerrainVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, pageFolder, baseNodeSize, createFloor, floorDepth);
 			return volume;
 		}
 
 		/**
-		 * Creates a new GameplaySmoothTerrainVolume.
+		 * Creates a new GameplayTerrainVolume.
 		 *
 		 * @script{create}
 		 */
-		static GameplaySmoothTerrainVolume* create(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize)
+		static GameplayTerrainVolume* create(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize)
 		{
-			GameplaySmoothTerrainVolume* volume = new GameplaySmoothTerrainVolume(dataToLoad, pageFolder, baseNodeSize);
+			GameplayTerrainVolume* volume = new GameplayTerrainVolume(dataToLoad, pageFolder, baseNodeSize);
 			return volume;
 		}
 
@@ -44,7 +44,7 @@ namespace Cubiquity
 		}
 
 		//Not sure I like exposing this one... should make some functions/classes friends instead?
-		SmoothTerrainVolume* getCubiquityVolume(void)
+		TerrainVolume* getCubiquityVolume(void)
 		{
 			return mCubiquityVolume;
 		}
@@ -77,17 +77,17 @@ namespace Cubiquity
 		void syncNode(OctreeNode< MultiMaterial >* octreeNode, GameplayOctreeNode< MultiMaterial >* gameplayOctreeNode);
 
 	protected:
-		GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize, bool createFloor, unsigned int floorDepth);
-		GameplaySmoothTerrainVolume(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize);
-		virtual ~GameplaySmoothTerrainVolume();
+		GameplayTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize, bool createFloor, unsigned int floorDepth);
+		GameplayTerrainVolume(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize);
+		virtual ~GameplayTerrainVolume();
 
 	private:
 
 		gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< ::PolyVox::PositionMaterialNormal< MultiMaterial > >* polyVoxMesh);
 
-		SmoothTerrainVolume* mCubiquityVolume;
+		TerrainVolume* mCubiquityVolume;
 		GameplayOctreeNode< MultiMaterial >* mRootGameplayOctreeNode;
 	};
 }
 
-#endif //GAMEPLAYSMOOTHTERRAINVOLUME_H_
+#endif //GAMEPLAYTERRAINVOLUME_H_

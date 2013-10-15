@@ -34,10 +34,10 @@ namespace Cubiquity
 
 	class SmoothSurfaceExtractionTask;
 
-	class SmoothTerrainVolume;
-	class SmoothTerrainVolumeImpl;
+	class TerrainVolume;
+	class TerrainVolumeImpl;
 
-	class SmoothTerrainVolumeEditor;
+	class TerrainVolumeEditor;
 
 	template <typename VoxelType>
 	class SQLitePager;

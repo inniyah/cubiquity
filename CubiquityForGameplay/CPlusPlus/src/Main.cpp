@@ -1,7 +1,7 @@
 #include "Main.h"
 
 #include "GameplayColouredCubesVolume.h"
-#include "GameplaySmoothTerrainVolume.h"
+#include "GameplayTerrainVolume.h"
 #include "GameplayRaycasting.h"
 
 #include "GameplayVolumeSerialisation.h"
@@ -181,12 +181,12 @@ void MeshGame::initialize()
 
 	// Create the volume and add it to the scene.
 #ifdef TERRAIN_SMOOTH
-	//mVolume = GameplaySmoothTerrainVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
+	//mVolume = GameplayTerrainVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
 	//mVolume = GameplayVolumeSerialisation::gameplayImportSmoothSlices("../../SliceData/SmoothVoxeliensTerrain/");
 	
-	//mVolume = GameplaySmoothTerrainVolume::create("C:/Code/cubiquity/Examples/SliceData/SmoothVoxeliensTerrain/", "./", 32);
-	mVolume = GameplaySmoothTerrainVolume::create(0, 0, 0, 127, 31, 127, "C:/temp/volume.vol", 32, true, 8);
-	mVolumeEditor = new GameplaySmoothTerrainVolumeEditor(mVolume);
+	//mVolume = GameplayTerrainVolume::create("C:/Code/cubiquity/Examples/SliceData/SmoothVoxeliensTerrain/", "./", 32);
+	mVolume = GameplayTerrainVolume::create(0, 0, 0, 127, 31, 127, "C:/temp/volume.vol", 32, true, 8);
+	mVolumeEditor = new GameplayTerrainVolumeEditor(mVolume);
 #endif
 #ifdef TERRAIN_CUBIC
 	//mVolume = GameplayColouredCubesVolume::create(0, 0, 0, 127, 31, 127, 32, 16);

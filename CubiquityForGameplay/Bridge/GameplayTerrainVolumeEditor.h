@@ -1,21 +1,21 @@
-#ifndef GAMEPLAY_SMOOTHTERRAINVOLUMEDATA_H_
-#define GAMEPLAY_SMOOTHTERRAINVOLUMEDATA_H_
+#ifndef GAMEPLAY_TERRAINVOLUMEDATA_H_
+#define GAMEPLAY_TERRAINVOLUMEDATA_H_
 
 #include "gameplay.h" //Would rather have this last, but it's being upset by Timer.h including Windows.h
 
-#include "GameplaySmoothTerrainVolume.h"
-#include "SmoothTerrainVolumeEditor.h"
+#include "GameplayTerrainVolume.h"
+#include "TerrainVolumeEditor.h"
 
 namespace Cubiquity
 {
 	/**
 	 * Just a dummy comment for now, so that gameplay-luagen will wrap this class.
 	 */
-	class GameplaySmoothTerrainVolumeEditor
+	class GameplayTerrainVolumeEditor
 	{
 	public:
-		GameplaySmoothTerrainVolumeEditor(GameplaySmoothTerrainVolume* volume);
-		~GameplaySmoothTerrainVolumeEditor();
+		GameplayTerrainVolumeEditor(GameplayTerrainVolume* volume);
+		~GameplayTerrainVolumeEditor();
 
 		void applyPaint(const gameplay::Vector3& centre, float innerRadius, float outerRadius, uint32_t materialToPaintWith, float timeElapsedInSeconds, float amount);
 		void smooth(const gameplay::Vector3& centre, float innerRadius, float outerRadius, float timeElapsedInSeconds, float amount);
@@ -23,7 +23,7 @@ namespace Cubiquity
 		void subtractMaterial(const gameplay::Vector3& centre, float innerRadius, float outerRadius, float timeElapsedInSeconds, float amount);
 
 	private:
-		SmoothTerrainVolumeImpl* mSmoothTerrainVolume;
+		TerrainVolumeImpl* mTerrainVolume;
 	};
 }
-#endif //GAMEPLAY_SMOOTHTERRAINVOLUMEDATA_H_
+#endif //GAMEPLAY_TERRAINVOLUMEDATA_H_

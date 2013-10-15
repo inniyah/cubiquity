@@ -43,10 +43,10 @@ namespace Cubiquity
 		virtual void update(const Vector3F& viewPosition, float lodThreshold) = 0;
 	};
 
-	class SmoothTerrainVolume
+	class TerrainVolume
 	{
 	public:
-		virtual ~SmoothTerrainVolume() {};
+		virtual ~TerrainVolume() {};
 
 		virtual int32_t getLowerX(void) const = 0;
 		virtual int32_t getUpperX(void) const = 0;

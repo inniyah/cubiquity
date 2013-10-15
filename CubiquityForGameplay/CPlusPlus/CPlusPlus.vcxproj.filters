@@ -31,13 +31,13 @@
     <ClInclude Include="..\Bridge\GameplayRaycasting.h">
       <Filter>Bridge</Filter>
     </ClInclude>
-    <ClInclude Include="..\Bridge\GameplaySmoothTerrainVolume.h">
-      <Filter>Bridge</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Bridge\GameplaySmoothTerrainVolumeEditor.h">
-      <Filter>Bridge</Filter>
-    </ClInclude>
     <ClInclude Include="..\Bridge\GameplayVolumeSerialisation.h">
+      <Filter>Bridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Bridge\GameplayTerrainVolume.h">
+      <Filter>Bridge</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Bridge\GameplayTerrainVolumeEditor.h">
       <Filter>Bridge</Filter>
     </ClInclude>
   </ItemGroup>
@@ -51,14 +51,14 @@
     <ClCompile Include="..\Bridge\GameplayRaycasting.cpp">
       <Filter>Bridge</Filter>
     </ClCompile>
-    <ClCompile Include="..\Bridge\GameplaySmoothTerrainVolume.cpp">
-      <Filter>Bridge</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Bridge\GameplaySmoothTerrainVolumeEditor.cpp">
-      <Filter>Bridge</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\Core\SQLite\sqlite3.c">
       <Filter>src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Bridge\GameplayTerrainVolume.cpp">
+      <Filter>Bridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Bridge\GameplayTerrainVolumeEditor.cpp">
+      <Filter>Bridge</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-#include "GameplaySmoothTerrainVolume.h"
+#include "GameplayTerrainVolume.h"
 
 #include "Clock.h"
 #include "VolumeSerialisation.h"
@@ -11,14 +11,14 @@ using namespace PolyVox;
 namespace Cubiquity
 {
 
-	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize, bool createFloor, unsigned int floorDepth)
+	GameplayTerrainVolume::GameplayTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize, bool createFloor, unsigned int floorDepth)
 	{
-		mCubiquityVolume = createSmoothTerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pageFolder, baseNodeSize, createFloor, floorDepth);
+		mCubiquityVolume = createTerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pageFolder, baseNodeSize, createFloor, floorDepth);
 
 		mRootGameplayOctreeNode = new GameplayOctreeNode< MultiMaterial >(mCubiquityVolume->getRootOctreeNode(), 0);
 	}
 
-	GameplaySmoothTerrainVolume::GameplaySmoothTerrainVolume(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize)
+	GameplayTerrainVolume::GameplayTerrainVolume(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize)
 	{
 		// Check whether the provided data is a file or a directory
 		FILE* file = fopen(dataToLoad, "rb");
@@ -32,19 +32,19 @@ namespace Cubiquity
 		{
 			// For now we assume it's VolDat. Leter on we should check for
 			// Volume.idx and load raw Cubiquity data instead if necessary.
-			mCubiquityVolume = importVolDat<SmoothTerrainVolumeImpl>(dataToLoad, pageFolder, baseNodeSize);
+			mCubiquityVolume = importVolDat<TerrainVolumeImpl>(dataToLoad, pageFolder, baseNodeSize);
 		}
 
 		mRootGameplayOctreeNode = new GameplayOctreeNode< MultiMaterial >(mCubiquityVolume->getRootOctreeNode(), 0);
 	}
 
-	GameplaySmoothTerrainVolume::~GameplaySmoothTerrainVolume()
+	GameplayTerrainVolume::~GameplayTerrainVolume()
 	{
 		delete mRootGameplayOctreeNode;
 		delete mCubiquityVolume;
 	}
 
-	void GameplaySmoothTerrainVolume::performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold)
+	void GameplayTerrainVolume::performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold)
 	{
 		Vector3DFloat v3dViewPosition(viewPosition.x, viewPosition.y, viewPosition.z);
 		mCubiquityVolume->update(v3dViewPosition, lodThreshold);
@@ -57,7 +57,7 @@ namespace Cubiquity
 		}
 	}
 
-	gameplay::Model* GameplaySmoothTerrainVolume::buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< ::PolyVox::PositionMaterialNormal< MultiMaterial > >* polyVoxMesh)
+	gameplay::Model* GameplayTerrainVolume::buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< ::PolyVox::PositionMaterialNormal< MultiMaterial > >* polyVoxMesh)
 	{
 		//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
 		const std::vector< ::PolyVox::PositionMaterialNormal< MultiMaterial > >& vecVertices = polyVoxMesh->getVertices();
@@ -126,7 +126,7 @@ namespace Cubiquity
 		return model;
 	}
 
-	void GameplaySmoothTerrainVolume::syncNode(OctreeNode< MultiMaterial >* octreeNode, GameplayOctreeNode< MultiMaterial >* gameplayOctreeNode)
+	void GameplayTerrainVolume::syncNode(OctreeNode< MultiMaterial >* octreeNode, GameplayOctreeNode< MultiMaterial >* gameplayOctreeNode)
 	{
 		if(gameplayOctreeNode->mMeshLastSyncronised < octreeNode->mMeshLastUpdated)
 		{
@@ -134,7 +134,7 @@ namespace Cubiquity
 			{
 				// Set up the renderable mesh
 				Model* model = buildModelFromPolyVoxMesh(octreeNode->mPolyVoxMesh);
-				model->setMaterial("res/Materials/SmoothTerrain.material");
+				model->setMaterial("res/Materials/Terrain.material");
 
 				gameplayOctreeNode->mGameplayNode->setModel(model);
 				SAFE_RELEASE(model);
@@ -200,7 +200,7 @@ namespace Cubiquity
 		}
 	}
 
-	gameplay::PhysicsCollisionShape::Definition GameplaySmoothTerrainVolume::buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< ::PolyVox::PositionMaterialNormal< MultiMaterial > >* polyVoxMesh)
+	gameplay::PhysicsCollisionShape::Definition GameplayTerrainVolume::buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< ::PolyVox::PositionMaterialNormal< MultiMaterial > >* polyVoxMesh)
 	{
 		//Now set up the physics
 		const std::vector< ::PolyVox::PositionMaterialNormal< MultiMaterial > >& vecVertices = polyVoxMesh->getVertices();

@@ -9,7 +9,7 @@
 #include "Logging.h"
 #include "OctreeNode.h"
 #include "Raycasting.h"
-#include "SmoothTerrainVolumeEditor.h"
+#include "TerrainVolumeEditor.h"
 #include "VolumeSerialisation.h"
 
 #include <vector>
@@ -66,7 +66,7 @@ const int MaxNodeHandle = (0x01 << NodeHandleBits) - 1;
 EntryAndExitPoints gEntryAndExitPoints;
 
 std::vector<ColouredCubesVolumeImpl*> gColouredCubesVolumes;
-std::vector<SmoothTerrainVolumeImpl*> gSmoothTerrainVolumes;
+std::vector<TerrainVolumeImpl*> gTerrainVolumes;
 
 void validateVolumeHandle(uint32_t volumeHandle)
 {
@@ -101,14 +101,14 @@ void validateVolumeHandleMC(uint32_t volumeHandle)
 		POLYVOX_THROW(std::invalid_argument, ss.str());
 	}
 
-	if(volumeHandle >= gSmoothTerrainVolumes.size())
+	if(volumeHandle >= gTerrainVolumes.size())
 	{
 		std::stringstream ss;
 		ss << "Volume handle'" << volumeHandle << "' is outside volume array bounds";
 		POLYVOX_THROW(std::invalid_argument, ss.str());
 	}
 
-	if(gSmoothTerrainVolumes[volumeHandle] == 0) 
+	if(gTerrainVolumes[volumeHandle] == 0) 
 	{
 		std::stringstream ss;
 		ss << "Volume handle'" << volumeHandle << "' is valid but the corresponding volume pointer is null";
@@ -122,10 +122,10 @@ ColouredCubesVolumeImpl* getVolumeFromHandle(uint32_t volumeHandle)
 	return gColouredCubesVolumes[volumeHandle];
 }
 
-SmoothTerrainVolumeImpl* getVolumeFromHandleMC(uint32_t volumeHandle)
+TerrainVolumeImpl* getVolumeFromHandleMC(uint32_t volumeHandle)
 {
 	validateVolumeHandleMC(volumeHandle);
-	return gSmoothTerrainVolumes[volumeHandle];
+	return gTerrainVolumes[volumeHandle];
 }
 
 void validateDecodedNodeHandle(uint32_t volumeHandle, uint32_t decodedNodeHandle)
@@ -160,7 +160,7 @@ void validateDecodedNodeHandleMC(uint32_t volumeHandle, uint32_t decodedNodeHand
 	}
 
 	// Get the volume (also validates the volume handle)
-	SmoothTerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
 
 	// Check the node really exists in the volume
 	OctreeNode<MultiMaterial>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
@@ -221,7 +221,7 @@ OctreeNode<MultiMaterial>* getNodeFromEncodedHandleMC(uint32_t encodedNodeHandle
 	uint32_t decodedNodeHandle;
 	decodeNodeHandleMC(encodedNodeHandle, &volumeHandle, &decodedNodeHandle);
 
-	SmoothTerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
 	OctreeNode<MultiMaterial>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
 	return node;
 }
@@ -409,20 +409,20 @@ CUBIQUITYC_API int32_t cuDiscardOverrideBlocks(uint32_t volumeHandle)
 
 //--------------------------------------------------------------------------------
 
-CUBIQUITYC_API int32_t cuNewSmoothTerrainVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* filename, uint32_t baseNodeSize, uint32_t createFloor, uint32_t floorDepth, uint32_t* result)
+CUBIQUITYC_API int32_t cuNewTerrainVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* filename, uint32_t baseNodeSize, uint32_t createFloor, uint32_t floorDepth, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	SmoothTerrainVolumeImpl* volume = dynamic_cast<SmoothTerrainVolumeImpl*>(createSmoothTerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), filename, baseNodeSize, createFloor==1, floorDepth));
+	TerrainVolumeImpl* volume = dynamic_cast<TerrainVolumeImpl*>(createTerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), filename, baseNodeSize, createFloor==1, floorDepth));
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 
 	// Replace an existing entry if it has been deleted.
 	bool foundEmptySlot = false;
-	for(uint32_t ct = 0; ct < gSmoothTerrainVolumes.size(); ct++)
+	for(uint32_t ct = 0; ct < gTerrainVolumes.size(); ct++)
 	{
-		if(gSmoothTerrainVolumes[ct] == 0)
+		if(gTerrainVolumes[ct] == 0)
 		{
-			gSmoothTerrainVolumes[ct] = volume;
+			gTerrainVolumes[ct] = volume;
 			*result =  ct;
 			foundEmptySlot = true;
 			break;
@@ -432,8 +432,8 @@ CUBIQUITYC_API int32_t cuNewSmoothTerrainVolume(int32_t lowerX, int32_t lowerY, 
 	//Otherwise append a new entry.
 	if(!foundEmptySlot)
 	{
-		gSmoothTerrainVolumes.push_back(volume);
-		*result = gSmoothTerrainVolumes.size() - 1;
+		gTerrainVolumes.push_back(volume);
+		*result = gTerrainVolumes.size() - 1;
 	}
 
 	logTrace() << "Creatd new smooth volume in slot " << *result;
@@ -445,24 +445,24 @@ CUBIQUITYC_API int32_t cuUpdateVolumeMC(uint32_t volumeHandle)
 {
 	OPEN_C_INTERFACE
 
-	SmoothTerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
 
 	volume->update(Vector3F(0.0f, 0.0f, 0.0f), 0);
 
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuDeleteSmoothTerrainVolume(uint32_t volumeHandle)
+CUBIQUITYC_API int32_t cuDeleteTerrainVolume(uint32_t volumeHandle)
 {
-	logTrace() << "In cuDeleteSmoothTerrainVolume() - deleting volume handle '" << volumeHandle << "'";
+	logTrace() << "In cuDeleteTerrainVolume() - deleting volume handle '" << volumeHandle << "'";
 
 	OPEN_C_INTERFACE
 
-	SmoothTerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
 	delete volume;
 
 	// In the future we could consider reusing this slot as we can detect that it set to zero.
-	gSmoothTerrainVolumes[volumeHandle] = 0;
+	gTerrainVolumes[volumeHandle] = 0;
 
 	CLOSE_C_INTERFACE
 }
@@ -471,7 +471,7 @@ CUBIQUITYC_API int32_t cuGetEnclosingRegionMC(uint32_t volumeHandle, int32_t* lo
 {
 	OPEN_C_INTERFACE
 
-	SmoothTerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
 	const Region& region = volume->getEnclosingRegion();
 	*lowerX = region.getLowerCorner().getX();
 	*lowerY = region.getLowerCorner().getY();
@@ -487,7 +487,7 @@ CUBIQUITYC_API int32_t cuGetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y,
 {
 	OPEN_C_INTERFACE
 
-	SmoothTerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
 	MultiMaterial& material = volume->getVoxelAt(x, y, z);
 	*value = material.getMaterial(index);
 
@@ -498,7 +498,7 @@ CUBIQUITYC_API int32_t cuSetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y,
 {
 	OPEN_C_INTERFACE
 
-	SmoothTerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
 	MultiMaterial& material = volume->getVoxelAt(x, y, z);
 	material.setMaterial(index, value);
 	volume->setVoxelAt(x, y, z, material, UpdatePriorities::Immediate);
@@ -510,7 +510,7 @@ CUBIQUITYC_API int32_t cuAcceptOverrideBlocksMC(uint32_t volumeHandle)
 {
 	OPEN_C_INTERFACE
 
-	SmoothTerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
 	volume->acceptOverrideBlocks();
 	
 	CLOSE_C_INTERFACE
@@ -520,7 +520,7 @@ CUBIQUITYC_API int32_t cuDiscardOverrideBlocksMC(uint32_t volumeHandle)
 {
 	OPEN_C_INTERFACE
 
-	SmoothTerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
 	volume->discardOverrideBlocks();
 	
 	CLOSE_C_INTERFACE
@@ -646,7 +646,7 @@ CUBIQUITYC_API int32_t cuHasRootOctreeNodeMC(uint32_t volumeHandle, uint32_t* re
 {
 	OPEN_C_INTERFACE
 
-	SmoothTerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
 	OctreeNode<MultiMaterial>* node = volume->getRootOctreeNode();
 	if(node)
 	{
@@ -664,7 +664,7 @@ CUBIQUITYC_API int32_t cuGetRootOctreeNodeMC(uint32_t volumeHandle, uint32_t* re
 {
 	OPEN_C_INTERFACE
 
-	SmoothTerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
 	OctreeNode<MultiMaterial>* node = volume->getRootOctreeNode();
 
 	if(!node)
@@ -943,7 +943,7 @@ CUBIQUITYC_API int32_t cuPickTerrainSurface(uint32_t volumeHandle, float rayStar
 {
 	OPEN_C_INTERFACE
 
-	SmoothTerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
 
 	if(pickTerrainSurface(volume, rayStartX, rayStartY, rayStartZ, rayDirX, rayDirY, rayDirZ, resultX, resultY, resultZ))
 	{
@@ -957,35 +957,35 @@ CUBIQUITYC_API int32_t cuPickTerrainSurface(uint32_t volumeHandle, float rayStar
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuSculptSmoothTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushInnerRadius, float brushOuterRadius, float opacity)
+CUBIQUITYC_API int32_t cuSculptTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushInnerRadius, float brushOuterRadius, float opacity)
 {
 	OPEN_C_INTERFACE
 
-	SmoothTerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
 
-	sculptSmoothTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushInnerRadius, brushOuterRadius, opacity));
+	sculptTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushInnerRadius, brushOuterRadius, opacity));
 
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuBlurSmoothTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushInnerRadius, float brushOuterRadius, float opacity)
+CUBIQUITYC_API int32_t cuBlurTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushInnerRadius, float brushOuterRadius, float opacity)
 {
 	OPEN_C_INTERFACE
 
-	SmoothTerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
 
-	blurSmoothTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushInnerRadius, brushOuterRadius, opacity));
+	blurTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushInnerRadius, brushOuterRadius, opacity));
 
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuPaintSmoothTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushInnerRadius, float brushOuterRadius, float opacity, uint32_t materialIndex)
+CUBIQUITYC_API int32_t cuPaintTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushInnerRadius, float brushOuterRadius, float opacity, uint32_t materialIndex)
 {
 	OPEN_C_INTERFACE
 
-	SmoothTerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
 
-	paintSmoothTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushInnerRadius, brushOuterRadius, opacity), materialIndex);
+	paintTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushInnerRadius, brushOuterRadius, opacity), materialIndex);
 
 	CLOSE_C_INTERFACE
 }

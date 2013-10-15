@@ -1,8 +1,8 @@
-#include "SmoothTerrainVolumeEditor.h"
+#include "TerrainVolumeEditor.h"
 
 #include "Brush.h"
 #include "SmoothSurfaceExtractionTask.h" // FIXME - Shouldn't need this here.
-#include "SmoothTerrainVolume.h"
+#include "TerrainVolume.h"
 
 using namespace PolyVox;
 
@@ -20,7 +20,7 @@ namespace Cubiquity
 		return result * brush.opacity();
 	}
 
-	void sculptSmoothTerrainVolume(SmoothTerrainVolumeImpl* smoothTerrainVolume, const Vector3F& centre, const Brush& brush)
+	void sculptTerrainVolume(TerrainVolumeImpl* terrainVolume, const Vector3F& centre, const Brush& brush)
 	{
 		int firstX = static_cast<int>(std::floor(centre.getX() - brush.outerRadius()));
 		int firstY = static_cast<int>(std::floor(centre.getY() - brush.outerRadius()));
@@ -31,13 +31,13 @@ namespace Cubiquity
 		int lastZ = static_cast<int>(std::ceil(centre.getZ() + brush.outerRadius()));
 
 		//Check bounds.
-		firstX = (std::max)(firstX,smoothTerrainVolume->getEnclosingRegion().getLowerCorner().getX());
-		firstY = (std::max)(firstY,smoothTerrainVolume->getEnclosingRegion().getLowerCorner().getY());
-		firstZ = (std::max)(firstZ,smoothTerrainVolume->getEnclosingRegion().getLowerCorner().getZ());
+		firstX = (std::max)(firstX,terrainVolume->getEnclosingRegion().getLowerCorner().getX());
+		firstY = (std::max)(firstY,terrainVolume->getEnclosingRegion().getLowerCorner().getY());
+		firstZ = (std::max)(firstZ,terrainVolume->getEnclosingRegion().getLowerCorner().getZ());
 
-		lastX = (std::min)(lastX,smoothTerrainVolume->getEnclosingRegion().getUpperCorner().getX());
-		lastY = (std::min)(lastY,smoothTerrainVolume->getEnclosingRegion().getUpperCorner().getY());
-		lastZ = (std::min)(lastZ,smoothTerrainVolume->getEnclosingRegion().getUpperCorner().getZ());
+		lastX = (std::min)(lastX,terrainVolume->getEnclosingRegion().getUpperCorner().getX());
+		lastY = (std::min)(lastY,terrainVolume->getEnclosingRegion().getUpperCorner().getY());
+		lastZ = (std::min)(lastZ,terrainVolume->getEnclosingRegion().getUpperCorner().getZ());
 
 		Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
 
@@ -59,16 +59,16 @@ namespace Cubiquity
 
 					for(uint32_t matIndex = 0; matIndex < MultiMaterial::getNoOfMaterials(); matIndex++)
 					{
-						int32_t original = smoothTerrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
+						int32_t original = terrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
 
-						float voxel1nx = static_cast<float>(smoothTerrainVolume->getVoxelAt(x-1, y, z).getMaterial(matIndex));
-						float voxel1px = static_cast<float>(smoothTerrainVolume->getVoxelAt(x+1, y, z).getMaterial(matIndex));
+						float voxel1nx = static_cast<float>(terrainVolume->getVoxelAt(x-1, y, z).getMaterial(matIndex));
+						float voxel1px = static_cast<float>(terrainVolume->getVoxelAt(x+1, y, z).getMaterial(matIndex));
 
-						float voxel1ny = static_cast<float>(smoothTerrainVolume->getVoxelAt(x, y-1, z).getMaterial(matIndex));
-						float voxel1py = static_cast<float>(smoothTerrainVolume->getVoxelAt(x, y+1, z).getMaterial(matIndex));
+						float voxel1ny = static_cast<float>(terrainVolume->getVoxelAt(x, y-1, z).getMaterial(matIndex));
+						float voxel1py = static_cast<float>(terrainVolume->getVoxelAt(x, y+1, z).getMaterial(matIndex));
 
-						float voxel1nz = static_cast<float>(smoothTerrainVolume->getVoxelAt(x, y, z-1).getMaterial(matIndex));
-						float voxel1pz = static_cast<float>(smoothTerrainVolume->getVoxelAt(x, y, z+1).getMaterial(matIndex));
+						float voxel1nz = static_cast<float>(terrainVolume->getVoxelAt(x, y, z-1).getMaterial(matIndex));
+						float voxel1pz = static_cast<float>(terrainVolume->getVoxelAt(x, y, z+1).getMaterial(matIndex));
 
 						Vector3DFloat normal
 						(
@@ -86,7 +86,7 @@ namespace Cubiquity
 
 						Vector3F samplePoint = pos - normal;
 
-						int32_t sample = getInterpolatedValue(smoothTerrainVolume->_getPolyVoxVolume(), samplePoint).getMaterial(matIndex);
+						int32_t sample = getInterpolatedValue(terrainVolume->_getPolyVoxVolume(), samplePoint).getMaterial(matIndex);
 
 						int32_t iAverage = sample;
 
@@ -112,15 +112,15 @@ namespace Cubiquity
 			{
 				for(int x = firstX; x <= lastX; ++x)
 				{
-					smoothTerrainVolume->setVoxelAt(x, y, z, mSmoothingVolume.getVoxelAt(x, y, z), UpdatePriorities::DontUpdate);
+					terrainVolume->setVoxelAt(x, y, z, mSmoothingVolume.getVoxelAt(x, y, z), UpdatePriorities::DontUpdate);
 				}
 			}
 		}
 
-		smoothTerrainVolume->markAsModified(region, UpdatePriorities::Immediate);
+		terrainVolume->markAsModified(region, UpdatePriorities::Immediate);
 	}
 
-	void blurSmoothTerrainVolume(SmoothTerrainVolumeImpl* smoothTerrainVolume, const Vector3F& centre, const Brush& brush)
+	void blurTerrainVolume(TerrainVolumeImpl* terrainVolume, const Vector3F& centre, const Brush& brush)
 	{
 		int firstX = static_cast<int>(std::floor(centre.getX() - brush.outerRadius()));
 		int firstY = static_cast<int>(std::floor(centre.getY() - brush.outerRadius()));
@@ -131,13 +131,13 @@ namespace Cubiquity
 		int lastZ = static_cast<int>(std::ceil(centre.getZ() + brush.outerRadius()));
 
 		//Check bounds.
-		firstX = (std::max)(firstX,smoothTerrainVolume->getEnclosingRegion().getLowerCorner().getX());
-		firstY = (std::max)(firstY,smoothTerrainVolume->getEnclosingRegion().getLowerCorner().getY());
-		firstZ = (std::max)(firstZ,smoothTerrainVolume->getEnclosingRegion().getLowerCorner().getZ());
+		firstX = (std::max)(firstX,terrainVolume->getEnclosingRegion().getLowerCorner().getX());
+		firstY = (std::max)(firstY,terrainVolume->getEnclosingRegion().getLowerCorner().getY());
+		firstZ = (std::max)(firstZ,terrainVolume->getEnclosingRegion().getLowerCorner().getZ());
 
-		lastX = (std::min)(lastX,smoothTerrainVolume->getEnclosingRegion().getUpperCorner().getX());
-		lastY = (std::min)(lastY,smoothTerrainVolume->getEnclosingRegion().getUpperCorner().getY());
-		lastZ = (std::min)(lastZ,smoothTerrainVolume->getEnclosingRegion().getUpperCorner().getZ());
+		lastX = (std::min)(lastX,terrainVolume->getEnclosingRegion().getUpperCorner().getX());
+		lastY = (std::min)(lastY,terrainVolume->getEnclosingRegion().getUpperCorner().getY());
+		lastZ = (std::min)(lastZ,terrainVolume->getEnclosingRegion().getUpperCorner().getZ());
 
 		Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
 
@@ -158,16 +158,16 @@ namespace Cubiquity
 
 					for(uint32_t matIndex = 0; matIndex < MultiMaterial::getNoOfMaterials(); matIndex++)
 					{
-						int32_t original = smoothTerrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
+						int32_t original = terrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
 
 						int32_t sum = 0;
-						sum += smoothTerrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
-						sum += smoothTerrainVolume->getVoxelAt(x+1, y, z).getMaterial(matIndex);
-						sum += smoothTerrainVolume->getVoxelAt(x-1, y, z).getMaterial(matIndex);
-						sum += smoothTerrainVolume->getVoxelAt(x, y+1, z).getMaterial(matIndex);
-						sum += smoothTerrainVolume->getVoxelAt(x, y-1, z).getMaterial(matIndex);
-						sum += smoothTerrainVolume->getVoxelAt(x, y, z+1).getMaterial(matIndex);
-						sum += smoothTerrainVolume->getVoxelAt(x, y, z-1).getMaterial(matIndex);
+						sum += terrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
+						sum += terrainVolume->getVoxelAt(x+1, y, z).getMaterial(matIndex);
+						sum += terrainVolume->getVoxelAt(x-1, y, z).getMaterial(matIndex);
+						sum += terrainVolume->getVoxelAt(x, y+1, z).getMaterial(matIndex);
+						sum += terrainVolume->getVoxelAt(x, y-1, z).getMaterial(matIndex);
+						sum += terrainVolume->getVoxelAt(x, y, z+1).getMaterial(matIndex);
+						sum += terrainVolume->getVoxelAt(x, y, z-1).getMaterial(matIndex);
 
 						float fAverage = static_cast<float>(sum) / 7.0f;
 
@@ -197,12 +197,12 @@ namespace Cubiquity
 			{
 				for(int x = firstX; x <= lastX; ++x)
 				{
-					smoothTerrainVolume->setVoxelAt(x, y, z, mSmoothingVolume.getVoxelAt(x, y, z), UpdatePriorities::DontUpdate);
+					terrainVolume->setVoxelAt(x, y, z, mSmoothingVolume.getVoxelAt(x, y, z), UpdatePriorities::DontUpdate);
 				}
 			}
 		}
 
-		smoothTerrainVolume->markAsModified(region, UpdatePriorities::Immediate);
+		terrainVolume->markAsModified(region, UpdatePriorities::Immediate);
 	}
 
 	void addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial& material)
@@ -240,7 +240,7 @@ namespace Cubiquity
 		}
 	}
 
-	void paintSmoothTerrainVolume(SmoothTerrainVolumeImpl* smoothTerrainVolume, const Vector3F& centre, const Brush& brush, uint32_t materialIndex)
+	void paintTerrainVolume(TerrainVolumeImpl* terrainVolume, const Vector3F& centre, const Brush& brush, uint32_t materialIndex)
 	{
 		int firstX = static_cast<int>(std::floor(centre.getX() - brush.outerRadius()));
 		int firstY = static_cast<int>(std::floor(centre.getY() - brush.outerRadius()));
@@ -251,13 +251,13 @@ namespace Cubiquity
 		int lastZ = static_cast<int>(std::ceil(centre.getZ() + brush.outerRadius()));
 
 		//Check bounds.
-		firstX = (std::max)(firstX,smoothTerrainVolume->getEnclosingRegion().getLowerCorner().getX());
-		firstY = (std::max)(firstY,smoothTerrainVolume->getEnclosingRegion().getLowerCorner().getY());
-		firstZ = (std::max)(firstZ,smoothTerrainVolume->getEnclosingRegion().getLowerCorner().getZ());
+		firstX = (std::max)(firstX,terrainVolume->getEnclosingRegion().getLowerCorner().getX());
+		firstY = (std::max)(firstY,terrainVolume->getEnclosingRegion().getLowerCorner().getY());
+		firstZ = (std::max)(firstZ,terrainVolume->getEnclosingRegion().getLowerCorner().getZ());
 
-		lastX = (std::min)(lastX,smoothTerrainVolume->getEnclosingRegion().getUpperCorner().getX());
-		lastY = (std::min)(lastY,smoothTerrainVolume->getEnclosingRegion().getUpperCorner().getY());
-		lastZ = (std::min)(lastZ,smoothTerrainVolume->getEnclosingRegion().getUpperCorner().getZ());
+		lastX = (std::min)(lastX,terrainVolume->getEnclosingRegion().getUpperCorner().getX());
+		lastY = (std::min)(lastY,terrainVolume->getEnclosingRegion().getUpperCorner().getY());
+		lastZ = (std::min)(lastZ,terrainVolume->getEnclosingRegion().getUpperCorner().getZ());
 
 		Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
 
@@ -278,15 +278,15 @@ namespace Cubiquity
 					int32_t amountToAdd = static_cast<int32_t>(fAmmountToAdd + 0.5f);
 
 
-					MultiMaterial voxel = smoothTerrainVolume->getVoxelAt(x, y, z);
+					MultiMaterial voxel = terrainVolume->getVoxelAt(x, y, z);
 					addToMaterial(materialIndex, amountToAdd, voxel);
 					voxel.clampSumOfMaterials();
-					smoothTerrainVolume->setVoxelAt(x, y, z, voxel);
+					terrainVolume->setVoxelAt(x, y, z, voxel);
 					
 				}
 			}
 		}
 
-		smoothTerrainVolume->markAsModified(region, UpdatePriorities::Immediate);
+		terrainVolume->markAsModified(region, UpdatePriorities::Immediate);
 	}
 }

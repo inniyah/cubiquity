@@ -81,8 +81,8 @@
     <ClInclude Include="Raycasting.h" />
     <ClInclude Include="Region.h" />
     <ClInclude Include="SmoothSurfaceExtractionTask.h" />
-    <ClInclude Include="SmoothTerrainVolume.h" />
-    <ClInclude Include="SmoothTerrainVolumeEditor.h" />
+    <ClInclude Include="TerrainVolume.h" />
+    <ClInclude Include="TerrainVolumeEditor.h" />
     <ClInclude Include="SQLitePager.h" />
     <ClInclude Include="sqlite\sqlite3.h" />
     <ClInclude Include="Task.h" />
@@ -155,8 +155,8 @@
     <ClCompile Include="MultiMaterial.cpp" />
     <ClCompile Include="Raycasting.cpp" />
     <ClCompile Include="SmoothSurfaceExtractionTask.cpp" />
-    <ClCompile Include="SmoothTerrainVolume.cpp" />
-    <ClCompile Include="SmoothTerrainVolumeEditor.cpp" />
+    <ClCompile Include="TerrainVolume.cpp" />
+    <ClCompile Include="TerrainVolumeEditor.cpp" />
     <ClCompile Include="SQLitePager.cpp" />
     <ClCompile Include="sqlite\sqlite3.c" />
     <ClCompile Include="Task.cpp" />

@@ -26,7 +26,7 @@ namespace Cubiquity
 				}
 				else
 				{
-					model->setMaterial("res/Materials/SmoothTerrain.material");
+					model->setMaterial("res/Materials/Terrain.material");
 				}
 				gameplayOctreeNode->mGameplayNode->setModel(model);
 				SAFE_RELEASE(model);
