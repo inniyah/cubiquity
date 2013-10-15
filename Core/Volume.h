@@ -54,8 +54,17 @@ namespace Cubiquity
 		// Marks a region as modified so it will be regenerated later.
 		void markAsModified(const Region& region, UpdatePriority updatePriority = UpdatePriorities::Background);
 
-		void acceptOverrideBlocks(void) { m_pSQLitePager->acceptOverrideBlocks(); }
-		void discardOverrideBlocks(void) { m_pSQLitePager->discardOverrideBlocks(); }
+		void acceptOverrideBlocks(void)
+		{
+			mPolyVoxVolume->flushAll();
+			m_pSQLitePager->acceptOverrideBlocks();
+		}
+		
+		void discardOverrideBlocks(void)
+		{
+			mPolyVoxVolume->flushAll();
+			m_pSQLitePager->discardOverrideBlocks();
+		}
 
 		// Should be called before rendering a frame to update the meshes and octree structure.
 		virtual void update(const Vector3F& viewPosition, float lodThreshold);
