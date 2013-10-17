@@ -13,8 +13,8 @@ namespace Cubiquity
 	class GameplayRaycasting
 	{
 	public:
-		static bool gameplayRaycast(GameplayColouredCubesVolume* volume, gameplay::Ray ray, float distance, gameplay::Vector3& result);
-		static bool gameplayRaycast(GameplayTerrainVolume* volume, gameplay::Ray ray, float distance, gameplay::Vector3& result);
+		static bool pickFirstSolidVoxel(GameplayColouredCubesVolume* volume, gameplay::Ray startAndDirection, float length, gameplay::Vector3& result);
+		static bool pickTerrainSurface(GameplayTerrainVolume* volume, gameplay::Ray startAndDirection, float length, gameplay::Vector3& result);
 	};
 }
 
