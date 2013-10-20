@@ -3,7 +3,9 @@
 
 #include "Colour.h"
 #include "CubiquityForwardDeclarations.h"
-#include "Volume.h"
+#include "Region.h"
+#include "UpdatePriorities.h"
+#include "Vector.h"
 
 namespace Cubiquity
 {

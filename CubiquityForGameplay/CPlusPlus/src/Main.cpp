@@ -265,11 +265,14 @@ void MeshGame::update(float elapsedTime)
 	ray.setDirection(dir);
 
 	Vector3 intersection;
-	if(GameplayRaycasting::gameplayRaycast(mVolume, ray, 200.0f, intersection))
+
+#ifdef TERRAIN_SMOOTH
+	if(GameplayRaycasting::pickTerrainSurface(mVolume, ray, 200.0f, intersection))
+#else
+	if(GameplayRaycasting::pickFirstSolidVoxel(mVolume, ray, 200.0f, intersection))
+#endif
 	{
-		/*dir.normalize();
-		dir *= 2.0f;*/
-		mSphereNode->setTranslation(intersection/* + dir*/);
+		mSphereNode->setTranslation(intersection);
 	}
 
 #ifdef TERRAIN_SMOOTH

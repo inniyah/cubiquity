@@ -6,6 +6,71 @@
 
 namespace Cubiquity
 {
+	template <typename VoxelType>
+	class RaycastTestFunctor
+	{
+	public:
+		RaycastTestFunctor()
+		{
+		}
+
+		bool operator()(Vector3F pos, const VoxelType& voxel)
+		{
+		}
+	};
+
+	template <>
+	class RaycastTestFunctor<MultiMaterial>
+	{
+	public:
+		RaycastTestFunctor()
+		{
+		}
+
+		bool operator()(Vector3F pos, const MultiMaterial& voxel)
+		{
+			mLastPos = pos;
+			return voxel.getSumOfMaterials() <= MultiMaterial::getMaxMaterialValue() / 2;
+		}
+
+		Vector3F mLastPos;
+	};
+
+	template <>
+	class RaycastTestFunctor<Colour>
+	{
+	public:
+		RaycastTestFunctor()
+		{
+		}
+
+		bool operator()(Vector3F pos, const Colour& voxel)
+		{
+			return false;
+		}
+
+		Vector3F mLastPos;
+	};
+
+	class ColouredCubesRaycastTestFunctor
+	{
+	public:
+		ColouredCubesRaycastTestFunctor()
+		{
+		}
+
+		bool operator()(const ::PolyVox::POLYVOX_VOLUME<Colour>::Sampler& sampler);
+
+		Vector3I mLastPos;
+	};
+
+	bool ColouredCubesRaycastTestFunctor::operator()(const ::PolyVox::POLYVOX_VOLUME<Colour>::Sampler& sampler)
+	{
+		mLastPos = sampler.getPosition();
+
+		return sampler.getVoxel().getAlpha() == 0;
+	}
+
 	bool pickFirstSolidVoxel(ColouredCubesVolume* colouredCubesVolume, float startX, float startY, float startZ, float dirAndLengthX, float dirAndLengthY, float dirAndLengthZ, int32_t* resultX, int32_t* resultY, int32_t* resultZ)
 	{
 		::PolyVox::Vector3DFloat start(startX, startY, startZ);
