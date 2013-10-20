@@ -10,6 +10,7 @@
 #include "OctreeNode.h"
 #include "Raycasting.h"
 #include "TerrainVolumeEditor.h"
+#include "TerrainVolumeGenerator.h"
 #include "VolumeSerialisation.h"
 
 #include <vector>
@@ -957,6 +958,9 @@ CUBIQUITYC_API int32_t cuPickTerrainSurface(uint32_t volumeHandle, float rayStar
 	CLOSE_C_INTERFACE
 }
 
+////////////////////////////////////////////////////////////////////////////////
+// Editing functions
+////////////////////////////////////////////////////////////////////////////////
 CUBIQUITYC_API int32_t cuSculptTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushInnerRadius, float brushOuterRadius, float opacity)
 {
 	OPEN_C_INTERFACE
@@ -986,6 +990,20 @@ CUBIQUITYC_API int32_t cuPaintTerrainVolume(uint32_t volumeHandle, float brushX,
 	TerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
 
 	paintTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushInnerRadius, brushOuterRadius, opacity), materialIndex);
+
+	CLOSE_C_INTERFACE
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Volume generation functions
+////////////////////////////////////////////////////////////////////////////////
+CUBIQUITYC_API int32_t cuGenerateFloor(uint32_t volumeHandle, int32_t lowerLayerHeight, uint32_t lowerLayerMaterial, int32_t upperLayerHeight, uint32_t upperLayerMaterial)
+{
+	OPEN_C_INTERFACE
+
+	TerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
+
+	generateFloor(volume, lowerLayerHeight, lowerLayerMaterial, upperLayerHeight, upperLayerMaterial);
 
 	CLOSE_C_INTERFACE
 }
