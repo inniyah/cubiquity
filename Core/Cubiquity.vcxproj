@@ -87,6 +87,7 @@
     <ClInclude Include="sqlite\sqlite3.h" />
     <ClInclude Include="Task.h" />
     <ClInclude Include="TaskProcessor.h" />
+    <ClInclude Include="TerrainVolumeGenerator.h" />
     <ClInclude Include="UpdatePriorities.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="Volume.h" />
@@ -160,6 +161,7 @@
     <ClCompile Include="SQLitePager.cpp" />
     <ClCompile Include="sqlite\sqlite3.c" />
     <ClCompile Include="Task.cpp" />
+    <ClCompile Include="TerrainVolumeGenerator.cpp" />
     <ClCompile Include="VolumeSerialisation.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

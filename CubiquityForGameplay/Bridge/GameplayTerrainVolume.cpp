@@ -1,6 +1,7 @@
 #include "GameplayTerrainVolume.h"
 
 #include "Clock.h"
+#include "TerrainVolumeGenerator.h"
 #include "VolumeSerialisation.h"
 
 #include "gameplay.h" //Would rather have this last, but it's being upset by Timer.h including Windows.h
@@ -14,6 +15,11 @@ namespace Cubiquity
 	GameplayTerrainVolume::GameplayTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize, bool createFloor, unsigned int floorDepth)
 	{
 		mCubiquityVolume = createTerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pageFolder, baseNodeSize, createFloor, floorDepth);
+
+		if(createFloor)
+		{
+			generateFloor(mCubiquityVolume, floorDepth-2, 0, floorDepth, 1);
+		}
 
 		mRootGameplayOctreeNode = new GameplayOctreeNode< MultiMaterial >(mCubiquityVolume->getRootOctreeNode(), 0);
 	}
