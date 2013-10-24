@@ -115,8 +115,6 @@ void MeshGame::initialize()
 	// Load mesh/scene from file
     Bundle* bundle = Bundle::create("res/Models/Icosphere3.gpb");
 	Mesh* sphere = bundle->loadMesh("Sphere_001");
-    SAFE_RELEASE(bundle);
-
 	Model* model = Model::create(sphere);
 	model->setMaterial("res/Materials/VertexColouredMesh.material");
 	mSphereNode = Node::create();
@@ -124,6 +122,10 @@ void MeshGame::initialize()
 	float scale = mBrushOuterRadiusSlider->getValue();
 	mSphereNode->setScale(scale, scale, scale);
 	_scene->addNode(mSphereNode);
+
+	SAFE_RELEASE(bundle);
+	SAFE_RELEASE(sphere);
+	SAFE_RELEASE(model);
 
 	//Create some physics object for testing.
 	Bundle* boxBundle = Bundle::create("res/Models/box.gpb");
@@ -148,6 +150,7 @@ void MeshGame::initialize()
 			SAFE_RELEASE(objectNode);
 		}
 	}
+	SAFE_RELEASE(objectMesh)
 	SAFE_RELEASE(boxBundle);
 
     // Find the light node
@@ -171,6 +174,7 @@ void MeshGame::initialize()
 	_cameraNode->setCamera(camera);
 	_scene->setActiveCamera(camera);
 	_scene->getActiveCamera()->setAspectRatio((float)getWidth() / (float)getHeight());
+	SAFE_RELEASE(camera);
 
 	
 	//_cameraPositionNode->rotateX(3.142f * 0.5f);
@@ -219,6 +223,16 @@ void MeshGame::finalize()
     SAFE_RELEASE(_scene);
 	SAFE_RELEASE(mVolume);
 	SAFE_RELEASE(mForm);
+	SAFE_RELEASE(mSphereNode);
+
+	SAFE_RELEASE(_light);
+	SAFE_RELEASE(_lightNode);
+	
+	/*SAFE_RELEASE(_cameraPositionNode);
+	SAFE_RELEASE(_cameraPitchNode);
+	SAFE_RELEASE(_cameraYawNode);
+
+	SAFE_RELEASE(_cameraNode);*/
 }
 
 void MeshGame::update(float elapsedTime)
