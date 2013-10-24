@@ -175,7 +175,6 @@ void MeshGame::initialize()
 	_scene->setActiveCamera(camera);
 	_scene->getActiveCamera()->setAspectRatio((float)getWidth() / (float)getHeight());
 	SAFE_RELEASE(camera);
-
 	
 	//_cameraPositionNode->rotateX(3.142f * 0.5f);
 
@@ -227,12 +226,11 @@ void MeshGame::finalize()
 
 	SAFE_RELEASE(_light);
 	SAFE_RELEASE(_lightNode);
-	
-	/*SAFE_RELEASE(_cameraPositionNode);
-	SAFE_RELEASE(_cameraPitchNode);
-	SAFE_RELEASE(_cameraYawNode);
 
-	SAFE_RELEASE(_cameraNode);*/
+	SAFE_RELEASE(_cameraNode);
+	SAFE_RELEASE(_cameraYawNode);
+	SAFE_RELEASE(_cameraPitchNode);
+	SAFE_RELEASE(_cameraPositionNode);
 }
 
 void MeshGame::update(float elapsedTime)
