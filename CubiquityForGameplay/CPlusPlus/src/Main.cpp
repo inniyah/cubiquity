@@ -218,6 +218,8 @@ void MeshGame::initialize()
 
 void MeshGame::finalize()
 {
+	delete mVolumeEditor;
+
     SAFE_RELEASE(_font);
     SAFE_RELEASE(_scene);
 	SAFE_RELEASE(mVolume);
