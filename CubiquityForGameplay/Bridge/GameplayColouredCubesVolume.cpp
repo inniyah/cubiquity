@@ -57,6 +57,8 @@ namespace Cubiquity
 
 	GameplayColouredCubesVolume::~GameplayColouredCubesVolume()
 	{
+		delete mRootGameplayOctreeNode;
+		delete mCubiquityVolume;
 	}
 
 	void GameplayColouredCubesVolume::performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold)
