@@ -72,7 +72,7 @@ namespace Cubiquity
 				float temp = static_cast<float>(getMaterial(ct));
 				float rhsFloat = static_cast<float>(rhs.getMaterial(ct));
 				temp += rhsFloat;
-				setMaterial(ct, static_cast<uint32_t>(temp));
+				setMaterial(ct, static_cast<uint8_t>(temp));
 			}
 			return *this;
 		}
@@ -84,7 +84,7 @@ namespace Cubiquity
 				float temp = static_cast<float>(getMaterial(ct));
 				float rhsFloat = static_cast<float>(rhs.getMaterial(ct));
 				temp -= rhsFloat;
-				setMaterial(ct, static_cast<uint32_t>(temp));
+				setMaterial(ct, static_cast<uint8_t>(temp));
 			}
 			return *this;
 		}
@@ -95,7 +95,7 @@ namespace Cubiquity
 			{
 				float temp = static_cast<float>(getMaterial(ct));
 				temp *= rhs;
-				setMaterial(ct, static_cast<uint32_t>(temp));
+				setMaterial(ct, static_cast<uint8_t>(temp));
 			}
 			return *this;
 		}
@@ -106,7 +106,7 @@ namespace Cubiquity
 			{
 				float temp = static_cast<float>(getMaterial(ct));
 				temp /= rhs;
-				setMaterial(ct, static_cast<uint32_t>(temp));
+				setMaterial(ct, static_cast<uint8_t>(temp));
 			}
 			return *this;
 		}
@@ -121,17 +121,17 @@ namespace Cubiquity
 			return 255;
 		}
 
-		uint32_t getMaterial(uint32_t index) const
+		uint8_t getMaterial(uint32_t index) const
 		{
 			assert(index < getNoOfMaterials());
-			return static_cast<uint32_t>(mMaterials[index]);
+			return mMaterials[index];
 		}
 
-		void setMaterial(uint32_t index, uint32_t value)
+		void setMaterial(uint32_t index, uint8_t value)
 		{
 			assert(index < getNoOfMaterials());
 
-			mMaterials[index] = static_cast<uint8_t>(value);
+			mMaterials[index] = value;
 		}
 
 		uint32_t getSumOfMaterials(void) const
