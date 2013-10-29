@@ -388,6 +388,38 @@ CUBIQUITYC_API int32_t cuSetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, i
 	CLOSE_C_INTERFACE
 }
 
+CUBIQUITYC_API int32_t cuGetVoxelNew(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuColor* color)
+{
+	OPEN_C_INTERFACE
+
+	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+	Colour& colour = volume->getVoxelAt(x, y, z);
+	/**red = colour.getRed();
+	*green = colour.getGreen();
+	*blue = colour.getBlue();
+	*alpha = colour.getAlpha();*/
+
+	//*color = reinterpret_cast<CuColor>(colour);
+
+	CuColor* ptr = (CuColor*)&colour;
+
+	*color = *ptr;
+
+	CLOSE_C_INTERFACE
+}
+
+CUBIQUITYC_API int32_t cuSetVoxelNew(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuColor color)
+{
+	OPEN_C_INTERFACE
+
+	Colour* pColour = (Colour*)&color;
+
+	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+	volume->setVoxelAt(x, y, z, *pColour, UpdatePriorities::Immediate);
+	
+	CLOSE_C_INTERFACE
+}
+
 CUBIQUITYC_API int32_t cuAcceptOverrideBlocks(uint32_t volumeHandle)
 {
 	OPEN_C_INTERFACE
