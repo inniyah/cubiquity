@@ -394,12 +394,6 @@ CUBIQUITYC_API int32_t cuGetVoxelNew(uint32_t volumeHandle, int32_t x, int32_t y
 
 	ColouredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
 	Colour& colour = volume->getVoxelAt(x, y, z);
-	/**red = colour.getRed();
-	*green = colour.getGreen();
-	*blue = colour.getBlue();
-	*alpha = colour.getAlpha();*/
-
-	//*color = reinterpret_cast<CuColor>(colour);
 
 	CuColor* ptr = (CuColor*)&colour;
 
@@ -535,6 +529,33 @@ CUBIQUITYC_API int32_t cuSetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y,
 	MultiMaterial& material = volume->getVoxelAt(x, y, z);
 	material.setMaterial(index, value);
 	volume->setVoxelAt(x, y, z, material, UpdatePriorities::Immediate);
+	
+	CLOSE_C_INTERFACE
+}
+
+CUBIQUITYC_API int32_t cuGetVoxelMCNew(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuMultiMaterial* multiMaterial)
+{
+	OPEN_C_INTERFACE
+
+	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	MultiMaterial& material = volume->getVoxelAt(x, y, z);
+
+	multiMaterial->mMaterials[0] = material.getMaterial(0);
+	multiMaterial->mMaterials[1] = material.getMaterial(1);
+	multiMaterial->mMaterials[2] = material.getMaterial(2);
+	multiMaterial->mMaterials[3] = material.getMaterial(3);
+
+	CLOSE_C_INTERFACE
+}
+
+CUBIQUITYC_API int32_t cuSetVoxelMCNew(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuMultiMaterial multiMaterial)
+{
+	OPEN_C_INTERFACE
+
+	MultiMaterial* pMat = (MultiMaterial*)&multiMaterial;
+
+	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	volume->setVoxelAt(x, y, z, *pMat, UpdatePriorities::Immediate);
 	
 	CLOSE_C_INTERFACE
 }

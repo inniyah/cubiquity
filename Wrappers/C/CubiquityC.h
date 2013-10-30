@@ -20,6 +20,12 @@ extern "C"
 	};
 	typedef struct CuColor_s CuColor;
 
+	struct CuMultiMaterial_s
+	{
+		uint8_t mMaterials[4];
+	};
+	typedef struct CuMultiMaterial_s CuMultiMaterial;
+
 	// Volume functions
 	CUBIQUITYC_API int32_t cuNewColouredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* filename, uint32_t baseNodeSize, uint32_t* result);
 	CUBIQUITYC_API int32_t cuNewColouredCubesVolumeFromVolDat(const char* volDatToImport, const char* filename, uint32_t baseNodeSize, uint32_t* result);
@@ -43,6 +49,8 @@ extern "C"
 	CUBIQUITYC_API int32_t cuGetEnclosingRegionMC(uint32_t volumeHandle, int32_t* lowerX, int32_t* lowerY, int32_t* lowerZ, int32_t* upperX, int32_t* upperY, int32_t* upperZ);
 	CUBIQUITYC_API int32_t cuGetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, uint32_t index, uint8_t* value);
 	CUBIQUITYC_API int32_t cuSetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, uint32_t index, uint8_t value);
+	CUBIQUITYC_API int32_t cuGetVoxelMCNew(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuMultiMaterial* multiMaterial);
+	CUBIQUITYC_API int32_t cuSetVoxelMCNew(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuMultiMaterial multiMaterial);
 
 	CUBIQUITYC_API int32_t cuAcceptOverrideBlocksMC(uint32_t volumeHandle);
 	CUBIQUITYC_API int32_t cuDiscardOverrideBlocksMC(uint32_t volumeHandle);
