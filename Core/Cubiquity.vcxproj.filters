@@ -159,9 +159,6 @@
     <ClInclude Include="MainThreadTaskProcessor.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="MultiMaterial.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Octree.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -259,6 +256,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="TerrainVolumeGenerator.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="MaterialSet.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
@@ -418,9 +418,6 @@
     <ClCompile Include="MainThreadTaskProcessor.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="MultiMaterial.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="SmoothSurfaceExtractionTask.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -461,6 +458,9 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="TerrainVolumeGenerator.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialSet.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>

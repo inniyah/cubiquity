@@ -3,7 +3,7 @@
 
 #include "Cubiquity.h"
 #include "Colour.h"
-#include "MultiMaterial.h"
+#include "MaterialSet.h"
 
 #include "PolyVoxCore/Raycast.h"
 

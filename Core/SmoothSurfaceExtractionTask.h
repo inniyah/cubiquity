@@ -10,17 +10,17 @@ namespace Cubiquity
 	class SmoothSurfaceExtractionTask : public Task
 	{
 	public:
-		SmoothSurfaceExtractionTask(OctreeNode< MultiMaterial >* octreeNode, ::PolyVox::POLYVOX_VOLUME< typename MultiMaterialMarchingCubesController::MaterialType >* polyVoxVolume);
+		SmoothSurfaceExtractionTask(OctreeNode< MaterialSet >* octreeNode, ::PolyVox::POLYVOX_VOLUME< typename MaterialSetMarchingCubesController::MaterialType >* polyVoxVolume);
 		~SmoothSurfaceExtractionTask();
 
 		void process(void);
 
-		void generateSmoothMesh(const Region& region, uint32_t lodLevel, ::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* resultMesh);
+		void generateSmoothMesh(const Region& region, uint32_t lodLevel, ::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MaterialSetMarchingCubesController::MaterialType > >* resultMesh);
 
 	public:
-		OctreeNode< MultiMaterial >* mOctreeNode;
-		::PolyVox::POLYVOX_VOLUME<typename MultiMaterialMarchingCubesController::MaterialType>* mPolyVoxVolume;
-		::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType> >* mPolyVoxMesh;
+		OctreeNode< MaterialSet >* mOctreeNode;
+		::PolyVox::POLYVOX_VOLUME<typename MaterialSetMarchingCubesController::MaterialType>* mPolyVoxVolume;
+		::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MaterialSetMarchingCubesController::MaterialType> >* mPolyVoxMesh;
 		Timestamp mProcessingStartedTimestamp;
 
 		// Whether the task owns the mesh, or whether it has been passed to
@@ -28,8 +28,8 @@ namespace Cubiquity
 		bool mOwnMesh;
 	};
 
-	void recalculateMaterials(::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MultiMaterialMarchingCubesController::MaterialType > >* mesh, const Vector3F& meshOffset, ::PolyVox::POLYVOX_VOLUME<MultiMaterial>* volume);
-	MultiMaterial getInterpolatedValue(::PolyVox::POLYVOX_VOLUME<MultiMaterial>* volume, const Vector3F& position);
+	void recalculateMaterials(::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MaterialSetMarchingCubesController::MaterialType > >* mesh, const Vector3F& meshOffset, ::PolyVox::POLYVOX_VOLUME<MaterialSet>* volume);
+	MaterialSet getInterpolatedValue(::PolyVox::POLYVOX_VOLUME<MaterialSet>* volume, const Vector3F& position);
 
 	template< typename SrcPolyVoxVolumeType, typename DstPolyVoxVolumeType>
 	void resampleVolume(uint32_t factor, SrcPolyVoxVolumeType* srcVolume, const Region& srcRegion, DstPolyVoxVolumeType* dstVolume, const Region& dstRegion)
@@ -48,7 +48,7 @@ namespace Cubiquity
 					int32_t sy = (dy - dstRegion.getLowerCorner().getY()) * factor + srcRegion.getLowerCorner().getY();
 					int32_t sz = (dz - dstRegion.getLowerCorner().getZ()) * factor + srcRegion.getLowerCorner().getZ();
 
-					const MultiMaterial& srcVoxel = srcVolume->getVoxel<WrapModes::Border>(sx,sy,sz);
+					const MaterialSet& srcVoxel = srcVolume->getVoxel<WrapModes::Border>(sx,sy,sz);
 					dstVolume->setVoxelAt(dx,dy,dz,srcVoxel);
 				}
 			}

@@ -164,7 +164,7 @@ void validateDecodedNodeHandleMC(uint32_t volumeHandle, uint32_t decodedNodeHand
 	TerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
 
 	// Check the node really exists in the volume
-	OctreeNode<MultiMaterial>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
+	OctreeNode<MaterialSet>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
 	if(!node)
 	{
 		std::stringstream ss;
@@ -216,14 +216,14 @@ OctreeNode<Colour>* getNodeFromEncodedHandle(uint32_t encodedNodeHandle)
 	return node;
 }
 
-OctreeNode<MultiMaterial>* getNodeFromEncodedHandleMC(uint32_t encodedNodeHandle)
+OctreeNode<MaterialSet>* getNodeFromEncodedHandleMC(uint32_t encodedNodeHandle)
 {
 	uint32_t volumeHandle;
 	uint32_t decodedNodeHandle;
 	decodeNodeHandleMC(encodedNodeHandle, &volumeHandle, &decodedNodeHandle);
 
 	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
-	OctreeNode<MultiMaterial>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
+	OctreeNode<MaterialSet>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
 	return node;
 }
 
@@ -515,7 +515,7 @@ CUBIQUITYC_API int32_t cuGetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y,
 	OPEN_C_INTERFACE
 
 	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
-	MultiMaterial& material = volume->getVoxelAt(x, y, z);
+	MaterialSet& material = volume->getVoxelAt(x, y, z);
 	*value = material.getMaterial(index);
 
 	CLOSE_C_INTERFACE
@@ -526,30 +526,30 @@ CUBIQUITYC_API int32_t cuSetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y,
 	OPEN_C_INTERFACE
 
 	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
-	MultiMaterial& material = volume->getVoxelAt(x, y, z);
+	MaterialSet& material = volume->getVoxelAt(x, y, z);
 	material.setMaterial(index, value);
 	volume->setVoxelAt(x, y, z, material, UpdatePriorities::Immediate);
 	
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuGetVoxelMCNew(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuMultiMaterial* multiMaterial)
+CUBIQUITYC_API int32_t cuGetVoxelMCNew(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuMaterialSet* materialSet)
 {
 	OPEN_C_INTERFACE
 
 	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
-	MultiMaterial& material = volume->getVoxelAt(x, y, z);
+	MaterialSet& material = volume->getVoxelAt(x, y, z);
 
-	multiMaterial->data = material.mMaterials;
+	materialSet->data = material.mMaterials;
 
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuSetVoxelMCNew(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuMultiMaterial multiMaterial)
+CUBIQUITYC_API int32_t cuSetVoxelMCNew(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuMaterialSet materialSet)
 {
 	OPEN_C_INTERFACE
 
-	MultiMaterial* pMat = (MultiMaterial*)&multiMaterial;
+	MaterialSet* pMat = (MaterialSet*)&materialSet;
 
 	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
 	volume->setVoxelAt(x, y, z, *pMat, UpdatePriorities::Immediate);
@@ -698,7 +698,7 @@ CUBIQUITYC_API int32_t cuHasRootOctreeNodeMC(uint32_t volumeHandle, uint32_t* re
 	OPEN_C_INTERFACE
 
 	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
-	OctreeNode<MultiMaterial>* node = volume->getRootOctreeNode();
+	OctreeNode<MaterialSet>* node = volume->getRootOctreeNode();
 	if(node)
 	{
 		*result = 1;
@@ -716,7 +716,7 @@ CUBIQUITYC_API int32_t cuGetRootOctreeNodeMC(uint32_t volumeHandle, uint32_t* re
 	OPEN_C_INTERFACE
 
 	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
-	OctreeNode<MultiMaterial>* node = volume->getRootOctreeNode();
+	OctreeNode<MaterialSet>* node = volume->getRootOctreeNode();
 
 	if(!node)
 	{
@@ -734,8 +734,8 @@ CUBIQUITYC_API int32_t cuHasChildNodeMC(uint32_t nodeHandle, uint32_t childX, ui
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<MultiMaterial>* node = getNodeFromEncodedHandleMC(nodeHandle);
-	OctreeNode<MultiMaterial>* child = node->getChildNode(childX, childY, childZ);
+	OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
+	OctreeNode<MaterialSet>* child = node->getChildNode(childX, childY, childZ);
 	if(child)
 	{
 		*result =  1;
@@ -752,8 +752,8 @@ CUBIQUITYC_API int32_t cuGetChildNodeMC(uint32_t nodeHandle, uint32_t childX, ui
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<MultiMaterial>* node = getNodeFromEncodedHandleMC(nodeHandle);
-	OctreeNode<MultiMaterial>* child = node->getChildNode(childX, childY, childZ);
+	OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
+	OctreeNode<MaterialSet>* child = node->getChildNode(childX, childY, childZ);
 
 	if(!node)
 	{
@@ -775,7 +775,7 @@ CUBIQUITYC_API int32_t cuNodeHasMeshMC(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<MultiMaterial>* node = getNodeFromEncodedHandleMC(nodeHandle);
+	OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
 	*result = (node->mPolyVoxMesh != 0) ? 1 : 0;
 
 	CLOSE_C_INTERFACE
@@ -785,7 +785,7 @@ CUBIQUITYC_API int32_t cuGetNodePositionMC(uint32_t nodeHandle, int32_t* x, int3
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<MultiMaterial>* node = getNodeFromEncodedHandleMC(nodeHandle);
+	OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
 	const Vector3I& lowerCorner = node->mRegion.getLowerCorner();
 	*x = lowerCorner.getX();
 	*y = lowerCorner.getY();
@@ -798,7 +798,7 @@ CUBIQUITYC_API int32_t cuGetMeshLastUpdatedMC(uint32_t nodeHandle, uint32_t* res
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<MultiMaterial>* node = getNodeFromEncodedHandleMC(nodeHandle);
+	OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
 	*result = node->mMeshLastUpdated;
 
 	CLOSE_C_INTERFACE
@@ -878,9 +878,9 @@ CUBIQUITYC_API int32_t cuGetNoOfVerticesMC(uint32_t nodeHandle, uint32_t* result
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<MultiMaterial>* node = getNodeFromEncodedHandleMC(nodeHandle);
+	OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
 
-	const ::PolyVox::SurfaceMesh< typename VoxelTraits<MultiMaterial>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
+	const ::PolyVox::SurfaceMesh< typename VoxelTraits<MaterialSet>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
 	*result = polyVoxMesh->getNoOfVertices();
 
@@ -891,9 +891,9 @@ CUBIQUITYC_API int32_t cuGetNoOfIndicesMC(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<MultiMaterial>* node = getNodeFromEncodedHandleMC(nodeHandle);
+	OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
 
-	const ::PolyVox::SurfaceMesh< typename VoxelTraits<MultiMaterial>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
+	const ::PolyVox::SurfaceMesh< typename VoxelTraits<MaterialSet>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
 	*result = polyVoxMesh->getNoOfIndices();
 
@@ -904,13 +904,13 @@ CUBIQUITYC_API int32_t cuGetVerticesMC(uint32_t nodeHandle, float** result)
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<MultiMaterial>* node = getNodeFromEncodedHandleMC(nodeHandle);
+	OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
 
-	const ::PolyVox::SurfaceMesh< typename VoxelTraits<MultiMaterial>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
+	const ::PolyVox::SurfaceMesh< typename VoxelTraits<MaterialSet>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
-	const std::vector< typename VoxelTraits<MultiMaterial>::VertexType >& vertexVector = polyVoxMesh->getVertices();
+	const std::vector< typename VoxelTraits<MaterialSet>::VertexType >& vertexVector = polyVoxMesh->getVertices();
 
-	const VoxelTraits<MultiMaterial>::VertexType* vertexPointer = &(vertexVector[0]);
+	const VoxelTraits<MaterialSet>::VertexType* vertexPointer = &(vertexVector[0]);
 
 	const float* constFloatPointer = reinterpret_cast<const float*>(vertexPointer);
 
@@ -925,9 +925,9 @@ CUBIQUITYC_API int32_t cuGetIndicesMC(uint32_t nodeHandle, uint32_t** result)
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<MultiMaterial>* node = getNodeFromEncodedHandleMC(nodeHandle);
+	OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
 
-	const ::PolyVox::SurfaceMesh< typename VoxelTraits<MultiMaterial>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
+	const ::PolyVox::SurfaceMesh< typename VoxelTraits<MaterialSet>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
 	const std::vector< unsigned int >& indexVector = polyVoxMesh->getIndices();
 	const unsigned int* constUIntPointer = &(indexVector[0]);

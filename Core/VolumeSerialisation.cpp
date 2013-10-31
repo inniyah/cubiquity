@@ -99,7 +99,7 @@ namespace Cubiquity
 		}
 	}
 
-	void pixelToVoxel(uint8_t* pixelData, MultiMaterial& voxelData, uint32_t componentCount)
+	void pixelToVoxel(uint8_t* pixelData, MaterialSet& voxelData, uint32_t componentCount)
 	{
 		for(uint32_t ct = 0; ct < componentCount; ct++)
 		{
@@ -116,7 +116,7 @@ namespace Cubiquity
 		*(pixelData + 3) = voxelData.getAlpha();
 	}
 
-	void voxelToPixel(MultiMaterial& voxelData, uint8_t* pixelData, uint32_t componentCount)
+	void voxelToPixel(MaterialSet& voxelData, uint8_t* pixelData, uint32_t componentCount)
 	{
 		for(uint32_t ct = 0; ct < componentCount; ct++)
 		{

@@ -41,7 +41,7 @@ namespace Cubiquity
 
 		Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
 
-		::PolyVox::RawVolume<MultiMaterial> mSmoothingVolume(region);
+		::PolyVox::RawVolume<MaterialSet> mSmoothingVolume(region);
 
 		for(int z = firstZ; z <= lastZ; ++z)
 		{
@@ -57,7 +57,7 @@ namespace Cubiquity
 
 					int32_t amountToAdd = static_cast<int32_t>(intensity + 0.5f);
 
-					for(uint32_t matIndex = 0; matIndex < MultiMaterial::getNoOfMaterials(); matIndex++)
+					for(uint32_t matIndex = 0; matIndex < MaterialSet::getNoOfMaterials(); matIndex++)
 					{
 						int32_t original = terrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
 
@@ -91,15 +91,15 @@ namespace Cubiquity
 						int32_t iAverage = sample;
 
 						// Prevent wrapping around.
-						iAverage = (std::min)(iAverage, static_cast<int32_t>(MultiMaterial::getMaxMaterialValue()));
+						iAverage = (std::min)(iAverage, static_cast<int32_t>(MaterialSet::getMaxMaterialValue()));
 						iAverage = (std::max)(iAverage, 1);
 
-						MultiMaterial result = mSmoothingVolume.getVoxelAt(x, y, z);
+						MaterialSet result = mSmoothingVolume.getVoxelAt(x, y, z);
 						result.setMaterial(matIndex, iAverage);
 						mSmoothingVolume.setVoxel(x, y, z, result);
 					}
 
-					MultiMaterial result = mSmoothingVolume.getVoxelAt(x, y, z);
+					MaterialSet result = mSmoothingVolume.getVoxelAt(x, y, z);
 					result.clampSumOfMaterials();
 					mSmoothingVolume.setVoxel(x, y, z, result);
 				}
@@ -141,7 +141,7 @@ namespace Cubiquity
 
 		Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
 
-		::PolyVox::RawVolume<MultiMaterial> mSmoothingVolume(region);
+		::PolyVox::RawVolume<MaterialSet> mSmoothingVolume(region);
 
 		for(int z = firstZ; z <= lastZ; ++z)
 		{
@@ -156,7 +156,7 @@ namespace Cubiquity
 
 					int32_t amountToAdd = static_cast<int32_t>(intensity + 0.5f);
 
-					for(uint32_t matIndex = 0; matIndex < MultiMaterial::getNoOfMaterials(); matIndex++)
+					for(uint32_t matIndex = 0; matIndex < MaterialSet::getNoOfMaterials(); matIndex++)
 					{
 						int32_t original = terrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
 
@@ -176,15 +176,15 @@ namespace Cubiquity
 						int32_t iLerped = static_cast<int32_t>(fLerped + 0.5f);
 
 						// Prevent wrapping around.
-						iLerped = (std::min)(iLerped, static_cast<int32_t>(MultiMaterial::getMaxMaterialValue()));
+						iLerped = (std::min)(iLerped, static_cast<int32_t>(MaterialSet::getMaxMaterialValue()));
 						iLerped = (std::max)(iLerped, 0);
 
-						MultiMaterial result = mSmoothingVolume.getVoxelAt(x, y, z);
+						MaterialSet result = mSmoothingVolume.getVoxelAt(x, y, z);
 						result.setMaterial(matIndex, iLerped);
 						mSmoothingVolume.setVoxel(x, y, z, result);
 					}
 
-					MultiMaterial result = mSmoothingVolume.getVoxelAt(x, y, z);
+					MaterialSet result = mSmoothingVolume.getVoxelAt(x, y, z);
 					result.clampSumOfMaterials();
 					mSmoothingVolume.setVoxel(x, y, z, result);
 				}
@@ -205,7 +205,7 @@ namespace Cubiquity
 		terrainVolume->markAsModified(region, UpdatePriorities::Immediate);
 	}
 
-	void addToMaterial(uint32_t index, uint8_t amountToAdd, MultiMaterial& material)
+	void addToMaterial(uint32_t index, uint8_t amountToAdd, MaterialSet& material)
 	{
 		uint32_t indexToRemoveFrom = 0; //FIXME - start somewhere random
 		uint32_t iterationWithNoRemovals = 0;
@@ -230,13 +230,13 @@ namespace Cubiquity
 				iterationWithNoRemovals++;
 			}
 
-			if(iterationWithNoRemovals == MultiMaterial::getNoOfMaterials())
+			if(iterationWithNoRemovals == MaterialSet::getNoOfMaterials())
 			{
 				break;
 			}
 
 			indexToRemoveFrom++;
-			indexToRemoveFrom %= MultiMaterial::getNoOfMaterials();
+			indexToRemoveFrom %= MaterialSet::getNoOfMaterials();
 		}
 	}
 
@@ -261,7 +261,7 @@ namespace Cubiquity
 
 		Region region(firstX, firstY, firstZ, lastX, lastY, lastZ);
 
-		//::PolyVox::RawVolume<MultiMaterial> mSmoothingVolume(region);
+		//::PolyVox::RawVolume<MaterialSet> mSmoothingVolume(region);
 
 		for(int z = firstZ; z <= lastZ; ++z)
 		{
@@ -273,12 +273,12 @@ namespace Cubiquity
 					float distFromCentre = (centre - pos).length();
 					float intensity = computeBrushIntensity(brush, distFromCentre);
 
-					float fAmmountToAdd = intensity * MultiMaterial::getMaxMaterialValue();
+					float fAmmountToAdd = intensity * MaterialSet::getMaxMaterialValue();
 
 					int32_t amountToAdd = static_cast<int32_t>(fAmmountToAdd + 0.5f);
 
 
-					MultiMaterial voxel = terrainVolume->getVoxelAt(x, y, z);
+					MaterialSet voxel = terrainVolume->getVoxelAt(x, y, z);
 					addToMaterial(materialIndex, amountToAdd, voxel);
 					voxel.clampSumOfMaterials();
 					terrainVolume->setVoxelAt(x, y, z, voxel);

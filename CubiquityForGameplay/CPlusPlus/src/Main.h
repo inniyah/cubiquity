@@ -4,7 +4,7 @@
 #include "gameplay.h" //Would rather have this last, but it's being upset by Timer.h including Windows.h
 
 #include "Colour.h"
-#include "MultiMaterial.h"
+#include "MaterialSet.h"
 
 #include "GameplayColouredCubesVolume.h"
 #include "GameplayTerrainVolume.h"

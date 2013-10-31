@@ -19,9 +19,9 @@ namespace Cubiquity
 
 	class MainThreadTaskProcessor;
 
-	class MultiMaterial;
+	class MaterialSet;
 
-	class MultiMaterialMarchingCubesController;
+	class MaterialSetMarchingCubesController;
 
 	template <typename VoxelType>
 	class Octree;

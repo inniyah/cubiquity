@@ -37,7 +37,7 @@ namespace Cubiquity
 	}
 
 	void pixelToVoxel(uint8_t* pixelData, Colour& voxelData, uint32_t componentCount);
-	void pixelToVoxel(uint8_t* pixelData, MultiMaterial& voxelData, uint32_t componentCount);
+	void pixelToVoxel(uint8_t* pixelData, MaterialSet& voxelData, uint32_t componentCount);
 
 	template <typename VoxelType>
 	void voxelToPixel(VoxelType& voxelData, uint8_t* pixelData, uint32_t componentCount)
@@ -46,7 +46,7 @@ namespace Cubiquity
 	}
 
 	void voxelToPixel(Colour& voxelData, uint8_t* pixelData, uint32_t componentCount);
-	void voxelToPixel(MultiMaterial& voxelData, uint8_t* pixelData, uint32_t componentCount);
+	void voxelToPixel(MaterialSet& voxelData, uint8_t* pixelData, uint32_t componentCount);
 
 	ColouredCubesVolumeImpl* importVxl(const std::string& vxlFfilename, const std::string& volumeFilename);
 

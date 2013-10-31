@@ -72,9 +72,9 @@ namespace Cubiquity
 
 		void performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold);
 
-		gameplay::PhysicsCollisionShape::Definition buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< ::PolyVox::PositionMaterialNormal< MultiMaterial > >* polyVoxMesh);
+		gameplay::PhysicsCollisionShape::Definition buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< ::PolyVox::PositionMaterialNormal< MaterialSet > >* polyVoxMesh);
 
-		void syncNode(OctreeNode< MultiMaterial >* octreeNode, GameplayOctreeNode< MultiMaterial >* gameplayOctreeNode);
+		void syncNode(OctreeNode< MaterialSet >* octreeNode, GameplayOctreeNode< MaterialSet >* gameplayOctreeNode);
 
 	protected:
 		GameplayTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize, bool createFloor, unsigned int floorDepth);
@@ -83,10 +83,10 @@ namespace Cubiquity
 
 	private:
 
-		gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< ::PolyVox::PositionMaterialNormal< MultiMaterial > >* polyVoxMesh);
+		gameplay::Model* buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< ::PolyVox::PositionMaterialNormal< MaterialSet > >* polyVoxMesh);
 
 		TerrainVolume* mCubiquityVolume;
-		GameplayOctreeNode< MultiMaterial >* mRootGameplayOctreeNode;
+		GameplayOctreeNode< MaterialSet >* mRootGameplayOctreeNode;
 	};
 }
 

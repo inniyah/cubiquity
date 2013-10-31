@@ -74,7 +74,7 @@
     <ClInclude Include="Impl\VolumePrivateAccessor.h" />
     <ClInclude Include="Logging.h" />
     <ClInclude Include="MainThreadTaskProcessor.h" />
-    <ClInclude Include="MultiMaterial.h" />
+    <ClInclude Include="MaterialSet.h" />
     <ClInclude Include="Octree.h" />
     <ClInclude Include="OctreeNode.h" />
     <ClInclude Include="OverrideFilePager.h" />
@@ -153,7 +153,7 @@
     <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="Logging.cpp" />
     <ClCompile Include="MainThreadTaskProcessor.cpp" />
-    <ClCompile Include="MultiMaterial.cpp" />
+    <ClCompile Include="MaterialSet.cpp" />
     <ClCompile Include="Raycasting.cpp" />
     <ClCompile Include="SmoothSurfaceExtractionTask.cpp" />
     <ClCompile Include="TerrainVolume.cpp" />

@@ -10,7 +10,7 @@ namespace Cubiquity
 	class TerrainVolumeImpl : public TerrainVolume
 	{
 	public:
-		typedef MultiMaterial VoxelType;
+		typedef MaterialSet VoxelType;
 
 		TerrainVolumeImpl(const Region& region, const std::string& filename, unsigned int baseNodeSize)
 			:mCubiquityVolume(region, filename, OctreeConstructionModes::BoundCells, baseNodeSize)
@@ -40,14 +40,14 @@ namespace Cubiquity
 		virtual const Region& getEnclosingRegion(void) const {return mCubiquityVolume.getEnclosingRegion();}
 
 		// Note this adds a border rather than calling straight through.
-		virtual MultiMaterial getVoxelAt(int32_t x, int32_t y, int32_t z) const {return mCubiquityVolume.getVoxelAt(x, y, z);}
+		virtual MaterialSet getVoxelAt(int32_t x, int32_t y, int32_t z) const {return mCubiquityVolume.getVoxelAt(x, y, z);}
 
 		// Octree access
-		virtual Octree<MultiMaterial>* getOctree(void) {return mCubiquityVolume.getOctree();}
-		virtual OctreeNode<MultiMaterial>* getRootOctreeNode(void) {return mCubiquityVolume.getRootOctreeNode();}
+		virtual Octree<MaterialSet>* getOctree(void) {return mCubiquityVolume.getOctree();}
+		virtual OctreeNode<MaterialSet>* getRootOctreeNode(void) {return mCubiquityVolume.getRootOctreeNode();}
 
 		// Set voxel doesn't just pass straight through, it also validates the position and marks the voxel as modified.
-		virtual void setVoxelAt(int32_t x, int32_t y, int32_t z, MultiMaterial value, UpdatePriority updatePriority = UpdatePriorities::Background) {mCubiquityVolume.setVoxelAt(x, y, z, value, updatePriority); }
+		virtual void setVoxelAt(int32_t x, int32_t y, int32_t z, MaterialSet value, UpdatePriority updatePriority = UpdatePriorities::Background) {mCubiquityVolume.setVoxelAt(x, y, z, value, updatePriority); }
 
 		// Marks a region as modified so it will be regenerated later.
 		virtual void markAsModified(const Region& region, UpdatePriority updatePriority = UpdatePriorities::Background) {mCubiquityVolume.markAsModified(region, updatePriority);}
@@ -59,10 +59,10 @@ namespace Cubiquity
 		virtual void update(const Vector3F& viewPosition, float lodThreshold) {mCubiquityVolume.update(viewPosition, lodThreshold);}
 
 		// This one's a bit of a hack... direct access to underlying PolyVox volume
-		virtual ::PolyVox::POLYVOX_VOLUME<MultiMaterial>* _getPolyVoxVolume(void) {return mCubiquityVolume._getPolyVoxVolume(); }
+		virtual ::PolyVox::POLYVOX_VOLUME<MaterialSet>* _getPolyVoxVolume(void) {return mCubiquityVolume._getPolyVoxVolume(); }
 
 	public:
-		Volume<MultiMaterial> mCubiquityVolume;
+		Volume<MaterialSet> mCubiquityVolume;
 	};
 
 	TerrainVolume* createTerrainVolume(const Region& region, const std::string& filename, unsigned int baseNodeSize, bool createFloor = true, uint32_t floorDepth = 8);

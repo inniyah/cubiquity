@@ -10,7 +10,7 @@
 #include "BackgroundTaskProcessor.h"
 #include "Logging.h"
 #include "MainThreadTaskProcessor.h"
-#include "MultiMaterial.h"
+#include "MaterialSet.h"
 #include "OverrideFilePager.h"
 #include "Raycasting.h"
 #include "SQLitePager.h"

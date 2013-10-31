@@ -1,7 +1,7 @@
 #include "TerrainVolume.h"
 
 #include "Clock.h"
-#include "MultiMaterial.h"
+#include "MaterialSet.h"
 #include "SmoothSurfaceExtractionTask.h"
 #include "MainThreadTaskProcessor.h"
 
@@ -20,12 +20,12 @@ namespace Cubiquity
 	}
 
 	/*TerrainVolume::TerrainVolume(const Region& region, const std::string& filename, unsigned int baseNodeSize)
-		:Volume<MultiMaterial>(region, filename, OctreeConstructionModes::BoundCells, baseNodeSize)
+		:Volume<MaterialSet>(region, filename, OctreeConstructionModes::BoundCells, baseNodeSize)
 	{
 	}
 
 	void TerrainVolume::update(const Vector3F& viewPosition, float lodThreshold)
 	{
-		Volume<typename MultiMaterialMarchingCubesController::MaterialType>::update(viewPosition, lodThreshold);
+		Volume<typename MaterialSetMarchingCubesController::MaterialType>::update(viewPosition, lodThreshold);
 	}*/
 }

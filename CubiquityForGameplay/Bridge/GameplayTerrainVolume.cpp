@@ -21,7 +21,7 @@ namespace Cubiquity
 			generateFloor(mCubiquityVolume, floorDepth-2, 0, floorDepth, 1);
 		}
 
-		mRootGameplayOctreeNode = new GameplayOctreeNode< MultiMaterial >(mCubiquityVolume->getRootOctreeNode(), 0);
+		mRootGameplayOctreeNode = new GameplayOctreeNode< MaterialSet >(mCubiquityVolume->getRootOctreeNode(), 0);
 	}
 
 	GameplayTerrainVolume::GameplayTerrainVolume(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize)
@@ -41,7 +41,7 @@ namespace Cubiquity
 			mCubiquityVolume = importVolDat<TerrainVolumeImpl>(dataToLoad, pageFolder, baseNodeSize);
 		}
 
-		mRootGameplayOctreeNode = new GameplayOctreeNode< MultiMaterial >(mCubiquityVolume->getRootOctreeNode(), 0);
+		mRootGameplayOctreeNode = new GameplayOctreeNode< MaterialSet >(mCubiquityVolume->getRootOctreeNode(), 0);
 	}
 
 	GameplayTerrainVolume::~GameplayTerrainVolume()
@@ -63,10 +63,10 @@ namespace Cubiquity
 		}
 	}
 
-	gameplay::Model* GameplayTerrainVolume::buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< ::PolyVox::PositionMaterialNormal< MultiMaterial > >* polyVoxMesh)
+	gameplay::Model* GameplayTerrainVolume::buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< ::PolyVox::PositionMaterialNormal< MaterialSet > >* polyVoxMesh)
 	{
 		//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
-		const std::vector< ::PolyVox::PositionMaterialNormal< MultiMaterial > >& vecVertices = polyVoxMesh->getVertices();
+		const std::vector< ::PolyVox::PositionMaterialNormal< MaterialSet > >& vecVertices = polyVoxMesh->getVertices();
 		const float* pVerticesConst = reinterpret_cast<const float*>(&vecVertices[0]);
 		float* pVertices = const_cast<float*>(pVerticesConst);
 
@@ -132,7 +132,7 @@ namespace Cubiquity
 		return model;
 	}
 
-	void GameplayTerrainVolume::syncNode(OctreeNode< MultiMaterial >* octreeNode, GameplayOctreeNode< MultiMaterial >* gameplayOctreeNode)
+	void GameplayTerrainVolume::syncNode(OctreeNode< MaterialSet >* octreeNode, GameplayOctreeNode< MaterialSet >* gameplayOctreeNode)
 	{
 		if(gameplayOctreeNode->mMeshLastSyncronised < octreeNode->mMeshLastUpdated)
 		{
@@ -179,14 +179,14 @@ namespace Cubiquity
 			{
 				for(int ix = 0; ix < 2; ix++)
 				{
-					OctreeNode< MultiMaterial >* childOctreeNode = octreeNode->getChildNode(ix, iy, iz);
+					OctreeNode< MaterialSet >* childOctreeNode = octreeNode->getChildNode(ix, iy, iz);
 					if(childOctreeNode)
 					{
-						GameplayOctreeNode< MultiMaterial >* childGameplayOctreeNode = gameplayOctreeNode->mChildren[ix][iy][iz];
+						GameplayOctreeNode< MaterialSet >* childGameplayOctreeNode = gameplayOctreeNode->mChildren[ix][iy][iz];
 
 						if(childGameplayOctreeNode == 0)
 						{
-							childGameplayOctreeNode = new GameplayOctreeNode< MultiMaterial >(childOctreeNode, gameplayOctreeNode);
+							childGameplayOctreeNode = new GameplayOctreeNode< MaterialSet >(childOctreeNode, gameplayOctreeNode);
 							gameplayOctreeNode->mChildren[ix][iy][iz] = childGameplayOctreeNode;							
 						}
 
@@ -206,10 +206,10 @@ namespace Cubiquity
 		}
 	}
 
-	gameplay::PhysicsCollisionShape::Definition GameplayTerrainVolume::buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< ::PolyVox::PositionMaterialNormal< MultiMaterial > >* polyVoxMesh)
+	gameplay::PhysicsCollisionShape::Definition GameplayTerrainVolume::buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< ::PolyVox::PositionMaterialNormal< MaterialSet > >* polyVoxMesh)
 	{
 		//Now set up the physics
-		const std::vector< ::PolyVox::PositionMaterialNormal< MultiMaterial > >& vecVertices = polyVoxMesh->getVertices();
+		const std::vector< ::PolyVox::PositionMaterialNormal< MaterialSet > >& vecVertices = polyVoxMesh->getVertices();
 		const std::vector<unsigned int>& vecIndices = polyVoxMesh->getIndices();
 		float* vertexData = new float[polyVoxMesh->getVertices().size() * 3];
 

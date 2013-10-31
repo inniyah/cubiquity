@@ -18,14 +18,14 @@ namespace Cubiquity
 			// from fully empty to fully solid (over only a few voxels)
 			density *= 64;
 			// Account for the threshold not being at zero
-			density += MultiMaterial::getMaxMaterialValue() / 2;
+			density += MaterialSet::getMaxMaterialValue() / 2;
 
 			//Clamp resulting density
-			density = (std::min)(density, static_cast<int32_t>(MultiMaterial::getMaxMaterialValue()));
+			density = (std::min)(density, static_cast<int32_t>(MaterialSet::getMaxMaterialValue()));
 			density = (std::max)(density, 0);
 
 			uint32_t index = (y <= lowerLayerHeight) ? lowerLayerMaterial : upperLayerMaterial;
-			MultiMaterial material;
+			MaterialSet material;
 			material.setMaterial(index, density);
 
 			for(int32_t x = region.getLowerX(); x <= region.getUpperX(); x++)

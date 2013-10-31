@@ -20,17 +20,17 @@ namespace Cubiquity
 	};
 
 	template <>
-	class RaycastTestFunctor<MultiMaterial>
+	class RaycastTestFunctor<MaterialSet>
 	{
 	public:
 		RaycastTestFunctor()
 		{
 		}
 
-		bool operator()(Vector3F pos, const MultiMaterial& voxel)
+		bool operator()(Vector3F pos, const MaterialSet& voxel)
 		{
 			mLastPos = pos;
-			return voxel.getSumOfMaterials() <= MultiMaterial::getMaxMaterialValue() / 2;
+			return voxel.getSumOfMaterials() <= MaterialSet::getMaxMaterialValue() / 2;
 		}
 
 		Vector3F mLastPos;
@@ -121,7 +121,7 @@ namespace Cubiquity
 		Vector3F v3dDirection(dirAndLengthX, dirAndLengthY, dirAndLengthZ);
 		//v3dDirection *= length;
 
-		RaycastTestFunctor<MultiMaterial> raycastTestFunctor;
+		RaycastTestFunctor<MaterialSet> raycastTestFunctor;
 		::PolyVox::RaycastResult myResult = terrainRaycastWithDirection(dynamic_cast<TerrainVolumeImpl*>(terrainVolume)->_getPolyVoxVolume(), v3dStart, v3dDirection, raycastTestFunctor, 0.5f);
 		if(myResult == ::PolyVox::RaycastResults::Interupted)
 		{

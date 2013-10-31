@@ -1,5 +1,5 @@
-#ifndef __MultiMaterial_H__
-#define __MultiMaterial_H__
+#ifndef __MaterialSet_H__
+#define __MaterialSet_H__
 
 #include "PolyVoxCore/Impl/TypeDef.h"
 
@@ -12,7 +12,7 @@
 
 namespace Cubiquity
 {
-	class MultiMaterial
+	class MaterialSet
 	{
 	private:
 		//These could be template parameters if this class needs to be templatised.
@@ -20,7 +20,7 @@ namespace Cubiquity
 		static const uint32_t BitsPerMaterial = 8;
 		typedef uint32_t StorageType;
 	public:
-		MultiMaterial()
+		MaterialSet()
 		{
 			for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
 			{
@@ -28,9 +28,9 @@ namespace Cubiquity
 			}
 		}
 
-		// This function lets us convert a Vector of floats into a MultiMaterial. 
+		// This function lets us convert a Vector of floats into a MaterialSet. 
 		// This is useful for performing certain operations with more precision.
-		MultiMaterial(const ::PolyVox::Vector<NoOfMaterials, float>& value) throw()
+		MaterialSet(const ::PolyVox::Vector<NoOfMaterials, float>& value) throw()
 		{
 			for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
 			{
@@ -38,7 +38,7 @@ namespace Cubiquity
 			}
 		}
 
-		// This function lets us convert a MultiMaterial into a Vector of floats. 
+		// This function lets us convert a MaterialSet into a Vector of floats. 
 		// This is useful for performing certain operations with more precision.
 		operator ::PolyVox::Vector<NoOfMaterials, float>()
 		{
@@ -51,7 +51,7 @@ namespace Cubiquity
 			return result;
 		}
 
-		bool operator==(const MultiMaterial& rhs) const throw()
+		bool operator==(const MaterialSet& rhs) const throw()
 		{
 			for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
 			{
@@ -63,12 +63,12 @@ namespace Cubiquity
 			return true;
 		};
 
-		bool operator!=(const MultiMaterial& rhs) const throw()
+		bool operator!=(const MaterialSet& rhs) const throw()
 		{
 			return !(*this == rhs);
 		}
 
-		MultiMaterial& operator+=(const MultiMaterial& rhs)
+		MaterialSet& operator+=(const MaterialSet& rhs)
 		{
 			for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
 			{
@@ -80,7 +80,7 @@ namespace Cubiquity
 			return *this;
 		}
 
-		MultiMaterial& operator-=(const MultiMaterial& rhs)
+		MaterialSet& operator-=(const MaterialSet& rhs)
 		{
 			for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
 			{
@@ -92,7 +92,7 @@ namespace Cubiquity
 			return *this;
 		}
 
-		MultiMaterial& operator*=(float rhs)
+		MaterialSet& operator*=(float rhs)
 		{
 			for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
 			{
@@ -103,7 +103,7 @@ namespace Cubiquity
 			return *this;
 		}
 
-		MultiMaterial& operator/=(float rhs)
+		MaterialSet& operator/=(float rhs)
 		{
 			for(uint32_t ct = 0; ct < getNoOfMaterials(); ct++)
 			{
@@ -225,49 +225,49 @@ namespace Cubiquity
 				}
 			}
 
-			POLYVOX_ASSERT(getSumOfMaterials() <= getMaxMaterialValue(), "MultiMaterial::clampSum() failed to perform clamping");
+			POLYVOX_ASSERT(getSumOfMaterials() <= getMaxMaterialValue(), "MaterialSet::clampSum() failed to perform clamping");
 		}
 
 	public:
 		StorageType mMaterials;
 	};
 
-	class MultiMaterialMarchingCubesController
+	class MaterialSetMarchingCubesController
 	{
 	public:
 		typedef uint8_t DensityType;
-		typedef MultiMaterial MaterialType;
+		typedef MaterialSet MaterialType;
 
-		MultiMaterialMarchingCubesController(void);
+		MaterialSetMarchingCubesController(void);
 
-		DensityType convertToDensity(MultiMaterial voxel);
-		MaterialType convertToMaterial(MultiMaterial voxel);
+		DensityType convertToDensity(MaterialSet voxel);
+		MaterialType convertToMaterial(MaterialSet voxel);
 
-		MaterialType blendMaterials(MultiMaterial a, MaterialType b, float weight);
+		MaterialType blendMaterials(MaterialSet a, MaterialType b, float weight);
 
-		MultiMaterial getBorderValue(void);
+		MaterialSet getBorderValue(void);
 		DensityType getThreshold(void);
 		::PolyVox::WrapMode getWrapMode(void);
 
 		void setThreshold(DensityType tThreshold);
-		void setWrapMode(::PolyVox::WrapMode eWrapMode, MultiMaterial tBorder = MultiMaterial(0));
+		void setWrapMode(::PolyVox::WrapMode eWrapMode, MaterialSet tBorder = MaterialSet(0));
 
 	private:
 		DensityType m_tThreshold;
 		::PolyVox::WrapMode m_eWrapMode;
-		MultiMaterial m_tBorder;
+		MaterialSet m_tBorder;
 	};
 }
 
-// We overload the trilinear interpolation for the MultiMaterial type because it does not have enough precision.
+// We overload the trilinear interpolation for the MaterialSet type because it does not have enough precision.
 // The overloaded version converts the values to floats and interpolates those before converting back.
 // See also http://www.gotw.ca/publications/mill17.htm - Why Not Specialize Function Templates?
 namespace PolyVox
 {
-	::Cubiquity::MultiMaterial trilerp(
-		const ::Cubiquity::MultiMaterial& v000,const ::Cubiquity::MultiMaterial& v100,const ::Cubiquity::MultiMaterial& v010,const ::Cubiquity::MultiMaterial& v110,
-		const ::Cubiquity::MultiMaterial& v001,const ::Cubiquity::MultiMaterial& v101,const ::Cubiquity::MultiMaterial& v011,const ::Cubiquity::MultiMaterial& v111,
+	::Cubiquity::MaterialSet trilerp(
+		const ::Cubiquity::MaterialSet& v000,const ::Cubiquity::MaterialSet& v100,const ::Cubiquity::MaterialSet& v010,const ::Cubiquity::MaterialSet& v110,
+		const ::Cubiquity::MaterialSet& v001,const ::Cubiquity::MaterialSet& v101,const ::Cubiquity::MaterialSet& v011,const ::Cubiquity::MaterialSet& v111,
 		const float x, const float y, const float z);
 }
 
-#endif //__MultiMaterial_H__
+#endif //__MaterialSet_H__
