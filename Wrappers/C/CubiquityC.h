@@ -22,7 +22,7 @@ extern "C"
 
 	struct CuMultiMaterial_s
 	{
-		uint8_t mMaterials[4];
+		uint32_t data;
 	};
 	typedef struct CuMultiMaterial_s CuMultiMaterial;
 

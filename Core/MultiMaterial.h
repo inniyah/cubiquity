@@ -15,7 +15,10 @@ namespace Cubiquity
 	class MultiMaterial
 	{
 	private:
+		//These could be template parameters if this class needs to be templatised.
 		static const uint32_t NoOfMaterials = 4;
+		static const uint32_t BitsPerMaterial = 8;
+		typedef uint32_t StorageType;
 	public:
 		MultiMaterial()
 		{
@@ -72,7 +75,7 @@ namespace Cubiquity
 				float temp = static_cast<float>(getMaterial(ct));
 				float rhsFloat = static_cast<float>(rhs.getMaterial(ct));
 				temp += rhsFloat;
-				setMaterial(ct, static_cast<uint8_t>(temp));
+				setMaterial(ct, static_cast<uint32_t>(temp));
 			}
 			return *this;
 		}
@@ -84,7 +87,7 @@ namespace Cubiquity
 				float temp = static_cast<float>(getMaterial(ct));
 				float rhsFloat = static_cast<float>(rhs.getMaterial(ct));
 				temp -= rhsFloat;
-				setMaterial(ct, static_cast<uint8_t>(temp));
+				setMaterial(ct, static_cast<uint32_t>(temp));
 			}
 			return *this;
 		}
@@ -95,7 +98,7 @@ namespace Cubiquity
 			{
 				float temp = static_cast<float>(getMaterial(ct));
 				temp *= rhs;
-				setMaterial(ct, static_cast<uint8_t>(temp));
+				setMaterial(ct, static_cast<uint32_t>(temp));
 			}
 			return *this;
 		}
@@ -106,7 +109,7 @@ namespace Cubiquity
 			{
 				float temp = static_cast<float>(getMaterial(ct));
 				temp /= rhs;
-				setMaterial(ct, static_cast<uint8_t>(temp));
+				setMaterial(ct, static_cast<uint32_t>(temp));
 			}
 			return *this;
 		}
@@ -118,20 +121,55 @@ namespace Cubiquity
 
 		static uint32_t getMaxMaterialValue(void)
 		{
-			return 255;
+			return (0x01 << BitsPerMaterial) - 1;
 		}
 
-		uint8_t getMaterial(uint32_t index) const
-		{
-			assert(index < getNoOfMaterials());
-			return mMaterials[index];
-		}
-
-		void setMaterial(uint32_t index, uint8_t value)
+		uint32_t getMaterial(uint32_t index) const
 		{
 			assert(index < getNoOfMaterials());
 
-			mMaterials[index] = value;
+			// We store the materials with material 0 in the LSBs and materials N in the MSBs. This feels slightly counter-intutive
+			// (like reading right-to-left) when looking at the order of bytes on paper, but in memory material 0 will be stored
+			// at a lower address and material N will be stored at a higher address (assuming a little-endien system). This maps
+			// more closely to how an array would be laid out, making it easier to switch to that in the future if we want to.
+
+			// Move the required bits into the least significant bits of result.
+			StorageType result = mMaterials >> (BitsPerMaterial * index);
+
+			// Build a mask containing all '0's except for the least significant bits (which are '1's).
+			StorageType mask = (std::numeric_limits<StorageType>::max)(); //Set to all '1's
+			mask = mask << BitsPerMaterial; // Insert the required number of '0's for the lower bits
+			mask = ~mask; // And invert
+			result = result & mask;
+
+			return static_cast<uint32_t>(result);
+		}
+
+		void setMaterial(uint32_t index, uint32_t value)
+		{
+			assert(index < getNoOfMaterials());
+
+			// We store the materials with material 0 in the LSBs and materials N in the MSBs. This feels slightly counter-intutive
+			// (like reading right-to-left) when looking at the order of bytes on paper, but in memory material 0 will be stored
+			// at a lower address and material N will be stored at a higher address (assuming a little-endien system). This maps
+			// more closely to how an array would be laid out, making it easier to switch to that in the future if we want to.
+
+			// The bits we want to set first get cleared to zeros.
+			// To do this we create a mask which is all '1' except
+			// for the bits we wish to clear (which are '0').
+			StorageType mask = (std::numeric_limits<StorageType>::max)(); //Set to all '1's
+			mask = mask << BitsPerMaterial; // Insert the required number of '0's for the lower bits
+			mask = ~mask; // We want to insert '1's next, so fake this by inverting before and after
+			mask = mask << (BitsPerMaterial * index); // Insert the '0's which we will invert to '1's.
+			mask = ~mask; // And invert back again
+
+			// Clear the bits which we're about to set.
+			mMaterials &= mask;
+
+			// OR with the value to set the bits
+			StorageType temp = value;
+			temp = temp << (BitsPerMaterial * index);
+			mMaterials |= temp;
 		}
 
 		uint32_t getSumOfMaterials(void) const
@@ -191,7 +229,7 @@ namespace Cubiquity
 		}
 
 	public:
-		uint8_t mMaterials[NoOfMaterials];
+		StorageType mMaterials;
 	};
 
 	class MultiMaterialMarchingCubesController

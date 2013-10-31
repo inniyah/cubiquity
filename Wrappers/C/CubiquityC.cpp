@@ -540,10 +540,7 @@ CUBIQUITYC_API int32_t cuGetVoxelMCNew(uint32_t volumeHandle, int32_t x, int32_t
 	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
 	MultiMaterial& material = volume->getVoxelAt(x, y, z);
 
-	multiMaterial->mMaterials[0] = material.getMaterial(0);
-	multiMaterial->mMaterials[1] = material.getMaterial(1);
-	multiMaterial->mMaterials[2] = material.getMaterial(2);
-	multiMaterial->mMaterials[3] = material.getMaterial(3);
+	multiMaterial->data = material.mMaterials;
 
 	CLOSE_C_INTERFACE
 }
