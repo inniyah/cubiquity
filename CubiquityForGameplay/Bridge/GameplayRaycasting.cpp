@@ -6,7 +6,7 @@
 
 namespace Cubiquity
 {
-	bool GameplayRaycasting::pickFirstSolidVoxel(GameplayColouredCubesVolume* volume, gameplay::Ray startAndDirection, float length, gameplay::Vector3& result)
+	bool GameplayRaycasting::pickFirstSolidVoxel(GameplayColoredCubesVolume* volume, gameplay::Ray startAndDirection, float length, gameplay::Vector3& result)
 	{
 		Vector3F v3dStart(startAndDirection.getOrigin().x, startAndDirection.getOrigin().y, startAndDirection.getOrigin().z);
 		Vector3F v3dDirection(startAndDirection.getDirection().x, startAndDirection.getDirection().y, startAndDirection.getDirection().z);

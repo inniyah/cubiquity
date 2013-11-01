@@ -141,15 +141,6 @@
     <ClInclude Include="Clock.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="Colour.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="ColouredCubesVolume.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="ColouredCubicSurfaceExtractionTask.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="ConcurrentQueue.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -261,6 +252,15 @@
     <ClInclude Include="MaterialSet.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="Color.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ColoredCubesVolume.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="ColoredCubicSurfaceExtractionTask.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.inl">
@@ -365,9 +365,6 @@
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Picking.inl">
       <Filter>PolyVox</Filter>
     </None>
-    <None Include="ColouredCubicSurfaceExtractionTask.cpp.bak">
-      <Filter>Core</Filter>
-    </None>
     <None Include="SQLitePager.inl">
       <Filter>Core</Filter>
     </None>
@@ -404,15 +401,6 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Clock.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="Colour.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="ColouredCubesVolume.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="ColouredCubicSurfaceExtractionTask.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="MainThreadTaskProcessor.cpp">
@@ -461,6 +449,15 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="MaterialSet.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Color.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ColoredCubesVolume.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ColoredCubicSurfaceExtractionTask.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>

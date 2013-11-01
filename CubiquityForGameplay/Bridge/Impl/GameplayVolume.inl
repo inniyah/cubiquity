@@ -20,7 +20,7 @@ namespace Cubiquity
 			{
 				// Set up the renderable mesh
 				Model* model = buildModelFromPolyVoxMesh(octreeNode->mPolyVoxMesh);
-				if(VoxelTraits<typename CubiquityVolumeType::VoxelType>::IsColour)
+				if(VoxelTraits<typename CubiquityVolumeType::VoxelType>::IsColor)
 				{
 					model->setMaterial("res/Materials/ColouredCubicTerrain.material");
 				}

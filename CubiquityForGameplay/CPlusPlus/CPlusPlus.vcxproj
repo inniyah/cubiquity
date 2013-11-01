@@ -320,14 +320,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Core\SQLite\sqlite3.c" />
-    <ClCompile Include="..\Bridge\GameplayColouredCubesVolume.cpp" />
+    <ClCompile Include="..\Bridge\GameplayColoredCubesVolume.cpp" />
     <ClCompile Include="..\Bridge\GameplayRaycasting.cpp" />
     <ClCompile Include="..\Bridge\GameplayTerrainVolume.cpp" />
     <ClCompile Include="..\Bridge\GameplayTerrainVolumeEditor.cpp" />
     <ClCompile Include="src\Main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\Bridge\GameplayColouredCubesVolume.h" />
+    <ClInclude Include="..\Bridge\GameplayColoredCubesVolume.h" />
     <ClInclude Include="..\Bridge\GameplayRaycasting.h" />
     <ClInclude Include="..\Bridge\GameplayTerrainVolume.h" />
     <ClInclude Include="..\Bridge\GameplayTerrainVolumeEditor.h" />

@@ -3,10 +3,10 @@
 
 #include "gameplay.h" //Would rather have this last, but it's being upset by Timer.h including Windows.h
 
-#include "Colour.h"
+#include "Color.h"
 #include "MaterialSet.h"
 
-#include "GameplayColouredCubesVolume.h"
+#include "GameplayColoredCubesVolume.h"
 #include "GameplayTerrainVolume.h"
 #include "GameplayTerrainVolumeEditor.h"
 
@@ -109,7 +109,7 @@ private:
 #endif
 
 #ifdef TERRAIN_CUBIC
-	GameplayColouredCubesVolume* mVolume;
+	GameplayColoredCubesVolume* mVolume;
 #endif
 };
 

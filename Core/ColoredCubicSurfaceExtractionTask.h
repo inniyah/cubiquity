@@ -2,7 +2,7 @@
 #define CUBIQUITY_COLOUREDCUBICSURFACEEXTRACTIONTASK_H_
 
 #include "Clock.h"
-#include "Colour.h"
+#include "Color.h"
 #include "CubiquityForwardDeclarations.h"
 #include "Region.h"
 #include "Task.h"
@@ -11,18 +11,18 @@
 
 namespace Cubiquity
 {
-	class ColouredCubicSurfaceExtractionTask : public Task
+	class ColoredCubicSurfaceExtractionTask : public Task
 	{
 	public:
-		ColouredCubicSurfaceExtractionTask(OctreeNode< Colour >* octreeNode, ::PolyVox::POLYVOX_VOLUME<Colour>* polyVoxVolume);
-		~ColouredCubicSurfaceExtractionTask();
+		ColoredCubicSurfaceExtractionTask(OctreeNode< Color >* octreeNode, ::PolyVox::POLYVOX_VOLUME<Color>* polyVoxVolume);
+		~ColoredCubicSurfaceExtractionTask();
 
 		void process(void);
 
 	public:
-		OctreeNode< Colour >* mOctreeNode;
-		::PolyVox::POLYVOX_VOLUME<Colour>* mPolyVoxVolume;
-		::PolyVox::SurfaceMesh<::PolyVox::PositionMaterial<Colour> >* mPolyVoxMesh;
+		OctreeNode< Color >* mOctreeNode;
+		::PolyVox::POLYVOX_VOLUME<Color>* mPolyVoxVolume;
+		::PolyVox::SurfaceMesh<::PolyVox::PositionMaterial<Color> >* mPolyVoxMesh;
 		Timestamp mProcessingStartedTimestamp;
 
 		// Whether the task owns the mesh, or whether it has been passed to
@@ -40,8 +40,8 @@ namespace Cubiquity
 		SrcPolyVoxVolumeType::Sampler srcSampler(pVolSrc);
 		DstPolyVoxVolumeType::Sampler dstSampler(pVolDst);
 
-		// First of all we iterate over all destination voxels and compute their colour as the
-		// average of the colours of the eight corresponding voxels in the higher resolution version.
+		// First of all we iterate over all destination voxels and compute their color as the
+		// average of the colors of the eight corresponding voxels in the higher resolution version.
 		for(int32_t z = 0; z < regDst.getDepthInVoxels(); z++)
 		{
 			for(int32_t y = 0; y < regDst.getHeightInVoxels(); y++)
@@ -63,7 +63,7 @@ namespace Cubiquity
 							{
 								srcSampler.setPosition(srcPos + Vector3DInt32(childX, childY, childZ));
 
-								Colour child = srcSampler.getVoxel();
+								Color child = srcSampler.getVoxel();
 
 								if(child.getAlpha () > 0)
 								{
@@ -80,15 +80,15 @@ namespace Cubiquity
 					// means that higher LOD meshes actually shrink away which ensures cracks aren't visible.
 					if(noOfSolidVoxels > 7)
 					{
-						Colour colour;
-						colour.setColour(averageOf8Red / noOfSolidVoxels, averageOf8Green / noOfSolidVoxels, averageOf8Blue / noOfSolidVoxels, 255);
-						pVolDst->setVoxelAt(dstPos, colour);
+						Color color;
+						color.setColor(averageOf8Red / noOfSolidVoxels, averageOf8Green / noOfSolidVoxels, averageOf8Blue / noOfSolidVoxels, 255);
+						pVolDst->setVoxelAt(dstPos, color);
 					}
 					else
 					{
-						Colour colour;
-						colour.setColour(0,0,0,0);
-						pVolDst->setVoxelAt(dstPos, colour);
+						Color color;
+						color.setColor(0,0,0,0);
+						pVolDst->setVoxelAt(dstPos, color);
 					}
 				}
 			}
@@ -97,8 +97,8 @@ namespace Cubiquity
 		// At this point the results are usable, but we have a problem with thin structures disappearing.
 		// For example, if we have a solid blue sphere with a one voxel thick layer of red voxels on it,
 		// then we don't care that the shape changes then the red voxels are lost but we do care that the
-		// colour changes, as this is very noticable. Our solution is o process again only those voxels
-		// which lie on a material-air boundary, and to recompute their colour using a larger naighbourhood
+		// color changes, as this is very noticable. Our solution is o process again only those voxels
+		// which lie on a material-air boundary, and to recompute their color using a larger naighbourhood
 		// while also accounting for how visible the child voxels are.
 		for(int32_t z = 0; z < regDst.getDepthInVoxels(); z++)
 		{
@@ -137,12 +137,12 @@ namespace Cubiquity
 									{
 										srcSampler.setPosition(srcPos + Vector3DInt32(childX, childY, childZ));
 
-										Colour child = srcSampler.getVoxel();
+										Color child = srcSampler.getVoxel();
 
 										if(child.getAlpha () > 0)
 										{
 											// For each small voxel, count the exposed faces and use this
-											// to determine the importance of the colour contribution.
+											// to determine the importance of the color contribution.
 											uint32_t exposedFaces = 0;
 											if(srcSampler.peekVoxel0px0py1nz().getAlpha() == 0) exposedFaces++;
 											if(srcSampler.peekVoxel0px0py1pz().getAlpha() == 0) exposedFaces++;
@@ -164,9 +164,9 @@ namespace Cubiquity
 							// Avoid divide by zero if there were no exposed faces.
 							if(totalExposedFaces == 0) totalExposedFaces++;
 
-							Colour colour;
-							colour.setColour(totalRed / totalExposedFaces, totalGreen / totalExposedFaces, totalBlue / totalExposedFaces, 255);
-							pVolDst->setVoxelAt(dstPos, colour);
+							Color color;
+							color.setColor(totalRed / totalExposedFaces, totalGreen / totalExposedFaces, totalBlue / totalExposedFaces, 255);
+							pVolDst->setVoxelAt(dstPos, color);
 						}
 					}
 				}

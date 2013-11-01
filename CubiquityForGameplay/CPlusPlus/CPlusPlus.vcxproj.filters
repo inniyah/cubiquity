@@ -25,9 +25,6 @@
     <ClInclude Include="..\Bridge\Impl\GameplayVolume.h">
       <Filter>Bridge\Impl</Filter>
     </ClInclude>
-    <ClInclude Include="..\Bridge\GameplayColouredCubesVolume.h">
-      <Filter>Bridge</Filter>
-    </ClInclude>
     <ClInclude Include="..\Bridge\GameplayRaycasting.h">
       <Filter>Bridge</Filter>
     </ClInclude>
@@ -40,13 +37,13 @@
     <ClInclude Include="..\Bridge\GameplayTerrainVolumeEditor.h">
       <Filter>Bridge</Filter>
     </ClInclude>
+    <ClInclude Include="..\Bridge\GameplayColoredCubesVolume.h">
+      <Filter>Bridge</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Main.cpp">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Bridge\GameplayColouredCubesVolume.cpp">
-      <Filter>Bridge</Filter>
     </ClCompile>
     <ClCompile Include="..\Bridge\GameplayRaycasting.cpp">
       <Filter>Bridge</Filter>
@@ -58,6 +55,9 @@
       <Filter>Bridge</Filter>
     </ClCompile>
     <ClCompile Include="..\Bridge\GameplayTerrainVolumeEditor.cpp">
+      <Filter>Bridge</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Bridge\GameplayColoredCubesVolume.cpp">
       <Filter>Bridge</Filter>
     </ClCompile>
   </ItemGroup>

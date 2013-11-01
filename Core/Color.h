@@ -8,7 +8,7 @@
 
 namespace Cubiquity
 {
-	class Colour
+	class Color
 	{
 	public:
 		static const uint32_t NoOfRedBits = 4;
@@ -25,19 +25,19 @@ namespace Cubiquity
 		static const uint32_t BlueScaleFactor = MaxInOutValue / ((0x01 << NoOfBlueBits) - 1);
 		static const uint32_t AlphaScaleFactor = MaxInOutValue / ((0x01 << NoOfAlphaBits) - 1);
 
-		Colour() : m_uRed(0), m_uGreen(0), m_uBlue(0), m_uAlpha(0) {}
+		Color() : m_uRed(0), m_uGreen(0), m_uBlue(0), m_uAlpha(0) {}
 
-		Colour(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha = MaxInOutValue)
+		Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha = MaxInOutValue)
 		{
-			setColour(red, green, blue, alpha);
+			setColor(red, green, blue, alpha);
 		}
 
-		bool operator==(const Colour& rhs) const throw()
+		bool operator==(const Color& rhs) const throw()
 		{
 			return ((m_uRed == rhs.m_uRed) && (m_uGreen == rhs.m_uGreen) && (m_uBlue == rhs.m_uBlue) && (m_uAlpha == rhs.m_uAlpha));
 		};
 
-		bool operator!=(const Colour& rhs) const throw()
+		bool operator!=(const Color& rhs) const throw()
 		{
 			return !(*this == rhs);
 		}
@@ -82,7 +82,7 @@ namespace Cubiquity
 			m_uAlpha = value / AlphaScaleFactor;
 		}
 
-		void setColour(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
+		void setColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
 		{
 			setRed(red);
 			setGreen(green);
@@ -98,18 +98,18 @@ namespace Cubiquity
 	};
 
 	// These operations are used by the smooth raycast to perform trilinear interpolation.
-	// We never actually do that on this type (because colours are used for cubic surfaces
+	// We never actually do that on this type (because colors are used for cubic surfaces
 	// not smooth ones) but our use of templates means that this code path still gets compiled.
 	// The actual implementations simply assert if they are ever called by mistake.
-	Colour operator+(const Colour& lhs, const Colour& rhs) throw();
-	Colour operator-(const Colour& lhs, const Colour& rhs) throw();
-	Colour operator*(const Colour& lhs, float rhs) throw();
-	Colour operator/(const Colour& lhs, float rhs) throw();
+	Color operator+(const Color& lhs, const Color& rhs) throw();
+	Color operator-(const Color& lhs, const Color& rhs) throw();
+	Color operator*(const Color& lhs, float rhs) throw();
+	Color operator/(const Color& lhs, float rhs) throw();
 
-	class ColouredCubesIsQuadNeeded
+	class ColoredCubesIsQuadNeeded
 	{
 	public:
-		bool operator()(Colour back, Colour front, Colour& materialToUse)
+		bool operator()(Color back, Color front, Color& materialToUse)
 		{
 			if((back.getAlpha() > 0) && (front.getAlpha() == 0))
 			{

@@ -1,6 +1,6 @@
 #include "Volume.h"
 
-#include "ColouredCubicSurfaceExtractionTask.h"
+#include "ColoredCubicSurfaceExtractionTask.h"
 #include "Octree.h"
 #include "SmoothSurfaceExtractionTask.h"
 

@@ -27,11 +27,11 @@ extern "C"
 	typedef struct CuMaterialSet_s CuMaterialSet;
 
 	// Volume functions
-	CUBIQUITYC_API int32_t cuNewColouredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* filename, uint32_t baseNodeSize, uint32_t* result);
-	CUBIQUITYC_API int32_t cuNewColouredCubesVolumeFromVolDat(const char* volDatToImport, const char* filename, uint32_t baseNodeSize, uint32_t* result);
-	CUBIQUITYC_API int32_t cuNewColouredCubesVolumeFromHeightmap(const char* heightmapFileName, const char* colormapFileName, const char* filename, uint32_t baseNodeSize, uint32_t* result);
+	CUBIQUITYC_API int32_t cuNewColoredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* filename, uint32_t baseNodeSize, uint32_t* result);
+	CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVolDat(const char* volDatToImport, const char* filename, uint32_t baseNodeSize, uint32_t* result);
+	CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromHeightmap(const char* heightmapFileName, const char* colormapFileName, const char* filename, uint32_t baseNodeSize, uint32_t* result);
 	CUBIQUITYC_API int32_t cuUpdateVolume(uint32_t volumeHandle);
-	CUBIQUITYC_API int32_t cuDeleteColouredCubesVolume(uint32_t volumeHandle);
+	CUBIQUITYC_API int32_t cuDeleteColoredCubesVolume(uint32_t volumeHandle);
 
 	CUBIQUITYC_API int32_t cuGetEnclosingRegion(uint32_t volumeHandle, int32_t* lowerX, int32_t* lowerY, int32_t* lowerZ, int32_t* upperX, int32_t* upperY, int32_t* upperZ);
 	CUBIQUITYC_API int32_t cuGetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, uint8_t* red, uint8_t* green, uint8_t* blue, uint8_t* alpha);

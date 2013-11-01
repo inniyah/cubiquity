@@ -1,7 +1,7 @@
 #ifndef GAMEPLAYRAYCASTING_H_
 #define GAMEPLAYRAYCASTING_H_
 
-#include "GameplayColouredCubesVolume.h"
+#include "GameplayColoredCubesVolume.h"
 #include "GameplayTerrainVolume.h"
 
 namespace Cubiquity
@@ -13,7 +13,7 @@ namespace Cubiquity
 	class GameplayRaycasting
 	{
 	public:
-		static bool pickFirstSolidVoxel(GameplayColouredCubesVolume* volume, gameplay::Ray startAndDirection, float length, gameplay::Vector3& result);
+		static bool pickFirstSolidVoxel(GameplayColoredCubesVolume* volume, gameplay::Ray startAndDirection, float length, gameplay::Vector3& result);
 		static bool pickTerrainSurface(GameplayTerrainVolume* volume, gameplay::Ray startAndDirection, float length, gameplay::Vector3& result);
 	};
 }

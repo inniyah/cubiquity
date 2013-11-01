@@ -64,9 +64,9 @@
     <ClInclude Include="BackgroundTaskProcessor.h" />
     <ClInclude Include="Brush.h" />
     <ClInclude Include="Clock.h" />
-    <ClInclude Include="Colour.h" />
-    <ClInclude Include="ColouredCubesVolume.h" />
-    <ClInclude Include="ColouredCubicSurfaceExtractionTask.h" />
+    <ClInclude Include="Color.h" />
+    <ClInclude Include="ColoredCubesVolume.h" />
+    <ClInclude Include="ColoredCubicSurfaceExtractionTask.h" />
     <ClInclude Include="ConcurrentQueue.h" />
     <ClInclude Include="Cubiquity.h" />
     <ClInclude Include="CubiquityForwardDeclarations.h" />
@@ -125,7 +125,6 @@
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Vector.inl" />
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VolumeResampler.inl" />
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.inl" />
-    <None Include="ColouredCubicSurfaceExtractionTask.cpp.bak" />
     <None Include="Octree.inl" />
     <None Include="OctreeNode.inl" />
     <None Include="OverrideFilePager.inl" />
@@ -147,9 +146,9 @@
     <ClCompile Include="BackgroundTaskProcessor.cpp" />
     <ClCompile Include="Brush.cpp" />
     <ClCompile Include="Clock.cpp" />
-    <ClCompile Include="Colour.cpp" />
-    <ClCompile Include="ColouredCubesVolume.cpp" />
-    <ClCompile Include="ColouredCubicSurfaceExtractionTask.cpp" />
+    <ClCompile Include="Color.cpp" />
+    <ClCompile Include="ColoredCubesVolume.cpp" />
+    <ClCompile Include="ColoredCubicSurfaceExtractionTask.cpp" />
     <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="Logging.cpp" />
     <ClCompile Include="MainThreadTaskProcessor.cpp" />

@@ -8,14 +8,14 @@ namespace Cubiquity
 	class Brush;
 	class Clock;
 
-	class Colour;
+	class Color;
 
-	class ColouredCubesIsQuadNeeded;
+	class ColoredCubesIsQuadNeeded;
 
-	class ColouredCubesVolume;
-	class ColouredCubesVolumeImpl;
+	class ColoredCubesVolume;
+	class ColoredCubesVolumeImpl;
 
-	class ColouredCubicSurfaceExtractionTask;
+	class ColoredCubicSurfaceExtractionTask;
 
 	class MainThreadTaskProcessor;
 

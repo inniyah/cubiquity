@@ -19,9 +19,9 @@ typedef std::ostringstream tstringstream;
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-	//unsigned int volumeID = newColouredCubesVolume(0, 0, 0, 127, 127, 127, 256, 256);
+	//unsigned int volumeID = newColoredCubesVolume(0, 0, 0, 127, 127, 127, 256, 256);
 	unsigned int volumeID;
-	cuNewColouredCubesVolumeFromVolDat("C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/", "./", 256, &volumeID);
+	cuNewColoredCubesVolumeFromVolDat("C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/", "./", 256, &volumeID);
 	cuUpdateVolume(volumeID);
 	unsigned int rootOctreeNodeHandle;
 	cuGetRootOctreeNode(volumeID, &rootOctreeNodeHandle);
@@ -40,7 +40,7 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	std::cout << noOfVertices << " " << noOfIndices << std::endl;
 
-	cuDeleteColouredCubesVolume(volumeID);
+	cuDeleteColoredCubesVolume(volumeID);
 
 	/*for(unsigned int ct = 0; ct < noOfIndices; ct++)
 	{   

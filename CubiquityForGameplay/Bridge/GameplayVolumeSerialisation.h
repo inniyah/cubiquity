@@ -1,24 +1,24 @@
 #ifndef GAMEPLAYVOLUMESERIALISATION_H_
 #define GAMEPLAYVOLUMESERIALISATION_H_
 
-#include "ColouredCubesVolume.h"
+#include "ColoredCubesVolume.h"
 #include "VolumeSerialisation.h"
 
-#include "GameplayColouredCubesVolume.h"
+#include "GameplayColoredCubesVolume.h"
 #include "GameplayTerrainVolume.h"
 
 namespace Cubiquity
 {
 	/**
 	 * These functions are wrapped in a class because that seems
-	 * to be required for luagen to create bingings for them.
+	 * to be required for luagen to create bindings for them.
 	 */
 	class GameplayVolumeSerialisation
 	{
 	public:
-		static void gameplayExportColourSlices(GameplayColouredCubesVolume* volume, const char* voldatFolder)
+		static void gameplayExportColorSlices(GameplayColoredCubesVolume* volume, const char* voldatFolder)
 		{
-			exportVolDat<ColouredCubesVolumeImpl>(dynamic_cast<ColouredCubesVolumeImpl*>(volume->getCubiquityVolume()), voldatFolder);
+			exportVolDat<ColoredCubesVolumeImpl>(dynamic_cast<ColoredCubesVolumeImpl*>(volume->getCubiquityVolume()), voldatFolder);
 		}
 
 		static void gameplayExportSmoothSlices(GameplayTerrainVolume* volume, const char* voldatFolder)

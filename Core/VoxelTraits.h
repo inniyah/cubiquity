@@ -12,12 +12,12 @@ namespace Cubiquity
 	class VoxelTraits;
 
 	template<>
-	class VoxelTraits<Colour>
+	class VoxelTraits<Color>
 	{
 	public:
-		typedef ::PolyVox::PositionMaterial<Colour> VertexType;
-		typedef ColouredCubicSurfaceExtractionTask SurfaceExtractionTaskType;
-		static const bool IsColour = true;
+		typedef ::PolyVox::PositionMaterial<Color> VertexType;
+		typedef ColoredCubicSurfaceExtractionTask SurfaceExtractionTaskType;
+		static const bool IsColor = true;
 		static const bool IsMaterialSet = false;
 	};
 
@@ -27,7 +27,7 @@ namespace Cubiquity
 	public:
 		typedef ::PolyVox::PositionMaterialNormal< MaterialSetMarchingCubesController::MaterialType > VertexType;
 		typedef SmoothSurfaceExtractionTask SurfaceExtractionTaskType;
-		static const bool IsColour = false;
+		static const bool IsColor = false;
 		static const bool IsMaterialSet = true;
 	};
 }

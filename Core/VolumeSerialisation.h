@@ -1,7 +1,7 @@
 #ifndef CUBIQUITY_VOLUMESERIALISATION_H_
 #define CUBIQUITY_VOLUMESERIALISATION_H_
 
-#include "ColouredCubesVolume.h"
+#include "ColoredCubesVolume.h"
 #include "CubiquityForwardDeclarations.h"
 #include "TerrainVolume.h"
 #include "UpdatePriorities.h"
@@ -24,8 +24,8 @@ namespace Cubiquity
 	std::map<std::string, std::string> parseIndexFile(const std::string& filename);
 	void convertStringToInt(const std::string& str, int& i);
 
-	ColouredCubesVolumeImpl* importColouredSlices(std::string folder);
-	void exportSlices(ColouredCubesVolumeImpl* volume, std::string folder);
+	ColoredCubesVolumeImpl* importColoredSlices(std::string folder);
+	void exportSlices(ColoredCubesVolumeImpl* volume, std::string folder);
 
 	TerrainVolumeImpl* importSmoothSlices(std::string folder);
 	void exportSlices(TerrainVolumeImpl* volume, std::string folder);
@@ -36,7 +36,7 @@ namespace Cubiquity
 		POLYVOX_ASSERT(false, "NOT IMPLEMENTED");
 	}
 
-	void pixelToVoxel(uint8_t* pixelData, Colour& voxelData, uint32_t componentCount);
+	void pixelToVoxel(uint8_t* pixelData, Color& voxelData, uint32_t componentCount);
 	void pixelToVoxel(uint8_t* pixelData, MaterialSet& voxelData, uint32_t componentCount);
 
 	template <typename VoxelType>
@@ -45,12 +45,12 @@ namespace Cubiquity
 		POLYVOX_ASSERT(false, "NOT IMPLEMENTED");
 	}
 
-	void voxelToPixel(Colour& voxelData, uint8_t* pixelData, uint32_t componentCount);
+	void voxelToPixel(Color& voxelData, uint8_t* pixelData, uint32_t componentCount);
 	void voxelToPixel(MaterialSet& voxelData, uint8_t* pixelData, uint32_t componentCount);
 
-	ColouredCubesVolumeImpl* importVxl(const std::string& vxlFfilename, const std::string& volumeFilename);
+	ColoredCubesVolumeImpl* importVxl(const std::string& vxlFfilename, const std::string& volumeFilename);
 
-	ColouredCubesVolumeImpl* importHeightmap(const std::string& heightmapFileName, const std::string& colormapFileName, const std::string& volumeFilename, uint32_t baseNodeSize);
+	ColoredCubesVolumeImpl* importHeightmap(const std::string& heightmapFileName, const std::string& colormapFileName, const std::string& volumeFilename, uint32_t baseNodeSize);
 
 	// --------------------------------------------------
 	// Imports data in the VolDat format.

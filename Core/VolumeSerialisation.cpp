@@ -82,20 +82,20 @@ namespace Cubiquity
 		return keyValuePairs;
 	}
 
-	void pixelToVoxel(uint8_t* pixelData, Colour& voxelData, uint32_t componentCount)
+	void pixelToVoxel(uint8_t* pixelData, Color& voxelData, uint32_t componentCount)
 	{
 		if(componentCount == 1)
 		{
 			uint8_t pixel = *pixelData;
-			voxelData = Colour(255, pixel, 0, pixel > 127 ? 255 : 0);
+			voxelData = Color(255, pixel, 0, pixel > 127 ? 255 : 0);
 		}
 		else if(componentCount == 4)
 		{
-			voxelData = Colour(*(pixelData + 0), *(pixelData + 1), *(pixelData + 2), *(pixelData + 3));
+			voxelData = Color(*(pixelData + 0), *(pixelData + 1), *(pixelData + 2), *(pixelData + 3));
 		}
 		else
 		{
-			POLYVOX_ASSERT(false, "Invalid number of colour channels");
+			POLYVOX_ASSERT(false, "Invalid number of color channels");
 		}
 	}
 
@@ -107,9 +107,9 @@ namespace Cubiquity
 		}
 	}
 
-	void voxelToPixel(Colour& voxelData, uint8_t* pixelData, uint32_t componentCount)
+	void voxelToPixel(Color& voxelData, uint8_t* pixelData, uint32_t componentCount)
 	{
-		POLYVOX_ASSERT(componentCount == 4, "Images must have four colour channels to export from a ColouredCubesVolume");
+		POLYVOX_ASSERT(componentCount == 4, "Images must have four color channels to export from a ColoredCubesVolume");
 		*(pixelData + 0) = voxelData.getRed();
 		*(pixelData + 1) = voxelData.getGreen();
 		*(pixelData + 2) = voxelData.getBlue();
@@ -124,9 +124,9 @@ namespace Cubiquity
 		}
 	}
 
-	ColouredCubesVolumeImpl* importVxl(const std::string& vxlFilename, const std::string& volumeFilename)
+	ColoredCubesVolumeImpl* importVxl(const std::string& vxlFilename, const std::string& volumeFilename)
 	{
-		ColouredCubesVolumeImpl* result = new ColouredCubesVolumeImpl(Region(0, 0, 0, 511, 63, 511), volumeFilename, 64);
+		ColoredCubesVolumeImpl* result = new ColoredCubesVolumeImpl(Region(0, 0, 0, 511, 63, 511), volumeFilename, 64);
 
 		FILE* inputFile = fopen(vxlFilename.c_str(), "rb");
 		POLYVOX_ASSERT(inputFile, "Failed to open input file!");
@@ -190,7 +190,7 @@ namespace Cubiquity
 					blue = data[i + 4 + colorI * 4];
 					// Do something with these colors
 					//makeVoxelColorful(x, y, zz, red, green, blue);
-					result->setVoxelAt(x, 63 - zz, y, Colour(red, green, blue, 255), UpdatePriorities::DontUpdate);
+					result->setVoxelAt(x, 63 - zz, y, Color(red, green, blue, 255), UpdatePriorities::DontUpdate);
 					zz++;
 					colorI++;
 				}
@@ -202,7 +202,7 @@ namespace Cubiquity
 			for (j = 0; j < runlength; j++)
 			{
 				//makeVoxelSolid(x, y, zz);
-				result->setVoxelAt(x, 63 - zz, y, Colour(127, 127, 127, 255), UpdatePriorities::DontUpdate);
+				result->setVoxelAt(x, 63 - zz, y, Color(127, 127, 127, 255), UpdatePriorities::DontUpdate);
 				zz++;
 			}
 			if (N == 0)
@@ -227,7 +227,7 @@ namespace Cubiquity
 		return result;
 	}
 
-	ColouredCubesVolumeImpl* importHeightmap(const std::string& heightmapFileName, const std::string& colormapFileName, const std::string& volumeFilename, uint32_t baseNodeSize)
+	ColoredCubesVolumeImpl* importHeightmap(const std::string& heightmapFileName, const std::string& colormapFileName, const std::string& volumeFilename, uint32_t baseNodeSize)
 	{
 		int heightmapWidth = 0, heightmapHeight = 0, heightmapChannels;
 		unsigned char *heightmapData = stbi_load(heightmapFileName.c_str(), &heightmapWidth, &heightmapHeight, &heightmapChannels, 0);
@@ -248,7 +248,7 @@ namespace Cubiquity
 
 		// When importing we treat 'y' as up because the Gameplay physics engine makes some
 		// assumptions about this. This means we need to swap the 'y' and 'slice' indices.
-		ColouredCubesVolumeImpl* volume = new ColouredCubesVolumeImpl(Region(0, 0, 0, volumeWidth - 1, volumeDepth - 1, volumeHeight - 1), volumeFilename, baseNodeSize);
+		ColoredCubesVolumeImpl* volume = new ColoredCubesVolumeImpl(Region(0, 0, 0, volumeWidth - 1, volumeDepth - 1, volumeHeight - 1), volumeFilename, baseNodeSize);
 
 		// Now iterate over each pixel.
 		for(int x = 0; x < volumeWidth; x++)
@@ -266,12 +266,12 @@ namespace Cubiquity
 						unsigned char green = *(colormapPixel+1);
 						unsigned char blue = *(colormapPixel+2);
 						// Note y and z are swapped again
-						volume->setVoxelAt(x, z, y, Colour(red, green, blue, 255), UpdatePriorities::DontUpdate);
+						volume->setVoxelAt(x, z, y, Color(red, green, blue, 255), UpdatePriorities::DontUpdate);
 					}
 					else
 					{
 						// Note y and z are swapped again
-						volume->setVoxelAt(x, z, y, Colour(0, 0, 0, 0), UpdatePriorities::DontUpdate);
+						volume->setVoxelAt(x, z, y, Color(0, 0, 0, 0), UpdatePriorities::DontUpdate);
 					}
 				}
 			}

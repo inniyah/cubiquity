@@ -1,6 +1,6 @@
 #include "Main.h"
 
-#include "GameplayColouredCubesVolume.h"
+#include "GameplayColoredCubesVolume.h"
 #include "GameplayTerrainVolume.h"
 #include "GameplayRaycasting.h"
 
@@ -192,21 +192,21 @@ void MeshGame::initialize()
 	mVolumeEditor = new GameplayTerrainVolumeEditor(mVolume);
 #endif
 #ifdef TERRAIN_CUBIC
-	//mVolume = GameplayColouredCubesVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
-	//mVolume = GameplayVolumeSerialisation::gameplayImportColourSlices("../../SliceData/VoxeliensTerrain/");
+	//mVolume = GameplayColoredCubesVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
+	//mVolume = GameplayVolumeSerialisation::gameplayImportColorSlices("../../SliceData/VoxeliensTerrain/");
 	//mVolume = GameplayVolumeSerialisation::gameplayImportVxl("D:\\Google Drive\\VolumesOfFun\\VolumeData\\Industry.vxl");
-	//mVolume = GameplayColouredCubesVolume::create("../../SliceData/VoxeliensTerrain/", "./", 32);
-	//mVolume = GameplayColouredCubesVolume::create("../../SliceData/VoxeliensTerrain/", 32, "./");
-	//mVolume = GameplayColouredCubesVolume::create("C:\\code\\cubiquity\\Tools\\FractalGenerator\\FractalGenerator\\output\\");
-	//mVolume = GameplayColouredCubesVolume::create("D:\\Google Drive\\VolumesOfFun\\VolumeData\\Industry.vxl", "D:\\temp\\voldata\\", 16);
+	//mVolume = GameplayColoredCubesVolume::create("../../SliceData/VoxeliensTerrain/", "./", 32);
+	//mVolume = GameplayColoredCubesVolume::create("../../SliceData/VoxeliensTerrain/", 32, "./");
+	//mVolume = GameplayColoredCubesVolume::create("C:\\code\\cubiquity\\Tools\\FractalGenerator\\FractalGenerator\\output\\");
+	//mVolume = GameplayColoredCubesVolume::create("D:\\Google Drive\\VolumesOfFun\\VolumeData\\Industry.vxl", "D:\\temp\\voldata\\", 16);
 
-	mVolume = GameplayColouredCubesVolume::create("C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/", "VoxeliensTerrain.vol", 32);
+	mVolume = GameplayColoredCubesVolume::create("C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/", "VoxeliensTerrain.vol", 32);
 
 	mVolumeEditor = 0;
 #endif
 
 	//GameplayVolumeSerialisation::gameplayExportSmoothSlices(mVolume, "C:\\temp\\output");
-	//GameplayVolumeSerialisation::gameplayExportColourSlices(mVolume, "D:/temp/mytest/");
+	//GameplayVolumeSerialisation::gameplayExportColorSlices(mVolume, "D:/temp/mytest/");
 
 	_cameraPositionNode->setTranslation(mVolume->getWidth() / 2.0f, mVolume->getHeight(), mVolume->getDepth());
 

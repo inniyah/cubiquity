@@ -1,5 +1,5 @@
 #include "Raycasting.h"
-#include "ColouredCubesVolume.h"
+#include "ColoredCubesVolume.h"
 #include "TerrainVolume.h"
 
 #include "PolyVoxCore/Picking.h"
@@ -37,14 +37,14 @@ namespace Cubiquity
 	};
 
 	template <>
-	class RaycastTestFunctor<Colour>
+	class RaycastTestFunctor<Color>
 	{
 	public:
 		RaycastTestFunctor()
 		{
 		}
 
-		bool operator()(Vector3F pos, const Colour& voxel)
+		bool operator()(Vector3F pos, const Color& voxel)
 		{
 			return false;
 		}
@@ -52,33 +52,33 @@ namespace Cubiquity
 		Vector3F mLastPos;
 	};
 
-	class ColouredCubesRaycastTestFunctor
+	class ColoredCubesRaycastTestFunctor
 	{
 	public:
-		ColouredCubesRaycastTestFunctor()
+		ColoredCubesRaycastTestFunctor()
 		{
 		}
 
-		bool operator()(const ::PolyVox::POLYVOX_VOLUME<Colour>::Sampler& sampler);
+		bool operator()(const ::PolyVox::POLYVOX_VOLUME<Color>::Sampler& sampler);
 
 		Vector3I mLastPos;
 	};
 
-	bool ColouredCubesRaycastTestFunctor::operator()(const ::PolyVox::POLYVOX_VOLUME<Colour>::Sampler& sampler)
+	bool ColoredCubesRaycastTestFunctor::operator()(const ::PolyVox::POLYVOX_VOLUME<Color>::Sampler& sampler)
 	{
 		mLastPos = sampler.getPosition();
 
 		return sampler.getVoxel().getAlpha() == 0;
 	}
 
-	bool pickFirstSolidVoxel(ColouredCubesVolume* colouredCubesVolume, float startX, float startY, float startZ, float dirAndLengthX, float dirAndLengthY, float dirAndLengthZ, int32_t* resultX, int32_t* resultY, int32_t* resultZ)
+	bool pickFirstSolidVoxel(ColoredCubesVolume* coloredCubesVolume, float startX, float startY, float startZ, float dirAndLengthX, float dirAndLengthY, float dirAndLengthZ, int32_t* resultX, int32_t* resultY, int32_t* resultZ)
 	{
 		::PolyVox::Vector3DFloat start(startX, startY, startZ);
 		::PolyVox::Vector3DFloat dirAndLength(dirAndLengthX, dirAndLengthY, dirAndLengthZ);
 
-		ColouredCubesVolumeImpl* volumeImpl = dynamic_cast<ColouredCubesVolumeImpl*>(colouredCubesVolume);
+		ColoredCubesVolumeImpl* volumeImpl = dynamic_cast<ColoredCubesVolumeImpl*>(coloredCubesVolume);
 
-		::PolyVox::PickResult result = ::PolyVox::pickVoxel(volumeImpl->_getPolyVoxVolume(), start, dirAndLength, Colour(0, 0, 0, 0));
+		::PolyVox::PickResult result = ::PolyVox::pickVoxel(volumeImpl->_getPolyVoxVolume(), start, dirAndLength, Color(0, 0, 0, 0));
 
 		if(result.didHit)
 		{
@@ -93,14 +93,14 @@ namespace Cubiquity
 		}
 	}
 
-	bool pickLastEmptyVoxel(ColouredCubesVolume* colouredCubesVolume, float startX, float startY, float startZ, float dirAndLengthX, float dirAndLengthY, float dirAndLengthZ, int32_t* resultX, int32_t* resultY, int32_t* resultZ)
+	bool pickLastEmptyVoxel(ColoredCubesVolume* coloredCubesVolume, float startX, float startY, float startZ, float dirAndLengthX, float dirAndLengthY, float dirAndLengthZ, int32_t* resultX, int32_t* resultY, int32_t* resultZ)
 	{
 		::PolyVox::Vector3DFloat start(startX, startY, startZ);
 		::PolyVox::Vector3DFloat dirAndLength(dirAndLengthX, dirAndLengthY, dirAndLengthZ);
 
-		ColouredCubesVolumeImpl* volumeImpl = dynamic_cast<ColouredCubesVolumeImpl*>(colouredCubesVolume);
+		ColoredCubesVolumeImpl* volumeImpl = dynamic_cast<ColoredCubesVolumeImpl*>(coloredCubesVolume);
 
-		::PolyVox::PickResult result = ::PolyVox::pickVoxel(volumeImpl->_getPolyVoxVolume(), start, dirAndLength, Colour(0, 0, 0, 0));
+		::PolyVox::PickResult result = ::PolyVox::pickVoxel(volumeImpl->_getPolyVoxVolume(), start, dirAndLength, Color(0, 0, 0, 0));
 
 		if(result.didHit)
 		{

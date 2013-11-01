@@ -1,7 +1,7 @@
-#include "GameplayColouredCubesVolume.h"
+#include "GameplayColoredCubesVolume.h"
 
 #include "Clock.h"
-#include "ColouredCubicSurfaceExtractionTask.h"
+#include "ColoredCubicSurfaceExtractionTask.h"
 #include "VolumeSerialisation.h"
 
 #include "gameplay.h"
@@ -13,17 +13,17 @@ using namespace PolyVox;
 
 namespace Cubiquity
 {
-	GameplayColouredCubesVolume::GameplayColouredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize)
+	GameplayColoredCubesVolume::GameplayColoredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize)
 	{
 		mCubiquityVolume = createColoredCubesVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pageFolder, baseNodeSize);
 
 		GP_ASSERT(mCubiquityVolume);
 		GP_ASSERT(mCubiquityVolume->getRootOctreeNode());
 
-		mRootGameplayOctreeNode = new GameplayOctreeNode< Colour >(mCubiquityVolume->getRootOctreeNode(), 0);
+		mRootGameplayOctreeNode = new GameplayOctreeNode< Color >(mCubiquityVolume->getRootOctreeNode(), 0);
 	}
 
-	GameplayColouredCubesVolume::GameplayColouredCubesVolume(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize)
+	GameplayColoredCubesVolume::GameplayColoredCubesVolume(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize)
 	{
 		// Check whether the provided data is a file or a directory
 		FILE* file = fopen(dataToLoad, "rb");
@@ -36,32 +36,32 @@ namespace Cubiquity
 		{
 			// For now we assume it's VolDat. Leter on we should check for
 			// Volume.idx and load raw Cubiquity data instead if necessary.
-			mCubiquityVolume = importVolDat<ColouredCubesVolumeImpl>(dataToLoad, pageFolder, baseNodeSize);
+			mCubiquityVolume = importVolDat<ColoredCubesVolumeImpl>(dataToLoad, pageFolder, baseNodeSize);
 		}
 
 		GP_ASSERT(mCubiquityVolume);
 		GP_ASSERT(mCubiquityVolume->getRootOctreeNode());
 
-		mRootGameplayOctreeNode = new GameplayOctreeNode< Colour >(mCubiquityVolume->getRootOctreeNode(), 0);
+		mRootGameplayOctreeNode = new GameplayOctreeNode< Color >(mCubiquityVolume->getRootOctreeNode(), 0);
 	}
 
-	GameplayColouredCubesVolume::GameplayColouredCubesVolume(const char* heightmapFileName, const char* colormapFileName, const char* pageFolder, unsigned int baseNodeSize)
+	GameplayColoredCubesVolume::GameplayColoredCubesVolume(const char* heightmapFileName, const char* colormapFileName, const char* pageFolder, unsigned int baseNodeSize)
 	{
 		mCubiquityVolume = importHeightmap(heightmapFileName, colormapFileName, pageFolder, baseNodeSize);
 
 		GP_ASSERT(mCubiquityVolume);
 		GP_ASSERT(mCubiquityVolume->getRootOctreeNode());
 
-		mRootGameplayOctreeNode = new GameplayOctreeNode< Colour >(mCubiquityVolume->getRootOctreeNode(), 0);
+		mRootGameplayOctreeNode = new GameplayOctreeNode< Color >(mCubiquityVolume->getRootOctreeNode(), 0);
 	}
 
-	GameplayColouredCubesVolume::~GameplayColouredCubesVolume()
+	GameplayColoredCubesVolume::~GameplayColoredCubesVolume()
 	{
 		delete mRootGameplayOctreeNode;
 		delete mCubiquityVolume;
 	}
 
-	void GameplayColouredCubesVolume::performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold)
+	void GameplayColoredCubesVolume::performUpdate(const gameplay::Vector3& viewPosition, float lodThreshold)
 	{
 		Vector3DFloat v3dViewPosition(viewPosition.x, viewPosition.y, viewPosition.z);
 		mCubiquityVolume->update(v3dViewPosition, lodThreshold);
@@ -74,10 +74,10 @@ namespace Cubiquity
 		}
 	}
 
-	gameplay::Model* GameplayColouredCubesVolume::buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PositionMaterial<Colour> >* polyVoxMesh)
+	gameplay::Model* GameplayColoredCubesVolume::buildModelFromPolyVoxMesh(const PolyVox::SurfaceMesh< PositionMaterial<Color> >* polyVoxMesh)
 	{
 		//Can get rid of this casting in the future? See https://github.com/blackberry/GamePlay/issues/267
-		const std::vector< PositionMaterial<Colour> >& vecVertices = polyVoxMesh->getVertices();
+		const std::vector< PositionMaterial<Color> >& vecVertices = polyVoxMesh->getVertices();
 		const float* pVerticesConst = reinterpret_cast<const float*>(&vecVertices[0]);
 		float* pVertices = const_cast<float*>(pVerticesConst);
 
@@ -96,17 +96,17 @@ namespace Cubiquity
 			*ptr = vecVertices[i].getPosition().getY(); ptr++;
 			*ptr = vecVertices[i].getPosition().getZ(); ptr++;
 
-			// Encode colour in w component
-			Colour colour = vecVertices[i].getMaterial();
-			uint8_t red = colour.getRed();
-			uint8_t green = colour.getGreen();
-			uint8_t blue = colour.getBlue();
+			// Encode color in w component
+			Color color = vecVertices[i].getMaterial();
+			uint8_t red = color.getRed();
+			uint8_t green = color.getGreen();
+			uint8_t blue = color.getBlue();
 
 			// A single precision float can eactly represent all integer values from 0 to 2^24 (http://www.mathworks.nl/help/matlab/ref/flintmax.html).
-			// We can use therefore precisely and uniquely represent our three eight-bit colours but combining them into a single value as shown below.
-			// In the shader we then extract the colours again. If we want to add alpha we will have to pass each component with only six bits of precision.
-			float colourAsFloat = static_cast<float>(red * 65536 + green * 256 + blue);
-			*ptr = colourAsFloat; ptr++;
+			// We can use therefore precisely and uniquely represent our three eight-bit colors but combining them into a single value as shown below.
+			// In the shader we then extract the colors again. If we want to add alpha we will have to pass each component with only six bits of precision.
+			float colorAsFloat = static_cast<float>(red * 65536 + green * 256 + blue);
+			*ptr = colorAsFloat; ptr++;
 		}
 
 		Mesh* mesh = Mesh::createMesh(VertexFormat(elements, 1), polyVoxMesh->getVertices().size(), false);
@@ -132,24 +132,24 @@ namespace Cubiquity
 		return model;
 	}
 
-	gameplay::Vector4 GameplayColouredCubesVolume::getVoxel(int x, int y, int z)
+	gameplay::Vector4 GameplayColoredCubesVolume::getVoxel(int x, int y, int z)
 	{
-		Colour colour = mCubiquityVolume->getVoxelAt(x, y, z);
-		gameplay::Vector4 result(colour.getRed() / 255.0f, colour.getGreen() / 255.0f, colour.getBlue() / 255.0f, colour.getAlpha() / 255.0f);
+		Color color = mCubiquityVolume->getVoxelAt(x, y, z);
+		gameplay::Vector4 result(color.getRed() / 255.0f, color.getGreen() / 255.0f, color.getBlue() / 255.0f, color.getAlpha() / 255.0f);
 		return result;
 	}
 	
-	void GameplayColouredCubesVolume::setVoxel(int x, int y, int z, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha, int updatePriority)
+	void GameplayColoredCubesVolume::setVoxel(int x, int y, int z, unsigned char red, unsigned char green, unsigned char blue, unsigned char alpha, int updatePriority)
 	{
-		mCubiquityVolume->setVoxelAt(x, y, z, Colour(red, green, blue, alpha), static_cast<UpdatePriority>(updatePriority));
+		mCubiquityVolume->setVoxelAt(x, y, z, Color(red, green, blue, alpha), static_cast<UpdatePriority>(updatePriority));
 	}
 
-	void GameplayColouredCubesVolume::markAsModified(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, int updatePriority)
+	void GameplayColoredCubesVolume::markAsModified(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, int updatePriority)
 	{
 		mCubiquityVolume->markAsModified(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), static_cast<UpdatePriority>(updatePriority));
 	}
 
-	void GameplayColouredCubesVolume::syncNode(OctreeNode< Colour >* octreeNode, GameplayOctreeNode< Colour >* gameplayOctreeNode)
+	void GameplayColoredCubesVolume::syncNode(OctreeNode< Color >* octreeNode, GameplayOctreeNode< Color >* gameplayOctreeNode)
 	{
 		if(gameplayOctreeNode->mMeshLastSyncronised < octreeNode->mMeshLastUpdated)
 		{
@@ -196,14 +196,14 @@ namespace Cubiquity
 			{
 				for(int ix = 0; ix < 2; ix++)
 				{
-					OctreeNode< Colour >* childOctreeNode = octreeNode->getChildNode(ix, iy, iz);
+					OctreeNode< Color >* childOctreeNode = octreeNode->getChildNode(ix, iy, iz);
 					if(childOctreeNode)
 					{
-						GameplayOctreeNode< Colour >* childGameplayOctreeNode = gameplayOctreeNode->mChildren[ix][iy][iz];
+						GameplayOctreeNode< Color >* childGameplayOctreeNode = gameplayOctreeNode->mChildren[ix][iy][iz];
 
 						if(childGameplayOctreeNode == 0)
 						{
-							childGameplayOctreeNode = new GameplayOctreeNode< Colour >(childOctreeNode, gameplayOctreeNode);
+							childGameplayOctreeNode = new GameplayOctreeNode< Color >(childOctreeNode, gameplayOctreeNode);
 							gameplayOctreeNode->mChildren[ix][iy][iz] = childGameplayOctreeNode;							
 						}
 
@@ -223,10 +223,10 @@ namespace Cubiquity
 		}
 	}
 
-	gameplay::PhysicsCollisionShape::Definition GameplayColouredCubesVolume::buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< ::PolyVox::PositionMaterial<Colour> >* polyVoxMesh)
+	gameplay::PhysicsCollisionShape::Definition GameplayColoredCubesVolume::buildCollisionObjectFromPolyVoxMesh(const PolyVox::SurfaceMesh< ::PolyVox::PositionMaterial<Color> >* polyVoxMesh)
 	{
 		//Now set up the physics
-		const std::vector< ::PolyVox::PositionMaterial<Colour> >& vecVertices = polyVoxMesh->getVertices();
+		const std::vector< ::PolyVox::PositionMaterial<Color> >& vecVertices = polyVoxMesh->getVertices();
 		const std::vector<unsigned int>& vecIndices = polyVoxMesh->getIndices();
 		float* vertexData = new float[polyVoxMesh->getVertices().size() * 3];
 
