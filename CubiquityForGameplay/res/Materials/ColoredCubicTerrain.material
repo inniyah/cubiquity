@@ -1,12 +1,12 @@
-material ColouredCubicTerrain
+material ColoredCubicTerrain
 {
     technique
     {
         pass
         {
             // shaders
-            vertexShader = res/Materials/Shaders/ColouredCubicTerrain.vert
-            fragmentShader = res/Materials/Shaders/ColouredCubicTerrain.frag
+            vertexShader = res/Materials/Shaders/ColoredCubicTerrain.vert
+            fragmentShader = res/Materials/Shaders/ColoredCubicTerrain.frag
             
 			defines = TEXTURE_REPEAT; SPECULAR; BUMPED
             u_modelToWorldMatrix = WORLD_MATRIX

@@ -157,7 +157,7 @@ namespace Cubiquity
 			{
 				// Set up the renderable mesh
 				Model* model = buildModelFromPolyVoxMesh(octreeNode->mPolyVoxMesh);
-				model->setMaterial("res/Materials/ColouredCubicTerrain.material");
+				model->setMaterial("res/Materials/ColoredCubicTerrain.material");
 
 				gameplayOctreeNode->mGameplayNode->setModel(model);
 				SAFE_RELEASE(model);

@@ -22,7 +22,7 @@ namespace Cubiquity
 				Model* model = buildModelFromPolyVoxMesh(octreeNode->mPolyVoxMesh);
 				if(VoxelTraits<typename CubiquityVolumeType::VoxelType>::IsColor)
 				{
-					model->setMaterial("res/Materials/ColouredCubicTerrain.material");
+					model->setMaterial("res/Materials/ColoredCubicTerrain.material");
 				}
 				else
 				{

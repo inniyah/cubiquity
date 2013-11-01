@@ -116,7 +116,7 @@ void MeshGame::initialize()
     Bundle* bundle = Bundle::create("res/Models/Icosphere3.gpb");
 	Mesh* sphere = bundle->loadMesh("Sphere_001");
 	Model* model = Model::create(sphere);
-	model->setMaterial("res/Materials/VertexColouredMesh.material");
+	model->setMaterial("res/Materials/VertexColoredMesh.material");
 	mSphereNode = Node::create();
 	mSphereNode->setModel(model);
 	float scale = mBrushOuterRadiusSlider->getValue();
@@ -135,7 +135,7 @@ void MeshGame::initialize()
 		for(int x = 0; x < 128; x += 40)
 		{
 			Model* objectModel = Model::create(objectMesh);
-			objectModel->setMaterial("res/Materials/VertexColouredMesh.material");
+			objectModel->setMaterial("res/Materials/VertexColoredMesh.material");
 
 			Node* objectNode = Node::create();
 			objectNode->setModel(objectModel);

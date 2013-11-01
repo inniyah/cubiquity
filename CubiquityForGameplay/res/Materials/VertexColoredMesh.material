@@ -1,12 +1,12 @@
-material VertexColouredMesh
+material VertexColoredMesh
 {
     technique
     {
         pass 0
         {
             // shaders
-            vertexShader = res/Materials/Shaders/VertexColouredMesh.vert
-            fragmentShader = res/Materials/Shaders/VertexColouredMesh.frag
+            vertexShader = res/Materials/Shaders/VertexColoredMesh.vert
+            fragmentShader = res/Materials/Shaders/VertexColoredMesh.frag
 
              // uniforms
             u_worldViewProjectionMatrix = WORLD_VIEW_PROJECTION_MATRIX
