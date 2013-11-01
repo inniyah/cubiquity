@@ -62,6 +62,7 @@
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VolumeResampler.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.h" />
     <ClInclude Include="BackgroundTaskProcessor.h" />
+    <ClInclude Include="BitField.h" />
     <ClInclude Include="Brush.h" />
     <ClInclude Include="Clock.h" />
     <ClInclude Include="Color.h" />

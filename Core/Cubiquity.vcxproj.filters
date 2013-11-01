@@ -261,6 +261,9 @@
     <ClInclude Include="ColoredCubicSurfaceExtractionTask.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="BitField.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.inl">
