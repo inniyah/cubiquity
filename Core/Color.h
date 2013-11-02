@@ -4,6 +4,8 @@
 #include "PolyVoxCore/Impl/TypeDef.h"
 #include "PolyVoxCore/VertexTypes.h"
 
+#include "BitField.h"
+
 #include <cassert>
 
 namespace Cubiquity
@@ -25,7 +27,10 @@ namespace Cubiquity
 		static const uint32_t BlueScaleFactor = MaxInOutValue / ((0x01 << NoOfBlueBits) - 1);
 		static const uint32_t AlphaScaleFactor = MaxInOutValue / ((0x01 << NoOfAlphaBits) - 1);
 
-		Color() : m_uRed(0), m_uGreen(0), m_uBlue(0), m_uAlpha(0) {}
+		Color()
+		{
+			data.mData = 0;
+		}
 
 		Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha = MaxInOutValue)
 		{
@@ -34,8 +39,8 @@ namespace Cubiquity
 
 		bool operator==(const Color& rhs) const throw()
 		{
-			return ((m_uRed == rhs.m_uRed) && (m_uGreen == rhs.m_uGreen) && (m_uBlue == rhs.m_uBlue) && (m_uAlpha == rhs.m_uAlpha));
-		};
+			return data == rhs.data;
+		}
 
 		bool operator!=(const Color& rhs) const throw()
 		{
@@ -44,42 +49,42 @@ namespace Cubiquity
 
 		uint8_t getRed(void)
 		{
-			return m_uRed * RedScaleFactor;
+			return static_cast<uint8_t>(data.getBits(15, 12) * RedScaleFactor);
 		}
 
 		uint8_t getGreen(void)
 		{
-			return m_uGreen * GreenScaleFactor;
+			return static_cast<uint8_t>(data.getBits(11, 8) * GreenScaleFactor);
 		}
 
 		uint8_t getBlue(void)
 		{
-			return m_uBlue * BlueScaleFactor;
+			return static_cast<uint8_t>(data.getBits(7, 4) * BlueScaleFactor);
 		}
 
 		uint8_t getAlpha(void)
 		{
-			return m_uAlpha * AlphaScaleFactor;
+			return static_cast<uint8_t>(data.getBits(3, 0) * AlphaScaleFactor);
 		}
 
 		void setRed(uint8_t value)
 		{
-			m_uRed = value / RedScaleFactor;
+			data.setBits(15, 12, value / RedScaleFactor);
 		}
 
 		void setGreen(uint8_t value)
 		{
-			m_uGreen = value / GreenScaleFactor;
+			data.setBits(11, 8, value / GreenScaleFactor);
 		}
 
 		void setBlue(uint8_t value)
 		{
-			m_uBlue = value / BlueScaleFactor;
+			data.setBits(7, 4, value / BlueScaleFactor);
 		}
 
 		void setAlpha(uint8_t value)
 		{
-			m_uAlpha = value / AlphaScaleFactor;
+			data.setBits(3, 0, value / AlphaScaleFactor);
 		}
 
 		void setColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
@@ -91,10 +96,12 @@ namespace Cubiquity
 		}
 
 	private:
-		StorageType m_uRed : NoOfRedBits;
+		/*StorageType m_uRed : NoOfRedBits;
 		StorageType m_uGreen : NoOfGreenBits;
 		StorageType m_uBlue : NoOfBlueBits;
-		StorageType m_uAlpha : NoOfAlphaBits;
+		StorageType m_uAlpha : NoOfAlphaBits;*/
+
+		BitField<uint16_t> data;
 	};
 
 	// These operations are used by the smooth raycast to perform trilinear interpolation.

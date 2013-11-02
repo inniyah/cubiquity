@@ -1,5 +1,5 @@
-#ifndef CUBIQUITY_BRUSH_H
-#define CUBIQUITY_BRUSH_H
+#ifndef CUBIQUITY_BITFIELD_H
+#define CUBIQUITY_BITFIELD_H
 
 #include <limits>
 
@@ -9,6 +9,16 @@ namespace Cubiquity
 	class BitField
 	{
 	public:
+		bool operator==(const BitField& rhs) const throw()
+		{
+			return mData == rhs.mData;
+		};
+
+		bool operator!=(const BitField& rhs) const throw()
+		{
+			return !(*this == rhs);
+		}
+
 		StorageType getBits(size_t MSB, size_t LSB)
 		{
 			const size_t totalNoOfBits = sizeof(StorageType) * CHAR_BIT;
@@ -28,6 +38,15 @@ namespace Cubiquity
 		void setBits(size_t MSB, size_t LSB, StorageType bitsToSet)
 		{
 			const size_t noOfBitsToSet = (MSB - LSB) + 1;
+
+			StorageType mask = (std::numeric_limits<StorageType>::max)(); //Set to all '1's
+			mask = mask << noOfBitsToSet; // Insert the required number of '0's for the lower bits
+			mask = ~mask; // And invert
+			mask = mask << LSB;
+
+			bitsToSet = (bitsToSet << LSB) & mask;
+
+			mData = (mData & ~mask) | bitsToSet;
 		}
 
 	public:
@@ -35,4 +54,4 @@ namespace Cubiquity
 	};
 }
 
-#endif //CUBIQUITY_BRUSH_H
+#endif //CUBIQUITY_BITFIELD_H
