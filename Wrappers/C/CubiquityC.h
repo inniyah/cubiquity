@@ -22,7 +22,7 @@ extern "C"
 
 	struct CuMaterialSet_s
 	{
-		uint32_t data;
+		uint64_t data;
 	};
 	typedef struct CuMaterialSet_s CuMaterialSet;
 

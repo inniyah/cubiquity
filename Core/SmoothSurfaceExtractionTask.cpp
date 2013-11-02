@@ -100,7 +100,7 @@ namespace Cubiquity
 			// isn't clear but it might be inaccuraceies in the lower LOD mesh. It also might only 
 			// happen right on the edge of the volume so wrap modes might help. Hopefully we can
 			// remove this hack in the future.
-			Vector<4, float> matAsVec = value;
+			Vector<8, float> matAsVec = value;
 			if(matAsVec.length() < 0.001f)
 			{
 				value = MaterialSet(0);

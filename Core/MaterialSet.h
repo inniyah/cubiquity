@@ -18,9 +18,9 @@ namespace Cubiquity
 	{
 	private:
 		//These could be template parameters if this class needs to be templatised.
-		static const uint32_t NoOfMaterials = 4;
+		static const uint32_t NoOfMaterials = 8;
 		static const uint32_t BitsPerMaterial = 8;
-		typedef uint32_t StorageType;
+		typedef uint64_t StorageType;
 	public:
 		MaterialSet()
 		{
@@ -235,7 +235,6 @@ namespace Cubiquity
 		}
 
 	public:
-		//StorageType mMaterials;
 		BitField<StorageType> mWeights;
 	};
 
