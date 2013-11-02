@@ -19,7 +19,7 @@ namespace Cubiquity
 			return !(*this == rhs);
 		}
 
-		StorageType getBits(size_t MSB, size_t LSB)
+		StorageType getBits(size_t MSB, size_t LSB) const
 		{
 			const size_t totalNoOfBits = sizeof(StorageType) * CHAR_BIT;
 			const size_t noOfBitsToGet = (MSB - LSB) + 1;
@@ -47,6 +47,11 @@ namespace Cubiquity
 			bitsToSet = (bitsToSet << LSB) & mask;
 
 			mBits = (mBits & ~mask) | bitsToSet;
+		}
+
+		StorageType allBits(void)
+		{
+			return mBits;
 		}
 
 		void clearAllBits(void)

@@ -7,6 +7,8 @@
 #include "PolyVoxCore/Vector.h"
 #include "PolyVoxCore/VertexTypes.h"
 
+#include "BitField.h"
+
 #include <cassert>
 #include <limits>
 
@@ -133,8 +135,10 @@ namespace Cubiquity
 			// at a lower address and material N will be stored at a higher address (assuming a little-endien system). This maps
 			// more closely to how an array would be laid out, making it easier to switch to that in the future if we want to.
 
+			return static_cast<uint32_t>(mWeights.getBits(index * 8 + 7, index * 8));
+
 			// Move the required bits into the least significant bits of result.
-			StorageType result = mMaterials >> (BitsPerMaterial * index);
+			/*StorageType result = mMaterials >> (BitsPerMaterial * index);
 
 			// Build a mask containing all '0's except for the least significant bits (which are '1's).
 			StorageType mask = (std::numeric_limits<StorageType>::max)(); //Set to all '1's
@@ -142,7 +146,7 @@ namespace Cubiquity
 			mask = ~mask; // And invert
 			result = result & mask;
 
-			return static_cast<uint32_t>(result);
+			return static_cast<uint32_t>(result);*/
 		}
 
 		void setMaterial(uint32_t index, uint32_t value)
@@ -154,10 +158,12 @@ namespace Cubiquity
 			// at a lower address and material N will be stored at a higher address (assuming a little-endien system). This maps
 			// more closely to how an array would be laid out, making it easier to switch to that in the future if we want to.
 
+			mWeights.setBits(index * 8 + 7, index * 8, value);
+
 			// The bits we want to set first get cleared to zeros.
 			// To do this we create a mask which is all '1' except
 			// for the bits we wish to clear (which are '0').
-			StorageType mask = (std::numeric_limits<StorageType>::max)(); //Set to all '1's
+			/*StorageType mask = (std::numeric_limits<StorageType>::max)(); //Set to all '1's
 			mask = mask << BitsPerMaterial; // Insert the required number of '0's for the lower bits
 			mask = ~mask; // We want to insert '1's next, so fake this by inverting before and after
 			mask = mask << (BitsPerMaterial * index); // Insert the '0's which we will invert to '1's.
@@ -169,7 +175,7 @@ namespace Cubiquity
 			// OR with the value to set the bits
 			StorageType temp = value;
 			temp = temp << (BitsPerMaterial * index);
-			mMaterials |= temp;
+			mMaterials |= temp;*/
 		}
 
 		uint32_t getSumOfMaterials(void) const
@@ -229,7 +235,8 @@ namespace Cubiquity
 		}
 
 	public:
-		StorageType mMaterials;
+		//StorageType mMaterials;
+		BitField<StorageType> mWeights;
 	};
 
 	class MaterialSetMarchingCubesController
