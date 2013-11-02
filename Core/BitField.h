@@ -11,7 +11,7 @@ namespace Cubiquity
 	public:
 		bool operator==(const BitField& rhs) const throw()
 		{
-			return mData == rhs.mData;
+			return mBits == rhs.mBits;
 		};
 
 		bool operator!=(const BitField& rhs) const throw()
@@ -30,7 +30,7 @@ namespace Cubiquity
 			mask = ~mask; // And invert
 
 			// Move the desired bits into the LSBs and mask them off
-			StorageType result = (mData >> LSB) & mask;
+			StorageType result = (mBits >> LSB) & mask;
 
 			return result;
 		}
@@ -46,11 +46,16 @@ namespace Cubiquity
 
 			bitsToSet = (bitsToSet << LSB) & mask;
 
-			mData = (mData & ~mask) | bitsToSet;
+			mBits = (mBits & ~mask) | bitsToSet;
 		}
 
-	public:
-		StorageType mData;
+		void clearAllBits(void)
+		{
+			mBits = 0;
+		}
+
+	private:
+		StorageType mBits;
 	};
 }
 

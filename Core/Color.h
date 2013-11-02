@@ -29,7 +29,7 @@ namespace Cubiquity
 
 		Color()
 		{
-			data.mData = 0;
+			mChannels.clearAllBits();
 		}
 
 		Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha = MaxInOutValue)
@@ -39,7 +39,7 @@ namespace Cubiquity
 
 		bool operator==(const Color& rhs) const throw()
 		{
-			return data == rhs.data;
+			return mChannels == rhs.mChannels;
 		}
 
 		bool operator!=(const Color& rhs) const throw()
@@ -49,42 +49,42 @@ namespace Cubiquity
 
 		uint8_t getRed(void)
 		{
-			return static_cast<uint8_t>(data.getBits(15, 12) * RedScaleFactor);
+			return static_cast<uint8_t>(mChannels.getBits(15, 12) * RedScaleFactor);
 		}
 
 		uint8_t getGreen(void)
 		{
-			return static_cast<uint8_t>(data.getBits(11, 8) * GreenScaleFactor);
+			return static_cast<uint8_t>(mChannels.getBits(11, 8) * GreenScaleFactor);
 		}
 
 		uint8_t getBlue(void)
 		{
-			return static_cast<uint8_t>(data.getBits(7, 4) * BlueScaleFactor);
+			return static_cast<uint8_t>(mChannels.getBits(7, 4) * BlueScaleFactor);
 		}
 
 		uint8_t getAlpha(void)
 		{
-			return static_cast<uint8_t>(data.getBits(3, 0) * AlphaScaleFactor);
+			return static_cast<uint8_t>(mChannels.getBits(3, 0) * AlphaScaleFactor);
 		}
 
 		void setRed(uint8_t value)
 		{
-			data.setBits(15, 12, value / RedScaleFactor);
+			mChannels.setBits(15, 12, value / RedScaleFactor);
 		}
 
 		void setGreen(uint8_t value)
 		{
-			data.setBits(11, 8, value / GreenScaleFactor);
+			mChannels.setBits(11, 8, value / GreenScaleFactor);
 		}
 
 		void setBlue(uint8_t value)
 		{
-			data.setBits(7, 4, value / BlueScaleFactor);
+			mChannels.setBits(7, 4, value / BlueScaleFactor);
 		}
 
 		void setAlpha(uint8_t value)
 		{
-			data.setBits(3, 0, value / AlphaScaleFactor);
+			mChannels.setBits(3, 0, value / AlphaScaleFactor);
 		}
 
 		void setColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
@@ -96,12 +96,7 @@ namespace Cubiquity
 		}
 
 	private:
-		/*StorageType m_uRed : NoOfRedBits;
-		StorageType m_uGreen : NoOfGreenBits;
-		StorageType m_uBlue : NoOfBlueBits;
-		StorageType m_uAlpha : NoOfAlphaBits;*/
-
-		BitField<uint16_t> data;
+		BitField<uint16_t> mChannels;
 	};
 
 	// These operations are used by the smooth raycast to perform trilinear interpolation.
