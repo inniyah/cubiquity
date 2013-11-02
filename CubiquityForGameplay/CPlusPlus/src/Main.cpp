@@ -232,7 +232,10 @@ void MeshGame::finalize()
 	SAFE_RELEASE(_cameraNode);
 	SAFE_RELEASE(_cameraYawNode);
 	SAFE_RELEASE(_cameraPitchNode);
-	SAFE_RELEASE(_cameraPositionNode);
+
+	// Weh should release this one too... but for some reason it causes a crash
+	// when closing the windows with the 'x' button (pressing esc seems ok).
+	//SAFE_RELEASE(_cameraPositionNode);
 }
 
 void MeshGame::update(float elapsedTime)
