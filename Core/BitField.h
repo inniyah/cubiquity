@@ -21,7 +21,6 @@ namespace Cubiquity
 
 		StorageType getBits(size_t MSB, size_t LSB) const
 		{
-			const size_t totalNoOfBits = sizeof(StorageType) * CHAR_BIT;
 			const size_t noOfBitsToGet = (MSB - LSB) + 1;
 
 			// Build a mask containing all '0's except for the least significant bits (which are '1's).

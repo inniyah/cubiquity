@@ -16,7 +16,7 @@ extern "C"
 {
 	struct CuColor_s
 	{
-		uint16_t data;
+		uint32_t data;
 	};
 	typedef struct CuColor_s CuColor;
 

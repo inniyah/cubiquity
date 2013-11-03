@@ -18,7 +18,7 @@ namespace Cubiquity
 		static const uint32_t NoOfBlueBits = 4;
 		static const uint32_t NoOfAlphaBits = 4;
 
-		typedef uint16_t StorageType;
+		typedef uint32_t StorageType;
 		static_assert(NoOfRedBits + NoOfGreenBits + NoOfBlueBits + NoOfAlphaBits <= sizeof(StorageType) * CHAR_BIT, "StorageType does not have enough bits!");
 
 		static const uint32_t MaxInOutValue = 255;
@@ -34,6 +34,7 @@ namespace Cubiquity
 
 		Color(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha = MaxInOutValue)
 		{
+			mChannels.clearAllBits();
 			setColor(red, green, blue, alpha);
 		}
 
@@ -96,7 +97,7 @@ namespace Cubiquity
 		}
 
 	private:
-		BitField<uint16_t> mChannels;
+		BitField<StorageType> mChannels;
 	};
 
 	// These operations are used by the smooth raycast to perform trilinear interpolation.

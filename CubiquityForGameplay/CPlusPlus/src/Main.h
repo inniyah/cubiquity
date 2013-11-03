@@ -15,8 +15,8 @@
 using namespace gameplay;
 using namespace Cubiquity; // Bad!
 
-#define TERRAIN_SMOOTH
-//#define TERRAIN_CUBIC
+//#define TERRAIN_SMOOTH
+#define TERRAIN_CUBIC
 
 /**
  * Sample game for rendering a scene with a model/mesh.
