@@ -13,15 +13,23 @@ namespace Cubiquity
 	class Color
 	{
 	public:
-		static const uint32_t NoOfRedBits = 4;
-		static const uint32_t NoOfGreenBits = 4;
-		static const uint32_t NoOfBlueBits = 4;
-		static const uint32_t NoOfAlphaBits = 4;
-
-		typedef uint32_t StorageType;
-		static_assert(NoOfRedBits + NoOfGreenBits + NoOfBlueBits + NoOfAlphaBits <= sizeof(StorageType) * CHAR_BIT, "StorageType does not have enough bits!");
 
 		static const uint32_t MaxInOutValue = 255;
+
+		static const uint32_t RedMSB = 15;
+		static const uint32_t RedLSB = 12;		
+		static const uint32_t GreenMSB = 11;
+		static const uint32_t GreenLSB = 8;
+		static const uint32_t BlueMSB = 7;
+		static const uint32_t BlueLSB = 4;
+		static const uint32_t AlphaMSB = 3;
+		static const uint32_t AlphaLSB = 0;
+		
+		static const uint32_t NoOfRedBits = RedMSB - RedLSB + 1;
+		static const uint32_t NoOfGreenBits = GreenMSB - GreenLSB + 1;
+		static const uint32_t NoOfBlueBits = BlueMSB - BlueLSB + 1;
+		static const uint32_t NoOfAlphaBits = AlphaMSB - AlphaLSB + 1;
+		
 		static const uint32_t RedScaleFactor = MaxInOutValue / ((0x01 << NoOfRedBits) - 1);
 		static const uint32_t GreenScaleFactor = MaxInOutValue / ((0x01 << NoOfGreenBits) - 1);
 		static const uint32_t BlueScaleFactor = MaxInOutValue / ((0x01 << NoOfBlueBits) - 1);
@@ -50,42 +58,42 @@ namespace Cubiquity
 
 		uint8_t getRed(void)
 		{
-			return static_cast<uint8_t>(mChannels.getBits(15, 12) * RedScaleFactor);
+			return static_cast<uint8_t>(mChannels.getBits(RedMSB, RedLSB) * RedScaleFactor);
 		}
 
 		uint8_t getGreen(void)
 		{
-			return static_cast<uint8_t>(mChannels.getBits(11, 8) * GreenScaleFactor);
+			return static_cast<uint8_t>(mChannels.getBits(GreenMSB, GreenLSB) * GreenScaleFactor);
 		}
 
 		uint8_t getBlue(void)
 		{
-			return static_cast<uint8_t>(mChannels.getBits(7, 4) * BlueScaleFactor);
+			return static_cast<uint8_t>(mChannels.getBits(BlueMSB, BlueLSB) * BlueScaleFactor);
 		}
 
 		uint8_t getAlpha(void)
 		{
-			return static_cast<uint8_t>(mChannels.getBits(3, 0) * AlphaScaleFactor);
+			return static_cast<uint8_t>(mChannels.getBits(AlphaMSB, AlphaLSB) * AlphaScaleFactor);
 		}
 
 		void setRed(uint8_t value)
 		{
-			mChannels.setBits(15, 12, value / RedScaleFactor);
+			mChannels.setBits(RedMSB, RedLSB, value / RedScaleFactor);
 		}
 
 		void setGreen(uint8_t value)
 		{
-			mChannels.setBits(11, 8, value / GreenScaleFactor);
+			mChannels.setBits(GreenMSB, GreenLSB, value / GreenScaleFactor);
 		}
 
 		void setBlue(uint8_t value)
 		{
-			mChannels.setBits(7, 4, value / BlueScaleFactor);
+			mChannels.setBits(BlueMSB, BlueLSB, value / BlueScaleFactor);
 		}
 
 		void setAlpha(uint8_t value)
 		{
-			mChannels.setBits(3, 0, value / AlphaScaleFactor);
+			mChannels.setBits(AlphaMSB, AlphaLSB, value / AlphaScaleFactor);
 		}
 
 		void setColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
@@ -97,7 +105,7 @@ namespace Cubiquity
 		}
 
 	private:
-		BitField<StorageType> mChannels;
+		BitField<uint32_t> mChannels;
 	};
 
 	// These operations are used by the smooth raycast to perform trilinear interpolation.
