@@ -17,13 +17,13 @@ namespace Cubiquity
 		static const uint32_t MaxInOutValue = 255;
 
 		static const uint32_t RedMSB = 31;
-		static const uint32_t RedLSB = 28;		
-		static const uint32_t GreenMSB = 27;
-		static const uint32_t GreenLSB = 24;
-		static const uint32_t BlueMSB = 23;
-		static const uint32_t BlueLSB = 20;
-		static const uint32_t AlphaMSB = 19;
-		static const uint32_t AlphaLSB = 16;
+		static const uint32_t RedLSB = 27;		
+		static const uint32_t GreenMSB = 26;
+		static const uint32_t GreenLSB = 21;
+		static const uint32_t BlueMSB = 20;
+		static const uint32_t BlueLSB = 16;
+		static const uint32_t AlphaMSB = 15;
+		static const uint32_t AlphaLSB = 12;
 		
 		static const uint32_t NoOfRedBits = RedMSB - RedLSB + 1;
 		static const uint32_t NoOfGreenBits = GreenMSB - GreenLSB + 1;
