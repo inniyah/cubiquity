@@ -205,6 +205,66 @@ namespace Cubiquity
 		terrainVolume->markAsModified(region, UpdatePriorities::Immediate);
 	}
 
+	void blurTerrainVolume(TerrainVolumeImpl* terrainVolume, const Region& region)
+	{
+		Region croppedRegion = region;
+		croppedRegion.cropTo(terrainVolume->getEnclosingRegion());
+
+		::PolyVox::RawVolume<MaterialSet> mSmoothingVolume(croppedRegion);
+
+		for(int z = croppedRegion.getLowerZ(); z <= croppedRegion.getUpperZ(); ++z)
+		{
+			for(int y = croppedRegion.getLowerY(); y <= croppedRegion.getUpperY(); ++y)
+			{
+				for(int x = croppedRegion.getLowerX(); x <= croppedRegion.getUpperX(); ++x)
+				{
+					for(uint32_t matIndex = 0; matIndex < MaterialSet::getNoOfMaterials(); matIndex++)
+					{
+						int32_t original = terrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
+
+						int32_t sum = 0;
+						sum += terrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
+						sum += terrainVolume->getVoxelAt(x+1, y, z).getMaterial(matIndex);
+						sum += terrainVolume->getVoxelAt(x-1, y, z).getMaterial(matIndex);
+						sum += terrainVolume->getVoxelAt(x, y+1, z).getMaterial(matIndex);
+						sum += terrainVolume->getVoxelAt(x, y-1, z).getMaterial(matIndex);
+						sum += terrainVolume->getVoxelAt(x, y, z+1).getMaterial(matIndex);
+						sum += terrainVolume->getVoxelAt(x, y, z-1).getMaterial(matIndex);
+
+						float fAverage = static_cast<float>(sum) / 7.0f;
+
+						int32_t iAverage = static_cast<int32_t>(fAverage + 0.5f);
+
+						// Prevent wrapping around.
+						iAverage = (std::min)(iAverage, static_cast<int32_t>(MaterialSet::getMaxMaterialValue()));
+						iAverage = (std::max)(iAverage, 0);
+
+						MaterialSet result = mSmoothingVolume.getVoxelAt(x, y, z);
+						result.setMaterial(matIndex, iAverage);
+						mSmoothingVolume.setVoxel(x, y, z, result);
+					}
+
+					MaterialSet result = mSmoothingVolume.getVoxelAt(x, y, z);
+					result.clampSumOfMaterials();
+					mSmoothingVolume.setVoxel(x, y, z, result);
+				}
+			}
+		}
+
+		for(int z = croppedRegion.getLowerZ(); z <= croppedRegion.getUpperZ(); ++z)
+		{
+			for(int y = croppedRegion.getLowerY(); y <= croppedRegion.getUpperY(); ++y)
+			{
+				for(int x = croppedRegion.getLowerX(); x <= croppedRegion.getUpperX(); ++x)
+				{
+					terrainVolume->setVoxelAt(x, y, z, mSmoothingVolume.getVoxelAt(x, y, z), UpdatePriorities::DontUpdate);
+				}
+			}
+		}
+
+		terrainVolume->markAsModified(croppedRegion, UpdatePriorities::Immediate);
+	}
+
 	void addToMaterial(uint32_t index, uint8_t amountToAdd, MaterialSet& material)
 	{
 		uint32_t indexToRemoveFrom = 0; //FIXME - start somewhere random

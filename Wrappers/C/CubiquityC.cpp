@@ -1033,6 +1033,17 @@ CUBIQUITYC_API int32_t cuBlurTerrainVolume(uint32_t volumeHandle, float brushX, 
 	CLOSE_C_INTERFACE
 }
 
+CUBIQUITYC_API int32_t cuBlurTerrainVolumeRegion(uint32_t volumeHandle, int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ)
+{
+	OPEN_C_INTERFACE
+
+	TerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
+
+	blurTerrainVolume(volume, Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ));
+
+	CLOSE_C_INTERFACE
+}
+
 CUBIQUITYC_API int32_t cuPaintTerrainVolume(uint32_t volumeHandle, float brushX, float brushY, float brushZ, float brushInnerRadius, float brushOuterRadius, float opacity, uint32_t materialIndex)
 {
 	OPEN_C_INTERFACE
