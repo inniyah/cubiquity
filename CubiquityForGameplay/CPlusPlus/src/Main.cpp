@@ -6,6 +6,7 @@
 
 #include "GameplayVolumeSerialisation.h"
 
+#include "Logging.h"
 #include "MainThreadTaskProcessor.h"
 
 #include <algorithm>
@@ -14,6 +15,26 @@
 //using namespace PolyVox;
 using namespace std;
 using namespace Cubiquity;
+
+// This class (via it's single global instance) allows code to be executed when the library is loaded and unloaded.
+// I do have some concerns about how robust this is - in particular see here: http://stackoverflow.com/a/1229542
+class EntryAndExitPoints
+{
+public:
+	EntryAndExitPoints()
+	{
+		// Note that we can't actually write to the log from this entry point
+		// code as the global Boost.Log source might not have been created yet.
+		setLogVerbosity(LogLevels::Trace);
+	}
+
+	~EntryAndExitPoints()
+	{
+	}
+};
+
+// The single global instance of the above class.
+EntryAndExitPoints gEntryAndExitPoints;
 
 //Rotates the goven node to point at the target.
 //NOTE - Might only work if node position and target are in world space?
