@@ -1,3 +1,4 @@
+#include "PolyVoxCore/Impl/Timer.h"
 #include "PolyVoxCore/Impl/Utility.h"
 
 namespace Cubiquity
@@ -41,6 +42,16 @@ namespace Cubiquity
 		else
 		{
 			logInfo() << "Successfully opened'" << dbName << "'";
+		}
+
+		// Disable syncing
+		rc = sqlite3_exec(mDatabase, "PRAGMA synchronous = OFF", 0, 0, &pErrorMsg);
+		if(rc != SQLITE_OK)
+		{
+			std::stringstream ss;
+			ss << "Failed to set 'synchronous' to OFF. Message was: \"" << pErrorMsg << "\"";
+			sqlite3_free(pErrorMsg);
+			throw std::runtime_error(ss.str().c_str());
 		}
 
 		// Now create the 'Blocks' table if it doesn't exist. Not sure we need 'ASC'
@@ -126,6 +137,8 @@ namespace Cubiquity
 	{
 		POLYVOX_ASSERT(pBlockData, "Attempting to page in NULL block");
 
+		PolyVox::Timer timer;
+
 		int64_t key = regionToKey(region);
 
 		// First we try and read the data from the OverrideBlocks table
@@ -152,12 +165,16 @@ namespace Cubiquity
 				pBlockData->setData(static_cast<const uint8_t*>(data), length);
 			}
 		}
+
+		logTrace() << "Paged block in in " << timer.elapsedTimeInMilliSeconds() << "ms";
 	}
 
 	template <typename VoxelType>
 	void SQLitePager<VoxelType>::pageOut(const PolyVox::Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData)
 	{
 		POLYVOX_ASSERT(pBlockData, "Attempting to page out NULL block");
+
+		PolyVox::Timer timer;
 
 		logTrace() << "Paging out data for " << region;
 
@@ -168,6 +185,8 @@ namespace Cubiquity
 		sqlite3_bind_int64(mInsertOrReplaceOverrideBlockStatement, 1, key);
 		sqlite3_bind_blob(mInsertOrReplaceOverrideBlockStatement, 2, static_cast<const void*>(pBlockData->getData()), pBlockData->getDataSizeInBytes(), SQLITE_TRANSIENT);
 		sqlite3_step(mInsertOrReplaceOverrideBlockStatement);
+
+		logTrace() << "Paged block out in " << timer.elapsedTimeInMilliSeconds() << "ms (" << pBlockData->getDataSizeInBytes() << "bytes of data)";
 	}
 
 	template <typename VoxelType>
