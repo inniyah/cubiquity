@@ -34,7 +34,9 @@ public:
 };
 
 // The single global instance of the above class.
-EntryAndExitPoints gEntryAndExitPoints;
+#ifndef _DEBUG // Crashes in debug mode, probably because of the gameplay issues with standard C++ library.
+	EntryAndExitPoints gEntryAndExitPoints;
+#endif
 
 //Rotates the goven node to point at the target.
 //NOTE - Might only work if node position and target are in world space?
@@ -208,8 +210,8 @@ void MeshGame::initialize()
 	//mVolume = GameplayTerrainVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
 	//mVolume = GameplayVolumeSerialisation::gameplayImportSmoothSlices("../../SliceData/SmoothVoxeliensTerrain/");
 	
-	//mVolume = GameplayTerrainVolume::create("C:/Code/cubiquity/Examples/SliceData/SmoothVoxeliensTerrain/", "./", 32);
-	mVolume = GameplayTerrainVolume::create(0, 0, 0, 127, 31, 127, "C:/temp/volume.vol", 32, true, 8);
+	mVolume = GameplayTerrainVolume::create("C:/Code/cubiquity/Examples/SliceData/SmoothVoxeliensTerrain/", "C:/temp/volume.vol", 32);
+	//mVolume = GameplayTerrainVolume::create(0, 0, 0, 127, 31, 127, "C:/temp/volume.vol", 32, true, 8);
 	mVolumeEditor = new GameplayTerrainVolumeEditor(mVolume);
 #endif
 #ifdef TERRAIN_CUBIC
