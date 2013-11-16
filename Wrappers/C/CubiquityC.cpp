@@ -364,30 +364,6 @@ CUBIQUITYC_API int32_t cuGetEnclosingRegion(uint32_t volumeHandle, int32_t* lowe
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuGetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, uint8_t* red, uint8_t* green, uint8_t* blue, uint8_t* alpha)
-{
-	OPEN_C_INTERFACE
-
-	ColoredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
-	Color& color = volume->getVoxelAt(x, y, z);
-	*red = color.getRed();
-	*green = color.getGreen();
-	*blue = color.getBlue();
-	*alpha = color.getAlpha();
-
-	CLOSE_C_INTERFACE
-}
-
-CUBIQUITYC_API int32_t cuSetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
-{
-	OPEN_C_INTERFACE
-
-	ColoredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
-	volume->setVoxelAt(x, y, z, Color(red, green, blue, alpha), UpdatePriorities::Immediate);
-	
-	CLOSE_C_INTERFACE
-}
-
 CUBIQUITYC_API int32_t cuGetVoxelNew(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuColor* color)
 {
 	OPEN_C_INTERFACE
@@ -507,29 +483,6 @@ CUBIQUITYC_API int32_t cuGetEnclosingRegionMC(uint32_t volumeHandle, int32_t* lo
 	*upperY = region.getUpperCorner().getY();
 	*upperZ = region.getUpperCorner().getZ();
 
-	CLOSE_C_INTERFACE
-}
-
-CUBIQUITYC_API int32_t cuGetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, uint32_t index, uint8_t* value)
-{
-	OPEN_C_INTERFACE
-
-	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
-	MaterialSet& material = volume->getVoxelAt(x, y, z);
-	*value = material.getMaterial(index);
-
-	CLOSE_C_INTERFACE
-}
-
-CUBIQUITYC_API int32_t cuSetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, uint32_t index, uint8_t value)
-{
-	OPEN_C_INTERFACE
-
-	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
-	MaterialSet& material = volume->getVoxelAt(x, y, z);
-	material.setMaterial(index, value);
-	volume->setVoxelAt(x, y, z, material, UpdatePriorities::Immediate);
-	
 	CLOSE_C_INTERFACE
 }
 
