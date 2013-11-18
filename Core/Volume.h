@@ -11,11 +11,7 @@
 #include "PolyVoxCore/Material.h"
 #include "PolyVoxCore/RawVolume.h"
 
-#ifdef USE_LARGE_VOLUME
 #include "PolyVoxCore/LargeVolume.h"
-#else
-#include "PolyVoxCore/SimpleVolume.h"
-#endif
 
 
 #include "PolyVoxCore/CubicSurfaceExtractor.h"
@@ -42,7 +38,7 @@ namespace Cubiquity
 		VoxelType getVoxelAt(int32_t x, int32_t y, int32_t z) const;
 
 		// This one's a bit of a hack... direct access to underlying PolyVox volume
-		::PolyVox::POLYVOX_VOLUME<VoxelType>* _getPolyVoxVolume(void) const { return mPolyVoxVolume; }
+		::PolyVox::LargeVolume<VoxelType>* _getPolyVoxVolume(void) const { return mPolyVoxVolume; }
 
 		// Octree access
 		Octree<VoxelType>* getOctree(void) { return mOctree; };
@@ -72,12 +68,10 @@ namespace Cubiquity
 	private:
 		Volume& operator=(const Volume&);
 
-		::PolyVox::POLYVOX_VOLUME<VoxelType>* mPolyVoxVolume;
+		::PolyVox::LargeVolume<VoxelType>* mPolyVoxVolume;
 
-#ifdef USE_LARGE_VOLUME
 		::PolyVox::MinizBlockCompressor<VoxelType>* m_pCompressor;
 		SQLitePager<VoxelType>* m_pSQLitePager;
-#endif
 
 		Octree<VoxelType>* mOctree;
 
