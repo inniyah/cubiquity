@@ -25,10 +25,8 @@ namespace Cubiquity
 	template <typename VoxelType>
 	Volume<VoxelType>::Volume(const Region& region, const std::string& filename, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize)
 		:mPolyVoxVolume(0)
-#ifdef USE_LARGE_VOLUME
 		,m_pCompressor(0)
 		,m_pSQLitePager(0)
-#endif
 		,mOctree(0)
 	{
 		logTrace() << "Entering Volume(" << region << ",...)";
@@ -42,7 +40,6 @@ namespace Cubiquity
 
 		POLYVOX_THROW_IF(filename.size() == 0, std::invalid_argument, "A valid filename must be provided");
 	
-#ifdef USE_LARGE_VOLUME
 		m_pCompressor = new ::PolyVox::MinizBlockCompressor<VoxelType>;
 
 		m_pSQLitePager = new SQLitePager<VoxelType>(filename);
@@ -50,27 +47,15 @@ namespace Cubiquity
 		//FIXME - This should not be decided based on the Octree type but instead be in different volume constructors
 		if(octreeConstructionMode == OctreeConstructionModes::BoundCells) // Smooth terrain
 		{
-			mPolyVoxVolume = new ::PolyVox::POLYVOX_VOLUME<VoxelType>(region, m_pCompressor, m_pSQLitePager, 32);
+			mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pCompressor, m_pSQLitePager, 32);
 		}
 		else // Cubic terrain
 		{
-			mPolyVoxVolume = new ::PolyVox::POLYVOX_VOLUME<VoxelType>(region, m_pCompressor, m_pSQLitePager, 64);
+			mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pCompressor, m_pSQLitePager, 64);
 		}
 
 		mPolyVoxVolume->setMaxNumberOfBlocksInMemory(256);
 		mPolyVoxVolume->setMaxNumberOfUncompressedBlocks(64);
-
-#else
-		//FIXME - This should not be decided based on the Octree type but instead be in different volume constructors
-		if(octreeConstructionMode == OctreeConstructionModes::BoundCells) // Smooth terrain
-		{
-			mPolyVoxVolume = new ::PolyVox::POLYVOX_VOLUME<VoxelType>(region, 32);
-		}
-		else // Cubic terrain
-		{
-			mPolyVoxVolume = new ::PolyVox::POLYVOX_VOLUME<VoxelType>(region, 64);
-		}
-#endif
 
 		mOctree = new Octree<VoxelType>(this, octreeConstructionMode, baseNodeSize);
 
@@ -86,9 +71,7 @@ namespace Cubiquity
 
 		// NOTE: We should really delete the volume here, but the background task processor might still be using it.
 		// We need a way to shut that down, or maybe smart pointers can help here. Just flush until we have a better fix.
-#ifdef USE_LARGE_VOLUME
 		mPolyVoxVolume->flushAll();
-#endif
 
 		//delete mPolyVoxVolume;
 		//delete m_pCompressor;

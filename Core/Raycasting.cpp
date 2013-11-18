@@ -59,12 +59,12 @@ namespace Cubiquity
 		{
 		}
 
-		bool operator()(const ::PolyVox::POLYVOX_VOLUME<Color>::Sampler& sampler);
+		bool operator()(const ::PolyVox::LargeVolume<Color>::Sampler& sampler);
 
 		Vector3I mLastPos;
 	};
 
-	bool ColoredCubesRaycastTestFunctor::operator()(const ::PolyVox::POLYVOX_VOLUME<Color>::Sampler& sampler)
+	bool ColoredCubesRaycastTestFunctor::operator()(const ::PolyVox::LargeVolume<Color>::Sampler& sampler)
 	{
 		mLastPos = sampler.getPosition();
 

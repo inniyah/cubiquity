@@ -53,7 +53,7 @@ namespace Cubiquity
 		virtual void update(const Vector3F& viewPosition, float lodThreshold) {mCubiquityVolume.update(viewPosition, lodThreshold);}
 
 		// This one's a bit of a hack... direct access to underlying PolyVox volume
-		virtual ::PolyVox::POLYVOX_VOLUME<Color>* _getPolyVoxVolume(void) {return mCubiquityVolume._getPolyVoxVolume(); }
+		virtual ::PolyVox::LargeVolume<Color>* _getPolyVoxVolume(void) {return mCubiquityVolume._getPolyVoxVolume(); }
 
 	private:
 		Volume<Color> mCubiquityVolume;
