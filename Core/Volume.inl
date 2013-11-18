@@ -57,8 +57,8 @@ namespace Cubiquity
 			mPolyVoxVolume = new ::PolyVox::POLYVOX_VOLUME<VoxelType>(region, m_pCompressor, m_pSQLitePager, 64);
 		}
 
-		mPolyVoxVolume->setMaxNumberOfBlocksInMemory(8);
-		mPolyVoxVolume->setMaxNumberOfUncompressedBlocks(4);
+		mPolyVoxVolume->setMaxNumberOfBlocksInMemory(256);
+		mPolyVoxVolume->setMaxNumberOfUncompressedBlocks(64);
 
 #else
 		//FIXME - This should not be decided based on the Octree type but instead be in different volume constructors

@@ -16,13 +16,6 @@ namespace Cubiquity
 		ColoredCubesVolumeImpl(const Region& region, const std::string& filename, unsigned int baseNodeSize)
 			:mCubiquityVolume(region, filename, OctreeConstructionModes::BoundVoxels, baseNodeSize)
 		{
-			// Throw an exception if the requested volume dimensions exceed those allowed by the license. Actually the
-			// volume has already been constructed at this point, so we're just destroying it again. Might be nice if
-			// we could prvent it being constructed in the first place but it's not obvious where such logic would go.
-			int32_t maxVolumeSize = 256;
-			POLYVOX_THROW_IF(region.getWidthInVoxels() > maxVolumeSize, std::invalid_argument, "Volume width exceeds maximum permitted size");
-			POLYVOX_THROW_IF(region.getHeightInVoxels() > maxVolumeSize, std::invalid_argument, "Volume width exceeds maximum permitted size");
-			POLYVOX_THROW_IF(region.getDepthInVoxels() > maxVolumeSize, std::invalid_argument, "Volume width exceeds maximum permitted size");
 		}
 
 		virtual ~ColoredCubesVolumeImpl() {}
