@@ -13,48 +13,13 @@ namespace Cubiquity
 
 	/// Constructor
 	template <typename VoxelType>
-	SQLitePager<VoxelType>::SQLitePager(const std::string& dbName)
+	SQLitePager<VoxelType>::SQLitePager(sqlite3* mDatabase)
 		:Pager<VoxelType>()
 	{
-		logInfo() << "Creating SQLitePager from '" << dbName << "'";
-
 		int rc = 0; // SQLite return code
 		char* pErrorMsg = 0; // SQLite error message
-		
-		// Open the database if it already exists.
-		rc = sqlite3_open_v2(dbName.c_str(), &mDatabase, SQLITE_OPEN_READWRITE, NULL);
-		if(rc != SQLITE_OK)
-		{
-			logInfo() << "Failed to open '" << dbName << "'. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
 
-			// If we failed, then try again but this time allow it to be created.
-			logInfo() << "Attempting to create '" << dbName << "'";
-			rc = sqlite3_open_v2(dbName.c_str(), &mDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
-			if(rc != SQLITE_OK)
-			{
-				// If we failed to create it as well then we give up
-				std::stringstream ss;
-				ss << "Failed to create '" << dbName << "'. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
-				throw std::runtime_error(ss.str().c_str());
-			}
-			logInfo() << "Successfully created'" << dbName << "'";
-		}
-		else
-		{
-			logInfo() << "Successfully opened'" << dbName << "'";
-		}
-
-		// Disable syncing
-		rc = sqlite3_exec(mDatabase, "PRAGMA synchronous = OFF", 0, 0, &pErrorMsg);
-		if(rc != SQLITE_OK)
-		{
-			std::stringstream ss;
-			ss << "Failed to set 'synchronous' to OFF. Message was: \"" << pErrorMsg << "\"";
-			sqlite3_free(pErrorMsg);
-			throw std::runtime_error(ss.str().c_str());
-		}
-
-		// Now create the 'Blocks' table if it doesn't exist. Not sure we need 'ASC'
+		// Create the 'Blocks' table if it doesn't exist. Not sure we need 'ASC'
 		// here, but it's in the example (http://goo.gl/NLHjQv) as is the default anyway.
 		rc = sqlite3_exec(mDatabase, "CREATE TABLE IF NOT EXISTS Blocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, &pErrorMsg);
 		if(rc != SQLITE_OK)

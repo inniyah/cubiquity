@@ -230,11 +230,11 @@ OctreeNode<MaterialSet>* getNodeFromEncodedHandleMC(uint32_t encodedNodeHandle)
 ////////////////////////////////////////////////////////////////////////////////
 // Volume functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API int32_t cuNewColoredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* filename, uint32_t baseNodeSize, uint32_t* result)
+CUBIQUITYC_API int32_t cuNewColoredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pathToVoxelDatabase, uint32_t baseNodeSize, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolumeImpl* volume = new ColoredCubesVolumeImpl(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), filename, baseNodeSize);
+	ColoredCubesVolumeImpl* volume = new ColoredCubesVolumeImpl(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pathToVoxelDatabase, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 
 	// Replace an existing entry if it has been deleted.
@@ -262,11 +262,11 @@ CUBIQUITYC_API int32_t cuNewColoredCubesVolume(int32_t lowerX, int32_t lowerY, i
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVolDat(const char* volDatToImport, const char* filename, uint32_t baseNodeSize, uint32_t* result)
+CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVolDat(const char* volDatToImport, const char* pathToVoxelDatabase, uint32_t baseNodeSize, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolumeImpl* volume = importVolDat< ColoredCubesVolumeImpl >(volDatToImport, filename, baseNodeSize);
+	ColoredCubesVolumeImpl* volume = importVolDat< ColoredCubesVolumeImpl >(volDatToImport, pathToVoxelDatabase, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 	
 	// Replace an existing entry if it has been deleted.
@@ -292,11 +292,11 @@ CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVolDat(const char* volDatToImp
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromHeightmap(const char* heightmapFileName, const char* colormapFileName, const char* filename, uint32_t baseNodeSize, uint32_t* result)
+CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromHeightmap(const char* heightmapFileName, const char* colormapFileName, const char* pathToVoxelDatabase, uint32_t baseNodeSize, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolumeImpl* volume = importHeightmap(heightmapFileName, colormapFileName, filename, baseNodeSize);
+	ColoredCubesVolumeImpl* volume = importHeightmap(heightmapFileName, colormapFileName, pathToVoxelDatabase, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 	
 	// Replace an existing entry if it has been deleted.
@@ -412,11 +412,11 @@ CUBIQUITYC_API int32_t cuDiscardOverrideBlocks(uint32_t volumeHandle)
 
 //--------------------------------------------------------------------------------
 
-CUBIQUITYC_API int32_t cuNewTerrainVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* filename, uint32_t baseNodeSize, uint32_t createFloor, uint32_t floorDepth, uint32_t* result)
+CUBIQUITYC_API int32_t cuNewTerrainVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pathToVoxelDatabase, uint32_t baseNodeSize, uint32_t createFloor, uint32_t floorDepth, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolumeImpl* volume = dynamic_cast<TerrainVolumeImpl*>(createTerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), filename, baseNodeSize, createFloor==1, floorDepth));
+	TerrainVolumeImpl* volume = dynamic_cast<TerrainVolumeImpl*>(createTerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pathToVoxelDatabase, baseNodeSize, createFloor==1, floorDepth));
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 
 	// Replace an existing entry if it has been deleted.

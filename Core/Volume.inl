@@ -23,26 +23,62 @@
 namespace Cubiquity
 {
 	template <typename VoxelType>
-	Volume<VoxelType>::Volume(const Region& region, const std::string& filename, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize)
+	Volume<VoxelType>::Volume(const Region& region, const std::string& pathToVoxelDatabase, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize)
 		:mPolyVoxVolume(0)
 		,m_pCompressor(0)
 		,m_pSQLitePager(0)
 		,mOctree(0)
+		,mVoxelDatabase(0)
 	{
 		logTrace() << "Entering Volume(" << region << ",...)";
 
-		/*POLYVOX_ASSERT(region.getWidthInVoxels() > 0, "All volume dimensions must be greater than zero");
-		POLYVOX_ASSERT(region.getHeightInVoxels() > 0, "All volume dimensions must be greater than zero");
-		POLYVOX_ASSERT(region.getDepthInVoxels() > 0, "All volume dimensions must be greater than zero");*/
 		POLYVOX_THROW_IF(region.getWidthInVoxels() == 0, std::invalid_argument, "Volume width must be greater than zero");
 		POLYVOX_THROW_IF(region.getHeightInVoxels() == 0, std::invalid_argument, "Volume height must be greater than zero");
 		POLYVOX_THROW_IF(region.getDepthInVoxels() == 0, std::invalid_argument, "Volume depth must be greater than zero");
 
-		POLYVOX_THROW_IF(filename.size() == 0, std::invalid_argument, "A valid filename must be provided");
+		POLYVOX_THROW_IF(pathToVoxelDatabase.size() == 0, std::invalid_argument, "A valid voxel database path must be provided");
+
+		logInfo() << "Creating SQLitePager from '" << pathToVoxelDatabase << "'";
+
+		int rc = 0; // SQLite return code
+		char* pErrorMsg = 0; // SQLite error message
+		
+		// Open the database if it already exists.
+		rc = sqlite3_open_v2(pathToVoxelDatabase.c_str(), &mVoxelDatabase, SQLITE_OPEN_READWRITE, NULL);
+		if(rc != SQLITE_OK)
+		{
+			logInfo() << "Failed to open '" << pathToVoxelDatabase << "'. Error message was: \"" << sqlite3_errmsg(mVoxelDatabase) << "\"";
+
+			// If we failed, then try again but this time allow it to be created.
+			logInfo() << "Attempting to create '" << pathToVoxelDatabase << "'";
+			rc = sqlite3_open_v2(pathToVoxelDatabase.c_str(), &mVoxelDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
+			if(rc != SQLITE_OK)
+			{
+				// If we failed to create it as well then we give up
+				std::stringstream ss;
+				ss << "Failed to create '" << pathToVoxelDatabase << "'. Error message was: \"" << sqlite3_errmsg(mVoxelDatabase) << "\"";
+				throw std::runtime_error(ss.str().c_str());
+			}
+			logInfo() << "Successfully created'" << pathToVoxelDatabase << "'";
+		}
+		else
+		{
+			logInfo() << "Successfully opened'" << pathToVoxelDatabase << "'";
+		}
+
+		// Disable syncing
+		rc = sqlite3_exec(mVoxelDatabase, "PRAGMA synchronous = OFF", 0, 0, &pErrorMsg);
+		if(rc != SQLITE_OK)
+		{
+			std::stringstream ss;
+			ss << "Failed to set 'synchronous' to OFF. Message was: \"" << pErrorMsg << "\"";
+			sqlite3_free(pErrorMsg);
+			throw std::runtime_error(ss.str().c_str());
+		}
 	
 		m_pCompressor = new ::PolyVox::MinizBlockCompressor<VoxelType>;
 
-		m_pSQLitePager = new SQLitePager<VoxelType>(filename);
+		m_pSQLitePager = new SQLitePager<VoxelType>(mVoxelDatabase);
 		
 		//FIXME - This should not be decided based on the Octree type but instead be in different volume constructors
 		if(octreeConstructionMode == OctreeConstructionModes::BoundCells) // Smooth terrain

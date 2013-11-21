@@ -18,7 +18,7 @@ namespace Cubiquity
 	{
 	public:
 		/// Constructor
-		SQLitePager(const std::string& dbName);
+		SQLitePager(sqlite3* mDatabase);
 
 		/// Destructor
 		virtual ~SQLitePager();

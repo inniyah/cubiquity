@@ -13,9 +13,10 @@
 
 #include "PolyVoxCore/LargeVolume.h"
 
-
 #include "PolyVoxCore/CubicSurfaceExtractor.h"
 #include "PolyVoxCore/MarchingCubesSurfaceExtractor.h"
+
+#include "SQLite/sqlite3.h"
 
 namespace Cubiquity
 {
@@ -25,7 +26,7 @@ namespace Cubiquity
 	public:
 		typedef _VoxelType VoxelType;
 
-		Volume(const Region& region, const std::string& filename, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize);
+		Volume(const Region& region, const std::string& pathToVoxelDatabase, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize);
 		~Volume();
 
 		// These functions just forward to the underlying PolyVox volume.
@@ -74,6 +75,8 @@ namespace Cubiquity
 		SQLitePager<VoxelType>* m_pSQLitePager;
 
 		Octree<VoxelType>* mOctree;
+
+		sqlite3* mVoxelDatabase;
 
 		// Friend functions
 		friend class Octree<VoxelType>;

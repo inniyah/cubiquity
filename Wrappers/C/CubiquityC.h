@@ -27,9 +27,9 @@ extern "C"
 	typedef struct CuMaterialSet_s CuMaterialSet;
 
 	// Volume functions
-	CUBIQUITYC_API int32_t cuNewColoredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* filename, uint32_t baseNodeSize, uint32_t* result);
-	CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVolDat(const char* volDatToImport, const char* filename, uint32_t baseNodeSize, uint32_t* result);
-	CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromHeightmap(const char* heightmapFileName, const char* colormapFileName, const char* filename, uint32_t baseNodeSize, uint32_t* result);
+	CUBIQUITYC_API int32_t cuNewColoredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pathToVoxelDatabase, uint32_t baseNodeSize, uint32_t* result);
+	CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVolDat(const char* volDatToImport, const char* pathToVoxelDatabase, uint32_t baseNodeSize, uint32_t* result);
+	CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromHeightmap(const char* heightmapFileName, const char* colormapFileName, const char* pathToVoxelDatabase, uint32_t baseNodeSize, uint32_t* result);
 	CUBIQUITYC_API int32_t cuUpdateVolume(uint32_t volumeHandle);
 	CUBIQUITYC_API int32_t cuDeleteColoredCubesVolume(uint32_t volumeHandle);
 
@@ -40,7 +40,7 @@ extern "C"
 	CUBIQUITYC_API int32_t cuAcceptOverrideBlocks(uint32_t volumeHandle);
 	CUBIQUITYC_API int32_t cuDiscardOverrideBlocks(uint32_t volumeHandle);
 
-	CUBIQUITYC_API int32_t cuNewTerrainVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* filename, uint32_t baseNodeSize, uint32_t createFloor, uint32_t floorDepth, uint32_t* result);
+	CUBIQUITYC_API int32_t cuNewTerrainVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pathToVoxelDatabase, uint32_t baseNodeSize, uint32_t createFloor, uint32_t floorDepth, uint32_t* result);
 	CUBIQUITYC_API int32_t cuUpdateVolumeMC(uint32_t volumeHandle);
 	CUBIQUITYC_API int32_t cuDeleteTerrainVolume(uint32_t volumeHandle);
 
