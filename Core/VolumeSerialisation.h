@@ -48,17 +48,17 @@ namespace Cubiquity
 	void voxelToPixel(Color& voxelData, uint8_t* pixelData, uint32_t componentCount);
 	void voxelToPixel(MaterialSet& voxelData, uint8_t* pixelData, uint32_t componentCount);
 
-	ColoredCubesVolumeImpl* importVxl(const std::string& vxlFfilename, const std::string& volumeFilename);
+	ColoredCubesVolumeImpl* importVxl(const std::string& vxlFfilename, const std::string& pathToVoxelDatabase);
 
-	ColoredCubesVolumeImpl* importHeightmap(const std::string& heightmapFileName, const std::string& colormapFileName, const std::string& volumeFilename, uint32_t baseNodeSize);
+	ColoredCubesVolumeImpl* importHeightmap(const std::string& heightmapFileName, const std::string& colormapFileName, const std::string& pathToVoxelDatabase, uint32_t baseNodeSize);
 
 	// --------------------------------------------------
 	// Imports data in the VolDat format.
 	// --------------------------------------------------
 	template <typename CubiquityVolumeType>
-	CubiquityVolumeType* importVolDat(std::string folder, const std::string& volumeFilename, uint32_t baseNodeSize)
+	CubiquityVolumeType* importVolDat(std::string folder, const std::string& pathToVoxelDatabase, uint32_t baseNodeSize)
 	{
-		logInfo() << "Importing images from '" << folder << "' and into '" << volumeFilename << "'";
+		logInfo() << "Importing images from '" << folder << "' and into '" << pathToVoxelDatabase << "'";
 		if((folder.back() != '/') && (folder.back() != '\\'))
 		{
 			//logWarning() << "Folder name " << folder << " is missing a trailing '/' or '\\'. Please to provide this to avoid confusion!";

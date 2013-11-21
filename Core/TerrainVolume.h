@@ -12,8 +12,8 @@ namespace Cubiquity
 	public:
 		typedef MaterialSet VoxelType;
 
-		TerrainVolumeImpl(const Region& region, const std::string& filename, unsigned int baseNodeSize)
-			:mCubiquityVolume(region, filename, OctreeConstructionModes::BoundCells, baseNodeSize)
+		TerrainVolumeImpl(const Region& region, const std::string& pathToVoxelDatabase, unsigned int baseNodeSize)
+			:mCubiquityVolume(region, pathToVoxelDatabase, OctreeConstructionModes::BoundCells, baseNodeSize)
 		{
 		}
 
@@ -58,7 +58,7 @@ namespace Cubiquity
 		Volume<MaterialSet> mCubiquityVolume;
 	};
 
-	TerrainVolume* createTerrainVolume(const Region& region, const std::string& filename, unsigned int baseNodeSize, bool createFloor = true, uint32_t floorDepth = 8);
+	TerrainVolume* createTerrainVolume(const Region& region, const std::string& pathToVoxelDatabase, unsigned int baseNodeSize, bool createFloor = true, uint32_t floorDepth = 8);
 }
 
 #endif //TERRAINVOLUME_H_
