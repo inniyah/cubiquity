@@ -119,11 +119,11 @@ namespace Cubiquity
 		{
 		}
 
-		GameplayVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize)
+		GameplayVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pathToVoxelDatabase, unsigned int baseNodeSize)
 			:mRootGameplayOctreeNode(0)
 			,mCubiquityVolume(0)
 		{
-			mCubiquityVolume = new CubiquityVolumeType(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pageFolder, baseNodeSize);
+			mCubiquityVolume = new CubiquityVolumeType(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pathToVoxelDatabase, baseNodeSize);
 		}
 
 		~GameplayVolume()

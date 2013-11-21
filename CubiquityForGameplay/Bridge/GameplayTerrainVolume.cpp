@@ -12,9 +12,9 @@ using namespace PolyVox;
 namespace Cubiquity
 {
 
-	GameplayTerrainVolume::GameplayTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize, bool createFloor, unsigned int floorDepth)
+	GameplayTerrainVolume::GameplayTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pathToVoxelDatabase, unsigned int baseNodeSize, bool createFloor, unsigned int floorDepth)
 	{
-		mCubiquityVolume = createTerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pageFolder, baseNodeSize, createFloor, floorDepth);
+		mCubiquityVolume = createTerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pathToVoxelDatabase, baseNodeSize, createFloor, floorDepth);
 
 		if(createFloor)
 		{
@@ -24,7 +24,7 @@ namespace Cubiquity
 		mRootGameplayOctreeNode = new GameplayOctreeNode< MaterialSet >(mCubiquityVolume->getRootOctreeNode(), 0);
 	}
 
-	GameplayTerrainVolume::GameplayTerrainVolume(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize)
+	GameplayTerrainVolume::GameplayTerrainVolume(const char* dataToLoad, const char* pathToVoxelDatabase, unsigned int baseNodeSize)
 	{
 		// Check whether the provided data is a file or a directory
 		FILE* file = fopen(dataToLoad, "rb");
@@ -38,7 +38,7 @@ namespace Cubiquity
 		{
 			// For now we assume it's VolDat. Leter on we should check for
 			// Volume.idx and load raw Cubiquity data instead if necessary.
-			mCubiquityVolume = importVolDat<TerrainVolumeImpl>(dataToLoad, pageFolder, baseNodeSize);
+			mCubiquityVolume = importVolDat<TerrainVolumeImpl>(dataToLoad, pathToVoxelDatabase, baseNodeSize);
 		}
 
 		mRootGameplayOctreeNode = new GameplayOctreeNode< MaterialSet >(mCubiquityVolume->getRootOctreeNode(), 0);

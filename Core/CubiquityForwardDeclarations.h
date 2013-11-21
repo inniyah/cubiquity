@@ -29,9 +29,6 @@ namespace Cubiquity
 	template <typename VoxelType>
 	class OctreeNode;
 
-	template <typename VoxelType>
-	class OverrideFilePager;
-
 	class SmoothSurfaceExtractionTask;
 
 	class TerrainVolume;

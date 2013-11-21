@@ -122,7 +122,7 @@ namespace Cubiquity
 		//Create the volume
 		// When importing we treat 'y' as up because the Gameplay physics engine makes some
 		// assumptions about this. This means we need to swap the 'y' and 'slice' indices.
-		CubiquityVolumeType* volume = new CubiquityVolumeType(Region(0, 0, 0, volumeWidth - 1, sliceCount - 1, volumeHeight - 1), volumeFilename, baseNodeSize);
+		CubiquityVolumeType* volume = new CubiquityVolumeType(Region(0, 0, 0, volumeWidth - 1, sliceCount - 1, volumeHeight - 1), pathToVoxelDatabase, baseNodeSize);
 
 		// Now iterate over each slice and import the data.
 		for(int slice = 0; slice < sliceCount; slice++)

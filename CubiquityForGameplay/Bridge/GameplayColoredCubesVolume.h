@@ -23,9 +23,9 @@ namespace Cubiquity
 		 *
 		 * @script{create}
 		 */
-		static GameplayColoredCubesVolume* create(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize)
+		static GameplayColoredCubesVolume* create(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pathToVoxelDatabase, unsigned int baseNodeSize)
 		{
-			GameplayColoredCubesVolume* volume = new GameplayColoredCubesVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, pageFolder, baseNodeSize);
+			GameplayColoredCubesVolume* volume = new GameplayColoredCubesVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, pathToVoxelDatabase, baseNodeSize);
 			return volume;
 		}
 
@@ -34,9 +34,9 @@ namespace Cubiquity
 		 *
 		 * @script{create}
 		 */
-		static GameplayColoredCubesVolume* create(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize)
+		static GameplayColoredCubesVolume* create(const char* dataToLoad, const char* pathToVoxelDatabase, unsigned int baseNodeSize)
 		{
-			GameplayColoredCubesVolume* volume = new GameplayColoredCubesVolume(dataToLoad, pageFolder, baseNodeSize);
+			GameplayColoredCubesVolume* volume = new GameplayColoredCubesVolume(dataToLoad, pathToVoxelDatabase, baseNodeSize);
 			return volume;
 		}
 
@@ -45,9 +45,9 @@ namespace Cubiquity
 		 *
 		 * @script{create}
 		 */
-		static GameplayColoredCubesVolume* create(const char* heightmapFileName, const char* colormapFileName, const char* pageFolder, unsigned int baseNodeSize)
+		static GameplayColoredCubesVolume* create(const char* heightmapFileName, const char* colormapFileName, const char* pathToVoxelDatabase, unsigned int baseNodeSize)
 		{
-			GameplayColoredCubesVolume* volume = new GameplayColoredCubesVolume(heightmapFileName, colormapFileName, pageFolder, baseNodeSize);
+			GameplayColoredCubesVolume* volume = new GameplayColoredCubesVolume(heightmapFileName, colormapFileName, pathToVoxelDatabase, baseNodeSize);
 			return volume;
 		}
 
@@ -98,17 +98,17 @@ namespace Cubiquity
 		 * Text here...
 		 * @script{ignore}
 		 */
-		GameplayColoredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize);
+		GameplayColoredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pathToVoxelDatabase, unsigned int baseNodeSize);
 		/**
 		 * Text here...
 		 * @script{ignore}
 		 */
-		GameplayColoredCubesVolume(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize);
+		GameplayColoredCubesVolume(const char* dataToLoad, const char* pathToVoxelDatabase, unsigned int baseNodeSize);
 		/**
 		 * Text here...
 		 * @script{ignore}
 		 */
-		GameplayColoredCubesVolume(const char* heightmapFileName, const char* colormapFileName, const char* pageFolder, unsigned int baseNodeSize);
+		GameplayColoredCubesVolume(const char* heightmapFileName, const char* colormapFileName, const char* pathToVoxelDatabase, unsigned int baseNodeSize);
 		virtual ~GameplayColoredCubesVolume();
 
 	private:

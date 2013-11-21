@@ -21,9 +21,9 @@ namespace Cubiquity
 		 *
 		 * @script{create}
 		 */
-		static GameplayTerrainVolume* create(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize, bool createFloor, unsigned int floorDepth)
+		static GameplayTerrainVolume* create(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pathToVoxelDatabase, unsigned int baseNodeSize, bool createFloor, unsigned int floorDepth)
 		{
-			GameplayTerrainVolume* volume = new GameplayTerrainVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, pageFolder, baseNodeSize, createFloor, floorDepth);
+			GameplayTerrainVolume* volume = new GameplayTerrainVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, pathToVoxelDatabase, baseNodeSize, createFloor, floorDepth);
 			return volume;
 		}
 
@@ -32,9 +32,9 @@ namespace Cubiquity
 		 *
 		 * @script{create}
 		 */
-		static GameplayTerrainVolume* create(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize)
+		static GameplayTerrainVolume* create(const char* dataToLoad, const char* pathToVoxelDatabase, unsigned int baseNodeSize)
 		{
-			GameplayTerrainVolume* volume = new GameplayTerrainVolume(dataToLoad, pageFolder, baseNodeSize);
+			GameplayTerrainVolume* volume = new GameplayTerrainVolume(dataToLoad, pathToVoxelDatabase, baseNodeSize);
 			return volume;
 		}
 
@@ -77,8 +77,8 @@ namespace Cubiquity
 		void syncNode(OctreeNode< MaterialSet >* octreeNode, GameplayOctreeNode< MaterialSet >* gameplayOctreeNode);
 
 	protected:
-		GameplayTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pageFolder, unsigned int baseNodeSize, bool createFloor, unsigned int floorDepth);
-		GameplayTerrainVolume(const char* dataToLoad, const char* pageFolder, unsigned int baseNodeSize);
+		GameplayTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pathToVoxelDatabase, unsigned int baseNodeSize, bool createFloor, unsigned int floorDepth);
+		GameplayTerrainVolume(const char* dataToLoad, const char* pathToVoxelDatabase, unsigned int baseNodeSize);
 		virtual ~GameplayTerrainVolume();
 
 	private:

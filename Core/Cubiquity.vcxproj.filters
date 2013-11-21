@@ -198,12 +198,6 @@
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Pager.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
-    <ClInclude Include="OverrideFilePager.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="FileSystem.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="Cubiquity.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -350,9 +344,6 @@
     <None Include="Volume.inl">
       <Filter>Core</Filter>
     </None>
-    <None Include="OverrideFilePager.inl">
-      <Filter>Core</Filter>
-    </None>
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\CompressedBlock.inl">
       <Filter>PolyVox</Filter>
     </None>
@@ -419,9 +410,6 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Logging.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="FileSystem.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\Timer.cpp">

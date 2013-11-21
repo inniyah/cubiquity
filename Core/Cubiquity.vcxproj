@@ -71,14 +71,12 @@
     <ClInclude Include="ConcurrentQueue.h" />
     <ClInclude Include="Cubiquity.h" />
     <ClInclude Include="CubiquityForwardDeclarations.h" />
-    <ClInclude Include="FileSystem.h" />
     <ClInclude Include="Impl\VolumePrivateAccessor.h" />
     <ClInclude Include="Logging.h" />
     <ClInclude Include="MainThreadTaskProcessor.h" />
     <ClInclude Include="MaterialSet.h" />
     <ClInclude Include="Octree.h" />
     <ClInclude Include="OctreeNode.h" />
-    <ClInclude Include="OverrideFilePager.h" />
     <ClInclude Include="Raycasting.h" />
     <ClInclude Include="Region.h" />
     <ClInclude Include="SmoothSurfaceExtractionTask.h" />
@@ -128,7 +126,6 @@
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.inl" />
     <None Include="Octree.inl" />
     <None Include="OctreeNode.inl" />
-    <None Include="OverrideFilePager.inl" />
     <None Include="SQLitePager.inl" />
     <None Include="Volume.inl" />
   </ItemGroup>
@@ -150,7 +147,6 @@
     <ClCompile Include="Color.cpp" />
     <ClCompile Include="ColoredCubesVolume.cpp" />
     <ClCompile Include="ColoredCubicSurfaceExtractionTask.cpp" />
-    <ClCompile Include="FileSystem.cpp" />
     <ClCompile Include="Logging.cpp" />
     <ClCompile Include="MainThreadTaskProcessor.cpp" />
     <ClCompile Include="MaterialSet.cpp" />
