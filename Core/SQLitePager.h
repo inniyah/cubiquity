@@ -18,7 +18,7 @@ namespace Cubiquity
 	{
 	public:
 		/// Constructor
-		SQLitePager(sqlite3* mDatabase);
+		SQLitePager(sqlite3* voxelDatabase);
 
 		/// Destructor
 		virtual ~SQLitePager();
@@ -31,7 +31,7 @@ namespace Cubiquity
 
 	private:
 
-		sqlite3* mDatabase;
+		sqlite3* mVoxelDatabase;
 
 		sqlite3_stmt* mSelectBlockStatement;
 		sqlite3_stmt* mSelectOverrideBlockStatement;

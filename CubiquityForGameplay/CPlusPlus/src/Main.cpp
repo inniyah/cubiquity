@@ -210,7 +210,7 @@ void MeshGame::initialize()
 	//mVolume = GameplayTerrainVolume::create(0, 0, 0, 127, 31, 127, 32, 16);
 	//mVolume = GameplayVolumeSerialisation::gameplayImportSmoothSlices("../../SliceData/SmoothVoxeliensTerrain/");
 	
-	mVolume = GameplayTerrainVolume::create("C:/Code/cubiquity/Examples/SliceData/SmoothVoxeliensTerrain/", "C:/temp/volume.vol", 32);
+	mVolume = GameplayTerrainVolume::create("C:/Code/cubiquity/Examples/SliceData/SmoothVoxeliensTerrain/", "C:/temp/volume.vdb", 32);
 	//mVolume = GameplayTerrainVolume::create(0, 0, 0, 127, 31, 127, "C:/temp/volume.vol", 32, true, 8);
 	mVolumeEditor = new GameplayTerrainVolumeEditor(mVolume);
 #endif

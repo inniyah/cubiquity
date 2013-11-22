@@ -114,6 +114,17 @@ namespace Cubiquity
 		m_pSQLitePager->acceptOverrideBlocks();
 		delete m_pSQLitePager;
 
+		logInfo() << "Closing database connection...";
+		int rc = sqlite3_close(mVoxelDatabase);
+		if(rc == SQLITE_OK)
+		{
+			logInfo() << "Connection closed successfully";
+		}
+		else
+		{
+			logInfo() << "Error closing connection. Error message was: \"" << sqlite3_errstr(rc) << "\"";
+		}
+
 		logTrace() << "Exiting ~Volume()";
 	}
 
