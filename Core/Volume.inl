@@ -86,7 +86,7 @@ namespace Cubiquity
 		}
 		else // Cubic terrain
 		{
-			mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pCompressor, m_pSQLitePager, 64);
+			mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pCompressor, m_pSQLitePager, 32);
 		}
 
 		mPolyVoxVolume->setMaxNumberOfBlocksInMemory(256);
