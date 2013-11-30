@@ -40,7 +40,7 @@ extern "C"
 	CUBIQUITYC_API int32_t cuAcceptOverrideBlocks(uint32_t volumeHandle);
 	CUBIQUITYC_API int32_t cuDiscardOverrideBlocks(uint32_t volumeHandle);
 
-	CUBIQUITYC_API int32_t cuNewTerrainVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pathToVoxelDatabase, uint32_t baseNodeSize, uint32_t createFloor, uint32_t floorDepth, uint32_t* result);
+	CUBIQUITYC_API int32_t cuNewTerrainVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pathToVoxelDatabase, uint32_t baseNodeSize, uint32_t* result);
 	CUBIQUITYC_API int32_t cuUpdateVolumeMC(uint32_t volumeHandle);
 	CUBIQUITYC_API int32_t cuDeleteTerrainVolume(uint32_t volumeHandle);
 
