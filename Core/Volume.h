@@ -71,7 +71,7 @@ namespace Cubiquity
 
 		::PolyVox::LargeVolume<VoxelType>* mPolyVoxVolume;
 
-		::PolyVox::MinizBlockCompressor<VoxelType>* m_pCompressor;
+		//::PolyVox::MinizBlockCompressor<VoxelType>* m_pCompressor;
 		SQLitePager<VoxelType>* m_pSQLitePager;
 
 		Octree<VoxelType>* mOctree;

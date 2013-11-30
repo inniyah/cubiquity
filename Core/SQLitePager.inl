@@ -16,6 +16,7 @@ namespace Cubiquity
 	SQLitePager<VoxelType>::SQLitePager(sqlite3* voxelDatabase)
 		:Pager<VoxelType>()
 		,mVoxelDatabase(voxelDatabase)
+		,m_pCompressor(0)
 	{
 		int rc = 0; // SQLite return code
 		char* pErrorMsg = 0; // SQLite error message
@@ -75,6 +76,9 @@ namespace Cubiquity
 			ss << "Failed to prepare 'SELECT Data FROM OverrideBlocks...' statement. Error message was: \"" << sqlite3_errmsg(mVoxelDatabase) << "\"";
 			throw std::runtime_error(ss.str().c_str());
 		}
+
+		//Create the compressor
+		m_pCompressor = new ::PolyVox::MinizBlockCompressor<VoxelType>;
 	}
 
 	/// Destructor
@@ -85,6 +89,18 @@ namespace Cubiquity
 		finalizeStatementWithLogging(mSelectOverrideBlockStatement);
 		finalizeStatementWithLogging(mInsertOrReplaceBlockStatement);
 		finalizeStatementWithLogging(mInsertOrReplaceOverrideBlockStatement);
+
+		delete m_pCompressor;
+	}
+
+	template <typename VoxelType>
+	void SQLitePager<VoxelType>::compress(PolyVox::UncompressedBlock<VoxelType>* pSrcBlock, PolyVox::CompressedBlock<VoxelType>* pDstBlock)
+	{
+	}
+
+	template <typename VoxelType>
+	void SQLitePager<VoxelType>::decompress(PolyVox::CompressedBlock<VoxelType>* pSrcBlock, PolyVox::UncompressedBlock<VoxelType>* pDstBlock)
+	{
 	}
 
 	template <typename VoxelType>

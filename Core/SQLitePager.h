@@ -3,6 +3,7 @@
 
 #include "PolyVoxCore/Impl/TypeDef.h"
 
+#include "PolyVoxCore/MinizBlockCompressor.h"
 #include "PolyVoxCore/Pager.h"
 #include "PolyVoxCore/Region.h"
 
@@ -14,7 +15,7 @@ namespace Cubiquity
 	 * Provides an interface for performing paging of data.
 	 */
 	template <typename VoxelType>
-	class SQLitePager : public PolyVox::Pager<VoxelType>
+	class SQLitePager : public PolyVox::BlockCompressor<VoxelType>, public PolyVox::Pager<VoxelType>
 	{
 	public:
 		/// Constructor
@@ -22,6 +23,9 @@ namespace Cubiquity
 
 		/// Destructor
 		virtual ~SQLitePager();
+
+		virtual void compress(PolyVox::UncompressedBlock<VoxelType>* pSrcBlock, PolyVox::CompressedBlock<VoxelType>* pDstBlock);
+		virtual void decompress(PolyVox::CompressedBlock<VoxelType>* pSrcBlock, PolyVox::UncompressedBlock<VoxelType>* pDstBlock);
 
 		virtual void pageIn(const PolyVox::Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData);
 		virtual void pageOut(const PolyVox::Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData);
@@ -38,6 +42,8 @@ namespace Cubiquity
 		
 		sqlite3_stmt* mInsertOrReplaceBlockStatement;
 		sqlite3_stmt* mInsertOrReplaceOverrideBlockStatement;
+
+		::PolyVox::MinizBlockCompressor<VoxelType>* m_pCompressor;
 	};
 
 	// Utility function to perform bit rotation.

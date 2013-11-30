@@ -24,7 +24,6 @@ namespace Cubiquity
 	template <typename VoxelType>
 	Volume<VoxelType>::Volume(const Region& region, const std::string& pathToVoxelDatabase, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize)
 		:mPolyVoxVolume(0)
-		,m_pCompressor(0)
 		,m_pSQLitePager(0)
 		,mOctree(0)
 		,mVoxelDatabase(0)
@@ -75,18 +74,18 @@ namespace Cubiquity
 			throw std::runtime_error(ss.str().c_str());
 		}
 	
-		m_pCompressor = new ::PolyVox::MinizBlockCompressor<VoxelType>;
+		//m_pCompressor = new ::PolyVox::MinizBlockCompressor<VoxelType>;
 
 		m_pSQLitePager = new SQLitePager<VoxelType>(mVoxelDatabase);
 		
 		//FIXME - This should not be decided based on the Octree type but instead be in different volume constructors
 		if(octreeConstructionMode == OctreeConstructionModes::BoundCells) // Smooth terrain
 		{
-			mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pCompressor, m_pSQLitePager, 32);
+			mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pSQLitePager, m_pSQLitePager, 32);
 		}
 		else // Cubic terrain
 		{
-			mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pCompressor, m_pSQLitePager, 32);
+			mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pSQLitePager, m_pSQLitePager, 32);
 		}
 
 		mPolyVoxVolume->setMaxNumberOfBlocksInMemory(256);
