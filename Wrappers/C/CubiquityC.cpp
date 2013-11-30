@@ -66,7 +66,7 @@ const int MaxNodeHandle = (0x01 << NodeHandleBits) - 1;
 // The single global instance of the above class.
 EntryAndExitPoints gEntryAndExitPoints;
 
-std::vector<ColoredCubesVolumeImpl*> gColoredCubesVolumes;
+std::vector<ColoredCubesVolume*> gColoredCubesVolumes;
 std::vector<TerrainVolumeImpl*> gTerrainVolumes;
 
 void validateVolumeHandle(uint32_t volumeHandle)
@@ -117,7 +117,7 @@ void validateVolumeHandleMC(uint32_t volumeHandle)
 	}
 }
 
-ColoredCubesVolumeImpl* getVolumeFromHandle(uint32_t volumeHandle)
+ColoredCubesVolume* getVolumeFromHandle(uint32_t volumeHandle)
 {
 	validateVolumeHandle(volumeHandle);
 	return gColoredCubesVolumes[volumeHandle];
@@ -139,7 +139,7 @@ void validateDecodedNodeHandle(uint32_t volumeHandle, uint32_t decodedNodeHandle
 	}
 
 	// Get the volume (also validates the volume handle)
-	ColoredCubesVolumeImpl* volume = getVolumeFromHandle(volumeHandle);
+	ColoredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
 
 	// Check the node really exists in the volume
 	OctreeNode<Color>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
@@ -234,7 +234,7 @@ CUBIQUITYC_API int32_t cuNewColoredCubesVolume(int32_t lowerX, int32_t lowerY, i
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolumeImpl* volume = new ColoredCubesVolumeImpl(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pathToVoxelDatabase, baseNodeSize);
+	ColoredCubesVolume* volume = new ColoredCubesVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pathToVoxelDatabase, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 
 	// Replace an existing entry if it has been deleted.
@@ -266,7 +266,7 @@ CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVolDat(const char* volDatToImp
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolumeImpl* volume = importVolDat< ColoredCubesVolumeImpl >(volDatToImport, pathToVoxelDatabase, baseNodeSize);
+	ColoredCubesVolume* volume = importVolDat< ColoredCubesVolume >(volDatToImport, pathToVoxelDatabase, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 	
 	// Replace an existing entry if it has been deleted.
@@ -296,7 +296,7 @@ CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromHeightmap(const char* heightma
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolumeImpl* volume = importHeightmap(heightmapFileName, colormapFileName, pathToVoxelDatabase, baseNodeSize);
+	ColoredCubesVolume* volume = importHeightmap(heightmapFileName, colormapFileName, pathToVoxelDatabase, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 	
 	// Replace an existing entry if it has been deleted.
@@ -352,7 +352,7 @@ CUBIQUITYC_API int32_t cuGetEnclosingRegion(uint32_t volumeHandle, int32_t* lowe
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolumeImpl* volume = getVolumeFromHandle(volumeHandle);
+	ColoredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
 	const Region& region = volume->getEnclosingRegion();
 	*lowerX = region.getLowerCorner().getX();
 	*lowerY = region.getLowerCorner().getY();
@@ -911,7 +911,7 @@ CUBIQUITYC_API int32_t cuPickFirstSolidVoxel(uint32_t volumeHandle, float raySta
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolumeImpl* volume = getVolumeFromHandle(volumeHandle);
+	ColoredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
 
 	if(pickFirstSolidVoxel(volume, rayStartX, rayStartY, rayStartZ, rayDirX, rayDirY, rayDirZ, resultX, resultY, resultZ))
 	{
@@ -929,7 +929,7 @@ CUBIQUITYC_API int32_t cuPickLastEmptyVoxel(uint32_t volumeHandle, float rayStar
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolumeImpl* volume = getVolumeFromHandle(volumeHandle);
+	ColoredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
 
 	if(pickLastEmptyVoxel(volume, rayStartX, rayStartY, rayStartZ, rayDirX, rayDirY, rayDirZ, resultX, resultY, resultZ))
 	{

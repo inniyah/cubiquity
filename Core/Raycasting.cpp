@@ -76,9 +76,7 @@ namespace Cubiquity
 		::PolyVox::Vector3DFloat start(startX, startY, startZ);
 		::PolyVox::Vector3DFloat dirAndLength(dirAndLengthX, dirAndLengthY, dirAndLengthZ);
 
-		ColoredCubesVolumeImpl* volumeImpl = dynamic_cast<ColoredCubesVolumeImpl*>(coloredCubesVolume);
-
-		::PolyVox::PickResult result = ::PolyVox::pickVoxel(volumeImpl->_getPolyVoxVolume(), start, dirAndLength, Color(0, 0, 0, 0));
+		::PolyVox::PickResult result = ::PolyVox::pickVoxel(coloredCubesVolume->_getPolyVoxVolume(), start, dirAndLength, Color(0, 0, 0, 0));
 
 		if(result.didHit)
 		{
@@ -98,9 +96,7 @@ namespace Cubiquity
 		::PolyVox::Vector3DFloat start(startX, startY, startZ);
 		::PolyVox::Vector3DFloat dirAndLength(dirAndLengthX, dirAndLengthY, dirAndLengthZ);
 
-		ColoredCubesVolumeImpl* volumeImpl = dynamic_cast<ColoredCubesVolumeImpl*>(coloredCubesVolume);
-
-		::PolyVox::PickResult result = ::PolyVox::pickVoxel(volumeImpl->_getPolyVoxVolume(), start, dirAndLength, Color(0, 0, 0, 0));
+		::PolyVox::PickResult result = ::PolyVox::pickVoxel(coloredCubesVolume->_getPolyVoxVolume(), start, dirAndLength, Color(0, 0, 0, 0));
 
 		if(result.didHit)
 		{

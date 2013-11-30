@@ -13,7 +13,6 @@ namespace Cubiquity
 	class ColoredCubesIsQuadNeeded;
 
 	class ColoredCubesVolume;
-	class ColoredCubesVolumeImpl;
 
 	class ColoredCubicSurfaceExtractionTask;
 

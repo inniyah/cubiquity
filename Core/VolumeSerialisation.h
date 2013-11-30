@@ -24,8 +24,8 @@ namespace Cubiquity
 	std::map<std::string, std::string> parseIndexFile(const std::string& filename);
 	void convertStringToInt(const std::string& str, int& i);
 
-	ColoredCubesVolumeImpl* importColoredSlices(std::string folder);
-	void exportSlices(ColoredCubesVolumeImpl* volume, std::string folder);
+	ColoredCubesVolume* importColoredSlices(std::string folder);
+	void exportSlices(ColoredCubesVolume* volume, std::string folder);
 
 	TerrainVolumeImpl* importSmoothSlices(std::string folder);
 	void exportSlices(TerrainVolumeImpl* volume, std::string folder);
@@ -48,9 +48,9 @@ namespace Cubiquity
 	void voxelToPixel(Color& voxelData, uint8_t* pixelData, uint32_t componentCount);
 	void voxelToPixel(MaterialSet& voxelData, uint8_t* pixelData, uint32_t componentCount);
 
-	ColoredCubesVolumeImpl* importVxl(const std::string& vxlFfilename, const std::string& pathToVoxelDatabase);
+	ColoredCubesVolume* importVxl(const std::string& vxlFfilename, const std::string& pathToVoxelDatabase);
 
-	ColoredCubesVolumeImpl* importHeightmap(const std::string& heightmapFileName, const std::string& colormapFileName, const std::string& pathToVoxelDatabase, uint32_t baseNodeSize);
+	ColoredCubesVolume* importHeightmap(const std::string& heightmapFileName, const std::string& colormapFileName, const std::string& pathToVoxelDatabase, uint32_t baseNodeSize);
 
 	// --------------------------------------------------
 	// Imports data in the VolDat format.

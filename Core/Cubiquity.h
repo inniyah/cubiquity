@@ -9,7 +9,7 @@
 
 namespace Cubiquity
 {
-	class ColoredCubesVolume
+	/*class ColoredCubesVolume
 	{
 	public:
 		virtual ~ColoredCubesVolume() {};
@@ -43,7 +43,7 @@ namespace Cubiquity
 
 		// Should be called before rendering a frame to update the meshes and octree structure.
 		virtual void update(const Vector3F& viewPosition, float lodThreshold) = 0;
-	};
+	};*/
 
 	class TerrainVolume
 	{

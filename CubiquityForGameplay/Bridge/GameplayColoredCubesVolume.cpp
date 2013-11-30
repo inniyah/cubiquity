@@ -15,7 +15,7 @@ namespace Cubiquity
 {
 	GameplayColoredCubesVolume::GameplayColoredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pathToVoxelDatabase, unsigned int baseNodeSize)
 	{
-		mCubiquityVolume = createColoredCubesVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pathToVoxelDatabase, baseNodeSize);
+		mCubiquityVolume = new ColoredCubesVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pathToVoxelDatabase, baseNodeSize);
 
 		GP_ASSERT(mCubiquityVolume);
 		GP_ASSERT(mCubiquityVolume->getRootOctreeNode());
@@ -36,7 +36,7 @@ namespace Cubiquity
 		{
 			// For now we assume it's VolDat. Leter on we should check for
 			// Volume.idx and load raw Cubiquity data instead if necessary.
-			mCubiquityVolume = importVolDat<ColoredCubesVolumeImpl>(dataToLoad, pathToVoxelDatabase, baseNodeSize);
+			mCubiquityVolume = importVolDat<ColoredCubesVolume>(dataToLoad, pathToVoxelDatabase, baseNodeSize);
 		}
 
 		GP_ASSERT(mCubiquityVolume);
