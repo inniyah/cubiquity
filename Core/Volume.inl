@@ -22,7 +22,7 @@
 namespace Cubiquity
 {
 	template <typename VoxelType>
-	Volume<VoxelType>::Volume(const Region& region, const std::string& pathToVoxelDatabase, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize)
+	Volume<VoxelType>::Volume(const Region& region, const std::string& pathToVoxelDatabase, uint32_t baseNodeSize)
 		:mPolyVoxVolume(0)
 		,m_pVoxelDatabase(0)
 		,mOctree(0)
@@ -78,20 +78,10 @@ namespace Cubiquity
 
 		m_pVoxelDatabase = new VoxelDatabase<VoxelType>(mDatabase);
 		
-		//FIXME - This should not be decided based on the Octree type but instead be in different volume constructors
-		if(octreeConstructionMode == OctreeConstructionModes::BoundCells) // Smooth terrain
-		{
-			mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pVoxelDatabase, m_pVoxelDatabase, 32);
-		}
-		else // Cubic terrain
-		{
-			mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pVoxelDatabase, m_pVoxelDatabase, 32);
-		}
+		mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pVoxelDatabase, m_pVoxelDatabase, 32);
 
 		mPolyVoxVolume->setMaxNumberOfBlocksInMemory(256);
 		mPolyVoxVolume->setMaxNumberOfUncompressedBlocks(64);
-
-		mOctree = new Octree<VoxelType>(this, octreeConstructionMode, baseNodeSize);
 
 		logTrace() << "Leaving Volume(" << region << ",...)";
 	}
@@ -100,8 +90,6 @@ namespace Cubiquity
 	Volume<VoxelType>::~Volume()
 	{
 		logTrace() << "Entering ~Volume()";
-
-		delete mOctree;
 
 		// NOTE: We should really delete the volume here, but the background task processor might still be using it.
 		// We need a way to shut that down, or maybe smart pointers can help here. Just flush until we have a better fix.

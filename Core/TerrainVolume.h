@@ -13,12 +13,14 @@ namespace Cubiquity
 		typedef MaterialSet VoxelType;
 
 		TerrainVolume(const Region& region, const std::string& pathToVoxelDatabase, unsigned int baseNodeSize)
-			:Volume<MaterialSet>(region, pathToVoxelDatabase, OctreeConstructionModes::BoundCells, baseNodeSize)
+			:Volume<MaterialSet>(region, pathToVoxelDatabase, baseNodeSize)
 		{
+			mOctree = new Octree<VoxelType>(this, OctreeConstructionModes::BoundCells, baseNodeSize);
 		}
 
 		virtual ~TerrainVolume()
 		{
+			delete mOctree;
 		}
 	};
 }

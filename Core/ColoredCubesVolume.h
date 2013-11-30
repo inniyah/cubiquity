@@ -14,12 +14,14 @@ namespace Cubiquity
 		typedef Color VoxelType;
 
 		ColoredCubesVolume(const Region& region, const std::string& pathToVoxelDatabase, unsigned int baseNodeSize)
-			:Volume<Color>(region, pathToVoxelDatabase, OctreeConstructionModes::BoundVoxels, baseNodeSize)
+			:Volume<Color>(region, pathToVoxelDatabase, baseNodeSize)
 		{
+			mOctree = new Octree<VoxelType>(this, OctreeConstructionModes::BoundVoxels, baseNodeSize);
 		}
 
 		virtual ~ColoredCubesVolume()
 		{
+			delete mOctree;
 		}
 	};
 }

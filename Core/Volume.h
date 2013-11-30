@@ -26,7 +26,7 @@ namespace Cubiquity
 	public:
 		typedef _VoxelType VoxelType;
 
-		Volume(const Region& region, const std::string& pathToVoxelDatabase, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize);
+		Volume(const Region& region, const std::string& pathToVoxelDatabase, uint32_t baseNodeSize);
 		~Volume();
 
 		// These functions just forward to the underlying PolyVox volume.
@@ -66,6 +66,9 @@ namespace Cubiquity
 		// Should be called before rendering a frame to update the meshes and octree structure.
 		virtual void update(const Vector3F& viewPosition, float lodThreshold);
 
+	protected:
+		Octree<VoxelType>* mOctree;
+
 	private:
 		Volume& operator=(const Volume&);
 
@@ -73,8 +76,6 @@ namespace Cubiquity
 
 		//::PolyVox::MinizBlockCompressor<VoxelType>* m_pCompressor;
 		VoxelDatabase<VoxelType>* m_pVoxelDatabase;
-
-		Octree<VoxelType>* mOctree;
 
 		sqlite3* mDatabase;
 
