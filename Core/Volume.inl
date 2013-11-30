@@ -22,47 +22,40 @@
 namespace Cubiquity
 {
 	template <typename VoxelType>
-	Volume<VoxelType>::Volume(const Region& region, const std::string& pathToVoxelDatabase, uint32_t baseNodeSize)
+	Volume<VoxelType>::Volume(const Region& region, const std::string& pathToNewVoxelDatabase, uint32_t baseNodeSize)
 		:mPolyVoxVolume(0)
 		,m_pVoxelDatabase(0)
 		,mOctree(0)
 		,mDatabase(0)
 	{
-		logTrace() << "Entering Volume(" << region << ",...)";
-
 		POLYVOX_THROW_IF(region.getWidthInVoxels() == 0, std::invalid_argument, "Volume width must be greater than zero");
 		POLYVOX_THROW_IF(region.getHeightInVoxels() == 0, std::invalid_argument, "Volume height must be greater than zero");
 		POLYVOX_THROW_IF(region.getDepthInVoxels() == 0, std::invalid_argument, "Volume depth must be greater than zero");
 
-		POLYVOX_THROW_IF(pathToVoxelDatabase.size() == 0, std::invalid_argument, "A valid voxel database path must be provided");
+		//Note: If the file is NULL then we don't need to (and can't) close it.
+		FILE* file = fopen(pathToNewVoxelDatabase.c_str(), "rb");
+		if(file != NULL)
+		{
+			fclose(file);
+			POLYVOX_THROW(std::invalid_argument, "Cannot create a new voxel database as the provided filename already exists");
+		}
 
-		logInfo() << "Creating VoxelDatabase from '" << pathToVoxelDatabase << "'";
+		logInfo() << "Creating VoxelDatabase from '" << pathToNewVoxelDatabase << "'";
 
 		int rc = 0; // SQLite return code
-		char* pErrorMsg = 0; // SQLite error message
-		
-		// Open the database if it already exists.
-		rc = sqlite3_open_v2(pathToVoxelDatabase.c_str(), &mDatabase, SQLITE_OPEN_READWRITE, NULL);
+		char* pErrorMsg = 0; // SQLite error message		
+
+		// If we failed, then try again but this time allow it to be created.
+		logInfo() << "Attempting to create '" << pathToNewVoxelDatabase << "'";
+		rc = sqlite3_open_v2(pathToNewVoxelDatabase.c_str(), &mDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
 		if(rc != SQLITE_OK)
 		{
-			logInfo() << "Failed to open '" << pathToVoxelDatabase << "'. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
-
-			// If we failed, then try again but this time allow it to be created.
-			logInfo() << "Attempting to create '" << pathToVoxelDatabase << "'";
-			rc = sqlite3_open_v2(pathToVoxelDatabase.c_str(), &mDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
-			if(rc != SQLITE_OK)
-			{
-				// If we failed to create it as well then we give up
-				std::stringstream ss;
-				ss << "Failed to create '" << pathToVoxelDatabase << "'. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
-				throw std::runtime_error(ss.str().c_str());
-			}
-			logInfo() << "Successfully created'" << pathToVoxelDatabase << "'";
+			// If we failed to create it as well then we give up
+			std::stringstream ss;
+			ss << "Failed to create '" << pathToNewVoxelDatabase << "'. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
+			throw std::runtime_error(ss.str().c_str());
 		}
-		else
-		{
-			logInfo() << "Successfully opened'" << pathToVoxelDatabase << "'";
-		}
+		logInfo() << "Successfully created'" << pathToNewVoxelDatabase << "'";
 
 		// Disable syncing
 		rc = sqlite3_exec(mDatabase, "PRAGMA synchronous = OFF", 0, 0, &pErrorMsg);
@@ -73,8 +66,6 @@ namespace Cubiquity
 			sqlite3_free(pErrorMsg);
 			throw std::runtime_error(ss.str().c_str());
 		}
-	
-		//m_pCompressor = new ::PolyVox::MinizBlockCompressor<VoxelType>;
 
 		m_pVoxelDatabase = new VoxelDatabase<VoxelType>(mDatabase);
 		
@@ -82,8 +73,53 @@ namespace Cubiquity
 
 		mPolyVoxVolume->setMaxNumberOfBlocksInMemory(256);
 		mPolyVoxVolume->setMaxNumberOfUncompressedBlocks(64);
+	}
 
-		logTrace() << "Leaving Volume(" << region << ",...)";
+	template <typename VoxelType>
+	Volume<VoxelType>::Volume(const std::string& pathToExistingVoxelDatabase, uint32_t baseNodeSize)
+		:mPolyVoxVolume(0)
+		,m_pVoxelDatabase(0)
+		,mOctree(0)
+		,mDatabase(0)
+	{
+		Region region(0, 0, 0, 127, 31, 127); //HACK!!!!
+
+		POLYVOX_THROW_IF(region.getWidthInVoxels() == 0, std::invalid_argument, "Volume width must be greater than zero");
+		POLYVOX_THROW_IF(region.getHeightInVoxels() == 0, std::invalid_argument, "Volume height must be greater than zero");
+		POLYVOX_THROW_IF(region.getDepthInVoxels() == 0, std::invalid_argument, "Volume depth must be greater than zero");
+
+		logInfo() << "Creating VoxelDatabase from '" << pathToExistingVoxelDatabase << "'";
+
+		int rc = 0; // SQLite return code
+		char* pErrorMsg = 0; // SQLite error message
+		
+		// Open the database if it already exists.
+		rc = sqlite3_open_v2(pathToExistingVoxelDatabase.c_str(), &mDatabase, SQLITE_OPEN_READWRITE, NULL);
+		if(rc != SQLITE_OK)
+		{
+			// If we failed to create it as well then we give up
+			std::stringstream ss;
+			ss << "Failed to open '" << pathToExistingVoxelDatabase << "'. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
+			throw std::runtime_error(ss.str().c_str());
+		}
+		logInfo() << "Successfully opened'" << pathToExistingVoxelDatabase << "'";
+
+		// Disable syncing
+		rc = sqlite3_exec(mDatabase, "PRAGMA synchronous = OFF", 0, 0, &pErrorMsg);
+		if(rc != SQLITE_OK)
+		{
+			std::stringstream ss;
+			ss << "Failed to set 'synchronous' to OFF. Message was: \"" << pErrorMsg << "\"";
+			sqlite3_free(pErrorMsg);
+			throw std::runtime_error(ss.str().c_str());
+		}
+
+		m_pVoxelDatabase = new VoxelDatabase<VoxelType>(mDatabase);
+		
+		mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pVoxelDatabase, m_pVoxelDatabase, 32);
+
+		mPolyVoxVolume->setMaxNumberOfBlocksInMemory(256);
+		mPolyVoxVolume->setMaxNumberOfUncompressedBlocks(64);
 	}
 
 	template <typename VoxelType>
@@ -148,5 +184,27 @@ namespace Cubiquity
 	void Volume<VoxelType>::update(const Vector3F& viewPosition, float lodThreshold)
 	{
 		mOctree->update(viewPosition, lodThreshold);
+	}
+
+	////////////////////////////////////////////////////////////////////////////////
+
+	template <typename VoxelType>
+	void validate(void)
+	{
+	}
+
+	template <typename VoxelType>
+	sqlite3* createNewDatabase(const std::string& pathToNewDatabase)
+	{
+	}
+
+	template <typename VoxelType>
+	sqlite3* openExistingDatabase(const std::string& pathToExistingDatabase)
+	{
+	}
+
+	template <typename VoxelType>
+	void initialize(void)
+	{
 	}
 }

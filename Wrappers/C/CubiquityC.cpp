@@ -230,11 +230,43 @@ OctreeNode<MaterialSet>* getNodeFromEncodedHandleMC(uint32_t encodedNodeHandle)
 ////////////////////////////////////////////////////////////////////////////////
 // Volume functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API int32_t cuNewColoredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pathToVoxelDatabase, uint32_t baseNodeSize, uint32_t* result)
+CUBIQUITYC_API int32_t cuNewEmptyColoredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pathToNewVoxelDatabase, uint32_t baseNodeSize, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolume* volume = new ColoredCubesVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pathToVoxelDatabase, baseNodeSize);
+	ColoredCubesVolume* volume = new ColoredCubesVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pathToNewVoxelDatabase, baseNodeSize);
+	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
+
+	// Replace an existing entry if it has been deleted.
+	bool foundEmptySlot = false;
+	for(uint32_t ct = 0; ct < gColoredCubesVolumes.size(); ct++)
+	{
+		if(gColoredCubesVolumes[ct] == 0)
+		{
+			gColoredCubesVolumes[ct] = volume;
+			*result =  ct;
+			foundEmptySlot = true;
+			break;
+		}
+	}
+
+	//Otherwise append a new entry.
+	if(!foundEmptySlot)
+	{
+		gColoredCubesVolumes.push_back(volume);
+		*result = gColoredCubesVolumes.size() - 1;
+	}
+
+	logTrace() << "Created new colored cubes volume in slot " << *result;
+
+	CLOSE_C_INTERFACE
+}
+
+CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVDB(const char* pathToExistingVoxelDatabase, uint32_t baseNodeSize, uint32_t* result)
+{
+	OPEN_C_INTERFACE
+
+	ColoredCubesVolume* volume = new ColoredCubesVolume(pathToExistingVoxelDatabase, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 
 	// Replace an existing entry if it has been deleted.
@@ -412,11 +444,43 @@ CUBIQUITYC_API int32_t cuDiscardOverrideBlocks(uint32_t volumeHandle)
 
 //--------------------------------------------------------------------------------
 
-CUBIQUITYC_API int32_t cuNewTerrainVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pathToVoxelDatabase, uint32_t baseNodeSize, uint32_t* result)
+CUBIQUITYC_API int32_t cuNewEmptyTerrainVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pathToNewVoxelDatabase, uint32_t baseNodeSize, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolume* volume = new TerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pathToVoxelDatabase, baseNodeSize);
+	TerrainVolume* volume = new TerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pathToNewVoxelDatabase, baseNodeSize);
+	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
+
+	// Replace an existing entry if it has been deleted.
+	bool foundEmptySlot = false;
+	for(uint32_t ct = 0; ct < gTerrainVolumes.size(); ct++)
+	{
+		if(gTerrainVolumes[ct] == 0)
+		{
+			gTerrainVolumes[ct] = volume;
+			*result =  ct;
+			foundEmptySlot = true;
+			break;
+		}
+	}
+
+	//Otherwise append a new entry.
+	if(!foundEmptySlot)
+	{
+		gTerrainVolumes.push_back(volume);
+		*result = gTerrainVolumes.size() - 1;
+	}
+
+	logTrace() << "Creatd new smooth volume in slot " << *result;
+
+	CLOSE_C_INTERFACE
+}
+
+CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxelDatabase, uint32_t baseNodeSize, uint32_t* result)
+{
+	OPEN_C_INTERFACE
+
+	TerrainVolume* volume = new TerrainVolume(pathToExistingVoxelDatabase, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 
 	// Replace an existing entry if it has been deleted.

@@ -26,7 +26,8 @@ namespace Cubiquity
 	public:
 		typedef _VoxelType VoxelType;
 
-		Volume(const Region& region, const std::string& pathToVoxelDatabase, uint32_t baseNodeSize);
+		Volume(const Region& region, const std::string& pathToNewVoxelDatabase, uint32_t baseNodeSize);
+		Volume(const std::string& pathToExistingVoxelDatabase, uint32_t baseNodeSize);
 		~Volume();
 
 		// These functions just forward to the underlying PolyVox volume.
@@ -71,6 +72,11 @@ namespace Cubiquity
 
 	private:
 		Volume& operator=(const Volume&);
+
+		void validate(void);
+		sqlite3* createNewDatabase(const std::string& pathToNewDatabase);
+		sqlite3* openExistingDatabase(const std::string& pathToExistingDatabase);
+		void initialize(void);
 
 		::PolyVox::LargeVolume<VoxelType>* mPolyVoxVolume;
 

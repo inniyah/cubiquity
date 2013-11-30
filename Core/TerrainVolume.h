@@ -12,8 +12,14 @@ namespace Cubiquity
 	public:
 		typedef MaterialSet VoxelType;
 
-		TerrainVolume(const Region& region, const std::string& pathToVoxelDatabase, unsigned int baseNodeSize)
-			:Volume<MaterialSet>(region, pathToVoxelDatabase, baseNodeSize)
+		TerrainVolume(const Region& region, const std::string& pathToNewVoxelDatabase, unsigned int baseNodeSize)
+			:Volume<MaterialSet>(region, pathToNewVoxelDatabase, baseNodeSize)
+		{
+			mOctree = new Octree<VoxelType>(this, OctreeConstructionModes::BoundCells, baseNodeSize);
+		}
+
+		TerrainVolume(const std::string& pathToExistingVoxelDatabase, unsigned int baseNodeSize)
+			:Volume<MaterialSet>(pathToExistingVoxelDatabase, baseNodeSize)
 		{
 			mOctree = new Octree<VoxelType>(this, OctreeConstructionModes::BoundCells, baseNodeSize);
 		}
