@@ -228,9 +228,6 @@
     <ClInclude Include="Brush.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="SQLitePager.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="sqlite\sqlite3.h">
       <Filter>Core\sqlite</Filter>
     </ClInclude>
@@ -256,6 +253,9 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="BitField.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="VoxelDatabase.h">
       <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
@@ -359,7 +359,7 @@
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Picking.inl">
       <Filter>PolyVox</Filter>
     </None>
-    <None Include="SQLitePager.inl">
+    <None Include="VoxelDatabase.inl">
       <Filter>Core</Filter>
     </None>
   </ItemGroup>
@@ -427,9 +427,6 @@
     <ClCompile Include="sqlite\sqlite3.c">
       <Filter>Core\sqlite</Filter>
     </ClCompile>
-    <ClCompile Include="SQLitePager.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="TerrainVolume.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -449,6 +446,9 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="ColoredCubicSurfaceExtractionTask.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="VoxelDatabase.cpp">
       <Filter>Core</Filter>
     </ClCompile>
   </ItemGroup>

@@ -15,14 +15,14 @@ namespace Cubiquity
 	 * Provides an interface for performing paging of data.
 	 */
 	template <typename VoxelType>
-	class SQLitePager : public PolyVox::BlockCompressor<VoxelType>, public PolyVox::Pager<VoxelType>
+	class VoxelDatabase : public PolyVox::BlockCompressor<VoxelType>, public PolyVox::Pager<VoxelType>
 	{
 	public:
 		/// Constructor
-		SQLitePager(sqlite3* voxelDatabase);
+		VoxelDatabase(sqlite3* database);
 
 		/// Destructor
-		virtual ~SQLitePager();
+		virtual ~VoxelDatabase();
 
 		virtual void compress(PolyVox::UncompressedBlock<VoxelType>* pSrcBlock, PolyVox::CompressedBlock<VoxelType>* pDstBlock);
 		virtual void decompress(PolyVox::CompressedBlock<VoxelType>* pSrcBlock, PolyVox::UncompressedBlock<VoxelType>* pDstBlock);
@@ -35,7 +35,7 @@ namespace Cubiquity
 
 	private:
 
-		sqlite3* mVoxelDatabase;
+		sqlite3* mDatabase;
 
 		sqlite3_stmt* mSelectBlockStatement;
 		sqlite3_stmt* mSelectOverrideBlockStatement;
@@ -56,6 +56,6 @@ namespace Cubiquity
 	void finalizeStatementWithLogging(sqlite3_stmt* statement);
 }
 
-#include "SQLitePager.inl"
+#include "VoxelDatabase.inl"
 
 #endif //__CUBIQUITY_SQLITE_PAGER_H__

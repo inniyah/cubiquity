@@ -54,13 +54,13 @@ namespace Cubiquity
 		void acceptOverrideBlocks(void)
 		{
 			mPolyVoxVolume->flushAll();
-			m_pSQLitePager->acceptOverrideBlocks();
+			m_pVoxelDatabase->acceptOverrideBlocks();
 		}
 		
 		void discardOverrideBlocks(void)
 		{
 			mPolyVoxVolume->flushAll();
-			m_pSQLitePager->discardOverrideBlocks();
+			m_pVoxelDatabase->discardOverrideBlocks();
 		}
 
 		// Should be called before rendering a frame to update the meshes and octree structure.
@@ -72,11 +72,11 @@ namespace Cubiquity
 		::PolyVox::LargeVolume<VoxelType>* mPolyVoxVolume;
 
 		//::PolyVox::MinizBlockCompressor<VoxelType>* m_pCompressor;
-		SQLitePager<VoxelType>* m_pSQLitePager;
+		VoxelDatabase<VoxelType>* m_pVoxelDatabase;
 
 		Octree<VoxelType>* mOctree;
 
-		sqlite3* mVoxelDatabase;
+		sqlite3* mDatabase;
 
 		// Friend functions
 		friend class Octree<VoxelType>;

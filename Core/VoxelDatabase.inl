@@ -13,9 +13,9 @@ namespace Cubiquity
 
 	/// Constructor
 	template <typename VoxelType>
-	SQLitePager<VoxelType>::SQLitePager(sqlite3* voxelDatabase)
+	VoxelDatabase<VoxelType>::VoxelDatabase(sqlite3* database)
 		:Pager<VoxelType>()
-		,mVoxelDatabase(voxelDatabase)
+		,mDatabase(database)
 		,m_pCompressor(0)
 	{
 		int rc = 0; // SQLite return code
@@ -23,7 +23,7 @@ namespace Cubiquity
 
 		// Create the 'Blocks' table if it doesn't exist. Not sure we need 'ASC'
 		// here, but it's in the example (http://goo.gl/NLHjQv) as is the default anyway.
-		rc = sqlite3_exec(mVoxelDatabase, "CREATE TABLE IF NOT EXISTS Blocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, &pErrorMsg);
+		rc = sqlite3_exec(mDatabase, "CREATE TABLE IF NOT EXISTS Blocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, &pErrorMsg);
 		if(rc != SQLITE_OK)
 		{
 			std::stringstream ss;
@@ -34,7 +34,7 @@ namespace Cubiquity
 
 		// Now create the 'OverrideBlocks' table if it doesn't exist. Not sure we need 'ASC'
 		// here, but it's in the example (http://goo.gl/NLHjQv) as is the default anyway.
-		rc = sqlite3_exec(mVoxelDatabase, "CREATE TABLE IF NOT EXISTS OverrideBlocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, &pErrorMsg);
+		rc = sqlite3_exec(mDatabase, "CREATE TABLE IF NOT EXISTS OverrideBlocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, &pErrorMsg);
 		if(rc != SQLITE_OK)
 		{
 			std::stringstream ss;
@@ -44,36 +44,36 @@ namespace Cubiquity
 		}
 
 		// Now build the 'insert or replace' prepared statements
-		rc = sqlite3_prepare_v2(mVoxelDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceBlockStatement, NULL);
+		rc = sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceBlockStatement, NULL);
 		if(rc != SQLITE_OK)
 		{
 			std::stringstream ss;
-			ss << "Failed to prepare 'INSERT OR REPLACE INTO Blocks...' statement. Error message was: \"" << sqlite3_errmsg(mVoxelDatabase) << "\"";
+			ss << "Failed to prepare 'INSERT OR REPLACE INTO Blocks...' statement. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
 			throw std::runtime_error(ss.str().c_str());
 		}
 
-		rc = sqlite3_prepare_v2(mVoxelDatabase, "INSERT OR REPLACE INTO OverrideBlocks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceOverrideBlockStatement, NULL);
+		rc = sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO OverrideBlocks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceOverrideBlockStatement, NULL);
 		if(rc != SQLITE_OK)
 		{
 			std::stringstream ss;
-			ss << "Failed to prepare 'INSERT OR REPLACE INTO OverrideBlocks...' statement. Error message was: \"" << sqlite3_errmsg(mVoxelDatabase) << "\"";
+			ss << "Failed to prepare 'INSERT OR REPLACE INTO OverrideBlocks...' statement. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
 			throw std::runtime_error(ss.str().c_str());
 		}
 
 		// Now build the 'select' prepared statements
-		rc = sqlite3_prepare_v2(mVoxelDatabase, "SELECT Data FROM Blocks WHERE Region = ?", -1, &mSelectBlockStatement, NULL);
+		rc = sqlite3_prepare_v2(mDatabase, "SELECT Data FROM Blocks WHERE Region = ?", -1, &mSelectBlockStatement, NULL);
 		if(rc != SQLITE_OK)
 		{
 			std::stringstream ss;
-			ss << "Failed to prepare 'SELECT Data FROM Blocks...' statement. Error message was: \"" << sqlite3_errmsg(mVoxelDatabase) << "\"";
+			ss << "Failed to prepare 'SELECT Data FROM Blocks...' statement. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
 			throw std::runtime_error(ss.str().c_str());
 		}
 
-		rc = sqlite3_prepare_v2(mVoxelDatabase, "SELECT Data FROM OverrideBlocks WHERE Region = ?", -1, &mSelectOverrideBlockStatement, NULL);
+		rc = sqlite3_prepare_v2(mDatabase, "SELECT Data FROM OverrideBlocks WHERE Region = ?", -1, &mSelectOverrideBlockStatement, NULL);
 		if(rc != SQLITE_OK)
 		{
 			std::stringstream ss;
-			ss << "Failed to prepare 'SELECT Data FROM OverrideBlocks...' statement. Error message was: \"" << sqlite3_errmsg(mVoxelDatabase) << "\"";
+			ss << "Failed to prepare 'SELECT Data FROM OverrideBlocks...' statement. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
 			throw std::runtime_error(ss.str().c_str());
 		}
 
@@ -83,7 +83,7 @@ namespace Cubiquity
 
 	/// Destructor
 	template <typename VoxelType>
-	SQLitePager<VoxelType>::~SQLitePager()
+	VoxelDatabase<VoxelType>::~VoxelDatabase()
 	{
 		finalizeStatementWithLogging(mSelectBlockStatement);
 		finalizeStatementWithLogging(mSelectOverrideBlockStatement);
@@ -94,17 +94,21 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void SQLitePager<VoxelType>::compress(PolyVox::UncompressedBlock<VoxelType>* pSrcBlock, PolyVox::CompressedBlock<VoxelType>* pDstBlock)
+	void VoxelDatabase<VoxelType>::compress(PolyVox::UncompressedBlock<VoxelType>* pSrcBlock, PolyVox::CompressedBlock<VoxelType>* pDstBlock)
 	{
+		// Pass through to compressor
+		m_pCompressor->compress(pSrcBlock, pDstBlock);
 	}
 
 	template <typename VoxelType>
-	void SQLitePager<VoxelType>::decompress(PolyVox::CompressedBlock<VoxelType>* pSrcBlock, PolyVox::UncompressedBlock<VoxelType>* pDstBlock)
+	void VoxelDatabase<VoxelType>::decompress(PolyVox::CompressedBlock<VoxelType>* pSrcBlock, PolyVox::UncompressedBlock<VoxelType>* pDstBlock)
 	{
+		// Pass through to compressor
+		m_pCompressor->decompress(pSrcBlock, pDstBlock);
 	}
 
 	template <typename VoxelType>
-	void SQLitePager<VoxelType>::pageIn(const PolyVox::Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData)
+	void VoxelDatabase<VoxelType>::pageIn(const PolyVox::Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData)
 	{
 		POLYVOX_ASSERT(pBlockData, "Attempting to page in NULL block");
 
@@ -141,7 +145,7 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void SQLitePager<VoxelType>::pageOut(const PolyVox::Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData)
+	void VoxelDatabase<VoxelType>::pageOut(const PolyVox::Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData)
 	{
 		POLYVOX_ASSERT(pBlockData, "Attempting to page out NULL block");
 
@@ -161,12 +165,12 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void SQLitePager<VoxelType>::acceptOverrideBlocks(void)
+	void VoxelDatabase<VoxelType>::acceptOverrideBlocks(void)
 	{
 		int rc = 0; // SQLite return code
 		char* pErrorMsg = 0; // SQLite error message
 
-		rc = sqlite3_exec(mVoxelDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) SELECT Region, Data from OverrideBlocks;", 0, 0, &pErrorMsg);
+		rc = sqlite3_exec(mDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) SELECT Region, Data from OverrideBlocks;", 0, 0, &pErrorMsg);
 		if(rc != SQLITE_OK)
 		{
 			std::stringstream ss;
@@ -181,12 +185,12 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void SQLitePager<VoxelType>::discardOverrideBlocks(void)
+	void VoxelDatabase<VoxelType>::discardOverrideBlocks(void)
 	{
 		int rc = 0; // SQLite return code
 		char* pErrorMsg = 0; // SQLite error message
 
-		rc = sqlite3_exec(mVoxelDatabase, "DELETE FROM OverrideBlocks;", 0, 0, &pErrorMsg);
+		rc = sqlite3_exec(mDatabase, "DELETE FROM OverrideBlocks;", 0, 0, &pErrorMsg);
 		if(rc != SQLITE_OK)
 		{
 			std::stringstream ss;

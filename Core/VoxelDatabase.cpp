@@ -1,4 +1,4 @@
-#include "SQLitePager.h"
+#include "VoxelDatabase.h"
 
 #include "PolyVoxCore/Region.h"
 

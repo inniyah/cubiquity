@@ -37,7 +37,7 @@ namespace Cubiquity
 	class TerrainVolumeEditor;
 
 	template <typename VoxelType>
-	class SQLitePager;
+	class VoxelDatabase;
 
 	class Task;
 	class TaskProcessor;

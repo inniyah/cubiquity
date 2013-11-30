@@ -12,7 +12,7 @@
 #include "MainThreadTaskProcessor.h"
 #include "MaterialSet.h"
 #include "Raycasting.h"
-#include "SQLitePager.h"
+#include "VoxelDatabase.h"
 
 #include <boost/filesystem.hpp>
 
@@ -24,9 +24,9 @@ namespace Cubiquity
 	template <typename VoxelType>
 	Volume<VoxelType>::Volume(const Region& region, const std::string& pathToVoxelDatabase, OctreeConstructionMode octreeConstructionMode, uint32_t baseNodeSize)
 		:mPolyVoxVolume(0)
-		,m_pSQLitePager(0)
+		,m_pVoxelDatabase(0)
 		,mOctree(0)
-		,mVoxelDatabase(0)
+		,mDatabase(0)
 	{
 		logTrace() << "Entering Volume(" << region << ",...)";
 
@@ -36,25 +36,25 @@ namespace Cubiquity
 
 		POLYVOX_THROW_IF(pathToVoxelDatabase.size() == 0, std::invalid_argument, "A valid voxel database path must be provided");
 
-		logInfo() << "Creating SQLitePager from '" << pathToVoxelDatabase << "'";
+		logInfo() << "Creating VoxelDatabase from '" << pathToVoxelDatabase << "'";
 
 		int rc = 0; // SQLite return code
 		char* pErrorMsg = 0; // SQLite error message
 		
 		// Open the database if it already exists.
-		rc = sqlite3_open_v2(pathToVoxelDatabase.c_str(), &mVoxelDatabase, SQLITE_OPEN_READWRITE, NULL);
+		rc = sqlite3_open_v2(pathToVoxelDatabase.c_str(), &mDatabase, SQLITE_OPEN_READWRITE, NULL);
 		if(rc != SQLITE_OK)
 		{
-			logInfo() << "Failed to open '" << pathToVoxelDatabase << "'. Error message was: \"" << sqlite3_errmsg(mVoxelDatabase) << "\"";
+			logInfo() << "Failed to open '" << pathToVoxelDatabase << "'. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
 
 			// If we failed, then try again but this time allow it to be created.
 			logInfo() << "Attempting to create '" << pathToVoxelDatabase << "'";
-			rc = sqlite3_open_v2(pathToVoxelDatabase.c_str(), &mVoxelDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
+			rc = sqlite3_open_v2(pathToVoxelDatabase.c_str(), &mDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
 			if(rc != SQLITE_OK)
 			{
 				// If we failed to create it as well then we give up
 				std::stringstream ss;
-				ss << "Failed to create '" << pathToVoxelDatabase << "'. Error message was: \"" << sqlite3_errmsg(mVoxelDatabase) << "\"";
+				ss << "Failed to create '" << pathToVoxelDatabase << "'. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
 				throw std::runtime_error(ss.str().c_str());
 			}
 			logInfo() << "Successfully created'" << pathToVoxelDatabase << "'";
@@ -65,7 +65,7 @@ namespace Cubiquity
 		}
 
 		// Disable syncing
-		rc = sqlite3_exec(mVoxelDatabase, "PRAGMA synchronous = OFF", 0, 0, &pErrorMsg);
+		rc = sqlite3_exec(mDatabase, "PRAGMA synchronous = OFF", 0, 0, &pErrorMsg);
 		if(rc != SQLITE_OK)
 		{
 			std::stringstream ss;
@@ -76,16 +76,16 @@ namespace Cubiquity
 	
 		//m_pCompressor = new ::PolyVox::MinizBlockCompressor<VoxelType>;
 
-		m_pSQLitePager = new SQLitePager<VoxelType>(mVoxelDatabase);
+		m_pVoxelDatabase = new VoxelDatabase<VoxelType>(mDatabase);
 		
 		//FIXME - This should not be decided based on the Octree type but instead be in different volume constructors
 		if(octreeConstructionMode == OctreeConstructionModes::BoundCells) // Smooth terrain
 		{
-			mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pSQLitePager, m_pSQLitePager, 32);
+			mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pVoxelDatabase, m_pVoxelDatabase, 32);
 		}
 		else // Cubic terrain
 		{
-			mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pSQLitePager, m_pSQLitePager, 32);
+			mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pVoxelDatabase, m_pVoxelDatabase, 32);
 		}
 
 		mPolyVoxVolume->setMaxNumberOfBlocksInMemory(256);
@@ -110,11 +110,11 @@ namespace Cubiquity
 		//delete mPolyVoxVolume;
 		//delete m_pCompressor;
 
-		m_pSQLitePager->acceptOverrideBlocks();
-		delete m_pSQLitePager;
+		m_pVoxelDatabase->acceptOverrideBlocks();
+		delete m_pVoxelDatabase;
 
 		logInfo() << "Closing database connection...";
-		int rc = sqlite3_close(mVoxelDatabase);
+		int rc = sqlite3_close(mDatabase);
 		if(rc == SQLITE_OK)
 		{
 			logInfo() << "Connection closed successfully";
