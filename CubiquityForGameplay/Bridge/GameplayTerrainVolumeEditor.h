@@ -23,7 +23,7 @@ namespace Cubiquity
 		void subtractMaterial(const gameplay::Vector3& centre, float innerRadius, float outerRadius, float timeElapsedInSeconds, float amount);
 
 	private:
-		TerrainVolumeImpl* mTerrainVolume;
+		TerrainVolume* mTerrainVolume;
 	};
 }
 #endif //GAMEPLAY_TERRAINVOLUMEDATA_H_

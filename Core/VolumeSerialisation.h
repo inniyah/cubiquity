@@ -27,8 +27,8 @@ namespace Cubiquity
 	ColoredCubesVolume* importColoredSlices(std::string folder);
 	void exportSlices(ColoredCubesVolume* volume, std::string folder);
 
-	TerrainVolumeImpl* importSmoothSlices(std::string folder);
-	void exportSlices(TerrainVolumeImpl* volume, std::string folder);
+	TerrainVolume* importSmoothSlices(std::string folder);
+	void exportSlices(TerrainVolume* volume, std::string folder);
 
 	template <typename VoxelType>
 	void pixelToVoxel(uint8_t* pixelData, VoxelType& voxelData, uint32_t componentCount)

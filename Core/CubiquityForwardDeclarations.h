@@ -31,7 +31,6 @@ namespace Cubiquity
 	class SmoothSurfaceExtractionTask;
 
 	class TerrainVolume;
-	class TerrainVolumeImpl;
 
 	class TerrainVolumeEditor;
 

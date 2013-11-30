@@ -23,7 +23,7 @@ namespace Cubiquity
 
 		static void gameplayExportSmoothSlices(GameplayTerrainVolume* volume, const char* voldatFolder)
 		{
-			exportVolDat<TerrainVolumeImpl>(dynamic_cast<TerrainVolumeImpl*>(volume->getCubiquityVolume()), voldatFolder);
+			exportVolDat<TerrainVolume>(dynamic_cast<TerrainVolume*>(volume->getCubiquityVolume()), voldatFolder);
 		}
 	};
 }

@@ -14,7 +14,7 @@ namespace Cubiquity
 
 	GameplayTerrainVolume::GameplayTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pathToVoxelDatabase, unsigned int baseNodeSize, bool createFloor, unsigned int floorDepth)
 	{
-		mCubiquityVolume = createTerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pathToVoxelDatabase, baseNodeSize, createFloor, floorDepth);
+		mCubiquityVolume = new TerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pathToVoxelDatabase, baseNodeSize);
 
 		if(createFloor)
 		{
@@ -38,7 +38,7 @@ namespace Cubiquity
 		{
 			// For now we assume it's VolDat. Leter on we should check for
 			// Volume.idx and load raw Cubiquity data instead if necessary.
-			mCubiquityVolume = importVolDat<TerrainVolumeImpl>(dataToLoad, pathToVoxelDatabase, baseNodeSize);
+			mCubiquityVolume = importVolDat<TerrainVolume>(dataToLoad, pathToVoxelDatabase, baseNodeSize);
 		}
 
 		mRootGameplayOctreeNode = new GameplayOctreeNode< MaterialSet >(mCubiquityVolume->getRootOctreeNode(), 0);

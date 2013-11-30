@@ -118,7 +118,7 @@ namespace Cubiquity
 		//v3dDirection *= length;
 
 		RaycastTestFunctor<MaterialSet> raycastTestFunctor;
-		::PolyVox::RaycastResult myResult = terrainRaycastWithDirection(dynamic_cast<TerrainVolumeImpl*>(terrainVolume)->_getPolyVoxVolume(), v3dStart, v3dDirection, raycastTestFunctor, 0.5f);
+		::PolyVox::RaycastResult myResult = terrainRaycastWithDirection(dynamic_cast<TerrainVolume*>(terrainVolume)->_getPolyVoxVolume(), v3dStart, v3dDirection, raycastTestFunctor, 0.5f);
 		if(myResult == ::PolyVox::RaycastResults::Interupted)
 		{
 			*resultX = raycastTestFunctor.mLastPos.getX();

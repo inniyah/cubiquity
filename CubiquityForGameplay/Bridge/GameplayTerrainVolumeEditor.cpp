@@ -7,7 +7,7 @@ namespace Cubiquity
 {
 	GameplayTerrainVolumeEditor::GameplayTerrainVolumeEditor(GameplayTerrainVolume* volume)
 	{
-		mTerrainVolume = dynamic_cast<TerrainVolumeImpl*>(volume->getCubiquityVolume());
+		mTerrainVolume = dynamic_cast<TerrainVolume*>(volume->getCubiquityVolume());
 	}
 
 	GameplayTerrainVolumeEditor::~GameplayTerrainVolumeEditor()

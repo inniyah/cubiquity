@@ -6,7 +6,7 @@ namespace Cubiquity
 {
 	void generateFloor(TerrainVolume* terrainVolume, int32_t lowerLayerHeight, uint32_t lowerLayerMaterial, int32_t upperLayerHeight, uint32_t upperLayerMaterial)
 	{
-		Region region(terrainVolume->getLowerX(), terrainVolume->getLowerY(), terrainVolume->getLowerZ(), terrainVolume->getUpperX(), terrainVolume->getUpperY(), terrainVolume->getUpperZ());
+		const Region& region = terrainVolume->getEnclosingRegion();
 
 		for(int32_t y = region.getLowerY(); y < region.getUpperY(); y++)		
 		{

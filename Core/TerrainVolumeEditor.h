@@ -7,10 +7,10 @@
 
 namespace Cubiquity
 {
-	void sculptTerrainVolume(TerrainVolumeImpl* terrainVolume, const Vector3F& centre, const Brush& brush);
-	void blurTerrainVolume(TerrainVolumeImpl* terrainVolume, const Vector3F& centre, const Brush& brush);
-	void blurTerrainVolume(TerrainVolumeImpl* terrainVolume, const Region& region);
-	void paintTerrainVolume(TerrainVolumeImpl* terrainVolume, const Vector3F& centre, const Brush& brush, uint32_t materialIndex);
+	void sculptTerrainVolume(TerrainVolume* terrainVolume, const Vector3F& centre, const Brush& brush);
+	void blurTerrainVolume(TerrainVolume* terrainVolume, const Vector3F& centre, const Brush& brush);
+	void blurTerrainVolume(TerrainVolume* terrainVolume, const Region& region);
+	void paintTerrainVolume(TerrainVolume* terrainVolume, const Vector3F& centre, const Brush& brush, uint32_t materialIndex);
 }
 
 #endif //TERRAINVOLUMEEDITOR_H_

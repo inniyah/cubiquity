@@ -20,7 +20,7 @@ namespace Cubiquity
 		return result * brush.opacity();
 	}
 
-	void sculptTerrainVolume(TerrainVolumeImpl* terrainVolume, const Vector3F& centre, const Brush& brush)
+	void sculptTerrainVolume(TerrainVolume* terrainVolume, const Vector3F& centre, const Brush& brush)
 	{
 		int firstX = static_cast<int>(std::floor(centre.getX() - brush.outerRadius()));
 		int firstY = static_cast<int>(std::floor(centre.getY() - brush.outerRadius()));
@@ -120,7 +120,7 @@ namespace Cubiquity
 		terrainVolume->markAsModified(region, UpdatePriorities::Immediate);
 	}
 
-	void blurTerrainVolume(TerrainVolumeImpl* terrainVolume, const Vector3F& centre, const Brush& brush)
+	void blurTerrainVolume(TerrainVolume* terrainVolume, const Vector3F& centre, const Brush& brush)
 	{
 		int firstX = static_cast<int>(std::floor(centre.getX() - brush.outerRadius()));
 		int firstY = static_cast<int>(std::floor(centre.getY() - brush.outerRadius()));
@@ -205,7 +205,7 @@ namespace Cubiquity
 		terrainVolume->markAsModified(region, UpdatePriorities::Immediate);
 	}
 
-	void blurTerrainVolume(TerrainVolumeImpl* terrainVolume, const Region& region)
+	void blurTerrainVolume(TerrainVolume* terrainVolume, const Region& region)
 	{
 		Region croppedRegion = region;
 		croppedRegion.cropTo(terrainVolume->getEnclosingRegion());
@@ -300,7 +300,7 @@ namespace Cubiquity
 		}
 	}
 
-	void paintTerrainVolume(TerrainVolumeImpl* terrainVolume, const Vector3F& centre, const Brush& brush, uint32_t materialIndex)
+	void paintTerrainVolume(TerrainVolume* terrainVolume, const Vector3F& centre, const Brush& brush, uint32_t materialIndex)
 	{
 		int firstX = static_cast<int>(std::floor(centre.getX() - brush.outerRadius()));
 		int firstY = static_cast<int>(std::floor(centre.getY() - brush.outerRadius()));

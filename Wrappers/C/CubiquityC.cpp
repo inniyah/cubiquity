@@ -67,7 +67,7 @@ const int MaxNodeHandle = (0x01 << NodeHandleBits) - 1;
 EntryAndExitPoints gEntryAndExitPoints;
 
 std::vector<ColoredCubesVolume*> gColoredCubesVolumes;
-std::vector<TerrainVolumeImpl*> gTerrainVolumes;
+std::vector<TerrainVolume*> gTerrainVolumes;
 
 void validateVolumeHandle(uint32_t volumeHandle)
 {
@@ -123,7 +123,7 @@ ColoredCubesVolume* getVolumeFromHandle(uint32_t volumeHandle)
 	return gColoredCubesVolumes[volumeHandle];
 }
 
-TerrainVolumeImpl* getVolumeFromHandleMC(uint32_t volumeHandle)
+TerrainVolume* getVolumeFromHandleMC(uint32_t volumeHandle)
 {
 	validateVolumeHandleMC(volumeHandle);
 	return gTerrainVolumes[volumeHandle];
@@ -161,7 +161,7 @@ void validateDecodedNodeHandleMC(uint32_t volumeHandle, uint32_t decodedNodeHand
 	}
 
 	// Get the volume (also validates the volume handle)
-	TerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
 
 	// Check the node really exists in the volume
 	OctreeNode<MaterialSet>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
@@ -416,7 +416,7 @@ CUBIQUITYC_API int32_t cuNewTerrainVolume(int32_t lowerX, int32_t lowerY, int32_
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolumeImpl* volume = dynamic_cast<TerrainVolumeImpl*>(createTerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pathToVoxelDatabase, baseNodeSize, createFloor==1, floorDepth));
+	TerrainVolume* volume = new TerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pathToVoxelDatabase, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 
 	// Replace an existing entry if it has been deleted.
@@ -474,7 +474,7 @@ CUBIQUITYC_API int32_t cuGetEnclosingRegionMC(uint32_t volumeHandle, int32_t* lo
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
 	const Region& region = volume->getEnclosingRegion();
 	*lowerX = region.getLowerCorner().getX();
 	*lowerY = region.getLowerCorner().getY();
@@ -947,7 +947,7 @@ CUBIQUITYC_API int32_t cuPickTerrainSurface(uint32_t volumeHandle, float rayStar
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
 
 	if(pickTerrainSurface(volume, rayStartX, rayStartY, rayStartZ, rayDirX, rayDirY, rayDirZ, resultX, resultY, resultZ))
 	{
@@ -968,7 +968,7 @@ CUBIQUITYC_API int32_t cuSculptTerrainVolume(uint32_t volumeHandle, float brushX
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
 
 	sculptTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushInnerRadius, brushOuterRadius, opacity));
 
@@ -979,7 +979,7 @@ CUBIQUITYC_API int32_t cuBlurTerrainVolume(uint32_t volumeHandle, float brushX, 
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
 
 	blurTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushInnerRadius, brushOuterRadius, opacity));
 
@@ -990,7 +990,7 @@ CUBIQUITYC_API int32_t cuBlurTerrainVolumeRegion(uint32_t volumeHandle, int32_t 
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
 
 	blurTerrainVolume(volume, Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ));
 
@@ -1001,7 +1001,7 @@ CUBIQUITYC_API int32_t cuPaintTerrainVolume(uint32_t volumeHandle, float brushX,
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
 
 	paintTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushInnerRadius, brushOuterRadius, opacity), materialIndex);
 
@@ -1015,7 +1015,7 @@ CUBIQUITYC_API int32_t cuGenerateFloor(uint32_t volumeHandle, int32_t lowerLayer
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolumeImpl* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
 
 	generateFloor(volume, lowerLayerHeight, lowerLayerMaterial, upperLayerHeight, upperLayerMaterial);
 
