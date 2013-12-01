@@ -1,3 +1,6 @@
+#ifndef CUBIQUITY_C_INTERFACE_H_
+#define CUBIQUITY_C_INTERFACE_H_
+
 #include <stdint.h> //C99 fixed size data types.
 
 // The following ifdef block is the standard way of creating macros which make exporting 
@@ -101,3 +104,5 @@ extern "C"
 	// Volume generation functions
 	CUBIQUITYC_API int32_t cuGenerateFloor(uint32_t volumeHandle, int32_t lowerLayerHeight, uint32_t lowerLayerMaterial, int32_t upperLayerHeight, uint32_t upperLayerMaterial);
 }
+
+#endif //CUBIQUITY_C_INTERFACE_H_

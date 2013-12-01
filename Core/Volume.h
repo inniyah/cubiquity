@@ -73,11 +73,6 @@ namespace Cubiquity
 	private:
 		Volume& operator=(const Volume&);
 
-		void validate(void);
-		sqlite3* createNewDatabase(const std::string& pathToNewDatabase);
-		sqlite3* openExistingDatabase(const std::string& pathToExistingDatabase);
-		void initialize(void);
-
 		::PolyVox::LargeVolume<VoxelType>* mPolyVoxVolume;
 
 		//::PolyVox::MinizBlockCompressor<VoxelType>* m_pCompressor;

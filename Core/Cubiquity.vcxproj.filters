@@ -258,6 +258,9 @@
     <ClInclude Include="VoxelDatabase.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="SQLiteUtils.h">
+      <Filter>Core</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.inl">

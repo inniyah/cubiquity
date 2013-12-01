@@ -12,6 +12,7 @@
 #include "MainThreadTaskProcessor.h"
 #include "MaterialSet.h"
 #include "Raycasting.h"
+#include "SQLiteUtils.h"
 #include "VoxelDatabase.h"
 
 #include <boost/filesystem.hpp>
@@ -41,31 +42,13 @@ namespace Cubiquity
 		}
 
 		logInfo() << "Creating VoxelDatabase from '" << pathToNewVoxelDatabase << "'";
-
-		int rc = 0; // SQLite return code
-		char* pErrorMsg = 0; // SQLite error message		
-
-		// If we failed, then try again but this time allow it to be created.
+		
 		logInfo() << "Attempting to create '" << pathToNewVoxelDatabase << "'";
-		rc = sqlite3_open_v2(pathToNewVoxelDatabase.c_str(), &mDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL);
-		if(rc != SQLITE_OK)
-		{
-			// If we failed to create it as well then we give up
-			std::stringstream ss;
-			ss << "Failed to create '" << pathToNewVoxelDatabase << "'. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
-			throw std::runtime_error(ss.str().c_str());
-		}
+		EXECUTE_SQLITE_FUNC( sqlite3_open_v2(pathToNewVoxelDatabase.c_str(), &mDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL) );
 		logInfo() << "Successfully created'" << pathToNewVoxelDatabase << "'";
 
 		// Disable syncing
-		rc = sqlite3_exec(mDatabase, "PRAGMA synchronous = OFF", 0, 0, &pErrorMsg);
-		if(rc != SQLITE_OK)
-		{
-			std::stringstream ss;
-			ss << "Failed to set 'synchronous' to OFF. Message was: \"" << pErrorMsg << "\"";
-			sqlite3_free(pErrorMsg);
-			throw std::runtime_error(ss.str().c_str());
-		}
+		EXECUTE_SQLITE_FUNC( sqlite3_exec(mDatabase, "PRAGMA synchronous = OFF", 0, 0, 0) );
 
 		m_pVoxelDatabase = new VoxelDatabase<VoxelType>(mDatabase);
 		
@@ -89,30 +72,13 @@ namespace Cubiquity
 		POLYVOX_THROW_IF(region.getDepthInVoxels() == 0, std::invalid_argument, "Volume depth must be greater than zero");
 
 		logInfo() << "Creating VoxelDatabase from '" << pathToExistingVoxelDatabase << "'";
-
-		int rc = 0; // SQLite return code
-		char* pErrorMsg = 0; // SQLite error message
 		
-		// Open the database if it already exists.
-		rc = sqlite3_open_v2(pathToExistingVoxelDatabase.c_str(), &mDatabase, SQLITE_OPEN_READWRITE, NULL);
-		if(rc != SQLITE_OK)
-		{
-			// If we failed to create it as well then we give up
-			std::stringstream ss;
-			ss << "Failed to open '" << pathToExistingVoxelDatabase << "'. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
-			throw std::runtime_error(ss.str().c_str());
-		}
+		// Open the database
+		EXECUTE_SQLITE_FUNC(  sqlite3_open_v2(pathToExistingVoxelDatabase.c_str(), &mDatabase, SQLITE_OPEN_READWRITE, NULL) );
 		logInfo() << "Successfully opened'" << pathToExistingVoxelDatabase << "'";
 
 		// Disable syncing
-		rc = sqlite3_exec(mDatabase, "PRAGMA synchronous = OFF", 0, 0, &pErrorMsg);
-		if(rc != SQLITE_OK)
-		{
-			std::stringstream ss;
-			ss << "Failed to set 'synchronous' to OFF. Message was: \"" << pErrorMsg << "\"";
-			sqlite3_free(pErrorMsg);
-			throw std::runtime_error(ss.str().c_str());
-		}
+		EXECUTE_SQLITE_FUNC( sqlite3_exec(mDatabase, "PRAGMA synchronous = OFF", 0, 0, 0) );
 
 		m_pVoxelDatabase = new VoxelDatabase<VoxelType>(mDatabase);
 		
@@ -137,16 +103,8 @@ namespace Cubiquity
 		m_pVoxelDatabase->acceptOverrideBlocks();
 		delete m_pVoxelDatabase;
 
-		logInfo() << "Closing database connection...";
-		int rc = sqlite3_close(mDatabase);
-		if(rc == SQLITE_OK)
-		{
-			logInfo() << "Connection closed successfully";
-		}
-		else
-		{
-			logInfo() << "Error closing connection. Error message was: \"" << sqlite3_errstr(rc) << "\"";
-		}
+
+		EXECUTE_SQLITE_FUNC( sqlite3_close(mDatabase) );
 
 		logTrace() << "Exiting ~Volume()";
 	}
@@ -186,25 +144,4 @@ namespace Cubiquity
 		mOctree->update(viewPosition, lodThreshold);
 	}
 
-	////////////////////////////////////////////////////////////////////////////////
-
-	template <typename VoxelType>
-	void validate(void)
-	{
-	}
-
-	template <typename VoxelType>
-	sqlite3* createNewDatabase(const std::string& pathToNewDatabase)
-	{
-	}
-
-	template <typename VoxelType>
-	sqlite3* openExistingDatabase(const std::string& pathToExistingDatabase)
-	{
-	}
-
-	template <typename VoxelType>
-	void initialize(void)
-	{
-	}
 }

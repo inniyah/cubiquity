@@ -80,6 +80,7 @@
     <ClInclude Include="Raycasting.h" />
     <ClInclude Include="Region.h" />
     <ClInclude Include="SmoothSurfaceExtractionTask.h" />
+    <ClInclude Include="SQLiteUtils.h" />
     <ClInclude Include="TerrainVolume.h" />
     <ClInclude Include="TerrainVolumeEditor.h" />
     <ClInclude Include="sqlite\sqlite3.h" />
