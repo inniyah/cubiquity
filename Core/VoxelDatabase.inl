@@ -1,6 +1,8 @@
 #include "PolyVoxCore/Impl/Timer.h"
 #include "PolyVoxCore/Impl/Utility.h"
 
+#include "SQLiteUtils.h"
+
 namespace Cubiquity
 {
 	// From http://stackoverflow.com/a/776550
@@ -18,64 +20,21 @@ namespace Cubiquity
 		,mDatabase(database)
 		,m_pCompressor(0)
 	{
-		int rc = 0; // SQLite return code
-		char* pErrorMsg = 0; // SQLite error message
-
 		// Create the 'Blocks' table if it doesn't exist. Not sure we need 'ASC'
 		// here, but it's in the example (http://goo.gl/NLHjQv) as is the default anyway.
-		rc = sqlite3_exec(mDatabase, "CREATE TABLE IF NOT EXISTS Blocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, &pErrorMsg);
-		if(rc != SQLITE_OK)
-		{
-			std::stringstream ss;
-			ss << "Failed to create 'Blocks' table. Message was: \"" << pErrorMsg << "\"";
-			sqlite3_free(pErrorMsg);
-			throw std::runtime_error(ss.str().c_str());
-		}
+		EXECUTE_SQLITE_FUNC( sqlite3_exec(mDatabase, "CREATE TABLE IF NOT EXISTS Blocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0) );
 
 		// Now create the 'OverrideBlocks' table if it doesn't exist. Not sure we need 'ASC'
 		// here, but it's in the example (http://goo.gl/NLHjQv) as is the default anyway.
-		rc = sqlite3_exec(mDatabase, "CREATE TABLE IF NOT EXISTS OverrideBlocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, &pErrorMsg);
-		if(rc != SQLITE_OK)
-		{
-			std::stringstream ss;
-			ss << "Failed to create 'OverrideBlocks' table. Message was: \"" << pErrorMsg << "\"";
-			sqlite3_free(pErrorMsg);
-			throw std::runtime_error(ss.str().c_str());
-		}
+		EXECUTE_SQLITE_FUNC( sqlite3_exec(mDatabase, "CREATE TABLE IF NOT EXISTS OverrideBlocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0) );
 
 		// Now build the 'insert or replace' prepared statements
-		rc = sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceBlockStatement, NULL);
-		if(rc != SQLITE_OK)
-		{
-			std::stringstream ss;
-			ss << "Failed to prepare 'INSERT OR REPLACE INTO Blocks...' statement. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
-			throw std::runtime_error(ss.str().c_str());
-		}
-
-		rc = sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO OverrideBlocks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceOverrideBlockStatement, NULL);
-		if(rc != SQLITE_OK)
-		{
-			std::stringstream ss;
-			ss << "Failed to prepare 'INSERT OR REPLACE INTO OverrideBlocks...' statement. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
-			throw std::runtime_error(ss.str().c_str());
-		}
+		EXECUTE_SQLITE_FUNC( sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceBlockStatement, NULL) );
+		EXECUTE_SQLITE_FUNC( sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO OverrideBlocks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceOverrideBlockStatement, NULL) );
 
 		// Now build the 'select' prepared statements
-		rc = sqlite3_prepare_v2(mDatabase, "SELECT Data FROM Blocks WHERE Region = ?", -1, &mSelectBlockStatement, NULL);
-		if(rc != SQLITE_OK)
-		{
-			std::stringstream ss;
-			ss << "Failed to prepare 'SELECT Data FROM Blocks...' statement. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
-			throw std::runtime_error(ss.str().c_str());
-		}
-
-		rc = sqlite3_prepare_v2(mDatabase, "SELECT Data FROM OverrideBlocks WHERE Region = ?", -1, &mSelectOverrideBlockStatement, NULL);
-		if(rc != SQLITE_OK)
-		{
-			std::stringstream ss;
-			ss << "Failed to prepare 'SELECT Data FROM OverrideBlocks...' statement. Error message was: \"" << sqlite3_errmsg(mDatabase) << "\"";
-			throw std::runtime_error(ss.str().c_str());
-		}
+		EXECUTE_SQLITE_FUNC( sqlite3_prepare_v2(mDatabase, "SELECT Data FROM Blocks WHERE Region = ?", -1, &mSelectBlockStatement, NULL) );
+		EXECUTE_SQLITE_FUNC( sqlite3_prepare_v2(mDatabase, "SELECT Data FROM OverrideBlocks WHERE Region = ?", -1, &mSelectOverrideBlockStatement, NULL) );
 
 		//Create the compressor
 		m_pCompressor = new ::PolyVox::MinizBlockCompressor<VoxelType>;
@@ -167,17 +126,7 @@ namespace Cubiquity
 	template <typename VoxelType>
 	void VoxelDatabase<VoxelType>::acceptOverrideBlocks(void)
 	{
-		int rc = 0; // SQLite return code
-		char* pErrorMsg = 0; // SQLite error message
-
-		rc = sqlite3_exec(mDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) SELECT Region, Data from OverrideBlocks;", 0, 0, &pErrorMsg);
-		if(rc != SQLITE_OK)
-		{
-			std::stringstream ss;
-			ss << "Failed to drop 'OverrideBlocks' table. Message was: \"" << pErrorMsg << "\"";
-			sqlite3_free(pErrorMsg);
-			throw std::runtime_error(ss.str().c_str());
-		}
+		EXECUTE_SQLITE_FUNC( sqlite3_exec(mDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) SELECT Region, Data from OverrideBlocks;", 0, 0, 0) );
 
 		// The override blocks have been copied accross so we
 		// can now discard the contents of the override table.
@@ -187,16 +136,6 @@ namespace Cubiquity
 	template <typename VoxelType>
 	void VoxelDatabase<VoxelType>::discardOverrideBlocks(void)
 	{
-		int rc = 0; // SQLite return code
-		char* pErrorMsg = 0; // SQLite error message
-
-		rc = sqlite3_exec(mDatabase, "DELETE FROM OverrideBlocks;", 0, 0, &pErrorMsg);
-		if(rc != SQLITE_OK)
-		{
-			std::stringstream ss;
-			ss << "Failed to delete contents of 'OverrideBlocks' table. Message was: \"" << pErrorMsg << "\"";
-			sqlite3_free(pErrorMsg);
-			throw std::runtime_error(ss.str().c_str());
-		}
+		EXECUTE_SQLITE_FUNC( sqlite3_exec(mDatabase, "DELETE FROM OverrideBlocks;", 0, 0, 0) );
 	}
 }

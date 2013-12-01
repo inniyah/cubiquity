@@ -25,7 +25,7 @@ namespace Cubiquity
 			int rc = function; \
 			if(rc != SQLITE_OK) \
 			{ \
-				POLYVOX_THROW(SQLiteError, sqlite3_errmsg(mDatabase)); \
+				POLYVOX_THROW(SQLiteError, sqlite3_errstr(rc)); \
 			} \
 		} while(0)
 }
