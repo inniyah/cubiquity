@@ -65,6 +65,13 @@ namespace Cubiquity
 
 		// Now build the 'select' prepared statements
 		EXECUTE_SQLITE_FUNC( sqlite3_prepare_v2(mDatabase, "SELECT Value FROM Properties WHERE Name = ?", -1, &mSelectPropertyStatement, NULL) );
+
+		setProperty("lowerX", region.getLowerX());
+		setProperty("lowerY", region.getLowerY());
+		setProperty("lowerZ", region.getLowerZ());
+		setProperty("upperX", region.getUpperX());
+		setProperty("upperY", region.getUpperY());
+		setProperty("upperZ", region.getUpperZ());
 	}
 
 	template <typename VoxelType>
@@ -112,7 +119,8 @@ namespace Cubiquity
 		m_pVoxelDatabase->acceptOverrideBlocks();
 		delete m_pVoxelDatabase;
 
-
+		EXECUTE_SQLITE_FUNC( sqlite3_finalize(mSelectPropertyStatement) );
+		EXECUTE_SQLITE_FUNC( sqlite3_finalize(mInsertOrReplacePropertyStatement) );
 		EXECUTE_SQLITE_FUNC( sqlite3_close(mDatabase) );
 
 		logTrace() << "Exiting ~Volume()";
@@ -148,10 +156,16 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	bool getProperty(const std::string& name, std::string& value)
+	void Volume<VoxelType>::update(const Vector3F& viewPosition, float lodThreshold)
 	{
-		sqlite3_reset(mSelectPropertyStatement);
-		sqlite3_bind_int64(mSelectPropertyStatement, 1, name);
+		mOctree->update(viewPosition, lodThreshold);
+	}
+
+	template <typename VoxelType>
+	bool Volume<VoxelType>::getProperty(const std::string& name, std::string& value)
+	{
+		EXECUTE_SQLITE_FUNC( sqlite3_reset(mSelectPropertyStatement) );
+		EXECUTE_SQLITE_FUNC( sqlite3_bind_text(mSelectPropertyStatement, 1, name));
 		if(sqlite3_step(mSelectPropertyStatement) == SQLITE_ROW)
         {
 			// I think the last index is zero because our select statement only returned one column.
@@ -160,46 +174,70 @@ namespace Cubiquity
         }
 		else
 		{
+			logWarning() << "Property '" << name << "' was not found. The default value will be used instead";
 			return false;
 		}
 	}
 
 	template <typename VoxelType>
-	void Volume<VoxelType>::update(const Vector3F& viewPosition, float lodThreshold)
+	int32_t Volume<VoxelType>::getPropertyAsInt(const std::string& name, int32_t defaultValue)
 	{
-		mOctree->update(viewPosition, lodThreshold);
-	}
+		std::string value;
+		if(getProperty(name, value))
+		{
+			return ::atol(value.c_str());
+		}
 
-	template <typename VoxelType>
-	int getPropertyAsInt(const std::string& name, int defaultValue)
-	{
 		return defaultValue;
 	}
 
 	template <typename VoxelType>
-	int getPropertyAsFloat(const std::string& name, float defaultValue)
+	float Volume<VoxelType>::getPropertyAsFloat(const std::string& name, float defaultValue)
 	{
+		std::string value;
+		if(getProperty(name, value))
+		{
+			return ::atof(value.c_str());
+		}
+
 		return defaultValue;
 	}
 
 	template <typename VoxelType>
-	int getPropertyAsString(const std::string& name, const std::string& defaultValue)
+	std::string Volume<VoxelType>::getPropertyAsString(const std::string& name, const std::string& defaultValue)
 	{
+		std::string value;
+		if(getProperty(name, value))
+		{
+			return value;
+		}
+
 		return defaultValue;
 	}
 
 	template <typename VoxelType>
-	void setProperty(const std::string& name, int value)
+	void Volume<VoxelType>::setProperty(const std::string& name, int value)
 	{
+		std::stringstream ss;
+		ss << value;
+		setProperty(name, ss.str());
 	}
 
 	template <typename VoxelType>
-	void setProperty(const std::string& name, float value)
+	void Volume<VoxelType>::setProperty(const std::string& name, float value)
 	{
+		std::stringstream ss;
+		ss << value;
+		setProperty(name, ss.str());
 	}
 
 	template <typename VoxelType>
-	void setProperty(const std::string& name, const std::string& value)
+	void Volume<VoxelType>::setProperty(const std::string& name, const std::string& value)
 	{
+		// Based on: http://stackoverflow.com/a/5308188
+		EXECUTE_SQLITE_FUNC( sqlite3_reset(mInsertOrReplacePropertyStatement) );
+		EXECUTE_SQLITE_FUNC( sqlite3_bind_text(mInsertOrReplacePropertyStatement, 1, name.c_str(), -1, SQLITE_TRANSIENT) );
+		EXECUTE_SQLITE_FUNC( sqlite3_bind_text(mInsertOrReplacePropertyStatement, 2, value.c_str(), -1, SQLITE_TRANSIENT) );
+		sqlite3_step(mInsertOrReplacePropertyStatement); //Don't wrap this one as it isn't supposed to return SQLITE_OK?
 	}
 }

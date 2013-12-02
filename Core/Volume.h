@@ -69,7 +69,7 @@ namespace Cubiquity
 
 	protected:
 		bool getProperty(const std::string& name, std::string& value);
-		int getPropertyAsInt(const std::string& name, int defaultValue);
+		int32_t getPropertyAsInt(const std::string& name, int32_t defaultValue);
 		float getPropertyAsFloat(const std::string& name, float defaultValue);
 		std::string getPropertyAsString(const std::string& name, const std::string& defaultValue);
 

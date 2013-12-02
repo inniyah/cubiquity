@@ -44,10 +44,10 @@ namespace Cubiquity
 	template <typename VoxelType>
 	VoxelDatabase<VoxelType>::~VoxelDatabase()
 	{
-		finalizeStatementWithLogging(mSelectBlockStatement);
-		finalizeStatementWithLogging(mSelectOverrideBlockStatement);
-		finalizeStatementWithLogging(mInsertOrReplaceBlockStatement);
-		finalizeStatementWithLogging(mInsertOrReplaceOverrideBlockStatement);
+		EXECUTE_SQLITE_FUNC( sqlite3_finalize(mSelectBlockStatement) );
+		EXECUTE_SQLITE_FUNC( sqlite3_finalize(mSelectOverrideBlockStatement) );
+		EXECUTE_SQLITE_FUNC( sqlite3_finalize(mInsertOrReplaceBlockStatement) );
+		EXECUTE_SQLITE_FUNC( sqlite3_finalize(mInsertOrReplaceOverrideBlockStatement) );
 
 		delete m_pCompressor;
 	}

@@ -56,13 +56,4 @@ namespace Cubiquity
 		// Return the combined value
 		return result;
 	}
-
-	void finalizeStatementWithLogging(sqlite3_stmt* statement)
-	{
-		int rc = sqlite3_finalize(statement);
-		if(rc != SQLITE_OK)
-		{
-			logWarning() << "Failed to finalize statement. Error message was: \"" << sqlite3_errstr(rc) << "\"";
-		}
-	}
 }
