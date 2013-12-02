@@ -56,6 +56,15 @@ namespace Cubiquity
 
 		mPolyVoxVolume->setMaxNumberOfBlocksInMemory(256);
 		mPolyVoxVolume->setMaxNumberOfUncompressedBlocks(64);
+
+		// Create the 'Properties' table.
+		EXECUTE_SQLITE_FUNC( sqlite3_exec(mDatabase, "CREATE TABLE Properties(Name TEXT PRIMARY KEY, Value TEXT);", 0, 0, 0) );
+
+		// Now build the 'insert or replace' prepared statements
+		EXECUTE_SQLITE_FUNC( sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO Properties (Name, Value) VALUES (?, ?)", -1, &mInsertOrReplacePropertyStatement, NULL) );
+
+		// Now build the 'select' prepared statements
+		EXECUTE_SQLITE_FUNC( sqlite3_prepare_v2(mDatabase, "SELECT Value FROM Properties WHERE Name = ?", -1, &mSelectPropertyStatement, NULL) );
 	}
 
 	template <typename VoxelType>
@@ -139,9 +148,58 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
+	bool getProperty(const std::string& name, std::string& value)
+	{
+		sqlite3_reset(mSelectPropertyStatement);
+		sqlite3_bind_int64(mSelectPropertyStatement, 1, name);
+		if(sqlite3_step(mSelectPropertyStatement) == SQLITE_ROW)
+        {
+			// I think the last index is zero because our select statement only returned one column.
+            value = sqlite3_column_text(mSelectPropertyStatement, 0);
+			return true;
+        }
+		else
+		{
+			return false;
+		}
+	}
+
+	template <typename VoxelType>
 	void Volume<VoxelType>::update(const Vector3F& viewPosition, float lodThreshold)
 	{
 		mOctree->update(viewPosition, lodThreshold);
 	}
 
+	template <typename VoxelType>
+	int getPropertyAsInt(const std::string& name, int defaultValue)
+	{
+		return defaultValue;
+	}
+
+	template <typename VoxelType>
+	int getPropertyAsFloat(const std::string& name, float defaultValue)
+	{
+		return defaultValue;
+	}
+
+	template <typename VoxelType>
+	int getPropertyAsString(const std::string& name, const std::string& defaultValue)
+	{
+		return defaultValue;
+	}
+
+	template <typename VoxelType>
+	void setProperty(const std::string& name, int value)
+	{
+	}
+
+	template <typename VoxelType>
+	void setProperty(const std::string& name, float value)
+	{
+	}
+
+	template <typename VoxelType>
+	void setProperty(const std::string& name, const std::string& value)
+	{
+	}
 }

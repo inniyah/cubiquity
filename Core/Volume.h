@@ -68,6 +68,15 @@ namespace Cubiquity
 		virtual void update(const Vector3F& viewPosition, float lodThreshold);
 
 	protected:
+		bool getProperty(const std::string& name, std::string& value);
+		int getPropertyAsInt(const std::string& name, int defaultValue);
+		float getPropertyAsFloat(const std::string& name, float defaultValue);
+		std::string getPropertyAsString(const std::string& name, const std::string& defaultValue);
+
+		void setProperty(const std::string& name, int value);
+		void setProperty(const std::string& name, float value);
+		void setProperty(const std::string& name, const std::string& value);
+
 		Octree<VoxelType>* mOctree;
 
 	private:
@@ -79,6 +88,9 @@ namespace Cubiquity
 		VoxelDatabase<VoxelType>* m_pVoxelDatabase;
 
 		sqlite3* mDatabase;
+
+		sqlite3_stmt* mSelectPropertyStatement;		
+		sqlite3_stmt* mInsertOrReplacePropertyStatement;
 
 		// Friend functions
 		friend class Octree<VoxelType>;
