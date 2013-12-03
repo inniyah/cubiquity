@@ -12,34 +12,9 @@ using namespace PolyVox;
 namespace Cubiquity
 {
 
-	GameplayTerrainVolume::GameplayTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pathToVoxelDatabase, unsigned int baseNodeSize, bool createFloor, unsigned int floorDepth)
+	GameplayTerrainVolume::GameplayTerrainVolume(const char* pathToVoxelDatabase, unsigned int baseNodeSize)
 	{
-		mCubiquityVolume = new TerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pathToVoxelDatabase, baseNodeSize);
-
-		if(createFloor)
-		{
-			generateFloor(mCubiquityVolume, floorDepth-2, 0, floorDepth, 1);
-		}
-
-		mRootGameplayOctreeNode = new GameplayOctreeNode< MaterialSet >(mCubiquityVolume->getRootOctreeNode(), 0);
-	}
-
-	GameplayTerrainVolume::GameplayTerrainVolume(const char* dataToLoad, const char* pathToVoxelDatabase, unsigned int baseNodeSize)
-	{
-		// Check whether the provided data is a file or a directory
-		FILE* file = fopen(dataToLoad, "rb");
-		if(file)
-		{
-			// For now we assume it's .vxl
-			//mCubiquityVolume = importVxl(dataToLoad);
-			POLYVOX_ASSERT(false, ".vxl data cannot be loaded into smooth terrain volumes");
-		}
-		else
-		{
-			// For now we assume it's VolDat. Leter on we should check for
-			// Volume.idx and load raw Cubiquity data instead if necessary.
-			mCubiquityVolume = importVolDat<TerrainVolume>(dataToLoad, pathToVoxelDatabase, baseNodeSize);
-		}
+		mCubiquityVolume = new TerrainVolume(pathToVoxelDatabase, baseNodeSize);
 
 		mRootGameplayOctreeNode = new GameplayOctreeNode< MaterialSet >(mCubiquityVolume->getRootOctreeNode(), 0);
 	}

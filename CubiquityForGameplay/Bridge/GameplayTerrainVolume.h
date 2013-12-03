@@ -21,20 +21,9 @@ namespace Cubiquity
 		 *
 		 * @script{create}
 		 */
-		static GameplayTerrainVolume* create(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pathToVoxelDatabase, unsigned int baseNodeSize, bool createFloor, unsigned int floorDepth)
+		static GameplayTerrainVolume* create(const char* pathToVoxelDatabase, unsigned int baseNodeSize)
 		{
-			GameplayTerrainVolume* volume = new GameplayTerrainVolume(lowerX, lowerY, lowerZ, upperX, upperY, upperZ, pathToVoxelDatabase, baseNodeSize, createFloor, floorDepth);
-			return volume;
-		}
-
-		/**
-		 * Creates a new GameplayTerrainVolume.
-		 *
-		 * @script{create}
-		 */
-		static GameplayTerrainVolume* create(const char* dataToLoad, const char* pathToVoxelDatabase, unsigned int baseNodeSize)
-		{
-			GameplayTerrainVolume* volume = new GameplayTerrainVolume(dataToLoad, pathToVoxelDatabase, baseNodeSize);
+			GameplayTerrainVolume* volume = new GameplayTerrainVolume(pathToVoxelDatabase, baseNodeSize);
 			return volume;
 		}
 
@@ -77,8 +66,7 @@ namespace Cubiquity
 		void syncNode(OctreeNode< MaterialSet >* octreeNode, GameplayOctreeNode< MaterialSet >* gameplayOctreeNode);
 
 	protected:
-		GameplayTerrainVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pathToVoxelDatabase, unsigned int baseNodeSize, bool createFloor, unsigned int floorDepth);
-		GameplayTerrainVolume(const char* dataToLoad, const char* pathToVoxelDatabase, unsigned int baseNodeSize);
+		GameplayTerrainVolume(const char* pathToVoxelDatabase, unsigned int baseNodeSize);
 		virtual ~GameplayTerrainVolume();
 
 	private:

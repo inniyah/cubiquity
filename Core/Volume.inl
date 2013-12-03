@@ -60,12 +60,11 @@ namespace Cubiquity
 		// Create the 'Properties' table.
 		EXECUTE_SQLITE_FUNC( sqlite3_exec(mDatabase, "CREATE TABLE Properties(Name TEXT PRIMARY KEY, Value TEXT);", 0, 0, 0) );
 
-		// Now build the 'insert or replace' prepared statements
-		EXECUTE_SQLITE_FUNC( sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO Properties (Name, Value) VALUES (?, ?)", -1, &mInsertOrReplacePropertyStatement, NULL) );
-
-		// Now build the 'select' prepared statements
+		// Now build the 'select' and 'insert or replace' prepared statements
 		EXECUTE_SQLITE_FUNC( sqlite3_prepare_v2(mDatabase, "SELECT Value FROM Properties WHERE Name = ?", -1, &mSelectPropertyStatement, NULL) );
+		EXECUTE_SQLITE_FUNC( sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO Properties (Name, Value) VALUES (?, ?)", -1, &mInsertOrReplacePropertyStatement, NULL) );		
 
+		// Store the volume region to the database.
 		setProperty("lowerX", region.getLowerX());
 		setProperty("lowerY", region.getLowerY());
 		setProperty("lowerZ", region.getLowerZ());
@@ -81,12 +80,6 @@ namespace Cubiquity
 		,mOctree(0)
 		,mDatabase(0)
 	{
-		Region region(0, 0, 0, 127, 31, 127); //HACK!!!!
-
-		POLYVOX_THROW_IF(region.getWidthInVoxels() == 0, std::invalid_argument, "Volume width must be greater than zero");
-		POLYVOX_THROW_IF(region.getHeightInVoxels() == 0, std::invalid_argument, "Volume height must be greater than zero");
-		POLYVOX_THROW_IF(region.getDepthInVoxels() == 0, std::invalid_argument, "Volume depth must be greater than zero");
-
 		logInfo() << "Creating VoxelDatabase from '" << pathToExistingVoxelDatabase << "'";
 		
 		// Open the database
@@ -95,6 +88,20 @@ namespace Cubiquity
 
 		// Disable syncing
 		EXECUTE_SQLITE_FUNC( sqlite3_exec(mDatabase, "PRAGMA synchronous = OFF", 0, 0, 0) );
+
+		// Now build the 'select' and 'insert or replace' prepared statements
+		EXECUTE_SQLITE_FUNC( sqlite3_prepare_v2(mDatabase, "SELECT Value FROM Properties WHERE Name = ?", -1, &mSelectPropertyStatement, NULL) );
+		EXECUTE_SQLITE_FUNC( sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO Properties (Name, Value) VALUES (?, ?)", -1, &mInsertOrReplacePropertyStatement, NULL) );
+
+		// Get the volume region from the database. The default values
+		// are fairly arbitrary as there is no sensible choice here.
+		int32_t lowerX = getPropertyAsInt("lowerX", 0);
+		int32_t lowerY = getPropertyAsInt("lowerY", 0);
+		int32_t lowerZ = getPropertyAsInt("lowerZ", 0);
+		int32_t upperX = getPropertyAsInt("upperX", 512);
+		int32_t upperY = getPropertyAsInt("upperY", 512);
+		int32_t upperZ = getPropertyAsInt("upperZ", 512);
+		Region region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
 
 		m_pVoxelDatabase = new VoxelDatabase<VoxelType>(mDatabase);
 		
@@ -165,11 +172,11 @@ namespace Cubiquity
 	bool Volume<VoxelType>::getProperty(const std::string& name, std::string& value)
 	{
 		EXECUTE_SQLITE_FUNC( sqlite3_reset(mSelectPropertyStatement) );
-		EXECUTE_SQLITE_FUNC( sqlite3_bind_text(mSelectPropertyStatement, 1, name));
+		EXECUTE_SQLITE_FUNC( sqlite3_bind_text(mSelectPropertyStatement, 1, name.c_str(), -1, SQLITE_TRANSIENT) );
 		if(sqlite3_step(mSelectPropertyStatement) == SQLITE_ROW)
         {
 			// I think the last index is zero because our select statement only returned one column.
-            value = sqlite3_column_text(mSelectPropertyStatement, 0);
+            value = std::string( reinterpret_cast<const char*>( sqlite3_column_text(mSelectPropertyStatement, 0) ) );
 			return true;
         }
 		else
