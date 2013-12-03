@@ -68,7 +68,6 @@ namespace Cubiquity
 		virtual void update(const Vector3F& viewPosition, float lodThreshold);
 
 	protected:
-		bool getProperty(const std::string& name, std::string& value);
 		int32_t getPropertyAsInt(const std::string& name, int32_t defaultValue);
 		float getPropertyAsFloat(const std::string& name, float defaultValue);
 		std::string getPropertyAsString(const std::string& name, const std::string& defaultValue);
@@ -81,6 +80,8 @@ namespace Cubiquity
 
 	private:
 		Volume& operator=(const Volume&);
+
+		bool getProperty(const std::string& name, std::string& value);
 
 		::PolyVox::LargeVolume<VoxelType>* mPolyVoxVolume;
 
