@@ -13,41 +13,9 @@ using namespace PolyVox;
 
 namespace Cubiquity
 {
-	GameplayColoredCubesVolume::GameplayColoredCubesVolume(int lowerX, int lowerY, int lowerZ, int upperX, int upperY, int upperZ, const char* pathToVoxelDatabase, unsigned int baseNodeSize)
+	GameplayColoredCubesVolume::GameplayColoredCubesVolume(const char* pathToVoxelDatabase, unsigned int baseNodeSize)
 	{
-		mCubiquityVolume = new ColoredCubesVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pathToVoxelDatabase, baseNodeSize);
-
-		GP_ASSERT(mCubiquityVolume);
-		GP_ASSERT(mCubiquityVolume->getRootOctreeNode());
-
-		mRootGameplayOctreeNode = new GameplayOctreeNode< Color >(mCubiquityVolume->getRootOctreeNode(), 0);
-	}
-
-	GameplayColoredCubesVolume::GameplayColoredCubesVolume(const char* dataToLoad, const char* pathToVoxelDatabase, unsigned int baseNodeSize)
-	{
-		// Check whether the provided data is a file or a directory
-		FILE* file = fopen(dataToLoad, "rb");
-		if(file)
-		{
-			// For now we assume it's .vxl
-			mCubiquityVolume = importVxl(dataToLoad, pathToVoxelDatabase);
-		}
-		else
-		{
-			// For now we assume it's VolDat. Leter on we should check for
-			// Volume.idx and load raw Cubiquity data instead if necessary.
-			mCubiquityVolume = importVolDat<ColoredCubesVolume>(dataToLoad, pathToVoxelDatabase, baseNodeSize);
-		}
-
-		GP_ASSERT(mCubiquityVolume);
-		GP_ASSERT(mCubiquityVolume->getRootOctreeNode());
-
-		mRootGameplayOctreeNode = new GameplayOctreeNode< Color >(mCubiquityVolume->getRootOctreeNode(), 0);
-	}
-
-	GameplayColoredCubesVolume::GameplayColoredCubesVolume(const char* heightmapFileName, const char* colormapFileName, const char* pathToVoxelDatabase, unsigned int baseNodeSize)
-	{
-		mCubiquityVolume = importHeightmap(heightmapFileName, colormapFileName, pathToVoxelDatabase, baseNodeSize);
+		mCubiquityVolume = new ColoredCubesVolume(pathToVoxelDatabase, baseNodeSize);
 
 		GP_ASSERT(mCubiquityVolume);
 		GP_ASSERT(mCubiquityVolume->getRootOctreeNode());
