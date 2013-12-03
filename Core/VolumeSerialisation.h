@@ -13,8 +13,6 @@
 #undef STB_IMAGE_WRITE_IMPLEMENTATION
 #include "stb_image_write.h"
 
-#include "boost/filesystem.hpp"
-
 #include <climits>
 #include <map>
 #include <string>

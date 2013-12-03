@@ -15,8 +15,6 @@
 #include "SQLiteUtils.h"
 #include "VoxelDatabase.h"
 
-#include <boost/filesystem.hpp>
-
 #include <stdlib.h>
 #include <time.h>
 
