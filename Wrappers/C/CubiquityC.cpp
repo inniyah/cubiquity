@@ -228,6 +228,20 @@ OctreeNode<MaterialSet>* getNodeFromEncodedHandleMC(uint32_t encodedNodeHandle)
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// Color functions
+////////////////////////////////////////////////////////////////////////////////
+CUBIQUITYC_API int32_t cuBuildColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha, CuColor* color)
+{
+	OPEN_C_INTERFACE
+
+	Color temp(red, green, blue, alpha);
+	CuColor* ptr = (CuColor*)&temp;
+	*color = *ptr;
+
+	CLOSE_C_INTERFACE
+}
+
+////////////////////////////////////////////////////////////////////////////////
 // Volume functions
 ////////////////////////////////////////////////////////////////////////////////
 CUBIQUITYC_API int32_t cuNewEmptyColoredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pathToNewVoxelDatabase, uint32_t baseNodeSize, uint32_t* result)
