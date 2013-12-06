@@ -211,7 +211,7 @@ void MeshGame::initialize()
 	//mVolume = GameplayVolumeSerialisation::gameplayImportSmoothSlices("../../SliceData/SmoothVoxeliensTerrain/");
 	
 	//mVolume = GameplayTerrainVolume::create("C:/Code/cubiquity/Examples/SliceData/SmoothVoxeliensTerrain/", "C:/temp/volume.vdb", 32);
-	mVolume = GameplayTerrainVolume::create("C:/temp/volume.vdb", 32);
+	mVolume = GameplayTerrainVolume::create("C:/code/cubiquity/Examples/Volumes/Version 0/SmoothVoxeliensTerrain.vdb", 32);
 	mVolumeEditor = new GameplayTerrainVolumeEditor(mVolume);
 #endif
 #ifdef TERRAIN_CUBIC
@@ -224,7 +224,7 @@ void MeshGame::initialize()
 	//mVolume = GameplayColoredCubesVolume::create("D:\\Google Drive\\VolumesOfFun\\VolumeData\\Industry.vxl", "D:\\temp\\voldata\\", 16);
 
 	//mVolume = GameplayColoredCubesVolume::create("C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/", "C:/temp/VoxeliensTerrain.vdb", 32);
-	mVolume = GameplayColoredCubesVolume::create("C:/temp/VoxeliensTerrain.vdb", 32);
+	mVolume = GameplayColoredCubesVolume::create("C:/code/cubiquity/Examples/Volumes/Version 0/VoxeliensTerrain.vdb", 32);
 
 	mVolumeEditor = 0;
 #endif
