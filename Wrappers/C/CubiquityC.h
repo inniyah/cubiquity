@@ -41,6 +41,7 @@ extern "C"
 	CUBIQUITYC_API int32_t cuDeleteColoredCubesVolume(uint32_t volumeHandle);
 
 	CUBIQUITYC_API int32_t cuGetEnclosingRegion(uint32_t volumeHandle, int32_t* lowerX, int32_t* lowerY, int32_t* lowerZ, int32_t* upperX, int32_t* upperY, int32_t* upperZ);
+
 	CUBIQUITYC_API int32_t cuGetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuColor* color);
 	CUBIQUITYC_API int32_t cuSetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuColor color);
 
@@ -52,7 +53,6 @@ extern "C"
 	CUBIQUITYC_API int32_t cuUpdateVolumeMC(uint32_t volumeHandle);
 	CUBIQUITYC_API int32_t cuDeleteTerrainVolume(uint32_t volumeHandle);
 
-	CUBIQUITYC_API int32_t cuGetEnclosingRegionMC(uint32_t volumeHandle, int32_t* lowerX, int32_t* lowerY, int32_t* lowerZ, int32_t* upperX, int32_t* upperY, int32_t* upperZ);
 	CUBIQUITYC_API int32_t cuGetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuMaterialSet* materialSet);
 	CUBIQUITYC_API int32_t cuSetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuMaterialSet materialSet);
 

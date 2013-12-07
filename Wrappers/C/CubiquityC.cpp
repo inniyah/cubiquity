@@ -398,14 +398,41 @@ CUBIQUITYC_API int32_t cuGetEnclosingRegion(uint32_t volumeHandle, int32_t* lowe
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
-	const Region& region = volume->getEnclosingRegion();
-	*lowerX = region.getLowerCorner().getX();
-	*lowerY = region.getLowerCorner().getY();
-	*lowerZ = region.getLowerCorner().getZ();
-	*upperX = region.getUpperCorner().getX();
-	*upperY = region.getUpperCorner().getY();
-	*upperZ = region.getUpperCorner().getZ();
+	//This function is rather hacky!
+
+	try
+	{
+		ColoredCubesVolume* coloredCubesVolume = getVolumeFromHandle(volumeHandle);
+		const Region& region = coloredCubesVolume->getEnclosingRegion();
+
+		*lowerX = region.getLowerCorner().getX();
+		*lowerY = region.getLowerCorner().getY();
+		*lowerZ = region.getLowerCorner().getZ();
+		*upperX = region.getUpperCorner().getX();
+		*upperY = region.getUpperCorner().getY();
+		*upperZ = region.getUpperCorner().getZ();
+	}
+	catch(std::invalid_argument& e)
+	{
+		// It might be the wrong volume type, we'll try the other one in a moment
+	}
+
+	try
+	{
+		TerrainVolume* terrainVolume = getVolumeFromHandleMC(volumeHandle);
+		const Region& region = terrainVolume->getEnclosingRegion();
+
+		*lowerX = region.getLowerCorner().getX();
+		*lowerY = region.getLowerCorner().getY();
+		*lowerZ = region.getLowerCorner().getZ();
+		*upperX = region.getUpperCorner().getX();
+		*upperY = region.getUpperCorner().getY();
+		*upperZ = region.getUpperCorner().getZ();
+	}
+	catch(std::invalid_argument& e)
+	{
+		// It was probably the other volume type, so don't worry.
+	}
 
 	CLOSE_C_INTERFACE
 }
@@ -544,22 +571,6 @@ CUBIQUITYC_API int32_t cuDeleteTerrainVolume(uint32_t volumeHandle)
 
 	// In the future we could consider reusing this slot as we can detect that it set to zero.
 	gTerrainVolumes[volumeHandle] = 0;
-
-	CLOSE_C_INTERFACE
-}
-
-CUBIQUITYC_API int32_t cuGetEnclosingRegionMC(uint32_t volumeHandle, int32_t* lowerX, int32_t* lowerY, int32_t* lowerZ, int32_t* upperX, int32_t* upperY, int32_t* upperZ)
-{
-	OPEN_C_INTERFACE
-
-	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
-	const Region& region = volume->getEnclosingRegion();
-	*lowerX = region.getLowerCorner().getX();
-	*lowerY = region.getLowerCorner().getY();
-	*lowerZ = region.getLowerCorner().getZ();
-	*upperX = region.getUpperCorner().getX();
-	*upperY = region.getUpperCorner().getY();
-	*upperZ = region.getUpperCorner().getZ();
 
 	CLOSE_C_INTERFACE
 }
