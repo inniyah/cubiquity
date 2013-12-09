@@ -2,6 +2,7 @@
 
 #include "CmdOption.h"
 #include "ImportImageSlices.h"
+#include "ImportMagicaVoxel.h"
 #include "ImportVXL.h"
 
 #include <cstdio>

@@ -13,12 +13,15 @@
   <ItemGroup>
     <ClInclude Include="CmdOption.h" />
     <ClInclude Include="ImportImageSlices.h" />
+    <ClInclude Include="ImportMagicaVoxel.h" />
     <ClInclude Include="ImportVXL.h" />
+    <ClInclude Include="MagicaVoxelModel.h" />
     <ClInclude Include="main.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CmdOption.cpp" />
     <ClCompile Include="ImportImageSlices.cpp" />
+    <ClCompile Include="ImportMagicaVoxel.cpp" />
     <ClCompile Include="ImportVXL.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="stb_image.c" />
