@@ -184,9 +184,13 @@ private :
                 // last color is not used, so we only need to read 255 colors
                 isCustomPalette = true;
                 fread( palette + 1, sizeof( MV_RGBA ), 255, fp );
+
+                // NOTICE : skip the last reserved color
+                MV_RGBA reserved;
+                fread( &reserved, sizeof( MV_RGBA ), 1, fp );
             }
 
-            // skip unused chunk or rest of current chunk
+            // skip unread bytes of current chunk or the whole unused chunk
             fseek( fp, sub.end, SEEK_SET );
         }
         
@@ -204,7 +208,7 @@ private :
         chunk.contentSize  = ReadInt( fp );
         chunk.childrenSize = ReadInt( fp );
         
-        // end of chunk
+        // end of chunk : used for skipping the whole chunk
         chunk.end = ftell( fp ) + chunk.contentSize + chunk.childrenSize;
         
         // print chunk info
