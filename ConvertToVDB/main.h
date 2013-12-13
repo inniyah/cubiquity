@@ -9,6 +9,7 @@ namespace InputFormats
 	{
 		ImageSlices,
 		VXL,
+		MagicaVoxel,
 		Unknown
 	};
 }

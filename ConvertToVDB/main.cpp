@@ -39,10 +39,16 @@ int main(int argc, char* argv[])
 	switch(inputFormat)
 	{
 	case InputFormats::ImageSlices:
+		cout << "Identified input as image slices" << endl;
 		importImageSlices(input, outputFilename);
 		break;
 	case InputFormats::VXL:
+		cout << "Identified input as .vxl file" << endl;
 		importVxl(input, outputFilename);
+		break;
+	case InputFormats::MagicaVoxel:
+		cout << "Identified input as Magica Voxel file" << endl;
+		importMagicaVoxel(input, outputFilename);
 		break;
 	default:
 		cerr << "Unrecognised input format" << endl;
@@ -63,6 +69,12 @@ InputFormat determineInputFormat(const std::string& input)
 	if(imageFiles.size() > 0)
 	{
 		return InputFormats::ImageSlices;
+	}
+
+	// Determine if we have a Magica file.
+	if(isMagicaVoxel(input))
+	{
+		return InputFormats::MagicaVoxel;
 	}
 
 	// Determine if we have a VXL file by running the VXL importer in dry-run mode

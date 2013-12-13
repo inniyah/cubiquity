@@ -28,6 +28,54 @@ const unsigned int mv_default_palette[ 256 ] = {
     0xff880000, 0xff770000, 0xff550000, 0xff440000, 0xff220000, 0xff110000, 0xffeeeeee, 0xffdddddd, 0xffbbbbbb, 0xffaaaaaa, 0xff888888, 0xff777777, 0xff555555, 0xff444444, 0xff222222, 0xff111111
 };
 
+int ReadInt( FILE *fp )
+{
+    int v = 0;
+    fread( &v, 4, 1, fp );
+    return v;
+}
+
+// This function has been derived from the official Magica Voxel import
+// code: https://voxel.codeplex.com/wikipage?title=Sample%20Codes
+bool isMagicaVoxel(const std::string& filename)
+{
+    FILE *fp = fopen(filename.c_str(), "rb");
+	if (!fp)
+	{
+        return false;
+    }
+
+	const int MV_VERSION = 150;
+        
+    const int ID_VOX  = MV_ID( 'V', 'O', 'X', ' ' );
+    const int ID_MAIN = MV_ID( 'M', 'A', 'I', 'N' );
+    const int ID_SIZE = MV_ID( 'S', 'I', 'Z', 'E' );
+    const int ID_XYZI = MV_ID( 'X', 'Y', 'Z', 'I' );
+    const int ID_RGBA = MV_ID( 'R', 'G', 'B', 'A' );
+       
+    // magic number
+	int magic;
+	fread(&magic, 4, 1, fp);
+    if ( magic != ID_VOX )
+	{
+        // Magic number does not match
+        return false;
+    }
+        
+    // version
+    int version;
+	fread(&version, 4, 1, fp);
+    if (version != MV_VERSION)
+	{
+        // Version does not match
+        return false;
+    }
+
+	fclose(fp);
+
+	return true;
+}
+
 bool importMagicaVoxel(const std::string& filename, const std::string& pathToVoxelDatabase)
 {
 	MV_Model model;
