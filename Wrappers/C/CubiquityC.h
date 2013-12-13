@@ -29,6 +29,9 @@ extern "C"
 	};
 	typedef struct CuMaterialSet_s CuMaterialSet;
 
+	// Version functions
+	CUBIQUITYC_API int32_t cuGetVersionNumber(uint32_t* majorVersion, uint32_t* minorVersion, uint32_t* patchVersion);
+
 	// Color functions
 	CUBIQUITYC_API int32_t cuBuildColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha, CuColor* color);
 

@@ -15,6 +15,10 @@
 
 #include <vector>
 
+const uint32_t CuMajorVersion = 0;
+const uint32_t CuMinorVersion = 5;
+const uint32_t CuPatchVersion = 0;
+
 #define OPEN_C_INTERFACE \
 	try \
 	{
@@ -225,6 +229,20 @@ OctreeNode<MaterialSet>* getNodeFromEncodedHandleMC(uint32_t encodedNodeHandle)
 	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
 	OctreeNode<MaterialSet>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
 	return node;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Version functions
+////////////////////////////////////////////////////////////////////////////////
+CUBIQUITYC_API int32_t cuGetVersionNumber(uint32_t* majorVersion, uint32_t* minorVersion, uint32_t* patchVersion)
+{
+	OPEN_C_INTERFACE
+
+	*majorVersion = CuMajorVersion;
+	*minorVersion = CuMinorVersion;
+	*patchVersion = CuPatchVersion;
+
+	CLOSE_C_INTERFACE
 }
 
 ////////////////////////////////////////////////////////////////////////////////
