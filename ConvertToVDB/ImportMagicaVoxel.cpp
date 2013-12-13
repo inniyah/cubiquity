@@ -59,7 +59,7 @@ bool importMagicaVoxel(const std::string& filename, const std::string& pathToVox
 		CuColor color;
 		cuBuildColor(rgba.r, rgba.g, rgba.b, rgba.a, &color);
 
-		if(cuSetVoxel(volumeHandle, model.voxels[i].x, model.voxels[i].y, model.voxels[i].z, color) != 1) // FIXME - Hardcoded return value.
+		if(cuSetVoxel(volumeHandle, model.voxels[i].x, model.voxels[i].z, model.voxels[i].y, color) != 1) // FIXME - Hardcoded return value.
 		{
 			cerr << "Error setting voxel color" << endl;
 			return false;
