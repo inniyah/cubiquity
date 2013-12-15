@@ -681,15 +681,31 @@ CUBIQUITYC_API int32_t cuHasChildNode(uint32_t nodeHandle, uint32_t childX, uint
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<Color>* node = getNodeFromEncodedHandle(nodeHandle);
-	OctreeNode<Color>* child = node->getChildNode(childX, childY, childZ);
-	if(child)
+	try
 	{
-		*result =  1;
+		OctreeNode<Color>* node = getNodeFromEncodedHandle(nodeHandle);
+		OctreeNode<Color>* child = node->getChildNode(childX, childY, childZ);
+		if(child)
+		{
+			*result =  1;
+		}
+		else
+		{
+			*result = 0;
+		}
 	}
-	else
+	catch(std::invalid_argument& e)
 	{
-		*result = 0;
+		OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
+		OctreeNode<MaterialSet>* child = node->getChildNode(childX, childY, childZ);
+		if(child)
+		{
+			*result =  1;
+		}
+		else
+		{
+			*result = 0;
+		}
 	}
 
 	CLOSE_C_INTERFACE
@@ -699,21 +715,42 @@ CUBIQUITYC_API int32_t cuGetChildNode(uint32_t nodeHandle, uint32_t childX, uint
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<Color>* node = getNodeFromEncodedHandle(nodeHandle);
-	OctreeNode<Color>* child = node->getChildNode(childX, childY, childZ);
-
-	if(!node)
+	try
 	{
-		POLYVOX_THROW(PolyVox::invalid_operation, "The specified child node does not exist! Please check this with cuHasChildNode() first");
+		OctreeNode<Color>* node = getNodeFromEncodedHandle(nodeHandle);
+		OctreeNode<Color>* child = node->getChildNode(childX, childY, childZ);
+
+		if(!node)
+		{
+			POLYVOX_THROW(PolyVox::invalid_operation, "The specified child node does not exist! Please check this with cuHasChildNode() first");
+		}
+
+		uint32_t decodedNodeHandle = child->mSelf;
+
+		uint32_t volumeHandle;
+		uint32_t dummy;
+		decodeNodeHandle(nodeHandle, &volumeHandle, &dummy);
+
+		*result = encodeNodeHandle(volumeHandle, decodedNodeHandle);
 	}
+	catch(std::invalid_argument& e)
+	{
+		OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
+		OctreeNode<MaterialSet>* child = node->getChildNode(childX, childY, childZ);
 
-	uint32_t decodedNodeHandle = child->mSelf;
+		if(!node)
+		{
+			POLYVOX_THROW(PolyVox::invalid_operation, "The specified child node does not exist! Please check this with cuHasChildNode() first");
+		}
 
-	uint32_t volumeHandle;
-	uint32_t dummy;
-	decodeNodeHandle(nodeHandle, &volumeHandle, &dummy);
+		uint32_t decodedNodeHandle = child->mSelf;
 
-	*result = encodeNodeHandle(volumeHandle, decodedNodeHandle);
+		uint32_t volumeHandle;
+		uint32_t dummy;
+		decodeNodeHandleMC(nodeHandle, &volumeHandle, &dummy);
+
+		*result = encodeNodeHandleMC(volumeHandle, decodedNodeHandle);
+	}
 
 	CLOSE_C_INTERFACE
 }
@@ -722,8 +759,16 @@ CUBIQUITYC_API int32_t cuNodeHasMesh(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<Color>* node = getNodeFromEncodedHandle(nodeHandle);
-	*result = (node->mPolyVoxMesh != 0) ? 1 : 0;
+	try
+	{
+		OctreeNode<Color>* node = getNodeFromEncodedHandle(nodeHandle);
+		*result = (node->mPolyVoxMesh != 0) ? 1 : 0;
+	}
+	catch(std::invalid_argument& e)
+	{
+		OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
+		*result = (node->mPolyVoxMesh != 0) ? 1 : 0;
+	}
 
 	CLOSE_C_INTERFACE
 }
@@ -732,11 +777,22 @@ CUBIQUITYC_API int32_t cuGetNodePosition(uint32_t nodeHandle, int32_t* x, int32_
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<Color>* node = getNodeFromEncodedHandle(nodeHandle);
-	const Vector3I& lowerCorner = node->mRegion.getLowerCorner();
-	*x = lowerCorner.getX();
-	*y = lowerCorner.getY();
-	*z = lowerCorner.getZ();
+	try
+	{
+		OctreeNode<Color>* node = getNodeFromEncodedHandle(nodeHandle);
+		const Vector3I& lowerCorner = node->mRegion.getLowerCorner();
+		*x = lowerCorner.getX();
+		*y = lowerCorner.getY();
+		*z = lowerCorner.getZ();
+	}
+	catch(std::invalid_argument& e)
+	{
+		OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
+		const Vector3I& lowerCorner = node->mRegion.getLowerCorner();
+		*x = lowerCorner.getX();
+		*y = lowerCorner.getY();
+		*z = lowerCorner.getZ();
+	}
 
 	CLOSE_C_INTERFACE
 }
@@ -745,8 +801,16 @@ CUBIQUITYC_API int32_t cuGetMeshLastUpdated(uint32_t nodeHandle, uint32_t* resul
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<Color>* node = getNodeFromEncodedHandle(nodeHandle);
-	*result = node->mMeshLastUpdated;
+	try
+	{
+		OctreeNode<Color>* node = getNodeFromEncodedHandle(nodeHandle);
+		*result = node->mMeshLastUpdated;
+	}
+	catch(std::invalid_argument& e)
+	{
+		OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
+		*result = node->mMeshLastUpdated;
+	}
 
 	CLOSE_C_INTERFACE
 }
