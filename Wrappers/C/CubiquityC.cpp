@@ -19,6 +19,16 @@ const uint32_t CuMajorVersion = 0;
 const uint32_t CuMinorVersion = 5;
 const uint32_t CuPatchVersion = 0;
 
+namespace VolumeTypes
+{
+	enum VolumeType
+	{
+		ColoredCubes,
+		Terrain
+	};
+}
+typedef VolumeTypes::VolumeType VolumeType;
+
 #define OPEN_C_INTERFACE \
 	try \
 	{
@@ -70,8 +80,10 @@ const int MaxNodeHandle = (0x01 << NodeHandleBits) - 1;
 // The single global instance of the above class.
 EntryAndExitPoints gEntryAndExitPoints;
 
-std::vector<ColoredCubesVolume*> gColoredCubesVolumes;
-std::vector<TerrainVolume*> gTerrainVolumes;
+/*std::vector<ColoredCubesVolume*> gColoredCubesVolumes;
+std::vector<TerrainVolume*> gTerrainVolumes;*/
+std::vector<void*> gVolumes;
+std::vector<VolumeType> gVolumeTypes;
 
 void validateVolumeHandle(uint32_t volumeHandle)
 {
@@ -82,14 +94,14 @@ void validateVolumeHandle(uint32_t volumeHandle)
 		POLYVOX_THROW(std::invalid_argument, ss.str());
 	}
 
-	if(volumeHandle >= gColoredCubesVolumes.size())
+	if(volumeHandle >= gVolumes.size())
 	{
 		std::stringstream ss;
 		ss << "Volume handle'" << volumeHandle << "' is outside volume array bounds";
 		POLYVOX_THROW(std::invalid_argument, ss.str());
 	}
 
-	if(gColoredCubesVolumes[volumeHandle] == 0) 
+	if(gVolumes[volumeHandle] == 0) 
 	{
 		std::stringstream ss;
 		ss << "Volume handle'" << volumeHandle << "' is valid but the corresponding volume pointer is null";
@@ -97,7 +109,7 @@ void validateVolumeHandle(uint32_t volumeHandle)
 	}
 }
 
-void validateVolumeHandleMC(uint32_t volumeHandle)
+/*void validateVolumeHandleMC(uint32_t volumeHandle)
 {
 	if(volumeHandle > MaxVolumeHandle)
 	{
@@ -119,19 +131,35 @@ void validateVolumeHandleMC(uint32_t volumeHandle)
 		ss << "Volume handle'" << volumeHandle << "' is valid but the corresponding volume pointer is null";
 		POLYVOX_THROW(std::invalid_argument, ss.str());
 	}
-}
+}*/
 
-ColoredCubesVolume* getVolumeFromHandle(uint32_t volumeHandle)
+void* getVolumeFromHandle(uint32_t volumeHandle)
 {
 	validateVolumeHandle(volumeHandle);
-	return gColoredCubesVolumes[volumeHandle];
+	return gVolumes[volumeHandle];
 }
 
-TerrainVolume* getVolumeFromHandleMC(uint32_t volumeHandle)
+ColoredCubesVolume* getColoredCubesVolumeFromHandle(uint32_t volumeHandle)
+{
+	validateVolumeHandle(volumeHandle);
+	POLYVOX_THROW_IF(gVolumeTypes[volumeHandle] != VolumeTypes::ColoredCubes, std::invalid_argument, "Wrong volume type");
+	ColoredCubesVolume* volume = reinterpret_cast<ColoredCubesVolume*>(gVolumes[volumeHandle]);
+	return volume;
+}
+
+TerrainVolume* getTerrainVolumeFromHandle(uint32_t volumeHandle)
+{
+	validateVolumeHandle(volumeHandle);
+	POLYVOX_THROW_IF(gVolumeTypes[volumeHandle] != VolumeTypes::Terrain, std::invalid_argument, "Wrong volume type");
+	TerrainVolume* volume = reinterpret_cast<TerrainVolume*>(gVolumes[volumeHandle]);
+	return volume;
+}
+
+/*TerrainVolume* getVolumeFromHandleMC(uint32_t volumeHandle)
 {
 	validateVolumeHandleMC(volumeHandle);
 	return gTerrainVolumes[volumeHandle];
-}
+}*/
 
 void validateDecodedNodeHandle(uint32_t volumeHandle, uint32_t decodedNodeHandle)
 {
@@ -142,20 +170,37 @@ void validateDecodedNodeHandle(uint32_t volumeHandle, uint32_t decodedNodeHandle
 		POLYVOX_THROW(std::invalid_argument, ss.str());
 	}
 
-	// Get the volume (also validates the volume handle)
-	ColoredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
-
-	// Check the node really exists in the volume
-	OctreeNode<Color>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
-	if(!node)
+	if(gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
-		std::stringstream ss;
-		ss << "Decoded Node handle'" << decodedNodeHandle << "' is does not reference a valid node.";
-		POLYVOX_THROW(std::invalid_argument, ss.str());
+		// Get the volume (also validates the volume handle)
+		ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
+
+		// Check the node really exists in the volume
+		OctreeNode<Color>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
+		if(!node)
+		{
+			std::stringstream ss;
+			ss << "Decoded Node handle'" << decodedNodeHandle << "' is does not reference a valid node.";
+			POLYVOX_THROW(std::invalid_argument, ss.str());
+		}
+	}
+	else
+	{
+		// Get the volume (also validates the volume handle)
+		TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
+
+		// Check the node really exists in the volume
+		OctreeNode<MaterialSet>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
+		if(!node)
+		{
+			std::stringstream ss;
+			ss << "Decoded Node handle'" << decodedNodeHandle << "' is does not reference a valid node.";
+			POLYVOX_THROW(std::invalid_argument, ss.str());
+		}
 	}
 }
 
-void validateDecodedNodeHandleMC(uint32_t volumeHandle, uint32_t decodedNodeHandle)
+/*void validateDecodedNodeHandleMC(uint32_t volumeHandle, uint32_t decodedNodeHandle)
 {
 	if(decodedNodeHandle > MaxNodeHandle)
 	{
@@ -165,7 +210,7 @@ void validateDecodedNodeHandleMC(uint32_t volumeHandle, uint32_t decodedNodeHand
 	}
 
 	// Get the volume (also validates the volume handle)
-	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
 
 	// Check the node really exists in the volume
 	OctreeNode<MaterialSet>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
@@ -175,7 +220,7 @@ void validateDecodedNodeHandleMC(uint32_t volumeHandle, uint32_t decodedNodeHand
 		ss << "Decoded Node handle'" << decodedNodeHandle << "' is does not reference a valid node.";
 		POLYVOX_THROW(std::invalid_argument, ss.str());
 	}
-}
+}*/
 
 uint32_t encodeNodeHandle(uint32_t volumeHandle, uint32_t decodedNodeHandle)
 {
@@ -185,13 +230,13 @@ uint32_t encodeNodeHandle(uint32_t volumeHandle, uint32_t decodedNodeHandle)
 	return shiftedVolumeHandle | decodedNodeHandle;
 }
 
-uint32_t encodeNodeHandleMC(uint32_t volumeHandle, uint32_t decodedNodeHandle)
+/*uint32_t encodeNodeHandleMC(uint32_t volumeHandle, uint32_t decodedNodeHandle)
 {
 	validateDecodedNodeHandleMC(volumeHandle, decodedNodeHandle);
 
 	uint32_t shiftedVolumeHandle = volumeHandle << VolumeHandleShift;
 	return shiftedVolumeHandle | decodedNodeHandle;
-}
+}*/
 
 void decodeNodeHandle(uint32_t encodedNodeHandle, uint32_t* volumeHandle, uint32_t* decodedNodeHandle)
 {
@@ -201,35 +246,44 @@ void decodeNodeHandle(uint32_t encodedNodeHandle, uint32_t* volumeHandle, uint32
 	validateDecodedNodeHandle(*volumeHandle, *decodedNodeHandle);
 }
 
-void decodeNodeHandleMC(uint32_t encodedNodeHandle, uint32_t* volumeHandle, uint32_t* decodedNodeHandle)
+/*void decodeNodeHandleMC(uint32_t encodedNodeHandle, uint32_t* volumeHandle, uint32_t* decodedNodeHandle)
 {
 	*volumeHandle = encodedNodeHandle >> VolumeHandleShift;
 	*decodedNodeHandle = encodedNodeHandle & NodeHandleMask;
 
 	validateDecodedNodeHandleMC(*volumeHandle, *decodedNodeHandle);
-}
+}*/
 
-OctreeNode<Color>* getNodeFromEncodedHandle(uint32_t encodedNodeHandle)
+void* getNodeFromEncodedHandle(uint32_t encodedNodeHandle)
 {
 	uint32_t volumeHandle;
 	uint32_t decodedNodeHandle;
 	decodeNodeHandle(encodedNodeHandle, &volumeHandle, &decodedNodeHandle);
 
-	ColoredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
-	OctreeNode<Color>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
-	return node;
+	if(gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
+	{
+		ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
+		OctreeNode<Color>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
+		return node;
+	}
+	else
+	{
+		TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
+		OctreeNode<MaterialSet>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
+		return node;
+	}
 }
 
-OctreeNode<MaterialSet>* getNodeFromEncodedHandleMC(uint32_t encodedNodeHandle)
+/*OctreeNode<MaterialSet>* getNodeFromEncodedHandleMC(uint32_t encodedNodeHandle)
 {
 	uint32_t volumeHandle;
 	uint32_t decodedNodeHandle;
 	decodeNodeHandleMC(encodedNodeHandle, &volumeHandle, &decodedNodeHandle);
 
-	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
 	OctreeNode<MaterialSet>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
 	return node;
-}
+}*/
 
 ////////////////////////////////////////////////////////////////////////////////
 // Version functions
@@ -271,11 +325,11 @@ CUBIQUITYC_API int32_t cuNewEmptyColoredCubesVolume(int32_t lowerX, int32_t lowe
 
 	// Replace an existing entry if it has been deleted.
 	bool foundEmptySlot = false;
-	for(uint32_t ct = 0; ct < gColoredCubesVolumes.size(); ct++)
+	for(uint32_t ct = 0; ct < gVolumes.size(); ct++)
 	{
-		if(gColoredCubesVolumes[ct] == 0)
+		if(gVolumes[ct] == 0)
 		{
-			gColoredCubesVolumes[ct] = volume;
+			gVolumes[ct] = volume;
 			*result =  ct;
 			foundEmptySlot = true;
 			break;
@@ -285,8 +339,9 @@ CUBIQUITYC_API int32_t cuNewEmptyColoredCubesVolume(int32_t lowerX, int32_t lowe
 	//Otherwise append a new entry.
 	if(!foundEmptySlot)
 	{
-		gColoredCubesVolumes.push_back(volume);
-		*result = gColoredCubesVolumes.size() - 1;
+		gVolumes.push_back(volume);
+		gVolumeTypes.push_back(VolumeTypes::ColoredCubes);
+		*result = gVolumes.size() - 1;
 	}
 
 	logTrace() << "Created new colored cubes volume in slot " << *result;
@@ -303,11 +358,11 @@ CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVDB(const char* pathToExisting
 
 	// Replace an existing entry if it has been deleted.
 	bool foundEmptySlot = false;
-	for(uint32_t ct = 0; ct < gColoredCubesVolumes.size(); ct++)
+	for(uint32_t ct = 0; ct < gVolumes.size(); ct++)
 	{
-		if(gColoredCubesVolumes[ct] == 0)
+		if(gVolumes[ct] == 0)
 		{
-			gColoredCubesVolumes[ct] = volume;
+			gVolumes[ct] = volume;
 			*result =  ct;
 			foundEmptySlot = true;
 			break;
@@ -317,8 +372,9 @@ CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVDB(const char* pathToExisting
 	//Otherwise append a new entry.
 	if(!foundEmptySlot)
 	{
-		gColoredCubesVolumes.push_back(volume);
-		*result = gColoredCubesVolumes.size() - 1;
+		gVolumes.push_back(volume);
+		gVolumeTypes.push_back(VolumeTypes::ColoredCubes);
+		*result = gVolumes.size() - 1;
 	}
 
 	logTrace() << "Created new colored cubes volume in slot " << *result;
@@ -335,11 +391,11 @@ CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVolDat(const char* volDatToImp
 	
 	// Replace an existing entry if it has been deleted.
 	bool foundEmptySlot = false;
-	for(uint32_t ct = 0; ct < gColoredCubesVolumes.size(); ct++)
+	for(uint32_t ct = 0; ct < gVolumes.size(); ct++)
 	{
-		if(gColoredCubesVolumes[ct] == 0)
+		if(gVolumes[ct] == 0)
 		{
-			gColoredCubesVolumes[ct] = volume;
+			gVolumes[ct] = volume;
 			*result =  ct;
 			foundEmptySlot = true;
 			break;
@@ -349,8 +405,9 @@ CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVolDat(const char* volDatToImp
 	//Otherwise append a new entry.
 	if(!foundEmptySlot)
 	{
-		gColoredCubesVolumes.push_back(volume);
-		*result = gColoredCubesVolumes.size() - 1;
+		gVolumes.push_back(volume);
+		gVolumeTypes.push_back(VolumeTypes::ColoredCubes);
+		*result = gVolumes.size() - 1;
 	}
 
 	CLOSE_C_INTERFACE
@@ -365,11 +422,11 @@ CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromHeightmap(const char* heightma
 	
 	// Replace an existing entry if it has been deleted.
 	bool foundEmptySlot = false;
-	for(uint32_t ct = 0; ct < gColoredCubesVolumes.size(); ct++)
+	for(uint32_t ct = 0; ct < gVolumes.size(); ct++)
 	{
-		if(gColoredCubesVolumes[ct] == 0)
+		if(gVolumes[ct] == 0)
 		{
-			gColoredCubesVolumes[ct] = volume;
+			gVolumes[ct] = volume;
 			*result =  ct;
 			foundEmptySlot = true;
 			break;
@@ -379,8 +436,9 @@ CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromHeightmap(const char* heightma
 	//Otherwise append a new entry.
 	if(!foundEmptySlot)
 	{
-		gColoredCubesVolumes.push_back(volume);
-		*result = gColoredCubesVolumes.size() - 1;
+		gVolumes.push_back(volume);
+		gVolumeTypes.push_back(VolumeTypes::ColoredCubes);
+		*result = gVolumes.size() - 1;
 	}
 
 	CLOSE_C_INTERFACE
@@ -390,7 +448,7 @@ CUBIQUITYC_API int32_t cuUpdateVolume(uint32_t volumeHandle)
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+	ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
 
 	volume->update(Vector3F(0.0f, 0.0f, 0.0f), 0);
 
@@ -403,11 +461,11 @@ CUBIQUITYC_API int32_t cuDeleteColoredCubesVolume(uint32_t volumeHandle)
 
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+	ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
 	delete volume;
 
 	// In the future we could consider reusing this slot as we can detect that it set to zero.
-	gColoredCubesVolumes[volumeHandle] = 0;
+	gVolumes[volumeHandle] = 0;
 
 	CLOSE_C_INTERFACE
 }
@@ -416,11 +474,9 @@ CUBIQUITYC_API int32_t cuGetEnclosingRegion(uint32_t volumeHandle, int32_t* lowe
 {
 	OPEN_C_INTERFACE
 
-	//This function is rather hacky!
-
-	try
+	if(gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
-		ColoredCubesVolume* coloredCubesVolume = getVolumeFromHandle(volumeHandle);
+		ColoredCubesVolume* coloredCubesVolume = getColoredCubesVolumeFromHandle(volumeHandle);
 		const Region& region = coloredCubesVolume->getEnclosingRegion();
 
 		*lowerX = region.getLowerCorner().getX();
@@ -430,14 +486,9 @@ CUBIQUITYC_API int32_t cuGetEnclosingRegion(uint32_t volumeHandle, int32_t* lowe
 		*upperY = region.getUpperCorner().getY();
 		*upperZ = region.getUpperCorner().getZ();
 	}
-	catch(std::invalid_argument& e)
+	else
 	{
-		// It might be the wrong volume type, we'll try the other one in a moment
-	}
-
-	try
-	{
-		TerrainVolume* terrainVolume = getVolumeFromHandleMC(volumeHandle);
+		TerrainVolume* terrainVolume = getTerrainVolumeFromHandle(volumeHandle);
 		const Region& region = terrainVolume->getEnclosingRegion();
 
 		*lowerX = region.getLowerCorner().getX();
@@ -447,10 +498,6 @@ CUBIQUITYC_API int32_t cuGetEnclosingRegion(uint32_t volumeHandle, int32_t* lowe
 		*upperY = region.getUpperCorner().getY();
 		*upperZ = region.getUpperCorner().getZ();
 	}
-	catch(std::invalid_argument& e)
-	{
-		// It was probably the other volume type, so don't worry.
-	}
 
 	CLOSE_C_INTERFACE
 }
@@ -459,7 +506,7 @@ CUBIQUITYC_API int32_t cuGetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, i
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+	ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
 	Color& temp = volume->getVoxelAt(x, y, z);
 
 	CuColor* ptr = (CuColor*)&temp;
@@ -475,7 +522,7 @@ CUBIQUITYC_API int32_t cuSetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, i
 
 	Color* pColor = (Color*)&color;
 
-	ColoredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+	ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
 	volume->setVoxelAt(x, y, z, *pColor, UpdatePriorities::Immediate);
 	
 	CLOSE_C_INTERFACE
@@ -485,7 +532,7 @@ CUBIQUITYC_API int32_t cuAcceptOverrideBlocks(uint32_t volumeHandle)
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+	ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
 	volume->acceptOverrideBlocks();
 	
 	CLOSE_C_INTERFACE
@@ -495,7 +542,7 @@ CUBIQUITYC_API int32_t cuDiscardOverrideBlocks(uint32_t volumeHandle)
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+	ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
 	volume->discardOverrideBlocks();
 	
 	CLOSE_C_INTERFACE
@@ -512,11 +559,11 @@ CUBIQUITYC_API int32_t cuNewEmptyTerrainVolume(int32_t lowerX, int32_t lowerY, i
 
 	// Replace an existing entry if it has been deleted.
 	bool foundEmptySlot = false;
-	for(uint32_t ct = 0; ct < gTerrainVolumes.size(); ct++)
+	for(uint32_t ct = 0; ct < gVolumes.size(); ct++)
 	{
-		if(gTerrainVolumes[ct] == 0)
+		if(gVolumes[ct] == 0)
 		{
-			gTerrainVolumes[ct] = volume;
+			gVolumes[ct] = volume;
 			*result =  ct;
 			foundEmptySlot = true;
 			break;
@@ -526,8 +573,9 @@ CUBIQUITYC_API int32_t cuNewEmptyTerrainVolume(int32_t lowerX, int32_t lowerY, i
 	//Otherwise append a new entry.
 	if(!foundEmptySlot)
 	{
-		gTerrainVolumes.push_back(volume);
-		*result = gTerrainVolumes.size() - 1;
+		gVolumes.push_back(volume);
+		gVolumeTypes.push_back(VolumeTypes::Terrain);
+		*result = gVolumes.size() - 1;
 	}
 
 	logTrace() << "Creatd new smooth volume in slot " << *result;
@@ -544,11 +592,11 @@ CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxel
 
 	// Replace an existing entry if it has been deleted.
 	bool foundEmptySlot = false;
-	for(uint32_t ct = 0; ct < gTerrainVolumes.size(); ct++)
+	for(uint32_t ct = 0; ct < gVolumes.size(); ct++)
 	{
-		if(gTerrainVolumes[ct] == 0)
+		if(gVolumes[ct] == 0)
 		{
-			gTerrainVolumes[ct] = volume;
+			gVolumes[ct] = volume;
 			*result =  ct;
 			foundEmptySlot = true;
 			break;
@@ -558,8 +606,9 @@ CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxel
 	//Otherwise append a new entry.
 	if(!foundEmptySlot)
 	{
-		gTerrainVolumes.push_back(volume);
-		*result = gTerrainVolumes.size() - 1;
+		gVolumes.push_back(volume);
+		gVolumeTypes.push_back(VolumeTypes::Terrain);
+		*result = gVolumes.size() - 1;
 	}
 
 	logTrace() << "Creatd new smooth volume in slot " << *result;
@@ -571,7 +620,7 @@ CUBIQUITYC_API int32_t cuUpdateVolumeMC(uint32_t volumeHandle)
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
 
 	volume->update(Vector3F(0.0f, 0.0f, 0.0f), 0);
 
@@ -584,11 +633,11 @@ CUBIQUITYC_API int32_t cuDeleteTerrainVolume(uint32_t volumeHandle)
 
 	OPEN_C_INTERFACE
 
-	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
 	delete volume;
 
 	// In the future we could consider reusing this slot as we can detect that it set to zero.
-	gTerrainVolumes[volumeHandle] = 0;
+	gVolumes[volumeHandle] = 0;
 
 	CLOSE_C_INTERFACE
 }
@@ -597,7 +646,7 @@ CUBIQUITYC_API int32_t cuGetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y,
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
 	MaterialSet& material = volume->getVoxelAt(x, y, z);
 
 	materialSet->data = material.mWeights.allBits();
@@ -611,7 +660,7 @@ CUBIQUITYC_API int32_t cuSetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y,
 
 	MaterialSet* pMat = (MaterialSet*)&materialSet;
 
-	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
 	volume->setVoxelAt(x, y, z, *pMat, UpdatePriorities::Immediate);
 	
 	CLOSE_C_INTERFACE
@@ -621,7 +670,7 @@ CUBIQUITYC_API int32_t cuAcceptOverrideBlocksMC(uint32_t volumeHandle)
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
 	volume->acceptOverrideBlocks();
 	
 	CLOSE_C_INTERFACE
@@ -631,7 +680,7 @@ CUBIQUITYC_API int32_t cuDiscardOverrideBlocksMC(uint32_t volumeHandle)
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
 	volume->discardOverrideBlocks();
 	
 	CLOSE_C_INTERFACE
@@ -644,7 +693,7 @@ CUBIQUITYC_API int32_t cuHasRootOctreeNode(uint32_t volumeHandle, uint32_t* resu
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+	ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
 	OctreeNode<Color>* node = volume->getRootOctreeNode();
 	if(node)
 	{
@@ -662,7 +711,7 @@ CUBIQUITYC_API int32_t cuGetRootOctreeNode(uint32_t volumeHandle, uint32_t* resu
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+	ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
 	OctreeNode<Color>* node = volume->getRootOctreeNode();
 
 	if(!node)
@@ -681,9 +730,13 @@ CUBIQUITYC_API int32_t cuHasChildNode(uint32_t nodeHandle, uint32_t childX, uint
 {
 	OPEN_C_INTERFACE
 
-	try
+	uint32_t volumeHandle;
+	uint32_t decodedNodeHandle;
+	decodeNodeHandle(nodeHandle, &volumeHandle, &decodedNodeHandle);
+
+	if(gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
-		OctreeNode<Color>* node = getNodeFromEncodedHandle(nodeHandle);
+		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNodeFromEncodedHandle(nodeHandle));
 		OctreeNode<Color>* child = node->getChildNode(childX, childY, childZ);
 		if(child)
 		{
@@ -694,9 +747,9 @@ CUBIQUITYC_API int32_t cuHasChildNode(uint32_t nodeHandle, uint32_t childX, uint
 			*result = 0;
 		}
 	}
-	catch(std::invalid_argument& e)
+	else
 	{
-		OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
 		OctreeNode<MaterialSet>* child = node->getChildNode(childX, childY, childZ);
 		if(child)
 		{
@@ -715,9 +768,13 @@ CUBIQUITYC_API int32_t cuGetChildNode(uint32_t nodeHandle, uint32_t childX, uint
 {
 	OPEN_C_INTERFACE
 
-	try
+	uint32_t volumeHandle;
+	uint32_t decodedNodeHandle;
+	decodeNodeHandle(nodeHandle, &volumeHandle, &decodedNodeHandle);
+
+	if(gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
-		OctreeNode<Color>* node = getNodeFromEncodedHandle(nodeHandle);
+		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNodeFromEncodedHandle(nodeHandle));
 		OctreeNode<Color>* child = node->getChildNode(childX, childY, childZ);
 
 		if(!node)
@@ -733,9 +790,9 @@ CUBIQUITYC_API int32_t cuGetChildNode(uint32_t nodeHandle, uint32_t childX, uint
 
 		*result = encodeNodeHandle(volumeHandle, decodedNodeHandle);
 	}
-	catch(std::invalid_argument& e)
+	else
 	{
-		OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
 		OctreeNode<MaterialSet>* child = node->getChildNode(childX, childY, childZ);
 
 		if(!node)
@@ -747,9 +804,9 @@ CUBIQUITYC_API int32_t cuGetChildNode(uint32_t nodeHandle, uint32_t childX, uint
 
 		uint32_t volumeHandle;
 		uint32_t dummy;
-		decodeNodeHandleMC(nodeHandle, &volumeHandle, &dummy);
+		decodeNodeHandle(nodeHandle, &volumeHandle, &dummy);
 
-		*result = encodeNodeHandleMC(volumeHandle, decodedNodeHandle);
+		*result = encodeNodeHandle(volumeHandle, decodedNodeHandle);
 	}
 
 	CLOSE_C_INTERFACE
@@ -759,14 +816,18 @@ CUBIQUITYC_API int32_t cuNodeHasMesh(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	try
+	uint32_t volumeHandle;
+	uint32_t decodedNodeHandle;
+	decodeNodeHandle(nodeHandle, &volumeHandle, &decodedNodeHandle);
+
+	if(gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
-		OctreeNode<Color>* node = getNodeFromEncodedHandle(nodeHandle);
+		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNodeFromEncodedHandle(nodeHandle));
 		*result = (node->mPolyVoxMesh != 0) ? 1 : 0;
 	}
-	catch(std::invalid_argument& e)
+	else
 	{
-		OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
 		*result = (node->mPolyVoxMesh != 0) ? 1 : 0;
 	}
 
@@ -777,17 +838,21 @@ CUBIQUITYC_API int32_t cuGetNodePosition(uint32_t nodeHandle, int32_t* x, int32_
 {
 	OPEN_C_INTERFACE
 
-	try
+	uint32_t volumeHandle;
+	uint32_t decodedNodeHandle;
+	decodeNodeHandle(nodeHandle, &volumeHandle, &decodedNodeHandle);
+
+	if(gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
-		OctreeNode<Color>* node = getNodeFromEncodedHandle(nodeHandle);
+		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNodeFromEncodedHandle(nodeHandle));
 		const Vector3I& lowerCorner = node->mRegion.getLowerCorner();
 		*x = lowerCorner.getX();
 		*y = lowerCorner.getY();
 		*z = lowerCorner.getZ();
 	}
-	catch(std::invalid_argument& e)
+	else
 	{
-		OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
 		const Vector3I& lowerCorner = node->mRegion.getLowerCorner();
 		*x = lowerCorner.getX();
 		*y = lowerCorner.getY();
@@ -801,14 +866,18 @@ CUBIQUITYC_API int32_t cuGetMeshLastUpdated(uint32_t nodeHandle, uint32_t* resul
 {
 	OPEN_C_INTERFACE
 
-	try
+	uint32_t volumeHandle;
+	uint32_t decodedNodeHandle;
+	decodeNodeHandle(nodeHandle, &volumeHandle, &decodedNodeHandle);
+
+	if(gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
-		OctreeNode<Color>* node = getNodeFromEncodedHandle(nodeHandle);
+		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNodeFromEncodedHandle(nodeHandle));
 		*result = node->mMeshLastUpdated;
 	}
-	catch(std::invalid_argument& e)
+	else
 	{
-		OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
 		*result = node->mMeshLastUpdated;
 	}
 
@@ -821,7 +890,7 @@ CUBIQUITYC_API int32_t cuHasRootOctreeNodeMC(uint32_t volumeHandle, uint32_t* re
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
 	OctreeNode<MaterialSet>* node = volume->getRootOctreeNode();
 	if(node)
 	{
@@ -839,7 +908,7 @@ CUBIQUITYC_API int32_t cuGetRootOctreeNodeMC(uint32_t volumeHandle, uint32_t* re
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
 	OctreeNode<MaterialSet>* node = volume->getRootOctreeNode();
 
 	if(!node)
@@ -849,7 +918,7 @@ CUBIQUITYC_API int32_t cuGetRootOctreeNodeMC(uint32_t volumeHandle, uint32_t* re
 
 	uint32_t decodedNodeHandle = node->mSelf;
 
-	*result = encodeNodeHandleMC(volumeHandle, decodedNodeHandle);
+	*result = encodeNodeHandle(volumeHandle, decodedNodeHandle);
 
 	CLOSE_C_INTERFACE
 }
@@ -858,7 +927,7 @@ CUBIQUITYC_API int32_t cuHasChildNodeMC(uint32_t nodeHandle, uint32_t childX, ui
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
+	OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
 	OctreeNode<MaterialSet>* child = node->getChildNode(childX, childY, childZ);
 	if(child)
 	{
@@ -876,7 +945,7 @@ CUBIQUITYC_API int32_t cuGetChildNodeMC(uint32_t nodeHandle, uint32_t childX, ui
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
+	OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
 	OctreeNode<MaterialSet>* child = node->getChildNode(childX, childY, childZ);
 
 	if(!node)
@@ -888,9 +957,9 @@ CUBIQUITYC_API int32_t cuGetChildNodeMC(uint32_t nodeHandle, uint32_t childX, ui
 
 	uint32_t volumeHandle;
 	uint32_t dummy;
-	decodeNodeHandleMC(nodeHandle, &volumeHandle, &dummy);
+	decodeNodeHandle(nodeHandle, &volumeHandle, &dummy);
 
-	*result = encodeNodeHandleMC(volumeHandle, decodedNodeHandle);
+	*result = encodeNodeHandle(volumeHandle, decodedNodeHandle);
 
 	CLOSE_C_INTERFACE
 }
@@ -899,7 +968,7 @@ CUBIQUITYC_API int32_t cuNodeHasMeshMC(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
+	OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
 	*result = (node->mPolyVoxMesh != 0) ? 1 : 0;
 
 	CLOSE_C_INTERFACE
@@ -909,7 +978,7 @@ CUBIQUITYC_API int32_t cuGetNodePositionMC(uint32_t nodeHandle, int32_t* x, int3
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
+	OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
 	const Vector3I& lowerCorner = node->mRegion.getLowerCorner();
 	*x = lowerCorner.getX();
 	*y = lowerCorner.getY();
@@ -922,7 +991,7 @@ CUBIQUITYC_API int32_t cuGetMeshLastUpdatedMC(uint32_t nodeHandle, uint32_t* res
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
+	OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
 	*result = node->mMeshLastUpdated;
 
 	CLOSE_C_INTERFACE
@@ -935,7 +1004,7 @@ CUBIQUITYC_API int32_t cuGetNoOfVertices(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<Color>* node = getNodeFromEncodedHandle(nodeHandle);
+	OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNodeFromEncodedHandle(nodeHandle));
 
 	const ::PolyVox::SurfaceMesh< typename VoxelTraits<Color>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
@@ -948,7 +1017,7 @@ CUBIQUITYC_API int32_t cuGetNoOfIndices(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<Color>* node = getNodeFromEncodedHandle(nodeHandle);
+	OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNodeFromEncodedHandle(nodeHandle));
 
 	const ::PolyVox::SurfaceMesh< typename VoxelTraits<Color>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
@@ -961,7 +1030,7 @@ CUBIQUITYC_API int32_t cuGetVertices(uint32_t nodeHandle, float** result)
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<Color>* node = getNodeFromEncodedHandle(nodeHandle);
+	OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNodeFromEncodedHandle(nodeHandle));
 
 	const ::PolyVox::SurfaceMesh< typename VoxelTraits<Color>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
@@ -982,7 +1051,7 @@ CUBIQUITYC_API int32_t cuGetIndices(uint32_t nodeHandle, uint32_t** result)
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<Color>* node = getNodeFromEncodedHandle(nodeHandle);
+	OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNodeFromEncodedHandle(nodeHandle));
 
 	const ::PolyVox::SurfaceMesh< typename VoxelTraits<Color>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
@@ -1002,7 +1071,7 @@ CUBIQUITYC_API int32_t cuGetNoOfVerticesMC(uint32_t nodeHandle, uint32_t* result
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
+	OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
 
 	const ::PolyVox::SurfaceMesh< typename VoxelTraits<MaterialSet>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
@@ -1015,7 +1084,7 @@ CUBIQUITYC_API int32_t cuGetNoOfIndicesMC(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
+	OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
 
 	const ::PolyVox::SurfaceMesh< typename VoxelTraits<MaterialSet>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
@@ -1028,7 +1097,7 @@ CUBIQUITYC_API int32_t cuGetVerticesMC(uint32_t nodeHandle, float** result)
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
+	OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
 
 	const ::PolyVox::SurfaceMesh< typename VoxelTraits<MaterialSet>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
@@ -1049,7 +1118,7 @@ CUBIQUITYC_API int32_t cuGetIndicesMC(uint32_t nodeHandle, uint32_t** result)
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<MaterialSet>* node = getNodeFromEncodedHandleMC(nodeHandle);
+	OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
 
 	const ::PolyVox::SurfaceMesh< typename VoxelTraits<MaterialSet>::VertexType >* polyVoxMesh = node->mPolyVoxMesh;
 
@@ -1082,7 +1151,7 @@ CUBIQUITYC_API int32_t cuPickFirstSolidVoxel(uint32_t volumeHandle, float raySta
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+	ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
 
 	if(pickFirstSolidVoxel(volume, rayStartX, rayStartY, rayStartZ, rayDirX, rayDirY, rayDirZ, resultX, resultY, resultZ))
 	{
@@ -1100,7 +1169,7 @@ CUBIQUITYC_API int32_t cuPickLastEmptyVoxel(uint32_t volumeHandle, float rayStar
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolume* volume = getVolumeFromHandle(volumeHandle);
+	ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
 
 	if(pickLastEmptyVoxel(volume, rayStartX, rayStartY, rayStartZ, rayDirX, rayDirY, rayDirZ, resultX, resultY, resultZ))
 	{
@@ -1118,7 +1187,7 @@ CUBIQUITYC_API int32_t cuPickTerrainSurface(uint32_t volumeHandle, float rayStar
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
 
 	if(pickTerrainSurface(volume, rayStartX, rayStartY, rayStartZ, rayDirX, rayDirY, rayDirZ, resultX, resultY, resultZ))
 	{
@@ -1139,7 +1208,7 @@ CUBIQUITYC_API int32_t cuSculptTerrainVolume(uint32_t volumeHandle, float brushX
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
 
 	sculptTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushInnerRadius, brushOuterRadius, opacity));
 
@@ -1150,7 +1219,7 @@ CUBIQUITYC_API int32_t cuBlurTerrainVolume(uint32_t volumeHandle, float brushX, 
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
 
 	blurTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushInnerRadius, brushOuterRadius, opacity));
 
@@ -1161,7 +1230,7 @@ CUBIQUITYC_API int32_t cuBlurTerrainVolumeRegion(uint32_t volumeHandle, int32_t 
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
 
 	blurTerrainVolume(volume, Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ));
 
@@ -1172,7 +1241,7 @@ CUBIQUITYC_API int32_t cuPaintTerrainVolume(uint32_t volumeHandle, float brushX,
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
 
 	paintTerrainVolume(volume, Vector3F(brushX, brushY, brushZ), Brush(brushInnerRadius, brushOuterRadius, opacity), materialIndex);
 
@@ -1186,7 +1255,7 @@ CUBIQUITYC_API int32_t cuGenerateFloor(uint32_t volumeHandle, int32_t lowerLayer
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolume* volume = getVolumeFromHandleMC(volumeHandle);
+	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
 
 	generateFloor(volume, lowerLayerHeight, lowerLayerMaterial, upperLayerHeight, upperLayerMaterial);
 
