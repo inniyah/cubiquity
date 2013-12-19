@@ -18,6 +18,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConvertToVDB", "ConvertToVD
 		{4BAFE49E-7FC2-4C92-8E57-E1C3BCFF0BC4} = {4BAFE49E-7FC2-4C92-8E57-E1C3BCFF0BC4}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConvertToImageSlices", "ConvertToImageSlices\ConvertToImageSlices.vcxproj", "{9D211879-B1B2-4050-B0EF-5A0EE95520A0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -64,6 +66,15 @@ Global
 		{79FF0F33-0A03-4C0F-B525-F3F31CD9E8BD}.Release|Win32.ActiveCfg = Release|Win32
 		{79FF0F33-0A03-4C0F-B525-F3F31CD9E8BD}.Release|Win32.Build.0 = Release|Win32
 		{79FF0F33-0A03-4C0F-B525-F3F31CD9E8BD}.Release|x64.ActiveCfg = Release|Win32
+		{9D211879-B1B2-4050-B0EF-5A0EE95520A0}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9D211879-B1B2-4050-B0EF-5A0EE95520A0}.Debug|Win32.Build.0 = Debug|Win32
+		{9D211879-B1B2-4050-B0EF-5A0EE95520A0}.Debug|x64.ActiveCfg = Debug|Win32
+		{9D211879-B1B2-4050-B0EF-5A0EE95520A0}.DebugMem|Win32.ActiveCfg = Debug|Win32
+		{9D211879-B1B2-4050-B0EF-5A0EE95520A0}.DebugMem|Win32.Build.0 = Debug|Win32
+		{9D211879-B1B2-4050-B0EF-5A0EE95520A0}.DebugMem|x64.ActiveCfg = Debug|Win32
+		{9D211879-B1B2-4050-B0EF-5A0EE95520A0}.Release|Win32.ActiveCfg = Release|Win32
+		{9D211879-B1B2-4050-B0EF-5A0EE95520A0}.Release|Win32.Build.0 = Release|Win32
+		{9D211879-B1B2-4050-B0EF-5A0EE95520A0}.Release|x64.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
