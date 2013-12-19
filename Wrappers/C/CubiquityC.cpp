@@ -69,7 +69,7 @@ public:
 };
 
 const int TotalHandleBits = 32;
-const int VolumeHandleBits = 3;
+const int VolumeHandleBits = 8;
 const int MaxVolumeHandle = (0x01 << VolumeHandleBits) - 1;
 const int VolumeHandleShift = TotalHandleBits - VolumeHandleBits - 1;
 
