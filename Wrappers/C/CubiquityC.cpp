@@ -9,9 +9,9 @@
 #include "Logging.h"
 #include "OctreeNode.h"
 #include "Raycasting.h"
+#include "TerrainVolume.h"
 #include "TerrainVolumeEditor.h"
 #include "TerrainVolumeGenerator.h"
-#include "VolumeSerialisation.h"
 
 #include <vector>
 
@@ -391,68 +391,6 @@ CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVDB(const char* pathToExisting
 	}
 
 	logTrace() << "Created new colored cubes volume in slot " << *result;
-
-	CLOSE_C_INTERFACE
-}
-
-CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVolDat(const char* volDatToImport, const char* pathToVoxelDatabase, uint32_t baseNodeSize, uint32_t* result)
-{
-	OPEN_C_INTERFACE
-
-	ColoredCubesVolume* volume = importVolDat< ColoredCubesVolume >(volDatToImport, pathToVoxelDatabase, baseNodeSize);
-	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
-	
-	// Replace an existing entry if it has been deleted.
-	bool foundEmptySlot = false;
-	for(uint32_t ct = 0; ct < gVolumes.size(); ct++)
-	{
-		if(gVolumes[ct] == 0)
-		{
-			gVolumes[ct] = volume;
-			*result =  ct;
-			foundEmptySlot = true;
-			break;
-		}
-	}
-
-	//Otherwise append a new entry.
-	if(!foundEmptySlot)
-	{
-		gVolumes.push_back(volume);
-		gVolumeTypes.push_back(VolumeTypes::ColoredCubes);
-		*result = gVolumes.size() - 1;
-	}
-
-	CLOSE_C_INTERFACE
-}
-
-CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromHeightmap(const char* heightmapFileName, const char* colormapFileName, const char* pathToVoxelDatabase, uint32_t baseNodeSize, uint32_t* result)
-{
-	OPEN_C_INTERFACE
-
-	ColoredCubesVolume* volume = importHeightmap(heightmapFileName, colormapFileName, pathToVoxelDatabase, baseNodeSize);
-	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
-	
-	// Replace an existing entry if it has been deleted.
-	bool foundEmptySlot = false;
-	for(uint32_t ct = 0; ct < gVolumes.size(); ct++)
-	{
-		if(gVolumes[ct] == 0)
-		{
-			gVolumes[ct] = volume;
-			*result =  ct;
-			foundEmptySlot = true;
-			break;
-		}
-	}
-
-	//Otherwise append a new entry.
-	if(!foundEmptySlot)
-	{
-		gVolumes.push_back(volume);
-		gVolumeTypes.push_back(VolumeTypes::ColoredCubes);
-		*result = gVolumes.size() - 1;
-	}
 
 	CLOSE_C_INTERFACE
 }

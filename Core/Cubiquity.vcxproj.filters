@@ -180,9 +180,6 @@
     <ClInclude Include="Volume.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="VolumeSerialisation.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="VoxelTraits.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -407,9 +404,6 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Task.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="VolumeSerialisation.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="Logging.cpp">

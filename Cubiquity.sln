@@ -19,6 +19,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConvertToVDB", "ConvertToVD
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ConvertToImageSlices", "ConvertToImageSlices\ConvertToImageSlices.vcxproj", "{9D211879-B1B2-4050-B0EF-5A0EE95520A0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{4BAFE49E-7FC2-4C92-8E57-E1C3BCFF0BC4} = {4BAFE49E-7FC2-4C92-8E57-E1C3BCFF0BC4}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

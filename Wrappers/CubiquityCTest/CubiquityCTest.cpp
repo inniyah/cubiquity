@@ -21,7 +21,7 @@ int _tmain(int argc, _TCHAR* argv[])
 {
 	//unsigned int volumeID = newColoredCubesVolume(0, 0, 0, 127, 127, 127, 256, 256);
 	unsigned int volumeID;
-	cuNewColoredCubesVolumeFromVolDat("C:/Code/cubiquity/Examples/SliceData/VoxeliensTerrain/", "./", 256, &volumeID);
+	cuNewColoredCubesVolumeFromVDB("C:/code/cubiquity/Examples/Volumes/Version 0/VoxeliensTerrain", 32, &volumeID);
 	cuUpdateVolume(volumeID);
 	unsigned int rootOctreeNodeHandle;
 	cuGetRootOctreeNode(volumeID, &rootOctreeNodeHandle);

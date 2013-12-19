@@ -28,9 +28,6 @@
     <ClInclude Include="..\Bridge\GameplayRaycasting.h">
       <Filter>Bridge</Filter>
     </ClInclude>
-    <ClInclude Include="..\Bridge\GameplayVolumeSerialisation.h">
-      <Filter>Bridge</Filter>
-    </ClInclude>
     <ClInclude Include="..\Bridge\GameplayTerrainVolume.h">
       <Filter>Bridge</Filter>
     </ClInclude>

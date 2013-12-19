@@ -331,7 +331,6 @@
     <ClInclude Include="..\Bridge\GameplayRaycasting.h" />
     <ClInclude Include="..\Bridge\GameplayTerrainVolume.h" />
     <ClInclude Include="..\Bridge\GameplayTerrainVolumeEditor.h" />
-    <ClInclude Include="..\Bridge\GameplayVolumeSerialisation.h" />
     <ClInclude Include="..\Bridge\Impl\GameplayVolume.h" />
     <ClInclude Include="src\Main.h" />
   </ItemGroup>
