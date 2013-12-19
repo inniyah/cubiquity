@@ -110,7 +110,7 @@ bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDat
 					blue = data[i + 4 + colorI * 4];
 					// Do something with these colors
 					//makeVoxelColorful(x, y, zz, red, green, blue);
-					CuColor color = cuBuildColor(red, green, blue, 255);
+					CuColor color = cuMakeColor(red, green, blue, 255);
 					if(cuSetVoxel(volumeHandle, x, 63 - zz, y, color) != 1) // FIXME - Hardcoded return value.
 					{
 						cerr << "Error setting voxel color" << endl;
@@ -131,7 +131,7 @@ bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDat
 			//makeVoxelSolid(x, y, zz);
 			if(!dryRun)
 			{
-				CuColor color = cuBuildColor(127, 127, 127, 255);
+				CuColor color = cuMakeColor(127, 127, 127, 255);
 				if(cuSetVoxel(volumeHandle, x, 63 - zz, y, color) != 1) // FIXME - Hardcoded return value.
 				{
 					cerr << "Error setting voxel color" << endl;

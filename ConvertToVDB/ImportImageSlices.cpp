@@ -129,7 +129,7 @@ bool importImageSlices(const std::string& folder, const std::string& pathToVoxel
 			{
 				unsigned char *pixelData = sliceData + (y * imageWidth + x) * imageChannels;
 
-				CuColor color = cuBuildColor(*(pixelData + 0), *(pixelData + 1), *(pixelData + 2), *(pixelData + 3));
+				CuColor color = cuMakeColor(*(pixelData + 0), *(pixelData + 1), *(pixelData + 2), *(pixelData + 3));
 
 				// When importing we treat 'y' as up because most game engines and physics
 				// engines expect this. This means we need to swap the 'y' and 'slice' indices.
