@@ -313,6 +313,19 @@ CUBIQUITYC_API int32_t cuBuildColor(uint8_t red, uint8_t green, uint8_t blue, ui
 	CLOSE_C_INTERFACE
 }
 
+CUBIQUITYC_API int32_t cuGetColorComponents(CuColor color, uint8_t* red, uint8_t* green, uint8_t* blue, uint8_t* alpha)
+{
+	OPEN_C_INTERFACE
+
+	BitField<uint32_t> bits(color.data);
+	*red = bits.getBits(Color::RedMSB, Color::RedLSB) * Color::RedScaleFactor;
+	*green = bits.getBits(Color::GreenMSB, Color::GreenLSB) * Color::GreenScaleFactor;
+	*blue = bits.getBits(Color::BlueMSB, Color::BlueLSB) * Color::BlueScaleFactor;
+	*alpha = bits.getBits(Color::AlphaMSB, Color::AlphaLSB) * Color::AlphaScaleFactor;
+
+	CLOSE_C_INTERFACE
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Volume functions
 ////////////////////////////////////////////////////////////////////////////////

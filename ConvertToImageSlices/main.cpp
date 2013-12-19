@@ -1,3 +1,6 @@
+#include "main.h"
+#include "CmdOption.h"
+
 #include "CubiquityC.h"
 
 #include <iostream>
@@ -9,19 +12,39 @@
 
 using namespace std;
 
-void exportAsImageSlices(const std::string& pathToVDB)
+int main(int argc, char* argv[])
+{
+	if(!cmdOptionExists(argv, argv+argc, "-i"))
+	{
+		cerr << "No input specified!" << endl << endl;
+		printUsage();
+		return EXIT_FAILURE;
+	}
+
+	string input = getCmdOption(argv, argv+argc, "-i");
+
+	return exportAsImageSlices(input);
+}
+
+void printUsage(void)
+{
+	cout << "Usage: ConvertToVDB -i inputFile" << endl;
+}
+
+int exportAsImageSlices(const std::string& pathToVDB)
 {
 	uint32_t volumeHandle = 0;
 	if(cuNewColoredCubesVolumeFromVDB(pathToVDB.c_str(), 32, &volumeHandle) != 1) //FIXME - hardcoded value
 	{
 		cerr << "Error opening VDB database" << endl;
-		return;
+		return EXIT_FAILURE;
 	}
 
 	int lowerX, lowerY, lowerZ, upperX, upperY, upperZ;
 	if(cuGetEnclosingRegion(volumeHandle, &lowerX, &lowerY, &lowerZ, &upperX, &upperY, &upperZ) != 1) //FIXME - hardcoded value
 	{
 		cerr << "Error geting enclosing region" << endl;
+		return EXIT_FAILURE;
 	}
 
 	// Note that 'y' and 'z' axis are flipped as Gameplay physics engine assumes 'y' is up.
@@ -48,11 +71,18 @@ void exportAsImageSlices(const std::string& pathToVDB)
 
 				CuColor color;
 				if(cuGetVoxel(volumeHandle, x + lowerX, slice + lowerY, z + lowerZ, &color) != 1) //FIXME - hardcoded value
+				{
+					cerr << "Error getting voxel value" << endl;
+					return EXIT_FAILURE;
+				}
 
-				*(pixelData + 0) = (color.data >> 24) & 0xFF;
-				*(pixelData + 1) = (color.data >> 16) & 0xFF;
-				*(pixelData + 2) = (color.data >>  8) & 0xFF;
-				*(pixelData + 3) = (color.data      ) & 0xFF;
+				uint8_t red, green, blue, alpha;
+				cuGetColorComponents(color, &red, &green, &blue, &alpha);
+
+				*(pixelData + 0) = red;
+				*(pixelData + 1) = green;
+				*(pixelData + 2) = blue;
+				*(pixelData + 3) = alpha;
 
 				/*// Note that 'y' and 'z' axis are flipped as Gameplay physics engine assumes 'y' is up.
 				CubiquityVolumeType::VoxelType voxel = volume->getVoxelAt(x, slice, y);*/
@@ -72,10 +102,6 @@ void exportAsImageSlices(const std::string& pathToVDB)
 	}
 
 	delete[] outputSliceData;
-}
 
-int main(int argc, char* argv[])
-{
-
-	return 0;
+	return EXIT_SUCCESS;
 }

@@ -9,6 +9,11 @@ namespace Cubiquity
 	class BitField
 	{
 	public:
+		BitField(StorageType initialValue = 0)
+			:mBits(initialValue)
+		{
+		}
+
 		bool operator==(const BitField& rhs) const throw()
 		{
 			return mBits == rhs.mBits;
