@@ -76,7 +76,7 @@ int exportAsImageSlices(const std::string& pathToVDB)
 					return EXIT_FAILURE;
 				}
 
-				cuGetColorComponents(color, pixelData + 0, pixelData + 1, pixelData + 2, pixelData + 3);
+				cuGetAllComponents(color, pixelData + 0, pixelData + 1, pixelData + 2, pixelData + 3);
 			}
 		}
 

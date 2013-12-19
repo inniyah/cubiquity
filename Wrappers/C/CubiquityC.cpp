@@ -302,6 +302,39 @@ CUBIQUITYC_API int32_t cuGetVersionNumber(uint32_t* majorVersion, uint32_t* mino
 ////////////////////////////////////////////////////////////////////////////////
 // Color functions
 ////////////////////////////////////////////////////////////////////////////////
+CUBIQUITYC_API uint8_t cuGetRed(CuColor color)
+{
+	BitField<uint32_t> bits(color.data);
+	return static_cast<uint8_t>(bits.getBits(Color::RedMSB, Color::RedLSB) * Color::RedScaleFactor);
+}
+
+CUBIQUITYC_API uint8_t cuGetGreen(CuColor color)
+{
+	BitField<uint32_t> bits(color.data);
+	return static_cast<uint8_t>(bits.getBits(Color::GreenMSB, Color::GreenLSB) * Color::GreenScaleFactor);
+}
+
+CUBIQUITYC_API uint8_t cuGetBlue(CuColor color)
+{
+	BitField<uint32_t> bits(color.data);
+	return static_cast<uint8_t>(bits.getBits(Color::BlueMSB, Color::BlueLSB) * Color::BlueScaleFactor);
+}
+
+CUBIQUITYC_API uint8_t cuGetAlpha(CuColor color)
+{
+	BitField<uint32_t> bits(color.data);
+	return static_cast<uint8_t>(bits.getBits(Color::AlphaMSB, Color::AlphaLSB) * Color::AlphaScaleFactor);
+}
+
+CUBIQUITYC_API void cuGetAllComponents(CuColor color, uint8_t* red, uint8_t* green, uint8_t* blue, uint8_t* alpha)
+{
+	BitField<uint32_t> bits(color.data);
+	*red = static_cast<uint8_t>(bits.getBits(Color::RedMSB, Color::RedLSB) * Color::RedScaleFactor);
+	*green = static_cast<uint8_t>(bits.getBits(Color::GreenMSB, Color::GreenLSB) * Color::GreenScaleFactor);
+	*blue = static_cast<uint8_t>(bits.getBits(Color::BlueMSB, Color::BlueLSB) * Color::BlueScaleFactor);
+	*alpha = static_cast<uint8_t>(bits.getBits(Color::AlphaMSB, Color::AlphaLSB) * Color::AlphaScaleFactor);
+}
+
 CUBIQUITYC_API int32_t cuBuildColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha, CuColor* color)
 {
 	OPEN_C_INTERFACE
@@ -309,19 +342,6 @@ CUBIQUITYC_API int32_t cuBuildColor(uint8_t red, uint8_t green, uint8_t blue, ui
 	Color temp(red, green, blue, alpha);
 	CuColor* ptr = (CuColor*)&temp;
 	*color = *ptr;
-
-	CLOSE_C_INTERFACE
-}
-
-CUBIQUITYC_API int32_t cuGetColorComponents(CuColor color, uint8_t* red, uint8_t* green, uint8_t* blue, uint8_t* alpha)
-{
-	OPEN_C_INTERFACE
-
-	BitField<uint32_t> bits(color.data);
-	*red = bits.getBits(Color::RedMSB, Color::RedLSB) * Color::RedScaleFactor;
-	*green = bits.getBits(Color::GreenMSB, Color::GreenLSB) * Color::GreenScaleFactor;
-	*blue = bits.getBits(Color::BlueMSB, Color::BlueLSB) * Color::BlueScaleFactor;
-	*alpha = bits.getBits(Color::AlphaMSB, Color::AlphaLSB) * Color::AlphaScaleFactor;
 
 	CLOSE_C_INTERFACE
 }
