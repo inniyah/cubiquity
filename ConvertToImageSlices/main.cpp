@@ -76,18 +76,7 @@ int exportAsImageSlices(const std::string& pathToVDB)
 					return EXIT_FAILURE;
 				}
 
-				uint8_t red, green, blue, alpha;
-				cuGetColorComponents(color, &red, &green, &blue, &alpha);
-
-				*(pixelData + 0) = red;
-				*(pixelData + 1) = green;
-				*(pixelData + 2) = blue;
-				*(pixelData + 3) = alpha;
-
-				/*// Note that 'y' and 'z' axis are flipped as Gameplay physics engine assumes 'y' is up.
-				CubiquityVolumeType::VoxelType voxel = volume->getVoxelAt(x, slice, y);*/
-
-				//voxelToPixel(voxel, pixel, componentCount);
+				cuGetColorComponents(color, pixelData + 0, pixelData + 1, pixelData + 2, pixelData + 3);
 			}
 		}
 
