@@ -335,15 +335,17 @@ CUBIQUITYC_API void cuGetAllComponents(CuColor color, uint8_t* red, uint8_t* gre
 	*alpha = static_cast<uint8_t>(bits.getBits(Color::AlphaMSB, Color::AlphaLSB) * Color::AlphaScaleFactor);
 }
 
-CUBIQUITYC_API int32_t cuBuildColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha, CuColor* color)
+CUBIQUITYC_API CuColor cuBuildColor(uint8_t red, uint8_t green, uint8_t blue, uint8_t alpha)
 {
-	OPEN_C_INTERFACE
+	BitField<uint32_t> bits;
+	bits.setBits(Color::RedMSB, Color::RedLSB, red / Color::RedScaleFactor);
+	bits.setBits(Color::GreenMSB, Color::GreenLSB, green / Color::GreenScaleFactor);
+	bits.setBits(Color::BlueMSB, Color::BlueLSB, blue / Color::BlueScaleFactor);
+	bits.setBits(Color::AlphaMSB, Color::AlphaLSB, alpha / Color::AlphaScaleFactor);
 
-	Color temp(red, green, blue, alpha);
-	CuColor* ptr = (CuColor*)&temp;
-	*color = *ptr;
-
-	CLOSE_C_INTERFACE
+	CuColor color;
+	color.data = bits.allBits();
+	return color;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
