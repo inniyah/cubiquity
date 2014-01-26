@@ -32,6 +32,7 @@
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\CompilerCapabilities.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Config.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ErrorHandling.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Logging.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\MarchingCubesTables.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\RandomUnitVectors.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\RandomVectors.h" />
@@ -133,6 +134,7 @@
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\ArraySizes.cpp" />
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\AStarPathfinder.cpp" />
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\ErrorHandling.cpp" />
+    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\Logging.cpp" />
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\MarchingCubesTables.cpp" />
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\MinizWrapper.cpp" />
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\RandomUnitVectors.cpp" />
@@ -201,7 +203,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <Lib>
-      <AdditionalDependencies>libboost_filesystem-vc100-mt-1_54.lib;libboost_log-vc100-mt-1_54.lib;libboost_system-vc100-mt-1_54.lib;libboost_thread-vc100-mt-1_54.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libboost_filesystem-vc100-mt-1_54.lib;libboost_system-vc100-mt-1_54.lib;libboost_thread-vc100-mt-1_54.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>C:\Program Files (x86)\boost\boost_1_54_0\stage\lib</AdditionalLibraryDirectories>
@@ -225,7 +227,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <Lib>
-      <AdditionalDependencies>libboost_filesystem-vc100-mt-1_54.lib;libboost_log-vc100-mt-1_54.lib;libboost_system-vc100-mt-1_54.lib;libboost_thread-vc100-mt-1_54.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libboost_filesystem-vc100-mt-1_54.lib;libboost_system-vc100-mt-1_54.lib;libboost_thread-vc100-mt-1_54.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Lib>
     <Lib>
       <AdditionalLibraryDirectories>C:\Program Files (x86)\boost\boost_1_54_0\stage\lib</AdditionalLibraryDirectories>

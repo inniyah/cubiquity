@@ -20,8 +20,6 @@ namespace Cubiquity
 	}
 	typedef LogLevels::LogLevel LogLevel;
 
-	void setLogVerbosity(LogLevel minimumLogLevel);
-
 	// Pull the PolyVox logging functions into Cubiquity
 	using PolyVox::logTrace;
 	using PolyVox::logDebug;

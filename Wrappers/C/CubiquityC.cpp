@@ -13,6 +13,7 @@
 #include "TerrainVolumeEditor.h"
 #include "TerrainVolumeGenerator.h"
 
+#include <fstream>
 #include <vector>
 
 const uint32_t CuMajorVersion = 0;
@@ -58,14 +59,14 @@ class EntryAndExitPoints
 public:
 	EntryAndExitPoints()
 	{
-		// Note that we can't actually write to the log from this entry point
-		// code as the global Boost.Log source might not have been created yet.
-		setLogVerbosity(LogLevels::Trace);
 	}
 
 	~EntryAndExitPoints()
 	{
 	}
+
+private:
+	std::ofstream* mCubiquityLogStream;
 };
 
 const int TotalHandleBits = 32;

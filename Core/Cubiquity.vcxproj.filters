@@ -258,6 +258,9 @@
     <ClInclude Include="SQLiteUtils.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Logging.h">
+      <Filter>PolyVox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.inl">
@@ -447,6 +450,9 @@
     </ClCompile>
     <ClCompile Include="VoxelDatabase.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\Logging.cpp">
+      <Filter>PolyVox</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
