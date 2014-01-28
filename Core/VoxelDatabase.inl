@@ -100,7 +100,7 @@ namespace Cubiquity
 			}
 		}
 
-		logTrace() << "Paged block in in " << timer.elapsedTimeInMilliSeconds() << "ms";
+		POLYVOX_LOG_TRACE("Paged block in in " << timer.elapsedTimeInMilliSeconds() << "ms");
 	}
 
 	template <typename VoxelType>
@@ -110,7 +110,7 @@ namespace Cubiquity
 
 		PolyVox::Timer timer;
 
-		logTrace() << "Paging out data for " << region;
+		POLYVOX_LOG_TRACE("Paging out data for " << region);
 
 		int64_t key = regionToKey(region);
 
@@ -120,7 +120,7 @@ namespace Cubiquity
 		sqlite3_bind_blob(mInsertOrReplaceOverrideBlockStatement, 2, static_cast<const void*>(pBlockData->getData()), pBlockData->getDataSizeInBytes(), SQLITE_TRANSIENT);
 		sqlite3_step(mInsertOrReplaceOverrideBlockStatement);
 
-		logTrace() << "Paged block out in " << timer.elapsedTimeInMilliSeconds() << "ms (" << pBlockData->getDataSizeInBytes() << "bytes of data)";
+		POLYVOX_LOG_TRACE("Paged block out in " << timer.elapsedTimeInMilliSeconds() << "ms (" << pBlockData->getDataSizeInBytes() << "bytes of data)");
 	}
 
 	template <typename VoxelType>

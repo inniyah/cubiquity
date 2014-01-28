@@ -380,7 +380,7 @@ CUBIQUITYC_API int32_t cuNewEmptyColoredCubesVolume(int32_t lowerX, int32_t lowe
 		*result = gVolumes.size() - 1;
 	}
 
-	logTrace() << "Created new colored cubes volume in slot " << *result;
+	POLYVOX_LOG_TRACE("Created new colored cubes volume in slot " << *result);
 
 	CLOSE_C_INTERFACE
 }
@@ -413,7 +413,7 @@ CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVDB(const char* pathToExisting
 		*result = gVolumes.size() - 1;
 	}
 
-	logTrace() << "Created new colored cubes volume in slot " << *result;
+	POLYVOX_LOG_TRACE("Created new colored cubes volume in slot " << *result);
 
 	CLOSE_C_INTERFACE
 }
@@ -431,7 +431,7 @@ CUBIQUITYC_API int32_t cuUpdateVolume(uint32_t volumeHandle)
 
 CUBIQUITYC_API int32_t cuDeleteColoredCubesVolume(uint32_t volumeHandle)
 {
-	logTrace() << "In cuDeleteColoredCubesVolume() - deleting volume handle '" << volumeHandle << "'";
+	POLYVOX_LOG_TRACE("In cuDeleteColoredCubesVolume() - deleting volume handle '" << volumeHandle << "'");
 
 	OPEN_C_INTERFACE
 
@@ -552,7 +552,7 @@ CUBIQUITYC_API int32_t cuNewEmptyTerrainVolume(int32_t lowerX, int32_t lowerY, i
 		*result = gVolumes.size() - 1;
 	}
 
-	logTrace() << "Creatd new smooth volume in slot " << *result;
+	POLYVOX_LOG_TRACE("Creatd new smooth volume in slot " << *result);
 
 	CLOSE_C_INTERFACE
 }
@@ -585,7 +585,7 @@ CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxel
 		*result = gVolumes.size() - 1;
 	}
 
-	logTrace() << "Creatd new smooth volume in slot " << *result;
+	POLYVOX_LOG_TRACE("Creatd new smooth volume in slot " << *result);
 
 	CLOSE_C_INTERFACE
 }
@@ -603,7 +603,7 @@ CUBIQUITYC_API int32_t cuUpdateVolumeMC(uint32_t volumeHandle)
 
 CUBIQUITYC_API int32_t cuDeleteTerrainVolume(uint32_t volumeHandle)
 {
-	logTrace() << "In cuDeleteTerrainVolume() - deleting volume handle '" << volumeHandle << "'";
+	POLYVOX_LOG_TRACE("In cuDeleteTerrainVolume() - deleting volume handle '" << volumeHandle << "'");
 
 	OPEN_C_INTERFACE
 

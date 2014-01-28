@@ -39,11 +39,11 @@ namespace Cubiquity
 			POLYVOX_THROW(std::invalid_argument, "Cannot create a new voxel database as the provided filename already exists");
 		}
 
-		logInfo() << "Creating VoxelDatabase from '" << pathToNewVoxelDatabase << "'";
+		POLYVOX_LOG_INFO("Creating VoxelDatabase from '" << pathToNewVoxelDatabase << "'");
 		
-		logInfo() << "Attempting to create '" << pathToNewVoxelDatabase << "'";
+		POLYVOX_LOG_INFO("Attempting to create '" << pathToNewVoxelDatabase << "'");
 		EXECUTE_SQLITE_FUNC( sqlite3_open_v2(pathToNewVoxelDatabase.c_str(), &mDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL) );
-		logInfo() << "Successfully created'" << pathToNewVoxelDatabase << "'";
+		POLYVOX_LOG_INFO("Successfully created'" << pathToNewVoxelDatabase << "'");
 
 		// Disable syncing
 		EXECUTE_SQLITE_FUNC( sqlite3_exec(mDatabase, "PRAGMA synchronous = OFF", 0, 0, 0) );
@@ -78,11 +78,11 @@ namespace Cubiquity
 		,mOctree(0)
 		,mDatabase(0)
 	{
-		logInfo() << "Creating VoxelDatabase from '" << pathToExistingVoxelDatabase << "'";
+		POLYVOX_LOG_INFO("Creating VoxelDatabase from '" << pathToExistingVoxelDatabase << "'");
 		
 		// Open the database
 		EXECUTE_SQLITE_FUNC(  sqlite3_open_v2(pathToExistingVoxelDatabase.c_str(), &mDatabase, SQLITE_OPEN_READWRITE, NULL) );
-		logInfo() << "Successfully opened'" << pathToExistingVoxelDatabase << "'";
+		POLYVOX_LOG_INFO("Successfully opened'" << pathToExistingVoxelDatabase << "'");
 
 		// Disable syncing
 		EXECUTE_SQLITE_FUNC( sqlite3_exec(mDatabase, "PRAGMA synchronous = OFF", 0, 0, 0) );
@@ -112,7 +112,7 @@ namespace Cubiquity
 	template <typename VoxelType>
 	Volume<VoxelType>::~Volume()
 	{
-		logTrace() << "Entering ~Volume()";
+		POLYVOX_LOG_TRACE("Entering ~Volume()");
 
 		// NOTE: We should really delete the volume here, but the background task processor might still be using it.
 		// We need a way to shut that down, or maybe smart pointers can help here. Just flush until we have a better fix.
@@ -127,14 +127,14 @@ namespace Cubiquity
 		EXECUTE_SQLITE_FUNC( sqlite3_finalize(mSelectPropertyStatement) );
 		EXECUTE_SQLITE_FUNC( sqlite3_finalize(mInsertOrReplacePropertyStatement) );
 
-		logTrace() << "Vacuuming database...";
+		POLYVOX_LOG_TRACE("Vacuuming database...");
 		PolyVox::Timer timer;
 		EXECUTE_SQLITE_FUNC( sqlite3_exec(mDatabase, "VACUUM;", 0, 0, 0) );
-		logTrace() << "Vacuumed database in " << timer.elapsedTimeInMilliSeconds() << "ms";
+		POLYVOX_LOG_TRACE("Vacuumed database in " << timer.elapsedTimeInMilliSeconds() << "ms");
 
 		EXECUTE_SQLITE_FUNC( sqlite3_close(mDatabase) );
 
-		logTrace() << "Exiting ~Volume()";
+		POLYVOX_LOG_TRACE("Exiting ~Volume()");
 	}
 
 	template <typename VoxelType>
@@ -185,7 +185,7 @@ namespace Cubiquity
         }
 		else
 		{
-			logWarning() << "Property '" << name << "' was not found. The default value will be used instead";
+			POLYVOX_LOG_WARNING("Property '" << name << "' was not found. The default value will be used instead");
 			return false;
 		}
 	}
