@@ -58,15 +58,18 @@ class EntryAndExitPoints
 {
 public:
 	EntryAndExitPoints()
+		:mFileLogger("CubiquityLog.txt")
 	{
+		PolyVox::setLogger(&mFileLogger);
 	}
 
 	~EntryAndExitPoints()
 	{
+		PolyVox::setLogger(0);
 	}
 
 private:
-	std::ofstream* mCubiquityLogStream;
+	FileLogger mFileLogger;
 };
 
 const int TotalHandleBits = 32;

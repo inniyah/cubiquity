@@ -3,6 +3,8 @@
 
 #include "PolyVoxCore/Impl/ErrorHandling.h"
 
+#include <fstream>
+
 namespace Cubiquity
 {
 	namespace LogLevels
@@ -27,6 +29,31 @@ namespace Cubiquity
 	using PolyVox::logWarning;
 	using PolyVox::logError;
 	using PolyVox::logFatal;
+
+	class FileLogger : public PolyVox::Logger
+	{
+	public:
+		FileLogger(const std::string& pathToLogFile)
+			: PolyVox::Logger()
+		{
+			mLogFile.open(pathToLogFile);
+		}
+
+		virtual ~FileLogger()
+		{
+			mLogFile.close();
+		}
+
+		std::ostream& getTraceStream() { return getNullStream(); }
+		std::ostream& getDebugStream() { return getNullStream(); }
+		std::ostream& getInfoStream() { return mLogFile; }
+		std::ostream& getWarningStream() { return mLogFile; }
+		std::ostream& getErrorStream() { return mLogFile; }
+		std::ostream& getFatalStream() { return mLogFile; }
+
+	private:
+		std::ofstream mLogFile;
+	};
 }
 
 #endif //__CUBIQUITY_LOGGING_H__

@@ -20,15 +20,18 @@ class EntryAndExitPoints
 {
 public:
 	EntryAndExitPoints()
+		:mFileLogger("CubiquityLog.txt")
 	{
-		// Note that we can't actually write to the log from this entry point
-		// code as the global Boost.Log source might not have been created yet.
-		//setLogVerbosity(LogLevels::Trace);
+		PolyVox::setLogger(&mFileLogger);
 	}
 
 	~EntryAndExitPoints()
 	{
+		PolyVox::setLogger(0);
 	}
+
+private:
+	FileLogger mFileLogger;
 };
 
 // The single global instance of the above class.
