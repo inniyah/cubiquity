@@ -3,6 +3,7 @@
 
 #include "PolyVoxCore/Impl/ErrorHandling.h"
 
+#include <ctime>
 #include <fstream>
 
 namespace Cubiquity
@@ -43,15 +44,24 @@ namespace Cubiquity
 		{
 			mLogFile.close();
 		}
-
-		std::ostream& getTraceStream() { return getNullStream(); }
-		std::ostream& getDebugStream() { return getNullStream(); }
-		std::ostream& getInfoStream() { return mLogFile; }
-		std::ostream& getWarningStream() { return mLogFile; }
-		std::ostream& getErrorStream() { return mLogFile; }
-		std::ostream& getFatalStream() { return mLogFile; }
+		
+		void logTraceMessage(const std::string& /*message*/) {  }
+		void logDebugMessage(const std::string& /*message*/) {  }
+		void logInfoMessage(const std::string& message) { logToFile("Info   ", message); }
+		void logWarningMessage(const std::string& message) { logToFile("Warning", message); }
+		void logErrorMessage(const std::string& message) { logToFile("Error  ", message); }
+		void logFatalMessage(const std::string& message) { logToFile("Fatal  ", message); }
 
 	private:
+		void logToFile(const std::string& type, const std::string& message)
+		{
+			time_t t = time(0); // get time now
+			struct tm * now = localtime( & t );
+
+			// Appending the 'std::endl' forces the stream to be flushed.
+			mLogFile << "[" << now->tm_hour << ":" << now->tm_min << ":" << now->tm_sec << ", " << type << "]: " << message << std::endl; 
+		}
+
 		std::ofstream mLogFile;
 	};
 }
