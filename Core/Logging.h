@@ -5,6 +5,7 @@
 
 #include <ctime>
 #include <fstream>
+#include <iomanip>
 
 namespace Cubiquity
 {
@@ -38,10 +39,18 @@ namespace Cubiquity
 			: PolyVox::Logger()
 		{
 			mLogFile.open(pathToLogFile);
+
+			mLogFile << "********************************************************************************" << std::endl;
+			mLogFile << "*                             Initializing Cubiquity                           *" << std::endl;
+			mLogFile << "********************************************************************************" << std::endl;
 		}
 
 		virtual ~FileLogger()
 		{
+			mLogFile << "********************************************************************************" << std::endl;
+			mLogFile << "*                             Shutting down Cubiquity                          *" << std::endl;
+			mLogFile << "********************************************************************************" << std::endl;
+			mLogFile << std::endl;
 			mLogFile.close();
 		}
 		
@@ -59,7 +68,8 @@ namespace Cubiquity
 			struct tm * now = localtime( & t );
 
 			// Appending the 'std::endl' forces the stream to be flushed.
-			mLogFile << "[" << now->tm_hour << ":" << now->tm_min << ":" << now->tm_sec << ", " << type << "]: " << message << std::endl; 
+			mLogFile << "[" << std::setfill('0') << std::setw(2) << now->tm_hour << ":" << std::setfill('0') << std::setw(2)
+				<< now->tm_min << ":" << std::setfill('0') << std::setw(2) << now->tm_sec << ", " << type << "]: " << message << std::endl; 
 		}
 
 		std::ofstream mLogFile;
