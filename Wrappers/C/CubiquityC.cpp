@@ -39,14 +39,14 @@ typedef VolumeTypes::VolumeType VolumeType;
 	} \
 	catch (const std::exception& ex) \
 	{ \
-		logError() << "An exception has reached the C interface and been suppressed."; \
-		logError() << "\tType: std::exception"; \
-		logError() << "\tMessage: \"" << ex.what() << "\""; \
+		POLYVOX_LOG_ERROR("An exception has reached the C interface and been suppressed."); \
+		POLYVOX_LOG_ERROR("\tType: std::exception"); \
+		POLYVOX_LOG_ERROR("\tMessage: \"" << ex.what() << "\""); \
 		return -1; \
 	} \
 	catch (...) \
 	{ \
-		logError() << "An unrecognised exception has reached the C interface and been suppressed."; \
+		POLYVOX_LOG_ERROR("An unrecognised exception has reached the C interface and been suppressed."); \
 		return -1; \
 	} \
 

@@ -24,14 +24,6 @@ namespace Cubiquity
 	}
 	typedef LogLevels::LogLevel LogLevel;
 
-	// Pull the PolyVox logging functions into Cubiquity
-	using PolyVox::logTrace;
-	using PolyVox::logDebug;
-	using PolyVox::logInfo;
-	using PolyVox::logWarning;
-	using PolyVox::logError;
-	using PolyVox::logFatal;
-
 	class FileLogger : public PolyVox::Logger
 	{
 	public:
