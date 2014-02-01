@@ -46,8 +46,8 @@ namespace Cubiquity
 			mLogFile.close();
 		}
 		
-		void logTraceMessage(const std::string& /*message*/) {  }
-		void logDebugMessage(const std::string& /*message*/) {  }
+		void logTraceMessage(const std::string& message) { logToFile("Trace  ", message); }
+		void logDebugMessage(const std::string& message) { logToFile("Debug  ", message); }
 		void logInfoMessage(const std::string& message) { logToFile("Info   ", message); }
 		void logWarningMessage(const std::string& message) { logToFile("Warning", message); }
 		void logErrorMessage(const std::string& message) { logToFile("Error  ", message); }
