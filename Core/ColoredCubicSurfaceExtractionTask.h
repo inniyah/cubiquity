@@ -37,8 +37,8 @@ namespace Cubiquity
 		POLYVOX_ASSERT(regSrc.getHeightInVoxels() == regDst.getHeightInVoxels() * 2, "Wrong size!");
 		POLYVOX_ASSERT(regSrc.getDepthInVoxels() == regDst.getDepthInVoxels() * 2, "Wrong size!");
 
-		SrcPolyVoxVolumeType::Sampler srcSampler(pVolSrc);
-		DstPolyVoxVolumeType::Sampler dstSampler(pVolDst);
+		typename SrcPolyVoxVolumeType::Sampler srcSampler(pVolSrc);
+		typename DstPolyVoxVolumeType::Sampler dstSampler(pVolDst);
 
 		// First of all we iterate over all destination voxels and compute their color as the
 		// average of the colors of the eight corresponding voxels in the higher resolution version.
@@ -48,8 +48,8 @@ namespace Cubiquity
 			{
 				for(int32_t x = 0; x < regDst.getWidthInVoxels(); x++)
 				{
-					Vector3DInt32 srcPos = regSrc.getLowerCorner() + (Vector3DInt32(x, y, z) * 2);
-					Vector3DInt32 dstPos = regDst.getLowerCorner() + Vector3DInt32(x, y, z);
+					Vector3I srcPos = regSrc.getLowerCorner() + (Vector3I(x, y, z) * 2);
+					Vector3I dstPos = regDst.getLowerCorner() + Vector3I(x, y, z);
 
 					uint32_t noOfSolidVoxels = 0;
 					uint32_t averageOf8Red = 0;
@@ -61,7 +61,7 @@ namespace Cubiquity
 						{
 							for(int32_t childX = 0; childX < 2; childX++)
 							{
-								srcSampler.setPosition(srcPos + Vector3DInt32(childX, childY, childZ));
+								srcSampler.setPosition(srcPos + Vector3I(childX, childY, childZ));
 
 								Color child = srcSampler.getVoxel();
 
@@ -106,7 +106,7 @@ namespace Cubiquity
 			{
 				for(int32_t x = 0; x < regDst.getWidthInVoxels(); x++)
 				{
-					Vector3DInt32 dstPos = regDst.getLowerCorner() + Vector3DInt32(x, y, z);
+					Vector3I dstPos = regDst.getLowerCorner() + Vector3I(x, y, z);
 
 					dstSampler.setPosition(dstPos);
 
@@ -121,7 +121,7 @@ namespace Cubiquity
 						   (dstSampler.peekVoxel1nx0py0pz().getAlpha() == 0) || 
 						   (dstSampler.peekVoxel1px0py0pz().getAlpha() == 0))
 						{
-							Vector3DInt32 srcPos = regSrc.getLowerCorner() + (Vector3DInt32(x, y, z) * 2);
+							Vector3I srcPos = regSrc.getLowerCorner() + (Vector3I(x, y, z) * 2);
 
 							uint32_t totalRed = 0;
 							uint32_t totalGreen = 0;
@@ -135,7 +135,7 @@ namespace Cubiquity
 								{
 									for(int32_t childX = -1; childX < 3; childX++)
 									{
-										srcSampler.setPosition(srcPos + Vector3DInt32(childX, childY, childZ));
+										srcSampler.setPosition(srcPos + Vector3I(childX, childY, childZ));
 
 										Color child = srcSampler.getVoxel();
 

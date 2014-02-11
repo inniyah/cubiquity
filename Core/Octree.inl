@@ -114,7 +114,7 @@ namespace Cubiquity
 		// This will include tasks from both the background and main threads.
 		while(!mFinishedSurfaceExtractionTasks.empty())
 		{
-			VoxelTraits<VoxelType>::SurfaceExtractionTaskType* task;
+			typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* task;
 			mFinishedSurfaceExtractionTasks.wait_and_pop(task);
 
 			task->mOctreeNode->updateFromCompletedTask(task);
@@ -261,7 +261,7 @@ namespace Cubiquity
 		{
 			node->mLastSceduledForUpdate = Clock::getTimestamp();
 
-			node->mLastSurfaceExtractionTask = new VoxelTraits<VoxelType>::SurfaceExtractionTaskType(node, mVolume->mPolyVoxVolume);
+			node->mLastSurfaceExtractionTask = new typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType(node, mVolume->mPolyVoxVolume);
 
 			// If the node was rendered last frame then this update is probably the result of an editing operation, rather than
 			// the node only just becoming visible. For editing operations it is important to process them immediatly so that we
