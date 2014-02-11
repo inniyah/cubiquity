@@ -486,7 +486,7 @@ CUBIQUITYC_API int32_t cuGetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, i
 	OPEN_C_INTERFACE
 
 	ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
-	Color& temp = volume->getVoxelAt(x, y, z);
+	Color temp = volume->getVoxelAt(x, y, z);
 
 	CuColor* ptr = (CuColor*)&temp;
 
@@ -628,7 +628,7 @@ CUBIQUITYC_API int32_t cuGetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y,
 	OPEN_C_INTERFACE
 
 	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
-	MaterialSet& material = volume->getVoxelAt(x, y, z);
+	MaterialSet material = volume->getVoxelAt(x, y, z);
 
 	materialSet->data = material.mWeights.allBits();
 
