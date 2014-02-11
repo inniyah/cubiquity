@@ -1,5 +1,6 @@
 #include "OctreeNode.h"
 #include "Volume.h"
+#include "MainThreadTaskProcessor.h"
 
 namespace Cubiquity
 {

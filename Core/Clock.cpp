@@ -1,6 +1,8 @@
 #include "Clock.h"
 
-#include "PolyVoxCore\Impl\ErrorHandling.h"
+#include "PolyVoxCore/Impl/ErrorHandling.h"
+
+#include <limits>
 
 namespace Cubiquity
 {

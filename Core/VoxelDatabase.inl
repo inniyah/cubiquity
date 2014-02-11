@@ -3,6 +3,8 @@
 
 #include "SQLiteUtils.h"
 
+#include <climits>
+
 namespace Cubiquity
 {
 	// From http://stackoverflow.com/a/776550
@@ -16,7 +18,7 @@ namespace Cubiquity
 	/// Constructor
 	template <typename VoxelType>
 	VoxelDatabase<VoxelType>::VoxelDatabase(sqlite3* database)
-		:Pager<VoxelType>()
+		:PolyVox::Pager<VoxelType>()
 		,mDatabase(database)
 		,m_pCompressor(0)
 	{
