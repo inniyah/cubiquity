@@ -1,12 +1,13 @@
 // CubiquityCTest.cpp : Defines the entry point for the console application.
 //
 
-#include "stdafx.h"
+#ifdef _WIN32
+	#include "stdafx.h"
+	#include <Windows.h>
+#endif
 
 #include <iostream>
 #include <sstream>
-
-#include <Windows.h>
 
 #include "CubiquityC.h"
 
@@ -16,8 +17,7 @@ typedef std::wostringstream tstringstream;
 typedef std::ostringstream tstringstream;
 #endif
 
-
-int _tmain(int argc, _TCHAR* argv[])
+int main()
 {
 	//unsigned int volumeID = newColoredCubesVolume(0, 0, 0, 127, 127, 127, 256, 256);
 	unsigned int volumeID;
@@ -36,7 +36,11 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	tstringstream stros;    
 	stros << noOfVertices << " " << noOfIndices;
+#ifdef _WIN32
 	OutputDebugString(stros.str().c_str());
+#else
+	std::cout << stros;
+#endif
 
 	std::cout << noOfVertices << " " << noOfIndices << std::endl;
 

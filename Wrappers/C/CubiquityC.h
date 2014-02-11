@@ -9,10 +9,14 @@
 // that uses this DLL. This way any other project whose source files include this file see 
 // CUBIQUITYC_API functions as being imported from a DLL, whereas this DLL sees symbols
 // defined with this macro as being exported.
-#ifdef CUBIQUITYC_EXPORTS
-#define CUBIQUITYC_API __declspec(dllexport)
+#if defined _WIN32 || defined __CYGWIN__
+	#ifdef CUBIQUITYC_EXPORTS
+	#define CUBIQUITYC_API __declspec(dllexport)
+	#else
+	#define CUBIQUITYC_API __declspec(dllimport)
+	#endif
 #else
-#define CUBIQUITYC_API __declspec(dllimport)
+	#define CUBIQUITYC_API __attribute__ ((visibility("default")))
 #endif
 
 extern "C"
