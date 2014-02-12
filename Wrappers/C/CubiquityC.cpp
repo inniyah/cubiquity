@@ -1,9 +1,6 @@
 // CubiquityC.cpp : Defines the exported functions for the DLL application.
 //
 
-#ifdef _WIN32
-	#include "stdafx.h"
-#endif
 #include "CubiquityC.h"
 
 #include "Brush.h"
