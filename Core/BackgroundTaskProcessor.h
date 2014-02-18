@@ -4,13 +4,13 @@
 #include "ConcurrentQueue.h"
 #include "TaskProcessor.h"
 
-#include "boost/thread.hpp"
+//#include "boost/thread.hpp"
 
 #include <list>
 
 namespace Cubiquity
 {
-	class BackgroundTaskProcessor : public TaskProcessor
+	/*class BackgroundTaskProcessor : public TaskProcessor
 	{
 	public:
 		BackgroundTaskProcessor(uint32_t noOfThreads);
@@ -28,7 +28,7 @@ namespace Cubiquity
 		std::list<boost::thread*> mThreads;
 	};
 
-	extern BackgroundTaskProcessor gBackgroundTaskProcessor;
+	extern BackgroundTaskProcessor gBackgroundTaskProcessor;*/
 }
 
 #endif //CUBIQUITY_BACKGROUNDTASKPROCESSOR_H_

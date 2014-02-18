@@ -1,6 +1,6 @@
 #include "BackgroundTaskProcessor.h"
 
-#include "boost/bind.hpp"
+/*#include "boost/bind.hpp"
 
 namespace Cubiquity
 {
@@ -35,11 +35,11 @@ namespace Cubiquity
 	{
 		// This is commented out becaue we're not currently using this class, and having this running
 		// causes problems on application shutdown. We probably need a way to stop this background processor.
-		/*while(true)
-		{
-			Task* task = 0;
-			mPendingTasks.wait_and_pop(task);
-			task->process();
-		}*/
+		//while(true)
+		//{
+		//	Task* task = 0;
+		//	mPendingTasks.wait_and_pop(task);
+		//	task->process();
+		//}
 	}
-}
+}*/
