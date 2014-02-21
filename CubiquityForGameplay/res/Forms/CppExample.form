@@ -98,7 +98,6 @@ form particleEditor
             max = 5.0
             value = 1.0
             step = 0.1
-            consumeInputEvents = false
         }
     }
     
@@ -174,7 +173,6 @@ form particleEditor
             max = 10
             value = 4
             step = 0.1
-            consumeInputEvents = false
         }
 		
 		label titleBrushOuterRadius
@@ -193,7 +191,6 @@ form particleEditor
             max = 10
             value = 6
             step = 0.1
-            consumeInputEvents = false
         }
         
         label titleBrushOpacity
@@ -212,7 +209,6 @@ form particleEditor
             max = 1.0
             value = 0.5
             step = 0.01
-            consumeInputEvents = false
         }
     }
 }
