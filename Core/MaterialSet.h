@@ -249,7 +249,7 @@ namespace Cubiquity
 		DensityType convertToDensity(MaterialSet voxel);
 		MaterialType convertToMaterial(MaterialSet voxel);
 
-		MaterialType blendMaterials(MaterialSet a, MaterialType b, float weight);
+		MaterialType blendMaterials(MaterialSet a, MaterialSet b, float weight);
 
 		MaterialSet getBorderValue(void);
 		DensityType getThreshold(void);

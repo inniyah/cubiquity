@@ -86,7 +86,7 @@ namespace Cubiquity
 		return voxel;
 	}
 
-	MaterialSetMarchingCubesController::MaterialType MaterialSetMarchingCubesController::blendMaterials(MaterialSet a, MaterialType b, float weight)
+	MaterialSetMarchingCubesController::MaterialType MaterialSetMarchingCubesController::blendMaterials(MaterialSet a, MaterialSet b, float weight)
 	{
 		MaterialSet result;
 		for(uint32_t ct = 0; ct < MaterialSet::getNoOfMaterials(); ct++)
