@@ -36,6 +36,9 @@ extern "C"
 	// Version functions
 	CUBIQUITYC_API int32_t cuGetVersionNumber(uint32_t* majorVersion, uint32_t* minorVersion, uint32_t* patchVersion);
 
+	// Logging functions - Doesn't return error code as it is too simple to fail.
+	CUBIQUITYC_API const char* cuGetLogFilePath(void);
+
 	// Color functions - these don't return error codes because they are too simple to fail.
 	CUBIQUITYC_API uint8_t cuGetRed(CuColor color);
 	CUBIQUITYC_API uint8_t cuGetGreen(CuColor color);
