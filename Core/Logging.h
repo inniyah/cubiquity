@@ -7,6 +7,14 @@
 #include <fstream>
 #include <iomanip>
 
+// Used for getting the path to the user's home folder.
+#ifdef __APPLE__
+	#include <stdlib.h>
+	#include <stdio.h>    
+	#include <pwd.h>
+	#include <unistd.h>
+#endif
+
 namespace Cubiquity
 {
 	namespace LogLevels
@@ -32,7 +40,18 @@ namespace Cubiquity
 		{
 
 #ifdef __APPLE__
-			mLogFilePath = "~/Library/Logs/Cubiquity.log";
+			// From http://stackoverflow.com/a/3734026
+			const char *homeDir = getenv("HOME");
+
+			if !homeDir
+			{
+				struct passwd* pwd = getpwuid(getuid());
+				if (pwd)
+					homeDir = pwd->pw_dir;
+			}
+
+			mLogFilePath = homeDir;
+			mLogFilePath += "/Library/Logs/Cubiquity.log";
 #else
 			mLogFilePath = "Cubiquity.log";
 #endif
