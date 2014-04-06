@@ -27,10 +27,17 @@ namespace Cubiquity
 	class FileLogger : public PolyVox::Logger
 	{
 	public:
-		FileLogger(const std::string& pathToLogFile)
+		FileLogger()
 			: PolyVox::Logger()
 		{
-			mLogFile.open(pathToLogFile);
+
+#ifdef __APPLE__
+			mLogFilePath = "~/Library/Logs/Cubiquity.log";
+#else
+			mLogFilePath = "Cubiquity.log";
+#endif
+
+			mLogFile.open(mLogFilePath);
 
 			mLogFile << "********************************************************************************" << std::endl;
 			mLogFile << "*                             Initializing Cubiquity                           *" << std::endl;
@@ -44,6 +51,11 @@ namespace Cubiquity
 			mLogFile << "********************************************************************************" << std::endl;
 			mLogFile << std::endl;
 			mLogFile.close();
+		}
+
+		std::string getLogFilePath()
+		{
+			return mLogFilePath;
 		}
 		
 		void logTraceMessage(const std::string& message) { logToFile("Trace  ", message); }
@@ -65,6 +77,7 @@ namespace Cubiquity
 		}
 
 		std::ofstream mLogFile;
+		std::string mLogFilePath;
 	};
 }
 

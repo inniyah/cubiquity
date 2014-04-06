@@ -51,19 +51,13 @@ typedef VolumeTypes::VolumeType VolumeType;
 
 using namespace Cubiquity;
 
-#ifdef __APPLE__
-	std::string gLogFilePath = "~/Library/Logs/Cubiquity.log";
-#else
-	std::string gLogFilePath = "Cubiquity.log";
-#endif
-
 // This class (via it's single global instance) allows code to be executed when the library is loaded and unloaded.
 // I do have some concerns about how robust this is - in particular see here: http://stackoverflow.com/a/1229542
 class EntryAndExitPoints
 {
 public:
 	EntryAndExitPoints()
-		:mFileLogger(gLogFilePath)
+		:mFileLogger()
 	{
 		PolyVox::setLogger(&mFileLogger);
 	}
@@ -73,7 +67,7 @@ public:
 		PolyVox::setLogger(0);
 	}
 
-private:
+public:
 	FileLogger mFileLogger;
 };
 
@@ -314,7 +308,7 @@ CUBIQUITYC_API int32_t cuGetVersionNumber(uint32_t* majorVersion, uint32_t* mino
 
 const char* cuGetLogFilePath(void)
 {
-	return gLogFilePath.c_str();
+	return gEntryAndExitPoints.mFileLogger.getLogFilePath().c_str();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
