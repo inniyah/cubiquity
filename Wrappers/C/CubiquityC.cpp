@@ -308,7 +308,10 @@ CUBIQUITYC_API int32_t cuGetVersionNumber(uint32_t* majorVersion, uint32_t* mino
 
 const char* cuGetLogFilePath(void)
 {
-	return gEntryAndExitPoints.mFileLogger.getLogFilePath().c_str();
+	// Use of buffer is a bit of a hack! But otherwise the string doesn't come through. To be investigated.
+	static char buffer[100];
+	strcpy(buffer, gEntryAndExitPoints.mFileLogger.getLogFilePath().c_str());
+	return buffer;
 }
 
 ////////////////////////////////////////////////////////////////////////////////
