@@ -43,7 +43,7 @@ namespace Cubiquity
 			// From http://stackoverflow.com/a/3734026
 			const char *homeDir = getenv("HOME");
 
-			if !homeDir
+			if(!homeDir)
 			{
 				struct passwd* pwd = getpwuid(getuid());
 				if (pwd)
