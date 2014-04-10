@@ -34,19 +34,17 @@ typedef VolumeTypes::VolumeType VolumeType;
 	{
 
 #define CLOSE_C_INTERFACE \
-	return 1; \
+	return CU_OK; \
 	} \
 	catch (const std::exception& ex) \
 	{ \
-		POLYVOX_LOG_ERROR("An exception has reached the C interface and been suppressed."); \
-		POLYVOX_LOG_ERROR("\tType: std::exception"); \
-		POLYVOX_LOG_ERROR("\tMessage: \"" << ex.what() << "\""); \
-		return -1; \
+		POLYVOX_LOG_ERROR("Caught std::exception at C interface. Message reads: \"" << ex.what() << "\""); \
+		return CU_EXCEPTION; \
 	} \
 	catch (...) \
 	{ \
-		POLYVOX_LOG_ERROR("An unrecognised exception has reached the C interface and been suppressed."); \
-		return -1; \
+		POLYVOX_LOG_ERROR("Caught unknown exception at C interface!"); \
+		return CU_UNKNOWN_ERROR; \
 	} \
 
 using namespace Cubiquity;

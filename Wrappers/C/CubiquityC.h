@@ -21,6 +21,41 @@
 
 extern "C"
 {
+	const int32_t CU_OK = 0;
+
+	// Standard exceptions, based on list here: http://www.cplusplus.com/reference/exception/exception/
+	const int32_t CU_EXCEPTION = 10;
+	const int32_t CU_BAD_ALLOC = 20;
+	const int32_t CU_BAD_CAST = 30;
+	const int32_t CU_BAD_EXCEPTION = 40;
+	const int32_t CU_BAD_FUNCTION_CALL = 50;
+	const int32_t CU_BAD_TYPE_ID = 60;
+	const int32_t CU_BAD_WEAK_PTR = 70;
+	//const int32_t ios_base::failure // Included below
+	const int32_t CU_LOGIC_ERROR = 80;
+	const int32_t CU_RUNTIME_ERROR = 90;
+
+	const int32_t CU_DOMAIN_ERROR = 100;
+	const int32_t CU_FUTURE_ERROR = 110;
+	const int32_t CU_INVALID_ARGUMENT = 120;
+	const int32_t CU_LENGTH_ERROR = 130;
+	const int32_t CU_OUT_OF_RANGE = 140;
+
+	const int32_t CU_OVERFLOW_ERROR = 150;
+	const int32_t CU_RANGE_ERROR = 160;
+	const int32_t CU_SYSTEM_ERROR = 170;
+	const int32_t CU_UNDERFLOW_ERROR = 180;
+
+	const int32_t CU_BAD_ARRAY_NEW_LENGTH = 190;
+
+	const int32_t CU_IOS_BASE_FAILURE = 200;
+
+	// Non-standard exceptions
+	const int32_t SQLITE_ERROR = 210;
+
+	// Unknown error (caught by ...)
+	const int32_t CU_UNKNOWN_ERROR = 1000;
+
 	struct CuColor_s
 	{
 		uint32_t data;
