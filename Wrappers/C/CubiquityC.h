@@ -29,7 +29,7 @@ extern "C"
 	const int32_t CU_BAD_CAST = 30;
 	const int32_t CU_BAD_EXCEPTION = 40;
 	const int32_t CU_BAD_FUNCTION_CALL = 50;
-	const int32_t CU_BAD_TYPE_ID = 60;
+	const int32_t CU_BAD_TYPEID = 60;
 	const int32_t CU_BAD_WEAK_PTR = 70;
 	//const int32_t ios_base::failure // Included below
 	const int32_t CU_LOGIC_ERROR = 80;

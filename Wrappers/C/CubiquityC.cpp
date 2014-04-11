@@ -12,8 +12,11 @@
 #include "TerrainVolumeEditor.h"
 #include "TerrainVolumeGenerator.h"
 
-#include <fstream>
+#include <future> //For std::future_error
+#include <stdexcept>
 #include <vector>
+
+using namespace std;
 
 const uint32_t CuMajorVersion = 0;
 const uint32_t CuMinorVersion = 5;
@@ -31,6 +34,14 @@ typedef VolumeTypes::VolumeType VolumeType;
 
 char gLastErrorMessage[4096];
 
+#define CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(exception, errorCode) \
+catch (const exception& ex) \
+{ \
+	POLYVOX_LOG_ERROR("Caught \'" #exception "\' at C interface. Message reads: \"" << ex.what() << "\""); \
+	strcpy(gLastErrorMessage, ex.what()); \
+	return errorCode; \
+}
+
 #define OPEN_C_INTERFACE \
 	try \
 	{
@@ -38,12 +49,35 @@ char gLastErrorMessage[4096];
 #define CLOSE_C_INTERFACE \
 	return CU_OK; \
 	} \
-	catch (const std::exception& ex) \
-	{ \
-		POLYVOX_LOG_ERROR("Caught std::exception at C interface. Message reads: \"" << ex.what() << "\""); \
-		strcpy(gLastErrorMessage, ex.what()); \
-		return CU_EXCEPTION; \
-	} \
+	/* Note - Exceptions are ordered from most to least specific */ \
+	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(SQLiteError, CU_SQLITE_ERROR) \
+	\
+	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(ios_base::failure, CU_IOS_BASE_FAILURE) \
+	\
+	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(bad_array_new_length, CU_BAD_ARRAY_NEW_LENGTH) \
+	\
+	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(underflow_error, CU_UNDERFLOW_ERROR) \
+	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(system_error, CU_SYSTEM_ERROR) \
+	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(range_error, CU_RANGE_ERROR) \
+	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(overflow_error, CU_OVERFLOW_ERROR) \
+	\
+	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(out_of_range, CU_OUT_OF_RANGE) \
+	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(length_error, CU_LENGTH_ERROR) \
+	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(invalid_argument, CU_INVALID_ARGUMENT) \
+	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(future_error, CU_FUTURE_ERROR) \
+	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(domain_error, CU_DOMAIN_ERROR) \
+	\
+	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(runtime_error, CU_RUNTIME_ERROR) \
+	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(logic_error, CU_LOGIC_ERROR) \
+	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(bad_weak_ptr, CU_BAD_WEAK_PTR) \
+	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(bad_typeid, CU_BAD_TYPEID) \
+	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(bad_function_call, CU_BAD_FUNCTION_CALL) \
+	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(bad_exception, CU_BAD_EXCEPTION) \
+	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(bad_cast, CU_BAD_CAST) \
+	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(bad_alloc, CU_BAD_ALLOC) \
+	\
+	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(exception, CU_EXCEPTION) \
+	\
 	catch (...) \
 	{ \
 		POLYVOX_LOG_ERROR("Caught unknown exception at C interface."); \
@@ -315,6 +349,8 @@ CUBIQUITYC_API const char* cuGetLogFilePath(void)
 	return buffer;
 }
 
+#define ERROR_CODE_TO_STRING(errorCode) case errorCode: strcpy(buffer, #errorCode); break;
+
 ////////////////////////////////////////////////////////////////////////////////
 // Logging functions
 ////////////////////////////////////////////////////////////////////////////////
@@ -324,82 +360,36 @@ CUBIQUITYC_API const char* cuGetErrorCodeAsString(int32_t errorCode)
 
 	switch (errorCode)
 	{
-	case CU_OK:
-		strcpy(buffer, "CU_OK");
-		break;
+		ERROR_CODE_TO_STRING(CU_OK)
 
-	case CU_EXCEPTION:
-		strcpy(buffer, "CU_EXCEPTION");
-		break;
-	case CU_BAD_ALLOC:
-		strcpy(buffer, "CU_BAD_ALLOC");
-		break;
-	case CU_BAD_CAST:
-		strcpy(buffer, "CU_BAD_CAST");
-		break;
-	case CU_BAD_EXCEPTION:
-		strcpy(buffer, "CU_BAD_EXCEPTION");
-		break;
-	case CU_BAD_FUNCTION_CALL:
-		strcpy(buffer, "CU_BAD_FUNCTION_CALL");
-		break;
-	case CU_BAD_TYPE_ID:
-		strcpy(buffer, "CU_BAD_TYPE_ID");
-		break;
-	case CU_BAD_WEAK_PTR:
-		strcpy(buffer, "CU_BAD_WEAK_PTR");
-		break;
-	case CU_LOGIC_ERROR:
-		strcpy(buffer, "CU_LOGIC_ERROR");
-		break;
-	case CU_RUNTIME_ERROR:
-		strcpy(buffer, "CU_RUNTIME_ERROR");
-		break;
+		ERROR_CODE_TO_STRING(CU_EXCEPTION)
+		ERROR_CODE_TO_STRING(CU_BAD_ALLOC)
+		ERROR_CODE_TO_STRING(CU_BAD_CAST)
+		ERROR_CODE_TO_STRING(CU_BAD_EXCEPTION)
+		ERROR_CODE_TO_STRING(CU_BAD_FUNCTION_CALL)
+		ERROR_CODE_TO_STRING(CU_BAD_TYPEID)
+		ERROR_CODE_TO_STRING(CU_BAD_WEAK_PTR)
+		ERROR_CODE_TO_STRING(CU_LOGIC_ERROR)
+		ERROR_CODE_TO_STRING(CU_RUNTIME_ERROR)
 
-	case CU_DOMAIN_ERROR:
-		strcpy(buffer, "CU_DOMAIN_ERROR");
-		break;
-	case CU_FUTURE_ERROR:
-		strcpy(buffer, "CU_FUTURE_ERROR");
-		break;
-	case CU_INVALID_ARGUMENT:
-		strcpy(buffer, "CU_INVALID_ARGUMENT");
-		break;
-	case CU_LENGTH_ERROR:
-		strcpy(buffer, "CU_LENGTH_ERROR");
-		break;
-	case CU_OUT_OF_RANGE:
-		strcpy(buffer, "CU_OUT_OF_RANGE");
-		break;
+		ERROR_CODE_TO_STRING(CU_DOMAIN_ERROR)
+		ERROR_CODE_TO_STRING(CU_FUTURE_ERROR)
+		ERROR_CODE_TO_STRING(CU_INVALID_ARGUMENT)
+		ERROR_CODE_TO_STRING(CU_LENGTH_ERROR)
+		ERROR_CODE_TO_STRING(CU_OUT_OF_RANGE)
 
-	case CU_OVERFLOW_ERROR:
-		strcpy(buffer, "CU_OVERFLOW_ERROR");
-		break;
-	case CU_RANGE_ERROR:
-		strcpy(buffer, "CU_RANGE_ERROR");
-		break;
-	case CU_SYSTEM_ERROR:
-		strcpy(buffer, "CU_SYSTEM_ERROR");
-		break;
-	case CU_UNDERFLOW_ERROR:
-		strcpy(buffer, "CU_UNDERFLOW_ERROR");
-		break;
+		ERROR_CODE_TO_STRING(CU_OVERFLOW_ERROR)
+		ERROR_CODE_TO_STRING(CU_RANGE_ERROR)
+		ERROR_CODE_TO_STRING(CU_SYSTEM_ERROR)
+		ERROR_CODE_TO_STRING(CU_UNDERFLOW_ERROR)
 
-	case CU_BAD_ARRAY_NEW_LENGTH:
-		strcpy(buffer, "CU_BAD_ARRAY_NEW_LENGTH");
-		break;
+		ERROR_CODE_TO_STRING(CU_BAD_ARRAY_NEW_LENGTH)
 
-	case CU_IOS_BASE_FAILURE:
-		strcpy(buffer, "CU_IOS_BASE_FAILURE");
-		break;
+		ERROR_CODE_TO_STRING(CU_IOS_BASE_FAILURE)
 
-	case CU_SQLITE_ERROR:
-		strcpy(buffer, "CU_SQLITE_ERROR");
-		break;
+		ERROR_CODE_TO_STRING(CU_SQLITE_ERROR)
 
-	case CU_UNKNOWN_ERROR:
-		strcpy(buffer, "CU_UNKNOWN_ERROR");
-		break;
+		ERROR_CODE_TO_STRING(CU_UNKNOWN_ERROR)
 
 	default:
 		strcpy(buffer, "Unrecognised error code");
