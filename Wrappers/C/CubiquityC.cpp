@@ -29,6 +29,8 @@ namespace VolumeTypes
 }
 typedef VolumeTypes::VolumeType VolumeType;
 
+char gLastErrorMessage[4096];
+
 #define OPEN_C_INTERFACE \
 	try \
 	{
@@ -39,11 +41,13 @@ typedef VolumeTypes::VolumeType VolumeType;
 	catch (const std::exception& ex) \
 	{ \
 		POLYVOX_LOG_ERROR("Caught std::exception at C interface. Message reads: \"" << ex.what() << "\""); \
+		strcpy(gLastErrorMessage, ex.what()); \
 		return CU_EXCEPTION; \
 	} \
 	catch (...) \
 	{ \
-		POLYVOX_LOG_ERROR("Caught unknown exception at C interface!"); \
+		POLYVOX_LOG_ERROR("Caught unknown exception at C interface."); \
+		strcpy(gLastErrorMessage, "No error message due to unknown exception type."); \
 		return CU_UNKNOWN_ERROR; \
 	} \
 
@@ -301,15 +305,113 @@ CUBIQUITYC_API int32_t cuGetVersionNumber(uint32_t* majorVersion, uint32_t* mino
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// Volume functions
+// Logging functions
 ////////////////////////////////////////////////////////////////////////////////
-
-const char* cuGetLogFilePath(void)
+CUBIQUITYC_API const char* cuGetLogFilePath(void)
 {
 	// Use of buffer is a bit of a hack! But otherwise the string doesn't come through. To be investigated.
-	static char buffer[100];
+	static char buffer[1024];
 	strcpy(buffer, gEntryAndExitPoints.mFileLogger.getLogFilePath().c_str());
 	return buffer;
+}
+
+////////////////////////////////////////////////////////////////////////////////
+// Logging functions
+////////////////////////////////////////////////////////////////////////////////
+CUBIQUITYC_API const char* cuGetErrorCodeAsString(int32_t errorCode)
+{
+	static char buffer[1024]; // Can't return a pointer to a local variableso we make it static.
+
+	switch (errorCode)
+	{
+	case CU_OK:
+		strcpy(buffer, "CU_OK");
+		break;
+
+	case CU_EXCEPTION:
+		strcpy(buffer, "CU_EXCEPTION");
+		break;
+	case CU_BAD_ALLOC:
+		strcpy(buffer, "CU_BAD_ALLOC");
+		break;
+	case CU_BAD_CAST:
+		strcpy(buffer, "CU_BAD_CAST");
+		break;
+	case CU_BAD_EXCEPTION:
+		strcpy(buffer, "CU_BAD_EXCEPTION");
+		break;
+	case CU_BAD_FUNCTION_CALL:
+		strcpy(buffer, "CU_BAD_FUNCTION_CALL");
+		break;
+	case CU_BAD_TYPE_ID:
+		strcpy(buffer, "CU_BAD_TYPE_ID");
+		break;
+	case CU_BAD_WEAK_PTR:
+		strcpy(buffer, "CU_BAD_WEAK_PTR");
+		break;
+	case CU_LOGIC_ERROR:
+		strcpy(buffer, "CU_LOGIC_ERROR");
+		break;
+	case CU_RUNTIME_ERROR:
+		strcpy(buffer, "CU_RUNTIME_ERROR");
+		break;
+
+	case CU_DOMAIN_ERROR:
+		strcpy(buffer, "CU_DOMAIN_ERROR");
+		break;
+	case CU_FUTURE_ERROR:
+		strcpy(buffer, "CU_FUTURE_ERROR");
+		break;
+	case CU_INVALID_ARGUMENT:
+		strcpy(buffer, "CU_INVALID_ARGUMENT");
+		break;
+	case CU_LENGTH_ERROR:
+		strcpy(buffer, "CU_LENGTH_ERROR");
+		break;
+	case CU_OUT_OF_RANGE:
+		strcpy(buffer, "CU_OUT_OF_RANGE");
+		break;
+
+	case CU_OVERFLOW_ERROR:
+		strcpy(buffer, "CU_OVERFLOW_ERROR");
+		break;
+	case CU_RANGE_ERROR:
+		strcpy(buffer, "CU_RANGE_ERROR");
+		break;
+	case CU_SYSTEM_ERROR:
+		strcpy(buffer, "CU_SYSTEM_ERROR");
+		break;
+	case CU_UNDERFLOW_ERROR:
+		strcpy(buffer, "CU_UNDERFLOW_ERROR");
+		break;
+
+	case CU_BAD_ARRAY_NEW_LENGTH:
+		strcpy(buffer, "CU_BAD_ARRAY_NEW_LENGTH");
+		break;
+
+	case CU_IOS_BASE_FAILURE:
+		strcpy(buffer, "CU_IOS_BASE_FAILURE");
+		break;
+
+	case CU_SQLITE_ERROR:
+		strcpy(buffer, "CU_SQLITE_ERROR");
+		break;
+
+	case CU_UNKNOWN_ERROR:
+		strcpy(buffer, "CU_UNKNOWN_ERROR");
+		break;
+
+	default:
+		strcpy(buffer, "Unrecognised error code");
+		break;
+	}
+
+	return buffer;
+}
+
+CUBIQUITYC_API const char* cuGetLastErrorMessage(void)
+{
+	return gLastErrorMessage;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

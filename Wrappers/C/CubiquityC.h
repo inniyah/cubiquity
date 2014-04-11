@@ -51,7 +51,7 @@ extern "C"
 	const int32_t CU_IOS_BASE_FAILURE = 200;
 
 	// Non-standard exceptions
-	const int32_t SQLITE_ERROR = 210;
+	const int32_t CU_SQLITE_ERROR = 210;
 
 	// Unknown error (caught by ...)
 	const int32_t CU_UNKNOWN_ERROR = 1000;
@@ -73,6 +73,10 @@ extern "C"
 
 	// Logging functions - Doesn't return error code as it is too simple to fail.
 	CUBIQUITYC_API const char* cuGetLogFilePath(void);
+
+	// Error handling functions - Don't return error code as they are too simple to fail.
+	CUBIQUITYC_API const char* cuGetErrorCodeAsString(int32_t errorCode);
+	CUBIQUITYC_API const char* cuGetLastErrorMessage(void);
 
 	// Color functions - these don't return error codes because they are too simple to fail.
 	CUBIQUITYC_API uint8_t cuGetRed(CuColor color);
