@@ -18,8 +18,8 @@
 
 using namespace std;
 
-const uint32_t CuMajorVersion = 0;
-const uint32_t CuMinorVersion = 5;
+const uint32_t CuMajorVersion = 1;
+const uint32_t CuMinorVersion = 0;
 const uint32_t CuPatchVersion = 0;
 
 namespace VolumeTypes
