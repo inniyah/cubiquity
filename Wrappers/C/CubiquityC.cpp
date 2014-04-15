@@ -12,7 +12,7 @@
 #include "TerrainVolumeEditor.h"
 #include "TerrainVolumeGenerator.h"
 
-#include <future> //For std::future_error
+//#include <future> //For std::future_error, but causes chrono-related compile errors on Linux/GCC.
 #include <stdexcept>
 #include <vector>
 
@@ -54,17 +54,17 @@ catch (const exception& ex) \
 	\
 	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(ios_base::failure, CU_IOS_BASE_FAILURE) \
 	\
-	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(bad_array_new_length, CU_BAD_ARRAY_NEW_LENGTH) \
+	/*CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(bad_array_new_length, CU_BAD_ARRAY_NEW_LENGTH) *Causing compile errors on Linux/GCC* */ \
 	\
 	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(underflow_error, CU_UNDERFLOW_ERROR) \
-	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(system_error, CU_SYSTEM_ERROR) \
+	/*CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(system_error, CU_SYSTEM_ERROR) *Causing compile errors on Linux/GCC* */ \
 	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(range_error, CU_RANGE_ERROR) \
 	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(overflow_error, CU_OVERFLOW_ERROR) \
 	\
 	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(out_of_range, CU_OUT_OF_RANGE) \
 	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(length_error, CU_LENGTH_ERROR) \
 	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(invalid_argument, CU_INVALID_ARGUMENT) \
-	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(future_error, CU_FUTURE_ERROR) \
+	/*CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(future_error, CU_FUTURE_ERROR) *Requires <future> header (problematic on Linux/GCC)* */ \
 	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(domain_error, CU_DOMAIN_ERROR) \
 	\
 	CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(runtime_error, CU_RUNTIME_ERROR) \

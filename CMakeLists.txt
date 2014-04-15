@@ -13,5 +13,9 @@ endif()
 add_subdirectory(Core)
 add_subdirectory(Wrappers/C)
 add_subdirectory(Wrappers/CubiquityCTest)
-add_subdirectory(ConvertToImageSlices)
-add_subdirectory(ConvertToVDB)
+
+# Converter tools not needed on Linux as the Unity editor doesn't run there.
+if(NOT CMAKE_SYSTEM_NAME MATCHES "Linux")
+	add_subdirectory(ConvertToImageSlices)
+	add_subdirectory(ConvertToVDB)
+endif()
