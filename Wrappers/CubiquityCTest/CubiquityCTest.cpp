@@ -29,16 +29,19 @@ int main()
 	//File name should not alreay exist. 32 is the internal chunk size (not imporant).
 	validate( cuNewEmptyColoredCubesVolume(0, 0, 0, width - 1, height - 1, depth - 1, "NewVolume.vdb", 32, &volumeID) );
 
+	// Precompute the colors to avoid calling 'cuMakeColor' inside the loop.
 	CuColor redCol = cuMakeColor(255, 0, 0, 255);
 	CuColor greenCol = cuMakeColor(0, 255, 0, 255);
 	CuColor blueCol = cuMakeColor(0, 0, 255, 255);
 
+	// Iterate over each voxel
 	for (int z = 0; z < depth; z++)
 	{
 		for (int y = 0; y < height; y++)
 		{
 			for (int x = 0; x < width; x++)
-			{				
+			{		
+				// Write a color based on the height of the voxel.
 				if (y < 5)
 					validate( cuSetVoxel(volumeID, x, y, z, redCol) );
 				else if (y < 10)
@@ -49,6 +52,7 @@ int main()
 		}
 	}
 
+	// This basically commits our changes.
 	validate( cuAcceptOverrideBlocks(volumeID) );
 
 	// Retieve the stored voxel to check it worked
@@ -59,11 +63,12 @@ int main()
 	uint8_t red, green, blue, alpha;
 	cuGetAllComponents(storedColor, &red, &green, &blue, &alpha);
 
-	std::stringstream stros;
-	stros << "Stored voxel color is (" << (int)red << ", " << (int)green << ", " << (int)blue << ", " << (int)alpha << ")" << std::endl;
+	// Print out the retrieved color
+	std::stringstream ss;
+	ss << "Stored voxel color is (" << (int)red << ", " << (int)green << ", " << (int)blue << ", " << (int)alpha << ")" << std::endl;
+	std::cout << ss.str();
 
-	std::cout << stros.str();
-
+	// Delete the volume from meory (doesn't delete from disk).
 	validate( cuDeleteColoredCubesVolume(volumeID) );
 
 	return 0;
