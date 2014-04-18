@@ -11,12 +11,6 @@
 
 #include "CubiquityC.h"
 
-#ifdef UNICODE
-typedef std::wostringstream tstringstream;
-#else
-typedef std::ostringstream tstringstream;
-#endif
-
 void validate(int returnCode)
 {
 	if (returnCode != CU_OK)
