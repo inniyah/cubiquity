@@ -12,7 +12,9 @@
 #include "TerrainVolumeEditor.h"
 #include "TerrainVolumeGenerator.h"
 
-//#include <future> //For std::future_error, but causes chrono-related compile errors on Linux/GCC.
+#if defined (_MSC_VER) || defined(__APPLE__)
+	#include <future> //For std::future_error, but causes chrono-related compile errors on Linux/GCC.
+#endif
 #include <stdexcept>
 #include <vector>
 
