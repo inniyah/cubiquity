@@ -83,7 +83,7 @@ bool importMagicaVoxel(const std::string& filename, const std::string& pathToVox
 
 	uint32_t volumeHandle;
 	// NOTE: Y/Z axis swapped to better match Magica to Cubiquity.
-	if(cuNewEmptyColoredCubesVolume(0, 0, 0, model.sizex - 1, model.sizez - 1, model.sizey - 1, pathToVoxelDatabase.c_str(), 32, &volumeHandle) != 1) //FIXME - Hardcoded return value!
+	if(cuNewEmptyColoredCubesVolume(0, 0, 0, model.sizex - 1, model.sizez - 1, model.sizey - 1, pathToVoxelDatabase.c_str(), 32, &volumeHandle) != CU_OK)
 	{
 		cerr << "Failed to create new empty volume" << endl;
 		return false;
@@ -108,7 +108,7 @@ bool importMagicaVoxel(const std::string& filename, const std::string& pathToVox
 		CuColor color = cuMakeColor(rgba.r, rgba.g, rgba.b, rgba.a);
 
 		// NOTE: Y/Z axis swapped to better match Magica to Cubiquity.
-		if(cuSetVoxel(volumeHandle, model.voxels[i].x, model.voxels[i].z, model.voxels[i].y, color) != 1) // FIXME - Hardcoded return value.
+		if(cuSetVoxel(volumeHandle, model.voxels[i].x, model.voxels[i].z, model.voxels[i].y, color) != CU_OK)
 		{
 			cerr << "Error setting voxel color" << endl;
 			return false;

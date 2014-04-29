@@ -95,7 +95,7 @@ bool importImageSlices(const std::string& folder, const std::string& pathToVoxel
 	// Create the volume. When importing we treat 'y' as up because most game engines and
 	// physics engines expect this. This means we need to swap the 'y' and 'slice' indices.
 	uint32_t volumeHandle;
-	if(cuNewEmptyColoredCubesVolume(0, 0, 0, volumeWidth - 1, sliceCount - 1, volumeHeight - 1, pathToVoxelDatabase.c_str(), 32, &volumeHandle) != 1) //FIXME - Hardcoded return value!
+	if(cuNewEmptyColoredCubesVolume(0, 0, 0, volumeWidth - 1, sliceCount - 1, volumeHeight - 1, pathToVoxelDatabase.c_str(), 32, &volumeHandle) != CU_OK)
 	{
 		cerr << "Failed to create new empty volume" << endl;
 		return false;
@@ -133,7 +133,7 @@ bool importImageSlices(const std::string& folder, const std::string& pathToVoxel
 
 				// When importing we treat 'y' as up because most game engines and physics
 				// engines expect this. This means we need to swap the 'y' and 'slice' indices.
-				if(cuSetVoxel(volumeHandle, x, slice, y, color) != 1) // FIXME - Hardcoded return value.
+				if(cuSetVoxel(volumeHandle, x, slice, y, color) != CU_OK)
 				{
 					cerr << "Error setting voxel color" << endl;
 					return false;

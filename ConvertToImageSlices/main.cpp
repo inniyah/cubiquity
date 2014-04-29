@@ -34,14 +34,14 @@ void printUsage(void)
 int exportAsImageSlices(const std::string& pathToVDB)
 {
 	uint32_t volumeHandle = 0;
-	if(cuNewColoredCubesVolumeFromVDB(pathToVDB.c_str(), 32, &volumeHandle) != 1) //FIXME - hardcoded value
+	if(cuNewColoredCubesVolumeFromVDB(pathToVDB.c_str(), 32, &volumeHandle) != CU_OK)
 	{
 		cerr << "Error opening VDB database" << endl;
 		return EXIT_FAILURE;
 	}
 
 	int lowerX, lowerY, lowerZ, upperX, upperY, upperZ;
-	if(cuGetEnclosingRegion(volumeHandle, &lowerX, &lowerY, &lowerZ, &upperX, &upperY, &upperZ) != 1) //FIXME - hardcoded value
+	if(cuGetEnclosingRegion(volumeHandle, &lowerX, &lowerY, &lowerZ, &upperX, &upperY, &upperZ) != CU_OK)
 	{
 		cerr << "Error geting enclosing region" << endl;
 		return EXIT_FAILURE;
@@ -70,7 +70,7 @@ int exportAsImageSlices(const std::string& pathToVDB)
 				unsigned char* pixelData = outputSliceData + (z * imageWidth + x) * componentCount;
 
 				CuColor color;
-				if(cuGetVoxel(volumeHandle, x + lowerX, slice + lowerY, z + lowerZ, &color) != 1) //FIXME - hardcoded value
+				if(cuGetVoxel(volumeHandle, x + lowerX, slice + lowerY, z + lowerZ, &color) != CU_OK) 
 				{
 					cerr << "Error getting voxel value" << endl;
 					return EXIT_FAILURE;
