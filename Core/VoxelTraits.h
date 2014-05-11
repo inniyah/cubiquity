@@ -15,7 +15,7 @@ namespace Cubiquity
 	class VoxelTraits<Color>
 	{
 	public:
-		typedef ::PolyVox::PositionMaterial<Color> VertexType;
+		typedef ::PolyVox::PositionMaterialNormal<Color> VertexType;
 		typedef ColoredCubicSurfaceExtractionTask SurfaceExtractionTaskType;
 		static const bool IsColor = true;
 		static const bool IsMaterialSet = false;

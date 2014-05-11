@@ -40,7 +40,7 @@ namespace Cubiquity
 		Region lod0Region = mOctreeNode->mRegion;
 
 		//Extract the surface
-		mPolyVoxMesh = new ::PolyVox::SurfaceMesh<::PolyVox::PositionMaterial<Color> >;
+		mPolyVoxMesh = new ::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal<Color> >;
 		mOwnMesh = true;
 
 		uint32_t downScaleFactor = 0x0001 << mOctreeNode->mHeight;
