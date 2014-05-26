@@ -36,7 +36,7 @@ namespace Cubiquity
 	{
 		mProcessingStartedTimestamp = Clock::getTimestamp();
 		//Extract the surface
-		mPolyVoxMesh = new ::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MaterialSetMarchingCubesController::MaterialType > >;
+		mPolyVoxMesh = new ::PolyVox::Mesh<::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >;
 		mOwnMesh = true;
 
 		generateSmoothMesh(mOctreeNode->mRegion, mOctreeNode->mHeight, mPolyVoxMesh);
@@ -44,13 +44,13 @@ namespace Cubiquity
 		mOctreeNode->mOctree->mFinishedSurfaceExtractionTasks.push(this);
 	}
 
-	void SmoothSurfaceExtractionTask::generateSmoothMesh(const Region& region, uint32_t lodLevel, ::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MaterialSetMarchingCubesController::MaterialType > >* resultMesh)
+	void SmoothSurfaceExtractionTask::generateSmoothMesh(const Region& region, uint32_t lodLevel, ::PolyVox::Mesh<::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >* resultMesh)
 	{
 		MaterialSetMarchingCubesController controller;
 
 		if(lodLevel == 0)
 		{
-			//SurfaceMesh<PositionMaterialNormal< typename MaterialSetMarchingCubesController::MaterialType > > mesh;
+			//Mesh<MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > > mesh;
 			::PolyVox::MarchingCubesSurfaceExtractor< ::PolyVox::LargeVolume<MaterialSet>, MaterialSetMarchingCubesController > surfaceExtractor(mPolyVoxVolume, region, resultMesh, ::PolyVox::WrapModes::Border, MaterialSet(0), controller);
 			surfaceExtractor.execute();
 		}
@@ -88,9 +88,9 @@ namespace Cubiquity
 		}
 	}
 
-	void recalculateMaterials(::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MaterialSetMarchingCubesController::MaterialType > >* mesh, const Vector3F& meshOffset,  ::PolyVox::LargeVolume<MaterialSet>* volume)
+	void recalculateMaterials(::PolyVox::Mesh<::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >* mesh, const Vector3F& meshOffset,  ::PolyVox::LargeVolume<MaterialSet>* volume)
 	{
-		std::vector< PositionMaterialNormal< typename MaterialSetMarchingCubesController::MaterialType > >& vertices = mesh->getRawVertexData();
+		std::vector< MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >& vertices = mesh->getRawVertexData();
 		for(uint32_t ct = 0; ct < vertices.size(); ct++)
 		{
 			const Vector3DFloat& vertexPos = vertices[ct].getPosition() + meshOffset;

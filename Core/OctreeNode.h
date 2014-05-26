@@ -41,7 +41,7 @@ namespace Cubiquity
 		bool mRenderThisNode;
 		bool mExtractOnMainThread;
 
-		const ::PolyVox::SurfaceMesh< typename VoxelTraits<VoxelType>::VertexType >* mPolyVoxMesh;
+		const ::PolyVox::Mesh< typename VoxelTraits<VoxelType>::VertexType >* mPolyVoxMesh;
 
 		void* mGameEngineNode;
 

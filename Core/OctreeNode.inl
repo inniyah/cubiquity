@@ -5,7 +5,7 @@
 #include "SmoothSurfaceExtractionTask.h"
 
 #include "PolyVoxCore/Region.h"
-#include "PolyVoxCore/SurfaceMesh.h"
+#include "PolyVoxCore/Mesh.h"
 
 #include <limits>
 #include <sstream>
