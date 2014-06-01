@@ -12,6 +12,18 @@ using namespace PolyVox;
 
 namespace Cubiquity
 {
+	// Eliminate this
+	void scaleVertices(::PolyVox::Mesh<::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >* mesh, float amount)
+	{
+		for (uint32_t ct = 0; ct < mesh->m_vecVertices.size(); ct++)
+		{
+			//TODO: Should rethink accessors here to provide faster access
+			Vector3DFloat position = mesh->m_vecVertices[ct].getPosition();
+			position *= amount;
+			mesh->m_vecVertices[ct].setPosition(position);
+		}
+	}
+
 	SmoothSurfaceExtractionTask::SmoothSurfaceExtractionTask(OctreeNode< MaterialSet >* octreeNode, ::PolyVox::LargeVolume<typename MaterialSetMarchingCubesController::MaterialType>* polyVoxVolume)
 		:Task()
 		,mOctreeNode(octreeNode)
@@ -82,7 +94,7 @@ namespace Cubiquity
 			::PolyVox::MarchingCubesSurfaceExtractor< ::PolyVox::RawVolume<MaterialSet>, MaterialSetMarchingCubesController > surfaceExtractor(&resampledVolume, lowRegion, resultMesh, ::PolyVox::WrapModes::Border, MaterialSet(0), controller);
 			surfaceExtractor.execute();
 
-			resultMesh->scaleVertices(static_cast<float>(downSampleFactor));
+			scaleVertices(resultMesh, static_cast<float>(downSampleFactor));
 
 			recalculateMaterials(resultMesh, static_cast<Vector3F>(mOctreeNode->mRegion.getLowerCorner()), mPolyVoxVolume);
 		}
