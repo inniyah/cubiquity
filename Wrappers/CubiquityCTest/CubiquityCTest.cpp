@@ -97,6 +97,27 @@ void processOctreeNode(uint32_t octreeNodeHandle)
 
 		std::cout << "Found mesh - it has " << noOfVertices << " vertices and " << noOfIndices << " indices." << std::endl;
 	}
+
+	for (uint32_t z = 0; z < 2; z++)
+	{
+		for (uint32_t y = 0; y < 2; y++)
+		{
+			for (uint32_t x = 0; x < 2; x++)
+			{
+				uint32_t hasChildNode;
+				validate(cuHasChildNodeMC(octreeNodeHandle, x, y, z, &hasChildNode));
+
+				if (hasChildNode == 1)
+				{
+					uint32_t childNodeHandle;
+					validate(cuGetChildNodeMC(octreeNodeHandle, x, y, z, &childNodeHandle));
+
+					// Recursivly call the octree traversal
+					processOctreeNode(childNodeHandle);
+				}
+			}
+		}
+	}
 }
 
 void testTerrainVolume()
