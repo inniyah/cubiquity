@@ -14,28 +14,28 @@ using namespace PolyVox;
 namespace Cubiquity
 {
 	// Eliminate this
-	void scaleVertices(::PolyVox::Mesh<::PolyVox::CubicVertex<Color> >* mesh, float amount)
+	void scaleVertices(::PolyVox::Mesh<::PolyVox::CubicVertex<Color> >* mesh, uint32_t amount)
 	{
 		for (uint32_t ct = 0; ct < mesh->m_vecVertices.size(); ct++)
 		{
 			//TODO: Should rethink accessors here to provide faster access
-			Vector3DFloat position = mesh->m_vecVertices[ct].getPosition();
+			Vector3DUint8 position = mesh->m_vecVertices[ct].position;
 			position *= amount;
-			mesh->m_vecVertices[ct].setPosition(position);
+			mesh->m_vecVertices[ct].position = position;
 		}
 	}
 
 	// Eliminate this
-	void translateVertices(::PolyVox::Mesh<::PolyVox::CubicVertex<Color> >* mesh, const Vector3DFloat& amount)
+	/*void translateVertices(::PolyVox::Mesh<::PolyVox::CubicVertex<Color> >* mesh, const Vector3DUint8& amount)
 	{
 		for (uint32_t ct = 0; ct < mesh->m_vecVertices.size(); ct++)
 		{
 			//TODO: Should rethink accessors here to provide faster access
-			Vector3DFloat position = mesh->m_vecVertices[ct].getPosition();
+			Vector3DUint8 position = mesh->m_vecVertices[ct].position;
 			position += amount;
-			mesh->m_vecVertices[ct].setPosition(position);
+			mesh->m_vecVertices[ct].position = position;
 		}
-	}
+	}*/
 
 	ColoredCubicSurfaceExtractionTask::ColoredCubicSurfaceExtractionTask(OctreeNode< Color >* octreeNode, ::PolyVox::LargeVolume<Color>* polyVoxVolume)
 		:Task()
@@ -102,8 +102,8 @@ namespace Cubiquity
 			::PolyVox::CubicSurfaceExtractor< ::PolyVox::RawVolume<Color>, ColoredCubesIsQuadNeeded > surfaceExtractor(&resampledVolume, dstRegion, mPolyVoxMesh, ::PolyVox::WrapModes::Border, Color(), true, isQuadNeeded);
 			surfaceExtractor.execute();
 
-			scaleVertices(mPolyVoxMesh, static_cast<float>(downScaleFactor));
-			translateVertices(mPolyVoxMesh, Vector3DFloat(0.5f, 0.5f, 0.5f));
+			scaleVertices(mPolyVoxMesh, downScaleFactor);
+			//translateVertices(mPolyVoxMesh, Vector3DFloat(0.5f, 0.5f, 0.5f)); // Removed when going from float positions to uin8_t. Do we need this?
 		}
 		else if(downScaleFactor == 4)
 		{
@@ -144,8 +144,8 @@ namespace Cubiquity
 			::PolyVox::CubicSurfaceExtractor< ::PolyVox::RawVolume<Color>, ColoredCubesIsQuadNeeded > surfaceExtractor(&resampledVolume2, dstRegion2, mPolyVoxMesh, ::PolyVox::WrapModes::Border, Color(), true, isQuadNeeded);
 			surfaceExtractor.execute();
 
-			scaleVertices(mPolyVoxMesh, static_cast<float>(downScaleFactor));
-			translateVertices(mPolyVoxMesh, Vector3DFloat(1.5f, 1.5f, 1.5f));
+			scaleVertices(mPolyVoxMesh, downScaleFactor);
+			//translateVertices(mPolyVoxMesh, Vector3DFloat(1.5f, 1.5f, 1.5f)); // Removed when going from float positions to uin8_t. Do we need this?
 		}
 
 		mOctreeNode->mOctree->mFinishedSurfaceExtractionTasks.push(this);

@@ -13,14 +13,14 @@ using namespace PolyVox;
 namespace Cubiquity
 {
 	// Eliminate this
-	void scaleVertices(::PolyVox::Mesh<::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >* mesh, float amount)
+	void scaleVertices(::PolyVox::Mesh<::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >* mesh, uint32_t amount)
 	{
 		for (uint32_t ct = 0; ct < mesh->m_vecVertices.size(); ct++)
 		{
 			//TODO: Should rethink accessors here to provide faster access
-			Vector3DFloat position = mesh->m_vecVertices[ct].getPosition();
+			Vector3DUint16 position = mesh->m_vecVertices[ct].position;
 			position *= amount;
-			mesh->m_vecVertices[ct].setPosition(position);
+			mesh->m_vecVertices[ct].position = position;
 		}
 	}
 
@@ -94,7 +94,7 @@ namespace Cubiquity
 			::PolyVox::MarchingCubesSurfaceExtractor< ::PolyVox::RawVolume<MaterialSet>, MaterialSetMarchingCubesController > surfaceExtractor(&resampledVolume, lowRegion, resultMesh, ::PolyVox::WrapModes::Border, MaterialSet(0), controller);
 			surfaceExtractor.execute();
 
-			scaleVertices(resultMesh, static_cast<float>(downSampleFactor));
+			scaleVertices(resultMesh, downSampleFactor);
 
 			recalculateMaterials(resultMesh, static_cast<Vector3F>(mOctreeNode->mRegion.getLowerCorner()), mPolyVoxVolume);
 		}
@@ -105,7 +105,7 @@ namespace Cubiquity
 		std::vector< MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >& vertices = mesh->getRawVertexData();
 		for(uint32_t ct = 0; ct < vertices.size(); ct++)
 		{
-			const Vector3DFloat& vertexPos = vertices[ct].getPosition() + meshOffset;
+			const Vector3DFloat& vertexPos = decode(vertices[ct]).position + meshOffset;
 			MaterialSet value = getInterpolatedValue(volume, vertexPos);
 
 			// It seems that sometimes the vertices can fall in an empty cell. The reason for this
@@ -119,7 +119,7 @@ namespace Cubiquity
 				value.setMaterial(0, 255);
 			}
 
-			vertices[ct].setMaterial(value);
+			vertices[ct].data = value;
 		}
 	}
 
