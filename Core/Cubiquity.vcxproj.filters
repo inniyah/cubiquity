@@ -126,9 +126,6 @@
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Vector.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VertexTypes.h">
-      <Filter>PolyVox</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VolumeResampler.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
@@ -261,6 +258,9 @@
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\Logging.h">
       <Filter>PolyVox</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Vertex.h">
+      <Filter>PolyVox</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Impl\ArraySizesImpl.inl">
@@ -389,9 +389,6 @@
       <Filter>PolyVox</Filter>
     </ClCompile>
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Region.cpp">
-      <Filter>PolyVox</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\VertexTypes.cpp">
       <Filter>PolyVox</Filter>
     </ClCompile>
     <ClCompile Include="BackgroundTaskProcessor.cpp">

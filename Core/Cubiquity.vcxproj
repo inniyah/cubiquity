@@ -59,7 +59,7 @@
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\SurfaceMesh.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\UncompressedBlock.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Vector.h" />
-    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VertexTypes.h" />
+    <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\Vertex.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VolumeResampler.h" />
     <ClInclude Include="..\..\polyvox\library\PolyVoxCore\include\PolyVoxCore\VoxelFilters.h" />
     <ClInclude Include="BackgroundTaskProcessor.h" />
@@ -142,7 +142,6 @@
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\Timer.cpp" />
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Impl\Utility.cpp" />
     <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\Region.cpp" />
-    <ClCompile Include="..\..\polyvox\library\PolyVoxCore\source\VertexTypes.cpp" />
     <ClCompile Include="BackgroundTaskProcessor.cpp" />
     <ClCompile Include="Brush.cpp" />
     <ClCompile Include="Clock.cpp" />

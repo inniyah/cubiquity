@@ -2,7 +2,7 @@
 #define __COLOUR_H__
 
 #include "PolyVoxCore/Impl/TypeDef.h"
-#include "PolyVoxCore/VertexTypes.h"
+#include "PolyVoxCore/Vertex.h"
 
 #include "BitField.h"
 

@@ -17,10 +17,7 @@ namespace Cubiquity
 	{
 		for (uint32_t ct = 0; ct < mesh->m_vecVertices.size(); ct++)
 		{
-			//TODO: Should rethink accessors here to provide faster access
-			Vector3DUint16 position = mesh->m_vecVertices[ct].position;
-			position *= amount;
-			mesh->m_vecVertices[ct].position = position;
+			mesh->m_vecVertices[ct].encodedPosition *= amount;
 		}
 	}
 
@@ -102,7 +99,9 @@ namespace Cubiquity
 
 	void recalculateMaterials(::PolyVox::Mesh<::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >* mesh, const Vector3F& meshOffset,  ::PolyVox::LargeVolume<MaterialSet>* volume)
 	{
-		std::vector< MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >& vertices = mesh->getRawVertexData();
+		// Nasty casting away of constness so we can tweak the material values.
+		std::vector< MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >& vertices = const_cast<std::vector< MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >&>(mesh->getVertices());
+
 		for(uint32_t ct = 0; ct < vertices.size(); ct++)
 		{
 			const Vector3DFloat& vertexPos = decode(vertices[ct]).position + meshOffset;

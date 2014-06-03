@@ -5,7 +5,7 @@
 
 #include "PolyVoxCore/BaseVolume.h"
 #include "PolyVoxCore/Vector.h"
-#include "PolyVoxCore/VertexTypes.h"
+#include "PolyVoxCore/Vertex.h"
 
 #include "BitField.h"
 
