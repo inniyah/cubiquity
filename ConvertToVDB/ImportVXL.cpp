@@ -32,7 +32,7 @@ bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDat
 	uint32_t volumeHandle = 1000000; // Better if handles were ints so they could be set invalid?
 	if(!dryRun)
 	{
-		if(cuNewEmptyColoredCubesVolume(0, 0, 0, 511, 63, 511, pathToVoxelDatabase.c_str(), 32, &volumeHandle) != 1) //FIXME - Hardcoded return value!
+		if(cuNewEmptyColoredCubesVolume(0, 0, 0, 511, 63, 511, pathToVoxelDatabase.c_str(), 32, &volumeHandle) != CU_OK)
 		{
 			cerr << "Failed to create new empty volume" << endl;
 			return false;
@@ -111,7 +111,7 @@ bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDat
 					// Do something with these colors
 					//makeVoxelColorful(x, y, zz, red, green, blue);
 					CuColor color = cuMakeColor(red, green, blue, 255);
-					if(cuSetVoxel(volumeHandle, x, 63 - zz, y, color) != 1) // FIXME - Hardcoded return value.
+					if(cuSetVoxel(volumeHandle, x, 63 - zz, y, color) != CU_OK)
 					{
 						cerr << "Error setting voxel color" << endl;
 						return false;
@@ -132,7 +132,7 @@ bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDat
 			if(!dryRun)
 			{
 				CuColor color = cuMakeColor(127, 127, 127, 255);
-				if(cuSetVoxel(volumeHandle, x, 63 - zz, y, color) != 1) // FIXME - Hardcoded return value.
+				if(cuSetVoxel(volumeHandle, x, 63 - zz, y, color) != CU_OK) 
 				{
 					cerr << "Error setting voxel color" << endl;
 					return false;
@@ -158,8 +158,11 @@ bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDat
 		}
 	}
 
-	cuAcceptOverrideBlocks(volumeHandle);
-	cuDeleteColoredCubesVolume(volumeHandle);
+	if (!dryRun)
+	{
+		cuAcceptOverrideBlocks(volumeHandle);
+		cuDeleteColoredCubesVolume(volumeHandle);
+	}
 
 	return true;
 }
