@@ -1,6 +1,21 @@
 project(CubiquityCore)
 
+include_directories(polyvox/library/PolyVoxCore/include/)
+
 set(SRCS
+	polyvox/library/PolyVoxCore/source/ArraySizes.cpp
+	polyvox/library/PolyVoxCore/source/AStarPathfinder.cpp
+	polyvox/library/PolyVoxCore/source/Region.cpp
+	
+	polyvox/library/PolyVoxCore/source/Impl/ErrorHandling.cpp
+	polyvox/library/PolyVoxCore/source/Impl/Logging.cpp
+	polyvox/library/PolyVoxCore/source/Impl/MarchingCubesTables.cpp
+	polyvox/library/PolyVoxCore/source/Impl/MinizWrapper.cpp
+	polyvox/library/PolyVoxCore/source/Impl/RandomUnitVectors.cpp
+	polyvox/library/PolyVoxCore/source/Impl/RandomVectors.cpp
+	polyvox/library/PolyVoxCore/source/Impl/Timer.cpp
+	polyvox/library/PolyVoxCore/source/Impl/Utility.cpp
+
 	BackgroundTaskProcessor.cpp
 	Brush.cpp
 	Clock.cpp
@@ -24,17 +39,19 @@ set_target_properties(_sqlite3 PROPERTIES COMPILE_FLAGS "-fPIC")
 
 add_library(cubiquitycore STATIC ${SRCS})
 
-set_target_properties(cubiquitycore PROPERTIES COMPILE_FLAGS "-fPIC -std=c++0x")
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-	set_target_properties(cubiquitycore PROPERTIES LINK_FLAGS "-static-libstdc++ -static-libgcc")
+if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+	set_target_properties(cubiquitycore PROPERTIES COMPILE_FLAGS "-fPIC -std=c++0x")
+	if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+		set_target_properties(cubiquitycore PROPERTIES LINK_FLAGS "-static-libstdc++ -static-libgcc")
+	endif()
 endif()
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-	target_link_libraries(cubiquitycore ${PolyVox_PREFIX}/lib/libPolyVoxCore.a)
-elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-	target_link_libraries(cubiquitycore ${PolyVox_PREFIX}/lib/libPolyVoxCore.a)
-elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
-	target_link_libraries(cubiquitycore ${PolyVox_PREFIX}/PolyVoxCore/lib/libPolyVoxCore.a)
-endif()
+#if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+#	target_link_libraries(cubiquitycore ${PolyVox_PREFIX}/lib/libPolyVoxCore.a)
+#elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+#	target_link_libraries(cubiquitycore ${PolyVox_PREFIX}/lib/libPolyVoxCore.a)
+#elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
+#	target_link_libraries(cubiquitycore ${PolyVox_PREFIX}/PolyVoxCore/lib/libPolyVoxCore.a)
+#endif()
 
 target_link_libraries(cubiquitycore _sqlite3)

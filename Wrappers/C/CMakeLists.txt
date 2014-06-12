@@ -1,10 +1,10 @@
 project(CubiquityC)
 
+include_directories(${CubiquityCore_SOURCE_DIR} ${CubiquityCore_SOURCE_DIR}/polyvox/library/PolyVoxCore/include/)
+
 set(SRCS
 	CubiquityC.cpp
 )
-
-include_directories(${CubiquityCore_SOURCE_DIR})
 
 add_library(CubiquityC SHARED ${SRCS})
 
