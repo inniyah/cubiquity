@@ -1,4 +1,4 @@
-project(CubiquityCore)
+project(CubiquityC)
 
 include_directories(polyvox/library/PolyVoxCore/include/)
 
@@ -32,15 +32,19 @@ set(SRCS
 	Task.cpp
 	TerrainVolumeGenerator.cpp
 	VoxelDatabase.cpp
+	
+	CubiquityC.cpp
 )
 
 add_library(_sqlite3 STATIC SQLite/sqlite3.c)
 set_target_properties(_sqlite3 PROPERTIES COMPILE_FLAGS "-fPIC")
 
-add_library(cubiquitycore STATIC ${SRCS})
+add_library(CubiquityC SHARED ${SRCS})
+
+set_target_properties(CubiquityC PROPERTIES COMPILE_FLAGS "-std=c++0x -DCUBIQUITYC_EXPORTS")
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-	set_target_properties(cubiquitycore PROPERTIES COMPILE_FLAGS "-fPIC -std=c++0x")
+	set_target_properties(cubiquitycore PROPERTIES COMPILE_FLAGS "-fPIC -std=c++0x -DCUBIQUITYC_EXPORTS")
 	if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 		set_target_properties(cubiquitycore PROPERTIES LINK_FLAGS "-static-libstdc++ -static-libgcc")
 	endif()
@@ -54,4 +58,4 @@ endif()
 #	target_link_libraries(cubiquitycore ${PolyVox_PREFIX}/PolyVoxCore/lib/libPolyVoxCore.a)
 #endif()
 
-target_link_libraries(cubiquitycore _sqlite3)
+target_link_libraries(CubiquityC _sqlite3)

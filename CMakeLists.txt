@@ -17,7 +17,7 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_subdirectory(Core)
-add_subdirectory(Wrappers/C)
+#add_subdirectory(Wrappers/C)
 add_subdirectory(Wrappers/CubiquityCTest)
 
 # Converter tools not needed on Linux as the Unity editor doesn't run there.
