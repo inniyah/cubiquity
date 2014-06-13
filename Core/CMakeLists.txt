@@ -1,20 +1,25 @@
 project(CubiquityC)
 
-include_directories(polyvox/library/PolyVoxCore/include/)
+include_directories(
+	Dependancies/polyvox/library/PolyVoxCore/include/
+	Dependancies/
+)
 
 set(SRCS
-	polyvox/library/PolyVoxCore/source/ArraySizes.cpp
-	polyvox/library/PolyVoxCore/source/AStarPathfinder.cpp
-	polyvox/library/PolyVoxCore/source/Region.cpp
+	Dependancies/polyvox/library/PolyVoxCore/source/ArraySizes.cpp
+	Dependancies/polyvox/library/PolyVoxCore/source/AStarPathfinder.cpp
+	Dependancies/polyvox/library/PolyVoxCore/source/Region.cpp
 	
-	polyvox/library/PolyVoxCore/source/Impl/ErrorHandling.cpp
-	polyvox/library/PolyVoxCore/source/Impl/Logging.cpp
-	polyvox/library/PolyVoxCore/source/Impl/MarchingCubesTables.cpp
-	polyvox/library/PolyVoxCore/source/Impl/MinizWrapper.cpp
-	polyvox/library/PolyVoxCore/source/Impl/RandomUnitVectors.cpp
-	polyvox/library/PolyVoxCore/source/Impl/RandomVectors.cpp
-	polyvox/library/PolyVoxCore/source/Impl/Timer.cpp
-	polyvox/library/PolyVoxCore/source/Impl/Utility.cpp
+	Dependancies/polyvox/library/PolyVoxCore/source/Impl/ErrorHandling.cpp
+	Dependancies/polyvox/library/PolyVoxCore/source/Impl/Logging.cpp
+	Dependancies/polyvox/library/PolyVoxCore/source/Impl/MarchingCubesTables.cpp
+	Dependancies/polyvox/library/PolyVoxCore/source/Impl/MinizWrapper.cpp
+	Dependancies/polyvox/library/PolyVoxCore/source/Impl/RandomUnitVectors.cpp
+	Dependancies/polyvox/library/PolyVoxCore/source/Impl/RandomVectors.cpp
+	Dependancies/polyvox/library/PolyVoxCore/source/Impl/Timer.cpp
+	Dependancies/polyvox/library/PolyVoxCore/source/Impl/Utility.cpp
+	
+	Dependancies/SQLite/sqlite3.c
 
 	BackgroundTaskProcessor.cpp
 	Brush.cpp
@@ -36,8 +41,8 @@ set(SRCS
 	CubiquityC.cpp
 )
 
-add_library(_sqlite3 STATIC SQLite/sqlite3.c)
-set_target_properties(_sqlite3 PROPERTIES COMPILE_FLAGS "-fPIC")
+#add_library(_sqlite3 STATIC SQLite/sqlite3.c)
+#set_target_properties(_sqlite3 PROPERTIES COMPILE_FLAGS "-fPIC")
 
 add_library(CubiquityC SHARED ${SRCS})
 
@@ -67,4 +72,4 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
 	#
 endif()
 
-target_link_libraries(CubiquityC _sqlite3)
+target_link_libraries(CubiquityC)
