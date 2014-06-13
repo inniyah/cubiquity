@@ -58,4 +58,13 @@ endif()
 #	target_link_libraries(cubiquitycore ${PolyVox_PREFIX}/PolyVoxCore/lib/libPolyVoxCore.a)
 #endif()
 
+# The code below was copied from the old separate 'C' wrapper. I'm not sure we need it but it's here for safe keeping.
+if(CMAKE_SYSTEM_NAME MATCHES "Linux")
+	#
+elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
+	target_link_libraries(CubiquityC /home/matt/osxcross/build/libcxx-3.4/build/lib/libc++.a /home/matt/osxcross/target/SDK/MacOSX10.8.sdk/usr/lib/libc++abi.dylib)
+elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
+	#
+endif()
+
 target_link_libraries(CubiquityC _sqlite3)
