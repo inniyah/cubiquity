@@ -22,6 +22,6 @@ add_subdirectory(Wrappers/CubiquityCTest)
 
 # Converter tools not needed on Linux as the Unity editor doesn't run there.
 if(NOT CMAKE_SYSTEM_NAME MATCHES "Linux")
-	add_subdirectory(ConvertToImageSlices)
-	add_subdirectory(ConvertToVDB)
+	add_subdirectory(Tools/ConvertToImageSlices)
+	add_subdirectory(Tools/ConvertToVDB)
 endif()
