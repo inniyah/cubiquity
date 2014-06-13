@@ -1,7 +1,0 @@
-Lua bindings
-
-LOD for smooth terrain
-
-Clever material handling for smooth terrain. Only pass most important materials? Pack more than one material intensity into a single float? Sort material intensities so that we can just process the first x materials in fragment shader?
-
-Consider editing with higher precision than we store at? Maybe copy the part of the volume that's being edited into a temporary buffer and edit that?
