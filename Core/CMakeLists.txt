@@ -1,11 +1,12 @@
 project(CubiquityC)
 
 include_directories(
-	Dependancies/polyvox/library/PolyVoxCore/include/
 	Dependancies/
+	Dependancies/polyvox/library/PolyVoxCore/include/
 )
 
 set(SRCS
+	# PolyVox code
 	Dependancies/polyvox/library/PolyVoxCore/source/ArraySizes.cpp
 	Dependancies/polyvox/library/PolyVoxCore/source/AStarPathfinder.cpp
 	Dependancies/polyvox/library/PolyVoxCore/source/Region.cpp
@@ -19,8 +20,10 @@ set(SRCS
 	Dependancies/polyvox/library/PolyVoxCore/source/Impl/Timer.cpp
 	Dependancies/polyvox/library/PolyVoxCore/source/Impl/Utility.cpp
 	
+	# SQLite code
 	Dependancies/SQLite/sqlite3.c
 
+	# Main Cubiquity code
 	BackgroundTaskProcessor.cpp
 	Brush.cpp
 	Clock.cpp
@@ -38,11 +41,9 @@ set(SRCS
 	TerrainVolumeGenerator.cpp
 	VoxelDatabase.cpp
 	
+	# Cubiquity 'C' interface
 	CubiquityC.cpp
 )
-
-#add_library(_sqlite3 STATIC SQLite/sqlite3.c)
-#set_target_properties(_sqlite3 PROPERTIES COMPILE_FLAGS "-fPIC")
 
 add_library(CubiquityC SHARED ${SRCS})
 
@@ -54,14 +55,6 @@ if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 		set_target_properties(cubiquitycore PROPERTIES LINK_FLAGS "-static-libstdc++ -static-libgcc")
 	endif()
 endif()
-
-#if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-#	target_link_libraries(cubiquitycore ${PolyVox_PREFIX}/lib/libPolyVoxCore.a)
-#elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-#	target_link_libraries(cubiquitycore ${PolyVox_PREFIX}/lib/libPolyVoxCore.a)
-#elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
-#	target_link_libraries(cubiquitycore ${PolyVox_PREFIX}/PolyVoxCore/lib/libPolyVoxCore.a)
-#endif()
 
 # The code below was copied from the old separate 'C' wrapper. I'm not sure we need it but it's here for safe keeping.
 if(CMAKE_SYSTEM_NAME MATCHES "Linux")
