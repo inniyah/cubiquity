@@ -4,14 +4,18 @@ include_directories(${CubiquityCore_SOURCE_DIR} ${CubiquityC_SOURCE_DIR})
 
 add_executable (ConvertToImageSlices main.cpp CmdOption.cpp)
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-  # GNU specific flags
-  set_target_properties(ConvertToImageSlices PROPERTIES LINK_FLAGS "-static-libstdc++")
-elseif(CMAKE_CXX_COMPILER_ID MATCHES "CLANG")
-  # Clang specific flags
+# Set LINK_FLAGS
+if(CMAKE_CXX_COMPILER_ID MATCHES "CLANG")
   set_target_properties(ConvertToImageSlices PROPERTIES LINK_FLAGS "-arch i386 -static-libstdc++")
-elseif(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-  # Visual Studio specific flags
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+  set_target_properties(ConvertToImageSlices PROPERTIES LINK_FLAGS "-static-libstdc++")
 endif()
 
-target_link_libraries (ConvertToImageSlices CubiquityC pthread)
+# Set target_link_libraries
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+  # Note - It's ugly that we need pthread here. It happens because the include-chain causes 'sqlite3.h' to be included from the application.
+  # Ideally 'CubiqutyC.h' should be changed so that it includes nothing but standard C libraries, so we only distribute that one header?
+  target_link_libraries (ConvertToImageSlices CubiquityC pthread)
+elseif(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+  target_link_libraries (ConvertToImageSlices CubiquityC)
+endif()

@@ -47,14 +47,19 @@ set(SRCS
 
 add_library(CubiquityC SHARED ${SRCS})
 
+# Set COMPILE_FLAGS
 set_target_properties(CubiquityC PROPERTIES COMPILE_FLAGS "-DCUBIQUITYC_EXPORTS -DSQLITE_OMIT_LOAD_EXTENSION")
 
-if(CMAKE_CXX_COMPILER_ID MATCHES "CLANG")
-	set_target_properties(CubiquityC PROPERTIES COMPILE_FLAGS "-fPIC -std=c++0x -DCUBIQUITYC_EXPORTS")
-elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-	set_target_properties(CubiquityC PROPERTIES LINK_FLAGS "-static-libstdc++ -static-libgcc -lpthread")
+# Set LINK_FLAGS
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+	set_target_properties(CubiquityC PROPERTIES LINK_FLAGS "-static-libstdc++ -static-libgcc")
+endif()
+
+# Set target_link_libraries
+if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+	target_link_libraries(CubiquityC pthread)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-	#
+	target_link_libraries(CubiquityC)
 endif()
 
 # The code below was copied from the old separate 'C' wrapper. I'm not sure we need it but it's here for safe keeping.
@@ -65,5 +70,3 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
 elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
 	#
 endif()
-
-target_link_libraries(CubiquityC)
