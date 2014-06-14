@@ -8,8 +8,6 @@ include_directories(${CubiquityCore_SOURCE_DIR} ${CubiquityC_SOURCE_DIR})
 
 add_executable(cubiquityctest ${SRCS})
 
-set_target_properties(cubiquityctest PROPERTIES COMPILE_FLAGS "-std=c++0x")
-
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 	set_target_properties(cubiquityctest PROPERTIES LINK_FLAGS "-static-libstdc++ -static-libgcc")
 endif()

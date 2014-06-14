@@ -47,13 +47,14 @@ set(SRCS
 
 add_library(CubiquityC SHARED ${SRCS})
 
-set_target_properties(CubiquityC PROPERTIES COMPILE_FLAGS "-std=c++0x -DCUBIQUITYC_EXPORTS")
+set_target_properties(CubiquityC PROPERTIES COMPILE_FLAGS "-DCUBIQUITYC_EXPORTS -DSQLITE_OMIT_LOAD_EXTENSION")
 
-if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+if(CMAKE_CXX_COMPILER_ID MATCHES "CLANG")
 	set_target_properties(CubiquityC PROPERTIES COMPILE_FLAGS "-fPIC -std=c++0x -DCUBIQUITYC_EXPORTS")
-	if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-		set_target_properties(CubiquityC PROPERTIES LINK_FLAGS "-static-libstdc++ -static-libgcc")
-	endif()
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+	set_target_properties(CubiquityC PROPERTIES LINK_FLAGS "-static-libstdc++ -static-libgcc -lpthread")
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+	#
 endif()
 
 # The code below was copied from the old separate 'C' wrapper. I'm not sure we need it but it's here for safe keeping.
