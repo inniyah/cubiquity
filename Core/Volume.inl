@@ -141,7 +141,7 @@ namespace Cubiquity
 	VoxelType Volume<VoxelType>::getVoxelAt(int32_t x, int32_t y, int32_t z) const
 	{
 		// Border value is returned for invalid position
-		return mPolyVoxVolume->template getVoxel<::PolyVox::WrapModes::Border>(x, y, z, VoxelType());
+		return mPolyVoxVolume->template getVoxel< ::PolyVox::WrapModes::Border>(x, y, z, VoxelType());
 	}
 
 	template <typename VoxelType>
