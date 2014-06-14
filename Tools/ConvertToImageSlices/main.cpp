@@ -3,6 +3,7 @@
 
 #include "CubiquityC.h"
 
+#include <climits>
 #include <iostream>
 #include <iomanip>
 #include <sstream>

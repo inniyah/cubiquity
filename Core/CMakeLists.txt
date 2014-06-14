@@ -50,9 +50,9 @@ add_library(CubiquityC SHARED ${SRCS})
 set_target_properties(CubiquityC PROPERTIES COMPILE_FLAGS "-std=c++0x -DCUBIQUITYC_EXPORTS")
 
 if(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-	set_target_properties(cubiquitycore PROPERTIES COMPILE_FLAGS "-fPIC -std=c++0x -DCUBIQUITYC_EXPORTS")
+	set_target_properties(CubiquityC PROPERTIES COMPILE_FLAGS "-fPIC -std=c++0x -DCUBIQUITYC_EXPORTS")
 	if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-		set_target_properties(cubiquitycore PROPERTIES LINK_FLAGS "-static-libstdc++ -static-libgcc")
+		set_target_properties(CubiquityC PROPERTIES LINK_FLAGS "-static-libstdc++ -static-libgcc")
 	endif()
 endif()
 
