@@ -54,13 +54,13 @@ add_definitions(
 
 # Tutorial 6
 add_executable(OpenGLExample
-	tutorial06.cpp
-	common/shader.cpp
-	common/shader.hpp
-	common/controls.cpp
-	common/controls.hpp
-	common/texture.cpp
-	common/texture.hpp
+	main.cpp
+	shader.cpp
+	shader.hpp
+	controls.cpp
+	controls.hpp
+	texture.cpp
+	texture.hpp
 	
 	TransformVertexShader.vertexshader
 	TextureFragmentShader.fragmentshader
@@ -72,7 +72,7 @@ target_link_libraries(OpenGLExample
 #set_target_properties(OpenGLExample PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/")
 #create_target_launcher(OpenGLExample WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/")
 
-SOURCE_GROUP(common REGULAR_EXPRESSION ".*/common/.*" )
+#SOURCE_GROUP(common REGULAR_EXPRESSION ".*/common/.*" )
 SOURCE_GROUP(shaders REGULAR_EXPRESSION ".*/.*shader$" )
 
 if(WIN32) # Perhaps this shouldn't be Windows only?

@@ -14,9 +14,9 @@ GLFWwindow* window;
 #include <glm/gtc/matrix_transform.hpp>
 using namespace glm;
 
-#include <common/shader.hpp>
-#include <common/texture.hpp>
-#include <common/controls.hpp>
+#include "shader.hpp"
+#include "texture.hpp"
+#include "controls.hpp"
 
 int main( void )
 {
