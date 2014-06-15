@@ -16,6 +16,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   # Note - It's ugly that we need pthread here. It happens because the include-chain causes 'sqlite3.h' to be included from the application.
   # Ideally 'CubiqutyC.h' should be changed so that it includes nothing but standard C libraries, so we only distribute that one header?
   target_link_libraries (ConvertToImageSlices CubiquityC pthread)
-elseif(NOT CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   target_link_libraries (ConvertToImageSlices CubiquityC)
 endif()
