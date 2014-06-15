@@ -15,5 +15,6 @@ endif()
 #Build the various projects
 add_subdirectory(Core)
 add_subdirectory(Examples/CubiquityCTest)
+add_subdirectory(Examples/OpenGL)
 add_subdirectory(Tools/ConvertToImageSlices)
 add_subdirectory(Tools/ConvertToVDB)
