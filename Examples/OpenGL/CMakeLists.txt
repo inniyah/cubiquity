@@ -53,8 +53,8 @@ add_definitions(
 )
 
 # Tutorial 6
-add_executable(tutorial06_keyboard_and_mouse
-	tutorial06_keyboard_and_mouse/tutorial06.cpp
+add_executable(OpenGLExample
+	tutorial06.cpp
 	common/shader.cpp
 	common/shader.hpp
 	common/controls.cpp
@@ -62,15 +62,15 @@ add_executable(tutorial06_keyboard_and_mouse
 	common/texture.cpp
 	common/texture.hpp
 	
-	tutorial06_keyboard_and_mouse/TransformVertexShader.vertexshader
-	tutorial06_keyboard_and_mouse/TextureFragmentShader.fragmentshader
+	TransformVertexShader.vertexshader
+	TextureFragmentShader.fragmentshader
 )
-target_link_libraries(tutorial06_keyboard_and_mouse
+target_link_libraries(OpenGLExample
 	${ALL_LIBS}
 )
 # Xcode and Visual working directories
-#set_target_properties(tutorial06_keyboard_and_mouse PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/tutorial06_keyboard_and_mouse/")
-#create_target_launcher(tutorial06_keyboard_and_mouse WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tutorial06_keyboard_and_mouse/")
+#set_target_properties(OpenGLExample PROPERTIES XCODE_ATTRIBUTE_CONFIGURATION_BUILD_DIR "${CMAKE_CURRENT_SOURCE_DIR}/")
+#create_target_launcher(OpenGLExample WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/")
 
 SOURCE_GROUP(common REGULAR_EXPRESSION ".*/common/.*" )
 SOURCE_GROUP(shaders REGULAR_EXPRESSION ".*/.*shader$" )
@@ -79,15 +79,15 @@ if(WIN32) # Perhaps this shouldn't be Windows only?
 	# We want to be able to run the examples from within Visual Studio, which means that the shaders/textures need to be in the
 	# 'working directory'. Unfortunately we can't set this working directory from CMake (http://goo.gl/Ne5uec), so we copy the
 	# resources to the default working directory (which is where the project file is). Perhaps there is a better way to find this?
-	file(COPY tutorial06_keyboard_and_mouse/TransformVertexShader.vertexshader DESTINATION ${CMAKE_BINARY_DIR}/Examples/OpenGL)
-	file(COPY tutorial06_keyboard_and_mouse/TextureFragmentShader.fragmentshader DESTINATION ${CMAKE_BINARY_DIR}/Examples/OpenGL)
-	file(COPY tutorial06_keyboard_and_mouse/uvtemplate.DDS DESTINATION ${CMAKE_BINARY_DIR}/Examples/OpenGL)
+	file(COPY TransformVertexShader.vertexshader DESTINATION ${CMAKE_BINARY_DIR}/Examples/OpenGL)
+	file(COPY TextureFragmentShader.fragmentshader DESTINATION ${CMAKE_BINARY_DIR}/Examples/OpenGL)
+	file(COPY uvtemplate.DDS DESTINATION ${CMAKE_BINARY_DIR}/Examples/OpenGL)
 endif()
 
 #if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
 #add_custom_command(
-#   TARGET tutorial06_keyboard_and_mouse POST_BUILD
-#   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/tutorial06_keyboard_and_mouse${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/tutorial06_keyboard_and_mouse/"
+#   TARGET OpenGLExample POST_BUILD
+#   COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/OpenGLExample${CMAKE_EXECUTABLE_SUFFIX}" "${CMAKE_CURRENT_SOURCE_DIR}/"
 #)
 #elseif (${CMAKE_GENERATOR} MATCHES "Xcode" )
 
