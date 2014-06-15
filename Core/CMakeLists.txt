@@ -19,9 +19,6 @@ set(SRCS
 	Dependancies/polyvox/library/PolyVoxCore/source/Impl/RandomVectors.cpp
 	Dependancies/polyvox/library/PolyVoxCore/source/Impl/Timer.cpp
 	Dependancies/polyvox/library/PolyVoxCore/source/Impl/Utility.cpp
-	
-	# SQLite code
-	Dependancies/SQLite/sqlite3.c
 
 	# Main Cubiquity code
 	BackgroundTaskProcessor.cpp
@@ -45,7 +42,15 @@ set(SRCS
 	CubiquityC.cpp
 )
 
+# Build SQLite - Leading underscore to avoid conflict with system version?
+add_library(_sqlite3 STATIC Dependancies/SQLite/sqlite3.c)
+set_target_properties(_sqlite3 PROPERTIES COMPILE_FLAGS "-fPIC")
+SET_PROPERTY(TARGET _sqlite3 PROPERTY FOLDER "Core/CubiquityC/Dependancies/_sqlite3")
+
+
+
 add_library(CubiquityC SHARED ${SRCS})
+SET_PROPERTY(TARGET CubiquityC PROPERTY FOLDER "Core/CubiquityC")
 
 # Set COMPILE_FLAGS
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -61,9 +66,9 @@ endif()
 
 # Set target_link_libraries
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-	target_link_libraries(CubiquityC pthread)
+	target_link_libraries(CubiquityC _sqlite3 pthread)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-	target_link_libraries(CubiquityC)
+	target_link_libraries(CubiquityC _sqlite3)
 endif()
 
 # The code below was copied from the old separate 'C' wrapper. I'm not sure we need it but it's here for safe keeping.
