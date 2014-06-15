@@ -10,6 +10,8 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 	set(CMAKE_CXX_FLAGS "-stdlib=libc++ -arch i386 ${CMAKE_CXX_FLAGS}")
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+	set(CMAKE_CXX_FLAGS "-fPIC -std=c++0x ${CMAKE_CXX_FLAGS}")
 endif()
 
 #Build the various projects
