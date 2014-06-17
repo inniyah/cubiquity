@@ -1,11 +1,16 @@
 project(CubiquityC)
 
-include_directories(
-	Dependancies/
-	Dependancies/polyvox/library/PolyVoxCore/include/
-)
+################################################################################
+# Build SQLite - Leading underscore to avoid conflict with system version?
+################################################################################
+add_library(_sqlite3 STATIC Dependancies/SQLite/sqlite3.c)
+set_target_properties(_sqlite3 PROPERTIES COMPILE_FLAGS "-fPIC")
+SET_PROPERTY(TARGET _sqlite3 PROPERTY FOLDER "Core/CubiquityC/Dependancies/_sqlite3")
 
-set(SRCS
+################################################################################
+# Build PolyVox
+################################################################################
+set(POLYVOX_SRCS
 	# PolyVox code
 	Dependancies/polyvox/library/PolyVoxCore/source/ArraySizes.cpp
 	Dependancies/polyvox/library/PolyVoxCore/source/AStarPathfinder.cpp
@@ -19,7 +24,21 @@ set(SRCS
 	Dependancies/polyvox/library/PolyVoxCore/source/Impl/RandomVectors.cpp
 	Dependancies/polyvox/library/PolyVoxCore/source/Impl/Timer.cpp
 	Dependancies/polyvox/library/PolyVoxCore/source/Impl/Utility.cpp
+)
 
+add_library(_PolyVoxCore STATIC ${POLYVOX_SRCS})
+set_target_properties(_PolyVoxCore PROPERTIES COMPILE_FLAGS "-fPIC")
+SET_PROPERTY(TARGET _PolyVoxCore PROPERTY FOLDER "Core/CubiquityC/Dependancies/_PolyVoxCore")
+
+################################################################################
+# Build Cubiquity
+################################################################################
+include_directories(
+	Dependancies/
+	Dependancies/polyvox/library/PolyVoxCore/include/
+)
+
+set(SRCS
 	# Main Cubiquity code
 	BackgroundTaskProcessor.cpp
 	Brush.cpp
@@ -42,13 +61,6 @@ set(SRCS
 	CubiquityC.cpp
 )
 
-# Build SQLite - Leading underscore to avoid conflict with system version?
-add_library(_sqlite3 STATIC Dependancies/SQLite/sqlite3.c)
-set_target_properties(_sqlite3 PROPERTIES COMPILE_FLAGS "-fPIC")
-SET_PROPERTY(TARGET _sqlite3 PROPERTY FOLDER "Core/CubiquityC/Dependancies/_sqlite3")
-
-
-
 add_library(CubiquityC SHARED ${SRCS})
 SET_PROPERTY(TARGET CubiquityC PROPERTY FOLDER "Core/CubiquityC")
 
@@ -66,9 +78,9 @@ endif()
 
 # Set target_link_libraries
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-	target_link_libraries(CubiquityC _sqlite3 pthread)
+	target_link_libraries(CubiquityC _sqlite3 _PolyVoxCore pthread)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-	target_link_libraries(CubiquityC _sqlite3)
+	target_link_libraries(CubiquityC _sqlite3 _PolyVoxCore)
 endif()
 
 # The code below was copied from the old separate 'C' wrapper. I'm not sure we need it but it's here for safe keeping.
