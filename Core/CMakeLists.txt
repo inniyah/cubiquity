@@ -5,6 +5,8 @@ project(CubiquityC)
 ################################################################################
 add_library(_sqlite3 STATIC Dependancies/SQLite/sqlite3.c)
 set_target_properties(_sqlite3 PROPERTIES COMPILE_FLAGS "-fPIC")
+
+# Organise the Visual Studio folders.
 SET_PROPERTY(TARGET _sqlite3 PROPERTY FOLDER "Core/CubiquityC/Dependancies/_sqlite3")
 
 ################################################################################
@@ -28,6 +30,8 @@ set(POLYVOX_SRCS
 
 add_library(_PolyVoxCore STATIC ${POLYVOX_SRCS})
 set_target_properties(_PolyVoxCore PROPERTIES COMPILE_FLAGS "-fPIC")
+
+# Organise the Visual Studio folders.
 SET_PROPERTY(TARGET _PolyVoxCore PROPERTY FOLDER "Core/CubiquityC/Dependancies/_PolyVoxCore")
 
 ################################################################################
@@ -62,6 +66,8 @@ set(SRCS
 )
 
 add_library(CubiquityC SHARED ${SRCS})
+
+# Organise the Visual Studio folders.
 SET_PROPERTY(TARGET CubiquityC PROPERTY FOLDER "Core/CubiquityC")
 
 # Set COMPILE_FLAGS

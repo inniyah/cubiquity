@@ -93,3 +93,8 @@ endif()
 
 #endif (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )
 
+# Organise the Visual Studio folders.
+SET_PROPERTY(TARGET OpenGLExample PROPERTY FOLDER "Examples/OpenGLExample")
+SET_PROPERTY(TARGET GLEW_190 PROPERTY FOLDER "Examples/external/GLEW")
+SET_PROPERTY(TARGET GLFW_303 PROPERTY FOLDER "Examples/external/GLFW")
+SET_PROPERTY(TARGET docs PROPERTY FOLDER "Examples/external/GLFW/docs")

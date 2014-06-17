@@ -19,3 +19,6 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   target_link_libraries (ConvertToImageSlices CubiquityC)
 endif()
+
+# Organise the Visual Studio folders.
+SET_PROPERTY(TARGET ConvertToImageSlices PROPERTY FOLDER "Tools/ConvertToImageSlices")
