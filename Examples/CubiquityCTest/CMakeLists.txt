@@ -23,4 +23,4 @@ elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
 endif()
 
 # Organise the Visual Studio folders.
-SET_PROPERTY(TARGET CubiquityCTest PROPERTY FOLDER "Examples/CubiquityCTest")
+SET_PROPERTY(TARGET CubiquityCTest PROPERTY FOLDER "Examples")

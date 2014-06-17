@@ -8,7 +8,7 @@ set_target_properties(_sqlite3 PROPERTIES COMPILE_FLAGS "-fPIC")
 add_definitions( -DSQLITE_OMIT_LOAD_EXTENSION ) # Avoids needing 'dl' on Linux
 
 # Organise the Visual Studio folders.
-SET_PROPERTY(TARGET _sqlite3 PROPERTY FOLDER "Core/CubiquityC/Dependancies/_sqlite3")
+SET_PROPERTY(TARGET _sqlite3 PROPERTY FOLDER "Core/Dependancies")
 
 ################################################################################
 # Build PolyVox - Leading underscore to avoid conflict with system version?
@@ -32,7 +32,7 @@ set(POLYVOX_SRCS
 add_library(_PolyVoxCore STATIC ${POLYVOX_SRCS})
 
 # Organise the Visual Studio folders.
-SET_PROPERTY(TARGET _PolyVoxCore PROPERTY FOLDER "Core/CubiquityC/Dependancies/_PolyVoxCore")
+SET_PROPERTY(TARGET _PolyVoxCore PROPERTY FOLDER "Core/Dependancies")
 
 ################################################################################
 # Build Cubiquity
@@ -68,7 +68,7 @@ set(SRCS
 add_library(CubiquityC SHARED ${SRCS})
 
 # Organise the Visual Studio folders.
-SET_PROPERTY(TARGET CubiquityC PROPERTY FOLDER "Core/CubiquityC")
+SET_PROPERTY(TARGET CubiquityC PROPERTY FOLDER "Core")
 
 # Shared library must export symbols
 add_definitions( -DCUBIQUITYC_EXPORTS )

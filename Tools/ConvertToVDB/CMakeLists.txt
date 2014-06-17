@@ -25,4 +25,4 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 endif()
 
 # Organise the Visual Studio folders.
-SET_PROPERTY(TARGET ConvertToVDB PROPERTY FOLDER "Tools/ConvertToVDB")
+SET_PROPERTY(TARGET ConvertToVDB PROPERTY FOLDER "Tools")

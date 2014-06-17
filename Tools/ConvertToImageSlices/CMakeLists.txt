@@ -25,4 +25,4 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 endif()
 
 # Organise the Visual Studio folders.
-SET_PROPERTY(TARGET ConvertToImageSlices PROPERTY FOLDER "Tools/ConvertToImageSlices")
+SET_PROPERTY(TARGET ConvertToImageSlices PROPERTY FOLDER "Tools")
