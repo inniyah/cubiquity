@@ -13,7 +13,7 @@ using namespace PolyVox;
 namespace Cubiquity
 {
 	// Eliminate this
-	void scaleVertices(::PolyVox::Mesh<::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >* mesh, uint32_t amount)
+	void scaleVertices(::PolyVox::Mesh< ::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >* mesh, uint32_t amount)
 	{
 		for (uint32_t ct = 0; ct < mesh->m_vecVertices.size(); ct++)
 		{
@@ -45,7 +45,7 @@ namespace Cubiquity
 	{
 		mProcessingStartedTimestamp = Clock::getTimestamp();
 		//Extract the surface
-		mPolyVoxMesh = new ::PolyVox::Mesh<::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >;
+		mPolyVoxMesh = new ::PolyVox::Mesh< ::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >;
 		mOwnMesh = true;
 
 		generateSmoothMesh(mOctreeNode->mRegion, mOctreeNode->mHeight, mPolyVoxMesh);
@@ -53,7 +53,7 @@ namespace Cubiquity
 		mOctreeNode->mOctree->mFinishedSurfaceExtractionTasks.push(this);
 	}
 
-	void SmoothSurfaceExtractionTask::generateSmoothMesh(const Region& region, uint32_t lodLevel, ::PolyVox::Mesh<::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >* resultMesh)
+	void SmoothSurfaceExtractionTask::generateSmoothMesh(const Region& region, uint32_t lodLevel, ::PolyVox::Mesh< ::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >* resultMesh)
 	{
 		MaterialSetMarchingCubesController controller;
 
@@ -97,7 +97,7 @@ namespace Cubiquity
 		}
 	}
 
-	void recalculateMaterials(::PolyVox::Mesh<::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >* mesh, const Vector3F& meshOffset,  ::PolyVox::LargeVolume<MaterialSet>* volume)
+	void recalculateMaterials(::PolyVox::Mesh< ::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >* mesh, const Vector3F& meshOffset,  ::PolyVox::LargeVolume<MaterialSet>* volume)
 	{
 		// Nasty casting away of constness so we can tweak the material values.
 		std::vector< MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >& vertices = const_cast<std::vector< MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >&>(mesh->getVertices());

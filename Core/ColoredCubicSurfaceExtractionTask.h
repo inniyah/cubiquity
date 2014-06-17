@@ -22,7 +22,7 @@ namespace Cubiquity
 	public:
 		OctreeNode< Color >* mOctreeNode;
 		::PolyVox::LargeVolume<Color>* mPolyVoxVolume;
-		::PolyVox::Mesh<::PolyVox::CubicVertex<Color> >* mPolyVoxMesh;
+		::PolyVox::Mesh< ::PolyVox::CubicVertex<Color> >* mPolyVoxMesh;
 		Timestamp mProcessingStartedTimestamp;
 
 		// Whether the task owns the mesh, or whether it has been passed to

@@ -1,21 +1,30 @@
 cmake_minimum_required(VERSION 2.8)
 
-set(PolyVox_PREFIX "" CACHE STRING "Location of PolyVox install")
+project(Cubiquity)
 
-if(CMAKE_SYSTEM_NAME MATCHES "Linux")
-	include_directories(${PolyVox_PREFIX}/include/PolyVoxCore/)
-elseif(CMAKE_SYSTEM_NAME MATCHES "Darwin")
-	include_directories(${PolyVox_PREFIX}/include/PolyVoxCore/)
-elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
-	include_directories(${PolyVox_PREFIX}/PolyVoxCore/include/)
+# For keeping things tidy in Visual Studio
+SET_PROPERTY(GLOBAL PROPERTY USE_FOLDERS ON)
+
+# To run the examples/tools from Visual Studio we need the built executables and libraries to
+# be in the same folder. See http://www.cmake.org/pipermail/cmake/2006-September/011249.html
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+# We set the CXX flags here as 'global' options, and then add to them as required using set_target_properties()
+# See: http://stackoverflow.com/questions/5096881/does-set-target-properties-in-cmake-override-cmake-cxx-flags
+# Note: Should we be using 'CMAKE_CXX_COMPILE_FLAGS' instead of 'CMAKE_CXX_FLAGS'? See http://goo.gl/rLqUyk
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+	set(CMAKE_C_FLAGS "-arch i386 ${CMAKE_C_FLAGS}")
+	set(CMAKE_CXX_FLAGS "-stdlib=libc++ -arch i386 ${CMAKE_CXX_FLAGS}")
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+	set(CMAKE_C_FLAGS "-fPIC ${CMAKE_C_FLAGS}")
+	set(CMAKE_CXX_FLAGS "-fPIC -std=c++0x ${CMAKE_CXX_FLAGS}")
 endif()
 
+#Build the various projects
 add_subdirectory(Core)
-add_subdirectory(Wrappers/C)
-add_subdirectory(Wrappers/CubiquityCTest)
-
-# Converter tools not needed on Linux as the Unity editor doesn't run there.
-if(NOT CMAKE_SYSTEM_NAME MATCHES "Linux")
-	add_subdirectory(ConvertToImageSlices)
-	add_subdirectory(ConvertToVDB)
-endif()
+add_subdirectory(Examples/CubiquityCTest)
+add_subdirectory(Examples/OpenGL)
+add_subdirectory(Tools/ConvertToImageSlices)
+add_subdirectory(Tools/ConvertToVDB)
