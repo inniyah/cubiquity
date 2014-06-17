@@ -70,12 +70,8 @@ add_library(CubiquityC SHARED ${SRCS})
 # Organise the Visual Studio folders.
 SET_PROPERTY(TARGET CubiquityC PROPERTY FOLDER "Core/CubiquityC")
 
-# Set COMPILE_FLAGS
-if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-	set_target_properties(CubiquityC PROPERTIES COMPILE_FLAGS "-arch i386 -DCUBIQUITYC_EXPORTS")
-else()
-	set_target_properties(CubiquityC PROPERTIES COMPILE_FLAGS "-DCUBIQUITYC_EXPORTS")
-endif()
+# Shared library must export symbols
+add_definitions( -DCUBIQUITYC_EXPORTS )
 
 # Set LINK_FLAGS
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
@@ -83,12 +79,10 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 endif()
 
 # Set target_link_libraries
-if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-	target_link_libraries(CubiquityC _sqlite3 _PolyVoxCore pthread)
-elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
-	target_link_libraries(CubiquityC _sqlite3 _PolyVoxCore pthread)
-elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
+if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 	target_link_libraries(CubiquityC _sqlite3 _PolyVoxCore)
+else()
+	target_link_libraries(CubiquityC _sqlite3 _PolyVoxCore pthread)
 endif()
 
 # The code below was copied from the old separate 'C' wrapper. I'm not sure we need it but it's here for safe keeping.
