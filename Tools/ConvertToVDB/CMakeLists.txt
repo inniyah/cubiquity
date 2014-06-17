@@ -12,7 +12,11 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 endif()
 
 # Set target_link_libraries
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  # Note - It's ugly that we need pthread here. It happens because the include-chain causes 'sqlite3.h' to be included from the application.
+  # Ideally 'CubiqutyC.h' should be changed so that it includes nothing but standard C libraries, so we only distribute that one header?
+  target_link_libraries (ConvertToVDB CubiquityC pthread)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   # Note - It's ugly that we need pthread here. It happens because the include-chain causes 'sqlite3.h' to be included from the application.
   # Ideally 'CubiqutyC.h' should be changed so that it includes nothing but standard C libraries, so we only distribute that one header?
   target_link_libraries (ConvertToVDB CubiquityC pthread)

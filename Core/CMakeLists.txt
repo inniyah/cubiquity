@@ -83,7 +83,9 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 endif()
 
 # Set target_link_libraries
-if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
+if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+	target_link_libraries(CubiquityC _sqlite3 _PolyVoxCore pthread)
+elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 	target_link_libraries(CubiquityC _sqlite3 _PolyVoxCore pthread)
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
 	target_link_libraries(CubiquityC _sqlite3 _PolyVoxCore)
