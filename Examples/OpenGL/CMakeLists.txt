@@ -62,8 +62,8 @@ add_executable(OpenGLExample
 	texture.cpp
 	texture.hpp
 	
-	TransformVertexShader.vertexshader
-	TextureFragmentShader.fragmentshader
+	VertexShader.glsl
+	FragmentShader.glsl
 )
 target_link_libraries(OpenGLExample
 	${ALL_LIBS}
