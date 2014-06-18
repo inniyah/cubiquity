@@ -1,6 +1,7 @@
 // Include standard headers
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
 
 // Include GLEW
 #include <GL/glew.h>
@@ -17,6 +18,70 @@ using namespace glm;
 #include "shader.hpp"
 #include "texture.hpp"
 #include "controls.hpp"
+
+#include "CubiquityC.h"
+
+uint32_t noOfIndices;
+uint32_t* indices;
+uint32_t noOfVertices;
+float* vertices;
+
+void validate(int returnCode)
+{
+	if (returnCode != CU_OK)
+	{
+		std::cout << cuGetErrorCodeAsString(returnCode) << " : " << cuGetLastErrorMessage() << std::endl;
+		exit(EXIT_FAILURE);
+	}
+}
+
+void processOctreeNode(uint32_t octreeNodeHandle)
+{
+	int32_t nodeX, nodeY, nodeZ;
+	cuGetNodePositionMC(octreeNodeHandle, &nodeX, &nodeY, &nodeZ);
+
+	std::cout << "Node position: " << nodeX << " " << nodeY << " " << nodeZ << std::endl;
+
+	uint32_t hasMesh;
+	validate(cuNodeHasMesh(octreeNodeHandle, &hasMesh));
+	if (hasMesh == 1)
+	{
+		//uint32_t noOfIndices;
+		validate(cuGetNoOfIndicesMC(octreeNodeHandle, &noOfIndices));
+
+		indices = new uint32_t[noOfIndices];
+		validate(cuGetIndicesMC(octreeNodeHandle, &indices));
+
+		//uint32_t noOfVertices;
+		validate(cuGetNoOfVerticesMC(octreeNodeHandle, &noOfVertices));
+
+		vertices = new float[noOfVertices * 7]; // Vertex no longer built from floats.
+		validate(cuGetVerticesMC(octreeNodeHandle, &vertices));
+
+		std::cout << "Found mesh - it has " << noOfVertices << " vertices and " << noOfIndices << " indices." << std::endl;
+	}
+
+	for (uint32_t z = 0; z < 2; z++)
+	{
+		for (uint32_t y = 0; y < 2; y++)
+		{
+			for (uint32_t x = 0; x < 2; x++)
+			{
+				uint32_t hasChildNode;
+				validate(cuHasChildNodeMC(octreeNodeHandle, x, y, z, &hasChildNode));
+
+				if (hasChildNode == 1)
+				{
+					uint32_t childNodeHandle;
+					validate(cuGetChildNodeMC(octreeNodeHandle, x, y, z, &childNodeHandle));
+
+					// Recursivly call the octree traversal
+					processOctreeNode(childNodeHandle);
+				}
+			}
+		}
+	}
+}
 
 int main( void )
 {
@@ -120,6 +185,25 @@ int main( void )
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+
+	uint32_t volumeHandle;
+	validate(cuNewTerrainVolumeFromVDB("C:/code/cubiquity/Data/Volumes/Version 0/SmoothVoxeliensTerrain.vdb", 32, &volumeHandle));
+
+	validate(cuUpdateVolumeMC(volumeHandle));
+
+	uint32_t hasRootNode;
+	validate(cuHasRootOctreeNodeMC(volumeHandle, &hasRootNode));
+	if (hasRootNode == 1)
+	{
+		uint32_t octreeNodeHandle;
+		cuGetRootOctreeNodeMC(volumeHandle, &octreeNodeHandle);
+		processOctreeNode(octreeNodeHandle);
+	}
+
+	// Delete the volume from memory (doesn't delete from disk).
+	validate(cuDeleteTerrainVolume(volumeHandle));
+
+	std::cout << "Final mesh has " << noOfVertices << " vertices and " << noOfIndices << " indices." << std::endl;
 
 	do
 	{

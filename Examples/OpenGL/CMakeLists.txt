@@ -32,6 +32,7 @@ endif(INCLUDE_DISTRIB)
 
 
 include_directories(
+	${CubiquityCore_SOURCE_DIR} ${CubiquityC_SOURCE_DIR}
 	external/glfw-3.0.3/include/GLFW/
 	external/glm-0.9.4.0/
 	external/glew-1.9.0/include/
@@ -66,6 +67,7 @@ add_executable(OpenGLExample
 	FragmentShader.glsl
 )
 target_link_libraries(OpenGLExample
+	CubiquityC
 	${ALL_LIBS}
 )
 # Xcode and Visual working directories
