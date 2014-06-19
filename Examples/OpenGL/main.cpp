@@ -21,10 +21,29 @@ using namespace glm;
 
 #include "CubiquityC.h"
 
+class SmoothVertex
+{
+public:
+	uint16_t x;
+	uint16_t y;
+	uint16_t z;
+	uint16_t normal;
+	uint8_t m0;
+	uint8_t m1;
+	uint8_t m2;
+	uint8_t m3;
+	uint8_t m4;
+	uint8_t m5;
+	uint8_t m6;
+	uint8_t m7;
+};
+
 uint32_t noOfIndices;
 uint32_t* indices;
 uint32_t noOfVertices;
 float* vertices;
+
+SmoothVertex vertexArray[1000000];
 
 void validate(int returnCode)
 {
@@ -58,7 +77,16 @@ void processOctreeNode(uint32_t octreeNodeHandle)
 		vertices = new float[noOfVertices * 7]; // Vertex no longer built from floats.
 		validate(cuGetVerticesMC(octreeNodeHandle, &vertices));
 
+		/*for (int ct = 0; ct < 1000; ct++)
+		{
+			std::cout << vertices[ct] << " ";
+		}*/
+
+		memcpy(vertexArray, vertices, sizeof(SmoothVertex)* noOfVertices);
+
 		std::cout << "Found mesh - it has " << noOfVertices << " vertices and " << noOfIndices << " indices." << std::endl;
+
+		std::cout << "Vertex zero x = " << vertexArray[0].x << std::endl;
 	}
 
 	for (uint32_t z = 0; z < 2; z++)
@@ -142,7 +170,7 @@ int main( void )
 
 	// Our vertices. Tree consecutive floats give a 3D vertex; Three consecutive vertices give a triangle.
 	// A cube has 6 faces with 2 triangles each, so this makes 6*2=12 triangles, and 12*3 vertices
-	static const GLushort g_vertex_buffer_data[] = { 
+	static GLushort g_vertex_buffer_data[] = { 
 		0000000,0000000,0000000, 1, 2, 3, 4, 5,
 		0000000, 0000000, 128*256, 1, 2, 3, 4, 5,
 		0000000, 128*256, 128*256, 1, 2, 3, 4, 5,
@@ -200,10 +228,27 @@ int main( void )
 
 	std::cout << "Final mesh has " << noOfVertices << " vertices and " << noOfIndices << " indices." << std::endl;
 
+	/*for (int ct = 0; ct < 1000; ct++)
+	{
+		std::cout << vertices[ct] << " ";
+	}*/
+
+	std::cout << "Vertex zero = " << vertexArray[0].x << std::endl;
+
+	std::cout << "Size of GLushort = " << sizeof(GLushort) << std::endl;
+
+	/*GLushort* verticesAsUshort = reinterpret_cast<GLushort*>(vertices);
+
+	for (int ct = 0; ct < 36 * 8; ct++)
+	{
+		g_vertex_buffer_data[ct] = *verticesAsUshort;
+		verticesAsUshort = verticesAsUshort + 1;
+	}*/
+
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), g_vertex_buffer_data, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), vertexArray, GL_STATIC_DRAW);
 
 	do
 	{
