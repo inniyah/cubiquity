@@ -142,43 +142,43 @@ int main( void )
 
 	// Our vertices. Tree consecutive floats give a 3D vertex; Three consecutive vertices give a triangle.
 	// A cube has 6 faces with 2 triangles each, so this makes 6*2=12 triangles, and 12*3 vertices
-	static const GLfloat g_vertex_buffer_data[] = { 
-		-128.0f,-128.0f,-128.0f,
-		-128.0f,-128.0f, 128.0f,
-		-128.0f, 128.0f, 128.0f,
-		 128.0f, 128.0f,-128.0f,
-		-128.0f,-128.0f,-128.0f,
-		-128.0f, 128.0f,-128.0f,
-		 128.0f,-128.0f, 128.0f,
-		-128.0f,-128.0f,-128.0f,
-		 128.0f,-128.0f,-128.0f,
-		 128.0f, 128.0f,-128.0f,
-		 128.0f,-128.0f,-128.0f,
-		-128.0f,-128.0f,-128.0f,
-		-128.0f,-128.0f,-128.0f,
-		-128.0f, 128.0f, 128.0f,
-		-128.0f, 128.0f,-128.0f,
-		 128.0f,-128.0f, 128.0f,
-		-128.0f,-128.0f, 128.0f,
-		-128.0f,-128.0f,-128.0f,
-		-128.0f, 128.0f, 128.0f,
-		-128.0f,-128.0f, 128.0f,
-		 128.0f,-128.0f, 128.0f,
-		 128.0f, 128.0f, 128.0f,
-		 128.0f,-128.0f,-128.0f,
-		 128.0f, 128.0f,-128.0f,
-		 128.0f,-128.0f,-128.0f,
-		 128.0f, 128.0f, 128.0f,
-		 128.0f,-128.0f, 128.0f,
-		 128.0f, 128.0f, 128.0f,
-		 128.0f, 128.0f,-128.0f,
-		-128.0f, 128.0f,-128.0f,
-		 128.0f, 128.0f, 128.0f,
-		-128.0f, 128.0f,-128.0f,
-		-128.0f, 128.0f, 128.0f,
-		 128.0f, 128.0f, 128.0f,
-		-128.0f, 128.0f, 128.0f,
-		 128.0f,-128.0f, 128.0f
+	static const GLushort g_vertex_buffer_data[] = { 
+		000,000,000,
+		000,000, 128,
+		000, 128, 128,
+		 128, 128,000,
+		000,000,000,
+		000, 128,000,
+		 128,000, 128,
+		000,000,000,
+		 128,000,000,
+		 128, 128,000,
+		 128,000,000,
+		000,000,000,
+		000,000,000,
+		000, 128, 128,
+		000, 128,000,
+		 128,000, 128,
+		000,000, 128,
+		000,000,000,
+		000, 128, 128,
+		000,000, 128,
+		 128,000, 128,
+		 128, 128, 128,
+		 128,000,000,
+		 128, 128,000,
+		 128,000,000,
+		 128, 128, 128,
+		 128,000, 128,
+		 128, 128, 128,
+		 128, 128,000,
+		000, 128,000,
+		 128, 128, 128,
+		000, 128,000,
+		000, 128, 128,
+		 128, 128, 128,
+		000, 128, 128,
+		 128,000, 128
 	};
 
 	GLuint vertexbuffer;
@@ -227,17 +227,17 @@ int main( void )
 		// 1rst attribute buffer : vertices
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-		glVertexAttribPointer(
+		glVertexAttribIPointer(
 			0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
 			3,                  // size
-			GL_FLOAT,           // type
-			GL_FALSE,           // normalized?
+			GL_UNSIGNED_SHORT,           // type
+			//GL_FALSE,           // normalized?
 			0,                  // stride
 			(void*)0            // array buffer offset
 		);
 
 		// Draw the triangle !
-		glDrawArrays(GL_TRIANGLES, 0, 12*3); // 12*3 indices starting at 0 -> 12 triangles
+		glDrawArrays(GL_POINTS, 0, 12*3); // 12*3 indices starting at 0 -> 12 triangles
 
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
