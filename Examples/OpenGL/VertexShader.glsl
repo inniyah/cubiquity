@@ -14,8 +14,11 @@ uniform mat4 projectionMatrix;
 
 void main()
 {
+	vec3 decodedPosition = vertexPosition_modelspace;
+	decodedPosition.xyz = decodedPosition.xyz * (1.0 / 256.0);
+	
 	// Output position of the vertex, in clip space : MVP * position
-	gl_Position =  projectionMatrix * viewMatrix * modelMatrix * vec4(vertexPosition_modelspace,1);
+	gl_Position =  projectionMatrix * viewMatrix * modelMatrix * vec4(decodedPosition,1);
 	
 	// UV of the vertex. No special space for this one.
 	UV = vertexUV;
