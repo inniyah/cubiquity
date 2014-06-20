@@ -43,7 +43,7 @@ uint32_t* indices;
 uint32_t noOfVertices;
 float* vertices;
 
-SmoothVertex vertexArray[1000000];
+//SmoothVertex vertexArray[1000000];
 
 void validate(int returnCode)
 {
@@ -82,11 +82,11 @@ void processOctreeNode(uint32_t octreeNodeHandle)
 			std::cout << vertices[ct] << " ";
 		}*/
 
-		memcpy(vertexArray, vertices, sizeof(SmoothVertex)* noOfVertices);
+		//memcpy(vertexArray, vertices, sizeof(SmoothVertex)* noOfVertices);
 
 		std::cout << "Found mesh - it has " << noOfVertices << " vertices and " << noOfIndices << " indices." << std::endl;
 
-		std::cout << "Vertex zero x = " << vertexArray[0].x << std::endl;
+		//std::cout << "Vertex zero x = " << vertexArray[0].x << std::endl;
 	}
 
 	for (uint32_t z = 0; z < 2; z++)
@@ -223,9 +223,6 @@ int main( void )
 		processOctreeNode(octreeNodeHandle);
 	}
 
-	// Delete the volume from memory (doesn't delete from disk).
-	validate(cuDeleteTerrainVolume(volumeHandle));
-
 	std::cout << "Final mesh has " << noOfVertices << " vertices and " << noOfIndices << " indices." << std::endl;
 
 	/*for (int ct = 0; ct < 1000; ct++)
@@ -233,7 +230,7 @@ int main( void )
 		std::cout << vertices[ct] << " ";
 	}*/
 
-	std::cout << "Vertex zero = " << vertexArray[0].x << std::endl;
+	std::cout << "Vertex zero = " << vertices[0] << std::endl;
 
 	std::cout << "Size of GLushort = " << sizeof(GLushort) << std::endl;
 
@@ -248,7 +245,7 @@ int main( void )
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), vertexArray, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), vertices, GL_STATIC_DRAW);
 
 	do
 	{
@@ -302,6 +299,9 @@ int main( void )
 
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
+
+	// Delete the volume from memory (doesn't delete from disk).
+	validate(cuDeleteTerrainVolume(volumeHandle));
 
 	return 0;
 }
