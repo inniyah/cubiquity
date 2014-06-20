@@ -43,8 +43,6 @@ uint32_t* indices;
 uint32_t noOfVertices;
 float* vertices;
 
-//SmoothVertex vertexArray[1000000];
-
 void validate(int returnCode)
 {
 	if (returnCode != CU_OK)
@@ -65,28 +63,13 @@ void processOctreeNode(uint32_t octreeNodeHandle)
 	validate(cuNodeHasMesh(octreeNodeHandle, &hasMesh));
 	if (hasMesh == 1)
 	{
-		//uint32_t noOfIndices;
 		validate(cuGetNoOfIndicesMC(octreeNodeHandle, &noOfIndices));
-
-		indices = new uint32_t[noOfIndices];
 		validate(cuGetIndicesMC(octreeNodeHandle, &indices));
 
-		//uint32_t noOfVertices;
 		validate(cuGetNoOfVerticesMC(octreeNodeHandle, &noOfVertices));
-
-		vertices = new float[noOfVertices * 7]; // Vertex no longer built from floats.
 		validate(cuGetVerticesMC(octreeNodeHandle, &vertices));
 
-		/*for (int ct = 0; ct < 1000; ct++)
-		{
-			std::cout << vertices[ct] << " ";
-		}*/
-
-		//memcpy(vertexArray, vertices, sizeof(SmoothVertex)* noOfVertices);
-
 		std::cout << "Found mesh - it has " << noOfVertices << " vertices and " << noOfIndices << " indices." << std::endl;
-
-		//std::cout << "Vertex zero x = " << vertexArray[0].x << std::endl;
 	}
 
 	for (uint32_t z = 0; z < 2; z++)
@@ -222,25 +205,6 @@ int main( void )
 		cuGetRootOctreeNodeMC(volumeHandle, &octreeNodeHandle);
 		processOctreeNode(octreeNodeHandle);
 	}
-
-	std::cout << "Final mesh has " << noOfVertices << " vertices and " << noOfIndices << " indices." << std::endl;
-
-	/*for (int ct = 0; ct < 1000; ct++)
-	{
-		std::cout << vertices[ct] << " ";
-	}*/
-
-	std::cout << "Vertex zero = " << vertices[0] << std::endl;
-
-	std::cout << "Size of GLushort = " << sizeof(GLushort) << std::endl;
-
-	/*GLushort* verticesAsUshort = reinterpret_cast<GLushort*>(vertices);
-
-	for (int ct = 0; ct < 36 * 8; ct++)
-	{
-		g_vertex_buffer_data[ct] = *verticesAsUshort;
-		verticesAsUshort = verticesAsUshort + 1;
-	}*/
 
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
