@@ -211,6 +211,11 @@ int main( void )
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(SmoothVertex) * noOfVertices, vertices, GL_STATIC_DRAW);
 
+	GLuint indexbuffer;
+	glGenBuffers(1, &indexbuffer);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * noOfIndices, indices, GL_STATIC_DRAW);
+
 	do
 	{
 		// Clear the screen
@@ -243,7 +248,7 @@ int main( void )
 		);
 
 		// Draw the triangle !
-		glDrawArrays(GL_POINTS, 0, noOfVertices); // 12*3 indices starting at 0 -> 12 triangles
+		glDrawElements(GL_TRIANGLES, noOfIndices, GL_UNSIGNED_INT, 0);
 
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
