@@ -41,7 +41,7 @@ public:
 uint32_t noOfIndices;
 uint32_t* indices;
 uint32_t noOfVertices;
-float* vertices;
+SmoothVertex* vertices;
 
 void validate(int returnCode)
 {
@@ -67,7 +67,7 @@ void processOctreeNode(uint32_t octreeNodeHandle)
 		validate(cuGetIndicesMC(octreeNodeHandle, &indices));
 
 		validate(cuGetNoOfVerticesMC(octreeNodeHandle, &noOfVertices));
-		validate(cuGetVerticesMC(octreeNodeHandle, &vertices));
+		validate(cuGetVerticesMC(octreeNodeHandle, (float**)(&vertices)));
 
 		std::cout << "Found mesh - it has " << noOfVertices << " vertices and " << noOfIndices << " indices." << std::endl;
 	}
@@ -209,7 +209,7 @@ int main( void )
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_buffer_data), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(SmoothVertex) * noOfVertices, vertices, GL_STATIC_DRAW);
 
 	do
 	{
@@ -243,7 +243,7 @@ int main( void )
 		);
 
 		// Draw the triangle !
-		glDrawArrays(GL_POINTS, 0, 12*3); // 12*3 indices starting at 0 -> 12 triangles
+		glDrawArrays(GL_POINTS, 0, noOfVertices); // 12*3 indices starting at 0 -> 12 triangles
 
 		glDisableVertexAttribArray(0);
 		glDisableVertexAttribArray(1);
