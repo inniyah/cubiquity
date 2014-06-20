@@ -68,6 +68,24 @@ extern "C"
 	};
 	typedef struct CuMaterialSet_s CuMaterialSet;
 
+	struct CuTerrainVertex_s
+	{
+	public:
+		uint16_t encodedPosX;
+		uint16_t encodedPosY;
+		uint16_t encodedPosZ;
+		uint16_t encodedNormal;
+		uint8_t material0;
+		uint8_t material1;
+		uint8_t material2;
+		uint8_t material3;
+		uint8_t material4;
+		uint8_t material5;
+		uint8_t material6;
+		uint8_t material7;
+	};
+	typedef struct CuTerrainVertex_s CuTerrainVertex;
+
 	// Version functions
 	CUBIQUITYC_API int32_t cuGetVersionNumber(uint32_t* majorVersion, uint32_t* minorVersion, uint32_t* patchVersion);
 

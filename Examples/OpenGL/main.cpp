@@ -21,27 +21,10 @@ using namespace glm;
 
 #include "CubiquityC.h"
 
-class SmoothVertex
-{
-public:
-	uint16_t x;
-	uint16_t y;
-	uint16_t z;
-	uint16_t normal;
-	uint8_t m0;
-	uint8_t m1;
-	uint8_t m2;
-	uint8_t m3;
-	uint8_t m4;
-	uint8_t m5;
-	uint8_t m6;
-	uint8_t m7;
-};
-
 uint32_t noOfIndices;
 uint32_t* indices;
 uint32_t noOfVertices;
-SmoothVertex* vertices;
+CuTerrainVertex* vertices;
 
 void validate(int returnCode)
 {
@@ -209,7 +192,7 @@ int main( void )
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(SmoothVertex) * noOfVertices, vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(CuTerrainVertex)* noOfVertices, vertices, GL_STATIC_DRAW);
 
 	GLuint indexbuffer;
 	glGenBuffers(1, &indexbuffer);
