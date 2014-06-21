@@ -2,10 +2,11 @@
 
 // Input vertex data, different for all executions of this shader.
 layout(location = 0) in uvec3 vertexPosition_modelspace;
-layout(location = 1) in vec2 vertexUV;
+layout(location = 1) in uint normal;
 
 // Output data ; will be interpolated for each fragment.
-out vec2 UV;
+//out vec2 UV;
+out vec3 worldNormal;
 
 // Values that stay constant for the whole mesh.
 uniform mat4 modelMatrix;
@@ -17,9 +18,13 @@ void main()
 	vec3 decodedPosition = vertexPosition_modelspace;
 	decodedPosition.xyz = decodedPosition.xyz * (1.0 / 256.0);
 	
+	uint encodedX = (normal >> 10u) & 0x1Fu;
+	uint encodedY = (normal >> 5u) & 0x1Fu;
+	uint encodedZ = (normal) & 0x1Fu;
+	worldNormal = vec3(encodedX, encodedY, encodedZ);
+	worldNormal = worldNormal / 15.5;
+	worldNormal = worldNormal - vec3(1.0, 1.0, 1.0);
+	
 	// Output position of the vertex, in clip space : MVP * position
 	gl_Position =  projectionMatrix * viewMatrix * modelMatrix * vec4(decodedPosition,1);
-	
-	// UV of the vertex. No special space for this one.
-	UV = vertexUV;
 }

@@ -230,6 +230,9 @@ int main( void )
 			(void*)0            // array buffer offset
 		);
 
+		glEnableVertexAttribArray(1); // Attrib '1' is the vertex normals.
+		glVertexAttribIPointer(1, 1, GL_UNSIGNED_SHORT, 16, (GLvoid*)(offsetof(CuTerrainVertex, encodedNormal)));
+
 		// Draw the triangle !
 		glDrawElements(GL_TRIANGLES, noOfIndices, GL_UNSIGNED_INT, 0);
 
