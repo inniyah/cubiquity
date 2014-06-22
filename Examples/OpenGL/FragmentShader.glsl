@@ -12,15 +12,14 @@ void main()
 	// Vertex colors coming out of Cubiquity don't actually sum to one
 	// (roughly 0.5 as that's where the isosurface is). Make them sum
 	// to one, though Cubiquity should probably be changed to do this.
-	vec4 normalizedMaterialWeights = materialWeights;
-	float materialStrengthsSum = 
-		materialWeights.x + materialWeights.y + materialWeights.z + materialWeights.w;
-	normalizedMaterialWeights /= materialStrengthsSum;
+	// Even when fixed, interpolation could cause the sum to be wrong.
+	float sumOfMaterialWeights = dot(materialWeights, vec4(1.0, 1.0, 1.0, 1.0));
+	vec4 normalizedMaterialWeights = materialWeights / sumOfMaterialWeights;
 			
 	// Colors taken from https://en.wikipedia.org/wiki/List_of_colors
 	vec4 material0 = vec4(0.88, 0.66, 0.37, 1.0); // Earth yellow
 	vec4 material1 = vec4(0.09, 0.55, 0.09, 1.0); // Forest green
-	vec4 material2 = vec4(0.50, 1.00, 0.83, 1.0); // Aquamarine
+	vec4 material2 = vec4(0.00, 0.00, 1.00, 1.0); // Blue
 	vec4 material3 = vec4(1.00, 1.00, 1.00, 1.0); // White
 	
 	vec4 blendedColor =

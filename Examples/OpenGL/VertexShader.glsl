@@ -14,18 +14,25 @@ uniform mat4 modelMatrix;
 uniform mat4 viewMatrix;
 uniform mat4 projectionMatrix;
 
+vec3 decodePosition(uvec3 encodedPosition)
+{
+	return vec3(encodedPosition) / 256.0;
+}
+
+vec3 decodeNormal(uint encodedNormal)
+{
+	uvec3 decodedNormal = uvec3(encodedNormal);
+	decodedNormal = (decodedNormal >> uvec3(10u, 5u, 0u)) & uvec3(0x1Fu, 0x1Fu, 0x1Fu);
+	return (vec3(decodedNormal) / 15.5) - vec3(1.0, 1.0, 1.0);
+}
+
 void main()
 {
 	// Extract and decode the position.
-	vec3 modelSpacePosition = vec3(encodedPositionAndNormal.xyz) / 256.0;
+	vec3 modelSpacePosition = decodePosition(encodedPositionAndNormal.xyz);
 	
 	// Extract and decode the normal.
-	uint encodedNormal = encodedPositionAndNormal.w;
-	uint encodedNormalX = (encodedNormal >> 10u) & 0x1Fu;
-	uint encodedNormalY = (encodedNormal >> 5u) & 0x1Fu;
-	uint encodedNormalZ = (encodedNormal) & 0x1Fu;
-	vec3 modelSpaceNormal = vec3(encodedNormalX, encodedNormalY, encodedNormalZ);
-	modelSpaceNormal = (modelSpaceNormal / 15.5) - vec3(1.0, 1.0, 1.0);
+	vec3 modelSpaceNormal = decodeNormal(encodedPositionAndNormal.w);
 	worldSpaceNormal = modelSpaceNormal; // Valid if we don't scale or rotate our volume.
 	
 	// Pass through the material weights.
