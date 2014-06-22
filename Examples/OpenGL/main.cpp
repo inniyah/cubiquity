@@ -52,6 +52,7 @@ public:
 	GLuint noOfIndices;
 	GLuint indexBuffer;
 	GLuint vertexBuffer;
+	GLuint vertexArrayObject;
 
 	OpenGLOctreeNode* parent;
 	OpenGLOctreeNode* children[2][2][2];
@@ -83,6 +84,30 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 		validate(cuGetNoOfVerticesMC(octreeNodeHandle, &noOfVertices));
 		validate(cuGetVerticesMC(octreeNodeHandle, (float**)(&vertices)));
 
+		openGLOctreeNode->noOfIndices = noOfIndices;
+
+		glGenVertexArrays(1, &(openGLOctreeNode->vertexArrayObject));
+		glBindVertexArray(openGLOctreeNode->vertexArrayObject);
+
+		glGenBuffers(1, &(openGLOctreeNode->vertexBuffer));
+		glBindBuffer(GL_ARRAY_BUFFER, openGLOctreeNode->vertexBuffer);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(CuTerrainVertex)* noOfVertices, vertices, GL_STATIC_DRAW);
+
+		glGenBuffers(1, &(openGLOctreeNode->indexBuffer));
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, openGLOctreeNode->indexBuffer);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t)* noOfIndices, indices, GL_STATIC_DRAW);
+
+		glEnableVertexAttribArray(0);
+		glVertexAttribIPointer(0, 3, GL_UNSIGNED_SHORT, sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, encodedPosX)));
+
+		glEnableVertexAttribArray(1); // Attrib '1' is the vertex normals.
+		glVertexAttribIPointer(1, 1, GL_UNSIGNED_SHORT, sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, encodedNormal)));
+
+		//glDisableVertexAttribArray(0);
+		//glDisableVertexAttribArray(1);
+
+		glBindVertexArray(0);
+
 		std::cout << "Found mesh - it has " << noOfVertices << " vertices and " << noOfIndices << " indices." << std::endl;
 	}
 
@@ -104,6 +129,33 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 
 					// Recursivly call the octree traversal
 					processOctreeNode(childNodeHandle, openGLOctreeNode->children[x][y][z]);
+				}
+			}
+		}
+	}
+}
+
+void renderOpenGLOctreeNode(OpenGLOctreeNode* openGLOctreeNode)
+{
+	if (openGLOctreeNode->noOfIndices > 0)
+	{
+		glBindVertexArray(openGLOctreeNode->vertexArrayObject);
+
+		// Draw the triangle !
+		glDrawElements(GL_TRIANGLES, openGLOctreeNode->noOfIndices, GL_UNSIGNED_INT, 0);
+
+		glBindVertexArray(0);
+	}
+
+	for (uint32_t z = 0; z < 2; z++)
+	{
+		for (uint32_t y = 0; y < 2; y++)
+		{
+			for (uint32_t x = 0; x < 2; x++)
+			{
+				if (openGLOctreeNode->children[x][y][z])
+				{
+					renderOpenGLOctreeNode(openGLOctreeNode->children[x][y][z]);
 				}
 			}
 		}
@@ -157,7 +209,6 @@ int main( void )
 
 	GLuint VertexArrayID;
 	glGenVertexArrays(1, &VertexArrayID);
-	glBindVertexArray(VertexArrayID);
 
 	// Create and compile our GLSL program from the shaders
 	GLuint programID = LoadShaders( "VertexShader.glsl", "FragmentShader.glsl" );
@@ -173,14 +224,17 @@ int main( void )
 	validate(cuUpdateVolumeMC(volumeHandle));
 
 	uint32_t hasRootNode;
+	OpenGLOctreeNode* rootOpenGLOctreeNode = 0;
 	validate(cuHasRootOctreeNodeMC(volumeHandle, &hasRootNode));
 	if (hasRootNode == 1)
 	{
 		uint32_t octreeNodeHandle;
-		OpenGLOctreeNode* rootOpenGLOctreeNode = new OpenGLOctreeNode(0);
+		rootOpenGLOctreeNode = new OpenGLOctreeNode(0);
 		cuGetRootOctreeNodeMC(volumeHandle, &octreeNodeHandle);
 		processOctreeNode(octreeNodeHandle, rootOpenGLOctreeNode);
 	}
+
+	glBindVertexArray(VertexArrayID);
 
 	GLuint vertexbuffer;
 	glGenBuffers(1, &vertexbuffer);
@@ -191,6 +245,16 @@ int main( void )
 	glGenBuffers(1, &indexbuffer);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * noOfIndices, indices, GL_STATIC_DRAW);
+
+	// 1rst attribute buffer : vertices
+	glEnableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
+	glVertexAttribIPointer(0, 3, GL_UNSIGNED_SHORT, sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, encodedPosX)));
+
+	glEnableVertexAttribArray(1); // Attrib '1' is the vertex normals.
+	glVertexAttribIPointer(1, 1, GL_UNSIGNED_SHORT, sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, encodedNormal)));
+
+	glBindVertexArray(0);
 
 	do
 	{
@@ -211,19 +275,17 @@ int main( void )
 		glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &viewMatrix[0][0]);
 		glUniformMatrix4fv(projectionMatrixID, 1, GL_FALSE, &projectionMatrix[0][0]);
 
-		// 1rst attribute buffer : vertices
-		glEnableVertexAttribArray(0);
-		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-		glVertexAttribIPointer(0, 3, GL_UNSIGNED_SHORT,  sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, encodedPosX)));
-
-		glEnableVertexAttribArray(1); // Attrib '1' is the vertex normals.
-		glVertexAttribIPointer(1, 1, GL_UNSIGNED_SHORT, sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, encodedNormal)));
+		glBindVertexArray(VertexArrayID);
 
 		// Draw the triangle !
 		glDrawElements(GL_TRIANGLES, noOfIndices, GL_UNSIGNED_INT, 0);
 
-		glDisableVertexAttribArray(0);
-		glDisableVertexAttribArray(1);
+		glBindVertexArray(0);
+
+		if (rootOpenGLOctreeNode)
+		{
+			renderOpenGLOctreeNode(rootOpenGLOctreeNode);
+		}
 
 		// Swap buffers
 		glfwSwapBuffers(window);
