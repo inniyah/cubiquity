@@ -1,8 +1,7 @@
 #version 330 core
 
 // Interpolated values from the vertex shaders
-//in vec2 UV;
-in vec3 worldNormal;
+in vec3 worldSpaceNormal;
 in vec4 materialWeights;
 
 // Ouput data
@@ -34,7 +33,7 @@ void main()
 	float ambient = 0.3;
 	float diffuse = 0.7;
 	vec3 lightDir = vec3(0.0, 1.0, 0.0);
-	float nDotL = clamp(dot(normalize(worldNormal), lightDir), 0.0, 1.0);
+	float nDotL = clamp(dot(normalize(worldSpaceNormal), lightDir), 0.0, 1.0);
 	float lightIntensity = ambient + diffuse * nDotL;
 
 	// Output color = color of the texture at the specified UV
