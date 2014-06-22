@@ -1,9 +1,9 @@
 #version 330 core
 
-// Input vertex data, different for all executions of this shader.
-layout(location = 0) in uvec3 vertexPosition_modelspace;
-layout(location = 1) in uint normal;
-layout(location = 2) in uvec4 materials;
+// We pack the encoded position and the encoded normal into a single 
+// vertex attribute to save space: http://stackoverflow.com/a/21680009
+layout(location = 0) in uvec4 encodedPositionAndNormal;
+layout(location = 1) in uvec4 materials;
 
 // Output data ; will be interpolated for each fragment.
 //out vec2 UV;
@@ -17,12 +17,12 @@ uniform mat4 projectionMatrix;
 
 void main()
 {
-	vec3 decodedPosition = vertexPosition_modelspace;
+	vec3 decodedPosition = encodedPositionAndNormal.xyz;
 	decodedPosition.xyz = decodedPosition.xyz * (1.0 / 256.0);
 	
-	uint encodedX = (normal >> 10u) & 0x1Fu;
-	uint encodedY = (normal >> 5u) & 0x1Fu;
-	uint encodedZ = (normal) & 0x1Fu;
+	uint encodedX = (encodedPositionAndNormal.w >> 10u) & 0x1Fu;
+	uint encodedY = (encodedPositionAndNormal.w >> 5u) & 0x1Fu;
+	uint encodedZ = (encodedPositionAndNormal.w) & 0x1Fu;
 	worldNormal = vec3(encodedX, encodedY, encodedZ);
 	worldNormal = worldNormal / 15.5;
 	worldNormal = worldNormal - vec3(1.0, 1.0, 1.0);

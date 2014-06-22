@@ -114,14 +114,13 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, openGLOctreeNode->indexBuffer);
 		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t)* noOfIndices, indices, GL_STATIC_DRAW);
 
+		// We pack the encoded position and the encoded normal into a single 
+		// vertex attribute to save space: http://stackoverflow.com/a/21680009
 		glEnableVertexAttribArray(0);
-		glVertexAttribIPointer(0, 3, GL_UNSIGNED_SHORT, sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, encodedPosX)));
+		glVertexAttribIPointer(0, 4, GL_UNSIGNED_SHORT, sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, encodedPosX)));
 
-		glEnableVertexAttribArray(1); // Attrib '1' is the vertex normals.
-		glVertexAttribIPointer(1, 1, GL_UNSIGNED_SHORT, sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, encodedNormal)));
-
-		glEnableVertexAttribArray(2); // Attrib '2' is the first four materials
-		glVertexAttribIPointer(2, 4, GL_UNSIGNED_BYTE, sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, material0)));
+		glEnableVertexAttribArray(1); // Attrib '1' is the first four materials
+		glVertexAttribIPointer(1, 4, GL_UNSIGNED_BYTE, sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, material0)));
 
 		glBindVertexArray(0);
 	}
