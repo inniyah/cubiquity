@@ -120,6 +120,9 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 		glEnableVertexAttribArray(1); // Attrib '1' is the vertex normals.
 		glVertexAttribIPointer(1, 1, GL_UNSIGNED_SHORT, sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, encodedNormal)));
 
+		glEnableVertexAttribArray(2); // Attrib '2' is the first four materials
+		glVertexAttribIPointer(2, 4, GL_UNSIGNED_BYTE, sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, material0)));
+
 		glBindVertexArray(0);
 	}
 
