@@ -21,6 +21,8 @@ using namespace glm;
 
 #include "CubiquityC.h"
 
+GLuint programID;
+
 class OpenGLOctreeNode
 {
 public:
@@ -29,6 +31,10 @@ public:
 		noOfIndices = 0;
 		indexBuffer = 0;
 		vertexBuffer = 0;
+
+		posX = 0;
+		posY = 0;
+		posZ = 0;
 
 		this->parent = parent;
 
@@ -48,6 +54,10 @@ public:
 	GLuint indexBuffer;
 	GLuint vertexBuffer;
 	GLuint vertexArrayObject;
+
+	int32_t posX;
+	int32_t posY;
+	int32_t posZ;
 
 	OpenGLOctreeNode* parent;
 	OpenGLOctreeNode* children[2][2][2];
@@ -86,7 +96,11 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 		validate(cuGetNoOfVerticesMC(octreeNodeHandle, &noOfVertices));
 		validate(cuGetVerticesMC(octreeNodeHandle, (float**)(&vertices)));
 
-		// Pass it to the penGL node.
+		// Pass it to the OpenGL node.
+		openGLOctreeNode->posX = nodeX;
+		openGLOctreeNode->posY = nodeY;
+		openGLOctreeNode->posZ = nodeZ;
+
 		openGLOctreeNode->noOfIndices = noOfIndices;
 
 		glGenVertexArrays(1, &(openGLOctreeNode->vertexArrayObject));
@@ -137,6 +151,11 @@ void renderOpenGLOctreeNode(OpenGLOctreeNode* openGLOctreeNode)
 {
 	if (openGLOctreeNode->noOfIndices > 0)
 	{
+		glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(openGLOctreeNode->posX, openGLOctreeNode->posY, openGLOctreeNode->posZ));
+
+		GLuint modelMatrixID = glGetUniformLocation(programID, "modelMatrix");
+		glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
+
 		glBindVertexArray(openGLOctreeNode->vertexArrayObject);
 
 		// Draw the triangle !
@@ -206,10 +225,9 @@ int main( void )
 	glEnable(GL_CULL_FACE);
 
 	// Create and compile our GLSL program from the shaders
-	GLuint programID = LoadShaders( "VertexShader.glsl", "FragmentShader.glsl" );
+	programID = LoadShaders( "VertexShader.glsl", "FragmentShader.glsl" );
 
 	// Get a handle for our "MVP" uniform
-	GLuint modelMatrixID = glGetUniformLocation(programID, "modelMatrix");
 	GLuint viewMatrixID = glGetUniformLocation(programID, "viewMatrix");
 	GLuint projectionMatrixID = glGetUniformLocation(programID, "projectionMatrix");
 
@@ -239,12 +257,10 @@ int main( void )
 
 		// Compute the MVP matrix from keyboard and mouse input
 		computeMatricesFromInputs();
-		glm::mat4 modelMatrix = glm::mat4(1.0);
 		glm::mat4 viewMatrix = getViewMatrix();
 		glm::mat4 projectionMatrix = getProjectionMatrix();
 
 		// Send our transformations to the currently bound shader
-		glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
 		glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &viewMatrix[0][0]);
 		glUniformMatrix4fv(projectionMatrixID, 1, GL_FALSE, &projectionMatrix[0][0]);
 
