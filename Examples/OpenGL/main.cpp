@@ -26,6 +26,37 @@ uint32_t* indices;
 uint32_t noOfVertices;
 CuTerrainVertex* vertices;
 
+class OpenGLOctreeNode
+{
+public:
+	OpenGLOctreeNode(OpenGLOctreeNode* parent)
+	{
+		noOfIndices = 0;
+		indexBuffer = 0;
+		vertexBuffer = 0;
+
+		this->parent = parent;
+
+		for (uint32_t z = 0; z < 2; z++)
+		{
+			for (uint32_t y = 0; y < 2; y++)
+			{
+				for (uint32_t x = 0; x < 2; x++)
+				{
+					children[x][y][z] = 0;
+				}
+			}
+		}
+	}
+
+	GLuint noOfIndices;
+	GLuint indexBuffer;
+	GLuint vertexBuffer;
+
+	OpenGLOctreeNode* parent;
+	OpenGLOctreeNode* children[2][2][2];
+};
+
 void validate(int returnCode)
 {
 	if (returnCode != CU_OK)
@@ -35,7 +66,7 @@ void validate(int returnCode)
 	}
 }
 
-void processOctreeNode(uint32_t octreeNodeHandle)
+void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctreeNode)
 {
 	int32_t nodeX, nodeY, nodeZ;
 	cuGetNodePositionMC(octreeNodeHandle, &nodeX, &nodeY, &nodeZ);
@@ -69,8 +100,10 @@ void processOctreeNode(uint32_t octreeNodeHandle)
 					uint32_t childNodeHandle;
 					validate(cuGetChildNodeMC(octreeNodeHandle, x, y, z, &childNodeHandle));
 
+					openGLOctreeNode->children[x][y][z] = new OpenGLOctreeNode(openGLOctreeNode);
+
 					// Recursivly call the octree traversal
-					processOctreeNode(childNodeHandle);
+					processOctreeNode(childNodeHandle, openGLOctreeNode->children[x][y][z]);
 				}
 			}
 		}
@@ -134,47 +167,6 @@ int main( void )
 	GLuint viewMatrixID = glGetUniformLocation(programID, "viewMatrix");
 	GLuint projectionMatrixID = glGetUniformLocation(programID, "projectionMatrix");
 
-	// Our vertices. Tree consecutive floats give a 3D vertex; Three consecutive vertices give a triangle.
-	// A cube has 6 faces with 2 triangles each, so this makes 6*2=12 triangles, and 12*3 vertices
-	static GLushort g_vertex_buffer_data[] = { 
-		0000000,0000000,0000000, 1, 2, 3, 4, 5,
-		0000000, 0000000, 128*256, 1, 2, 3, 4, 5,
-		0000000, 128*256, 128*256, 1, 2, 3, 4, 5,
-		128*256, 128*256, 0000000, 1, 2, 3, 4, 5,
-		0000000, 0000000, 0000000, 1, 2, 3, 4, 5,
-		0000000, 128*256, 0000000, 1, 2, 3, 4, 5,
-		128*256, 0000000, 128*256, 1, 2, 3, 4, 5,
-		0000000, 0000000, 0000000, 1, 2, 3, 4, 5,
-		128*256, 0000000, 0000000, 1, 2, 3, 4, 5,
-		128*256, 128*256, 0000000, 1, 2, 3, 4, 5,
-		128*256, 0000000, 0000000, 1, 2, 3, 4, 5,
-		0000000, 0000000, 0000000, 1, 2, 3, 4, 5,
-		0000000, 0000000, 0000000, 1, 2, 3, 4, 5,
-		0000000, 128*256, 128*256, 1, 2, 3, 4, 5,
-		0000000, 128*256, 0000000, 1, 2, 3, 4, 5,
-		128*256, 0000000, 128*256, 1, 2, 3, 4, 5,
-		0000000, 0000000, 128*256, 1, 2, 3, 4, 5,
-		0000000, 0000000, 0000000, 1, 2, 3, 4, 5,
-		0000000, 128*256, 128*256, 1, 2, 3, 4, 5,
-		0000000, 0000000, 128*256, 1, 2, 3, 4, 5,
-		128*256, 0000000, 128*256, 1, 2, 3, 4, 5,
-		128*256, 128*256, 128*256, 1, 2, 3, 4, 5,
-		128*256, 0000000, 0000000, 1, 2, 3, 4, 5,
-		128*256, 128*256, 0000000, 1, 2, 3, 4, 5,
-		128*256, 0000000, 0000000, 1, 2, 3, 4, 5,
-		128*256, 128*256, 128*256, 1, 2, 3, 4, 5,
-		128*256, 0000000, 128*256, 1, 2, 3, 4, 5,
-		128*256, 128*256, 128*256, 1, 2, 3, 4, 5,
-		128*256, 128*256, 0000000, 1, 2, 3, 4, 5,
-		0000000, 128*256, 0000000, 1, 2, 3, 4, 5,
-		128*256, 128*256, 128*256, 1, 2, 3, 4, 5,
-		0000000, 128*256, 0000000, 1, 2, 3, 4, 5,
-		0000000, 128*256, 128*256, 1, 2, 3, 4, 5,
-		128*256, 128*256, 128*256, 1, 2, 3, 4, 5,
-		0000000, 128*256, 128*256, 1, 2, 3, 4, 5,
-		128*256, 0000000, 128*256, 1, 2, 3, 4, 5
-	};
-
 	uint32_t volumeHandle;
 	validate(cuNewTerrainVolumeFromVDB("C:/code/cubiquity/Data/Volumes/Version 0/SmoothVoxeliensTerrain.vdb", 32, &volumeHandle));
 
@@ -185,8 +177,9 @@ int main( void )
 	if (hasRootNode == 1)
 	{
 		uint32_t octreeNodeHandle;
+		OpenGLOctreeNode* rootOpenGLOctreeNode = new OpenGLOctreeNode(0);
 		cuGetRootOctreeNodeMC(volumeHandle, &octreeNodeHandle);
-		processOctreeNode(octreeNodeHandle);
+		processOctreeNode(octreeNodeHandle, rootOpenGLOctreeNode);
 	}
 
 	GLuint vertexbuffer;
@@ -221,17 +214,10 @@ int main( void )
 		// 1rst attribute buffer : vertices
 		glEnableVertexAttribArray(0);
 		glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-		glVertexAttribIPointer(
-			0,                  // attribute. No particular reason for 0, but must match the layout in the shader.
-			3,                  // size
-			GL_UNSIGNED_SHORT,           // type
-			//GL_FALSE,           // normalized?
-			16,                  // stride
-			(void*)0            // array buffer offset
-		);
+		glVertexAttribIPointer(0, 3, GL_UNSIGNED_SHORT,  sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, encodedPosX)));
 
 		glEnableVertexAttribArray(1); // Attrib '1' is the vertex normals.
-		glVertexAttribIPointer(1, 1, GL_UNSIGNED_SHORT, 16, (GLvoid*)(offsetof(CuTerrainVertex, encodedNormal)));
+		glVertexAttribIPointer(1, 1, GL_UNSIGNED_SHORT, sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, encodedNormal)));
 
 		// Draw the triangle !
 		glDrawElements(GL_TRIANGLES, noOfIndices, GL_UNSIGNED_INT, 0);
