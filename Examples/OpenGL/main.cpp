@@ -21,11 +21,6 @@ using namespace glm;
 
 #include "CubiquityC.h"
 
-uint32_t noOfIndices;
-uint32_t* indices;
-uint32_t noOfVertices;
-CuTerrainVertex* vertices;
-
 class OpenGLOctreeNode
 {
 public:
@@ -78,12 +73,20 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 	validate(cuNodeHasMesh(octreeNodeHandle, &hasMesh));
 	if (hasMesh == 1)
 	{
+		// These will point to the index and vertex data
+		uint32_t noOfIndices;
+		uint32_t* indices;
+		uint32_t noOfVertices;
+		CuTerrainVertex* vertices;
+
+		// Get the index and vertex data
 		validate(cuGetNoOfIndicesMC(octreeNodeHandle, &noOfIndices));
 		validate(cuGetIndicesMC(octreeNodeHandle, &indices));
 
 		validate(cuGetNoOfVerticesMC(octreeNodeHandle, &noOfVertices));
 		validate(cuGetVerticesMC(octreeNodeHandle, (float**)(&vertices)));
 
+		// Pass it to the penGL node.
 		openGLOctreeNode->noOfIndices = noOfIndices;
 
 		glGenVertexArrays(1, &(openGLOctreeNode->vertexArrayObject));
@@ -103,12 +106,7 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 		glEnableVertexAttribArray(1); // Attrib '1' is the vertex normals.
 		glVertexAttribIPointer(1, 1, GL_UNSIGNED_SHORT, sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, encodedNormal)));
 
-		//glDisableVertexAttribArray(0);
-		//glDisableVertexAttribArray(1);
-
 		glBindVertexArray(0);
-
-		std::cout << "Found mesh - it has " << noOfVertices << " vertices and " << noOfIndices << " indices." << std::endl;
 	}
 
 	for (uint32_t z = 0; z < 2; z++)
@@ -207,9 +205,6 @@ int main( void )
 	// Cull triangles which normal is not towards the camera
 	glEnable(GL_CULL_FACE);
 
-	GLuint VertexArrayID;
-	glGenVertexArrays(1, &VertexArrayID);
-
 	// Create and compile our GLSL program from the shaders
 	GLuint programID = LoadShaders( "VertexShader.glsl", "FragmentShader.glsl" );
 
@@ -234,28 +229,6 @@ int main( void )
 		processOctreeNode(octreeNodeHandle, rootOpenGLOctreeNode);
 	}
 
-	glBindVertexArray(VertexArrayID);
-
-	GLuint vertexbuffer;
-	glGenBuffers(1, &vertexbuffer);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(CuTerrainVertex)* noOfVertices, vertices, GL_STATIC_DRAW);
-
-	GLuint indexbuffer;
-	glGenBuffers(1, &indexbuffer);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexbuffer);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t) * noOfIndices, indices, GL_STATIC_DRAW);
-
-	// 1rst attribute buffer : vertices
-	glEnableVertexAttribArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-	glVertexAttribIPointer(0, 3, GL_UNSIGNED_SHORT, sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, encodedPosX)));
-
-	glEnableVertexAttribArray(1); // Attrib '1' is the vertex normals.
-	glVertexAttribIPointer(1, 1, GL_UNSIGNED_SHORT, sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, encodedNormal)));
-
-	glBindVertexArray(0);
-
 	do
 	{
 		// Clear the screen
@@ -275,13 +248,6 @@ int main( void )
 		glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &viewMatrix[0][0]);
 		glUniformMatrix4fv(projectionMatrixID, 1, GL_FALSE, &projectionMatrix[0][0]);
 
-		glBindVertexArray(VertexArrayID);
-
-		// Draw the triangle !
-		glDrawElements(GL_TRIANGLES, noOfIndices, GL_UNSIGNED_INT, 0);
-
-		glBindVertexArray(0);
-
 		if (rootOpenGLOctreeNode)
 		{
 			renderOpenGLOctreeNode(rootOpenGLOctreeNode);
@@ -296,9 +262,7 @@ int main( void )
 		   glfwWindowShouldClose(window) == 0 );
 
 	// Cleanup VBO and shader
-	glDeleteBuffers(1, &vertexbuffer);
 	glDeleteProgram(programID);
-	glDeleteVertexArrays(1, &VertexArrayID);
 
 	// Close OpenGL window and terminate GLFW
 	glfwTerminate();
