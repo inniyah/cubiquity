@@ -77,8 +77,6 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 	int32_t nodeX, nodeY, nodeZ;
 	cuGetNodePositionMC(octreeNodeHandle, &nodeX, &nodeY, &nodeZ);
 
-	std::cout << "Node position: " << nodeX << " " << nodeY << " " << nodeZ << std::endl;
-
 	uint32_t hasMesh;
 	validate(cuNodeHasMesh(octreeNodeHandle, &hasMesh));
 	if (hasMesh == 1)

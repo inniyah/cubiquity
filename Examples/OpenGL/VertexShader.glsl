@@ -3,12 +3,11 @@
 // We pack the encoded position and the encoded normal into a single 
 // vertex attribute to save space: http://stackoverflow.com/a/21680009
 layout(location = 0) in uvec4 encodedPositionAndNormal;
-layout(location = 1) in uvec4 materials;
+layout(location = 1) in uvec4 materialWeightsAsUBytes;
 
-// Output data ; will be interpolated for each fragment.
-//out vec2 UV;
+// Output data
 out vec3 worldNormal;
-out vec4 materialsOut;
+out vec4 materialWeights;
 
 // Values that stay constant for the whole mesh.
 uniform mat4 modelMatrix;
@@ -27,7 +26,7 @@ void main()
 	worldNormal = worldNormal / 15.5;
 	worldNormal = worldNormal - vec3(1.0, 1.0, 1.0);
 	
-	materialsOut = materials;
+	materialWeights = materialWeightsAsUBytes;
 	
 	// Output position of the vertex, in clip space : MVP * position
 	gl_Position =  projectionMatrix * viewMatrix * modelMatrix * vec4(decodedPosition,1);
