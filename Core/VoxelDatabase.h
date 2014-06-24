@@ -19,10 +19,13 @@ namespace Cubiquity
 	{
 	public:
 		/// Constructor
-		VoxelDatabase(sqlite3* database);
+		VoxelDatabase();
 
 		/// Destructor
 		virtual ~VoxelDatabase();
+
+		void create(const std::string& pathToNewVoxelDatabase);
+		void open(const std::string& pathToExistingVoxelDatabase);
 
 		virtual void compress(PolyVox::UncompressedBlock<VoxelType>* pSrcBlock, PolyVox::CompressedBlock<VoxelType>* pDstBlock);
 		virtual void decompress(PolyVox::CompressedBlock<VoxelType>* pSrcBlock, PolyVox::UncompressedBlock<VoxelType>* pDstBlock);
@@ -33,7 +36,17 @@ namespace Cubiquity
 		void acceptOverrideBlocks(void);
 		void discardOverrideBlocks(void);
 
+		int32_t getPropertyAsInt(const std::string& name, int32_t defaultValue);
+		float getPropertyAsFloat(const std::string& name, float defaultValue);
+		std::string getPropertyAsString(const std::string& name, const std::string& defaultValue);
+
+		void setProperty(const std::string& name, int value);
+		void setProperty(const std::string& name, float value);
+		void setProperty(const std::string& name, const std::string& value);
+
 	private:
+
+		bool getProperty(const std::string& name, std::string& value);
 
 		sqlite3* mDatabase;
 
@@ -42,6 +55,9 @@ namespace Cubiquity
 		
 		sqlite3_stmt* mInsertOrReplaceBlockStatement;
 		sqlite3_stmt* mInsertOrReplaceOverrideBlockStatement;
+
+		sqlite3_stmt* mSelectPropertyStatement;
+		sqlite3_stmt* mInsertOrReplacePropertyStatement;
 
 		::PolyVox::MinizBlockCompressor<VoxelType>* m_pCompressor;
 	};
