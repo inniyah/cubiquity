@@ -30,8 +30,10 @@ namespace Cubiquity
 		POLYVOX_THROW_IF(region.getHeightInVoxels() == 0, std::invalid_argument, "Volume height must be greater than zero");
 		POLYVOX_THROW_IF(region.getDepthInVoxels() == 0, std::invalid_argument, "Volume depth must be greater than zero");
 
-		m_pVoxelDatabase = new VoxelDatabase<VoxelType>;
-		m_pVoxelDatabase->create(pathToNewVoxelDatabase);
+		//m_pVoxelDatabase = new VoxelDatabase<VoxelType>;
+		//m_pVoxelDatabase->create(pathToNewVoxelDatabase);
+
+		m_pVoxelDatabase = VoxelDatabase<VoxelType>::create(pathToNewVoxelDatabase);
 
 		// Store the volume region to the database.
 		m_pVoxelDatabase->setProperty("lowerX", region.getLowerX());
@@ -54,8 +56,10 @@ namespace Cubiquity
 		,mOctree(0)
 		//,mDatabase(0)
 	{
-		m_pVoxelDatabase = new VoxelDatabase<VoxelType>;
-		m_pVoxelDatabase->open(pathToExistingVoxelDatabase);
+		//m_pVoxelDatabase = new VoxelDatabase<VoxelType>;
+		//m_pVoxelDatabase->open(pathToExistingVoxelDatabase);
+
+		m_pVoxelDatabase = VoxelDatabase<VoxelType>::open(pathToExistingVoxelDatabase);
 
 		// Get the volume region from the database. The default values
 		// are fairly arbitrary as there is no sensible choice here.

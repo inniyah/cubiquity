@@ -18,14 +18,11 @@ namespace Cubiquity
 	class VoxelDatabase : public PolyVox::BlockCompressor<VoxelType>, public PolyVox::Pager<VoxelType>
 	{
 	public:
-		/// Constructor
-		VoxelDatabase();
-
 		/// Destructor
 		virtual ~VoxelDatabase();
 
-		void create(const std::string& pathToNewVoxelDatabase);
-		void open(const std::string& pathToExistingVoxelDatabase);
+		static VoxelDatabase* create(const std::string& pathToNewVoxelDatabase);
+		static VoxelDatabase* open(const std::string& pathToExistingVoxelDatabase);
 
 		virtual void compress(PolyVox::UncompressedBlock<VoxelType>* pSrcBlock, PolyVox::CompressedBlock<VoxelType>* pDstBlock);
 		virtual void decompress(PolyVox::CompressedBlock<VoxelType>* pSrcBlock, PolyVox::UncompressedBlock<VoxelType>* pDstBlock);
@@ -45,6 +42,9 @@ namespace Cubiquity
 		void setProperty(const std::string& name, const std::string& value);
 
 	private:
+
+		/// Constructor
+		VoxelDatabase();
 
 		bool getProperty(const std::string& name, std::string& value);
 

@@ -47,7 +47,7 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void VoxelDatabase<VoxelType>::create(const std::string& pathToNewVoxelDatabase)
+	VoxelDatabase<VoxelType>* VoxelDatabase<VoxelType>::create(const std::string& pathToNewVoxelDatabase)
 	{
 		// If the file is NULL then we don't need to (and can't) close it.
 		FILE* file = fopen(pathToNewVoxelDatabase.c_str(), "rb");
@@ -57,70 +57,78 @@ namespace Cubiquity
 			POLYVOX_THROW(std::invalid_argument, "Cannot create a new voxel database as the provided filename already exists");
 		}
 
+		VoxelDatabase<VoxelType>* voxelDatabase = new VoxelDatabase<VoxelType>;
+
 		POLYVOX_LOG_INFO("Creating VoxelDatabase from '" << pathToNewVoxelDatabase << "'");
 
 		POLYVOX_LOG_INFO("Attempting to create '" << pathToNewVoxelDatabase << "'");
-		EXECUTE_SQLITE_FUNC(sqlite3_open_v2(pathToNewVoxelDatabase.c_str(), &mDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL));
+		EXECUTE_SQLITE_FUNC(sqlite3_open_v2(pathToNewVoxelDatabase.c_str(), &(voxelDatabase->mDatabase), SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL));
 		POLYVOX_LOG_INFO("Successfully created'" << pathToNewVoxelDatabase << "'");
 
 		// Disable syncing
-		EXECUTE_SQLITE_FUNC(sqlite3_exec(mDatabase, "PRAGMA synchronous = OFF", 0, 0, 0));
+		EXECUTE_SQLITE_FUNC(sqlite3_exec(voxelDatabase->mDatabase, "PRAGMA synchronous = OFF", 0, 0, 0));
 
 		// Create the 'Properties' table.
-		EXECUTE_SQLITE_FUNC(sqlite3_exec(mDatabase, "CREATE TABLE Properties(Name TEXT PRIMARY KEY, Value TEXT);", 0, 0, 0));
+		EXECUTE_SQLITE_FUNC(sqlite3_exec(voxelDatabase->mDatabase, "CREATE TABLE Properties(Name TEXT PRIMARY KEY, Value TEXT);", 0, 0, 0));
 
 		// Create the 'Blocks' table if it doesn't exist. Not sure we need 'ASC'
 		// here, but it's in the example (http://goo.gl/NLHjQv) as is the default anyway.
-		EXECUTE_SQLITE_FUNC(sqlite3_exec(mDatabase, "CREATE TABLE IF NOT EXISTS Blocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
+		EXECUTE_SQLITE_FUNC(sqlite3_exec(voxelDatabase->mDatabase, "CREATE TABLE IF NOT EXISTS Blocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
 
 		// Now create the 'OverrideBlocks' table if it doesn't exist. Not sure we need 'ASC'
 		// here, but it's in the example (http://goo.gl/NLHjQv) as is the default anyway.
-		EXECUTE_SQLITE_FUNC(sqlite3_exec(mDatabase, "CREATE TABLE IF NOT EXISTS OverrideBlocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
+		EXECUTE_SQLITE_FUNC(sqlite3_exec(voxelDatabase->mDatabase, "CREATE TABLE IF NOT EXISTS OverrideBlocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
 
 		// Now build the 'insert or replace' prepared statements
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceBlockStatement, NULL));
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO OverrideBlocks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceOverrideBlockStatement, NULL));
+		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) VALUES (?, ?)", -1, &(voxelDatabase->mInsertOrReplaceBlockStatement), NULL));
+		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "INSERT OR REPLACE INTO OverrideBlocks (Region, Data) VALUES (?, ?)", -1, &(voxelDatabase->mInsertOrReplaceOverrideBlockStatement), NULL));
 
 		// Now build the 'select' prepared statements
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "SELECT Data FROM Blocks WHERE Region = ?", -1, &mSelectBlockStatement, NULL));
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "SELECT Data FROM OverrideBlocks WHERE Region = ?", -1, &mSelectOverrideBlockStatement, NULL));
+		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "SELECT Data FROM Blocks WHERE Region = ?", -1, &(voxelDatabase->mSelectBlockStatement), NULL));
+		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "SELECT Data FROM OverrideBlocks WHERE Region = ?", -1, &(voxelDatabase->mSelectOverrideBlockStatement), NULL));
 
 		// Now build the 'select' and 'insert or replace' prepared statements
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "SELECT Value FROM Properties WHERE Name = ?", -1, &mSelectPropertyStatement, NULL));
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO Properties (Name, Value) VALUES (?, ?)", -1, &mInsertOrReplacePropertyStatement, NULL));
+		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "SELECT Value FROM Properties WHERE Name = ?", -1, &(voxelDatabase->mSelectPropertyStatement), NULL));
+		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "INSERT OR REPLACE INTO Properties (Name, Value) VALUES (?, ?)", -1, &(voxelDatabase->mInsertOrReplacePropertyStatement), NULL));
+
+		return voxelDatabase;
 	}
 
 	template <typename VoxelType>
-	void VoxelDatabase<VoxelType>::open(const std::string& pathToExistingVoxelDatabase)
+	VoxelDatabase<VoxelType>* VoxelDatabase<VoxelType>::open(const std::string& pathToExistingVoxelDatabase)
 	{
+		VoxelDatabase<VoxelType>* voxelDatabase = new VoxelDatabase<VoxelType>;
+
 		POLYVOX_LOG_INFO("Creating VoxelDatabase from '" << pathToExistingVoxelDatabase << "'");
 
 		// Open the database
-		EXECUTE_SQLITE_FUNC(sqlite3_open_v2(pathToExistingVoxelDatabase.c_str(), &mDatabase, SQLITE_OPEN_READWRITE, NULL));
+		EXECUTE_SQLITE_FUNC(sqlite3_open_v2(pathToExistingVoxelDatabase.c_str(), &(voxelDatabase->mDatabase), SQLITE_OPEN_READWRITE, NULL));
 		POLYVOX_LOG_INFO("Successfully opened'" << pathToExistingVoxelDatabase << "'");
 
 		// Disable syncing
-		EXECUTE_SQLITE_FUNC(sqlite3_exec(mDatabase, "PRAGMA synchronous = OFF", 0, 0, 0));
+		EXECUTE_SQLITE_FUNC(sqlite3_exec(voxelDatabase->mDatabase, "PRAGMA synchronous = OFF", 0, 0, 0));
 
 		// Create the 'Blocks' table if it doesn't exist. Not sure we need 'ASC'
 		// here, but it's in the example (http://goo.gl/NLHjQv) as is the default anyway.
-		EXECUTE_SQLITE_FUNC(sqlite3_exec(mDatabase, "CREATE TABLE IF NOT EXISTS Blocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
+		EXECUTE_SQLITE_FUNC(sqlite3_exec(voxelDatabase->mDatabase, "CREATE TABLE IF NOT EXISTS Blocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
 
 		// Now create the 'OverrideBlocks' table if it doesn't exist. Not sure we need 'ASC'
 		// here, but it's in the example (http://goo.gl/NLHjQv) as is the default anyway.
-		EXECUTE_SQLITE_FUNC(sqlite3_exec(mDatabase, "CREATE TABLE IF NOT EXISTS OverrideBlocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
+		EXECUTE_SQLITE_FUNC(sqlite3_exec(voxelDatabase->mDatabase, "CREATE TABLE IF NOT EXISTS OverrideBlocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
 
 		// Now build the 'insert or replace' prepared statements
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceBlockStatement, NULL));
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO OverrideBlocks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceOverrideBlockStatement, NULL));
+		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) VALUES (?, ?)", -1, &(voxelDatabase->mInsertOrReplaceBlockStatement), NULL));
+		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "INSERT OR REPLACE INTO OverrideBlocks (Region, Data) VALUES (?, ?)", -1, &(voxelDatabase->mInsertOrReplaceOverrideBlockStatement), NULL));
 
 		// Now build the 'select' prepared statements
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "SELECT Data FROM Blocks WHERE Region = ?", -1, &mSelectBlockStatement, NULL));
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "SELECT Data FROM OverrideBlocks WHERE Region = ?", -1, &mSelectOverrideBlockStatement, NULL));
+		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "SELECT Data FROM Blocks WHERE Region = ?", -1, &(voxelDatabase->mSelectBlockStatement), NULL));
+		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "SELECT Data FROM OverrideBlocks WHERE Region = ?", -1, &(voxelDatabase->mSelectOverrideBlockStatement), NULL));
 
 		// Now build the 'select' and 'insert or replace' prepared statements
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "SELECT Value FROM Properties WHERE Name = ?", -1, &mSelectPropertyStatement, NULL));
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO Properties (Name, Value) VALUES (?, ?)", -1, &mInsertOrReplacePropertyStatement, NULL));
+		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "SELECT Value FROM Properties WHERE Name = ?", -1, &(voxelDatabase->mSelectPropertyStatement), NULL));
+		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "INSERT OR REPLACE INTO Properties (Name, Value) VALUES (?, ?)", -1, &(voxelDatabase->mInsertOrReplacePropertyStatement), NULL));
+
+		return voxelDatabase;
 	}
 
 	template <typename VoxelType>
