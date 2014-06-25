@@ -131,22 +131,25 @@ void validateVolumeHandle(uint32_t volumeHandle)
 	if(volumeHandle > MaxVolumeHandle)
 	{
 		std::stringstream ss;
-		ss << "Volume handle'" << volumeHandle << "' exceeds the maximum permitted value of '" << MaxVolumeHandle << "'";
-		POLYVOX_THROW(std::invalid_argument, ss.str());
+		ss << "Volume handle' " << volumeHandle << "' exceeds the maximum permitted value of '" << MaxVolumeHandle << "'";
+		std::string errorString(ss.str());
+		POLYVOX_THROW(std::invalid_argument, errorString);
 	}
 
 	if(volumeHandle >= gVolumes.size())
 	{
 		std::stringstream ss;
-		ss << "Volume handle'" << volumeHandle << "' is outside volume array bounds";
-		POLYVOX_THROW(std::invalid_argument, ss.str());
+		ss << "Volume handle' " << volumeHandle << "' is outside volume array bounds";
+		std::string errorString(ss.str());
+		POLYVOX_THROW(std::invalid_argument, errorString);
 	}
 
 	if(gVolumes[volumeHandle] == 0) 
 	{
 		std::stringstream ss;
-		ss << "Volume handle'" << volumeHandle << "' is valid but the corresponding volume pointer is null";
-		POLYVOX_THROW(std::invalid_argument, ss.str());
+		ss << "Volume handle' " << volumeHandle << "' is valid but the corresponding volume pointer is null";
+		std::string errorString(ss.str());
+		POLYVOX_THROW(std::invalid_argument, errorString);
 	}
 }
 
