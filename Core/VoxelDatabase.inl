@@ -79,17 +79,7 @@ namespace Cubiquity
 		// here, but it's in the example (http://goo.gl/NLHjQv) as is the default anyway.
 		EXECUTE_SQLITE_FUNC(sqlite3_exec(voxelDatabase->mDatabase, "CREATE TABLE IF NOT EXISTS OverrideBlocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
 
-		// Now build the 'insert or replace' prepared statements
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) VALUES (?, ?)", -1, &(voxelDatabase->mInsertOrReplaceBlockStatement), NULL));
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "INSERT OR REPLACE INTO OverrideBlocks (Region, Data) VALUES (?, ?)", -1, &(voxelDatabase->mInsertOrReplaceOverrideBlockStatement), NULL));
-
-		// Now build the 'select' prepared statements
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "SELECT Data FROM Blocks WHERE Region = ?", -1, &(voxelDatabase->mSelectBlockStatement), NULL));
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "SELECT Data FROM OverrideBlocks WHERE Region = ?", -1, &(voxelDatabase->mSelectOverrideBlockStatement), NULL));
-
-		// Now build the 'select' and 'insert or replace' prepared statements
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "SELECT Value FROM Properties WHERE Name = ?", -1, &(voxelDatabase->mSelectPropertyStatement), NULL));
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "INSERT OR REPLACE INTO Properties (Name, Value) VALUES (?, ?)", -1, &(voxelDatabase->mInsertOrReplacePropertyStatement), NULL));
+		voxelDatabase->buildPreparedStatements();
 
 		return voxelDatabase;
 	}
@@ -116,19 +106,25 @@ namespace Cubiquity
 		// here, but it's in the example (http://goo.gl/NLHjQv) as is the default anyway.
 		EXECUTE_SQLITE_FUNC(sqlite3_exec(voxelDatabase->mDatabase, "CREATE TABLE IF NOT EXISTS OverrideBlocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
 
-		// Now build the 'insert or replace' prepared statements
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) VALUES (?, ?)", -1, &(voxelDatabase->mInsertOrReplaceBlockStatement), NULL));
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "INSERT OR REPLACE INTO OverrideBlocks (Region, Data) VALUES (?, ?)", -1, &(voxelDatabase->mInsertOrReplaceOverrideBlockStatement), NULL));
-
-		// Now build the 'select' prepared statements
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "SELECT Data FROM Blocks WHERE Region = ?", -1, &(voxelDatabase->mSelectBlockStatement), NULL));
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "SELECT Data FROM OverrideBlocks WHERE Region = ?", -1, &(voxelDatabase->mSelectOverrideBlockStatement), NULL));
-
-		// Now build the 'select' and 'insert or replace' prepared statements
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "SELECT Value FROM Properties WHERE Name = ?", -1, &(voxelDatabase->mSelectPropertyStatement), NULL));
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(voxelDatabase->mDatabase, "INSERT OR REPLACE INTO Properties (Name, Value) VALUES (?, ?)", -1, &(voxelDatabase->mInsertOrReplacePropertyStatement), NULL));
+		voxelDatabase->buildPreparedStatements();
 
 		return voxelDatabase;
+	}
+
+	template <typename VoxelType>
+	void VoxelDatabase<VoxelType>::buildPreparedStatements(void)
+	{
+		// Now build the 'insert or replace' prepared statements
+		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceBlockStatement, NULL));
+		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO OverrideBlocks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceOverrideBlockStatement, NULL));
+
+		// Now build the 'select' prepared statements
+		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "SELECT Data FROM Blocks WHERE Region = ?", -1, &mSelectBlockStatement, NULL));
+		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "SELECT Data FROM OverrideBlocks WHERE Region = ?", -1, &mSelectOverrideBlockStatement, NULL));
+
+		// Now build the 'select' and 'insert or replace' prepared statements
+		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "SELECT Value FROM Properties WHERE Name = ?", -1, &mSelectPropertyStatement, NULL));
+		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO Properties (Name, Value) VALUES (?, ?)", -1, &mInsertOrReplacePropertyStatement, NULL));
 	}
 
 	template <typename VoxelType>

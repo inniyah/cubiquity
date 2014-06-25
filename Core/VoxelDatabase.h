@@ -46,6 +46,8 @@ namespace Cubiquity
 		/// Constructor
 		VoxelDatabase();
 
+		void buildPreparedStatements(void);
+
 		bool getProperty(const std::string& name, std::string& value);
 
 		sqlite3* mDatabase;
