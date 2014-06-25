@@ -47,7 +47,7 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	VoxelDatabase<VoxelType>* VoxelDatabase<VoxelType>::create(const std::string& pathToNewVoxelDatabase)
+	VoxelDatabase<VoxelType>* VoxelDatabase<VoxelType>::createEmpty(const std::string& pathToNewVoxelDatabase)
 	{
 		// If the file is NULL then we don't need to (and can't) close it.
 		FILE* file = fopen(pathToNewVoxelDatabase.c_str(), "rb");
@@ -65,27 +65,19 @@ namespace Cubiquity
 		EXECUTE_SQLITE_FUNC(sqlite3_open_v2(pathToNewVoxelDatabase.c_str(), &(voxelDatabase->mDatabase), SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL));
 		POLYVOX_LOG_INFO("Successfully created'" << pathToNewVoxelDatabase << "'");
 
-		// Disable syncing
-		EXECUTE_SQLITE_FUNC(sqlite3_exec(voxelDatabase->mDatabase, "PRAGMA synchronous = OFF", 0, 0, 0));
-
 		// Create the 'Properties' table.
 		EXECUTE_SQLITE_FUNC(sqlite3_exec(voxelDatabase->mDatabase, "CREATE TABLE Properties(Name TEXT PRIMARY KEY, Value TEXT);", 0, 0, 0));
 
-		// Create the 'Blocks' table if it doesn't exist. Not sure we need 'ASC'
-		// here, but it's in the example (http://goo.gl/NLHjQv) as is the default anyway.
-		EXECUTE_SQLITE_FUNC(sqlite3_exec(voxelDatabase->mDatabase, "CREATE TABLE IF NOT EXISTS Blocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
+		// Create the 'Blocks' table. Not sure we need 'ASC' here, but it's in the example (http://goo.gl/NLHjQv) as is the default anyway.
+		EXECUTE_SQLITE_FUNC(sqlite3_exec(voxelDatabase->mDatabase, "CREATE TABLE Blocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
 
-		// Now create the 'OverrideBlocks' table if it doesn't exist. Not sure we need 'ASC'
-		// here, but it's in the example (http://goo.gl/NLHjQv) as is the default anyway.
-		EXECUTE_SQLITE_FUNC(sqlite3_exec(voxelDatabase->mDatabase, "CREATE TABLE IF NOT EXISTS OverrideBlocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
-
-		voxelDatabase->buildPreparedStatements();
+		voxelDatabase->initialize();
 
 		return voxelDatabase;
 	}
 
 	template <typename VoxelType>
-	VoxelDatabase<VoxelType>* VoxelDatabase<VoxelType>::open(const std::string& pathToExistingVoxelDatabase)
+	VoxelDatabase<VoxelType>* VoxelDatabase<VoxelType>::createFromVDB(const std::string& pathToExistingVoxelDatabase)
 	{
 		VoxelDatabase<VoxelType>* voxelDatabase = new VoxelDatabase<VoxelType>;
 
@@ -95,25 +87,21 @@ namespace Cubiquity
 		EXECUTE_SQLITE_FUNC(sqlite3_open_v2(pathToExistingVoxelDatabase.c_str(), &(voxelDatabase->mDatabase), SQLITE_OPEN_READWRITE, NULL));
 		POLYVOX_LOG_INFO("Successfully opened'" << pathToExistingVoxelDatabase << "'");
 
-		// Disable syncing
-		EXECUTE_SQLITE_FUNC(sqlite3_exec(voxelDatabase->mDatabase, "PRAGMA synchronous = OFF", 0, 0, 0));
-
-		// Create the 'Blocks' table if it doesn't exist. Not sure we need 'ASC'
-		// here, but it's in the example (http://goo.gl/NLHjQv) as is the default anyway.
-		EXECUTE_SQLITE_FUNC(sqlite3_exec(voxelDatabase->mDatabase, "CREATE TABLE IF NOT EXISTS Blocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
-
-		// Now create the 'OverrideBlocks' table if it doesn't exist. Not sure we need 'ASC'
-		// here, but it's in the example (http://goo.gl/NLHjQv) as is the default anyway.
-		EXECUTE_SQLITE_FUNC(sqlite3_exec(voxelDatabase->mDatabase, "CREATE TABLE IF NOT EXISTS OverrideBlocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
-
-		voxelDatabase->buildPreparedStatements();
+		voxelDatabase->initialize();
 
 		return voxelDatabase;
 	}
 
 	template <typename VoxelType>
-	void VoxelDatabase<VoxelType>::buildPreparedStatements(void)
+	void VoxelDatabase<VoxelType>::initialize(void)
 	{
+		// Disable syncing
+		EXECUTE_SQLITE_FUNC(sqlite3_exec(mDatabase, "PRAGMA synchronous = OFF", 0, 0, 0));
+
+		// Now create the 'OverrideBlocks' table if it doesn't exist. Not sure we need 'ASC' here, but it's in the example (http://goo.gl/NLHjQv) and is the default anyway.
+		// Note that the table shouldn't exist because it's created as 'TEMP', but older version of Cubiquity didn't use this 'TEMP' flag (so it might exist but be empty).
+		EXECUTE_SQLITE_FUNC(sqlite3_exec(mDatabase, "CREATE TEMP TABLE IF NOT EXISTS OverrideBlocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
+
 		// Now build the 'insert or replace' prepared statements
 		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceBlockStatement, NULL));
 		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO OverrideBlocks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceOverrideBlockStatement, NULL));

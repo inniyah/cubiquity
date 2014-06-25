@@ -21,8 +21,8 @@ namespace Cubiquity
 		/// Destructor
 		virtual ~VoxelDatabase();
 
-		static VoxelDatabase* create(const std::string& pathToNewVoxelDatabase);
-		static VoxelDatabase* open(const std::string& pathToExistingVoxelDatabase);
+		static VoxelDatabase* createEmpty(const std::string& pathToNewVoxelDatabase);
+		static VoxelDatabase* createFromVDB(const std::string& pathToExistingVoxelDatabase);
 
 		virtual void compress(PolyVox::UncompressedBlock<VoxelType>* pSrcBlock, PolyVox::CompressedBlock<VoxelType>* pDstBlock);
 		virtual void decompress(PolyVox::CompressedBlock<VoxelType>* pSrcBlock, PolyVox::UncompressedBlock<VoxelType>* pDstBlock);
@@ -46,7 +46,7 @@ namespace Cubiquity
 		/// Constructor
 		VoxelDatabase();
 
-		void buildPreparedStatements(void);
+		void initialize(void);
 
 		bool getProperty(const std::string& name, std::string& value);
 

@@ -33,7 +33,7 @@ namespace Cubiquity
 		//m_pVoxelDatabase = new VoxelDatabase<VoxelType>;
 		//m_pVoxelDatabase->create(pathToNewVoxelDatabase);
 
-		m_pVoxelDatabase = VoxelDatabase<VoxelType>::create(pathToNewVoxelDatabase);
+		m_pVoxelDatabase = VoxelDatabase<VoxelType>::createEmpty(pathToNewVoxelDatabase);
 
 		// Store the volume region to the database.
 		m_pVoxelDatabase->setProperty("lowerX", region.getLowerX());
@@ -59,7 +59,7 @@ namespace Cubiquity
 		//m_pVoxelDatabase = new VoxelDatabase<VoxelType>;
 		//m_pVoxelDatabase->open(pathToExistingVoxelDatabase);
 
-		m_pVoxelDatabase = VoxelDatabase<VoxelType>::open(pathToExistingVoxelDatabase);
+		m_pVoxelDatabase = VoxelDatabase<VoxelType>::createFromVDB(pathToExistingVoxelDatabase);
 
 		// Get the volume region from the database. The default values
 		// are fairly arbitrary as there is no sensible choice here.
