@@ -49,21 +49,18 @@ namespace Cubiquity
 	template <typename VoxelType>
 	VoxelDatabase<VoxelType>* VoxelDatabase<VoxelType>::createEmpty(const std::string& pathToNewVoxelDatabase)
 	{
+		// Make sure that the provided path doesn't already exist.
 		// If the file is NULL then we don't need to (and can't) close it.
 		FILE* file = fopen(pathToNewVoxelDatabase.c_str(), "rb");
 		if (file != NULL)
 		{
 			fclose(file);
-			POLYVOX_THROW(std::invalid_argument, "Cannot create a new voxel database as the provided filename already exists");
+			POLYVOX_THROW(std::invalid_argument, "Cannot create a new voxel database as the provided filename (" << pathToNewVoxelDatabase << ") already exists");
 		}
 
+		POLYVOX_LOG_INFO("Creating empty voxel database as '" << pathToNewVoxelDatabase << "'");
 		VoxelDatabase<VoxelType>* voxelDatabase = new VoxelDatabase<VoxelType>;
-
-		POLYVOX_LOG_INFO("Creating VoxelDatabase from '" << pathToNewVoxelDatabase << "'");
-
-		POLYVOX_LOG_INFO("Attempting to create '" << pathToNewVoxelDatabase << "'");
 		EXECUTE_SQLITE_FUNC(sqlite3_open_v2(pathToNewVoxelDatabase.c_str(), &(voxelDatabase->mDatabase), SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL));
-		POLYVOX_LOG_INFO("Successfully created'" << pathToNewVoxelDatabase << "'");
 
 		// Create the 'Properties' table.
 		EXECUTE_SQLITE_FUNC(sqlite3_exec(voxelDatabase->mDatabase, "CREATE TABLE Properties(Name TEXT PRIMARY KEY, Value TEXT);", 0, 0, 0));
@@ -72,23 +69,21 @@ namespace Cubiquity
 		EXECUTE_SQLITE_FUNC(sqlite3_exec(voxelDatabase->mDatabase, "CREATE TABLE Blocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
 
 		voxelDatabase->initialize();
-
 		return voxelDatabase;
 	}
 
 	template <typename VoxelType>
 	VoxelDatabase<VoxelType>* VoxelDatabase<VoxelType>::createFromVDB(const std::string& pathToExistingVoxelDatabase)
 	{
+		// When creating a new empty voxel database the user can pass an empty string to signify that 
+		// the database will be temporary, but when creating from a VDB a valid path must be provided.
+		POLYVOX_THROW_IF(pathToExistingVoxelDatabase.empty(), std::invalid_argument, "Path must not be an empty string");
+
+		POLYVOX_LOG_INFO("Creating voxel database from '" << pathToExistingVoxelDatabase << "'");
 		VoxelDatabase<VoxelType>* voxelDatabase = new VoxelDatabase<VoxelType>;
-
-		POLYVOX_LOG_INFO("Creating VoxelDatabase from '" << pathToExistingVoxelDatabase << "'");
-
-		// Open the database
 		EXECUTE_SQLITE_FUNC(sqlite3_open_v2(pathToExistingVoxelDatabase.c_str(), &(voxelDatabase->mDatabase), SQLITE_OPEN_READWRITE, NULL));
-		POLYVOX_LOG_INFO("Successfully opened'" << pathToExistingVoxelDatabase << "'");
 
 		voxelDatabase->initialize();
-
 		return voxelDatabase;
 	}
 

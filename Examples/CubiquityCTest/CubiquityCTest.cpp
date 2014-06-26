@@ -18,8 +18,8 @@ void testColoredCubesVolume()
 	int height = 32;
 	int depth = 128;
 	unsigned int volumeID;
-	//File name should not alreay exist. 32 is the internal chunk size (not imporant).
-	validate(cuNewEmptyColoredCubesVolume(0, 0, 0, width - 1, height - 1, depth - 1, "NewVolume.vdb", 32, &volumeID));
+	// Empty path signifies temporary database. 32 is the internal chunk size (not imporant).
+	validate(cuNewEmptyColoredCubesVolume(0, 0, 0, width - 1, height - 1, depth - 1, "", 32, &volumeID));
 
 	// Precompute the colors to avoid calling 'cuMakeColor' inside the loop.
 	CuColor redCol = cuMakeColor(255, 0, 0, 255);
@@ -134,7 +134,7 @@ void testTerrainVolume()
 
 int main()
 {
-	//testColoredCubesVolume();
+	testColoredCubesVolume();
 	testTerrainVolume();
 	
 	return 0;
