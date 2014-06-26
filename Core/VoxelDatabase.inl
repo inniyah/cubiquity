@@ -36,10 +36,13 @@ namespace Cubiquity
 		EXECUTE_SQLITE_FUNC( sqlite3_finalize(mSelectPropertyStatement) );
 		EXECUTE_SQLITE_FUNC( sqlite3_finalize(mInsertOrReplacePropertyStatement) );
 
+		if (sqlite3_db_readonly(mDatabase, "main") == 0)
+		{
 		POLYVOX_LOG_TRACE("Vacuuming database...");
 		PolyVox::Timer timer;
 		EXECUTE_SQLITE_FUNC(sqlite3_exec(mDatabase, "VACUUM;", 0, 0, 0));
 		POLYVOX_LOG_TRACE("Vacuumed database in " << timer.elapsedTimeInMilliSeconds() << "ms");
+		}
 
 		EXECUTE_SQLITE_FUNC(sqlite3_close(mDatabase));
 
