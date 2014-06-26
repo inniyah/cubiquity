@@ -89,7 +89,6 @@ namespace Cubiquity
 		//delete mPolyVoxVolume;
 		//delete m_pCompressor;
 
-		m_pVoxelDatabase->acceptOverrideBlocks();
 		delete m_pVoxelDatabase;
 
 		POLYVOX_LOG_TRACE("Exiting ~Volume()");
