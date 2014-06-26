@@ -20,8 +20,8 @@ namespace Cubiquity
 			mOctree = new Octree<VoxelType>(this, OctreeConstructionModes::BoundCells, baseNodeSize);
 		}
 
-		TerrainVolume(const std::string& pathToExistingVoxelDatabase, unsigned int baseNodeSize)
-			:Volume<MaterialSet>(pathToExistingVoxelDatabase, baseNodeSize)
+		TerrainVolume(const std::string& pathToExistingVoxelDatabase, WritePermission writePermission, unsigned int baseNodeSize)
+			:Volume<MaterialSet>(pathToExistingVoxelDatabase, writePermission, baseNodeSize)
 		{
 			std::string voxelType = m_pVoxelDatabase->getPropertyAsString("VoxelType", "");
 			POLYVOX_THROW_IF(voxelType != "MaterialSet", std::runtime_error, "VoxelDatabase does not have the expected VoxelType of 'MaterialSet'");

@@ -76,7 +76,7 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	VoxelDatabase<VoxelType>* VoxelDatabase<VoxelType>::createFromVDB(const std::string& pathToExistingVoxelDatabase)
+	VoxelDatabase<VoxelType>* VoxelDatabase<VoxelType>::createFromVDB(const std::string& pathToExistingVoxelDatabase, WritePermission writePermission)
 	{
 		// When creating a new empty voxel database the user can pass an empty string to signify that 
 		// the database will be temporary, but when creating from a VDB a valid path must be provided.
@@ -84,7 +84,8 @@ namespace Cubiquity
 
 		POLYVOX_LOG_INFO("Creating voxel database from '" << pathToExistingVoxelDatabase << "'");
 		VoxelDatabase<VoxelType>* voxelDatabase = new VoxelDatabase<VoxelType>;
-		EXECUTE_SQLITE_FUNC(sqlite3_open_v2(pathToExistingVoxelDatabase.c_str(), &(voxelDatabase->mDatabase), SQLITE_OPEN_READWRITE, NULL));
+		int flags = (writePermission == WritePermissions::ReadOnly) ? SQLITE_OPEN_READONLY : SQLITE_OPEN_READWRITE;
+		EXECUTE_SQLITE_FUNC(sqlite3_open_v2(pathToExistingVoxelDatabase.c_str(), &(voxelDatabase->mDatabase), flags, NULL));
 
 		voxelDatabase->initialize();
 		return voxelDatabase;

@@ -496,7 +496,7 @@ CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVDB(const char* pathToExisting
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolume* volume = new ColoredCubesVolume(pathToExistingVoxelDatabase, baseNodeSize);
+	ColoredCubesVolume* volume = new ColoredCubesVolume(pathToExistingVoxelDatabase, WritePermissions::ReadWrite, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 
 	// Replace an existing entry if it has been deleted.
@@ -670,7 +670,7 @@ CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxel
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolume* volume = new TerrainVolume(pathToExistingVoxelDatabase, baseNodeSize);
+	TerrainVolume* volume = new TerrainVolume(pathToExistingVoxelDatabase, WritePermissions::ReadWrite, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 
 	// Replace an existing entry if it has been deleted.

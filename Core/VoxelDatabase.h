@@ -9,6 +9,8 @@
 
 #include "SQLite/sqlite3.h"
 
+#include "WritePermissions.h"
+
 namespace Cubiquity
 {
 	/**
@@ -22,7 +24,7 @@ namespace Cubiquity
 		virtual ~VoxelDatabase();
 
 		static VoxelDatabase* createEmpty(const std::string& pathToNewVoxelDatabase);
-		static VoxelDatabase* createFromVDB(const std::string& pathToExistingVoxelDatabase);
+		static VoxelDatabase* createFromVDB(const std::string& pathToExistingVoxelDatabase, WritePermission writePermission);
 
 		virtual void compress(PolyVox::UncompressedBlock<VoxelType>* pSrcBlock, PolyVox::CompressedBlock<VoxelType>* pDstBlock);
 		virtual void decompress(PolyVox::CompressedBlock<VoxelType>* pSrcBlock, PolyVox::UncompressedBlock<VoxelType>* pDstBlock);

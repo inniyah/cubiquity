@@ -50,7 +50,7 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	Volume<VoxelType>::Volume(const std::string& pathToExistingVoxelDatabase, uint32_t baseNodeSize)
+	Volume<VoxelType>::Volume(const std::string& pathToExistingVoxelDatabase, WritePermission writePermission, uint32_t baseNodeSize)
 		:mPolyVoxVolume(0)
 		,m_pVoxelDatabase(0)
 		,mOctree(0)
@@ -59,7 +59,7 @@ namespace Cubiquity
 		//m_pVoxelDatabase = new VoxelDatabase<VoxelType>;
 		//m_pVoxelDatabase->open(pathToExistingVoxelDatabase);
 
-		m_pVoxelDatabase = VoxelDatabase<VoxelType>::createFromVDB(pathToExistingVoxelDatabase);
+		m_pVoxelDatabase = VoxelDatabase<VoxelType>::createFromVDB(pathToExistingVoxelDatabase, writePermission);
 
 		// Get the volume region from the database. The default values
 		// are fairly arbitrary as there is no sensible choice here.

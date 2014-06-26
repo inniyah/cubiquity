@@ -6,6 +6,7 @@
 #include "UpdatePriorities.h"
 #include "Vector.h"
 #include "VoxelTraits.h"
+#include "WritePermissions.h"
 
 #include "PolyVoxCore/Array.h"
 #include "PolyVoxCore/Material.h"
@@ -27,7 +28,7 @@ namespace Cubiquity
 		typedef _VoxelType VoxelType;
 
 		Volume(const Region& region, const std::string& pathToNewVoxelDatabase, uint32_t baseNodeSize);
-		Volume(const std::string& pathToExistingVoxelDatabase, uint32_t baseNodeSize);
+		Volume(const std::string& pathToExistingVoxelDatabase, WritePermission writePermission, uint32_t baseNodeSize);
 		~Volume();
 
 		// These functions just forward to the underlying PolyVox volume.
