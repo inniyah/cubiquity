@@ -56,6 +56,11 @@ extern "C"
 	// Unknown error (caught by ...)
 	const int32_t CU_UNKNOWN_ERROR = 1000;
 
+	// C version of Cubiquity::WritePermissions
+	// Fixme - should this be a C enum?
+	const uint32_t CU_READONLY = 0;
+	const uint32_t CU_READWRITE = 1;
+
 	struct CuColor_s
 	{
 		uint32_t data;
@@ -107,7 +112,7 @@ extern "C"
 
 	// Volume functions
 	CUBIQUITYC_API int32_t cuNewEmptyColoredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pathToNewVoxelDatabase, uint32_t baseNodeSize, uint32_t* result);
-	CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVDB(const char* pathToExistingVoxelDatabase, uint32_t baseNodeSize, uint32_t* result);
+	CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVDB(const char* pathToExistingVoxelDatabase, uint32_t writePermissions, uint32_t baseNodeSize, uint32_t* result);
 	CUBIQUITYC_API int32_t cuUpdateVolume(uint32_t volumeHandle);
 	CUBIQUITYC_API int32_t cuDeleteColoredCubesVolume(uint32_t volumeHandle);
 
@@ -120,7 +125,7 @@ extern "C"
 	CUBIQUITYC_API int32_t cuDiscardOverrideBlocks(uint32_t volumeHandle);
 
 	CUBIQUITYC_API int32_t cuNewEmptyTerrainVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pathToNewVoxelDatabase, uint32_t baseNodeSize, uint32_t* result);
-	CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxelDatabase, uint32_t baseNodeSize, uint32_t* result);
+	CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxelDatabase, uint32_t writePermissions, uint32_t baseNodeSize, uint32_t* result);
 	CUBIQUITYC_API int32_t cuUpdateVolumeMC(uint32_t volumeHandle);
 	CUBIQUITYC_API int32_t cuDeleteTerrainVolume(uint32_t volumeHandle);
 
