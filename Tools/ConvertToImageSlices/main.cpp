@@ -35,7 +35,7 @@ void printUsage(void)
 int exportAsImageSlices(const std::string& pathToVDB)
 {
 	uint32_t volumeHandle = 0;
-	if(cuNewColoredCubesVolumeFromVDB(pathToVDB.c_str(), 32, &volumeHandle) != CU_OK)
+	if(cuNewColoredCubesVolumeFromVDB(pathToVDB.c_str(), CU_READWRITE, 32, &volumeHandle) != CU_OK)
 	{
 		cerr << "Error opening VDB database" << endl;
 		return EXIT_FAILURE;

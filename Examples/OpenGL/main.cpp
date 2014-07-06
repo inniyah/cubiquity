@@ -232,7 +232,7 @@ int main( void )
 	GLuint projectionMatrixID = glGetUniformLocation(programID, "projectionMatrix");
 
 	uint32_t volumeHandle;
-	validate(cuNewTerrainVolumeFromVDB("C:/code/cubiquity/Data/Volumes/Version 0/SmoothVoxeliensTerrain.vdb", 32, &volumeHandle));
+	validate(cuNewTerrainVolumeFromVDB("C:/code/cubiquity/Data/Volumes/Version 0/SmoothVoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
 
 	validate(cuUpdateVolumeMC(volumeHandle));
 

@@ -25,83 +25,51 @@ namespace Cubiquity
 		:mPolyVoxVolume(0)
 		,m_pVoxelDatabase(0)
 		,mOctree(0)
-		,mDatabase(0)
 	{
 		POLYVOX_THROW_IF(region.getWidthInVoxels() == 0, std::invalid_argument, "Volume width must be greater than zero");
 		POLYVOX_THROW_IF(region.getHeightInVoxels() == 0, std::invalid_argument, "Volume height must be greater than zero");
 		POLYVOX_THROW_IF(region.getDepthInVoxels() == 0, std::invalid_argument, "Volume depth must be greater than zero");
 
-		//Note: If the file is NULL then we don't need to (and can't) close it.
-		FILE* file = fopen(pathToNewVoxelDatabase.c_str(), "rb");
-		if(file != NULL)
-		{
-			fclose(file);
-			POLYVOX_THROW(std::invalid_argument, "Cannot create a new voxel database as the provided filename already exists");
-		}
+		//m_pVoxelDatabase = new VoxelDatabase<VoxelType>;
+		//m_pVoxelDatabase->create(pathToNewVoxelDatabase);
 
-		POLYVOX_LOG_INFO("Creating VoxelDatabase from '" << pathToNewVoxelDatabase << "'");
-		
-		POLYVOX_LOG_INFO("Attempting to create '" << pathToNewVoxelDatabase << "'");
-		EXECUTE_SQLITE_FUNC( sqlite3_open_v2(pathToNewVoxelDatabase.c_str(), &mDatabase, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL) );
-		POLYVOX_LOG_INFO("Successfully created'" << pathToNewVoxelDatabase << "'");
+		m_pVoxelDatabase = VoxelDatabase<VoxelType>::createEmpty(pathToNewVoxelDatabase);
 
-		// Disable syncing
-		EXECUTE_SQLITE_FUNC( sqlite3_exec(mDatabase, "PRAGMA synchronous = OFF", 0, 0, 0) );
-
-		m_pVoxelDatabase = new VoxelDatabase<VoxelType>(mDatabase);
+		// Store the volume region to the database.
+		m_pVoxelDatabase->setProperty("lowerX", region.getLowerX());
+		m_pVoxelDatabase->setProperty("lowerY", region.getLowerY());
+		m_pVoxelDatabase->setProperty("lowerZ", region.getLowerZ());
+		m_pVoxelDatabase->setProperty("upperX", region.getUpperX());
+		m_pVoxelDatabase->setProperty("upperY", region.getUpperY());
+		m_pVoxelDatabase->setProperty("upperZ", region.getUpperZ());
 		
 		mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pVoxelDatabase, m_pVoxelDatabase, 32);
 
 		mPolyVoxVolume->setMaxNumberOfBlocksInMemory(256);
 		mPolyVoxVolume->setMaxNumberOfUncompressedBlocks(64);
-
-		// Create the 'Properties' table.
-		EXECUTE_SQLITE_FUNC( sqlite3_exec(mDatabase, "CREATE TABLE Properties(Name TEXT PRIMARY KEY, Value TEXT);", 0, 0, 0) );
-
-		// Now build the 'select' and 'insert or replace' prepared statements
-		EXECUTE_SQLITE_FUNC( sqlite3_prepare_v2(mDatabase, "SELECT Value FROM Properties WHERE Name = ?", -1, &mSelectPropertyStatement, NULL) );
-		EXECUTE_SQLITE_FUNC( sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO Properties (Name, Value) VALUES (?, ?)", -1, &mInsertOrReplacePropertyStatement, NULL) );		
-
-		// Store the volume region to the database.
-		setProperty("lowerX", region.getLowerX());
-		setProperty("lowerY", region.getLowerY());
-		setProperty("lowerZ", region.getLowerZ());
-		setProperty("upperX", region.getUpperX());
-		setProperty("upperY", region.getUpperY());
-		setProperty("upperZ", region.getUpperZ());
 	}
 
 	template <typename VoxelType>
-	Volume<VoxelType>::Volume(const std::string& pathToExistingVoxelDatabase, uint32_t baseNodeSize)
+	Volume<VoxelType>::Volume(const std::string& pathToExistingVoxelDatabase, WritePermission writePermission, uint32_t baseNodeSize)
 		:mPolyVoxVolume(0)
 		,m_pVoxelDatabase(0)
 		,mOctree(0)
-		,mDatabase(0)
+		//,mDatabase(0)
 	{
-		POLYVOX_LOG_INFO("Creating VoxelDatabase from '" << pathToExistingVoxelDatabase << "'");
-		
-		// Open the database
-		EXECUTE_SQLITE_FUNC(  sqlite3_open_v2(pathToExistingVoxelDatabase.c_str(), &mDatabase, SQLITE_OPEN_READWRITE, NULL) );
-		POLYVOX_LOG_INFO("Successfully opened'" << pathToExistingVoxelDatabase << "'");
+		//m_pVoxelDatabase = new VoxelDatabase<VoxelType>;
+		//m_pVoxelDatabase->open(pathToExistingVoxelDatabase);
 
-		// Disable syncing
-		EXECUTE_SQLITE_FUNC( sqlite3_exec(mDatabase, "PRAGMA synchronous = OFF", 0, 0, 0) );
-
-		// Now build the 'select' and 'insert or replace' prepared statements
-		EXECUTE_SQLITE_FUNC( sqlite3_prepare_v2(mDatabase, "SELECT Value FROM Properties WHERE Name = ?", -1, &mSelectPropertyStatement, NULL) );
-		EXECUTE_SQLITE_FUNC( sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO Properties (Name, Value) VALUES (?, ?)", -1, &mInsertOrReplacePropertyStatement, NULL) );
+		m_pVoxelDatabase = VoxelDatabase<VoxelType>::createFromVDB(pathToExistingVoxelDatabase, writePermission);
 
 		// Get the volume region from the database. The default values
 		// are fairly arbitrary as there is no sensible choice here.
-		int32_t lowerX = getPropertyAsInt("lowerX", 0);
-		int32_t lowerY = getPropertyAsInt("lowerY", 0);
-		int32_t lowerZ = getPropertyAsInt("lowerZ", 0);
-		int32_t upperX = getPropertyAsInt("upperX", 512);
-		int32_t upperY = getPropertyAsInt("upperY", 512);
-		int32_t upperZ = getPropertyAsInt("upperZ", 512);
+		int32_t lowerX = m_pVoxelDatabase->getPropertyAsInt("lowerX", 0);
+		int32_t lowerY = m_pVoxelDatabase->getPropertyAsInt("lowerY", 0);
+		int32_t lowerZ = m_pVoxelDatabase->getPropertyAsInt("lowerZ", 0);
+		int32_t upperX = m_pVoxelDatabase->getPropertyAsInt("upperX", 512);
+		int32_t upperY = m_pVoxelDatabase->getPropertyAsInt("upperY", 512);
+		int32_t upperZ = m_pVoxelDatabase->getPropertyAsInt("upperZ", 512);
 		Region region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
-
-		m_pVoxelDatabase = new VoxelDatabase<VoxelType>(mDatabase);
 		
 		mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pVoxelDatabase, m_pVoxelDatabase, 32);
 
@@ -121,18 +89,7 @@ namespace Cubiquity
 		//delete mPolyVoxVolume;
 		//delete m_pCompressor;
 
-		m_pVoxelDatabase->acceptOverrideBlocks();
 		delete m_pVoxelDatabase;
-
-		EXECUTE_SQLITE_FUNC( sqlite3_finalize(mSelectPropertyStatement) );
-		EXECUTE_SQLITE_FUNC( sqlite3_finalize(mInsertOrReplacePropertyStatement) );
-
-		POLYVOX_LOG_TRACE("Vacuuming database...");
-		PolyVox::Timer timer;
-		EXECUTE_SQLITE_FUNC( sqlite3_exec(mDatabase, "VACUUM;", 0, 0, 0) );
-		POLYVOX_LOG_TRACE("Vacuumed database in " << timer.elapsedTimeInMilliSeconds() << "ms");
-
-		EXECUTE_SQLITE_FUNC( sqlite3_close(mDatabase) );
 
 		POLYVOX_LOG_TRACE("Exiting ~Volume()");
 	}
@@ -170,85 +127,5 @@ namespace Cubiquity
 	void Volume<VoxelType>::update(const Vector3F& viewPosition, float lodThreshold)
 	{
 		mOctree->update(viewPosition, lodThreshold);
-	}
-
-	template <typename VoxelType>
-	bool Volume<VoxelType>::getProperty(const std::string& name, std::string& value)
-	{
-		EXECUTE_SQLITE_FUNC( sqlite3_reset(mSelectPropertyStatement) );
-		EXECUTE_SQLITE_FUNC( sqlite3_bind_text(mSelectPropertyStatement, 1, name.c_str(), -1, SQLITE_TRANSIENT) );
-		if(sqlite3_step(mSelectPropertyStatement) == SQLITE_ROW)
-        {
-			// I think the last index is zero because our select statement only returned one column.
-            value = std::string( reinterpret_cast<const char*>( sqlite3_column_text(mSelectPropertyStatement, 0) ) );
-			return true;
-        }
-		else
-		{
-			POLYVOX_LOG_WARNING("Property '" << name << "' was not found. The default value will be used instead");
-			return false;
-		}
-	}
-
-	template <typename VoxelType>
-	int32_t Volume<VoxelType>::getPropertyAsInt(const std::string& name, int32_t defaultValue)
-	{
-		std::string value;
-		if(getProperty(name, value))
-		{
-			return ::atol(value.c_str());
-		}
-
-		return defaultValue;
-	}
-
-	template <typename VoxelType>
-	float Volume<VoxelType>::getPropertyAsFloat(const std::string& name, float defaultValue)
-	{
-		std::string value;
-		if(getProperty(name, value))
-		{
-			return ::atof(value.c_str());
-		}
-
-		return defaultValue;
-	}
-
-	template <typename VoxelType>
-	std::string Volume<VoxelType>::getPropertyAsString(const std::string& name, const std::string& defaultValue)
-	{
-		std::string value;
-		if(getProperty(name, value))
-		{
-			return value;
-		}
-
-		return defaultValue;
-	}
-
-	template <typename VoxelType>
-	void Volume<VoxelType>::setProperty(const std::string& name, int value)
-	{
-		std::stringstream ss;
-		ss << value;
-		setProperty(name, ss.str());
-	}
-
-	template <typename VoxelType>
-	void Volume<VoxelType>::setProperty(const std::string& name, float value)
-	{
-		std::stringstream ss;
-		ss << value;
-		setProperty(name, ss.str());
-	}
-
-	template <typename VoxelType>
-	void Volume<VoxelType>::setProperty(const std::string& name, const std::string& value)
-	{
-		// Based on: http://stackoverflow.com/a/5308188
-		EXECUTE_SQLITE_FUNC( sqlite3_reset(mInsertOrReplacePropertyStatement) );
-		EXECUTE_SQLITE_FUNC( sqlite3_bind_text(mInsertOrReplacePropertyStatement, 1, name.c_str(), -1, SQLITE_TRANSIENT) );
-		EXECUTE_SQLITE_FUNC( sqlite3_bind_text(mInsertOrReplacePropertyStatement, 2, value.c_str(), -1, SQLITE_TRANSIENT) );
-		sqlite3_step(mInsertOrReplacePropertyStatement); //Don't wrap this one as it isn't supposed to return SQLITE_OK?
 	}
 }

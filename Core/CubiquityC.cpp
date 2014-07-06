@@ -495,11 +495,13 @@ CUBIQUITYC_API int32_t cuNewEmptyColoredCubesVolume(int32_t lowerX, int32_t lowe
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVDB(const char* pathToExistingVoxelDatabase, uint32_t baseNodeSize, uint32_t* result)
+CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVDB(const char* pathToExistingVoxelDatabase, uint32_t writePermissions, uint32_t baseNodeSize, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolume* volume = new ColoredCubesVolume(pathToExistingVoxelDatabase, baseNodeSize);
+	// Fixme - Find out how to pass this write permissions enum properly.
+	WritePermission cubiquityWritePermissions = (writePermissions == CU_READONLY) ? WritePermissions::ReadOnly : WritePermissions::ReadWrite;
+	ColoredCubesVolume* volume = new ColoredCubesVolume(pathToExistingVoxelDatabase, cubiquityWritePermissions, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 
 	// Replace an existing entry if it has been deleted.
@@ -669,11 +671,13 @@ CUBIQUITYC_API int32_t cuNewEmptyTerrainVolume(int32_t lowerX, int32_t lowerY, i
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxelDatabase, uint32_t baseNodeSize, uint32_t* result)
+CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxelDatabase, uint32_t writePermissions, uint32_t baseNodeSize, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	TerrainVolume* volume = new TerrainVolume(pathToExistingVoxelDatabase, baseNodeSize);
+	// Fixme - Find out how to pass this write permissions enum properly.
+	WritePermission cubiquityWritePermissions = (writePermissions == CU_READONLY) ? WritePermissions::ReadOnly : WritePermissions::ReadWrite;
+	TerrainVolume* volume = new TerrainVolume(pathToExistingVoxelDatabase, cubiquityWritePermissions, baseNodeSize);
 	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
 
 	// Replace an existing entry if it has been deleted.

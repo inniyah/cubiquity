@@ -16,15 +16,15 @@ namespace Cubiquity
 		ColoredCubesVolume(const Region& region, const std::string& pathToNewVoxelDatabase, unsigned int baseNodeSize)
 			:Volume<Color>(region, pathToNewVoxelDatabase, baseNodeSize)
 		{
-			setProperty("VoxelType", "Color");
+			m_pVoxelDatabase->setProperty("VoxelType", "Color");
 
 			mOctree = new Octree<VoxelType>(this, OctreeConstructionModes::BoundVoxels, baseNodeSize);
 		}
 
-		ColoredCubesVolume(const std::string& pathToExistingVoxelDatabase, unsigned int baseNodeSize)
-			:Volume<Color>(pathToExistingVoxelDatabase, baseNodeSize)
+		ColoredCubesVolume(const std::string& pathToExistingVoxelDatabase, WritePermission writePermission, unsigned int baseNodeSize)
+			:Volume<Color>(pathToExistingVoxelDatabase, writePermission, baseNodeSize)
 		{
-			std::string voxelType = getPropertyAsString("VoxelType", "");
+			std::string voxelType = m_pVoxelDatabase->getPropertyAsString("VoxelType", "");
 			POLYVOX_THROW_IF(voxelType != "Color", std::runtime_error, "VoxelDatabase does not have the expected VoxelType of 'Color'");
 
 			mOctree = new Octree<VoxelType>(this, OctreeConstructionModes::BoundVoxels, baseNodeSize);
