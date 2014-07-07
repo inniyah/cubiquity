@@ -107,9 +107,11 @@ namespace Cubiquity
 		// Disable syncing
 		EXECUTE_SQLITE_FUNC(sqlite3_exec(mDatabase, "PRAGMA synchronous = OFF", 0, 0, 0));
 
-		// Now create the 'OverrideBlocks' table if it doesn't exist. Not sure we need 'ASC' here, but it's in the example (http://goo.gl/NLHjQv) and is the default anyway.
-		// Note that the table shouldn't exist because it's created as 'TEMP', but older version of Cubiquity didn't use this 'TEMP' flag (so it might exist but be empty).
-		EXECUTE_SQLITE_FUNC(sqlite3_exec(mDatabase, "CREATE TEMP TABLE IF NOT EXISTS OverrideBlocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
+		// Now create the 'OverrideBlocks' table. Not sure we need 'ASC' here, but it's in the example (http://goo.gl/NLHjQv) and is the default anyway.
+		// Note that the table cannot already exist because it's created as 'TEMP', and is therefore stored in a seperate temporary database.
+		// It appears this temporary table is not shared between connections (multiple volumes using the same VDB) which is probably desirable for
+		// us as it means different instances of the volume can be modified (but not commited to) without interfering with eachother.
+		EXECUTE_SQLITE_FUNC(sqlite3_exec(mDatabase, "CREATE TEMP TABLE OverrideBlocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
 
 		// Now build the 'insert or replace' prepared statements
 		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceBlockStatement, NULL));
