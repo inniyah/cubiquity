@@ -109,8 +109,8 @@ namespace Cubiquity
 
 		// Now create the 'OverrideBlocks' table. Not sure we need 'ASC' here, but it's in the example (http://goo.gl/NLHjQv) and is the default anyway.
 		// Note that the table cannot already exist because it's created as 'TEMP', and is therefore stored in a seperate temporary database.
-		// It appears this temporary table is not shared between connections (multiple volumes using the same VDB) which is probably desirable for
-		// us as it means different instances of the volume can be modified (but not commited to) without interfering with eachother.
+		// It appears this temporary table is not shared between connections (multiple volumes using the same VDB) which is probably desirable for us
+		// as it means different instances of the volume can be modified (but not commited to) without interfering with each other (http://goo.gl/aDKyId).
 		EXECUTE_SQLITE_FUNC(sqlite3_exec(mDatabase, "CREATE TEMP TABLE OverrideBlocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
 
 		// Now build the 'insert or replace' prepared statements
