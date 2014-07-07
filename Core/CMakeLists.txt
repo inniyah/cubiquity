@@ -65,7 +65,48 @@ set(SRCS
 	CubiquityC.cpp
 )
 
-add_library(CubiquityC SHARED ${SRCS})
+set(HEADERS
+	# Main Cubiquity code
+	BackgroundTaskProcessor.h
+	BitField.h
+	Brush.h
+	Clock.h
+	Color.h
+	ColoredCubesVolume.h
+	ColoredCubicSurfaceExtractionTask.h
+	ConcurrentQueue.h
+	Cubiquity.h
+	CubiquityForwardDeclarations.h
+	Logging.h
+	MainThreadTaskProcessor.h
+	MaterialSet.h
+	Octree.h
+	Octree.inl
+	OctreeNode.h
+	OctreeNode.inl
+	Raycasting.h
+	Region.h
+	SmoothSurfaceExtractionTask.h
+	SQLiteUtils.h
+	Task.h
+	TaskProcessor.h
+	TerrainVolume.h
+	TerrainVolumeEditor.h
+	TerrainVolumeGenerator.h
+	UpdatePriorities.h
+	Vector.h
+	Volume.h
+	Volume.inl
+	VoxelDatabase.h
+	VoxelDatabase.inl
+	VoxelTraits.h
+	WritePermissions.h	
+	
+	# Cubiquity 'C' interface
+	CubiquityC.h
+)
+
+add_library(CubiquityC SHARED ${SRCS} ${HEADERS})
 
 # Organise the Visual Studio folders.
 SET_PROPERTY(TARGET CubiquityC PROPERTY FOLDER "Core")
