@@ -38,10 +38,20 @@ namespace Cubiquity
 
 		if (sqlite3_db_readonly(mDatabase, "main") == 0)
 		{
-		POLYVOX_LOG_TRACE("Vacuuming database...");
-		PolyVox::Timer timer;
-		EXECUTE_SQLITE_FUNC(sqlite3_exec(mDatabase, "VACUUM;", 0, 0, 0));
-		POLYVOX_LOG_TRACE("Vacuumed database in " << timer.elapsedTimeInMilliSeconds() << "ms");
+			POLYVOX_LOG_TRACE("Vacuuming database...");
+			try
+			{
+				PolyVox::Timer timer;
+				EXECUTE_SQLITE_FUNC(sqlite3_exec(mDatabase, "VACUUM;", 0, 0, 0));
+				POLYVOX_LOG_TRACE("Vacuumed database in " << timer.elapsedTimeInMilliSeconds() << "ms");
+			}
+			catch (SQLiteError& e)
+			{
+				// It seems that vacuuming of the database can fail even when opened in readwrite mode, if other processes are still
+				// accessing the database. This can happen if multiple volumes are sharing the database. This shouldn't really matter
+				// as the database will probably get vacuumed at some point in the future, and it's not essential anyway.
+				POLYVOX_LOG_WARNING("Failed to vacuum database. Error message was as follows:" << std::endl << "\t" << e.what());
+			}
 		}
 
 		EXECUTE_SQLITE_FUNC(sqlite3_close(mDatabase));
