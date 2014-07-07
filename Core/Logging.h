@@ -93,6 +93,9 @@ namespace Cubiquity
 			// Appending the 'std::endl' forces the stream to be flushed.
 			mLogFile << "[" << std::setfill('0') << std::setw(2) << now->tm_hour << ":" << std::setfill('0') << std::setw(2)
 				<< now->tm_min << ":" << std::setfill('0') << std::setw(2) << now->tm_sec << ", " << type << "]: " << message << std::endl; 
+
+			// FIXME - For debugging we also log to the console. We should probably create a dedicated console logger for this?
+			std::cout << "[" << type << "]: " << message << std::endl;
 		}
 
 		std::ofstream mLogFile;
