@@ -104,7 +104,7 @@ namespace Cubiquity
 
 		for(uint32_t ct = 0; ct < vertices.size(); ct++)
 		{
-			const Vector3DFloat& vertexPos = decode(vertices[ct]).position + meshOffset;
+			const Vector3DFloat& vertexPos = decodeVertex(vertices[ct]).position + meshOffset;
 			MaterialSet value = getInterpolatedValue(volume, vertexPos);
 
 			// It seems that sometimes the vertices can fall in an empty cell. The reason for this
