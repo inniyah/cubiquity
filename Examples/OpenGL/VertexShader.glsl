@@ -19,11 +19,28 @@ vec3 decodePosition(uvec3 encodedPosition)
 	return vec3(encodedPosition) / 256.0;
 }
 
+// Returns +/- 1
+vec2 signNotZero(vec2 v)
+{
+	return vec2((v.x >= 0.0) ? +1.0 : -1.0, (v.y >= 0.0) ? +1.0 : -1.0);
+}
+
 vec3 decodeNormal(uint encodedNormal)
 {
-	uvec3 decodedNormal = uvec3(encodedNormal);
-	decodedNormal = (decodedNormal >> uvec3(10u, 5u, 0u)) & uvec3(0x1Fu, 0x1Fu, 0x1Fu);
-	return (vec3(decodedNormal) / 15.5) - vec3(1.0, 1.0, 1.0);
+	//Get the encoded bytes of the normal
+	uint encodedX = (encodedNormal >> 8u) & 0xFFu;
+	uint encodedY = (encodedNormal) & 0xFFu;
+	
+	// Map to range [-1.0, +1.0]
+	vec2 e = vec2(encodedX, encodedY);
+	e = e * vec2(1.0 / 127.5, 1.0 / 127.5);
+	e = e - vec2(1.0, 1.0);
+	
+	// Now decode normal using listing 2 of http://jcgt.org/published/0003/02/01/
+	vec3 v = vec3(e.xy, 1.0 - abs(e.x) - abs(e.y));
+	if (v.z < 0) v.xy = (1.0 - abs(v.yx)) * signNotZero(v.xy);	
+	v = normalize(v);
+	return v;
 }
 
 void main()
