@@ -15,7 +15,6 @@ SET_PROPERTY(TARGET _sqlite3 PROPERTY FOLDER "Core/Dependancies")
 ################################################################################
 set(POLYVOX_SRCS
 	# PolyVox code
-	Dependancies/polyvox/library/PolyVoxCore/source/ArraySizes.cpp
 	Dependancies/polyvox/library/PolyVoxCore/source/AStarPathfinder.cpp
 	Dependancies/polyvox/library/PolyVoxCore/source/Region.cpp
 	

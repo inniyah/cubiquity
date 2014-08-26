@@ -15,9 +15,10 @@ namespace Cubiquity
 	// Eliminate this
 	void scaleVertices(::PolyVox::Mesh< ::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >* mesh, uint32_t amount)
 	{
-		for (uint32_t ct = 0; ct < mesh->m_vecVertices.size(); ct++)
+		for (uint32_t ct = 0; ct < mesh->getNoOfVertices(); ct++)
 		{
-			mesh->m_vecVertices[ct].encodedPosition *= amount;
+			::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType >& vertex = const_cast<::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType >& >(mesh->getVertex(ct));
+			vertex.encodedPosition *= amount;
 		}
 	}
 
@@ -60,7 +61,7 @@ namespace Cubiquity
 		if(lodLevel == 0)
 		{
 			//Mesh<MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > > mesh;
-			::PolyVox::MarchingCubesSurfaceExtractor< ::PolyVox::LargeVolume<MaterialSet>, MaterialSetMarchingCubesController > surfaceExtractor(mPolyVoxVolume, region, resultMesh, ::PolyVox::WrapModes::Border, MaterialSet(0), controller);
+			::PolyVox::MarchingCubesSurfaceExtractor< ::PolyVox::LargeVolume<MaterialSet>, ::PolyVox::Mesh< ::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >, MaterialSetMarchingCubesController > surfaceExtractor(mPolyVoxVolume, region, resultMesh, controller, ::PolyVox::WrapModes::Border, MaterialSet(0));
 			surfaceExtractor.execute();
 		}
 		else
@@ -88,7 +89,7 @@ namespace Cubiquity
 
 			lowRegion.shrink(1, 1, 1);
 
-			::PolyVox::MarchingCubesSurfaceExtractor< ::PolyVox::RawVolume<MaterialSet>, MaterialSetMarchingCubesController > surfaceExtractor(&resampledVolume, lowRegion, resultMesh, ::PolyVox::WrapModes::Border, MaterialSet(0), controller);
+			::PolyVox::MarchingCubesSurfaceExtractor< ::PolyVox::RawVolume<MaterialSet>, ::PolyVox::Mesh< ::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >, MaterialSetMarchingCubesController > surfaceExtractor(&resampledVolume, lowRegion, resultMesh, controller, ::PolyVox::WrapModes::Border, MaterialSet(0));
 			surfaceExtractor.execute();
 
 			scaleVertices(resultMesh, downSampleFactor);

@@ -16,9 +16,10 @@ namespace Cubiquity
 	// Eliminate this
 	void scaleVertices(::PolyVox::Mesh< ::PolyVox::CubicVertex<Color> >* mesh, uint32_t amount)
 	{
-		for (uint32_t ct = 0; ct < mesh->m_vecVertices.size(); ct++)
+		for (uint32_t ct = 0; ct < mesh->getNoOfVertices(); ct++)
 		{
-			mesh->m_vecVertices[ct].encodedPosition *= amount;
+			::PolyVox::CubicVertex<Color>& vertex = const_cast<::PolyVox::CubicVertex<Color>&>(mesh->getVertex(ct));
+			vertex.encodedPosition *= amount;
 		}
 	}
 
@@ -70,7 +71,7 @@ namespace Cubiquity
 
 		if(downScaleFactor == 1) 
 		{
-			::PolyVox::CubicSurfaceExtractor< ::PolyVox::LargeVolume<Color>, ::PolyVox::Mesh< ::PolyVox::CubicVertex<Color> >, ColoredCubesIsQuadNeeded > surfaceExtractor(mPolyVoxVolume, mOctreeNode->mRegion, mPolyVoxMesh, ::PolyVox::WrapModes::Border, Color(), true, isQuadNeeded);
+			::PolyVox::CubicSurfaceExtractor< ::PolyVox::LargeVolume<Color>, ::PolyVox::Mesh< ::PolyVox::CubicVertex<Color> >, ColoredCubesIsQuadNeeded > surfaceExtractor(mPolyVoxVolume, mOctreeNode->mRegion, mPolyVoxMesh, isQuadNeeded, ::PolyVox::WrapModes::Border, Color(), true);
 			surfaceExtractor.execute();
 		}
 		else if(downScaleFactor == 2)
@@ -96,7 +97,7 @@ namespace Cubiquity
 		
 			//dstRegion.shiftLowerCorner(-1, -1, -1);
 
-			::PolyVox::CubicSurfaceExtractor< ::PolyVox::RawVolume<Color>, ::PolyVox::Mesh< ::PolyVox::CubicVertex<Color> >, ColoredCubesIsQuadNeeded > surfaceExtractor(&resampledVolume, dstRegion, mPolyVoxMesh, ::PolyVox::WrapModes::Border, Color(), true, isQuadNeeded);
+			::PolyVox::CubicSurfaceExtractor< ::PolyVox::RawVolume<Color>, ::PolyVox::Mesh< ::PolyVox::CubicVertex<Color> >, ColoredCubesIsQuadNeeded > surfaceExtractor(&resampledVolume, dstRegion, mPolyVoxMesh, isQuadNeeded, ::PolyVox::WrapModes::Border, Color(), true);
 			surfaceExtractor.execute();
 
 			scaleVertices(mPolyVoxMesh, downScaleFactor);
@@ -138,7 +139,7 @@ namespace Cubiquity
 
 			//dstRegion.shiftLowerCorner(-1, -1, -1);
 
-			::PolyVox::CubicSurfaceExtractor< ::PolyVox::RawVolume<Color>, ::PolyVox::Mesh< ::PolyVox::CubicVertex<Color> >, ColoredCubesIsQuadNeeded > surfaceExtractor(&resampledVolume2, dstRegion2, mPolyVoxMesh, ::PolyVox::WrapModes::Border, Color(), true, isQuadNeeded);
+			::PolyVox::CubicSurfaceExtractor< ::PolyVox::RawVolume<Color>, ::PolyVox::Mesh< ::PolyVox::CubicVertex<Color> >, ColoredCubesIsQuadNeeded > surfaceExtractor(&resampledVolume2, dstRegion2, mPolyVoxMesh, isQuadNeeded, ::PolyVox::WrapModes::Border, Color(), true);
 			surfaceExtractor.execute();
 
 			scaleVertices(mPolyVoxMesh, downScaleFactor);
