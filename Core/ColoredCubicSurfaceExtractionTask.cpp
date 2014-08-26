@@ -71,8 +71,7 @@ namespace Cubiquity
 
 		if(downScaleFactor == 1) 
 		{
-			::PolyVox::CubicSurfaceExtractor< ::PolyVox::LargeVolume<Color>, ::PolyVox::Mesh< ::PolyVox::CubicVertex<Color> >, ColoredCubesIsQuadNeeded > surfaceExtractor(mPolyVoxVolume, mOctreeNode->mRegion, mPolyVoxMesh, isQuadNeeded, ::PolyVox::WrapModes::Border, Color(), true);
-			surfaceExtractor.execute();
+			extractCubicMeshCustom(mPolyVoxVolume, mOctreeNode->mRegion, mPolyVoxMesh, isQuadNeeded, ::PolyVox::WrapModes::Border, Color(), true);
 		}
 		else if(downScaleFactor == 2)
 		{
@@ -97,8 +96,7 @@ namespace Cubiquity
 		
 			//dstRegion.shiftLowerCorner(-1, -1, -1);
 
-			::PolyVox::CubicSurfaceExtractor< ::PolyVox::RawVolume<Color>, ::PolyVox::Mesh< ::PolyVox::CubicVertex<Color> >, ColoredCubesIsQuadNeeded > surfaceExtractor(&resampledVolume, dstRegion, mPolyVoxMesh, isQuadNeeded, ::PolyVox::WrapModes::Border, Color(), true);
-			surfaceExtractor.execute();
+			extractCubicMeshCustom(&resampledVolume, dstRegion, mPolyVoxMesh, isQuadNeeded, ::PolyVox::WrapModes::Border, Color(), true);
 
 			scaleVertices(mPolyVoxMesh, downScaleFactor);
 			//translateVertices(mPolyVoxMesh, Vector3DFloat(0.5f, 0.5f, 0.5f)); // Removed when going from float positions to uin8_t. Do we need this?
@@ -139,8 +137,7 @@ namespace Cubiquity
 
 			//dstRegion.shiftLowerCorner(-1, -1, -1);
 
-			::PolyVox::CubicSurfaceExtractor< ::PolyVox::RawVolume<Color>, ::PolyVox::Mesh< ::PolyVox::CubicVertex<Color> >, ColoredCubesIsQuadNeeded > surfaceExtractor(&resampledVolume2, dstRegion2, mPolyVoxMesh, isQuadNeeded, ::PolyVox::WrapModes::Border, Color(), true);
-			surfaceExtractor.execute();
+			extractCubicMeshCustom(&resampledVolume2, dstRegion2, mPolyVoxMesh, isQuadNeeded, ::PolyVox::WrapModes::Border, Color(), true);
 
 			scaleVertices(mPolyVoxMesh, downScaleFactor);
 			//translateVertices(mPolyVoxMesh, Vector3DFloat(1.5f, 1.5f, 1.5f)); // Removed when going from float positions to uin8_t. Do we need this?

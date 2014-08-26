@@ -60,9 +60,7 @@ namespace Cubiquity
 
 		if(lodLevel == 0)
 		{
-			//Mesh<MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > > mesh;
-			::PolyVox::MarchingCubesSurfaceExtractor< ::PolyVox::LargeVolume<MaterialSet>, ::PolyVox::Mesh< ::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >, MaterialSetMarchingCubesController > surfaceExtractor(mPolyVoxVolume, region, resultMesh, controller, ::PolyVox::WrapModes::Border, MaterialSet(0));
-			surfaceExtractor.execute();
+			extractMarchingCubesMeshCustom(mPolyVoxVolume, region, resultMesh, controller, ::PolyVox::WrapModes::Border, MaterialSet(0));
 		}
 		else
 		{
@@ -89,8 +87,7 @@ namespace Cubiquity
 
 			lowRegion.shrink(1, 1, 1);
 
-			::PolyVox::MarchingCubesSurfaceExtractor< ::PolyVox::RawVolume<MaterialSet>, ::PolyVox::Mesh< ::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >, MaterialSetMarchingCubesController > surfaceExtractor(&resampledVolume, lowRegion, resultMesh, controller, ::PolyVox::WrapModes::Border, MaterialSet(0));
-			surfaceExtractor.execute();
+			extractMarchingCubesMeshCustom(&resampledVolume, lowRegion, resultMesh, controller, ::PolyVox::WrapModes::Border, MaterialSet(0));
 
 			scaleVertices(resultMesh, downSampleFactor);
 
