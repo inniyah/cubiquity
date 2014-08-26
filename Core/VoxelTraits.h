@@ -1,6 +1,7 @@
 #ifndef CUBIQUITY_VOXELTRAITS_H_
 #define CUBIQUITY_VOXELTRAITS_H_
 
+#include "Color.h"
 #include "MaterialSet.h"
 
 namespace Cubiquity
@@ -15,7 +16,7 @@ namespace Cubiquity
 	class VoxelTraits<Color>
 	{
 	public:
-		typedef ::PolyVox::CubicVertex<Color> VertexType;
+		typedef ColoredCubesVertex VertexType;
 		typedef ColoredCubicSurfaceExtractionTask SurfaceExtractionTaskType;
 		static const bool IsColor = true;
 		static const bool IsMaterialSet = false;

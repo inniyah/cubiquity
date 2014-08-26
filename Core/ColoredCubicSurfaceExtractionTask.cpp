@@ -14,17 +14,17 @@ using namespace PolyVox;
 namespace Cubiquity
 {
 	// Eliminate this
-	void scaleVertices(::PolyVox::Mesh< ::PolyVox::CubicVertex<Color> >* mesh, uint32_t amount)
+	void scaleVertices(ColoredCubesMesh* mesh, uint32_t amount)
 	{
 		for (uint32_t ct = 0; ct < mesh->getNoOfVertices(); ct++)
 		{
-			::PolyVox::CubicVertex<Color>& vertex = const_cast<::PolyVox::CubicVertex<Color>&>(mesh->getVertex(ct));
+			ColoredCubesVertex& vertex = const_cast<ColoredCubesVertex&>(mesh->getVertex(ct));
 			vertex.encodedPosition *= amount;
 		}
 	}
 
 	// Eliminate this
-	/*void translateVertices(::PolyVox::Mesh<::PolyVox::CubicVertex<Color> >* mesh, const Vector3DUint8& amount)
+	/*void translateVertices(ColoredCubesMesh* mesh, const Vector3DUint8& amount)
 	{
 		for (uint32_t ct = 0; ct < mesh->m_vecVertices.size(); ct++)
 		{
@@ -62,7 +62,7 @@ namespace Cubiquity
 		Region lod0Region = mOctreeNode->mRegion;
 
 		//Extract the surface
-		mPolyVoxMesh = new ::PolyVox::Mesh< ::PolyVox::CubicVertex<Color> >;
+		mPolyVoxMesh = new ColoredCubesMesh;
 		mOwnMesh = true;
 
 		uint32_t downScaleFactor = 0x0001 << mOctreeNode->mHeight;
