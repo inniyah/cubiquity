@@ -263,6 +263,9 @@ namespace Cubiquity
 		::PolyVox::WrapMode m_eWrapMode;
 		MaterialSet m_tBorder;
 	};
+
+	typedef ::PolyVox::MarchingCubesVertex<MaterialSet> TerrainVertex;
+	typedef ::PolyVox::Mesh<TerrainVertex> TerrainMesh;
 }
 
 // We overload the trilinear interpolation for the MaterialSet type because it does not have enough precision.

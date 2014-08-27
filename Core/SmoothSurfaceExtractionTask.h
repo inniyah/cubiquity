@@ -10,17 +10,17 @@ namespace Cubiquity
 	class SmoothSurfaceExtractionTask : public Task
 	{
 	public:
-		SmoothSurfaceExtractionTask(OctreeNode< MaterialSet >* octreeNode, ::PolyVox::LargeVolume< typename MaterialSetMarchingCubesController::MaterialType >* polyVoxVolume);
+		SmoothSurfaceExtractionTask(OctreeNode< MaterialSet >* octreeNode, ::PolyVox::LargeVolume<MaterialSet>* polyVoxVolume);
 		~SmoothSurfaceExtractionTask();
 
 		void process(void);
 
-		void generateSmoothMesh(const Region& region, uint32_t lodLevel, ::PolyVox::Mesh< ::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >* resultMesh);
+		void generateSmoothMesh(const Region& region, uint32_t lodLevel, TerrainMesh* resultMesh);
 
 	public:
 		OctreeNode< MaterialSet >* mOctreeNode;
-		::PolyVox::LargeVolume<typename MaterialSetMarchingCubesController::MaterialType>* mPolyVoxVolume;
-		::PolyVox::Mesh< ::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType> >* mPolyVoxMesh;
+		::PolyVox::LargeVolume<MaterialSet>* mPolyVoxVolume;
+		TerrainMesh* mPolyVoxMesh;
 		Timestamp mProcessingStartedTimestamp;
 
 		// Whether the task owns the mesh, or whether it has been passed to
@@ -28,7 +28,7 @@ namespace Cubiquity
 		bool mOwnMesh;
 	};
 
-	void recalculateMaterials(::PolyVox::Mesh< ::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >* mesh, const Vector3F& meshOffset, ::PolyVox::LargeVolume<MaterialSet>* volume);
+	void recalculateMaterials(TerrainMesh* mesh, const Vector3F& meshOffset, ::PolyVox::LargeVolume<MaterialSet>* volume);
 	MaterialSet getInterpolatedValue(::PolyVox::LargeVolume<MaterialSet>* volume, const Vector3F& position);
 
 	template< typename SrcPolyVoxVolumeType, typename DstPolyVoxVolumeType>

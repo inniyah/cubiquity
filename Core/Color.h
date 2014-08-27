@@ -135,7 +135,7 @@ namespace Cubiquity
 	};
 
 	typedef ::PolyVox::CubicVertex<Color> ColoredCubesVertex;
-	typedef ::PolyVox::Mesh< ::PolyVox::CubicVertex<Color> > ColoredCubesMesh;
+	typedef ::PolyVox::Mesh<ColoredCubesVertex> ColoredCubesMesh;
 }
 
 #endif //__COLOUR_H__

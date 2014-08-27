@@ -26,7 +26,7 @@ namespace Cubiquity
 	class VoxelTraits<MaterialSet>
 	{
 	public:
-		typedef ::PolyVox::MarchingCubesVertex< MaterialSetMarchingCubesController::MaterialType > VertexType;
+		typedef TerrainVertex VertexType;
 		typedef SmoothSurfaceExtractionTask SurfaceExtractionTaskType;
 		static const bool IsColor = false;
 		static const bool IsMaterialSet = true;
