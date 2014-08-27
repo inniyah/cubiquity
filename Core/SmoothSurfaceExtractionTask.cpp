@@ -46,7 +46,7 @@ namespace Cubiquity
 	{
 		mProcessingStartedTimestamp = Clock::getTimestamp();
 		//Extract the surface
-		mPolyVoxMesh = new ::PolyVox::Mesh< ::PolyVox::MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >;
+		mPolyVoxMesh = new TerrainMesh;
 		mOwnMesh = true;
 
 		generateSmoothMesh(mOctreeNode->mRegion, mOctreeNode->mHeight, mPolyVoxMesh);

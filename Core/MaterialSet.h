@@ -265,7 +265,7 @@ namespace Cubiquity
 	};
 
 	typedef ::PolyVox::MarchingCubesVertex<MaterialSet> TerrainVertex;
-	typedef ::PolyVox::Mesh<TerrainVertex> TerrainMesh;
+	typedef ::PolyVox::Mesh<TerrainVertex, uint16_t> TerrainMesh;
 }
 
 // We overload the trilinear interpolation for the MaterialSet type because it does not have enough precision.

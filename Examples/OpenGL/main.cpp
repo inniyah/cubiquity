@@ -83,7 +83,7 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 	{
 		// These will point to the index and vertex data
 		uint32_t noOfIndices;
-		uint32_t* indices;
+		uint16_t* indices;
 		uint32_t noOfVertices;
 		CuTerrainVertex* vertices;
 
@@ -110,7 +110,7 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 
 		glGenBuffers(1, &(openGLOctreeNode->indexBuffer));
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, openGLOctreeNode->indexBuffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint32_t)* noOfIndices, indices, GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t)* noOfIndices, indices, GL_STATIC_DRAW);
 
 		// We pack the encoded position and the encoded normal into a single 
 		// vertex attribute to save space: http://stackoverflow.com/a/21680009
@@ -159,7 +159,7 @@ void renderOpenGLOctreeNode(OpenGLOctreeNode* openGLOctreeNode)
 		glBindVertexArray(openGLOctreeNode->vertexArrayObject);
 
 		// Draw the triangle !
-		glDrawElements(GL_TRIANGLES, openGLOctreeNode->noOfIndices, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, openGLOctreeNode->noOfIndices, GL_UNSIGNED_SHORT, 0);
 
 		glBindVertexArray(0);
 	}

@@ -78,7 +78,7 @@ void processOctreeNode(uint32_t octreeNodeHandle)
 		uint32_t noOfIndices;
 		validate(cuGetNoOfIndicesMC(octreeNodeHandle, &noOfIndices));
 
-		uint32_t* indices = new uint32_t[noOfIndices];
+		uint16_t* indices = new uint16_t[noOfIndices];
 		validate(cuGetIndicesMC(octreeNodeHandle, &indices));
 
 		uint32_t noOfVertices;
