@@ -26,11 +26,11 @@ namespace Cubiquity
 		static VoxelDatabase* createEmpty(const std::string& pathToNewVoxelDatabase);
 		static VoxelDatabase* createFromVDB(const std::string& pathToExistingVoxelDatabase, WritePermission writePermission);
 
-		virtual void compress(PolyVox::UncompressedBlock<VoxelType>* pSrcBlock, PolyVox::CompressedBlock<VoxelType>* pDstBlock);
-		virtual void decompress(PolyVox::CompressedBlock<VoxelType>* pSrcBlock, PolyVox::UncompressedBlock<VoxelType>* pDstBlock);
+		void compress(PolyVox::UncompressedBlock<VoxelType>* pSrcBlock, PolyVox::CompressedBlock<VoxelType>* pDstBlock);
+		void decompress(PolyVox::CompressedBlock<VoxelType>* pSrcBlock, PolyVox::UncompressedBlock<VoxelType>* pDstBlock);
 
-		virtual void pageIn(const PolyVox::Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData);
-		virtual void pageOut(const PolyVox::Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData);
+		virtual void pageIn(const PolyVox::Region& region, PolyVox::UncompressedBlock<VoxelType>* pBlockData);
+		virtual void pageOut(const PolyVox::Region& region, PolyVox::UncompressedBlock<VoxelType>* pBlockData);
 
 		void acceptOverrideBlocks(void);
 		void discardOverrideBlocks(void);

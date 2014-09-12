@@ -141,7 +141,7 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void VoxelDatabase<VoxelType>::pageIn(const PolyVox::Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData)
+	void VoxelDatabase<VoxelType>::pageIn(const PolyVox::Region& region, PolyVox::UncompressedBlock<VoxelType>* pBlockData)
 	{
 		POLYVOX_ASSERT(pBlockData, "Attempting to page in NULL block");
 
@@ -158,7 +158,10 @@ namespace Cubiquity
 			// I think the last index is zero because our select statement only returned one column.
             int length = sqlite3_column_bytes(mSelectOverrideBlockStatement, 0);
             const void* data = sqlite3_column_blob(mSelectOverrideBlockStatement, 0);
-			pBlockData->setData(static_cast<const uint8_t*>(data), length);
+
+			m_pCompressor->decompressWithMiniz(data, length, pBlockData->getData(), pBlockData->getDataSizeInBytes());
+
+			//pBlockData->setData(static_cast<const uint8_t*>(data), length);
         }
 		else
 		{
@@ -170,7 +173,10 @@ namespace Cubiquity
 				// I think the last index is zero because our select statement only returned one column.
 				int length = sqlite3_column_bytes(mSelectBlockStatement, 0);
 				const void* data = sqlite3_column_blob(mSelectBlockStatement, 0);
-				pBlockData->setData(static_cast<const uint8_t*>(data), length);
+
+				m_pCompressor->decompressWithMiniz(data, length, pBlockData->getData(), pBlockData->getDataSizeInBytes());
+
+				//pBlockData->setData(static_cast<const uint8_t*>(data), length);
 			}
 		}
 
@@ -178,7 +184,7 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void VoxelDatabase<VoxelType>::pageOut(const PolyVox::Region& region, PolyVox::CompressedBlock<VoxelType>* pBlockData)
+	void VoxelDatabase<VoxelType>::pageOut(const PolyVox::Region& region, PolyVox::UncompressedBlock<VoxelType>* pBlockData)
 	{
 		POLYVOX_ASSERT(pBlockData, "Attempting to page out NULL block");
 
@@ -186,13 +192,20 @@ namespace Cubiquity
 
 		POLYVOX_LOG_TRACE("Paging out data for " << region);
 
+		const size_t dstLength = 1000000; //HACK!!!
+		uint8_t* dstBuffer = new uint8_t[dstLength];
+
+		uint32_t resultLength = m_pCompressor->compressWithMiniz(pBlockData->getData(), pBlockData->getDataSizeInBytes(), dstBuffer, dstLength);
+
 		int64_t key = regionToKey(region);
 
 		// Based on: http://stackoverflow.com/a/5308188
 		sqlite3_reset(mInsertOrReplaceOverrideBlockStatement);
 		sqlite3_bind_int64(mInsertOrReplaceOverrideBlockStatement, 1, key);
-		sqlite3_bind_blob(mInsertOrReplaceOverrideBlockStatement, 2, static_cast<const void*>(pBlockData->getData()), pBlockData->getDataSizeInBytes(), SQLITE_TRANSIENT);
+		sqlite3_bind_blob(mInsertOrReplaceOverrideBlockStatement, 2, static_cast<const void*>(dstBuffer), resultLength, SQLITE_TRANSIENT);
 		sqlite3_step(mInsertOrReplaceOverrideBlockStatement);
+
+		delete[] dstBuffer;
 
 		POLYVOX_LOG_TRACE("Paged block out in " << timer.elapsedTimeInMilliSeconds() << "ms (" << pBlockData->getDataSizeInBytes() << "bytes of data)");
 	}
