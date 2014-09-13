@@ -51,7 +51,8 @@ extern "C"
 	const int32_t CU_IOS_BASE_FAILURE = 200;
 
 	// Non-standard exceptions
-	const int32_t CU_SQLITE_ERROR = 210;
+	const int32_t CU_DATABASE_ERROR = 210;
+	const int32_t CU_COMPRESSION_ERROR = 220;
 
 	// Unknown error (caught by ...)
 	const int32_t CU_UNKNOWN_ERROR = 1000;

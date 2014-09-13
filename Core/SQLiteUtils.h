@@ -10,10 +10,10 @@
 
 namespace Cubiquity
 {
-	class SQLiteError : public std::runtime_error
+	class DatabaseError : public std::runtime_error
 	{
 	public:
-		SQLiteError(const std::string& what_arg)
+		DatabaseError(const std::string& what_arg)
 			:runtime_error(what_arg)
 		{
 		}
@@ -25,7 +25,7 @@ namespace Cubiquity
 			int rc = function; \
 			if(rc != SQLITE_OK) \
 			{ \
-				POLYVOX_THROW(SQLiteError, "Encountered '" << sqlite3_errstr(rc) << "' (error code " << rc << ") when executing '" << #function << "'"); \
+				POLYVOX_THROW(DatabaseError, "Encountered '" << sqlite3_errstr(rc) << "' (error code " << rc << ") when executing '" << #function << "'"); \
 			} \
 		} while(0)
 }
