@@ -15,6 +15,15 @@
 
 namespace Cubiquity
 {
+	class CompressionError : public std::runtime_error
+	{
+	public:
+		CompressionError(const std::string& what_arg)
+			:runtime_error(what_arg)
+		{
+		}
+	};
+
 	/**
 	 * Provides an interface for performing paging of data.
 	 */
@@ -61,6 +70,10 @@ namespace Cubiquity
 
 		sqlite3_stmt* mSelectPropertyStatement;
 		sqlite3_stmt* mInsertOrReplacePropertyStatement;
+
+		// Used as a temporary store into which we compress
+		// block data, before passing it to the database.
+		std::vector<uint8_t> mCompressedBuffer;
 	};
 
 	// Utility function to perform bit rotation.

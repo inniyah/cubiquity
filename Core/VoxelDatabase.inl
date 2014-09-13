@@ -130,6 +130,9 @@ namespace Cubiquity
 
 		int64_t key = regionToKey(region);
 
+		const void* compressedData = nullptr;
+		int compressedLength = 0;
+
 		// First we try and read the data from the OverrideBlocks table
 		// Based on: http://stackoverflow.com/a/5308188
 		sqlite3_reset(mSelectOverrideBlockStatement);
@@ -137,15 +140,12 @@ namespace Cubiquity
 		if(sqlite3_step(mSelectOverrideBlockStatement) == SQLITE_ROW)
         {
 			// I think the last index is zero because our select statement only returned one column.
-            int length = sqlite3_column_bytes(mSelectOverrideBlockStatement, 0);
-            const void* data = sqlite3_column_blob(mSelectOverrideBlockStatement, 0);
-
-			//m_pCompressor->decompressWithMiniz(data, length, pBlockData->getData(), pBlockData->getDataSizeInBytes());
+			compressedLength = sqlite3_column_bytes(mSelectOverrideBlockStatement, 0);
+			compressedData = sqlite3_column_blob(mSelectOverrideBlockStatement, 0);
 
 			mz_ulong uncomp_len;
-			int cmp_status = uncompress((unsigned char*)pBlockData->getData(), &uncomp_len, (const unsigned char*)data, length);
-
-			//pBlockData->setData(static_cast<const uint8_t*>(data), length);
+			int status = uncompress((unsigned char*)pBlockData->getData(), &uncomp_len, (const unsigned char*)compressedData, compressedLength);
+			POLYVOX_THROW_IF(status != Z_OK, CompressionError, "Decompression failed with error message \'" << mz_error(status) << "\'");
         }
 		else
 		{
@@ -155,15 +155,12 @@ namespace Cubiquity
 			if(sqlite3_step(mSelectBlockStatement) == SQLITE_ROW)
 			{
 				// I think the last index is zero because our select statement only returned one column.
-				int length = sqlite3_column_bytes(mSelectBlockStatement, 0);
-				const void* data = sqlite3_column_blob(mSelectBlockStatement, 0);
-
-				//m_pCompressor->decompressWithMiniz(data, length, pBlockData->getData(), pBlockData->getDataSizeInBytes());
+				compressedLength = sqlite3_column_bytes(mSelectBlockStatement, 0);
+				compressedData = sqlite3_column_blob(mSelectBlockStatement, 0);
 
 				mz_ulong uncomp_len;
-				int cmp_status = uncompress((unsigned char*)pBlockData->getData(), &uncomp_len, (const unsigned char*)data, length);
-
-				//pBlockData->setData(static_cast<const uint8_t*>(data), length);
+				int status = uncompress((unsigned char*)pBlockData->getData(), &uncomp_len, (const unsigned char*)compressedData, compressedLength);
+				POLYVOX_THROW_IF(status != Z_OK, CompressionError, "Decompression failed with error message \'" << mz_error(status) << "\'");
 			}
 		}
 
@@ -179,27 +176,27 @@ namespace Cubiquity
 
 		POLYVOX_LOG_TRACE("Paging out data for " << region);
 
-		//const size_t dstLength = 1000000; //HACK!!!
-		//uint8_t* dstBuffer = new uint8_t[dstLength];
+		// Prepare for compression
+		uLong srcLength = pBlockData->getDataSizeInBytes();
+		uLong compressedLength = compressBound(srcLength); // Gets update when compression happens
+		if (mCompressedBuffer.size() != compressedLength)
+		{
+			// All blocks are the same size so should have the same upper bound. Therefore this should only happen once.
+			POLYVOX_LOG_INFO("Resizing compressed data buffer to " << compressedLength << "bytes. This should only happen once");
+			mCompressedBuffer.resize(compressedLength);
+		}
 
-		//uint32_t resultLength = m_pCompressor->compressWithMiniz(pBlockData->getData(), pBlockData->getDataSizeInBytes(), dstBuffer, dstLength);
-
-		uLong src_len = pBlockData->getDataSizeInBytes();
-		uLong cmp_len = compressBound(src_len);
-
-		uint8_t* pCmp = new uint8_t[cmp_len];
-
-		int cmp_status = compress(pCmp, &cmp_len, (const unsigned char *)pBlockData->getData(), src_len);
+		// Perform the compression, and update passed parameter with the new length.
+		int status = compress(&(mCompressedBuffer[0]), &compressedLength, (const unsigned char *)pBlockData->getData(), srcLength);
+		POLYVOX_THROW_IF(status != Z_OK, CompressionError, "Compression failed with error message \'" << mz_error(status) << "\'");
 
 		int64_t key = regionToKey(region);
 
 		// Based on: http://stackoverflow.com/a/5308188
 		sqlite3_reset(mInsertOrReplaceOverrideBlockStatement);
 		sqlite3_bind_int64(mInsertOrReplaceOverrideBlockStatement, 1, key);
-		sqlite3_bind_blob(mInsertOrReplaceOverrideBlockStatement, 2, static_cast<const void*>(pCmp), cmp_len, SQLITE_TRANSIENT);
+		sqlite3_bind_blob(mInsertOrReplaceOverrideBlockStatement, 2, static_cast<const void*>(&(mCompressedBuffer[0])), compressedLength, SQLITE_TRANSIENT);
 		sqlite3_step(mInsertOrReplaceOverrideBlockStatement);
-
-		delete[] pCmp;
 
 		POLYVOX_LOG_TRACE("Paged block out in " << timer.elapsedTimeInMilliSeconds() << "ms (" << pBlockData->getDataSizeInBytes() << "bytes of data)");
 	}
