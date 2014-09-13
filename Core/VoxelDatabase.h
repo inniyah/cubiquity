@@ -1,5 +1,5 @@
-#ifndef __CUBIQUITY_SQLITE_PAGER_H__
-#define __CUBIQUITY_SQLITE_PAGER_H__
+#ifndef __CUBIQUITY_VOXELDATABASE_H__
+#define __CUBIQUITY_VOXELDATABASE_H__
 
 #include "PolyVoxCore/Impl/TypeDef.h"
 
@@ -86,4 +86,4 @@ namespace Cubiquity
 
 #include "VoxelDatabase.inl"
 
-#endif //__CUBIQUITY_SQLITE_PAGER_H__
+#endif //__CUBIQUITY_VOXELDATABASE_H__
