@@ -75,6 +75,7 @@ set(HEADERS
 	ConcurrentQueue.h
 	Cubiquity.h
 	CubiquityForwardDeclarations.h
+	Exceptions.h
 	Logging.h
 	MainThreadTaskProcessor.h
 	MaterialSet.h

@@ -11,19 +11,11 @@
 #define MINIZ_HEADER_FILE_ONLY
 #include "miniz/miniz.c"
 
+#include "Exceptions.h"
 #include "WritePermissions.h"
 
 namespace Cubiquity
 {
-	class CompressionError : public std::runtime_error
-	{
-	public:
-		CompressionError(const std::string& what_arg)
-			:runtime_error(what_arg)
-		{
-		}
-	};
-
 	/**
 	 * Provides an interface for performing paging of data.
 	 */

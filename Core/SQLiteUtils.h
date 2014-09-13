@@ -1,6 +1,8 @@
 #ifndef CUBIQUITY_SQLITEUTILS_H_
 #define CUBIQUITY_SQLITEUTILS_H_
 
+#include "Exceptions.h"
+
 #include "SQLite/sqlite3.h"
 
 #include "PolyVoxCore/Impl/ErrorHandling.h"
@@ -10,15 +12,6 @@
 
 namespace Cubiquity
 {
-	class DatabaseError : public std::runtime_error
-	{
-	public:
-		DatabaseError(const std::string& what_arg)
-			:runtime_error(what_arg)
-		{
-		}
-	};
-
 	#define EXECUTE_SQLITE_FUNC(function) \
 		do \
 		{ \
