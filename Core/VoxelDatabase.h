@@ -9,6 +9,9 @@
 
 #include "SQLite/sqlite3.h"
 
+#define MINIZ_HEADER_FILE_ONLY
+#include "miniz/miniz.c"
+
 #include "WritePermissions.h"
 
 namespace Cubiquity
@@ -26,7 +29,7 @@ namespace Cubiquity
 		static VoxelDatabase* createEmpty(const std::string& pathToNewVoxelDatabase);
 		static VoxelDatabase* createFromVDB(const std::string& pathToExistingVoxelDatabase, WritePermission writePermission);
 
-		void compress(PolyVox::UncompressedBlock<VoxelType>* pSrcBlock, PolyVox::CompressedBlock<VoxelType>* pDstBlock);
+		void compressData(PolyVox::UncompressedBlock<VoxelType>* pSrcBlock, PolyVox::CompressedBlock<VoxelType>* pDstBlock);
 		void decompress(PolyVox::CompressedBlock<VoxelType>* pSrcBlock, PolyVox::UncompressedBlock<VoxelType>* pDstBlock);
 
 		virtual void pageIn(const PolyVox::Region& region, PolyVox::UncompressedBlock<VoxelType>* pBlockData);

@@ -127,10 +127,10 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void VoxelDatabase<VoxelType>::compress(PolyVox::UncompressedBlock<VoxelType>* pSrcBlock, PolyVox::CompressedBlock<VoxelType>* pDstBlock)
+	void VoxelDatabase<VoxelType>::compressData(PolyVox::UncompressedBlock<VoxelType>* pSrcBlock, PolyVox::CompressedBlock<VoxelType>* pDstBlock)
 	{
 		// Pass through to compressor
-		m_pCompressor->compress(pSrcBlock, pDstBlock);
+		m_pCompressor->compressData(pSrcBlock, pDstBlock);
 	}
 
 	template <typename VoxelType>
@@ -159,7 +159,10 @@ namespace Cubiquity
             int length = sqlite3_column_bytes(mSelectOverrideBlockStatement, 0);
             const void* data = sqlite3_column_blob(mSelectOverrideBlockStatement, 0);
 
-			m_pCompressor->decompressWithMiniz(data, length, pBlockData->getData(), pBlockData->getDataSizeInBytes());
+			//m_pCompressor->decompressWithMiniz(data, length, pBlockData->getData(), pBlockData->getDataSizeInBytes());
+
+			mz_ulong uncomp_len;
+			int cmp_status = uncompress((unsigned char*)pBlockData->getData(), &uncomp_len, (const unsigned char*)data, length);
 
 			//pBlockData->setData(static_cast<const uint8_t*>(data), length);
         }
@@ -174,7 +177,10 @@ namespace Cubiquity
 				int length = sqlite3_column_bytes(mSelectBlockStatement, 0);
 				const void* data = sqlite3_column_blob(mSelectBlockStatement, 0);
 
-				m_pCompressor->decompressWithMiniz(data, length, pBlockData->getData(), pBlockData->getDataSizeInBytes());
+				//m_pCompressor->decompressWithMiniz(data, length, pBlockData->getData(), pBlockData->getDataSizeInBytes());
+
+				mz_ulong uncomp_len;
+				int cmp_status = uncompress((unsigned char*)pBlockData->getData(), &uncomp_len, (const unsigned char*)data, length);
 
 				//pBlockData->setData(static_cast<const uint8_t*>(data), length);
 			}
@@ -192,20 +198,27 @@ namespace Cubiquity
 
 		POLYVOX_LOG_TRACE("Paging out data for " << region);
 
-		const size_t dstLength = 1000000; //HACK!!!
-		uint8_t* dstBuffer = new uint8_t[dstLength];
+		//const size_t dstLength = 1000000; //HACK!!!
+		//uint8_t* dstBuffer = new uint8_t[dstLength];
 
-		uint32_t resultLength = m_pCompressor->compressWithMiniz(pBlockData->getData(), pBlockData->getDataSizeInBytes(), dstBuffer, dstLength);
+		//uint32_t resultLength = m_pCompressor->compressWithMiniz(pBlockData->getData(), pBlockData->getDataSizeInBytes(), dstBuffer, dstLength);
+
+		uLong src_len = pBlockData->getDataSizeInBytes();
+		uLong cmp_len = compressBound(src_len);
+
+		uint8_t* pCmp = new uint8_t[cmp_len];
+
+		int cmp_status = compress(pCmp, &cmp_len, (const unsigned char *)pBlockData->getData(), src_len);
 
 		int64_t key = regionToKey(region);
 
 		// Based on: http://stackoverflow.com/a/5308188
 		sqlite3_reset(mInsertOrReplaceOverrideBlockStatement);
 		sqlite3_bind_int64(mInsertOrReplaceOverrideBlockStatement, 1, key);
-		sqlite3_bind_blob(mInsertOrReplaceOverrideBlockStatement, 2, static_cast<const void*>(dstBuffer), resultLength, SQLITE_TRANSIENT);
+		sqlite3_bind_blob(mInsertOrReplaceOverrideBlockStatement, 2, static_cast<const void*>(pCmp), cmp_len, SQLITE_TRANSIENT);
 		sqlite3_step(mInsertOrReplaceOverrideBlockStatement);
 
-		delete[] dstBuffer;
+		delete[] pCmp;
 
 		POLYVOX_LOG_TRACE("Paged block out in " << timer.elapsedTimeInMilliSeconds() << "ms (" << pBlockData->getDataSizeInBytes() << "bytes of data)");
 	}

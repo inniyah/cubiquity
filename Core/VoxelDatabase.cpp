@@ -4,6 +4,8 @@
 
 #include "Logging.h"
 
+#include "miniz/miniz.c"
+
 namespace Cubiquity
 {
 	// See: http://stackoverflow.com/a/18529061
