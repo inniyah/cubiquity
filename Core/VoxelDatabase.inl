@@ -142,10 +142,6 @@ namespace Cubiquity
 			// I think the last index is zero because our select statement only returned one column.
 			compressedLength = sqlite3_column_bytes(mSelectOverrideBlockStatement, 0);
 			compressedData = sqlite3_column_blob(mSelectOverrideBlockStatement, 0);
-
-			mz_ulong uncomp_len;
-			int status = uncompress((unsigned char*)pBlockData->getData(), &uncomp_len, (const unsigned char*)compressedData, compressedLength);
-			POLYVOX_THROW_IF(status != Z_OK, CompressionError, "Decompression failed with error message \'" << mz_error(status) << "\'");
         }
 		else
 		{
@@ -157,11 +153,16 @@ namespace Cubiquity
 				// I think the last index is zero because our select statement only returned one column.
 				compressedLength = sqlite3_column_bytes(mSelectBlockStatement, 0);
 				compressedData = sqlite3_column_blob(mSelectBlockStatement, 0);
-
-				mz_ulong uncomp_len;
-				int status = uncompress((unsigned char*)pBlockData->getData(), &uncomp_len, (const unsigned char*)compressedData, compressedLength);
-				POLYVOX_THROW_IF(status != Z_OK, CompressionError, "Decompression failed with error message \'" << mz_error(status) << "\'");
 			}
+		}
+
+		// The data might not have been found in the database, in which case
+		// we leave the block in it's default state (initialized to zero?).
+		if (compressedData)
+		{
+			mz_ulong uncomp_len;
+			int status = uncompress((unsigned char*)pBlockData->getData(), &uncomp_len, (const unsigned char*)compressedData, compressedLength);
+			POLYVOX_THROW_IF(status != Z_OK, CompressionError, "Decompression failed with error message \'" << mz_error(status) << "\'");
 		}
 
 		POLYVOX_LOG_TRACE("Paged block in in " << timer.elapsedTimeInMilliSeconds() << "ms");
