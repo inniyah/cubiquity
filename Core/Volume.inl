@@ -1,6 +1,5 @@
 #include "PolyVoxCore/LowPassFilter.h"
 #include "PolyVoxCore/MaterialDensityPair.h"
-#include "PolyVoxCore/MinizBlockCompressor.h"
 #include "PolyVoxCore/Raycast.h"
 #include "PolyVoxCore/VolumeResampler.h"
 
@@ -87,7 +86,6 @@ namespace Cubiquity
 		mPolyVoxVolume->flushAll();
 
 		//delete mPolyVoxVolume;
-		//delete m_pCompressor;
 
 		delete m_pVoxelDatabase;
 

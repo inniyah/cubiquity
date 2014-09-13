@@ -19,10 +19,7 @@ namespace Cubiquity
 	template <typename VoxelType>
 	VoxelDatabase<VoxelType>::VoxelDatabase()
 		:PolyVox::Pager<VoxelType>()
-		,m_pCompressor(0)
 	{
-		//Create the compressor
-		m_pCompressor = new ::PolyVox::MinizBlockCompressor<VoxelType>;
 	}
 
 	/// Destructor
@@ -55,8 +52,6 @@ namespace Cubiquity
 		}
 
 		EXECUTE_SQLITE_FUNC(sqlite3_close(mDatabase));
-
-		delete m_pCompressor;
 	}
 
 	template <typename VoxelType>
@@ -124,20 +119,6 @@ namespace Cubiquity
 		// Now build the 'select' and 'insert or replace' prepared statements
 		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "SELECT Value FROM Properties WHERE Name = ?", -1, &mSelectPropertyStatement, NULL));
 		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO Properties (Name, Value) VALUES (?, ?)", -1, &mInsertOrReplacePropertyStatement, NULL));
-	}
-
-	template <typename VoxelType>
-	void VoxelDatabase<VoxelType>::compressData(PolyVox::UncompressedBlock<VoxelType>* pSrcBlock, PolyVox::CompressedBlock<VoxelType>* pDstBlock)
-	{
-		// Pass through to compressor
-		m_pCompressor->compressData(pSrcBlock, pDstBlock);
-	}
-
-	template <typename VoxelType>
-	void VoxelDatabase<VoxelType>::decompress(PolyVox::CompressedBlock<VoxelType>* pSrcBlock, PolyVox::UncompressedBlock<VoxelType>* pDstBlock)
-	{
-		// Pass through to compressor
-		m_pCompressor->decompress(pSrcBlock, pDstBlock);
 	}
 
 	template <typename VoxelType>

@@ -1,10 +1,10 @@
+#include "miniz/miniz.c"
+
 #include "VoxelDatabase.h"
 
 #include "PolyVoxCore/Region.h"
 
 #include "Logging.h"
-
-#include "miniz/miniz.c"
 
 namespace Cubiquity
 {

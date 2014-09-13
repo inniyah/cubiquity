@@ -77,9 +77,6 @@ namespace Cubiquity
 
 		::PolyVox::LargeVolume<VoxelType>* mPolyVoxVolume;
 
-		//::PolyVox::MinizBlockCompressor<VoxelType>* m_pCompressor;
-		
-
 		//sqlite3* mDatabase;
 
 		

@@ -21,7 +21,6 @@ set(POLYVOX_SRCS
 	Dependancies/polyvox/library/PolyVoxCore/source/Impl/ErrorHandling.cpp
 	Dependancies/polyvox/library/PolyVoxCore/source/Impl/Logging.cpp
 	Dependancies/polyvox/library/PolyVoxCore/source/Impl/MarchingCubesTables.cpp
-	Dependancies/polyvox/library/PolyVoxCore/source/Impl/MinizWrapper.cpp
 	Dependancies/polyvox/library/PolyVoxCore/source/Impl/RandomUnitVectors.cpp
 	Dependancies/polyvox/library/PolyVoxCore/source/Impl/RandomVectors.cpp
 	Dependancies/polyvox/library/PolyVoxCore/source/Impl/Timer.cpp
