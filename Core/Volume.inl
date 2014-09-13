@@ -44,8 +44,7 @@ namespace Cubiquity
 		
 		mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pVoxelDatabase, 32);
 
-		//mPolyVoxVolume->setMaxNumberOfBlocksInMemory(256);
-		mPolyVoxVolume->setMaxNumberOfUncompressedBlocks(64);
+		mPolyVoxVolume->setMaxNumberOfUncompressedBlocks(256);
 	}
 
 	template <typename VoxelType>
@@ -72,8 +71,7 @@ namespace Cubiquity
 		
 		mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pVoxelDatabase, 32);
 
-		//mPolyVoxVolume->setMaxNumberOfBlocksInMemory(256);
-		mPolyVoxVolume->setMaxNumberOfUncompressedBlocks(64);
+		mPolyVoxVolume->setMaxNumberOfUncompressedBlocks(256);
 	}
 
 	template <typename VoxelType>

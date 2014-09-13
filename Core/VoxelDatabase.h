@@ -14,6 +14,8 @@
 #include "Exceptions.h"
 #include "WritePermissions.h"
 
+#include <vector>
+
 namespace Cubiquity
 {
 	/**

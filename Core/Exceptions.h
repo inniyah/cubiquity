@@ -3,7 +3,7 @@
 
 namespace Cubiquity
 {
-	// Exceptions listed in the order we added them, as this halps match the order
+	// Exceptions listed in the order we added them, as this helps match the order
 	// to the defines in the C interface (where they are also ordered numerically).
 
 	class DatabaseError : public std::runtime_error
