@@ -18,7 +18,7 @@ namespace Cubiquity
 	/// Constructor
 	template <typename VoxelType>
 	VoxelDatabase<VoxelType>::VoxelDatabase()
-		:PolyVox::Pager<VoxelType>()
+		:PolyVox::PagedVolume<VoxelType>::Pager()
 	{
 	}
 
@@ -122,9 +122,9 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void VoxelDatabase<VoxelType>::pageIn(const PolyVox::Region& region, PolyVox::UncompressedBlock<VoxelType>* pBlockData)
+	void VoxelDatabase<VoxelType>::pageIn(const PolyVox::Region& region, typename PolyVox::PagedVolume<VoxelType>::Chunk* pChunk)
 	{
-		POLYVOX_ASSERT(pBlockData, "Attempting to page in NULL block");
+		POLYVOX_ASSERT(pChunk, "Attempting to page in NULL chunk");
 
 		PolyVox::Timer timer;
 
@@ -161,24 +161,24 @@ namespace Cubiquity
 		if (compressedData)
 		{
 			mz_ulong uncomp_len;
-			int status = uncompress((unsigned char*)pBlockData->getData(), &uncomp_len, (const unsigned char*)compressedData, compressedLength);
+			int status = uncompress((unsigned char*)pChunk->getData(), &uncomp_len, (const unsigned char*)compressedData, compressedLength);
 			POLYVOX_THROW_IF(status != Z_OK, CompressionError, "Decompression failed with error message \'" << mz_error(status) << "\'");
 		}
 
-		POLYVOX_LOG_TRACE("Paged block in in " << timer.elapsedTimeInMilliSeconds() << "ms");
+		POLYVOX_LOG_TRACE("Paged chunk in in " << timer.elapsedTimeInMilliSeconds() << "ms");
 	}
 
 	template <typename VoxelType>
-	void VoxelDatabase<VoxelType>::pageOut(const PolyVox::Region& region, PolyVox::UncompressedBlock<VoxelType>* pBlockData)
+	void VoxelDatabase<VoxelType>::pageOut(const PolyVox::Region& region, typename PolyVox::PagedVolume<VoxelType>::Chunk* pChunk)
 	{
-		POLYVOX_ASSERT(pBlockData, "Attempting to page out NULL block");
+		POLYVOX_ASSERT(pChunk, "Attempting to page out NULL chunk");
 
 		PolyVox::Timer timer;
 
 		POLYVOX_LOG_TRACE("Paging out data for " << region);
 
 		// Prepare for compression
-		uLong srcLength = pBlockData->getDataSizeInBytes();
+		uLong srcLength = pChunk->getDataSizeInBytes();
 		uLong compressedLength = compressBound(srcLength); // Gets update when compression happens
 		if (mCompressedBuffer.size() != compressedLength)
 		{
@@ -188,7 +188,7 @@ namespace Cubiquity
 		}
 
 		// Perform the compression, and update passed parameter with the new length.
-		int status = compress(&(mCompressedBuffer[0]), &compressedLength, (const unsigned char *)pBlockData->getData(), srcLength);
+		int status = compress(&(mCompressedBuffer[0]), &compressedLength, (const unsigned char *)pChunk->getData(), srcLength);
 		POLYVOX_THROW_IF(status != Z_OK, CompressionError, "Compression failed with error message \'" << mz_error(status) << "\'");
 
 		int64_t key = regionToKey(region);
@@ -199,7 +199,7 @@ namespace Cubiquity
 		sqlite3_bind_blob(mInsertOrReplaceOverrideBlockStatement, 2, static_cast<const void*>(&(mCompressedBuffer[0])), compressedLength, SQLITE_TRANSIENT);
 		sqlite3_step(mInsertOrReplaceOverrideBlockStatement);
 
-		POLYVOX_LOG_TRACE("Paged block out in " << timer.elapsedTimeInMilliSeconds() << "ms (" << pBlockData->getDataSizeInBytes() << "bytes of data)");
+		POLYVOX_LOG_TRACE("Paged chunk out in " << timer.elapsedTimeInMilliSeconds() << "ms (" << pChunk->getDataSizeInBytes() << "bytes of data)");
 	}
 
 	template <typename VoxelType>

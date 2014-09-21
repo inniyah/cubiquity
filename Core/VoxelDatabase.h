@@ -3,7 +3,6 @@
 
 #include "PolyVoxCore/Impl/TypeDef.h"
 
-#include "PolyVoxCore/Pager.h"
 #include "PolyVoxCore/Region.h"
 
 #include "SQLite/sqlite3.h"
@@ -22,7 +21,7 @@ namespace Cubiquity
 	 * Provides an interface for performing paging of data.
 	 */
 	template <typename VoxelType>
-	class VoxelDatabase : public PolyVox::Pager<VoxelType>
+	class VoxelDatabase : public PolyVox::PagedVolume<VoxelType>::Pager
 	{
 	public:
 		/// Destructor
@@ -31,8 +30,8 @@ namespace Cubiquity
 		static VoxelDatabase* createEmpty(const std::string& pathToNewVoxelDatabase);
 		static VoxelDatabase* createFromVDB(const std::string& pathToExistingVoxelDatabase, WritePermission writePermission);
 
-		virtual void pageIn(const PolyVox::Region& region, PolyVox::UncompressedBlock<VoxelType>* pBlockData);
-		virtual void pageOut(const PolyVox::Region& region, PolyVox::UncompressedBlock<VoxelType>* pBlockData);
+		virtual void pageIn(const PolyVox::Region& region, typename PolyVox::PagedVolume<VoxelType>::Chunk* pChunk);
+		virtual void pageOut(const PolyVox::Region& region, typename PolyVox::PagedVolume<VoxelType>::Chunk* pChunk);
 
 		void acceptOverrideBlocks(void);
 		void discardOverrideBlocks(void);
