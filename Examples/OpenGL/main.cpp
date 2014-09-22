@@ -36,6 +36,8 @@ public:
 		posY = 0;
 		posZ = 0;
 
+		meshLastUpdated = 0;
+
 		this->parent = parent;
 
 		for (uint32_t z = 0; z < 2; z++)
@@ -59,6 +61,8 @@ public:
 	int32_t posY;
 	int32_t posZ;
 
+	uint32_t meshLastUpdated;
+
 	OpenGLOctreeNode* parent;
 	OpenGLOctreeNode* children[2][2][2];
 };
@@ -77,50 +81,61 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 	int32_t nodeX, nodeY, nodeZ;
 	cuGetNodePositionMC(octreeNodeHandle, &nodeX, &nodeY, &nodeZ);
 
-	uint32_t hasMesh;
-	validate(cuNodeHasMesh(octreeNodeHandle, &hasMesh));
-	if (hasMesh == 1)
+	uint32_t meshLastUpdated;
+	validate(cuGetMeshLastUpdatedMC(octreeNodeHandle, &meshLastUpdated));
+
+	if (meshLastUpdated > openGLOctreeNode->meshLastUpdated)
 	{
-		// These will point to the index and vertex data
-		uint32_t noOfIndices;
-		uint16_t* indices;
-		uint32_t noOfVertices;
-		CuTerrainVertex* vertices;
 
-		// Get the index and vertex data
-		validate(cuGetNoOfIndicesMC(octreeNodeHandle, &noOfIndices));
-		validate(cuGetIndicesMC(octreeNodeHandle, &indices));
+		uint32_t hasMesh;
+		validate(cuNodeHasMesh(octreeNodeHandle, &hasMesh));
+		if (hasMesh == 1)
+		{
+			std::cout << "Updating mesh" << std::endl;
 
-		validate(cuGetNoOfVerticesMC(octreeNodeHandle, &noOfVertices));
-		validate(cuGetVerticesMC(octreeNodeHandle, (float**)(&vertices)));
+			// These will point to the index and vertex data
+			uint32_t noOfIndices;
+			uint16_t* indices;
+			uint32_t noOfVertices;
+			CuTerrainVertex* vertices;
 
-		// Pass it to the OpenGL node.
-		openGLOctreeNode->posX = nodeX;
-		openGLOctreeNode->posY = nodeY;
-		openGLOctreeNode->posZ = nodeZ;
+			// Get the index and vertex data
+			validate(cuGetNoOfIndicesMC(octreeNodeHandle, &noOfIndices));
+			validate(cuGetIndicesMC(octreeNodeHandle, &indices));
 
-		openGLOctreeNode->noOfIndices = noOfIndices;
+			validate(cuGetNoOfVerticesMC(octreeNodeHandle, &noOfVertices));
+			validate(cuGetVerticesMC(octreeNodeHandle, (float**)(&vertices)));
 
-		glGenVertexArrays(1, &(openGLOctreeNode->vertexArrayObject));
-		glBindVertexArray(openGLOctreeNode->vertexArrayObject);
+			// Pass it to the OpenGL node.
+			openGLOctreeNode->posX = nodeX;
+			openGLOctreeNode->posY = nodeY;
+			openGLOctreeNode->posZ = nodeZ;
 
-		glGenBuffers(1, &(openGLOctreeNode->vertexBuffer));
-		glBindBuffer(GL_ARRAY_BUFFER, openGLOctreeNode->vertexBuffer);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(CuTerrainVertex)* noOfVertices, vertices, GL_STATIC_DRAW);
+			openGLOctreeNode->noOfIndices = noOfIndices;
 
-		glGenBuffers(1, &(openGLOctreeNode->indexBuffer));
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, openGLOctreeNode->indexBuffer);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t)* noOfIndices, indices, GL_STATIC_DRAW);
+			glGenVertexArrays(1, &(openGLOctreeNode->vertexArrayObject));
+			glBindVertexArray(openGLOctreeNode->vertexArrayObject);
 
-		// We pack the encoded position and the encoded normal into a single 
-		// vertex attribute to save space: http://stackoverflow.com/a/21680009
-		glEnableVertexAttribArray(0);
-		glVertexAttribIPointer(0, 4, GL_UNSIGNED_SHORT, sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, encodedPosX)));
+			glGenBuffers(1, &(openGLOctreeNode->vertexBuffer));
+			glBindBuffer(GL_ARRAY_BUFFER, openGLOctreeNode->vertexBuffer);
+			glBufferData(GL_ARRAY_BUFFER, sizeof(CuTerrainVertex)* noOfVertices, vertices, GL_STATIC_DRAW);
 
-		glEnableVertexAttribArray(1); // Attrib '1' is the first four materials
-		glVertexAttribIPointer(1, 4, GL_UNSIGNED_BYTE, sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, material0)));
+			glGenBuffers(1, &(openGLOctreeNode->indexBuffer));
+			glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, openGLOctreeNode->indexBuffer);
+			glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t)* noOfIndices, indices, GL_STATIC_DRAW);
 
-		glBindVertexArray(0);
+			// We pack the encoded position and the encoded normal into a single 
+			// vertex attribute to save space: http://stackoverflow.com/a/21680009
+			glEnableVertexAttribArray(0);
+			glVertexAttribIPointer(0, 4, GL_UNSIGNED_SHORT, sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, encodedPosX)));
+
+			glEnableVertexAttribArray(1); // Attrib '1' is the first four materials
+			glVertexAttribIPointer(1, 4, GL_UNSIGNED_BYTE, sizeof(CuTerrainVertex), (GLvoid*)(offsetof(CuTerrainVertex, material0)));
+
+			glBindVertexArray(0);
+		}
+
+		openGLOctreeNode->meshLastUpdated = meshLastUpdated;
 	}
 
 	for (uint32_t z = 0; z < 2; z++)
@@ -137,7 +152,10 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 					uint32_t childNodeHandle;
 					validate(cuGetChildNodeMC(octreeNodeHandle, x, y, z, &childNodeHandle));
 
-					openGLOctreeNode->children[x][y][z] = new OpenGLOctreeNode(openGLOctreeNode);
+					if (!openGLOctreeNode->children[x][y][z])
+					{
+						openGLOctreeNode->children[x][y][z] = new OpenGLOctreeNode(openGLOctreeNode);
+					}
 
 					// Recursivly call the octree traversal
 					processOctreeNode(childNodeHandle, openGLOctreeNode->children[x][y][z]);
@@ -158,7 +176,7 @@ void renderOpenGLOctreeNode(OpenGLOctreeNode* openGLOctreeNode)
 
 		glBindVertexArray(openGLOctreeNode->vertexArrayObject);
 
-		// Draw the triangle !
+		// Draw the triangles!
 		glDrawElements(GL_TRIANGLES, openGLOctreeNode->noOfIndices, GL_UNSIGNED_SHORT, 0);
 
 		glBindVertexArray(0);
@@ -234,21 +252,28 @@ int main( void )
 	uint32_t volumeHandle;
 	validate(cuNewTerrainVolumeFromVDB("C:/code/cubiquity/Data/Volumes/Version 0/SmoothVoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
 
-	validate(cuUpdateVolumeMC(volumeHandle));
-
-	uint32_t hasRootNode;
 	OpenGLOctreeNode* rootOpenGLOctreeNode = 0;
-	validate(cuHasRootOctreeNodeMC(volumeHandle, &hasRootNode));
-	if (hasRootNode == 1)
-	{
-		uint32_t octreeNodeHandle;
-		rootOpenGLOctreeNode = new OpenGLOctreeNode(0);
-		cuGetRootOctreeNodeMC(volumeHandle, &octreeNodeHandle);
-		processOctreeNode(octreeNodeHandle, rootOpenGLOctreeNode);
-	}
+	
 
 	do
 	{
+		validate(cuUpdateVolumeMC(volumeHandle));
+
+		uint32_t hasRootNode;
+		validate(cuHasRootOctreeNodeMC(volumeHandle, &hasRootNode));
+		if (hasRootNode == 1) // FIXME - Maybe it's easier if there is always a root node?
+		{
+			if (!rootOpenGLOctreeNode)
+			{
+				rootOpenGLOctreeNode = new OpenGLOctreeNode(0);
+			}
+
+			uint32_t octreeNodeHandle;
+			cuGetRootOctreeNodeMC(volumeHandle, &octreeNodeHandle);
+			processOctreeNode(octreeNodeHandle, rootOpenGLOctreeNode);
+		}
+		
+
 		// Clear the screen
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
