@@ -160,7 +160,7 @@ bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDat
 
 	if (!dryRun)
 	{
-		cuAcceptOverrideBlocks(volumeHandle);
+		cuAcceptOverrideChunks(volumeHandle);
 		cuDeleteColoredCubesVolume(volumeHandle);
 	}
 

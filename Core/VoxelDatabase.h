@@ -33,8 +33,8 @@ namespace Cubiquity
 		virtual void pageIn(const PolyVox::Region& region, typename PolyVox::PagedVolume<VoxelType>::Chunk* pChunk);
 		virtual void pageOut(const PolyVox::Region& region, typename PolyVox::PagedVolume<VoxelType>::Chunk* pChunk);
 
-		void acceptOverrideBlocks(void);
-		void discardOverrideBlocks(void);
+		void acceptOverrideChunks(void);
+		void discardOverrideChunks(void);
 
 		int32_t getPropertyAsInt(const std::string& name, int32_t defaultValue);
 		float getPropertyAsFloat(const std::string& name, float defaultValue);
@@ -55,17 +55,17 @@ namespace Cubiquity
 
 		sqlite3* mDatabase;
 
-		sqlite3_stmt* mSelectBlockStatement;
-		sqlite3_stmt* mSelectOverrideBlockStatement;
+		sqlite3_stmt* mSelectChunkStatement;
+		sqlite3_stmt* mSelectOverrideChunkStatement;
 		
 		sqlite3_stmt* mInsertOrReplaceBlockStatement;
-		sqlite3_stmt* mInsertOrReplaceOverrideBlockStatement;
+		sqlite3_stmt* mInsertOrReplaceOverrideChunkStatement;
 
 		sqlite3_stmt* mSelectPropertyStatement;
 		sqlite3_stmt* mInsertOrReplacePropertyStatement;
 
 		// Used as a temporary store into which we compress
-		// block data, before passing it to the database.
+		// chunk data, before passing it to the database.
 		std::vector<uint8_t> mCompressedBuffer;
 	};
 

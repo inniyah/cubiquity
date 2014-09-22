@@ -53,16 +53,16 @@ namespace Cubiquity
 		// Marks a region as modified so it will be regenerated later.
 		void markAsModified(const Region& region, UpdatePriority updatePriority = UpdatePriorities::Background);
 
-		void acceptOverrideBlocks(void)
+		void acceptOverrideChunks(void)
 		{
 			mPolyVoxVolume->flushAll();
-			m_pVoxelDatabase->acceptOverrideBlocks();
+			m_pVoxelDatabase->acceptOverrideChunks();
 		}
 		
-		void discardOverrideBlocks(void)
+		void discardOverrideChunks(void)
 		{
 			mPolyVoxVolume->flushAll();
-			m_pVoxelDatabase->discardOverrideBlocks();
+			m_pVoxelDatabase->discardOverrideChunks();
 		}
 
 		// Should be called before rendering a frame to update the meshes and octree structure.

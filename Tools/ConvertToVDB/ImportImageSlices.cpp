@@ -146,7 +146,7 @@ bool importImageSlices(const std::string& folder, const std::string& pathToVoxel
 
 	//volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Background);
 
-	cuAcceptOverrideBlocks(volumeHandle);
+	cuAcceptOverrideChunks(volumeHandle);
 	cuDeleteColoredCubesVolume(volumeHandle);
 
 	return true;

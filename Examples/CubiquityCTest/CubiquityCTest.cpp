@@ -45,7 +45,7 @@ void testColoredCubesVolume()
 	}
 
 	// This basically commits our changes.
-	validate(cuAcceptOverrideBlocks(volumeID));
+	validate(cuAcceptOverrideChunks(volumeID));
 
 	// Retieve the stored voxel to check it worked
 	CuColor storedColor;

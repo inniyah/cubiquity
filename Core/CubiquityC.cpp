@@ -617,22 +617,22 @@ CUBIQUITYC_API int32_t cuSetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, i
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuAcceptOverrideBlocks(uint32_t volumeHandle)
+CUBIQUITYC_API int32_t cuAcceptOverrideChunks(uint32_t volumeHandle)
 {
 	OPEN_C_INTERFACE
 
 	ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
-	volume->acceptOverrideBlocks();
+	volume->acceptOverrideChunks();
 	
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuDiscardOverrideBlocks(uint32_t volumeHandle)
+CUBIQUITYC_API int32_t cuDiscardOverrideChunks(uint32_t volumeHandle)
 {
 	OPEN_C_INTERFACE
 
 	ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
-	volume->discardOverrideBlocks();
+	volume->discardOverrideChunks();
 	
 	CLOSE_C_INTERFACE
 }
@@ -759,22 +759,22 @@ CUBIQUITYC_API int32_t cuSetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y,
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuAcceptOverrideBlocksMC(uint32_t volumeHandle)
+CUBIQUITYC_API int32_t cuAcceptOverrideChunksMC(uint32_t volumeHandle)
 {
 	OPEN_C_INTERFACE
 
 	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
-	volume->acceptOverrideBlocks();
+	volume->acceptOverrideChunks();
 	
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuDiscardOverrideBlocksMC(uint32_t volumeHandle)
+CUBIQUITYC_API int32_t cuDiscardOverrideChunksMC(uint32_t volumeHandle)
 {
 	OPEN_C_INTERFACE
 
 	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
-	volume->discardOverrideBlocks();
+	volume->discardOverrideChunks();
 	
 	CLOSE_C_INTERFACE
 }

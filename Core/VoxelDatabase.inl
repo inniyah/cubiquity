@@ -26,10 +26,10 @@ namespace Cubiquity
 	template <typename VoxelType>
 	VoxelDatabase<VoxelType>::~VoxelDatabase()
 	{
-		EXECUTE_SQLITE_FUNC( sqlite3_finalize(mSelectBlockStatement) );
-		EXECUTE_SQLITE_FUNC( sqlite3_finalize(mSelectOverrideBlockStatement) );
+		EXECUTE_SQLITE_FUNC( sqlite3_finalize(mSelectChunkStatement) );
+		EXECUTE_SQLITE_FUNC( sqlite3_finalize(mSelectOverrideChunkStatement) );
 		EXECUTE_SQLITE_FUNC( sqlite3_finalize(mInsertOrReplaceBlockStatement) );
-		EXECUTE_SQLITE_FUNC( sqlite3_finalize(mInsertOrReplaceOverrideBlockStatement) );
+		EXECUTE_SQLITE_FUNC( sqlite3_finalize(mInsertOrReplaceOverrideChunkStatement) );
 		EXECUTE_SQLITE_FUNC( sqlite3_finalize(mSelectPropertyStatement) );
 		EXECUTE_SQLITE_FUNC( sqlite3_finalize(mInsertOrReplacePropertyStatement) );
 
@@ -102,19 +102,19 @@ namespace Cubiquity
 		// Disable syncing
 		EXECUTE_SQLITE_FUNC(sqlite3_exec(mDatabase, "PRAGMA synchronous = OFF", 0, 0, 0));
 
-		// Now create the 'OverrideBlocks' table. Not sure we need 'ASC' here, but it's in the example (http://goo.gl/NLHjQv) and is the default anyway.
+		// Now create the 'OverrideChunks' table. Not sure we need 'ASC' here, but it's in the example (http://goo.gl/NLHjQv) and is the default anyway.
 		// Note that the table cannot already exist because it's created as 'TEMP', and is therefore stored in a seperate temporary database.
 		// It appears this temporary table is not shared between connections (multiple volumes using the same VDB) which is probably desirable for us
 		// as it means different instances of the volume can be modified (but not commited to) without interfering with each other (http://goo.gl/aDKyId).
-		EXECUTE_SQLITE_FUNC(sqlite3_exec(mDatabase, "CREATE TEMP TABLE OverrideBlocks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
+		EXECUTE_SQLITE_FUNC(sqlite3_exec(mDatabase, "CREATE TEMP TABLE OverrideChunks(Region INTEGER PRIMARY KEY ASC, Data BLOB);", 0, 0, 0));
 
 		// Now build the 'insert or replace' prepared statements
 		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceBlockStatement, NULL));
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO OverrideBlocks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceOverrideBlockStatement, NULL));
+		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "INSERT OR REPLACE INTO OverrideChunks (Region, Data) VALUES (?, ?)", -1, &mInsertOrReplaceOverrideChunkStatement, NULL));
 
 		// Now build the 'select' prepared statements
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "SELECT Data FROM Blocks WHERE Region = ?", -1, &mSelectBlockStatement, NULL));
-		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "SELECT Data FROM OverrideBlocks WHERE Region = ?", -1, &mSelectOverrideBlockStatement, NULL));
+		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "SELECT Data FROM Blocks WHERE Region = ?", -1, &mSelectChunkStatement, NULL));
+		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "SELECT Data FROM OverrideChunks WHERE Region = ?", -1, &mSelectOverrideChunkStatement, NULL));
 
 		// Now build the 'select' and 'insert or replace' prepared statements
 		EXECUTE_SQLITE_FUNC(sqlite3_prepare_v2(mDatabase, "SELECT Value FROM Properties WHERE Name = ?", -1, &mSelectPropertyStatement, NULL));
@@ -133,31 +133,31 @@ namespace Cubiquity
 		const void* compressedData = nullptr;
 		int compressedLength = 0;
 
-		// First we try and read the data from the OverrideBlocks table
+		// First we try and read the data from the OverrideChunks table
 		// Based on: http://stackoverflow.com/a/5308188
-		sqlite3_reset(mSelectOverrideBlockStatement);
-		sqlite3_bind_int64(mSelectOverrideBlockStatement, 1, key);
-		if(sqlite3_step(mSelectOverrideBlockStatement) == SQLITE_ROW)
+		sqlite3_reset(mSelectOverrideChunkStatement);
+		sqlite3_bind_int64(mSelectOverrideChunkStatement, 1, key);
+		if(sqlite3_step(mSelectOverrideChunkStatement) == SQLITE_ROW)
         {
 			// I think the last index is zero because our select statement only returned one column.
-			compressedLength = sqlite3_column_bytes(mSelectOverrideBlockStatement, 0);
-			compressedData = sqlite3_column_blob(mSelectOverrideBlockStatement, 0);
+			compressedLength = sqlite3_column_bytes(mSelectOverrideChunkStatement, 0);
+			compressedData = sqlite3_column_blob(mSelectOverrideChunkStatement, 0);
         }
 		else
 		{
-			// In this case the block data wasn't found in the override table, so we go to the real Blocks table.
-			sqlite3_reset(mSelectBlockStatement);
-			sqlite3_bind_int64(mSelectBlockStatement, 1, key);
-			if(sqlite3_step(mSelectBlockStatement) == SQLITE_ROW)
+			// In this case the chunk data wasn't found in the override table, so we go to the real Chunks table.
+			sqlite3_reset(mSelectChunkStatement);
+			sqlite3_bind_int64(mSelectChunkStatement, 1, key);
+			if(sqlite3_step(mSelectChunkStatement) == SQLITE_ROW)
 			{
 				// I think the last index is zero because our select statement only returned one column.
-				compressedLength = sqlite3_column_bytes(mSelectBlockStatement, 0);
-				compressedData = sqlite3_column_blob(mSelectBlockStatement, 0);
+				compressedLength = sqlite3_column_bytes(mSelectChunkStatement, 0);
+				compressedData = sqlite3_column_blob(mSelectChunkStatement, 0);
 			}
 		}
 
 		// The data might not have been found in the database, in which case
-		// we leave the block in it's default state (initialized to zero?).
+		// we leave the chunk in it's default state (initialized to zero).
 		if (compressedData)
 		{
 			mz_ulong uncomp_len;
@@ -182,7 +182,7 @@ namespace Cubiquity
 		uLong compressedLength = compressBound(srcLength); // Gets update when compression happens
 		if (mCompressedBuffer.size() != compressedLength)
 		{
-			// All blocks are the same size so should have the same upper bound. Therefore this should only happen once.
+			// All chunks are the same size so should have the same upper bound. Therefore this should only happen once.
 			POLYVOX_LOG_INFO("Resizing compressed data buffer to " << compressedLength << "bytes. This should only happen once");
 			mCompressedBuffer.resize(compressedLength);
 		}
@@ -194,28 +194,28 @@ namespace Cubiquity
 		int64_t key = regionToKey(region);
 
 		// Based on: http://stackoverflow.com/a/5308188
-		sqlite3_reset(mInsertOrReplaceOverrideBlockStatement);
-		sqlite3_bind_int64(mInsertOrReplaceOverrideBlockStatement, 1, key);
-		sqlite3_bind_blob(mInsertOrReplaceOverrideBlockStatement, 2, static_cast<const void*>(&(mCompressedBuffer[0])), compressedLength, SQLITE_TRANSIENT);
-		sqlite3_step(mInsertOrReplaceOverrideBlockStatement);
+		sqlite3_reset(mInsertOrReplaceOverrideChunkStatement);
+		sqlite3_bind_int64(mInsertOrReplaceOverrideChunkStatement, 1, key);
+		sqlite3_bind_blob(mInsertOrReplaceOverrideChunkStatement, 2, static_cast<const void*>(&(mCompressedBuffer[0])), compressedLength, SQLITE_TRANSIENT);
+		sqlite3_step(mInsertOrReplaceOverrideChunkStatement);
 
 		POLYVOX_LOG_TRACE("Paged chunk out in " << timer.elapsedTimeInMilliSeconds() << "ms (" << pChunk->getDataSizeInBytes() << "bytes of data)");
 	}
 
 	template <typename VoxelType>
-	void VoxelDatabase<VoxelType>::acceptOverrideBlocks(void)
+	void VoxelDatabase<VoxelType>::acceptOverrideChunks(void)
 	{
-		EXECUTE_SQLITE_FUNC( sqlite3_exec(mDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) SELECT Region, Data from OverrideBlocks;", 0, 0, 0) );
+		EXECUTE_SQLITE_FUNC( sqlite3_exec(mDatabase, "INSERT OR REPLACE INTO Blocks (Region, Data) SELECT Region, Data from OverrideChunks;", 0, 0, 0) );
 
-		// The override blocks have been copied accross so we
+		// The override chunks have been copied accross so we
 		// can now discard the contents of the override table.
-		discardOverrideBlocks();
+		discardOverrideChunks();
 	}
 
 	template <typename VoxelType>
-	void VoxelDatabase<VoxelType>::discardOverrideBlocks(void)
+	void VoxelDatabase<VoxelType>::discardOverrideChunks(void)
 	{
-		EXECUTE_SQLITE_FUNC( sqlite3_exec(mDatabase, "DELETE FROM OverrideBlocks;", 0, 0, 0) );
+		EXECUTE_SQLITE_FUNC( sqlite3_exec(mDatabase, "DELETE FROM OverrideChunks;", 0, 0, 0) );
 	}
 
 	template <typename VoxelType>

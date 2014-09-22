@@ -28,7 +28,7 @@ namespace Cubiquity
 		return (Part1By2(z) << 2) + (Part1By2(y) << 1) + Part1By2(x);
 	}
 
-	// This function encodes a Region as a 64-bit integer so that it can be used as a key to access block data in the SQLite database.
+	// This function encodes a Region as a 64-bit integer so that it can be used as a key to access chunk data in the SQLite database.
 	// A region actually contains more than 64-bits of data so some has to be lost here. Specifically we assume that we already know
 	// the size of the region (so we only have to encode it's lower corner and not its upper corner or extents), and we also restrict
 	// the range of valid coordinates. A Region's coordinates are represented by 3-bits of data, but we only support converting to a key 
