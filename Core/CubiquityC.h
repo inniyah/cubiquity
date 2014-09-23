@@ -127,7 +127,7 @@ extern "C"
 
 	CUBIQUITYC_API int32_t cuNewEmptyTerrainVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pathToNewVoxelDatabase, uint32_t baseNodeSize, uint32_t* result);
 	CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxelDatabase, uint32_t writePermissions, uint32_t baseNodeSize, uint32_t* result);
-	CUBIQUITYC_API int32_t cuUpdateVolumeMC(uint32_t volumeHandle);
+	CUBIQUITYC_API int32_t cuUpdateVolumeMC(uint32_t volumeHandle, float eyePosX, float eyePosY, float eyePosZ);
 	CUBIQUITYC_API int32_t cuDeleteTerrainVolume(uint32_t volumeHandle);
 
 	CUBIQUITYC_API int32_t cuGetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuMaterialSet* materialSet);
@@ -152,6 +152,7 @@ extern "C"
 	CUBIQUITYC_API int32_t cuNodeHasMeshMC( uint32_t nodeHandle, uint32_t* result);
 	CUBIQUITYC_API int32_t cuGetNodePositionMC(uint32_t nodeHandle, int32_t* x, int32_t* y, int32_t* z);
 	CUBIQUITYC_API int32_t cuGetMeshLastUpdatedMC(uint32_t nodeHandle, uint32_t* result);
+	CUBIQUITYC_API int32_t cuRenderThisNodeMC(uint32_t nodeHandle, uint32_t* result);
 
 	// Mesh functions
 	CUBIQUITYC_API int32_t cuGetNoOfVertices(uint32_t nodeHandle, uint32_t* result);

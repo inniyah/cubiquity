@@ -62,6 +62,7 @@ public:
 	int32_t posZ;
 
 	uint32_t meshLastUpdated;
+	uint32_t renderThisNode;
 
 	OpenGLOctreeNode* parent;
 	OpenGLOctreeNode* children[2][2][2];
@@ -84,15 +85,15 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 	uint32_t meshLastUpdated;
 	validate(cuGetMeshLastUpdatedMC(octreeNodeHandle, &meshLastUpdated));
 
+	validate(cuRenderThisNodeMC(octreeNodeHandle, &(openGLOctreeNode->renderThisNode)));
+
 	if (meshLastUpdated > openGLOctreeNode->meshLastUpdated)
 	{
 
 		uint32_t hasMesh;
 		validate(cuNodeHasMesh(octreeNodeHandle, &hasMesh));
 		if (hasMesh == 1)
-		{
-			std::cout << "Updating mesh" << std::endl;
-
+		{	
 			// These will point to the index and vertex data
 			uint32_t noOfIndices;
 			uint16_t* indices;
@@ -154,11 +155,21 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 
 					if (!openGLOctreeNode->children[x][y][z])
 					{
+						std::cout << "Adding mesh" << std::endl;
 						openGLOctreeNode->children[x][y][z] = new OpenGLOctreeNode(openGLOctreeNode);
 					}
 
 					// Recursivly call the octree traversal
 					processOctreeNode(childNodeHandle, openGLOctreeNode->children[x][y][z]);
+				}
+				else
+				{
+					if (openGLOctreeNode->children[x][y][z])
+					{
+						std::cout << "Deleting mesh" << std::endl;
+						delete openGLOctreeNode->children[x][y][z];
+						openGLOctreeNode->children[x][y][z] = nullptr;
+					}
 				}
 			}
 		}
@@ -167,7 +178,7 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 
 void renderOpenGLOctreeNode(OpenGLOctreeNode* openGLOctreeNode)
 {
-	if (openGLOctreeNode->noOfIndices > 0)
+	if (openGLOctreeNode->noOfIndices > 0 && openGLOctreeNode->renderThisNode)
 	{
 		glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(openGLOctreeNode->posX, openGLOctreeNode->posY, openGLOctreeNode->posZ));
 
@@ -257,7 +268,15 @@ int main( void )
 
 	do
 	{
-		validate(cuUpdateVolumeMC(volumeHandle));
+		// The framework we're using here doesn't seem to provide easy access to the camera position. The following lines compute it.
+		glm::mat4 ViewMatrix = getViewMatrix();
+		glm::vec4 eyeSpaceEyePos(0.0, 0.0, 0.0, 1.0);
+		glm::mat4 InverseViewMatrix = glm::inverse(ViewMatrix);
+		glm::vec4 worldSpaceEyePos = InverseViewMatrix * eyeSpaceEyePos;
+		worldSpaceEyePos /= worldSpaceEyePos.w;
+
+		
+		validate(cuUpdateVolumeMC(volumeHandle, worldSpaceEyePos[0], worldSpaceEyePos[1], worldSpaceEyePos[2]));
 
 		uint32_t hasRootNode;
 		validate(cuHasRootOctreeNodeMC(volumeHandle, &hasRootNode));
@@ -272,6 +291,14 @@ int main( void )
 			cuGetRootOctreeNodeMC(volumeHandle, &octreeNodeHandle);
 			processOctreeNode(octreeNodeHandle, rootOpenGLOctreeNode);
 		}
+		else
+		{
+			if (rootOpenGLOctreeNode)
+			{
+				delete rootOpenGLOctreeNode;
+				rootOpenGLOctreeNode = nullptr;
+			}
+		}
 		
 
 		// Clear the screen
@@ -284,6 +311,8 @@ int main( void )
 		computeMatricesFromInputs();
 		glm::mat4 viewMatrix = getViewMatrix();
 		glm::mat4 projectionMatrix = getProjectionMatrix();
+
+
 
 		// Send our transformations to the currently bound shader
 		glUniformMatrix4fv(viewMatrixID, 1, GL_FALSE, &viewMatrix[0][0]);

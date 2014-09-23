@@ -709,13 +709,13 @@ CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxel
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuUpdateVolumeMC(uint32_t volumeHandle)
+CUBIQUITYC_API int32_t cuUpdateVolumeMC(uint32_t volumeHandle, float eyePosX, float eyePosY, float eyePosZ)
 {
 	OPEN_C_INTERFACE
 
 	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
 
-	volume->update(Vector3F(0.0f, 0.0f, 0.0f), 0);
+	volume->update(Vector3F(eyePosX, eyePosY, eyePosZ), 1);
 
 	CLOSE_C_INTERFACE
 }
@@ -1086,6 +1086,16 @@ CUBIQUITYC_API int32_t cuGetMeshLastUpdatedMC(uint32_t nodeHandle, uint32_t* res
 
 	OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
 	*result = node->mMeshLastUpdated;
+
+	CLOSE_C_INTERFACE
+}
+
+CUBIQUITYC_API int32_t cuRenderThisNodeMC(uint32_t nodeHandle, uint32_t* result)
+{
+	OPEN_C_INTERFACE
+
+	OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
+	*result = node->mRenderThisNode;
 
 	CLOSE_C_INTERFACE
 }
