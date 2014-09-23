@@ -276,7 +276,7 @@ int main( void )
 		worldSpaceEyePos /= worldSpaceEyePos.w;
 
 		
-		validate(cuUpdateVolumeMC(volumeHandle, worldSpaceEyePos[0], worldSpaceEyePos[1], worldSpaceEyePos[2]));
+		validate(cuUpdateVolumeMC(volumeHandle, worldSpaceEyePos[0], worldSpaceEyePos[1], worldSpaceEyePos[2], 1.0f));
 
 		uint32_t hasRootNode;
 		validate(cuHasRootOctreeNodeMC(volumeHandle, &hasRootNode));
