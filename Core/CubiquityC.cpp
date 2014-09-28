@@ -1178,6 +1178,38 @@ CUBIQUITYC_API int32_t cuGetIndices(uint32_t nodeHandle, uint16_t** result)
 	CLOSE_C_INTERFACE
 }
 
+CUBIQUITYC_API int32_t cuGetMesh(uint32_t nodeHandle, uint32_t* noOfVertices, float** vertices, uint32_t* noOfIndices, uint16_t** indices)
+{
+	OPEN_C_INTERFACE
+
+	// Get the node
+	OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNodeFromEncodedHandle(nodeHandle));
+
+	// Get the mesh
+	const ::PolyVox::Mesh< typename VoxelTraits<Color>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
+
+	// Get no of vertices
+	*noOfVertices = polyVoxMesh->getNoOfVertices();
+
+	// Get the vertices
+	const std::vector< typename VoxelTraits<Color>::VertexType >& vertexVector = polyVoxMesh->getVertices();
+	const VoxelTraits<Color>::VertexType* vertexPointer = &(vertexVector[0]);
+	const float* constFloatPointer = reinterpret_cast<const float*>(vertexPointer);
+	float* floatPointer = const_cast<float*>(constFloatPointer);
+	*vertices = floatPointer;
+
+	// Get no of indices
+	*noOfIndices = polyVoxMesh->getNoOfIndices();
+
+	// Get the indices
+	const std::vector< uint16_t >& indexVector = polyVoxMesh->getIndices();
+	const uint16_t* constUInt16Pointer = &(indexVector[0]);
+	uint16_t* uintPointer = const_cast<uint16_t*>(constUInt16Pointer);
+	*indices = uintPointer;
+
+	CLOSE_C_INTERFACE
+}
+
 //--------------------------------------------------------------------------------
 
 CUBIQUITYC_API int32_t cuGetNoOfVerticesMC(uint32_t nodeHandle, uint32_t* result)
