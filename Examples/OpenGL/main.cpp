@@ -94,18 +94,12 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 		validate(cuNodeHasMesh(octreeNodeHandle, &hasMesh));
 		if (hasMesh == 1)
 		{	
-			// These will point to the index and vertex data
-			uint32_t noOfIndices;
-			uint16_t* indices;
+			// Get the index and vertex data
 			uint32_t noOfVertices;
 			CuTerrainVertex* vertices;
-
-			// Get the index and vertex data
-			validate(cuGetNoOfIndicesMC(octreeNodeHandle, &noOfIndices));
-			validate(cuGetIndicesMC(octreeNodeHandle, &indices));
-
-			validate(cuGetNoOfVerticesMC(octreeNodeHandle, &noOfVertices));
-			validate(cuGetVerticesMC(octreeNodeHandle, (float**)(&vertices)));
+			uint32_t noOfIndices;
+			uint16_t* indices;
+			validate(cuGetMeshMC(octreeNodeHandle, &noOfVertices, (float**)(&vertices), &noOfIndices, &indices));
 
 			// Pass it to the OpenGL node.
 			openGLOctreeNode->posX = nodeX;
