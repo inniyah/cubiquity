@@ -168,6 +168,8 @@ extern "C"
 	CUBIQUITYC_API int32_t cuGetVerticesMC(uint32_t nodeHandle, float** result);
 	CUBIQUITYC_API int32_t cuGetIndicesMC(uint32_t nodeHandle, uint16_t** result);
 
+	CUBIQUITYC_API int32_t cuGetMeshMC(uint32_t nodeHandle, uint32_t* noOfVertices, float** vertices, uint32_t* noOfIndices, uint16_t** indices);
+
 	// Clock functions
 	CUBIQUITYC_API int32_t cuGetCurrentTime(uint32_t* result);
 

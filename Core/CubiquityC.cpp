@@ -22,7 +22,7 @@ using namespace std;
 
 const uint32_t CuMajorVersion = 1;
 const uint32_t CuMinorVersion = 1;
-const uint32_t CuPatchVersion = 2;
+const uint32_t CuPatchVersion = 4;
 
 namespace VolumeTypes
 {
@@ -1241,6 +1241,38 @@ CUBIQUITYC_API int32_t cuGetIndicesMC(uint32_t nodeHandle, uint16_t** result)
 	uint16_t* uintPointer = const_cast<uint16_t*>(constUIntPointer);
 
 	*result = uintPointer;
+
+	CLOSE_C_INTERFACE
+}
+
+CUBIQUITYC_API int32_t cuGetMeshMC(uint32_t nodeHandle, uint32_t* noOfVertices, float** vertices, uint32_t* noOfIndices, uint16_t** indices)
+{
+	OPEN_C_INTERFACE
+
+	// Get the node
+	OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
+
+	// Get the mesh
+	const ::PolyVox::Mesh< typename VoxelTraits<MaterialSet>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
+
+	// Get no of vertices
+	*noOfVertices = polyVoxMesh->getNoOfVertices();
+
+	// Get the vertices
+	const std::vector< typename VoxelTraits<MaterialSet>::VertexType >& vertexVector = polyVoxMesh->getVertices();
+	const VoxelTraits<MaterialSet>::VertexType* vertexPointer = &(vertexVector[0]);
+	const float* constFloatPointer = reinterpret_cast<const float*>(vertexPointer);
+	float* floatPointer = const_cast<float*>(constFloatPointer);
+	*vertices = floatPointer;
+
+	// Get no of indices
+	*noOfIndices = polyVoxMesh->getNoOfIndices();
+
+	// Get the indices
+	const std::vector< uint16_t >& indexVector = polyVoxMesh->getIndices();
+	const uint16_t* constUIntPointer = &(indexVector[0]);
+	uint16_t* uintPointer = const_cast<uint16_t*>(constUIntPointer);
+	*indices = uintPointer;
 
 	CLOSE_C_INTERFACE
 }
