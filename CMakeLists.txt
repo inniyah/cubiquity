@@ -31,7 +31,7 @@ endif()
 # Note: Should we be using 'CMAKE_CXX_COMPILE_FLAGS' instead of 'CMAKE_CXX_FLAGS'? See http://goo.gl/rLqUyk
 if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
 	set(CMAKE_C_FLAGS "-arch i386 ${CMAKE_C_FLAGS}")
-	set(CMAKE_CXX_FLAGS "-stdlib=libc++ -arch i386 ${CMAKE_CXX_FLAGS}")
+	set(CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++ -arch i386 ${CMAKE_CXX_FLAGS}")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
 	set(CMAKE_C_FLAGS "-fPIC ${CMAKE_C_FLAGS}")
 	set(CMAKE_CXX_FLAGS "-fPIC -std=c++0x ${CMAKE_CXX_FLAGS}")
