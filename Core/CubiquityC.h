@@ -137,9 +137,6 @@ extern "C"
 	CUBIQUITYC_API int32_t cuGetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuMaterialSet* materialSet);
 	CUBIQUITYC_API int32_t cuSetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuMaterialSet materialSet);
 
-	CUBIQUITYC_API int32_t cuAcceptOverrideChunksMC(uint32_t volumeHandle);
-	CUBIQUITYC_API int32_t cuDiscardOverrideChunksMC(uint32_t volumeHandle);
-
 	// Octree functions
 	CUBIQUITYC_API int32_t cuHasRootOctreeNode(uint32_t volumeHandle, uint32_t* result);
 	CUBIQUITYC_API int32_t cuGetRootOctreeNode(uint32_t volumeHandle, uint32_t* result);
