@@ -80,12 +80,12 @@ void validate(int returnCode)
 void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctreeNode)
 {
 	int32_t nodeX, nodeY, nodeZ;
-	cuGetNodePositionMC(octreeNodeHandle, &nodeX, &nodeY, &nodeZ);
+	cuGetNodePosition(octreeNodeHandle, &nodeX, &nodeY, &nodeZ);
 
 	uint32_t meshLastUpdated;
-	validate(cuGetMeshLastUpdatedMC(octreeNodeHandle, &meshLastUpdated));
+	validate(cuGetMeshLastUpdated(octreeNodeHandle, &meshLastUpdated));
 
-	validate(cuRenderThisNodeMC(octreeNodeHandle, &(openGLOctreeNode->renderThisNode)));
+	validate(cuRenderThisNode(octreeNodeHandle, &(openGLOctreeNode->renderThisNode)));
 
 	if (meshLastUpdated > openGLOctreeNode->meshLastUpdated)
 	{
@@ -146,12 +146,12 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 			for (uint32_t x = 0; x < 2; x++)
 			{
 				uint32_t hasChildNode;
-				validate(cuHasChildNodeMC(octreeNodeHandle, x, y, z, &hasChildNode));
+				validate(cuHasChildNode(octreeNodeHandle, x, y, z, &hasChildNode));
 
 				if (hasChildNode == 1)
 				{
 					uint32_t childNodeHandle;
-					validate(cuGetChildNodeMC(octreeNodeHandle, x, y, z, &childNodeHandle));
+					validate(cuGetChildNode(octreeNodeHandle, x, y, z, &childNodeHandle));
 
 					if (!openGLOctreeNode->children[x][y][z])
 					{
@@ -279,7 +279,7 @@ int main( void )
 		validate(cuUpdateVolumeMC(volumeHandle, worldSpaceEyePos[0], worldSpaceEyePos[1], worldSpaceEyePos[2], 1.0f));
 
 		uint32_t hasRootNode;
-		validate(cuHasRootOctreeNodeMC(volumeHandle, &hasRootNode));
+		validate(cuHasRootOctreeNode(volumeHandle, &hasRootNode));
 		if (hasRootNode == 1) // FIXME - Maybe it's easier if there is always a root node?
 		{
 			if (!rootOpenGLOctreeNode)
@@ -288,7 +288,7 @@ int main( void )
 			}
 
 			uint32_t octreeNodeHandle;
-			cuGetRootOctreeNodeMC(volumeHandle, &octreeNodeHandle);
+			cuGetRootOctreeNode(volumeHandle, &octreeNodeHandle);
 			processOctreeNode(octreeNodeHandle, rootOpenGLOctreeNode);
 		}
 		else

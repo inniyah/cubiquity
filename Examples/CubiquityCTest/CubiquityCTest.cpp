@@ -67,7 +67,7 @@ void testColoredCubesVolume()
 void processOctreeNode(uint32_t octreeNodeHandle)
 {
 	int32_t nodeX, nodeY, nodeZ;
-	cuGetNodePositionMC(octreeNodeHandle, &nodeX, &nodeY, &nodeZ);
+	cuGetNodePosition(octreeNodeHandle, &nodeX, &nodeY, &nodeZ);
 
 	std::cout << "Node position: " << nodeX << " " << nodeY << " " << nodeZ << std::endl;
 
@@ -97,12 +97,12 @@ void processOctreeNode(uint32_t octreeNodeHandle)
 			for (uint32_t x = 0; x < 2; x++)
 			{
 				uint32_t hasChildNode;
-				validate(cuHasChildNodeMC(octreeNodeHandle, x, y, z, &hasChildNode));
+				validate(cuHasChildNode(octreeNodeHandle, x, y, z, &hasChildNode));
 
 				if (hasChildNode == 1)
 				{
 					uint32_t childNodeHandle;
-					validate(cuGetChildNodeMC(octreeNodeHandle, x, y, z, &childNodeHandle));
+					validate(cuGetChildNode(octreeNodeHandle, x, y, z, &childNodeHandle));
 
 					// Recursivly call the octree traversal
 					processOctreeNode(childNodeHandle);
@@ -120,11 +120,11 @@ void testTerrainVolume()
 	validate(cuUpdateVolumeMC(volumeHandle, 0.0f, 0.0f, 0.0f, 0.0f));
 
 	uint32_t hasRootNode;
-	validate(cuHasRootOctreeNodeMC(volumeHandle, &hasRootNode));
+	validate(cuHasRootOctreeNode(volumeHandle, &hasRootNode));
 	if(hasRootNode == 1)
 	{
 		uint32_t octreeNodeHandle;
-		cuGetRootOctreeNodeMC(volumeHandle, &octreeNodeHandle);
+		cuGetRootOctreeNode(volumeHandle, &octreeNodeHandle);
 		processOctreeNode(octreeNodeHandle);
 	}
 

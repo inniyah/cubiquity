@@ -786,15 +786,17 @@ CUBIQUITYC_API int32_t cuHasRootOctreeNode(uint32_t volumeHandle, uint32_t* resu
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
-	OctreeNode<Color>* node = volume->getRootOctreeNode();
-	if(node)
+	if (gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
-		*result = 1;
+		ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
+		OctreeNode<Color>* node = volume->getRootOctreeNode();
+		*result = node ? 1 : 0;
 	}
 	else
 	{
-		*result = 0;
+		TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
+		OctreeNode<MaterialSet>* node = volume->getRootOctreeNode();
+		*result = node ? 1 : 0;
 	}
 
 	CLOSE_C_INTERFACE
@@ -804,17 +806,34 @@ CUBIQUITYC_API int32_t cuGetRootOctreeNode(uint32_t volumeHandle, uint32_t* resu
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
-	OctreeNode<Color>* node = volume->getRootOctreeNode();
-
-	if(!node)
+	if (gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
-		POLYVOX_THROW(PolyVox::invalid_operation, "No root node exists! Please check this with cuHasRootOctreeNode() first");
+		ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
+		OctreeNode<Color>* node = volume->getRootOctreeNode();
+
+		if (!node)
+		{
+			POLYVOX_THROW(PolyVox::invalid_operation, "No root node exists! Please check this with cuHasRootOctreeNode() first");
+		}
+
+		uint32_t decodedNodeHandle = node->mSelf;
+
+		*result = encodeNodeHandle(volumeHandle, decodedNodeHandle);
 	}
+	else
+	{
+		TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
+		OctreeNode<MaterialSet>* node = volume->getRootOctreeNode();
 
-	uint32_t decodedNodeHandle = node->mSelf;
+		if (!node)
+		{
+			POLYVOX_THROW(PolyVox::invalid_operation, "No root node exists! Please check this with cuHasRootOctreeNode() first");
+		}
 
-	*result = encodeNodeHandle(volumeHandle, decodedNodeHandle);
+		uint32_t decodedNodeHandle = node->mSelf;
+
+		*result = encodeNodeHandle(volumeHandle, decodedNodeHandle);
+	}
 
 	CLOSE_C_INTERFACE
 }
@@ -831,27 +850,13 @@ CUBIQUITYC_API int32_t cuHasChildNode(uint32_t nodeHandle, uint32_t childX, uint
 	{
 		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNodeFromEncodedHandle(nodeHandle));
 		OctreeNode<Color>* child = node->getChildNode(childX, childY, childZ);
-		if(child)
-		{
-			*result =  1;
-		}
-		else
-		{
-			*result = 0;
-		}
+		*result = child ? 1 : 0;
 	}
 	else
 	{
 		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
 		OctreeNode<MaterialSet>* child = node->getChildNode(childX, childY, childZ);
-		if(child)
-		{
-			*result =  1;
-		}
-		else
-		{
-			*result = 0;
-		}
+		*result = child ? 1 : 0;
 	}
 
 	CLOSE_C_INTERFACE
@@ -888,7 +893,7 @@ CUBIQUITYC_API int32_t cuGetChildNode(uint32_t nodeHandle, uint32_t childX, uint
 		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
 		OctreeNode<MaterialSet>* child = node->getChildNode(childX, childY, childZ);
 
-		if(!node)
+		if (!node)
 		{
 			POLYVOX_THROW(PolyVox::invalid_operation, "The specified child node does not exist! Please check this with cuHasChildNode() first");
 		}
@@ -981,15 +986,27 @@ CUBIQUITYC_API int32_t cuRenderThisNode(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
-	*result = node->mRenderThisNode;
+	uint32_t volumeHandle;
+	uint32_t decodedNodeHandle;
+	decodeNodeHandle(nodeHandle, &volumeHandle, &decodedNodeHandle);
+
+	if (gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
+	{
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
+		*result = node->mRenderThisNode;
+	}
+	else
+	{
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
+		*result = node->mRenderThisNode;
+	}
 
 	CLOSE_C_INTERFACE
 }
 
 //--------------------------------------------------------------------------------
 
-CUBIQUITYC_API int32_t cuHasRootOctreeNodeMC(uint32_t volumeHandle, uint32_t* result)
+/*CUBIQUITYC_API int32_t cuHasRootOctreeNodeMC(uint32_t volumeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
@@ -1005,9 +1022,9 @@ CUBIQUITYC_API int32_t cuHasRootOctreeNodeMC(uint32_t volumeHandle, uint32_t* re
 	}
 
 	CLOSE_C_INTERFACE
-}
+}*/
 
-CUBIQUITYC_API int32_t cuGetRootOctreeNodeMC(uint32_t volumeHandle, uint32_t* result)
+/*CUBIQUITYC_API int32_t cuGetRootOctreeNodeMC(uint32_t volumeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
@@ -1024,9 +1041,9 @@ CUBIQUITYC_API int32_t cuGetRootOctreeNodeMC(uint32_t volumeHandle, uint32_t* re
 	*result = encodeNodeHandle(volumeHandle, decodedNodeHandle);
 
 	CLOSE_C_INTERFACE
-}
+}*/
 
-CUBIQUITYC_API int32_t cuHasChildNodeMC(uint32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ, uint32_t* result)
+/*CUBIQUITYC_API int32_t cuHasChildNodeMC(uint32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
@@ -1042,9 +1059,9 @@ CUBIQUITYC_API int32_t cuHasChildNodeMC(uint32_t nodeHandle, uint32_t childX, ui
 	}
 
 	CLOSE_C_INTERFACE
-}
+}*/
 
-CUBIQUITYC_API int32_t cuGetChildNodeMC(uint32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ, uint32_t* result)
+/*CUBIQUITYC_API int32_t cuGetChildNodeMC(uint32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
@@ -1065,9 +1082,9 @@ CUBIQUITYC_API int32_t cuGetChildNodeMC(uint32_t nodeHandle, uint32_t childX, ui
 	*result = encodeNodeHandle(volumeHandle, decodedNodeHandle);
 
 	CLOSE_C_INTERFACE
-}
+}*/
 
-CUBIQUITYC_API int32_t cuNodeHasMeshMC(uint32_t nodeHandle, uint32_t* result)
+/*CUBIQUITYC_API int32_t cuNodeHasMeshMC(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
@@ -1075,9 +1092,9 @@ CUBIQUITYC_API int32_t cuNodeHasMeshMC(uint32_t nodeHandle, uint32_t* result)
 	*result = (node->mPolyVoxMesh != 0) ? 1 : 0;
 
 	CLOSE_C_INTERFACE
-}
+}*/
 
-CUBIQUITYC_API int32_t cuGetNodePositionMC(uint32_t nodeHandle, int32_t* x, int32_t* y, int32_t* z)
+/*CUBIQUITYC_API int32_t cuGetNodePositionMC(uint32_t nodeHandle, int32_t* x, int32_t* y, int32_t* z)
 {
 	OPEN_C_INTERFACE
 
@@ -1088,9 +1105,9 @@ CUBIQUITYC_API int32_t cuGetNodePositionMC(uint32_t nodeHandle, int32_t* x, int3
 	*z = lowerCorner.getZ();
 
 	CLOSE_C_INTERFACE
-}
+}*/
 
-CUBIQUITYC_API int32_t cuGetMeshLastUpdatedMC(uint32_t nodeHandle, uint32_t* result)
+/*CUBIQUITYC_API int32_t cuGetMeshLastUpdatedMC(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
@@ -1098,9 +1115,9 @@ CUBIQUITYC_API int32_t cuGetMeshLastUpdatedMC(uint32_t nodeHandle, uint32_t* res
 	*result = node->mMeshLastUpdated;
 
 	CLOSE_C_INTERFACE
-}
+}*/
 
-CUBIQUITYC_API int32_t cuRenderThisNodeMC(uint32_t nodeHandle, uint32_t* result)
+/*CUBIQUITYC_API int32_t cuRenderThisNodeMC(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
@@ -1108,7 +1125,7 @@ CUBIQUITYC_API int32_t cuRenderThisNodeMC(uint32_t nodeHandle, uint32_t* result)
 	*result = node->mRenderThisNode;
 
 	CLOSE_C_INTERFACE
-}
+}*/
 
 ////////////////////////////////////////////////////////////////////////////////
 // Mesh functions
