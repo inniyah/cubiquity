@@ -1068,7 +1068,7 @@ CUBIQUITYC_API int32_t cuGetIndices(uint32_t nodeHandle, uint16_t** result)
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuGetMesh(uint32_t nodeHandle, uint32_t* noOfVertices, float** vertices, uint32_t* noOfIndices, uint16_t** indices)
+CUBIQUITYC_API int32_t cuGetMesh(uint32_t nodeHandle, uint16_t* noOfVertices, void** vertices, uint32_t* noOfIndices, uint16_t** indices)
 {
 	OPEN_C_INTERFACE
 
@@ -1084,9 +1084,9 @@ CUBIQUITYC_API int32_t cuGetMesh(uint32_t nodeHandle, uint32_t* noOfVertices, fl
 	// Get the vertices
 	const std::vector< typename VoxelTraits<Color>::VertexType >& vertexVector = polyVoxMesh->getVertices();
 	const VoxelTraits<Color>::VertexType* vertexPointer = &(vertexVector[0]);
-	const float* constFloatPointer = reinterpret_cast<const float*>(vertexPointer);
-	float* floatPointer = const_cast<float*>(constFloatPointer);
-	*vertices = floatPointer;
+	const void* constVoidPointer = reinterpret_cast<const void*>(vertexPointer);
+	void* voidPointer = const_cast<void*>(constVoidPointer);
+	*vertices = voidPointer;
 
 	// Get no of indices
 	*noOfIndices = polyVoxMesh->getNoOfIndices();
@@ -1167,7 +1167,7 @@ CUBIQUITYC_API int32_t cuGetIndicesMC(uint32_t nodeHandle, uint16_t** result)
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuGetMeshMC(uint32_t nodeHandle, uint32_t* noOfVertices, float** vertices, uint32_t* noOfIndices, uint16_t** indices)
+CUBIQUITYC_API int32_t cuGetMeshMC(uint32_t nodeHandle, uint16_t* noOfVertices, void** vertices, uint32_t* noOfIndices, uint16_t** indices)
 {
 	OPEN_C_INTERFACE
 
@@ -1183,9 +1183,9 @@ CUBIQUITYC_API int32_t cuGetMeshMC(uint32_t nodeHandle, uint32_t* noOfVertices, 
 	// Get the vertices
 	const std::vector< typename VoxelTraits<MaterialSet>::VertexType >& vertexVector = polyVoxMesh->getVertices();
 	const VoxelTraits<MaterialSet>::VertexType* vertexPointer = &(vertexVector[0]);
-	const float* constFloatPointer = reinterpret_cast<const float*>(vertexPointer);
-	float* floatPointer = const_cast<float*>(constFloatPointer);
-	*vertices = floatPointer;
+	const void* constVoidPointer = reinterpret_cast<const void*>(vertexPointer);
+	void* voidPointer = const_cast<void*>(constVoidPointer);
+	*vertices = voidPointer;
 
 	// Get no of indices
 	*noOfIndices = polyVoxMesh->getNoOfIndices();
