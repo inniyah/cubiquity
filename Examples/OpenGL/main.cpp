@@ -97,7 +97,7 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 			// These will point to the index and vertex data
 			uint32_t noOfIndices;
 			uint16_t* indices;
-			uint32_t noOfVertices;
+			uint16_t noOfVertices;
 			CuTerrainVertex* vertices;
 
 			// Get the index and vertex data
@@ -105,7 +105,7 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 			validate(cuGetIndicesMC(octreeNodeHandle, &indices));
 
 			validate(cuGetNoOfVerticesMC(octreeNodeHandle, &noOfVertices));
-			validate(cuGetVerticesMC(octreeNodeHandle, (float**)(&vertices)));
+			validate(cuGetVerticesMC(octreeNodeHandle, (void**)(&vertices)));
 
 			// Pass it to the OpenGL node.
 			openGLOctreeNode->posX = nodeX;

@@ -1003,7 +1003,7 @@ CUBIQUITYC_API int32_t cuRenderThisNode(uint32_t nodeHandle, uint32_t* result)
 ////////////////////////////////////////////////////////////////////////////////
 // Mesh functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API int32_t cuGetNoOfVertices(uint32_t nodeHandle, uint32_t* result)
+CUBIQUITYC_API int32_t cuGetNoOfVertices(uint32_t nodeHandle, uint16_t* result)
 {
 	OPEN_C_INTERFACE
 
@@ -1029,7 +1029,7 @@ CUBIQUITYC_API int32_t cuGetNoOfIndices(uint32_t nodeHandle, uint32_t* result)
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuGetVertices(uint32_t nodeHandle, float** result)
+CUBIQUITYC_API int32_t cuGetVertices(uint32_t nodeHandle, void** result)
 {
 	OPEN_C_INTERFACE
 
@@ -1102,7 +1102,7 @@ CUBIQUITYC_API int32_t cuGetMesh(uint32_t nodeHandle, uint32_t* noOfVertices, fl
 
 //--------------------------------------------------------------------------------
 
-CUBIQUITYC_API int32_t cuGetNoOfVerticesMC(uint32_t nodeHandle, uint32_t* result)
+CUBIQUITYC_API int32_t cuGetNoOfVerticesMC(uint32_t nodeHandle, uint16_t* result)
 {
 	OPEN_C_INTERFACE
 
@@ -1128,7 +1128,7 @@ CUBIQUITYC_API int32_t cuGetNoOfIndicesMC(uint32_t nodeHandle, uint32_t* result)
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuGetVerticesMC(uint32_t nodeHandle, float** result)
+CUBIQUITYC_API int32_t cuGetVerticesMC(uint32_t nodeHandle, void** result)
 {
 	OPEN_C_INTERFACE
 
