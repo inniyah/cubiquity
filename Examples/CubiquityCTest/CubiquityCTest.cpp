@@ -76,16 +76,16 @@ void processOctreeNode(uint32_t octreeNodeHandle)
 	if (hasMesh == 1)
 	{
 		uint32_t noOfIndices;
-		validate(cuGetNoOfIndicesMC(octreeNodeHandle, &noOfIndices));
+		validate(cuGetNoOfIndices(octreeNodeHandle, &noOfIndices));
 
 		uint16_t* indices = new uint16_t[noOfIndices];
-		validate(cuGetIndicesMC(octreeNodeHandle, &indices));
+		validate(cuGetIndices(octreeNodeHandle, &indices));
 
 		uint16_t noOfVertices;
-		validate(cuGetNoOfVerticesMC(octreeNodeHandle, &noOfVertices));
+		validate(cuGetNoOfVertices(octreeNodeHandle, &noOfVertices));
 
 		void* vertices;// = new float[noOfVertices * 7]; // Vertex no longer built from floats.
-		validate(cuGetVerticesMC(octreeNodeHandle, &vertices));
+		validate(cuGetVertices(octreeNodeHandle, &vertices));
 
 		std::cout << "Found mesh - it has " << noOfVertices << " vertices and " << noOfIndices << " indices." << std::endl;
 	}
