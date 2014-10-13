@@ -591,7 +591,7 @@ CUBIQUITYC_API int32_t cuGetEnclosingRegion(uint32_t volumeHandle, int32_t* lowe
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuGetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuColor* color)
+CUBIQUITYC_API int32_t cuGetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, void* result)
 {
 	OPEN_C_INTERFACE
 
@@ -600,7 +600,9 @@ CUBIQUITYC_API int32_t cuGetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, i
 
 	CuColor* ptr = (CuColor*)&temp;
 
-	*color = *ptr;
+	CuColor* resultAsColor = (CuColor*)result;
+
+	*resultAsColor = *ptr;
 
 	CLOSE_C_INTERFACE
 }
