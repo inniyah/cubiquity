@@ -614,11 +614,11 @@ CUBIQUITYC_API int32_t cuGetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, i
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuSetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuColor color)
+CUBIQUITYC_API int32_t cuSetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, void* value)
 {
 	OPEN_C_INTERFACE
 
-	Color* pColor = (Color*)&color;
+	Color* pColor = (Color*)value;
 
 	ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
 	volume->setVoxelAt(x, y, z, *pColor, UpdatePriorities::Immediate);

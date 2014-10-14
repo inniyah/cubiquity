@@ -108,7 +108,7 @@ bool importMagicaVoxel(const std::string& filename, const std::string& pathToVox
 		CuColor color = cuMakeColor(rgba.r, rgba.g, rgba.b, rgba.a);
 
 		// NOTE: Y/Z axis swapped to better match Magica to Cubiquity.
-		if(cuSetVoxel(volumeHandle, model.voxels[i].x, model.voxels[i].z, model.voxels[i].y, color) != CU_OK)
+		if(cuSetVoxel(volumeHandle, model.voxels[i].x, model.voxels[i].z, model.voxels[i].y, &color) != CU_OK)
 		{
 			cerr << "Error setting voxel color" << endl;
 			return false;

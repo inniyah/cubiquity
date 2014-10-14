@@ -35,11 +35,11 @@ void testColoredCubesVolume()
 			{
 				// Write a color based on the height of the voxel.
 				if (y < 5)
-					validate(cuSetVoxel(volumeID, x, y, z, redCol));
+					validate(cuSetVoxel(volumeID, x, y, z, &redCol));
 				else if (y < 10)
-					validate(cuSetVoxel(volumeID, x, y, z, greenCol));
+					validate(cuSetVoxel(volumeID, x, y, z, &greenCol));
 				else if (y < 15)
-					validate(cuSetVoxel(volumeID, x, y, z, blueCol));
+					validate(cuSetVoxel(volumeID, x, y, z, &blueCol));
 			}
 		}
 	}
