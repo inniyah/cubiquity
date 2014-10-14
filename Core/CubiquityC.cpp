@@ -595,14 +595,21 @@ CUBIQUITYC_API int32_t cuGetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, i
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
-	Color temp = volume->getVoxelAt(x, y, z);
-
-	CuColor* ptr = (CuColor*)&temp;
-
-	CuColor* resultAsColor = (CuColor*)result;
-
-	*resultAsColor = *ptr;
+	if (gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
+	{
+		ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
+		Color temp = volume->getVoxelAt(x, y, z);
+		CuColor* ptr = (CuColor*)&temp;
+		CuColor* resultAsColor = (CuColor*)result;
+		*resultAsColor = *ptr;
+	}
+	else
+	{
+		TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
+		MaterialSet material = volume->getVoxelAt(x, y, z);
+		CuMaterialSet* resultAsMaterialSet = (CuMaterialSet*)result;
+		resultAsMaterialSet->data = material.mWeights.allBits();
+	}
 
 	CLOSE_C_INTERFACE
 }
@@ -753,7 +760,7 @@ CUBIQUITYC_API int32_t cuDeleteTerrainVolume(uint32_t volumeHandle)
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuGetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuMaterialSet* materialSet)
+/*CUBIQUITYC_API int32_t cuGetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuMaterialSet* materialSet)
 {
 	OPEN_C_INTERFACE
 
@@ -763,7 +770,7 @@ CUBIQUITYC_API int32_t cuGetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y,
 	materialSet->data = material.mWeights.allBits();
 
 	CLOSE_C_INTERFACE
-}
+}*/
 
 CUBIQUITYC_API int32_t cuSetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuMaterialSet materialSet)
 {
