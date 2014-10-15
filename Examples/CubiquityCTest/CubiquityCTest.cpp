@@ -61,7 +61,7 @@ void testColoredCubesVolume()
 	std::cout << ss.str();
 
 	// Delete the volume from meory (doesn't delete from disk).
-	validate(cuDeleteColoredCubesVolume(volumeID));
+	validate(cuDeleteVolume(volumeID));
 }
 
 void processOctreeNode(uint32_t octreeNodeHandle)
@@ -117,7 +117,7 @@ void testTerrainVolume()
 	uint32_t volumeHandle;
 	validate(cuNewTerrainVolumeFromVDB("C:/code/cubiquity/Data/Volumes/Version 0/SmoothVoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
 
-	validate(cuUpdateVolumeMC(volumeHandle, 0.0f, 0.0f, 0.0f, 0.0f));
+	validate(cuUpdateVolume(volumeHandle, 0.0f, 0.0f, 0.0f, 0.0f));
 
 	uint32_t hasRootNode;
 	validate(cuHasRootOctreeNode(volumeHandle, &hasRootNode));
@@ -129,7 +129,7 @@ void testTerrainVolume()
 	}
 
 	// Delete the volume from memory (doesn't delete from disk).
-	validate(cuDeleteTerrainVolume(volumeHandle));
+	validate(cuDeleteVolume(volumeHandle));
 }
 
 int main()

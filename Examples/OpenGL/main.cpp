@@ -276,7 +276,7 @@ int main( void )
 		worldSpaceEyePos /= worldSpaceEyePos.w;
 
 		
-		validate(cuUpdateVolumeMC(volumeHandle, worldSpaceEyePos[0], worldSpaceEyePos[1], worldSpaceEyePos[2], 1.0f));
+		validate(cuUpdateVolume(volumeHandle, worldSpaceEyePos[0], worldSpaceEyePos[1], worldSpaceEyePos[2], 1.0f));
 
 		uint32_t hasRootNode;
 		validate(cuHasRootOctreeNode(volumeHandle, &hasRootNode));
@@ -338,7 +338,7 @@ int main( void )
 	glfwTerminate();
 
 	// Delete the volume from memory (doesn't delete from disk).
-	validate(cuDeleteTerrainVolume(volumeHandle));
+	validate(cuDeleteVolume(volumeHandle));
 
 	return 0;
 }

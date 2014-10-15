@@ -537,21 +537,34 @@ CUBIQUITYC_API int32_t cuUpdateVolume(uint32_t volumeHandle, float eyePosX, floa
 {
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
-
-	volume->update(Vector3F(eyePosX, eyePosY, eyePosZ), lodThreshold);
+	if (gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
+	{
+		ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
+		volume->update(Vector3F(eyePosX, eyePosY, eyePosZ), lodThreshold);
+	}
+	else
+	{
+		TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
+		volume->update(Vector3F(eyePosX, eyePosY, eyePosZ), lodThreshold);
+	}
 
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuDeleteColoredCubesVolume(uint32_t volumeHandle)
+CUBIQUITYC_API int32_t cuDeleteVolume(uint32_t volumeHandle)
 {
-	POLYVOX_LOG_DEBUG("In cuDeleteColoredCubesVolume() - deleting volume handle '" << volumeHandle << "'");
-
 	OPEN_C_INTERFACE
 
-	ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
-	delete volume;
+	if (gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
+	{
+		ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
+		delete volume;
+	}
+	else
+	{
+		TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
+		delete volume;
+	}	
 
 	// In the future we could consider reusing this slot as we can detect that it set to zero.
 	gVolumes[volumeHandle] = 0;
@@ -741,56 +754,6 @@ CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxel
 
 	CLOSE_C_INTERFACE
 }
-
-CUBIQUITYC_API int32_t cuUpdateVolumeMC(uint32_t volumeHandle, float eyePosX, float eyePosY, float eyePosZ, float lodThreshold)
-{
-	OPEN_C_INTERFACE
-
-	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
-
-	volume->update(Vector3F(eyePosX, eyePosY, eyePosZ), lodThreshold);
-
-	CLOSE_C_INTERFACE
-}
-
-CUBIQUITYC_API int32_t cuDeleteTerrainVolume(uint32_t volumeHandle)
-{
-	POLYVOX_LOG_DEBUG("In cuDeleteTerrainVolume() - deleting volume handle '" << volumeHandle << "'");
-
-	OPEN_C_INTERFACE
-
-	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
-	delete volume;
-
-	// In the future we could consider reusing this slot as we can detect that it set to zero.
-	gVolumes[volumeHandle] = 0;
-
-	CLOSE_C_INTERFACE
-}
-
-/*CUBIQUITYC_API int32_t cuGetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuMaterialSet* materialSet)
-{
-	OPEN_C_INTERFACE
-
-	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
-	MaterialSet material = volume->getVoxelAt(x, y, z);
-
-	materialSet->data = material.mWeights.allBits();
-
-	CLOSE_C_INTERFACE
-}*/
-
-/*CUBIQUITYC_API int32_t cuSetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuMaterialSet materialSet)
-{
-	OPEN_C_INTERFACE
-
-	MaterialSet* pMat = (MaterialSet*)&materialSet;
-
-	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
-	volume->setVoxelAt(x, y, z, *pMat, UpdatePriorities::Immediate);
-	
-	CLOSE_C_INTERFACE
-}*/
 
 ////////////////////////////////////////////////////////////////////////////////
 // Octree functions

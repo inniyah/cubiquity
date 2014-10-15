@@ -116,7 +116,7 @@ bool importMagicaVoxel(const std::string& filename, const std::string& pathToVox
 	}
 
 	cuAcceptOverrideChunks(volumeHandle);
-	cuDeleteColoredCubesVolume(volumeHandle);
+	cuDeleteVolume(volumeHandle);
 
 	return true;
 }
