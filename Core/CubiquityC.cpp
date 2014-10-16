@@ -137,30 +137,33 @@ void* getVolumeFromHandle(uint32_t volumeHandle)
 	return gVolumes[volumeHandle];
 }
 
-ColoredCubesVolume* getColoredCubesVolumeFromHandle(uint32_t volumeHandle)
+ColoredCubesVolume* getColoredCubesVolumeFromHandle(uint32_t volumeIndex)
 {
-	POLYVOX_THROW_IF(gVolumeTypes[volumeHandle] != VolumeTypes::ColoredCubes, std::invalid_argument, "Wrong volume type");
-	ColoredCubesVolume* volume = reinterpret_cast<ColoredCubesVolume*>(gVolumes[volumeHandle]);
+	POLYVOX_THROW_IF(gVolumeTypes[volumeIndex] != VolumeTypes::ColoredCubes, std::invalid_argument, "Wrong volume type");
+	ColoredCubesVolume* volume = reinterpret_cast<ColoredCubesVolume*>(gVolumes[volumeIndex]);
 	return volume;
 }
 
-TerrainVolume* getTerrainVolumeFromHandle(uint32_t volumeHandle)
+TerrainVolume* getTerrainVolumeFromHandle(uint32_t volumeIndex)
 {
-	POLYVOX_THROW_IF(gVolumeTypes[volumeHandle] != VolumeTypes::Terrain, std::invalid_argument, "Wrong volume type");
-	TerrainVolume* volume = reinterpret_cast<TerrainVolume*>(gVolumes[volumeHandle]);
+	POLYVOX_THROW_IF(gVolumeTypes[volumeIndex] != VolumeTypes::Terrain, std::invalid_argument, "Wrong volume type");
+	TerrainVolume* volume = reinterpret_cast<TerrainVolume*>(gVolumes[volumeIndex]);
 	return volume;
 }
 
-uint32_t encodeNodeHandle(uint32_t volumeHandle, uint32_t decodedNodeHandle)
+uint32_t encodeNodeHandle(uint32_t volumeType, uint32_t volumeIndex, uint32_t nodeIndex)
 {
-	uint32_t shiftedVolumeHandle = volumeHandle << NodeHandleBits;
-	return shiftedVolumeHandle | decodedNodeHandle;
+	uint32_t handle = volumeType << (TotalHandleBits - 1);
+	handle |= (volumeIndex << NodeHandleBits);
+	handle |= nodeIndex;
+	return handle;
 }
 
-void decodeNodeHandle(uint32_t encodedNodeHandle, uint32_t* volumeHandle, uint32_t* decodedNodeHandle)
+void decodeNodeHandle(uint32_t handle, uint32_t* volumeType, uint32_t* volumeIndex, uint32_t* nodeIndex)
 {
-	*volumeHandle = encodedNodeHandle >> NodeHandleBits;
-	*decodedNodeHandle = encodedNodeHandle & NodeHandleMask;
+	*volumeType = handle >> (TotalHandleBits - 1);
+	*volumeIndex = (handle >> NodeHandleBits) & 0xFF;
+	*nodeIndex = handle & NodeHandleMask;
 }
 
 void* getNode(uint32_t volumeIndex, uint32_t nodeIndex)
@@ -619,7 +622,7 @@ CUBIQUITYC_API int32_t cuGetRootOctreeNode(uint32_t volumeHandle, uint32_t* resu
 
 		uint32_t decodedNodeHandle = node->mSelf;
 
-		*result = encodeNodeHandle(volumeHandle, decodedNodeHandle);
+		*result = encodeNodeHandle(CU_COLORED_CUBES, volumeHandle, decodedNodeHandle);
 	}
 	else
 	{
@@ -633,7 +636,7 @@ CUBIQUITYC_API int32_t cuGetRootOctreeNode(uint32_t volumeHandle, uint32_t* resu
 
 		uint32_t decodedNodeHandle = node->mSelf;
 
-		*result = encodeNodeHandle(volumeHandle, decodedNodeHandle);
+		*result = encodeNodeHandle(CU_TERRAIN, volumeHandle, decodedNodeHandle);
 	}
 
 	CLOSE_C_INTERFACE
@@ -643,9 +646,8 @@ CUBIQUITYC_API int32_t cuHasChildNode(uint32_t nodeHandle, uint32_t childX, uint
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeHandle;
-	uint32_t decodedNodeHandle;
-	decodeNodeHandle(nodeHandle, &volumeHandle, &decodedNodeHandle);
+	uint32_t volumeType, volumeHandle, decodedNodeHandle;
+	decodeNodeHandle(nodeHandle, &volumeType, &volumeHandle, &decodedNodeHandle);
 
 	if(gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
@@ -667,9 +669,8 @@ CUBIQUITYC_API int32_t cuGetChildNode(uint32_t nodeHandle, uint32_t childX, uint
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeHandle;
-	uint32_t decodedNodeHandle;
-	decodeNodeHandle(nodeHandle, &volumeHandle, &decodedNodeHandle);
+	uint32_t volumeType, volumeHandle, decodedNodeHandle;
+	decodeNodeHandle(nodeHandle, &volumeType, &volumeHandle, &decodedNodeHandle);
 
 	if(gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
@@ -685,9 +686,9 @@ CUBIQUITYC_API int32_t cuGetChildNode(uint32_t nodeHandle, uint32_t childX, uint
 
 		uint32_t volumeHandle;
 		uint32_t dummy;
-		decodeNodeHandle(nodeHandle, &volumeHandle, &dummy);
+		decodeNodeHandle(nodeHandle, &volumeType, &volumeHandle, &dummy);
 
-		*result = encodeNodeHandle(volumeHandle, decodedNodeHandle);
+		*result = encodeNodeHandle(CU_COLORED_CUBES, volumeHandle, decodedNodeHandle);
 	}
 	else
 	{
@@ -703,9 +704,9 @@ CUBIQUITYC_API int32_t cuGetChildNode(uint32_t nodeHandle, uint32_t childX, uint
 
 		uint32_t volumeHandle;
 		uint32_t dummy;
-		decodeNodeHandle(nodeHandle, &volumeHandle, &dummy);
+		decodeNodeHandle(nodeHandle, &volumeType, &volumeHandle, &dummy);
 
-		*result = encodeNodeHandle(volumeHandle, decodedNodeHandle);
+		*result = encodeNodeHandle(CU_TERRAIN, volumeHandle, decodedNodeHandle);
 	}
 
 	CLOSE_C_INTERFACE
@@ -715,9 +716,8 @@ CUBIQUITYC_API int32_t cuNodeHasMesh(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeHandle;
-	uint32_t decodedNodeHandle;
-	decodeNodeHandle(nodeHandle, &volumeHandle, &decodedNodeHandle);
+	uint32_t volumeType, volumeHandle, decodedNodeHandle;
+	decodeNodeHandle(nodeHandle, &volumeType, &volumeHandle, &decodedNodeHandle);
 
 	if(gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
@@ -737,9 +737,8 @@ CUBIQUITYC_API int32_t cuGetNodePosition(uint32_t nodeHandle, int32_t* x, int32_
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeHandle;
-	uint32_t decodedNodeHandle;
-	decodeNodeHandle(nodeHandle, &volumeHandle, &decodedNodeHandle);
+	uint32_t volumeType, volumeHandle, decodedNodeHandle;
+	decodeNodeHandle(nodeHandle, &volumeType, &volumeHandle, &decodedNodeHandle);
 
 	if(gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
@@ -765,9 +764,8 @@ CUBIQUITYC_API int32_t cuGetMeshLastUpdated(uint32_t nodeHandle, uint32_t* resul
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeHandle;
-	uint32_t decodedNodeHandle;
-	decodeNodeHandle(nodeHandle, &volumeHandle, &decodedNodeHandle);
+	uint32_t volumeType, volumeHandle, decodedNodeHandle;
+	decodeNodeHandle(nodeHandle, &volumeType, &volumeHandle, &decodedNodeHandle);
 
 	if(gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
@@ -787,9 +785,8 @@ CUBIQUITYC_API int32_t cuRenderThisNode(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeHandle;
-	uint32_t decodedNodeHandle;
-	decodeNodeHandle(nodeHandle, &volumeHandle, &decodedNodeHandle);
+	uint32_t volumeType, volumeHandle, decodedNodeHandle;
+	decodeNodeHandle(nodeHandle, &volumeType, &volumeHandle, &decodedNodeHandle);
 
 	if (gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
@@ -812,9 +809,8 @@ CUBIQUITYC_API int32_t cuGetNoOfVertices(uint32_t nodeHandle, uint16_t* result)
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeHandle;
-	uint32_t decodedNodeHandle;
-	decodeNodeHandle(nodeHandle, &volumeHandle, &decodedNodeHandle);
+	uint32_t volumeType, volumeHandle, decodedNodeHandle;
+	decodeNodeHandle(nodeHandle, &volumeType, &volumeHandle, &decodedNodeHandle);
 
 	if (gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
@@ -836,9 +832,8 @@ CUBIQUITYC_API int32_t cuGetNoOfIndices(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeHandle;
-	uint32_t decodedNodeHandle;
-	decodeNodeHandle(nodeHandle, &volumeHandle, &decodedNodeHandle);
+	uint32_t volumeType, volumeHandle, decodedNodeHandle;
+	decodeNodeHandle(nodeHandle, &volumeType, &volumeHandle, &decodedNodeHandle);
 
 	if (gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
@@ -860,9 +855,8 @@ CUBIQUITYC_API int32_t cuGetVertices(uint32_t nodeHandle, void** result)
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeHandle;
-	uint32_t decodedNodeHandle;
-	decodeNodeHandle(nodeHandle, &volumeHandle, &decodedNodeHandle);
+	uint32_t volumeType, volumeHandle, decodedNodeHandle;
+	decodeNodeHandle(nodeHandle, &volumeType, &volumeHandle, &decodedNodeHandle);
 
 	if (gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
@@ -892,9 +886,8 @@ CUBIQUITYC_API int32_t cuGetIndices(uint32_t nodeHandle, uint16_t** result)
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeHandle;
-	uint32_t decodedNodeHandle;
-	decodeNodeHandle(nodeHandle, &volumeHandle, &decodedNodeHandle);
+	uint32_t volumeType, volumeHandle, decodedNodeHandle;
+	decodeNodeHandle(nodeHandle, &volumeType, &volumeHandle, &decodedNodeHandle);
 
 	if (gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
@@ -922,9 +915,8 @@ CUBIQUITYC_API int32_t cuGetMesh(uint32_t nodeHandle, uint16_t* noOfVertices, vo
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeHandle;
-	uint32_t decodedNodeHandle;
-	decodeNodeHandle(nodeHandle, &volumeHandle, &decodedNodeHandle);
+	uint32_t volumeType, volumeHandle, decodedNodeHandle;
+	decodeNodeHandle(nodeHandle, &volumeType, &volumeHandle, &decodedNodeHandle);
 
 	if (gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
