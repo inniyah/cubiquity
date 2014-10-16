@@ -95,7 +95,6 @@ const int MaxNoOfVolumes = 256;
 const int TotalHandleBits = 32;
 const int VolumeHandleBits = 8;
 const int MaxVolumeHandle = (0x01 << VolumeHandleBits) - 1;
-const int VolumeHandleShift = TotalHandleBits - VolumeHandleBits - 1;
 
 const int NodeHandleBits = 16; // Set this properly later.
 const int NodeHandleMask = (0x01 << NodeHandleBits) - 1;
@@ -154,32 +153,28 @@ TerrainVolume* getTerrainVolumeFromHandle(uint32_t volumeHandle)
 
 uint32_t encodeNodeHandle(uint32_t volumeHandle, uint32_t decodedNodeHandle)
 {
-	uint32_t shiftedVolumeHandle = volumeHandle << VolumeHandleShift;
+	uint32_t shiftedVolumeHandle = volumeHandle << NodeHandleBits;
 	return shiftedVolumeHandle | decodedNodeHandle;
 }
 
 void decodeNodeHandle(uint32_t encodedNodeHandle, uint32_t* volumeHandle, uint32_t* decodedNodeHandle)
 {
-	*volumeHandle = encodedNodeHandle >> VolumeHandleShift;
+	*volumeHandle = encodedNodeHandle >> NodeHandleBits;
 	*decodedNodeHandle = encodedNodeHandle & NodeHandleMask;
 }
 
-void* getNodeFromEncodedHandle(uint32_t encodedNodeHandle)
+void* getNode(uint32_t volumeIndex, uint32_t nodeIndex)
 {
-	uint32_t volumeHandle;
-	uint32_t decodedNodeHandle;
-	decodeNodeHandle(encodedNodeHandle, &volumeHandle, &decodedNodeHandle);
-
-	if(gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
+	if (gVolumeTypes[volumeIndex] == VolumeTypes::ColoredCubes)
 	{
-		ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
-		OctreeNode<Color>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
+		ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeIndex);
+		OctreeNode<Color>* node = volume->getOctree()->getNodeFromIndex(nodeIndex);
 		return node;
 	}
 	else
 	{
-		TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
-		OctreeNode<MaterialSet>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
+		TerrainVolume* volume = getTerrainVolumeFromHandle(volumeIndex);
+		OctreeNode<MaterialSet>* node = volume->getOctree()->getNodeFromIndex(nodeIndex);
 		return node;
 	}
 }
@@ -654,13 +649,13 @@ CUBIQUITYC_API int32_t cuHasChildNode(uint32_t nodeHandle, uint32_t childX, uint
 
 	if(gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
-		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNode(volumeHandle, decodedNodeHandle));
 		OctreeNode<Color>* child = node->getChildNode(childX, childY, childZ);
 		*result = child ? 1 : 0;
 	}
 	else
 	{
-		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNode(volumeHandle, decodedNodeHandle));
 		OctreeNode<MaterialSet>* child = node->getChildNode(childX, childY, childZ);
 		*result = child ? 1 : 0;
 	}
@@ -678,7 +673,7 @@ CUBIQUITYC_API int32_t cuGetChildNode(uint32_t nodeHandle, uint32_t childX, uint
 
 	if(gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
-		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNode(volumeHandle, decodedNodeHandle));
 		OctreeNode<Color>* child = node->getChildNode(childX, childY, childZ);
 
 		if(!node)
@@ -696,7 +691,7 @@ CUBIQUITYC_API int32_t cuGetChildNode(uint32_t nodeHandle, uint32_t childX, uint
 	}
 	else
 	{
-		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNode(volumeHandle, decodedNodeHandle));
 		OctreeNode<MaterialSet>* child = node->getChildNode(childX, childY, childZ);
 
 		if (!node)
@@ -726,12 +721,12 @@ CUBIQUITYC_API int32_t cuNodeHasMesh(uint32_t nodeHandle, uint32_t* result)
 
 	if(gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
-		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNode(volumeHandle, decodedNodeHandle));
 		*result = (node->mPolyVoxMesh != 0) ? 1 : 0;
 	}
 	else
 	{
-		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNode(volumeHandle, decodedNodeHandle));
 		*result = (node->mPolyVoxMesh != 0) ? 1 : 0;
 	}
 
@@ -748,7 +743,7 @@ CUBIQUITYC_API int32_t cuGetNodePosition(uint32_t nodeHandle, int32_t* x, int32_
 
 	if(gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
-		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNode(volumeHandle, decodedNodeHandle));
 		const Vector3I& lowerCorner = node->mRegion.getLowerCorner();
 		*x = lowerCorner.getX();
 		*y = lowerCorner.getY();
@@ -756,7 +751,7 @@ CUBIQUITYC_API int32_t cuGetNodePosition(uint32_t nodeHandle, int32_t* x, int32_
 	}
 	else
 	{
-		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNode(volumeHandle, decodedNodeHandle));
 		const Vector3I& lowerCorner = node->mRegion.getLowerCorner();
 		*x = lowerCorner.getX();
 		*y = lowerCorner.getY();
@@ -776,12 +771,12 @@ CUBIQUITYC_API int32_t cuGetMeshLastUpdated(uint32_t nodeHandle, uint32_t* resul
 
 	if(gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
-		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNode(volumeHandle, decodedNodeHandle));
 		*result = node->mMeshLastUpdated;
 	}
 	else
 	{
-		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNode(volumeHandle, decodedNodeHandle));
 		*result = node->mMeshLastUpdated;
 	}
 
@@ -798,12 +793,12 @@ CUBIQUITYC_API int32_t cuRenderThisNode(uint32_t nodeHandle, uint32_t* result)
 
 	if (gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
-		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNode(volumeHandle, decodedNodeHandle));
 		*result = node->mRenderThisNode;
 	}
 	else
 	{
-		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNode(volumeHandle, decodedNodeHandle));
 		*result = node->mRenderThisNode;
 	}
 
@@ -823,13 +818,13 @@ CUBIQUITYC_API int32_t cuGetNoOfVertices(uint32_t nodeHandle, uint16_t* result)
 
 	if (gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
-		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNode(volumeHandle, decodedNodeHandle));
 		const ::PolyVox::Mesh< typename VoxelTraits<Color>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
 		*result = polyVoxMesh->getNoOfVertices();
 	}
 	else
 	{
-		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNode(volumeHandle, decodedNodeHandle));
 		const ::PolyVox::Mesh< typename VoxelTraits<MaterialSet>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
 		*result = polyVoxMesh->getNoOfVertices();
 	}
@@ -847,13 +842,13 @@ CUBIQUITYC_API int32_t cuGetNoOfIndices(uint32_t nodeHandle, uint32_t* result)
 
 	if (gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
-		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNode(volumeHandle, decodedNodeHandle));
 		const ::PolyVox::Mesh< typename VoxelTraits<Color>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
 		*result = polyVoxMesh->getNoOfIndices();
 	}
 	else
 	{
-		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNode(volumeHandle, decodedNodeHandle));
 		const ::PolyVox::Mesh< typename VoxelTraits<MaterialSet>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
 		*result = polyVoxMesh->getNoOfIndices();
 	}
@@ -871,7 +866,7 @@ CUBIQUITYC_API int32_t cuGetVertices(uint32_t nodeHandle, void** result)
 
 	if (gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
-		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNode(volumeHandle, decodedNodeHandle));
 		const ::PolyVox::Mesh< typename VoxelTraits<Color>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
 		const std::vector< typename VoxelTraits<Color>::VertexType >& vertexVector = polyVoxMesh->getVertices();
 		const VoxelTraits<Color>::VertexType* vertexPointer = &(vertexVector[0]);
@@ -881,7 +876,7 @@ CUBIQUITYC_API int32_t cuGetVertices(uint32_t nodeHandle, void** result)
 	}
 	else
 	{
-		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNode(volumeHandle, decodedNodeHandle));
 		const ::PolyVox::Mesh< typename VoxelTraits<MaterialSet>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
 		const std::vector< typename VoxelTraits<MaterialSet>::VertexType >& vertexVector = polyVoxMesh->getVertices();
 		const VoxelTraits<MaterialSet>::VertexType* vertexPointer = &(vertexVector[0]);
@@ -903,7 +898,7 @@ CUBIQUITYC_API int32_t cuGetIndices(uint32_t nodeHandle, uint16_t** result)
 
 	if (gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
-		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNode(volumeHandle, decodedNodeHandle));
 		const ::PolyVox::Mesh< typename VoxelTraits<Color>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
 		const std::vector< uint16_t >& indexVector = polyVoxMesh->getIndices();
 		const uint16_t* constUInt16Pointer = &(indexVector[0]);
@@ -912,7 +907,7 @@ CUBIQUITYC_API int32_t cuGetIndices(uint32_t nodeHandle, uint16_t** result)
 	}
 	else
 	{
-		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNode(volumeHandle, decodedNodeHandle));
 		const ::PolyVox::Mesh< typename VoxelTraits<MaterialSet>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
 		const std::vector< uint16_t >& indexVector = polyVoxMesh->getIndices();
 		const uint16_t* constUIntPointer = &(indexVector[0]);
@@ -934,7 +929,7 @@ CUBIQUITYC_API int32_t cuGetMesh(uint32_t nodeHandle, uint16_t* noOfVertices, vo
 	if (gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
 	{
 		// Get the node
-		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNode(volumeHandle, decodedNodeHandle));
 
 		// Get the mesh
 		const ::PolyVox::Mesh< typename VoxelTraits<Color>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
@@ -961,7 +956,7 @@ CUBIQUITYC_API int32_t cuGetMesh(uint32_t nodeHandle, uint16_t* noOfVertices, vo
 	else
 	{
 		// Get the node
-		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNodeFromEncodedHandle(nodeHandle));
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNode(volumeHandle, decodedNodeHandle));
 
 		// Get the mesh
 		const ::PolyVox::Mesh< typename VoxelTraits<MaterialSet>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
