@@ -15,6 +15,7 @@
 #if defined (_MSC_VER) || defined(__APPLE__)
 	#include <future> //For std::future_error, but causes chrono-related compile errors on Linux/GCC.
 #endif
+#include <new>
 #include <stdexcept>
 #include <vector>
 
@@ -90,6 +91,19 @@ catch (const exception& ex) \
 
 using namespace Cubiquity;
 
+const int MaxNoOfVolumes = 256;
+const int TotalHandleBits = 32;
+const int VolumeHandleBits = 8;
+const int MaxVolumeHandle = (0x01 << VolumeHandleBits) - 1;
+const int VolumeHandleShift = TotalHandleBits - VolumeHandleBits - 1;
+
+const int NodeHandleBits = 16; // Set this properly later.
+const int NodeHandleMask = (0x01 << NodeHandleBits) - 1;
+const int MaxNodeHandle = (0x01 << NodeHandleBits) - 1;
+
+void* gVolumes[MaxNoOfVolumes];
+VolumeType gVolumeTypes[MaxNoOfVolumes];
+
 // This class (via it's single global instance) allows code to be executed when the library is loaded and unloaded.
 // I do have some concerns about how robust this is - in particular see here: http://stackoverflow.com/a/1229542
 class EntryAndExitPoints
@@ -99,6 +113,12 @@ public:
 		:mFileLogger()
 	{
 		PolyVox::setLogger(&mFileLogger);
+
+		// HACK - Should have a seperate init function for this?
+		for (int ct = 0; ct < MaxNoOfVolumes; ct++)
+		{
+			gVolumes[ct] = 0;
+		}
 	}
 
 	~EntryAndExitPoints()
@@ -110,83 +130,16 @@ public:
 	FileLogger mFileLogger;
 };
 
-const int TotalHandleBits = 32;
-const int VolumeHandleBits = 8;
-const int MaxVolumeHandle = (0x01 << VolumeHandleBits) - 1;
-const int VolumeHandleShift = TotalHandleBits - VolumeHandleBits - 1;
-
-const int NodeHandleBits = 16; // Set this properly later.
-const int NodeHandleMask = (0x01 << NodeHandleBits) - 1;
-const int MaxNodeHandle = (0x01 << NodeHandleBits) - 1;
-
 // The single global instance of the above class.
 EntryAndExitPoints gEntryAndExitPoints;
 
-/*std::vector<ColoredCubesVolume*> gColoredCubesVolumes;
-std::vector<TerrainVolume*> gTerrainVolumes;*/
-std::vector<void*> gVolumes;
-std::vector<VolumeType> gVolumeTypes;
-
-void validateVolumeHandle(uint32_t volumeHandle)
-{
-	if(volumeHandle > MaxVolumeHandle)
-	{
-		std::stringstream ss;
-		ss << "Volume handle' " << volumeHandle << "' exceeds the maximum permitted value of '" << MaxVolumeHandle << "'";
-		std::string errorString(ss.str());
-		POLYVOX_THROW(std::invalid_argument, errorString);
-	}
-
-	if(volumeHandle >= gVolumes.size())
-	{
-		std::stringstream ss;
-		ss << "Volume handle' " << volumeHandle << "' is outside volume array bounds";
-		std::string errorString(ss.str());
-		POLYVOX_THROW(std::invalid_argument, errorString);
-	}
-
-	if(gVolumes[volumeHandle] == 0) 
-	{
-		std::stringstream ss;
-		ss << "Volume handle' " << volumeHandle << "' is valid but the corresponding volume pointer is null";
-		std::string errorString(ss.str());
-		POLYVOX_THROW(std::invalid_argument, errorString);
-	}
-}
-
-/*void validateVolumeHandleMC(uint32_t volumeHandle)
-{
-	if(volumeHandle > MaxVolumeHandle)
-	{
-		std::stringstream ss;
-		ss << "Volume handle'" << volumeHandle << "' exceeds the maximum permitted value of '" << MaxVolumeHandle << "'";
-		POLYVOX_THROW(std::invalid_argument, ss.str());
-	}
-
-	if(volumeHandle >= gTerrainVolumes.size())
-	{
-		std::stringstream ss;
-		ss << "Volume handle'" << volumeHandle << "' is outside volume array bounds";
-		POLYVOX_THROW(std::invalid_argument, ss.str());
-	}
-
-	if(gTerrainVolumes[volumeHandle] == 0) 
-	{
-		std::stringstream ss;
-		ss << "Volume handle'" << volumeHandle << "' is valid but the corresponding volume pointer is null";
-		POLYVOX_THROW(std::invalid_argument, ss.str());
-	}
-}*/
-
 void* getVolumeFromHandle(uint32_t volumeHandle)
 {
-	validateVolumeHandle(volumeHandle);
 	return gVolumes[volumeHandle];
 }
 
 ColoredCubesVolume* getColoredCubesVolumeFromHandle(uint32_t volumeHandle)
 {
-	validateVolumeHandle(volumeHandle);
 	POLYVOX_THROW_IF(gVolumeTypes[volumeHandle] != VolumeTypes::ColoredCubes, std::invalid_argument, "Wrong volume type");
 	ColoredCubesVolume* volume = reinterpret_cast<ColoredCubesVolume*>(gVolumes[volumeHandle]);
 	return volume;
@@ -194,110 +147,22 @@ ColoredCubesVolume* getColoredCubesVolumeFromHandle(uint32_t volumeHandle)
 
 TerrainVolume* getTerrainVolumeFromHandle(uint32_t volumeHandle)
 {
-	validateVolumeHandle(volumeHandle);
 	POLYVOX_THROW_IF(gVolumeTypes[volumeHandle] != VolumeTypes::Terrain, std::invalid_argument, "Wrong volume type");
 	TerrainVolume* volume = reinterpret_cast<TerrainVolume*>(gVolumes[volumeHandle]);
 	return volume;
 }
 
-/*TerrainVolume* getVolumeFromHandleMC(uint32_t volumeHandle)
-{
-	validateVolumeHandleMC(volumeHandle);
-	return gTerrainVolumes[volumeHandle];
-}*/
-
-void validateDecodedNodeHandle(uint32_t volumeHandle, uint32_t decodedNodeHandle)
-{
-	if(decodedNodeHandle > MaxNodeHandle)
-	{
-		std::stringstream ss;
-		ss << "Decoded Node handle'" << decodedNodeHandle << "' exceeds the maximum permitted value of '" << MaxNodeHandle << "'";
-		POLYVOX_THROW(std::invalid_argument, ss.str());
-	}
-
-	if(gVolumeTypes[volumeHandle] == VolumeTypes::ColoredCubes)
-	{
-		// Get the volume (also validates the volume handle)
-		ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeHandle);
-
-		// Check the node really exists in the volume
-		OctreeNode<Color>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
-		if(!node)
-		{
-			std::stringstream ss;
-			ss << "Decoded Node handle'" << decodedNodeHandle << "' is does not reference a valid node.";
-			POLYVOX_THROW(std::invalid_argument, ss.str());
-		}
-	}
-	else
-	{
-		// Get the volume (also validates the volume handle)
-		TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
-
-		// Check the node really exists in the volume
-		OctreeNode<MaterialSet>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
-		if(!node)
-		{
-			std::stringstream ss;
-			ss << "Decoded Node handle'" << decodedNodeHandle << "' is does not reference a valid node.";
-			POLYVOX_THROW(std::invalid_argument, ss.str());
-		}
-	}
-}
-
-/*void validateDecodedNodeHandleMC(uint32_t volumeHandle, uint32_t decodedNodeHandle)
-{
-	if(decodedNodeHandle > MaxNodeHandle)
-	{
-		std::stringstream ss;
-		ss << "Decoded Node handle'" << decodedNodeHandle << "' exceeds the maximum permitted value of '" << MaxNodeHandle << "'";
-		POLYVOX_THROW(std::invalid_argument, ss.str());
-	}
-
-	// Get the volume (also validates the volume handle)
-	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
-
-	// Check the node really exists in the volume
-	OctreeNode<MaterialSet>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
-	if(!node)
-	{
-		std::stringstream ss;
-		ss << "Decoded Node handle'" << decodedNodeHandle << "' is does not reference a valid node.";
-		POLYVOX_THROW(std::invalid_argument, ss.str());
-	}
-}*/
-
 uint32_t encodeNodeHandle(uint32_t volumeHandle, uint32_t decodedNodeHandle)
 {
-	validateDecodedNodeHandle(volumeHandle, decodedNodeHandle);
-
 	uint32_t shiftedVolumeHandle = volumeHandle << VolumeHandleShift;
 	return shiftedVolumeHandle | decodedNodeHandle;
 }
-
-/*uint32_t encodeNodeHandleMC(uint32_t volumeHandle, uint32_t decodedNodeHandle)
-{
-	validateDecodedNodeHandleMC(volumeHandle, decodedNodeHandle);
-
-	uint32_t shiftedVolumeHandle = volumeHandle << VolumeHandleShift;
-	return shiftedVolumeHandle | decodedNodeHandle;
-}*/
 
 void decodeNodeHandle(uint32_t encodedNodeHandle, uint32_t* volumeHandle, uint32_t* decodedNodeHandle)
 {
 	*volumeHandle = encodedNodeHandle >> VolumeHandleShift;
 	*decodedNodeHandle = encodedNodeHandle & NodeHandleMask;
-
-	validateDecodedNodeHandle(*volumeHandle, *decodedNodeHandle);
 }
-
-/*void decodeNodeHandleMC(uint32_t encodedNodeHandle, uint32_t* volumeHandle, uint32_t* decodedNodeHandle)
-{
-	*volumeHandle = encodedNodeHandle >> VolumeHandleShift;
-	*decodedNodeHandle = encodedNodeHandle & NodeHandleMask;
-
-	validateDecodedNodeHandleMC(*volumeHandle, *decodedNodeHandle);
-}*/
 
 void* getNodeFromEncodedHandle(uint32_t encodedNodeHandle)
 {
@@ -318,17 +183,6 @@ void* getNodeFromEncodedHandle(uint32_t encodedNodeHandle)
 		return node;
 	}
 }
-
-/*OctreeNode<MaterialSet>* getNodeFromEncodedHandleMC(uint32_t encodedNodeHandle)
-{
-	uint32_t volumeHandle;
-	uint32_t decodedNodeHandle;
-	decodeNodeHandleMC(encodedNodeHandle, &volumeHandle, &decodedNodeHandle);
-
-	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeHandle);
-	OctreeNode<MaterialSet>* node = volume->getOctree()->getNodeFromIndex(decodedNodeHandle);
-	return node;
-}*/
 
 ////////////////////////////////////////////////////////////////////////////////
 // Version functions
@@ -472,7 +326,7 @@ CUBIQUITYC_API int32_t cuNewEmptyColoredCubesVolume(int32_t lowerX, int32_t lowe
 
 	// Replace an existing entry if it has been deleted.
 	bool foundEmptySlot = false;
-	for(uint32_t ct = 0; ct < gVolumes.size(); ct++)
+	for (uint32_t ct = 0; ct < MaxNoOfVolumes; ct++)
 	{
 		if(gVolumes[ct] == 0)
 		{
@@ -484,13 +338,7 @@ CUBIQUITYC_API int32_t cuNewEmptyColoredCubesVolume(int32_t lowerX, int32_t lowe
 		}
 	}
 
-	//Otherwise append a new entry.
-	if(!foundEmptySlot)
-	{
-		gVolumes.push_back(volume);
-		gVolumeTypes.push_back(VolumeTypes::ColoredCubes);
-		*result = gVolumes.size() - 1;
-	}
+	POLYVOX_THROW_IF(!foundEmptySlot, std::invalid_argument, "Cannot create new volume as there is a limit of " + MaxNoOfVolumes);
 
 	POLYVOX_LOG_DEBUG("Created new colored cubes volume in slot " << *result);
 
@@ -508,7 +356,7 @@ CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVDB(const char* pathToExisting
 
 	// Replace an existing entry if it has been deleted.
 	bool foundEmptySlot = false;
-	for(uint32_t ct = 0; ct < gVolumes.size(); ct++)
+	for (uint32_t ct = 0; ct < MaxNoOfVolumes; ct++)
 	{
 		if(gVolumes[ct] == 0)
 		{
@@ -520,13 +368,7 @@ CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVDB(const char* pathToExisting
 		}
 	}
 
-	//Otherwise append a new entry.
-	if(!foundEmptySlot)
-	{
-		gVolumes.push_back(volume);
-		gVolumeTypes.push_back(VolumeTypes::ColoredCubes);
-		*result = gVolumes.size() - 1;
-	}
+	POLYVOX_THROW_IF(!foundEmptySlot, std::invalid_argument, "Cannot create new volume as there is a limit of " + MaxNoOfVolumes);
 
 	POLYVOX_LOG_DEBUG("Created new colored cubes volume in slot " << *result);
 
@@ -694,7 +536,7 @@ CUBIQUITYC_API int32_t cuNewEmptyTerrainVolume(int32_t lowerX, int32_t lowerY, i
 
 	// Replace an existing entry if it has been deleted.
 	bool foundEmptySlot = false;
-	for(uint32_t ct = 0; ct < gVolumes.size(); ct++)
+	for (uint32_t ct = 0; ct < MaxNoOfVolumes; ct++)
 	{
 		if(gVolumes[ct] == 0)
 		{
@@ -706,13 +548,7 @@ CUBIQUITYC_API int32_t cuNewEmptyTerrainVolume(int32_t lowerX, int32_t lowerY, i
 		}
 	}
 
-	//Otherwise append a new entry.
-	if(!foundEmptySlot)
-	{
-		gVolumes.push_back(volume);
-		gVolumeTypes.push_back(VolumeTypes::Terrain);
-		*result = gVolumes.size() - 1;
-	}
+	POLYVOX_THROW_IF(!foundEmptySlot, std::invalid_argument, "Cannot create new volume as there is a limit of " + MaxNoOfVolumes);
 
 	POLYVOX_LOG_DEBUG("Created new smooth volume in slot " << *result);
 
@@ -730,7 +566,7 @@ CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxel
 
 	// Replace an existing entry if it has been deleted.
 	bool foundEmptySlot = false;
-	for(uint32_t ct = 0; ct < gVolumes.size(); ct++)
+	for (uint32_t ct = 0; ct < MaxNoOfVolumes; ct++)
 	{
 		if(gVolumes[ct] == 0)
 		{
@@ -742,13 +578,7 @@ CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxel
 		}
 	}
 
-	//Otherwise append a new entry.
-	if(!foundEmptySlot)
-	{
-		gVolumes.push_back(volume);
-		gVolumeTypes.push_back(VolumeTypes::Terrain);
-		*result = gVolumes.size() - 1;
-	}
+	POLYVOX_THROW_IF(!foundEmptySlot, std::invalid_argument, "Cannot create new volume as there is a limit of " + MaxNoOfVolumes);
 
 	POLYVOX_LOG_DEBUG("Created new smooth volume in slot " << *result);
 
