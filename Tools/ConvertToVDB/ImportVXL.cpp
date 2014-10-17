@@ -111,7 +111,7 @@ bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDat
 					// Do something with these colors
 					//makeVoxelColorful(x, y, zz, red, green, blue);
 					CuColor color = cuMakeColor(red, green, blue, 255);
-					if(cuSetVoxel(volumeHandle, x, 63 - zz, y, color) != CU_OK)
+					if (cuSetVoxel(volumeHandle, x, 63 - zz, y, &color) != CU_OK)
 					{
 						cerr << "Error setting voxel color" << endl;
 						return false;
@@ -132,7 +132,7 @@ bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDat
 			if(!dryRun)
 			{
 				CuColor color = cuMakeColor(127, 127, 127, 255);
-				if(cuSetVoxel(volumeHandle, x, 63 - zz, y, color) != CU_OK) 
+				if(cuSetVoxel(volumeHandle, x, 63 - zz, y, &color) != CU_OK) 
 				{
 					cerr << "Error setting voxel color" << endl;
 					return false;
@@ -161,7 +161,7 @@ bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDat
 	if (!dryRun)
 	{
 		cuAcceptOverrideChunks(volumeHandle);
-		cuDeleteColoredCubesVolume(volumeHandle);
+		cuDeleteVolume(volumeHandle);
 	}
 
 	return true;

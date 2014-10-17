@@ -35,11 +35,11 @@ void testColoredCubesVolume()
 			{
 				// Write a color based on the height of the voxel.
 				if (y < 5)
-					validate(cuSetVoxel(volumeID, x, y, z, redCol));
+					validate(cuSetVoxel(volumeID, x, y, z, &redCol));
 				else if (y < 10)
-					validate(cuSetVoxel(volumeID, x, y, z, greenCol));
+					validate(cuSetVoxel(volumeID, x, y, z, &greenCol));
 				else if (y < 15)
-					validate(cuSetVoxel(volumeID, x, y, z, blueCol));
+					validate(cuSetVoxel(volumeID, x, y, z, &blueCol));
 			}
 		}
 	}
@@ -61,13 +61,13 @@ void testColoredCubesVolume()
 	std::cout << ss.str();
 
 	// Delete the volume from meory (doesn't delete from disk).
-	validate(cuDeleteColoredCubesVolume(volumeID));
+	validate(cuDeleteVolume(volumeID));
 }
 
 void processOctreeNode(uint32_t octreeNodeHandle)
 {
 	int32_t nodeX, nodeY, nodeZ;
-	cuGetNodePositionMC(octreeNodeHandle, &nodeX, &nodeY, &nodeZ);
+	cuGetNodePosition(octreeNodeHandle, &nodeX, &nodeY, &nodeZ);
 
 	std::cout << "Node position: " << nodeX << " " << nodeY << " " << nodeZ << std::endl;
 
@@ -76,16 +76,16 @@ void processOctreeNode(uint32_t octreeNodeHandle)
 	if (hasMesh == 1)
 	{
 		uint32_t noOfIndices;
-		validate(cuGetNoOfIndicesMC(octreeNodeHandle, &noOfIndices));
+		validate(cuGetNoOfIndices(octreeNodeHandle, &noOfIndices));
 
 		uint16_t* indices = new uint16_t[noOfIndices];
-		validate(cuGetIndicesMC(octreeNodeHandle, &indices));
+		validate(cuGetIndices(octreeNodeHandle, &indices));
 
-		uint32_t noOfVertices;
-		validate(cuGetNoOfVerticesMC(octreeNodeHandle, &noOfVertices));
+		uint16_t noOfVertices;
+		validate(cuGetNoOfVertices(octreeNodeHandle, &noOfVertices));
 
-		float* vertices = new float[noOfVertices * 7]; // Vertex no longer built from floats.
-		validate(cuGetVerticesMC(octreeNodeHandle, &vertices));
+		void* vertices;// = new float[noOfVertices * 7]; // Vertex no longer built from floats.
+		validate(cuGetVertices(octreeNodeHandle, &vertices));
 
 		std::cout << "Found mesh - it has " << noOfVertices << " vertices and " << noOfIndices << " indices." << std::endl;
 	}
@@ -97,12 +97,12 @@ void processOctreeNode(uint32_t octreeNodeHandle)
 			for (uint32_t x = 0; x < 2; x++)
 			{
 				uint32_t hasChildNode;
-				validate(cuHasChildNodeMC(octreeNodeHandle, x, y, z, &hasChildNode));
+				validate(cuHasChildNode(octreeNodeHandle, x, y, z, &hasChildNode));
 
 				if (hasChildNode == 1)
 				{
 					uint32_t childNodeHandle;
-					validate(cuGetChildNodeMC(octreeNodeHandle, x, y, z, &childNodeHandle));
+					validate(cuGetChildNode(octreeNodeHandle, x, y, z, &childNodeHandle));
 
 					// Recursivly call the octree traversal
 					processOctreeNode(childNodeHandle);
@@ -117,19 +117,19 @@ void testTerrainVolume()
 	uint32_t volumeHandle;
 	validate(cuNewTerrainVolumeFromVDB("C:/code/cubiquity/Data/Volumes/Version 0/SmoothVoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
 
-	validate(cuUpdateVolumeMC(volumeHandle, 0.0f, 0.0f, 0.0f, 0.0f));
+	validate(cuUpdateVolume(volumeHandle, 0.0f, 0.0f, 0.0f, 0.0f));
 
 	uint32_t hasRootNode;
-	validate(cuHasRootOctreeNodeMC(volumeHandle, &hasRootNode));
+	validate(cuHasRootOctreeNode(volumeHandle, &hasRootNode));
 	if(hasRootNode == 1)
 	{
 		uint32_t octreeNodeHandle;
-		cuGetRootOctreeNodeMC(volumeHandle, &octreeNodeHandle);
+		cuGetRootOctreeNode(volumeHandle, &octreeNodeHandle);
 		processOctreeNode(octreeNodeHandle);
 	}
 
 	// Delete the volume from memory (doesn't delete from disk).
-	validate(cuDeleteTerrainVolume(volumeHandle));
+	validate(cuDeleteVolume(volumeHandle));
 }
 
 int main()

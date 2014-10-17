@@ -62,6 +62,10 @@ extern "C"
 	const uint32_t CU_READONLY = 0;
 	const uint32_t CU_READWRITE = 1;
 
+	// Fixme - should this be a C enum?
+	const uint32_t CU_COLORED_CUBES = 0;
+	const uint32_t CU_TERRAIN = 1;
+
 	struct CuColor_s
 	{
 		uint32_t data;
@@ -92,6 +96,17 @@ extern "C"
 	};
 	typedef struct CuTerrainVertex_s CuTerrainVertex;
 
+	struct CuColoredCubesVertex_s
+	{
+	public:
+		uint8_t encodedPosX;
+		uint8_t encodedPosY;
+		uint8_t encodedPosZ;
+		uint8_t dummy;
+		uint32_t data;
+	};
+	typedef struct CuColoredCubesVertex_s CuColoredCubesVertex;
+
 	// Version functions
 	CUBIQUITYC_API int32_t cuGetVersionNumber(uint32_t* majorVersion, uint32_t* minorVersion, uint32_t* patchVersion);
 
@@ -115,26 +130,21 @@ extern "C"
 	CUBIQUITYC_API int32_t cuNewEmptyColoredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pathToNewVoxelDatabase, uint32_t baseNodeSize, uint32_t* result);
 	CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVDB(const char* pathToExistingVoxelDatabase, uint32_t writePermissions, uint32_t baseNodeSize, uint32_t* result);
 	CUBIQUITYC_API int32_t cuUpdateVolume(uint32_t volumeHandle, float eyePosX, float eyePosY, float eyePosZ, float lodThreshold);
-	CUBIQUITYC_API int32_t cuDeleteColoredCubesVolume(uint32_t volumeHandle);
+	CUBIQUITYC_API int32_t cuDeleteVolume(uint32_t volumeHandle);
 
 	CUBIQUITYC_API int32_t cuGetEnclosingRegion(uint32_t volumeHandle, int32_t* lowerX, int32_t* lowerY, int32_t* lowerZ, int32_t* upperX, int32_t* upperY, int32_t* upperZ);
-
-	CUBIQUITYC_API int32_t cuGetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuColor* color);
-	CUBIQUITYC_API int32_t cuSetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuColor color);
 
 	CUBIQUITYC_API int32_t cuAcceptOverrideChunks(uint32_t volumeHandle);
 	CUBIQUITYC_API int32_t cuDiscardOverrideChunks(uint32_t volumeHandle);
 
 	CUBIQUITYC_API int32_t cuNewEmptyTerrainVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pathToNewVoxelDatabase, uint32_t baseNodeSize, uint32_t* result);
 	CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxelDatabase, uint32_t writePermissions, uint32_t baseNodeSize, uint32_t* result);
-	CUBIQUITYC_API int32_t cuUpdateVolumeMC(uint32_t volumeHandle, float eyePosX, float eyePosY, float eyePosZ, float lodThreshold);
-	CUBIQUITYC_API int32_t cuDeleteTerrainVolume(uint32_t volumeHandle);
 
-	CUBIQUITYC_API int32_t cuGetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuMaterialSet* materialSet);
-	CUBIQUITYC_API int32_t cuSetVoxelMC(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, CuMaterialSet materialSet);
+	CUBIQUITYC_API int32_t cuGetVolumeType(uint32_t volumeHandle, uint32_t* result);
 
-	CUBIQUITYC_API int32_t cuAcceptOverrideChunksMC(uint32_t volumeHandle);
-	CUBIQUITYC_API int32_t cuDiscardOverrideChunksMC(uint32_t volumeHandle);
+	// Voxel functions
+	CUBIQUITYC_API int32_t cuGetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, void* result);
+	CUBIQUITYC_API int32_t cuSetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, void* value);
 
 	// Octree functions
 	CUBIQUITYC_API int32_t cuHasRootOctreeNode(uint32_t volumeHandle, uint32_t* result);
@@ -146,31 +156,14 @@ extern "C"
 	CUBIQUITYC_API int32_t cuGetMeshLastUpdated(uint32_t nodeHandle, uint32_t* result);
 	CUBIQUITYC_API int32_t cuRenderThisNode(uint32_t nodeHandle, uint32_t* result);
 
-	CUBIQUITYC_API int32_t cuHasRootOctreeNodeMC(uint32_t volumeHandle, uint32_t* result);
-	CUBIQUITYC_API int32_t cuGetRootOctreeNodeMC(uint32_t volumeHandle, uint32_t* result);
-	CUBIQUITYC_API int32_t cuHasChildNodeMC(uint32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ, uint32_t* result);
-	CUBIQUITYC_API int32_t cuGetChildNodeMC(uint32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ, uint32_t* result);
-	CUBIQUITYC_API int32_t cuNodeHasMeshMC( uint32_t nodeHandle, uint32_t* result);
-	CUBIQUITYC_API int32_t cuGetNodePositionMC(uint32_t nodeHandle, int32_t* x, int32_t* y, int32_t* z);
-	CUBIQUITYC_API int32_t cuGetMeshLastUpdatedMC(uint32_t nodeHandle, uint32_t* result);
-	CUBIQUITYC_API int32_t cuRenderThisNodeMC(uint32_t nodeHandle, uint32_t* result);
-
 	// Mesh functions
-	CUBIQUITYC_API int32_t cuGetNoOfVertices(uint32_t nodeHandle, uint32_t* result);
+	CUBIQUITYC_API int32_t cuGetNoOfVertices(uint32_t nodeHandle, uint16_t* result);
 	CUBIQUITYC_API int32_t cuGetNoOfIndices(uint32_t nodeHandle, uint32_t* result);
 
-	CUBIQUITYC_API int32_t cuGetVertices(uint32_t nodeHandle, float** result);
+	CUBIQUITYC_API int32_t cuGetVertices(uint32_t nodeHandle, void** result);
 	CUBIQUITYC_API int32_t cuGetIndices(uint32_t nodeHandle, uint16_t** result);
 
-	CUBIQUITYC_API int32_t cuGetMesh(uint32_t nodeHandle, uint32_t* noOfVertices, float** vertices, uint32_t* noOfIndices, uint16_t** indices);
-
-	CUBIQUITYC_API int32_t cuGetNoOfVerticesMC(uint32_t nodeHandle, uint32_t* result);
-	CUBIQUITYC_API int32_t cuGetNoOfIndicesMC(uint32_t nodeHandle, uint32_t* result);
-
-	CUBIQUITYC_API int32_t cuGetVerticesMC(uint32_t nodeHandle, float** result);
-	CUBIQUITYC_API int32_t cuGetIndicesMC(uint32_t nodeHandle, uint16_t** result);
-
-	CUBIQUITYC_API int32_t cuGetMeshMC(uint32_t nodeHandle, uint32_t* noOfVertices, float** vertices, uint32_t* noOfIndices, uint16_t** indices);
+	CUBIQUITYC_API int32_t cuGetMesh(uint32_t nodeHandle, uint16_t* noOfVertices, void** vertices, uint32_t* noOfIndices, uint16_t** indices);
 
 	// Clock functions
 	CUBIQUITYC_API int32_t cuGetCurrentTime(uint32_t* result);

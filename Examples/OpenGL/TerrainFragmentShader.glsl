@@ -4,7 +4,7 @@
 in vec3 worldSpaceNormal;
 in vec4 materialWeights;
 
-// Ouput data
+// Output data
 out vec3 color;
 
 void main()
