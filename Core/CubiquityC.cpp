@@ -392,6 +392,8 @@ CUBIQUITYC_API int32_t cuDeleteVolume(uint32_t volumeHandle)
 	uint32_t volumeType, volumeIndex, nodeIndex;
 	decodeHandle(volumeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
+	POLYVOX_LOG_DEBUG("Deleting volume with index " << volumeIndex);
+
 	if (volumeType == CU_COLORED_CUBES)
 	{
 		ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeIndex);
@@ -403,8 +405,8 @@ CUBIQUITYC_API int32_t cuDeleteVolume(uint32_t volumeHandle)
 		delete volume;
 	}	
 
-	// In the future we could consider reusing this slot as we can detect that it set to zero.
-	gVolumes[volumeHandle] = 0;
+	// Set the slot to zero so that it can be reused.
+	gVolumes[volumeIndex] = 0;
 
 	CLOSE_C_INTERFACE
 }
