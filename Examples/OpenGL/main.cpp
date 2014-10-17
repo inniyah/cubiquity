@@ -136,8 +136,8 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 				glEnableVertexAttribArray(0);
 				glVertexAttribIPointer(0, 4, GL_UNSIGNED_BYTE, sizeof(CuColoredCubesVertex), (GLvoid*)(offsetof(CuColoredCubesVertex, encodedPosX)));
 
-				//glEnableVertexAttribArray(1); // Attrib '1' is the first four materials
-				//glVertexAttribIPointer(1, 4, GL_UNSIGNED_BYTE, sizeof(CuColoredCubesVertex), (GLvoid*)(offsetof(CuColoredCubesVertex, material0)));
+				glEnableVertexAttribArray(1); // Attrib '1' is the first four materials
+				glVertexAttribIPointer(1, 1, GL_UNSIGNED_INT, sizeof(CuColoredCubesVertex), (GLvoid*)(offsetof(CuColoredCubesVertex, data)));
 			}
 			else if (volumeType == CU_TERRAIN)
 			{
