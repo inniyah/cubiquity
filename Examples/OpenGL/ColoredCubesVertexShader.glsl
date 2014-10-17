@@ -5,6 +5,7 @@ layout(location = 1) in uint quantizedColor;
 
 // Output data
 out vec3 voxelColor;
+out vec4 worldPosition;
 
 // Values that stay constant for the whole mesh.
 uniform mat4 modelMatrix;
@@ -56,8 +57,13 @@ void main()
 	// Extract and decode the position.
 	vec3 modelSpacePosition = decodePosition(encodedPosition.xyz);
 	
+	// Extract and decode the color.
 	voxelColor = decodeColor(quantizedColor);
 	
+	// We pass the world-space position through to the fragment
+	// shader because we will use it to compute the normal.
+	worldPosition = modelMatrix * vec4(modelSpacePosition, 1);
+	
 	// Output position of the vertex in clip space.
-	gl_Position =  projectionMatrix * viewMatrix * modelMatrix * vec4(modelSpacePosition,1);
+	gl_Position =  projectionMatrix * viewMatrix * worldPosition;
 }
