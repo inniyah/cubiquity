@@ -272,17 +272,22 @@ int main( void )
 	// Cull triangles which normal is not towards the camera
 	glEnable(GL_CULL_FACE);
 
-	// Create and compile our GLSL program from the shaders
-	programID = LoadShaders( "ColoredCubesVertexShader.glsl", "ColoredCubesFragmentShader.glsl" );
-	//programID = LoadShaders("TerrainVertexShader.glsl", "TerrainFragmentShader.glsl");
+	uint32_t volumeHandle;
+	bool coloredCubesMode = true;
+	if (coloredCubesMode)
+	{
+		validate(cuNewColoredCubesVolumeFromVDB("C:/code/cubiquity/Data/Volumes/Version 0/VoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
+		programID = LoadShaders("ColoredCubesVertexShader.glsl", "ColoredCubesFragmentShader.glsl");
+	}
+	else
+	{
+		validate(cuNewTerrainVolumeFromVDB("C:/code/cubiquity/Data/Volumes/Version 0/SmoothVoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
+		programID = LoadShaders("TerrainVertexShader.glsl", "TerrainFragmentShader.glsl");
+	}
 	
 	// Get a handle for our "MVP" uniform
 	GLuint viewMatrixID = glGetUniformLocation(programID, "viewMatrix");
 	GLuint projectionMatrixID = glGetUniformLocation(programID, "projectionMatrix");
-
-	uint32_t volumeHandle;
-	//validate(cuNewTerrainVolumeFromVDB("C:/code/cubiquity/Data/Volumes/Version 0/SmoothVoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
-	validate(cuNewColoredCubesVolumeFromVDB("C:/code/cubiquity/Data/Volumes/Version 0/VoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
 
 	OpenGLOctreeNode* rootOpenGLOctreeNode = 0;
 	

@@ -12,8 +12,8 @@ uniform mat4 projectionMatrix;
 
 vec3 decodePosition(uvec3 encodedPosition)
 {
-	return vec3(encodedPosition) / 256.0;
-	//return vec3(encodedPosition) - 0.5;
+	//return vec3(encodedPosition) / 256.0;
+	return vec3(encodedPosition) - 0.5;
 }
 
 void main()
