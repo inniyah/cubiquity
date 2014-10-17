@@ -601,6 +601,16 @@ CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxel
 	CLOSE_C_INTERFACE
 }
 
+CUBIQUITYC_API int32_t cuGetVolumeType(uint32_t volumeHandle, uint32_t* result)
+{
+	OPEN_C_INTERFACE
+
+	uint32_t volumeIndex, nodeIndex;
+	decodeHandle(volumeHandle, result, &volumeIndex, &nodeIndex);
+
+	CLOSE_C_INTERFACE
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Octree functions
 ////////////////////////////////////////////////////////////////////////////////

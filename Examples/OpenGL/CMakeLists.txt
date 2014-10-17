@@ -81,8 +81,10 @@ if(WIN32) # Perhaps this shouldn't be Windows only?
 	# We want to be able to run the examples from within Visual Studio, which means that the shaders/textures need to be in the
 	# 'working directory'. Unfortunately we can't set this working directory from CMake (http://goo.gl/Ne5uec), so we copy the
 	# resources to the default working directory (which is where the project file is). Perhaps there is a better way to find this?
-	file(COPY VertexShader.glsl DESTINATION ${CMAKE_BINARY_DIR}/Examples/OpenGL)
-	file(COPY FragmentShader.glsl DESTINATION ${CMAKE_BINARY_DIR}/Examples/OpenGL)
+	file(COPY ColoredCubesVertexShader.glsl DESTINATION ${CMAKE_BINARY_DIR}/Examples/OpenGL)
+	file(COPY ColoredCubesFragmentShader.glsl DESTINATION ${CMAKE_BINARY_DIR}/Examples/OpenGL)
+	file(COPY TerrainVertexShader.glsl DESTINATION ${CMAKE_BINARY_DIR}/Examples/OpenGL)
+	file(COPY TerrainFragmentShader.glsl DESTINATION ${CMAKE_BINARY_DIR}/Examples/OpenGL)
 endif()
 
 #if (NOT ${CMAKE_GENERATOR} MATCHES "Xcode" )

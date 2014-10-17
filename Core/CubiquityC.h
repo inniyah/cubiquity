@@ -96,6 +96,17 @@ extern "C"
 	};
 	typedef struct CuTerrainVertex_s CuTerrainVertex;
 
+	struct CuColoredCubesVertex_s
+	{
+	public:
+		uint8_t encodedPosX;
+		uint8_t encodedPosY;
+		uint8_t encodedPosZ;
+		uint8_t dummy;
+		uint32_t data;
+	};
+	typedef struct CuColoredCubesVertex_s CuColoredCubesVertex;
+
 	// Version functions
 	CUBIQUITYC_API int32_t cuGetVersionNumber(uint32_t* majorVersion, uint32_t* minorVersion, uint32_t* patchVersion);
 
@@ -128,6 +139,8 @@ extern "C"
 
 	CUBIQUITYC_API int32_t cuNewEmptyTerrainVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pathToNewVoxelDatabase, uint32_t baseNodeSize, uint32_t* result);
 	CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxelDatabase, uint32_t writePermissions, uint32_t baseNodeSize, uint32_t* result);
+
+	CUBIQUITYC_API int32_t cuGetVolumeType(uint32_t volumeHandle, uint32_t* result);
 
 	// Voxel functions
 	CUBIQUITYC_API int32_t cuGetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, void* result);
