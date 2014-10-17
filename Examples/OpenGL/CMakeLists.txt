@@ -63,8 +63,10 @@ add_executable(OpenGLExample
 	texture.cpp
 	texture.hpp
 	
-	VertexShader.glsl
-	FragmentShader.glsl
+	ColoredCubesVertexShader.glsl
+	ColoredCubesFragmentShader.glsl
+	TerrainVertexShader.glsl
+	TerrainFragmentShader.glsl
 )
 target_link_libraries(OpenGLExample
 	CubiquityC
