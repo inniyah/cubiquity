@@ -155,6 +155,7 @@ extern "C"
 	CUBIQUITYC_API int32_t cuGetNodePosition(uint32_t nodeHandle, int32_t* x, int32_t* y, int32_t* z);
 	CUBIQUITYC_API int32_t cuGetMeshLastUpdated(uint32_t nodeHandle, uint32_t* result);
 	CUBIQUITYC_API int32_t cuRenderThisNode(uint32_t nodeHandle, uint32_t* result);
+	CUBIQUITYC_API int32_t cuGetLastChanged(uint32_t nodeHandle, uint32_t* result);
 
 	// Mesh functions
 	CUBIQUITYC_API int32_t cuGetNoOfVertices(uint32_t nodeHandle, uint16_t* result);

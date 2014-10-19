@@ -34,6 +34,8 @@ namespace Cubiquity
 		Timestamp mMeshLastUpdated;
 		Timestamp mLastSceduledForUpdate;
 
+		Timestamp mLastChanged;
+
 		Octree<VoxelType>* mOctree;
 
 		// Use flags here?
@@ -42,8 +44,6 @@ namespace Cubiquity
 		bool mExtractOnMainThread;
 
 		const ::PolyVox::Mesh< typename VoxelTraits<VoxelType>::VertexType, uint16_t >* mPolyVoxMesh;
-
-		void* mGameEngineNode;
 
 		uint8_t mHeight; // Zero for leaf nodes.
 

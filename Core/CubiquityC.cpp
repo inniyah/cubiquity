@@ -836,6 +836,27 @@ CUBIQUITYC_API int32_t cuRenderThisNode(uint32_t nodeHandle, uint32_t* result)
 	CLOSE_C_INTERFACE
 }
 
+CUBIQUITYC_API int32_t cuGetLastChanged(uint32_t nodeHandle, uint32_t* result)
+{
+	OPEN_C_INTERFACE
+
+	uint32_t volumeType, volumeIndex, nodeIndex;
+	decodeHandle(nodeHandle, &volumeType, &volumeIndex, &nodeIndex);
+
+	if (volumeType == CU_COLORED_CUBES)
+	{
+		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNode(volumeType, volumeIndex, nodeIndex));
+		*result = node->mLastChanged;
+	}
+	else
+	{
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNode(volumeType, volumeIndex, nodeIndex));
+		*result = node->mLastChanged;
+	}
+
+	CLOSE_C_INTERFACE
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Mesh functions
 ////////////////////////////////////////////////////////////////////////////////

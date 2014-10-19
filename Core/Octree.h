@@ -91,7 +91,12 @@ namespace Cubiquity
 		bool operator()(OctreeNode<VoxelType>* octreeNode)
 		{
 			//At some point we should handle the issue that we might want to render but the mesh might not be ready.
-			octreeNode->mRenderThisNode = octreeNode->mWantedForRendering;
+			if (octreeNode->mRenderThisNode != octreeNode->mWantedForRendering)
+			{
+				octreeNode->mRenderThisNode = octreeNode->mWantedForRendering;
+				octreeNode->mLastChanged = Clock::getTimestamp();
+				//std::cout << octreeNode->mLastChanged << std::endl;
+			}
 			return true;
 		}
 	};
@@ -133,9 +138,11 @@ namespace Cubiquity
 		void markAsModified(uint16_t index, int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority);
 		void markAsModified(uint16_t index, const Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority);
 
+		Timestamp Octree<VoxelType>::propagateTimestamps(uint16_t index);
+
 		void sceduleUpdateIfNeeded(uint16_t index, const Vector3F& viewPosition);
 
-		void determineWantedForRendering(uint16_t index, const Vector3F& viewPosition, float lodThreshold);
+		//void determineWantedForRendering(uint16_t index, const Vector3F& viewPosition, float lodThreshold);
 
 		std::vector< OctreeNode<VoxelType>*> mNodes;
 

@@ -128,6 +128,10 @@ namespace Cubiquity
 		}
 
 		acceptVisitor(DetermineWhetherToRenderVisitor<VoxelType>());
+
+		//std::cout << mNodes[mRootNodeIndex]->mLastChanged;
+		propagateTimestamps(mRootNodeIndex);
+		//std::cout << ", " << mNodes[mRootNodeIndex]->mLastChanged << std::endl;
 	}
 
 	template <typename VoxelType>
@@ -253,6 +257,30 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
+	Timestamp Octree<VoxelType>::propagateTimestamps(uint16_t index)
+	{
+		OctreeNode<VoxelType>* node = mNodes[index];
+
+		for (int iz = 0; iz < 2; iz++)
+		{
+			for (int iy = 0; iy < 2; iy++)
+			{
+				for (int ix = 0; ix < 2; ix++)
+				{
+					uint16_t childIndex = node->children[ix][iy][iz];
+					if (childIndex != InvalidNodeIndex)
+					{
+						Timestamp subtreeTimestamp = propagateTimestamps(childIndex);
+						node->mLastChanged = (std::max)(node->mLastChanged, subtreeTimestamp);
+					}
+				}
+			}
+		}
+
+		return node->mLastChanged;
+	}
+
+	template <typename VoxelType>
 	void Octree<VoxelType>::sceduleUpdateIfNeeded(uint16_t index, const Vector3F& viewPosition)
 	{
 		OctreeNode<VoxelType>* node = mNodes[index];
@@ -303,7 +331,7 @@ namespace Cubiquity
 		}
 	}
 
-	template <typename VoxelType>
+	/*template <typename VoxelType>
 	void Octree<VoxelType>::determineWantedForRendering(uint16_t index, const Vector3F& viewPosition, float lodThreshold)
 	{
 		OctreeNode<VoxelType>* octreeNode = mNodes[index];
@@ -373,7 +401,7 @@ namespace Cubiquity
 				octreeNode->mWantedForRendering = true;
 			}
 		}
-	}
+	}*/
 
 	template <typename VoxelType>
 	template<typename VisitorType>
