@@ -8,8 +8,8 @@ namespace InputFormats
 	enum InputFormat
 	{
 		ImageSlices,
-		VXL,
 		MagicaVoxel,
+		VXL,
 		Unknown
 	};
 }

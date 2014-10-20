@@ -5,6 +5,8 @@
 #include "ImportMagicaVoxel.h"
 #include "ImportVXL.h"
 
+#include "CubiquityC.h"
+
 #include <cstdio>
 #include <iostream>
 #include <string>
@@ -13,24 +15,48 @@ using namespace std;
 
 int main(int argc, char* argv[])
 {
-	if(!cmdOptionExists(argv, argv+argc, "-i"))
+	InputFormat inputFormat = InputFormats::Unknown;
+	string inputFilenameOrFolder;
+	if (cmdOptionExists(argv, argv + argc, "-ImageSlices"))
 	{
-		cerr << "No input specified!" << endl << endl;
+		inputFormat = InputFormats::ImageSlices;
+		inputFilenameOrFolder = getCmdOption(argv, argv + argc, "-ImageSlices");
+	}
+	else if (cmdOptionExists(argv, argv + argc, "-MagicaVoxel"))
+	{
+		inputFormat = InputFormats::MagicaVoxel;
+		inputFilenameOrFolder = getCmdOption(argv, argv + argc, "-MagicaVoxel");
+	}
+	else if (cmdOptionExists(argv, argv + argc, "-VXL"))
+	{
+		inputFormat = InputFormats::VXL;
+		inputFilenameOrFolder = getCmdOption(argv, argv + argc, "-VXL");
+	}
+	else
+	{
+		cerr << "No input format specified!" << endl << endl;
 		printUsage();
 		return EXIT_FAILURE;
 	}
 
-	if(!cmdOptionExists(argv, argv+argc, "-o"))
+	uint32_t outputFormat = CU_UNKNOWN;
+	string outputFilename;
+	if (cmdOptionExists(argv, argv + argc, "-ColoredCubesVolume"))
 	{
-		cerr << "No output filename specified!" << endl << endl;
+		outputFormat = CU_COLORED_CUBES;
+		outputFilename = getCmdOption(argv, argv + argc, "-ColoredCubesVolume");
+	}
+	else if (cmdOptionExists(argv, argv + argc, "-TerrainVolume"))
+	{
+		outputFormat = CU_TERRAIN;
+		outputFilename = getCmdOption(argv, argv + argc, "-TerrainVolume");
+	}
+	else
+	{
+		cerr << "No input format specified!" << endl << endl;
 		printUsage();
 		return EXIT_FAILURE;
 	}
-
-	string input = getCmdOption(argv, argv+argc, "-i");
-	string outputFilename = getCmdOption(argv, argv+argc, "-o");
-
-	InputFormat inputFormat = determineInputFormat(input);
 
 	// If the output file already exists then we need to delete
 	// it before we can use the filename for the new volume.
@@ -39,16 +65,16 @@ int main(int argc, char* argv[])
 	switch(inputFormat)
 	{
 	case InputFormats::ImageSlices:
-		cout << "Identified input as image slices" << endl;
-		importImageSlices(input, outputFilename);
+		cout << "Importing data from image slices." << endl;
+		importImageSlices(inputFilenameOrFolder, outputFilename);
 		break;
 	case InputFormats::VXL:
-		cout << "Identified input as .vxl file" << endl;
-		importVxl(input, outputFilename);
+		cout << "Importing data from VXL file." << endl;
+		importVxl(inputFilenameOrFolder, outputFilename);
 		break;
 	case InputFormats::MagicaVoxel:
-		cout << "Identified input as Magica Voxel file" << endl;
-		importMagicaVoxel(input, outputFilename);
+		cout << "Importing data from Magica Voxel file" << endl;
+		importMagicaVoxel(inputFilenameOrFolder, outputFilename);
 		break;
 	default:
 		cerr << "Unrecognised input format" << endl;
@@ -59,29 +85,10 @@ int main(int argc, char* argv[])
 
 void printUsage(void)
 {
-	cout << "Usage: ConvertToVDB -i inputFileOrFolder -o outputfile" << endl;
-}
-
-InputFormat determineInputFormat(const std::string& input)
-{
-	// Test whether the input represents a folder of images
-	std::vector<std::string> imageFiles = findImagesInFolder(input);
-	if(imageFiles.size() > 0)
-	{
-		return InputFormats::ImageSlices;
-	}
-
-	// Determine if we have a Magica file.
-	if(isMagicaVoxel(input))
-	{
-		return InputFormats::MagicaVoxel;
-	}
-
-	// Determine if we have a VXL file by running the VXL importer in dry-run mode
-	if(importVxl(input, "ThisFileShouldNeverExist.vdb", true))
-	{
-		return InputFormats::VXL;
-	}
-
-	return InputFormats::Unknown;
+	cout << "Usage: ConvertToVDB -InputFormat inputFileOrFolder -OutputFormat outputFile" << endl;
+	cout << "\tWhere:" << endl;
+	cout << "\t\tInputFormat = {ImageSlices, MagicaVoxel, VXL}" << endl;
+	cout << "\t\tOutputFormat = {ColoredCubesVolume, TerrainVolume}" << endl;
+	cout << "" << endl;
+	cout << "\t\tE.g. 'ConvertToVDB -VXL my_map.vxl -ColoredCubesVolume my_output.vdb'" << endl;
 }
