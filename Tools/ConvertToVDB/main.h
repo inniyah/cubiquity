@@ -7,6 +7,7 @@ namespace InputFormats
 {
 	enum InputFormat
 	{
+		Heightmap,
 		ImageSlices,
 		MagicaVoxel,
 		VXL,

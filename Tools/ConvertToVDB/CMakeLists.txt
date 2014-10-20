@@ -2,7 +2,7 @@ project(ConvertToVDB)
 
 include_directories(${CubiquityCore_SOURCE_DIR} ${CubiquityC_SOURCE_DIR})
 
-add_executable (ConvertToVDB CmdOption.cpp ImportImageSlices.cpp ImportMagicaVoxel.cpp ImportVXL.cpp main.cpp stb_image.cpp) 
+add_executable (ConvertToVDB CmdOption.cpp ImportHeightmap.cpp ImportImageSlices.cpp ImportMagicaVoxel.cpp ImportVXL.cpp main.cpp stb_image.cpp) 
 
 # Set LINK_FLAGS
 if(CMAKE_CXX_COMPILER_ID MATCHES "CLANG")

@@ -1,6 +1,7 @@
 #include "main.h"
 
 #include "CmdOption.h"
+#include "ImportHeightmap.h"
 #include "ImportImageSlices.h"
 #include "ImportMagicaVoxel.h"
 #include "ImportVXL.h"
@@ -17,7 +18,12 @@ int main(int argc, char* argv[])
 {
 	InputFormat inputFormat = InputFormats::Unknown;
 	string inputFilenameOrFolder;
-	if (cmdOptionExists(argv, argv + argc, "-ImageSlices"))
+	if (cmdOptionExists(argv, argv + argc, "-Heightmap"))
+	{
+		inputFormat = InputFormats::Heightmap;
+		inputFilenameOrFolder = getCmdOption(argv, argv + argc, "-Heightmap");
+	}
+	else if (cmdOptionExists(argv, argv + argc, "-ImageSlices"))
 	{
 		inputFormat = InputFormats::ImageSlices;
 		inputFilenameOrFolder = getCmdOption(argv, argv + argc, "-ImageSlices");
@@ -64,17 +70,18 @@ int main(int argc, char* argv[])
 
 	switch(inputFormat)
 	{
+	case InputFormats::Heightmap:
+		// User might have provided a colormap as well as the heightmap
+		importHeightmap(inputFilenameOrFolder, getCmdOption(argv, argv + argc, "-Colormap"), outputFilename);
+		break;
 	case InputFormats::ImageSlices:
-		cout << "Importing data from image slices." << endl;
 		importImageSlices(inputFilenameOrFolder, outputFilename);
 		break;
-	case InputFormats::VXL:
-		cout << "Importing data from VXL file." << endl;
-		importVxl(inputFilenameOrFolder, outputFilename);
-		break;
 	case InputFormats::MagicaVoxel:
-		cout << "Importing data from Magica Voxel file" << endl;
 		importMagicaVoxel(inputFilenameOrFolder, outputFilename);
+		break;
+	case InputFormats::VXL:
+		importVxl(inputFilenameOrFolder, outputFilename);
 		break;
 	default:
 		cerr << "Unrecognised input format" << endl;
