@@ -86,9 +86,11 @@ int main(int argc, char* argv[])
 void printUsage(void)
 {
 	cout << "Usage: ConvertToVDB -InputFormat inputFileOrFolder -OutputFormat outputFile" << endl;
-	cout << "\tWhere:" << endl;
-	cout << "\t\tInputFormat = {ImageSlices, MagicaVoxel, VXL}" << endl;
-	cout << "\t\tOutputFormat = {ColoredCubesVolume, TerrainVolume}" << endl;
 	cout << "" << endl;
-	cout << "\t\tE.g. 'ConvertToVDB -VXL my_map.vxl -ColoredCubesVolume my_output.vdb'" << endl;
+	cout << "Where:" << endl;
+	cout << "\tInputFormat is from {ImageSlices, MagicaVoxel, VXL}" << endl;
+	cout << "\tOutputFormat is from {ColoredCubesVolume, TerrainVolume}" << endl;
+	cout << "" << endl;
+	cout << "\tE.g. 'ConvertToVDB -VXL my_map.vxl -ColoredCubesVolume my_output.vdb'" << endl;
+	cout << "" << endl;
 }
