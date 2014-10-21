@@ -72,16 +72,16 @@ int main(int argc, char* argv[])
 	{
 	case InputFormats::Heightmap:
 		// User might have provided a colormap as well as the heightmap
-		importHeightmap(inputFilenameOrFolder, getCmdOption(argv, argv + argc, "-Colormap"), outputFilename);
+		importHeightmap(inputFilenameOrFolder, getCmdOption(argv, argv + argc, "-Colormap"), outputFilename, outputFormat);
 		break;
 	case InputFormats::ImageSlices:
-		importImageSlices(inputFilenameOrFolder, outputFilename);
+		importImageSlices(inputFilenameOrFolder, outputFilename, outputFormat);
 		break;
 	case InputFormats::MagicaVoxel:
-		importMagicaVoxel(inputFilenameOrFolder, outputFilename);
+		importMagicaVoxel(inputFilenameOrFolder, outputFilename, outputFormat);
 		break;
 	case InputFormats::VXL:
-		importVxl(inputFilenameOrFolder, outputFilename);
+		importVxl(inputFilenameOrFolder, outputFilename, false, outputFormat);
 		break;
 	default:
 		cerr << "Unrecognised input format" << endl;

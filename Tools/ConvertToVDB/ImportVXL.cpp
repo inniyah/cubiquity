@@ -6,7 +6,7 @@
 
 using namespace std;
 
-bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDatabase, bool dryRun)
+bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDatabase, bool dryRun, uint32_t outputFormat)
 {
 	FILE* inputFile = fopen(vxlFilename.c_str(), "rb");
 	if(inputFile == NULL)

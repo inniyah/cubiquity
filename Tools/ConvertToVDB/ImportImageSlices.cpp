@@ -63,7 +63,7 @@ std::vector<std::string> findImagesInFolder(std::string folder)
 	return imageFilenames;
 }
 
-bool importImageSlices(const std::string& folder, const std::string& pathToVoxelDatabase)
+bool importImageSlices(const std::string& folder, const std::string& pathToVoxelDatabase, uint32_t outputFormat)
 {
 	cout << "Importing images from '" << folder << "' and into '" << pathToVoxelDatabase << "'";
 

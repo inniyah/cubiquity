@@ -76,7 +76,7 @@ bool isMagicaVoxel(const std::string& filename)
 	return true;
 }
 
-bool importMagicaVoxel(const std::string& filename, const std::string& pathToVoxelDatabase)
+bool importMagicaVoxel(const std::string& filename, const std::string& pathToVoxelDatabase, uint32_t outputFormat)
 {
 	MV_Model model;
 	model.LoadModel(filename.c_str());
