@@ -7,5 +7,6 @@
 
 bool importHeightmap(const std::string& heightmapFilename, const std::string& colormapFilename, const std::string& pathToVoxelDatabase, uint32_t outputFormat);
 bool importHeightmapAsColoredCubesVolume(const std::string& heightmapFilename, const std::string& colormapFilename, const std::string& pathToVoxelDatabase);
+bool importHeightmapAsTerrainVolume(const std::string& heightmapFilename, const std::string& pathToVoxelDatabase);
 
 #endif //CUBIQUITYTOOLS_IMPORTHEIGHTMAP_H_
