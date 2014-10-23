@@ -90,9 +90,6 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 
 	//std::cout << lastChanged << ", " << openGLOctreeNode->lastChanged << std::endl;
 
-	uint32_t renderThisNode;
-	validate(cuRenderThisNode(octreeNodeHandle, &renderThisNode));
-
 	if (lastChanged > openGLOctreeNode->lastChanged)
 	{
 		//std::cout << "Procesing node " << lastChanged << std::endl;
@@ -170,6 +167,9 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 			openGLOctreeNode->meshLastUpdated = meshLastUpdated;
 		}
 
+		//uint32_t renderThisNode;
+		validate(cuRenderThisNode(octreeNodeHandle, &(openGLOctreeNode->renderThisNode)));
+
 		for (uint32_t z = 0; z < 2; z++)
 		{
 			for (uint32_t y = 0; y < 2; y++)
@@ -179,7 +179,7 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 					uint32_t hasChildNode;
 					validate(cuHasChildNode(octreeNodeHandle, x, y, z, &hasChildNode));
 
-					if (hasChildNode == 1 && renderThisNode == 0)
+					if (hasChildNode == 1 && openGLOctreeNode->renderThisNode == 0)
 					{
 						uint32_t childNodeHandle;
 						validate(cuGetChildNode(octreeNodeHandle, x, y, z, &childNodeHandle));
@@ -212,7 +212,7 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 
 void renderOpenGLOctreeNode(OpenGLOctreeNode* openGLOctreeNode)
 {
-	if (openGLOctreeNode->noOfIndices > 0 /*&& openGLOctreeNode->renderThisNode*/)
+	if (openGLOctreeNode->noOfIndices > 0 && openGLOctreeNode->renderThisNode)
 	{
 		glm::mat4 modelMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(openGLOctreeNode->posX, openGLOctreeNode->posY, openGLOctreeNode->posZ));
 
