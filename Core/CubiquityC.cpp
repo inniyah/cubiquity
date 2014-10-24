@@ -815,6 +815,27 @@ CUBIQUITYC_API int32_t cuGetMeshLastUpdated(uint32_t nodeHandle, uint32_t* resul
 	CLOSE_C_INTERFACE
 }
 
+CUBIQUITYC_API int32_t cuGetMeshOrChildMeshLastUpdated(uint32_t nodeHandle, uint32_t* result)
+{
+	OPEN_C_INTERFACE
+
+	uint32_t volumeType, volumeIndex, nodeIndex;
+	decodeHandle(nodeHandle, &volumeType, &volumeIndex, &nodeIndex);
+
+	if (volumeType == CU_COLORED_CUBES)
+	{
+		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNode(volumeType, volumeIndex, nodeIndex));
+		*result = node->mMeshOrChildMeshLastUpdated;
+	}
+	else
+	{
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNode(volumeType, volumeIndex, nodeIndex));
+		*result = node->mMeshOrChildMeshLastUpdated;
+	}
+
+	CLOSE_C_INTERFACE
+}
+
 CUBIQUITYC_API int32_t cuRenderThisNode(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE

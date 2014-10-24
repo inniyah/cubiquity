@@ -131,7 +131,7 @@ namespace Cubiquity
 
 		//std::cout << mNodes[mRootNodeIndex]->mLastChanged;
 		propagateTimestamps(mRootNodeIndex);
-		//std::cout << ", " << mNodes[mRootNodeIndex]->mLastChanged << std::endl;
+		propagateMeshTimestamps(mRootNodeIndex);
 	}
 
 	template <typename VoxelType>
@@ -278,6 +278,30 @@ namespace Cubiquity
 		}
 
 		return node->mLastChanged;
+	}
+
+	template <typename VoxelType>
+	Timestamp Octree<VoxelType>::propagateMeshTimestamps(uint16_t index)
+	{
+		OctreeNode<VoxelType>* node = mNodes[index];
+
+		for (int iz = 0; iz < 2; iz++)
+		{
+			for (int iy = 0; iy < 2; iy++)
+			{
+				for (int ix = 0; ix < 2; ix++)
+				{
+					uint16_t childIndex = node->children[ix][iy][iz];
+					if (childIndex != InvalidNodeIndex)
+					{
+						Timestamp subtreeTimestamp = propagateMeshTimestamps(childIndex);
+						node->mMeshOrChildMeshLastUpdated = (std::max)(node->mMeshOrChildMeshLastUpdated, subtreeTimestamp);
+					}
+				}
+			}
+		}
+
+		return node->mMeshOrChildMeshLastUpdated;
 	}
 
 	template <typename VoxelType>

@@ -95,7 +95,6 @@ namespace Cubiquity
 			{
 				octreeNode->mRenderThisNode = octreeNode->mWantedForRendering;
 				octreeNode->mLastChanged = Clock::getTimestamp();
-				//std::cout << octreeNode->mLastChanged << std::endl;
 			}
 			return true;
 		}
@@ -139,6 +138,7 @@ namespace Cubiquity
 		void markAsModified(uint16_t index, const Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority);
 
 		Timestamp Octree<VoxelType>::propagateTimestamps(uint16_t index);
+		Timestamp Octree<VoxelType>::propagateMeshTimestamps(uint16_t index);
 
 		void sceduleUpdateIfNeeded(uint16_t index, const Vector3F& viewPosition);
 

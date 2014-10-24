@@ -1,4 +1,5 @@
 // Include standard headers
+#include <algorithm>
 #include <stdio.h>
 #include <stdlib.h>
 #include <iostream>
@@ -37,6 +38,7 @@ public:
 		posZ = 0;
 
 		meshLastUpdated = 0;
+		oldestMeshSync = 0xFFFFFFFF;
 		renderThisNode = false;
 		lastChanged = 0;
 
@@ -64,6 +66,7 @@ public:
 	int32_t posZ;
 
 	uint32_t meshLastUpdated;
+	uint32_t oldestMeshSync;
 	uint32_t renderThisNode;
 	uint32_t lastChanged;
 
@@ -88,9 +91,12 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 	uint32_t lastChanged;
 	validate(cuGetLastChanged(octreeNodeHandle, &lastChanged));
 
+	uint32_t meshOrChildMeshLastUpdated;
+	validate(cuGetMeshOrChildMeshLastUpdated(octreeNodeHandle, &meshOrChildMeshLastUpdated));
+
 	//std::cout << lastChanged << ", " << openGLOctreeNode->lastChanged << std::endl;
 
-	if (lastChanged > openGLOctreeNode->lastChanged)
+	if ((lastChanged > openGLOctreeNode->lastChanged) || (meshOrChildMeshLastUpdated > openGLOctreeNode->oldestMeshSync))
 	{
 		//std::cout << "Procesing node " << lastChanged << std::endl;
 		uint32_t meshLastUpdated;
@@ -170,6 +176,8 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 		//uint32_t renderThisNode;
 		validate(cuRenderThisNode(octreeNodeHandle, &(openGLOctreeNode->renderThisNode)));
 
+		openGLOctreeNode->oldestMeshSync = meshLastUpdated;
+
 		for (uint32_t z = 0; z < 2; z++)
 		{
 			for (uint32_t y = 0; y < 2; y++)
@@ -192,6 +200,8 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 
 						// Recursivly call the octree traversal
 						processOctreeNode(childNodeHandle, openGLOctreeNode->children[x][y][z]);
+
+						openGLOctreeNode->oldestMeshSync = (std::min)(openGLOctreeNode->oldestMeshSync, openGLOctreeNode->children[x][y][z]->oldestMeshSync);
 					}
 					else
 					{

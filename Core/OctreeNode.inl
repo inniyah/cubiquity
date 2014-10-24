@@ -92,6 +92,5 @@ namespace Cubiquity
 		}
 
 		setMeshLastUpdated(Clock::getTimestamp());
-		mLastChanged = Clock::getTimestamp();
 	}
 }
