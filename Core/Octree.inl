@@ -285,6 +285,8 @@ namespace Cubiquity
 	{
 		OctreeNode<VoxelType>* node = mNodes[index];
 
+		node->mMeshOrChildMeshLastUpdated = node->mMeshLastUpdated;
+
 		for (int iz = 0; iz < 2; iz++)
 		{
 			for (int iy = 0; iy < 2; iy++)
