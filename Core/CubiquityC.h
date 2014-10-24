@@ -107,6 +107,24 @@ extern "C"
 	};
 	typedef struct CuColoredCubesVertex_s CuColoredCubesVertex;
 
+	struct CuOctreeNode_s
+	{
+	public:
+		int32_t posX;
+		int32_t posY;
+		int32_t posZ;
+
+		uint32_t lastChanged;
+		uint32_t meshLastUpdated;
+		uint32_t meshOrChildMeshLastUpdated;
+
+		uint32_t childHandles[2][2][2];
+
+		uint8_t hasMesh;
+		uint8_t renderThisNode;
+	};
+	typedef struct CuOctreeNode_s CuOctreeNode;
+
 	// Version functions
 	CUBIQUITYC_API int32_t cuGetVersionNumber(uint32_t* majorVersion, uint32_t* minorVersion, uint32_t* patchVersion);
 
@@ -157,6 +175,8 @@ extern "C"
 	CUBIQUITYC_API int32_t cuGetMeshOrChildMeshLastUpdated(uint32_t nodeHandle, uint32_t* result);
 	CUBIQUITYC_API int32_t cuRenderThisNode(uint32_t nodeHandle, uint32_t* result);
 	CUBIQUITYC_API int32_t cuGetLastChanged(uint32_t nodeHandle, uint32_t* result);
+
+	CUBIQUITYC_API int32_t cuGetOctreeNode(uint32_t nodeHandle, CuOctreeNode* result);
 
 	// Mesh functions
 	CUBIQUITYC_API int32_t cuGetNoOfVertices(uint32_t nodeHandle, uint16_t* result);

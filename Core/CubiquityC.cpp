@@ -878,6 +878,99 @@ CUBIQUITYC_API int32_t cuGetLastChanged(uint32_t nodeHandle, uint32_t* result)
 	CLOSE_C_INTERFACE
 }
 
+CUBIQUITYC_API int32_t cuGetOctreeNode(uint32_t nodeHandle, CuOctreeNode* result)
+{
+	OPEN_C_INTERFACE
+
+	uint32_t volumeType, volumeIndex, nodeIndex;
+	decodeHandle(nodeHandle, &volumeType, &volumeIndex, &nodeIndex);
+
+	if (volumeType == CU_COLORED_CUBES)
+	{
+		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNode(volumeType, volumeIndex, nodeIndex));
+		const Vector3I& lowerCorner = node->mRegion.getLowerCorner();
+		result->posX = lowerCorner.getX();
+		result->posY = lowerCorner.getY();
+		result->posZ = lowerCorner.getZ();
+
+		result->lastChanged = node->mLastChanged;
+		result->meshLastUpdated = node->mMeshLastUpdated;
+		result->meshOrChildMeshLastUpdated = node->mMeshOrChildMeshLastUpdated;
+
+		for (int childZ = 0; childZ < 2; childZ++)
+		{
+			for (int childY = 0; childY < 2; childY++)
+			{
+				for (int childX = 0; childX < 2; childX++)
+				{
+					OctreeNode<Color>* child = node->getChildNode(childX, childY, childZ);
+
+					if (child)
+					{
+						uint32_t nodeIndex = child->mSelf;
+
+						uint32_t volumeHandle;
+						uint32_t dummy;
+						decodeHandle(nodeHandle, &volumeType, &volumeHandle, &dummy);
+
+						result->childHandles[childX][childY][childZ] = encodeHandle(CU_COLORED_CUBES, volumeHandle, nodeIndex);
+					}
+					else
+					{
+						result->childHandles[childX][childY][childZ] = 0xFFFFFFFF; // Should be CU_INVALID_HANLDE
+					}
+				}
+			}
+		}
+		
+		result->hasMesh = (node->mPolyVoxMesh != 0) ? 1 : 0;
+		result->renderThisNode = node->mRenderThisNode;
+	}
+	else
+	{
+		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNode(volumeType, volumeIndex, nodeIndex));
+		const Vector3I& lowerCorner = node->mRegion.getLowerCorner();
+		result->posX = lowerCorner.getX();
+		result->posY = lowerCorner.getY();
+		result->posZ = lowerCorner.getZ();
+
+		result->lastChanged = node->mLastChanged;
+		result->meshLastUpdated = node->mMeshLastUpdated;
+		result->meshOrChildMeshLastUpdated = node->mMeshOrChildMeshLastUpdated;
+
+		for (int childZ = 0; childZ < 2; childZ++)
+		{
+			for (int childY = 0; childY < 2; childY++)
+			{
+				for (int childX = 0; childX < 2; childX++)
+				{
+					OctreeNode<MaterialSet>* child = node->getChildNode(childX, childY, childZ);
+
+					if (child)
+					{
+						uint32_t nodeIndex = child->mSelf;
+
+						uint32_t volumeHandle;
+						uint32_t dummy;
+						decodeHandle(nodeHandle, &volumeType, &volumeHandle, &dummy);
+
+						result->childHandles[childX][childY][childZ] = encodeHandle(CU_COLORED_CUBES, volumeHandle, nodeIndex);
+					}
+					else
+					{
+						result->childHandles[childX][childY][childZ] = 0xFFFFFFFF; // Should be CU_INVALID_HANLDE
+					}
+				}
+			}
+		}
+
+		result->hasMesh = (node->mPolyVoxMesh != 0) ? 1 : 0;
+		result->renderThisNode = node->mRenderThisNode;
+	}
+
+	CLOSE_C_INTERFACE
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // Mesh functions
 ////////////////////////////////////////////////////////////////////////////////

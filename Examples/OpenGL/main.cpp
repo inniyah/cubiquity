@@ -85,29 +85,14 @@ void validate(int returnCode)
 
 void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctreeNode)
 {
-	int32_t nodeX, nodeY, nodeZ;
-	cuGetNodePosition(octreeNodeHandle, &nodeX, &nodeY, &nodeZ);
+	CuOctreeNode octreeNode;
+	validate(cuGetOctreeNode(octreeNodeHandle, &octreeNode));
 
-	uint32_t lastChanged;
-	validate(cuGetLastChanged(octreeNodeHandle, &lastChanged));
-
-	uint32_t meshOrChildMeshLastUpdated;
-	validate(cuGetMeshOrChildMeshLastUpdated(octreeNodeHandle, &meshOrChildMeshLastUpdated));
-
-	//std::cout << lastChanged << ", " << openGLOctreeNode->lastChanged << std::endl;
-
-	if ((lastChanged > openGLOctreeNode->lastChanged) || (meshOrChildMeshLastUpdated > openGLOctreeNode->oldestMeshSync))
+	if ((octreeNode.lastChanged > openGLOctreeNode->lastChanged) || (octreeNode.meshOrChildMeshLastUpdated > openGLOctreeNode->oldestMeshSync))
 	{
-		//std::cout << "Procesing node " << lastChanged << std::endl;
-		uint32_t meshLastUpdated;
-		validate(cuGetMeshLastUpdated(octreeNodeHandle, &meshLastUpdated));
-
-		if (meshLastUpdated > openGLOctreeNode->meshLastUpdated)
+		if (octreeNode.meshLastUpdated > openGLOctreeNode->meshLastUpdated)
 		{
-
-			uint32_t hasMesh;
-			validate(cuNodeHasMesh(octreeNodeHandle, &hasMesh));
-			if (hasMesh == 1)
+			if (octreeNode.hasMesh == 1)
 			{
 				// These will point to the index and vertex data
 				uint32_t noOfIndices;
@@ -126,9 +111,9 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 				validate(cuGetVolumeType(octreeNodeHandle, &volumeType));
 
 				// Pass it to the OpenGL node.
-				openGLOctreeNode->posX = nodeX;
-				openGLOctreeNode->posY = nodeY;
-				openGLOctreeNode->posZ = nodeZ;
+				openGLOctreeNode->posX = octreeNode.posX;
+				openGLOctreeNode->posY = octreeNode.posY;
+				openGLOctreeNode->posZ = octreeNode.posZ;
 
 				openGLOctreeNode->noOfIndices = noOfIndices;
 
@@ -170,13 +155,12 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 				glBindVertexArray(0);
 			}
 
-			openGLOctreeNode->meshLastUpdated = meshLastUpdated;
+			openGLOctreeNode->meshLastUpdated = octreeNode.meshLastUpdated;
 		}
 
-		//uint32_t renderThisNode;
-		validate(cuRenderThisNode(octreeNodeHandle, &(openGLOctreeNode->renderThisNode)));
+		openGLOctreeNode->renderThisNode = octreeNode.renderThisNode;
 
-		openGLOctreeNode->oldestMeshSync = meshLastUpdated;
+		openGLOctreeNode->oldestMeshSync = octreeNode.meshLastUpdated;
 
 		for (uint32_t z = 0; z < 2; z++)
 		{
@@ -216,7 +200,7 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 			}
 		}
 
-		openGLOctreeNode->lastChanged = lastChanged;
+		openGLOctreeNode->lastChanged = octreeNode.lastChanged;
 	}
 }
 
