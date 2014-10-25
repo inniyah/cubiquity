@@ -34,6 +34,7 @@ namespace Cubiquity
 		Timestamp mDataLastModified;
 		Timestamp mLastSceduledForUpdate;
 
+		Timestamp mStructureLastChanged;
 		Timestamp mStructureLastChangedRecursive;
 
 		Timestamp mMeshLastChanged;

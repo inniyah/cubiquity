@@ -129,7 +129,6 @@ namespace Cubiquity
 
 		acceptVisitor(DetermineWhetherToRenderVisitor<VoxelType>());
 
-		//std::cout << mNodes[mRootNodeIndex]->mStructureLastChangedRecursive;
 		propagateTimestamps(mRootNodeIndex);
 		propagateMeshTimestamps(mRootNodeIndex);
 	}
@@ -260,6 +259,8 @@ namespace Cubiquity
 	Timestamp Octree<VoxelType>::propagateTimestamps(uint16_t index)
 	{
 		OctreeNode<VoxelType>* node = mNodes[index];
+
+		node->mStructureLastChangedRecursive = node->mStructureLastChanged;
 
 		for (int iz = 0; iz < 2; iz++)
 		{
