@@ -954,7 +954,7 @@ CUBIQUITYC_API int32_t cuGetOctreeNode(uint32_t nodeHandle, CuOctreeNode* result
 						uint32_t dummy;
 						decodeHandle(nodeHandle, &volumeType, &volumeHandle, &dummy);
 
-						result->childHandles[childX][childY][childZ] = encodeHandle(CU_COLORED_CUBES, volumeHandle, nodeIndex);
+						result->childHandles[childX][childY][childZ] = encodeHandle(CU_TERRAIN, volumeHandle, nodeIndex);
 					}
 					else
 					{
