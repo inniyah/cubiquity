@@ -66,14 +66,12 @@ void testColoredCubesVolume()
 
 void processOctreeNode(uint32_t octreeNodeHandle)
 {
-	int32_t nodeX, nodeY, nodeZ;
-	cuGetNodePosition(octreeNodeHandle, &nodeX, &nodeY, &nodeZ);
+	CuOctreeNode octreeNode;
+	cuGetOctreeNode(octreeNodeHandle, &octreeNode);
 
-	std::cout << "Node position: " << nodeX << " " << nodeY << " " << nodeZ << std::endl;
+	std::cout << "Node position: " << octreeNode.posX << " " << octreeNode.posY << " " << octreeNode.posZ << std::endl;
 
-	uint32_t hasMesh;
-	validate(cuNodeHasMesh(octreeNodeHandle, &hasMesh));
-	if (hasMesh == 1)
+	if (octreeNode.hasMesh)
 	{
 		uint32_t noOfIndices;
 		validate(cuGetNoOfIndices(octreeNodeHandle, &noOfIndices));
@@ -96,16 +94,10 @@ void processOctreeNode(uint32_t octreeNodeHandle)
 		{
 			for (uint32_t x = 0; x < 2; x++)
 			{
-				uint32_t hasChildNode;
-				validate(cuHasChildNode(octreeNodeHandle, x, y, z, &hasChildNode));
-
-				if (hasChildNode == 1)
+				if (octreeNode.childHandles[x][y][z] != 0xFFFFFFFF)
 				{
-					uint32_t childNodeHandle;
-					validate(cuGetChildNode(octreeNodeHandle, x, y, z, &childNodeHandle));
-
 					// Recursivly call the octree traversal
-					processOctreeNode(childNodeHandle);
+					processOctreeNode(octreeNode.childHandles[x][y][z]);
 				}
 			}
 		}

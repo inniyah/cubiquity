@@ -168,14 +168,8 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 			{
 				for (uint32_t x = 0; x < 2; x++)
 				{
-					uint32_t hasChildNode;
-					validate(cuHasChildNode(octreeNodeHandle, x, y, z, &hasChildNode));
-
-					if (hasChildNode == 1 && openGLOctreeNode->renderThisNode == 0)
+					if (octreeNode.childHandles[x][y][z] != 0xFFFFFFFF && openGLOctreeNode->renderThisNode == 0)
 					{
-						uint32_t childNodeHandle;
-						validate(cuGetChildNode(octreeNodeHandle, x, y, z, &childNodeHandle));
-
 						if (!openGLOctreeNode->children[x][y][z])
 						{
 							//std::cout << "Adding mesh" << std::endl;
@@ -183,7 +177,7 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 						}
 
 						// Recursivly call the octree traversal
-						processOctreeNode(childNodeHandle, openGLOctreeNode->children[x][y][z]);
+						processOctreeNode(octreeNode.childHandles[x][y][z], openGLOctreeNode->children[x][y][z]);
 
 						openGLOctreeNode->oldestMeshSync = (std::min)(openGLOctreeNode->oldestMeshSync, openGLOctreeNode->children[x][y][z]->oldestMeshSync);
 					}
@@ -282,7 +276,7 @@ int main( void )
 	glEnable(GL_CULL_FACE);
 
 	uint32_t volumeHandle;
-	bool coloredCubesMode = true;
+	bool coloredCubesMode = false;
 	if (coloredCubesMode)
 	{
 		validate(cuNewColoredCubesVolumeFromVDB("C:/code/cubiquity/Data/Volumes/Version 0/VoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));

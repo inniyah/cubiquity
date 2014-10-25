@@ -167,15 +167,6 @@ extern "C"
 	// Octree functions
 	CUBIQUITYC_API int32_t cuHasRootOctreeNode(uint32_t volumeHandle, uint32_t* result);
 	CUBIQUITYC_API int32_t cuGetRootOctreeNode(uint32_t volumeHandle, uint32_t* result);
-	CUBIQUITYC_API int32_t cuHasChildNode(uint32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ, uint32_t* result);
-	CUBIQUITYC_API int32_t cuGetChildNode(uint32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ, uint32_t* result);
-	CUBIQUITYC_API int32_t cuNodeHasMesh( uint32_t nodeHandle, uint32_t* result);
-	CUBIQUITYC_API int32_t cuGetNodePosition(uint32_t nodeHandle, int32_t* x, int32_t* y, int32_t* z);
-	CUBIQUITYC_API int32_t cuGetMeshLastUpdated(uint32_t nodeHandle, uint32_t* result);
-	CUBIQUITYC_API int32_t cuGetMeshOrChildMeshLastUpdated(uint32_t nodeHandle, uint32_t* result);
-	CUBIQUITYC_API int32_t cuRenderThisNode(uint32_t nodeHandle, uint32_t* result);
-	CUBIQUITYC_API int32_t cuGetLastChanged(uint32_t nodeHandle, uint32_t* result);
-
 	CUBIQUITYC_API int32_t cuGetOctreeNode(uint32_t nodeHandle, CuOctreeNode* result);
 
 	// Mesh functions
