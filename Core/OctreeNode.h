@@ -22,10 +22,11 @@ namespace Cubiquity
 		OctreeNode* getChildNode(uint32_t childX, uint32_t childY, uint32_t childZ);
 		OctreeNode* getParentNode(void);
 
+		const ::PolyVox::Mesh< typename VoxelTraits<VoxelType>::VertexType, uint16_t >* getMesh(void);
+		void setMesh(const ::PolyVox::Mesh< typename VoxelTraits<VoxelType>::VertexType, uint16_t >* mesh);
+
 		bool isMeshUpToDate(void);
 		bool isSceduledForUpdate(void);
-
-		void setMeshLastUpdated(Timestamp newTimeStamp);
 
 		void updateFromCompletedTask(typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* completedTask);
 
@@ -45,8 +46,6 @@ namespace Cubiquity
 		bool mRenderThisNode;
 		bool mExtractOnMainThread;
 
-		const ::PolyVox::Mesh< typename VoxelTraits<VoxelType>::VertexType, uint16_t >* mPolyVoxMesh;
-
 		uint8_t mHeight; // Zero for leaf nodes.
 
 		typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* mLastSurfaceExtractionTask;
@@ -56,6 +55,8 @@ namespace Cubiquity
 	private:
 		uint16_t mParent;
 		uint16_t children[2][2][2];
+
+		const ::PolyVox::Mesh< typename VoxelTraits<VoxelType>::VertexType, uint16_t >* mPolyVoxMesh;
 	};
 }
 

@@ -721,7 +721,7 @@ CUBIQUITYC_API int32_t cuGetOctreeNode(uint32_t nodeHandle, CuOctreeNode* result
 			}
 		}
 		
-		result->hasMesh = (node->mPolyVoxMesh != 0) ? 1 : 0;
+		result->hasMesh = (node->getMesh() != 0) ? 1 : 0;
 		result->renderThisNode = node->mRenderThisNode;
 	}
 	else
@@ -762,7 +762,7 @@ CUBIQUITYC_API int32_t cuGetOctreeNode(uint32_t nodeHandle, CuOctreeNode* result
 			}
 		}
 
-		result->hasMesh = (node->mPolyVoxMesh != 0) ? 1 : 0;
+		result->hasMesh = (node->getMesh() != 0) ? 1 : 0;
 		result->renderThisNode = node->mRenderThisNode;
 	}
 
@@ -782,13 +782,13 @@ CUBIQUITYC_API int32_t cuGetNoOfVertices(uint32_t nodeHandle, uint16_t* result)
 	if (volumeType == CU_COLORED_CUBES)
 	{
 		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNode(volumeType, volumeIndex, nodeIndex));
-		const ::PolyVox::Mesh< typename VoxelTraits<Color>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
+		const ::PolyVox::Mesh< typename VoxelTraits<Color>::VertexType, uint16_t >* polyVoxMesh = node->getMesh();
 		*result = polyVoxMesh->getNoOfVertices();
 	}
 	else
 	{
 		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNode(volumeType, volumeIndex, nodeIndex));
-		const ::PolyVox::Mesh< typename VoxelTraits<MaterialSet>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
+		const ::PolyVox::Mesh< typename VoxelTraits<MaterialSet>::VertexType, uint16_t >* polyVoxMesh = node->getMesh();
 		*result = polyVoxMesh->getNoOfVertices();
 	}
 
@@ -805,13 +805,13 @@ CUBIQUITYC_API int32_t cuGetNoOfIndices(uint32_t nodeHandle, uint32_t* result)
 	if (volumeType == CU_COLORED_CUBES)
 	{
 		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNode(volumeType, volumeIndex, nodeIndex));
-		const ::PolyVox::Mesh< typename VoxelTraits<Color>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
+		const ::PolyVox::Mesh< typename VoxelTraits<Color>::VertexType, uint16_t >* polyVoxMesh = node->getMesh();
 		*result = polyVoxMesh->getNoOfIndices();
 	}
 	else
 	{
 		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNode(volumeType, volumeIndex, nodeIndex));
-		const ::PolyVox::Mesh< typename VoxelTraits<MaterialSet>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
+		const ::PolyVox::Mesh< typename VoxelTraits<MaterialSet>::VertexType, uint16_t >* polyVoxMesh = node->getMesh();
 		*result = polyVoxMesh->getNoOfIndices();
 	}
 
@@ -828,7 +828,7 @@ CUBIQUITYC_API int32_t cuGetVertices(uint32_t nodeHandle, void** result)
 	if (volumeType == CU_COLORED_CUBES)
 	{
 		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNode(volumeType, volumeIndex, nodeIndex));
-		const ::PolyVox::Mesh< typename VoxelTraits<Color>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
+		const ::PolyVox::Mesh< typename VoxelTraits<Color>::VertexType, uint16_t >* polyVoxMesh = node->getMesh();
 		const std::vector< typename VoxelTraits<Color>::VertexType >& vertexVector = polyVoxMesh->getVertices();
 		const VoxelTraits<Color>::VertexType* vertexPointer = &(vertexVector[0]);
 		const float* constFloatPointer = reinterpret_cast<const float*>(vertexPointer);
@@ -838,7 +838,7 @@ CUBIQUITYC_API int32_t cuGetVertices(uint32_t nodeHandle, void** result)
 	else
 	{
 		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNode(volumeType, volumeIndex, nodeIndex));
-		const ::PolyVox::Mesh< typename VoxelTraits<MaterialSet>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
+		const ::PolyVox::Mesh< typename VoxelTraits<MaterialSet>::VertexType, uint16_t >* polyVoxMesh = node->getMesh();
 		const std::vector< typename VoxelTraits<MaterialSet>::VertexType >& vertexVector = polyVoxMesh->getVertices();
 		const VoxelTraits<MaterialSet>::VertexType* vertexPointer = &(vertexVector[0]);
 		const float* constFloatPointer = reinterpret_cast<const float*>(vertexPointer);
@@ -859,7 +859,7 @@ CUBIQUITYC_API int32_t cuGetIndices(uint32_t nodeHandle, uint16_t** result)
 	if (volumeType == CU_COLORED_CUBES)
 	{
 		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNode(volumeType, volumeIndex, nodeIndex));
-		const ::PolyVox::Mesh< typename VoxelTraits<Color>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
+		const ::PolyVox::Mesh< typename VoxelTraits<Color>::VertexType, uint16_t >* polyVoxMesh = node->getMesh();
 		const std::vector< uint16_t >& indexVector = polyVoxMesh->getIndices();
 		const uint16_t* constUInt16Pointer = &(indexVector[0]);
 		uint16_t* uintPointer = const_cast<uint16_t*>(constUInt16Pointer);
@@ -868,7 +868,7 @@ CUBIQUITYC_API int32_t cuGetIndices(uint32_t nodeHandle, uint16_t** result)
 	else
 	{
 		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNode(volumeType, volumeIndex, nodeIndex));
-		const ::PolyVox::Mesh< typename VoxelTraits<MaterialSet>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
+		const ::PolyVox::Mesh< typename VoxelTraits<MaterialSet>::VertexType, uint16_t >* polyVoxMesh = node->getMesh();
 		const std::vector< uint16_t >& indexVector = polyVoxMesh->getIndices();
 		const uint16_t* constUIntPointer = &(indexVector[0]);
 		uint16_t* uintPointer = const_cast<uint16_t*>(constUIntPointer);
@@ -891,7 +891,7 @@ CUBIQUITYC_API int32_t cuGetMesh(uint32_t nodeHandle, uint16_t* noOfVertices, vo
 		OctreeNode<Color>* node = reinterpret_cast<OctreeNode<Color>*>(getNode(volumeType, volumeIndex, nodeIndex));
 
 		// Get the mesh
-		const ::PolyVox::Mesh< typename VoxelTraits<Color>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
+		const ::PolyVox::Mesh< typename VoxelTraits<Color>::VertexType, uint16_t >* polyVoxMesh = node->getMesh();
 
 		// Get no of vertices
 		*noOfVertices = polyVoxMesh->getNoOfVertices();
@@ -918,7 +918,7 @@ CUBIQUITYC_API int32_t cuGetMesh(uint32_t nodeHandle, uint16_t* noOfVertices, vo
 		OctreeNode<MaterialSet>* node = reinterpret_cast<OctreeNode<MaterialSet>*>(getNode(volumeType, volumeIndex, nodeIndex));
 
 		// Get the mesh
-		const ::PolyVox::Mesh< typename VoxelTraits<MaterialSet>::VertexType, uint16_t >* polyVoxMesh = node->mPolyVoxMesh;
+		const ::PolyVox::Mesh< typename VoxelTraits<MaterialSet>::VertexType, uint16_t >* polyVoxMesh = node->getMesh();
 
 		// Get no of vertices
 		*noOfVertices = polyVoxMesh->getNoOfVertices();

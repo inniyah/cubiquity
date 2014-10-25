@@ -59,6 +59,26 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
+	const ::PolyVox::Mesh< typename VoxelTraits<VoxelType>::VertexType, uint16_t >* OctreeNode<VoxelType>::getMesh(void)
+	{
+		return mPolyVoxMesh;
+	}
+
+	template <typename VoxelType>
+	void OctreeNode<VoxelType>::setMesh(const ::PolyVox::Mesh< typename VoxelTraits<VoxelType>::VertexType, uint16_t >* mesh)
+	{
+		if (mPolyVoxMesh)
+		{
+			delete mPolyVoxMesh;
+			mPolyVoxMesh = 0;
+		}
+
+		mPolyVoxMesh = mesh;
+
+		mMeshLastChanged = Clock::getTimestamp();
+	}
+
+	template <typename VoxelType>
 	bool OctreeNode<VoxelType>::isMeshUpToDate(void)
 	{
 		return mMeshLastChanged > mDataLastModified;
@@ -72,25 +92,17 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void OctreeNode<VoxelType>::setMeshLastUpdated(Timestamp newTimeStamp)
-	{
-		mMeshLastChanged = newTimeStamp;
-	}
-
-	template <typename VoxelType>
 	void OctreeNode<VoxelType>::updateFromCompletedTask(typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* completedTask)
 	{
-		// Delete the old mesh first.
-		delete mPolyVoxMesh;
-		mPolyVoxMesh = 0;
-
-		// Assign a new on if available
+		// Assign a new mesh if available
 		if(completedTask->mPolyVoxMesh->getNoOfIndices() > 0)
 		{
-			mPolyVoxMesh = completedTask->mPolyVoxMesh;
+			setMesh(completedTask->mPolyVoxMesh);
 			completedTask->mOwnMesh = false; // So the task doesn't delete the mesh
 		}
-
-		setMeshLastUpdated(Clock::getTimestamp());
+		else // Otherwise it will just be deleted.
+		{
+			setMesh(0);
+		}
 	}
 }
