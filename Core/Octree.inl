@@ -129,7 +129,7 @@ namespace Cubiquity
 
 		acceptVisitor(DetermineWhetherToRenderVisitor<VoxelType>());
 
-		//std::cout << mNodes[mRootNodeIndex]->mLastChanged;
+		//std::cout << mNodes[mRootNodeIndex]->mStructureLastChangedRecursive;
 		propagateTimestamps(mRootNodeIndex);
 		propagateMeshTimestamps(mRootNodeIndex);
 	}
@@ -271,13 +271,13 @@ namespace Cubiquity
 					if (childIndex != InvalidNodeIndex)
 					{
 						Timestamp subtreeTimestamp = propagateTimestamps(childIndex);
-						node->mLastChanged = (std::max)(node->mLastChanged, subtreeTimestamp);
+						node->mStructureLastChangedRecursive = (std::max)(node->mStructureLastChangedRecursive, subtreeTimestamp);
 					}
 				}
 			}
 		}
 
-		return node->mLastChanged;
+		return node->mStructureLastChangedRecursive;
 	}
 
 	template <typename VoxelType>
@@ -285,7 +285,7 @@ namespace Cubiquity
 	{
 		OctreeNode<VoxelType>* node = mNodes[index];
 
-		node->mMeshOrChildMeshLastUpdated = node->mMeshLastUpdated;
+		node->mMeshLastChangedRecursive = node->mMeshLastChanged;
 
 		for (int iz = 0; iz < 2; iz++)
 		{
@@ -297,13 +297,13 @@ namespace Cubiquity
 					if (childIndex != InvalidNodeIndex)
 					{
 						Timestamp subtreeTimestamp = propagateMeshTimestamps(childIndex);
-						node->mMeshOrChildMeshLastUpdated = (std::max)(node->mMeshOrChildMeshLastUpdated, subtreeTimestamp);
+						node->mMeshLastChangedRecursive = (std::max)(node->mMeshLastChangedRecursive, subtreeTimestamp);
 					}
 				}
 			}
 		}
 
-		return node->mMeshOrChildMeshLastUpdated;
+		return node->mMeshLastChangedRecursive;
 	}
 
 	template <typename VoxelType>

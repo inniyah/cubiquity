@@ -21,9 +21,9 @@ namespace Cubiquity
 		,mRenderThisNode(false)
 		,mExtractOnMainThread(false)
 		,mLastSceduledForUpdate(0) // The values of these few initialisations is important
-		,mMeshLastUpdated(1)	   // to make sure the node is set to an 'out of date' 
+		,mMeshLastChanged(1)	   // to make sure the node is set to an 'out of date' 
 		,mDataLastModified(2)      // state which will then try to update.
-		,mLastChanged(3)
+		,mStructureLastChangedRecursive(3)
 		,mPolyVoxMesh(0)
 		,mHeight(0)
 		,mLastSurfaceExtractionTask(0)
@@ -61,20 +61,20 @@ namespace Cubiquity
 	template <typename VoxelType>
 	bool OctreeNode<VoxelType>::isMeshUpToDate(void)
 	{
-		return mMeshLastUpdated > mDataLastModified;
+		return mMeshLastChanged > mDataLastModified;
 	}
 
 	template <typename VoxelType>
 	bool OctreeNode<VoxelType>::isSceduledForUpdate(void)
 	{
 		//We are sceduled for an update if being sceduled was the most recent thing that happened.
-		return (mLastSceduledForUpdate > mDataLastModified) && (mLastSceduledForUpdate > mMeshLastUpdated);
+		return (mLastSceduledForUpdate > mDataLastModified) && (mLastSceduledForUpdate > mMeshLastChanged);
 	}
 
 	template <typename VoxelType>
 	void OctreeNode<VoxelType>::setMeshLastUpdated(Timestamp newTimeStamp)
 	{
-		mMeshLastUpdated = newTimeStamp;
+		mMeshLastChanged = newTimeStamp;
 	}
 
 	template <typename VoxelType>

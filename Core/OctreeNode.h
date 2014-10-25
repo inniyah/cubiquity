@@ -31,11 +31,12 @@ namespace Cubiquity
 
 		Region mRegion;
 		Timestamp mDataLastModified;
-		Timestamp mMeshLastUpdated;
-		Timestamp mMeshOrChildMeshLastUpdated;
 		Timestamp mLastSceduledForUpdate;
 
-		Timestamp mLastChanged;
+		Timestamp mStructureLastChangedRecursive;
+
+		Timestamp mMeshLastChanged;
+		Timestamp mMeshLastChangedRecursive;
 
 		Octree<VoxelType>* mOctree;
 

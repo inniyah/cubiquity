@@ -94,7 +94,7 @@ namespace Cubiquity
 			if (octreeNode->mRenderThisNode != octreeNode->mWantedForRendering)
 			{
 				octreeNode->mRenderThisNode = octreeNode->mWantedForRendering;
-				octreeNode->mLastChanged = Clock::getTimestamp();
+				octreeNode->mStructureLastChangedRecursive = Clock::getTimestamp();
 			}
 			return true;
 		}

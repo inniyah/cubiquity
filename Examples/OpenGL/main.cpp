@@ -88,9 +88,9 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 	CuOctreeNode octreeNode;
 	validate(cuGetOctreeNode(octreeNodeHandle, &octreeNode));
 
-	if ((octreeNode.lastChanged > openGLOctreeNode->lastChanged) || (octreeNode.meshOrChildMeshLastUpdated > openGLOctreeNode->oldestMeshSync))
+	if ((octreeNode.structureLastChangedRecursive > openGLOctreeNode->lastChanged) || (octreeNode.meshLastChangedRecursive > openGLOctreeNode->oldestMeshSync))
 	{
-		if (octreeNode.meshLastUpdated > openGLOctreeNode->meshLastUpdated)
+		if (octreeNode.meshLastChanged > openGLOctreeNode->meshLastUpdated)
 		{
 			if (octreeNode.hasMesh == 1)
 			{
@@ -155,12 +155,12 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 				glBindVertexArray(0);
 			}
 
-			openGLOctreeNode->meshLastUpdated = octreeNode.meshLastUpdated;
+			openGLOctreeNode->meshLastUpdated = octreeNode.meshLastChanged;
 		}
 
 		openGLOctreeNode->renderThisNode = octreeNode.renderThisNode;
 
-		openGLOctreeNode->oldestMeshSync = octreeNode.meshLastUpdated;
+		openGLOctreeNode->oldestMeshSync = octreeNode.meshLastChanged;
 
 		for (uint32_t z = 0; z < 2; z++)
 		{
@@ -194,7 +194,7 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 			}
 		}
 
-		openGLOctreeNode->lastChanged = octreeNode.lastChanged;
+		openGLOctreeNode->lastChanged = octreeNode.structureLastChangedRecursive;
 	}
 }
 
