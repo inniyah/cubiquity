@@ -25,6 +25,9 @@ namespace Cubiquity
 		const ::PolyVox::Mesh< typename VoxelTraits<VoxelType>::VertexType, uint16_t >* getMesh(void);
 		void setMesh(const ::PolyVox::Mesh< typename VoxelTraits<VoxelType>::VertexType, uint16_t >* mesh);
 
+		bool isActive(void);
+		void setActive(bool active);
+
 		bool isMeshUpToDate(void);
 		bool isSceduledForUpdate(void);
 
@@ -46,6 +49,7 @@ namespace Cubiquity
 		bool mWantedForRendering;
 		bool mRenderThisNode;
 		bool mExtractOnMainThread;
+		bool mActive;
 
 		uint8_t mHeight; // Zero for leaf nodes.
 

@@ -101,6 +101,8 @@ namespace Cubiquity
 	{
 		acceptVisitor(ClearWantedForRenderingVisitor<VoxelType>());
 
+		acceptVisitor(DetermineActiveNodesVisitor<VoxelType>(viewPosition, lodThreshold));
+
 		acceptVisitor(DetermineWantedForRenderingVisitor<VoxelType>(viewPosition, lodThreshold));
 
 		//determineWantedForRendering(mRootNodeIndex, viewPosition, lodThreshold);
@@ -312,7 +314,7 @@ namespace Cubiquity
 	{
 		OctreeNode<VoxelType>* node = mNodes[index];
 
-		if((node->isMeshUpToDate() == false) && (node->isSceduledForUpdate() == false) && ((node->mLastSurfaceExtractionTask == 0) || (node->mLastSurfaceExtractionTask->mProcessingStartedTimestamp < Clock::getTimestamp())) && (node->mWantedForRendering))
+		if ((node->isMeshUpToDate() == false) && (node->isSceduledForUpdate() == false) && ((node->mLastSurfaceExtractionTask == 0) || (node->mLastSurfaceExtractionTask->mProcessingStartedTimestamp < Clock::getTimestamp())) && (node->mWantedForRendering))
 		{
 			node->mLastSceduledForUpdate = Clock::getTimestamp();
 
@@ -330,17 +332,42 @@ namespace Cubiquity
 			}
 			/*else
 			{
-				// Note: tasks get sorted by their distance from the camera at the time they are added. If we
-				// want to account for the camera moving then we would have to sort the task queue each frame.
-				Vector3F regionCentre = static_cast<Vector3F>(node->mRegion.getCentre());
-				float distance = (viewPosition - regionCentre).length(); //We don't use distance squared to keep the values smaller
-				node->mLastSurfaceExtractionTask->mPriority = (std::numeric_limits<uint32_t>::max)() - static_cast<uint32_t>(distance);
-				gBackgroundTaskProcessor.addTask(node->mLastSurfaceExtractionTask);
+			// Note: tasks get sorted by their distance from the camera at the time they are added. If we
+			// want to account for the camera moving then we would have to sort the task queue each frame.
+			Vector3F regionCentre = static_cast<Vector3F>(node->mRegion.getCentre());
+			float distance = (viewPosition - regionCentre).length(); //We don't use distance squared to keep the values smaller
+			node->mLastSurfaceExtractionTask->mPriority = (std::numeric_limits<uint32_t>::max)() - static_cast<uint32_t>(distance);
+			gBackgroundTaskProcessor.addTask(node->mLastSurfaceExtractionTask);
 			}*/
 
 			// Clear this flag otherwise this node will always be done on the main thread.
 			node->mExtractOnMainThread = false;
 		}
+
+		for (int iz = 0; iz < 2; iz++)
+		{
+			for (int iy = 0; iy < 2; iy++)
+			{
+				for (int ix = 0; ix < 2; ix++)
+				{
+					uint16_t childIndex = node->children[ix][iy][iz];
+					if (childIndex != InvalidNodeIndex)
+					{
+						sceduleUpdateIfNeeded(childIndex, viewPosition);
+					}
+				}
+			}
+		}
+	}
+
+	template <typename VoxelType>
+	void Octree<VoxelType>::determineWhetherToRender(uint16_t index)
+	{
+		OctreeNode<VoxelType>* node = mNodes[index];
+
+		node->mRenderThisNode = true;
+
+		bool hasChildren = false;
 
 		for(int iz = 0; iz < 2; iz++)
 		{
@@ -351,11 +378,18 @@ namespace Cubiquity
 					uint16_t childIndex = node->children[ix][iy][iz];
 					if(childIndex != InvalidNodeIndex)
 					{
-						sceduleUpdateIfNeeded(childIndex, viewPosition);
+						OctreeNode<VoxelType>* childNode = mNodes[childIndex];
+						if (childNode->isActive())
+						{
+							hasChildren = true;
+							determineWhetherToRender(childIndex);
+						}
 					}
 				}
 			}
 		}
+
+		node->mRenderThisNode = !hasChildren;
 	}
 
 	/*template <typename VoxelType>

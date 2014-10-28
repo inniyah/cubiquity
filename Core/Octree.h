@@ -38,6 +38,51 @@ namespace Cubiquity
 	};
 
 	template <typename VoxelType>
+	class DetermineActiveNodesVisitor
+	{
+	public:
+		DetermineActiveNodesVisitor(const Vector3F& viewPosition, float lodThreshold)
+			:mViewPosition(viewPosition)
+			, mLodThreshold(lodThreshold)
+		{
+
+		}
+
+		bool operator()(OctreeNode<VoxelType>* octreeNode)
+		{
+			// FIXME - Should have an early out to set active to false if parent is false.
+
+			OctreeNode<VoxelType>* parentNode = octreeNode->getParentNode();
+			if (parentNode)
+			{
+
+				Vector3F regionCentre = static_cast<Vector3F>(parentNode->mRegion.getCentre());
+
+				float distance = (mViewPosition - regionCentre).length();
+
+				Vector3I diagonal = parentNode->mRegion.getUpperCorner() - parentNode->mRegion.getLowerCorner();
+				float diagonalLength = diagonal.length(); // A measure of our regions size
+
+				float projectedSize = diagonalLength / distance;
+
+				bool active = (projectedSize > mLodThreshold) || (parentNode->mHeight >= HighestMeshLevel);
+
+				octreeNode->setActive(active);
+			}
+			else
+			{
+				octreeNode->setActive(true);
+			}
+
+			return true; // Process children
+		}
+
+	private:
+		const Vector3F& mViewPosition;
+		float mLodThreshold;
+	};
+
+	template <typename VoxelType>
 	class DetermineWantedForRenderingVisitor
 	{
 	public:
@@ -141,6 +186,8 @@ namespace Cubiquity
 		Timestamp Octree<VoxelType>::propagateMeshTimestamps(uint16_t index);
 
 		void sceduleUpdateIfNeeded(uint16_t index, const Vector3F& viewPosition);
+
+		void Octree<VoxelType>::determineWhetherToRender(uint16_t index);
 
 		//void determineWantedForRendering(uint16_t index, const Vector3F& viewPosition, float lodThreshold);
 

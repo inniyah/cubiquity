@@ -703,7 +703,7 @@ CUBIQUITYC_API int32_t cuGetOctreeNode(uint32_t nodeHandle, CuOctreeNode* result
 				{
 					OctreeNode<Color>* child = node->getChildNode(childX, childY, childZ);
 
-					if (child)
+					if (child && child->isActive())
 					{
 						uint32_t nodeIndex = child->mSelf;
 
@@ -744,7 +744,7 @@ CUBIQUITYC_API int32_t cuGetOctreeNode(uint32_t nodeHandle, CuOctreeNode* result
 				{
 					OctreeNode<MaterialSet>* child = node->getChildNode(childX, childY, childZ);
 
-					if (child)
+					if (child && child->isActive())
 					{
 						uint32_t nodeIndex = child->mSelf;
 

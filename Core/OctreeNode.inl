@@ -20,6 +20,7 @@ namespace Cubiquity
 		,mWantedForRendering(false)
 		,mRenderThisNode(false)
 		,mExtractOnMainThread(false)
+		,mActive(false)
 		,mLastSceduledForUpdate(0) // The values of these few initialisations is important
 		,mMeshLastChanged(1)	   // to make sure the node is set to an 'out of date' 
 		,mDataLastModified(2)      // state which will then try to update.
@@ -76,6 +77,22 @@ namespace Cubiquity
 		mPolyVoxMesh = mesh;
 
 		mMeshLastChanged = Clock::getTimestamp();
+	}
+
+	template <typename VoxelType>
+	bool OctreeNode<VoxelType>::isActive(void)
+	{
+		return mActive;
+	}
+
+	template <typename VoxelType>
+	void OctreeNode<VoxelType>::setActive(bool active)
+	{
+		if (mActive != active)
+		{
+			mActive = active;
+			mStructureLastChanged = Clock::getTimestamp();
+		}
 	}
 
 	template <typename VoxelType>
