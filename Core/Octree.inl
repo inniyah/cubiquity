@@ -131,6 +131,8 @@ namespace Cubiquity
 
 		acceptVisitor(DetermineWhetherToRenderVisitor<VoxelType>());
 
+		//determineWhetherToRender(mRootNodeIndex);
+
 		propagateTimestamps(mRootNodeIndex);
 		propagateMeshTimestamps(mRootNodeIndex);
 	}
@@ -361,13 +363,13 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void Octree<VoxelType>::determineWhetherToRender(uint16_t index)
+	bool Octree<VoxelType>::determineWhetherToRender(uint16_t index)
 	{
 		OctreeNode<VoxelType>* node = mNodes[index];
 
-		node->mRenderThisNode = true;
+		node->mRenderThisNode = false; // node->isMeshUpToDate();
 
-		bool hasChildren = false;
+		bool renderAllChildren = true;
 
 		for(int iz = 0; iz < 2; iz++)
 		{
@@ -381,15 +383,23 @@ namespace Cubiquity
 						OctreeNode<VoxelType>* childNode = mNodes[childIndex];
 						if (childNode->isActive())
 						{
-							hasChildren = true;
-							determineWhetherToRender(childIndex);
+							renderAllChildren = renderAllChildren && determineWhetherToRender(childIndex);
+						}
+						else
+						{
+							renderAllChildren = false;
 						}
 					}
 				}
 			}
 		}
 
-		node->mRenderThisNode = !hasChildren;
+		if (renderAllChildren == false)
+		{
+			node->mRenderThisNode = true;
+		}
+
+		return node->mRenderThisNode;
 	}
 
 	/*template <typename VoxelType>

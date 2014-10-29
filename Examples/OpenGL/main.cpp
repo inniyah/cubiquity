@@ -90,6 +90,7 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 
 	if ((octreeNode.structureLastChangedRecursive > openGLOctreeNode->lastChanged) || (octreeNode.meshLastChangedRecursive > openGLOctreeNode->oldestMeshSync))
 	{
+		//std::cout << "updating" << std::endl;
 		if (octreeNode.meshLastChanged > openGLOctreeNode->meshLastUpdated)
 		{
 			if (octreeNode.hasMesh == 1)
@@ -101,11 +102,13 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 				void* vertices;
 
 				// Get the index and vertex data
-				validate(cuGetNoOfIndices(octreeNodeHandle, &noOfIndices));
+				/*validate(cuGetNoOfIndices(octreeNodeHandle, &noOfIndices));
 				validate(cuGetIndices(octreeNodeHandle, &indices));
 
 				validate(cuGetNoOfVertices(octreeNodeHandle, &noOfVertices));
-				validate(cuGetVertices(octreeNodeHandle, &vertices));
+				validate(cuGetVertices(octreeNodeHandle, &vertices));*/
+
+				validate(cuGetMesh(octreeNodeHandle, &noOfVertices, &vertices, &noOfIndices, &indices));
 
 				uint32_t volumeType;
 				validate(cuGetVolumeType(octreeNodeHandle, &volumeType));
@@ -168,7 +171,7 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 			{
 				for (uint32_t x = 0; x < 2; x++)
 				{
-					if (octreeNode.childHandles[x][y][z] != 0xFFFFFFFF && openGLOctreeNode->renderThisNode == 0)
+					if (octreeNode.childHandles[x][y][z] != 0xFFFFFFFF /*&& openGLOctreeNode->renderThisNode == 0*/)
 					{
 						if (!openGLOctreeNode->children[x][y][z])
 						{

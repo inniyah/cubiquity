@@ -77,6 +77,12 @@ namespace Cubiquity
 		mPolyVoxMesh = mesh;
 
 		mMeshLastChanged = Clock::getTimestamp();
+
+		if (mPolyVoxMesh == 0)
+		{
+			// Force the mesh to be updated next time it is needed.
+			mDataLastModified = Clock::getTimestamp();
+		}
 	}
 
 	template <typename VoxelType>
@@ -92,6 +98,11 @@ namespace Cubiquity
 		{
 			mActive = active;
 			mStructureLastChanged = Clock::getTimestamp();
+
+			if (mActive == false)
+			{
+				setMesh(0);
+			}
 		}
 	}
 
@@ -112,14 +123,14 @@ namespace Cubiquity
 	void OctreeNode<VoxelType>::updateFromCompletedTask(typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* completedTask)
 	{
 		// Assign a new mesh if available
-		if(completedTask->mPolyVoxMesh->getNoOfIndices() > 0)
-		{
+		/*if(completedTask->mPolyVoxMesh->getNoOfIndices() > 0)
+		{*/
 			setMesh(completedTask->mPolyVoxMesh);
 			completedTask->mOwnMesh = false; // So the task doesn't delete the mesh
-		}
+		/*}
 		else // Otherwise it will just be deleted.
 		{
 			setMesh(0);
-		}
+		}*/
 	}
 }
