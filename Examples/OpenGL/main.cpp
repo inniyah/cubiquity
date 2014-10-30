@@ -37,10 +37,10 @@ public:
 		posY = 0;
 		posZ = 0;
 
-		meshLastUpdated = 0;
-		oldestMeshSync = 0xFFFFFFFF;
+		meshLastSyncronised = 0;
+		meshAndChildMeshesLastSyncronised = 0;
 		renderThisNode = false;
-		lastChanged = 0;
+		structureAndChildStructureLastSyned = 0;
 
 		this->parent = parent;
 
@@ -65,10 +65,10 @@ public:
 	int32_t posY;
 	int32_t posZ;
 
-	uint32_t meshLastUpdated;
-	uint32_t oldestMeshSync;
+	uint32_t meshLastSyncronised;
+	uint32_t meshAndChildMeshesLastSyncronised;
 	uint32_t renderThisNode;
-	uint32_t lastChanged;
+	uint32_t structureAndChildStructureLastSyned;
 
 	OpenGLOctreeNode* parent;
 	OpenGLOctreeNode* children[2][2][2];
@@ -88,10 +88,10 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 	CuOctreeNode octreeNode;
 	validate(cuGetOctreeNode(octreeNodeHandle, &octreeNode));
 
-	if ((octreeNode.structureLastChangedRecursive > openGLOctreeNode->lastChanged) || (octreeNode.meshLastChangedRecursive > openGLOctreeNode->oldestMeshSync))
+	if ((octreeNode.structureLastChangedRecursive > openGLOctreeNode->structureAndChildStructureLastSyned) || (octreeNode.meshLastChangedRecursive > openGLOctreeNode->meshAndChildMeshesLastSyncronised))
 	{
 		//std::cout << "updating" << std::endl;
-		if (octreeNode.meshLastChanged > openGLOctreeNode->meshLastUpdated)
+		if (octreeNode.meshLastChanged > openGLOctreeNode->meshLastSyncronised)
 		{
 			if (octreeNode.hasMesh == 1)
 			{
@@ -152,12 +152,10 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 				glBindVertexArray(0);
 			}
 
-			openGLOctreeNode->meshLastUpdated = octreeNode.meshLastChanged;
+			openGLOctreeNode->meshLastSyncronised = octreeNode.meshLastChanged;
 		}
 
 		openGLOctreeNode->renderThisNode = octreeNode.renderThisNode;
-
-		openGLOctreeNode->oldestMeshSync = octreeNode.meshLastChanged;
 
 		for (uint32_t z = 0; z < 2; z++)
 		{
@@ -175,8 +173,6 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 
 						// Recursivly call the octree traversal
 						processOctreeNode(octreeNode.childHandles[x][y][z], openGLOctreeNode->children[x][y][z]);
-
-						openGLOctreeNode->oldestMeshSync = (std::min)(openGLOctreeNode->oldestMeshSync, openGLOctreeNode->children[x][y][z]->oldestMeshSync);
 					}
 					else
 					{
@@ -191,7 +187,8 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 			}
 		}
 
-		openGLOctreeNode->lastChanged = octreeNode.structureLastChangedRecursive;
+		openGLOctreeNode->structureAndChildStructureLastSyned = octreeNode.structureLastChangedRecursive;
+		openGLOctreeNode->meshAndChildMeshesLastSyncronised = octreeNode.meshLastChangedRecursive;
 	}
 }
 
