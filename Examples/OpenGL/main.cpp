@@ -102,12 +102,6 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 				void* vertices;
 
 				// Get the index and vertex data
-				/*validate(cuGetNoOfIndices(octreeNodeHandle, &noOfIndices));
-				validate(cuGetIndices(octreeNodeHandle, &indices));
-
-				validate(cuGetNoOfVertices(octreeNodeHandle, &noOfVertices));
-				validate(cuGetVertices(octreeNodeHandle, &vertices));*/
-
 				validate(cuGetMesh(octreeNodeHandle, &noOfVertices, &vertices, &noOfIndices, &indices));
 
 				uint32_t volumeType;
