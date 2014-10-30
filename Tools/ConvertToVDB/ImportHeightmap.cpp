@@ -5,6 +5,7 @@
 #define STBI_HEADER_FILE_ONLY
 #include "stb_image.cpp"
 
+#include <algorithm>
 #include <iomanip>
 #include <iostream>
 #include <cstdint>
@@ -131,7 +132,7 @@ bool importHeightmapAsTerrainVolume(const std::string& heightmapFilename, const 
 	// physics engines expect this. This means we need to swap the 'y' and 'slice' indices.
 	uint32_t volumeHandle;
 	uint32_t volumeWidth = heightmapWidth;
-	uint32_t volumeHeight = 256; // Assume we're not loading HDR images, not supported by stb_image anyway
+	uint32_t volumeHeight = 32; // Assume we're not loading HDR images, not supported by stb_image anyway
 	uint32_t volumeDepth = heightmapHeight;
 	if (cuNewEmptyTerrainVolume(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, pathToVoxelDatabase.c_str(), 32, &volumeHandle) != CU_OK)
 	{
@@ -150,10 +151,33 @@ bool importHeightmapAsTerrainVolume(const std::string& heightmapFilename, const 
 				CuMaterialSet materialSet;
 				materialSet.data = 0;
 
-				if (height < *heightmapPixel)
+				float fHeight = float(height) / float(volumeHeight);
+				float fPixelHeight = float(*heightmapPixel) / 255.0f;
+
+				float fDiff = fPixelHeight - fHeight;
+
+				fDiff *= 10000.0f;
+
+				int diff = int(fDiff);
+				diff += 127;
+
+				/*int diff = (int)height - int(*heightmapPixel);
+				diff *= 10;
+				diff += 127;*/
+
+				diff = (std::min)(diff, 255);
+				diff = (std::max)(diff, 0);
+
+				materialSet.data = static_cast<uint8_t>(diff);
+
+				/*if (height < imageX)
 				{
 					materialSet.data = 255;
 				}
+				else
+				{
+					materialSet.data = 0;
+				}*/
 
 				if (cuSetVoxel(volumeHandle, imageX, height, imageY, &materialSet) != CU_OK)
 				{
