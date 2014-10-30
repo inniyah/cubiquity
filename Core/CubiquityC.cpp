@@ -722,6 +722,7 @@ CUBIQUITYC_API int32_t cuGetOctreeNode(uint32_t nodeHandle, CuOctreeNode* result
 		}
 		
 		result->hasMesh = (node->getMesh() != 0) && (node->getMesh()->getNoOfVertices() > 0) && (node->getMesh()->getNoOfIndices() > 0) ? 1 : 0;
+		result->height = node->mHeight;
 		result->renderThisNode = node->mRenderThisNode;
 	}
 	else
@@ -763,6 +764,7 @@ CUBIQUITYC_API int32_t cuGetOctreeNode(uint32_t nodeHandle, CuOctreeNode* result
 		}
 
 		result->hasMesh = (node->getMesh() != 0) && (node->getMesh()->getNoOfVertices() > 0) && (node->getMesh()->getNoOfIndices() > 0) ? 1 : 0;
+		result->height = node->mHeight;
 		result->renderThisNode = node->mRenderThisNode;
 	}
 

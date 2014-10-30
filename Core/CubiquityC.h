@@ -123,6 +123,7 @@ extern "C"
 
 		uint8_t hasMesh;
 		uint8_t renderThisNode;
+		uint8_t height;
 	};
 	typedef struct CuOctreeNode_s CuOctreeNode;
 

@@ -72,6 +72,8 @@ public:
 
 	OpenGLOctreeNode* parent;
 	OpenGLOctreeNode* children[2][2][2];
+
+	uint8_t height;
 };
 
 void validate(int returnCode)
@@ -90,6 +92,8 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 
 	if ((octreeNode.structureLastChangedRecursive > openGLOctreeNode->structureAndChildStructureLastSynced) || (octreeNode.meshLastChangedRecursive > openGLOctreeNode->meshAndChildMeshesLastSynced))
 	{
+		openGLOctreeNode->height = octreeNode.height;
+
 		//std::cout << "updating" << std::endl;
 		if (octreeNode.meshLastChanged > openGLOctreeNode->meshLastSyncronised)
 		{
@@ -152,7 +156,7 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 				glBindVertexArray(0);
 			}
 
-			openGLOctreeNode->meshLastSyncronised = octreeNode.meshLastChanged;
+			cuGetCurrentTime(&(openGLOctreeNode->meshLastSyncronised));
 		}
 
 		openGLOctreeNode->renderThisNode = octreeNode.renderThisNode;
@@ -178,7 +182,7 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 					{
 						if (openGLOctreeNode->children[x][y][z])
 						{
-							//std::cout << "Deleting mesh" << std::endl;
+							//std::cout << "Deleting mesh " << openGLOctreeNode->children[x][y][z] << std::endl;
 							delete openGLOctreeNode->children[x][y][z];
 							openGLOctreeNode->children[x][y][z] = nullptr;
 						}
@@ -187,8 +191,8 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 			}
 		}
 
-		openGLOctreeNode->structureAndChildStructureLastSynced = octreeNode.structureLastChangedRecursive;
-		openGLOctreeNode->meshAndChildMeshesLastSynced = octreeNode.meshLastChangedRecursive;
+		cuGetCurrentTime(&(openGLOctreeNode->structureAndChildStructureLastSynced));
+		cuGetCurrentTime(&(openGLOctreeNode->meshAndChildMeshesLastSynced));
 	}
 }
 
@@ -200,6 +204,12 @@ void renderOpenGLOctreeNode(OpenGLOctreeNode* openGLOctreeNode)
 
 		GLuint modelMatrixID = glGetUniformLocation(programID, "modelMatrix");
 		glUniformMatrix4fv(modelMatrixID, 1, GL_FALSE, &modelMatrix[0][0]);
+
+		GLuint heightID = glGetUniformLocation(programID, "height");
+		if (heightID != -1)
+		{
+			glUniform1ui(heightID, openGLOctreeNode->height);
+		}
 
 		glBindVertexArray(openGLOctreeNode->vertexArrayObject);
 
