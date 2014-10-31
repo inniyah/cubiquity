@@ -65,6 +65,8 @@ namespace Cubiquity
 
 				float projectedSize = diagonalLength / distance;
 
+				// As we move far away only the highesy nodes will be larger than the threshold. But these may be too
+				// high to ever generate meshes, so we set here a maximum height for which nodes can be set to inacive.
 				bool active = (projectedSize > mLodThreshold) || (parentNode->mHeight >= HighestMeshLevel);
 
 				octreeNode->setActive(active);
