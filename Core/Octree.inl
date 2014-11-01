@@ -99,11 +99,11 @@ namespace Cubiquity
 	template <typename VoxelType>
 	void Octree<VoxelType>::update(const Vector3F& viewPosition, float lodThreshold)
 	{
-		acceptVisitor(ClearWantedForRenderingVisitor<VoxelType>());
+		//acceptVisitor(ClearWantedForRenderingVisitor<VoxelType>());
 
 		acceptVisitor(DetermineActiveNodesVisitor<VoxelType>(viewPosition, lodThreshold));
 
-		acceptVisitor(DetermineWantedForRenderingVisitor<VoxelType>(viewPosition, lodThreshold));
+		//acceptVisitor(DetermineWantedForRenderingVisitor<VoxelType>(viewPosition, lodThreshold));
 
 		//determineWantedForRendering(mRootNodeIndex, viewPosition, lodThreshold);
 
@@ -111,7 +111,8 @@ namespace Cubiquity
 
 
 		// Make sure any surface extraction tasks which were scheduled on the main thread get processed before we determine what to render.
-		gMainThreadTaskProcessor.processAllTasks(); //Doesn't really belong here
+		//gMainThreadTaskProcessor.processAllTasks(); //Doesn't really belong here
+		gMainThreadTaskProcessor.processOneTask(); //Doesn't really belong here
 
 		// This will include tasks from both the background and main threads.
 		while(!mFinishedSurfaceExtractionTasks.empty())
@@ -129,9 +130,9 @@ namespace Cubiquity
 			delete task;
 		}
 
-		acceptVisitor(DetermineWhetherToRenderVisitor<VoxelType>());
+		//acceptVisitor(DetermineWhetherToRenderVisitor<VoxelType>());
 
-		//determineWhetherToRender(mRootNodeIndex);
+		determineWhetherToRender(mRootNodeIndex);
 
 		propagateTimestamps(mRootNodeIndex);
 		propagateMeshTimestamps(mRootNodeIndex);
@@ -316,7 +317,7 @@ namespace Cubiquity
 	{
 		OctreeNode<VoxelType>* node = mNodes[index];
 
-		if ((node->isMeshUpToDate() == false) && (node->isSceduledForUpdate() == false) && ((node->mLastSurfaceExtractionTask == 0) || (node->mLastSurfaceExtractionTask->mProcessingStartedTimestamp < Clock::getTimestamp())) && (node->mWantedForRendering))
+		if ((node->isMeshUpToDate() == false) && (node->isSceduledForUpdate() == false) && ((node->mLastSurfaceExtractionTask == 0) || (node->mLastSurfaceExtractionTask->mProcessingStartedTimestamp < Clock::getTimestamp())) && (node->isActive()))
 		{
 			node->mLastSceduledForUpdate = Clock::getTimestamp();
 
@@ -367,9 +368,8 @@ namespace Cubiquity
 	{
 		OctreeNode<VoxelType>* node = mNodes[index];
 
-		node->mRenderThisNode = false; // node->isMeshUpToDate();
-
 		bool renderAllChildren = true;
+		bool isLeaf = true;
 
 		for(int iz = 0; iz < 2; iz++)
 		{
@@ -383,6 +383,7 @@ namespace Cubiquity
 						OctreeNode<VoxelType>* childNode = mNodes[childIndex];
 						if (childNode->isActive())
 						{
+							isLeaf = false;
 							renderAllChildren = renderAllChildren && determineWhetherToRender(childIndex);
 						}
 						else
@@ -394,12 +395,23 @@ namespace Cubiquity
 			}
 		}
 
-		if (renderAllChildren == false)
+		if (isLeaf)
 		{
-			node->mRenderThisNode = true;
+			node->mRenderThisNode = node->isMeshUpToDate();
+		}
+		else
+		{
+			if (renderAllChildren == false)
+			{
+				node->mRenderThisNode = true;
+			}
+			else
+			{
+				node->mRenderThisNode = false;
+			}
 		}
 
-		return node->mRenderThisNode;
+		return node->mRenderThisNode | renderAllChildren;
 	}
 
 	/*template <typename VoxelType>

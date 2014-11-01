@@ -46,10 +46,11 @@ namespace Cubiquity
 		Octree<VoxelType>* mOctree;
 
 		// Use flags here?
-		bool mWantedForRendering;
+		//bool mWantedForRendering;
 		bool mRenderThisNode;
 		bool mExtractOnMainThread;
 		bool mActive;
+		bool mIsLeaf;
 
 		uint8_t mHeight; // Zero for leaf nodes.
 

@@ -85,12 +85,57 @@ void validate(int returnCode)
 	}
 }
 
-void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctreeNode)
+void processOctreeNodeStructure(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctreeNode)
 {
 	CuOctreeNode octreeNode;
 	validate(cuGetOctreeNode(octreeNodeHandle, &octreeNode));
 
-	if ((octreeNode.structureLastChangedRecursive > openGLOctreeNode->structureAndChildStructureLastSynced) || (octreeNode.meshLastChangedRecursive > openGLOctreeNode->meshAndChildMeshesLastSynced))
+	openGLOctreeNode->renderThisNode = octreeNode.renderThisNode;
+
+	//if ((octreeNode.structureLastChangedRecursive > openGLOctreeNode->structureAndChildStructureLastSynced) || (octreeNode.meshLastChangedRecursive > openGLOctreeNode->meshAndChildMeshesLastSynced))
+	{
+		openGLOctreeNode->height = octreeNode.height;
+
+		for (uint32_t z = 0; z < 2; z++)
+		{
+			for (uint32_t y = 0; y < 2; y++)
+			{
+				for (uint32_t x = 0; x < 2; x++)
+				{
+					if (octreeNode.childHandles[x][y][z] != 0xFFFFFFFF /*&& openGLOctreeNode->renderThisNode == 0*/)
+					{
+						if (!openGLOctreeNode->children[x][y][z])
+						{
+							//std::cout << "Adding node at height" << std::endl;
+							openGLOctreeNode->children[x][y][z] = new OpenGLOctreeNode(openGLOctreeNode);
+						}
+
+						// Recursivly call the octree traversal
+						processOctreeNodeStructure(octreeNode.childHandles[x][y][z], openGLOctreeNode->children[x][y][z]);
+					}
+					else
+					{
+						if (openGLOctreeNode->children[x][y][z])
+						{
+							//std::cout << "Deleting mesh " << openGLOctreeNode->children[x][y][z] << std::endl;
+							delete openGLOctreeNode->children[x][y][z];
+							openGLOctreeNode->children[x][y][z] = nullptr;
+						}
+					}
+				}
+			}
+		}
+
+		cuGetCurrentTime(&(openGLOctreeNode->structureAndChildStructureLastSynced));
+	}
+}
+
+void processOctreeNodeMeshes(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctreeNode)
+{
+	CuOctreeNode octreeNode;
+	validate(cuGetOctreeNode(octreeNodeHandle, &octreeNode));
+
+	//if ((octreeNode.structureLastChangedRecursive > openGLOctreeNode->structureAndChildStructureLastSynced) || (octreeNode.meshLastChangedRecursive > openGLOctreeNode->meshAndChildMeshesLastSynced))
 	{
 		openGLOctreeNode->height = octreeNode.height;
 
@@ -99,6 +144,7 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 		{
 			if (octreeNode.hasMesh == 1)
 			{
+				//std::cout << "Adding mesh for node height " << octreeNode.height;
 				// These will point to the index and vertex data
 				uint32_t noOfIndices;
 				uint16_t* indices;
@@ -155,11 +201,13 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 
 				glBindVertexArray(0);
 			}
+			else
+			{
+				assert(openGLOctreeNode->noOfIndices == 0);
+			}
 
 			cuGetCurrentTime(&(openGLOctreeNode->meshLastSyncronised));
 		}
-
-		openGLOctreeNode->renderThisNode = octreeNode.renderThisNode;
 
 		for (uint32_t z = 0; z < 2; z++)
 		{
@@ -167,31 +215,15 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 			{
 				for (uint32_t x = 0; x < 2; x++)
 				{
-					if (octreeNode.childHandles[x][y][z] != 0xFFFFFFFF /*&& openGLOctreeNode->renderThisNode == 0*/)
+					if (octreeNode.childHandles[x][y][z] != 0xFFFFFFFF)
 					{
-						if (!openGLOctreeNode->children[x][y][z])
-						{
-							//std::cout << "Adding mesh" << std::endl;
-							openGLOctreeNode->children[x][y][z] = new OpenGLOctreeNode(openGLOctreeNode);
-						}
-
 						// Recursivly call the octree traversal
-						processOctreeNode(octreeNode.childHandles[x][y][z], openGLOctreeNode->children[x][y][z]);
-					}
-					else
-					{
-						if (openGLOctreeNode->children[x][y][z])
-						{
-							//std::cout << "Deleting mesh " << openGLOctreeNode->children[x][y][z] << std::endl;
-							delete openGLOctreeNode->children[x][y][z];
-							openGLOctreeNode->children[x][y][z] = nullptr;
-						}
+						processOctreeNodeMeshes(octreeNode.childHandles[x][y][z], openGLOctreeNode->children[x][y][z]);
 					}
 				}
 			}
 		}
 
-		cuGetCurrentTime(&(openGLOctreeNode->structureAndChildStructureLastSynced));
 		cuGetCurrentTime(&(openGLOctreeNode->meshAndChildMeshesLastSynced));
 	}
 }
@@ -308,7 +340,7 @@ int main( void )
 		glm::vec4 worldSpaceEyePos = InverseViewMatrix * eyeSpaceEyePos;
 		worldSpaceEyePos /= worldSpaceEyePos.w;
 
-		
+		//std::cout << "Updating..." << std::endl;
 		validate(cuUpdateVolume(volumeHandle, worldSpaceEyePos[0], worldSpaceEyePos[1], worldSpaceEyePos[2], 1.0f));
 
 		uint32_t hasRootNode;
@@ -322,7 +354,8 @@ int main( void )
 
 			uint32_t octreeNodeHandle;
 			cuGetRootOctreeNode(volumeHandle, &octreeNodeHandle);
-			processOctreeNode(octreeNodeHandle, rootOpenGLOctreeNode);
+			processOctreeNodeStructure(octreeNodeHandle, rootOpenGLOctreeNode);
+			processOctreeNodeMeshes(octreeNodeHandle, rootOpenGLOctreeNode);
 		}
 		else
 		{

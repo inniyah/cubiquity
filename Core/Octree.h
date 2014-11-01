@@ -26,7 +26,7 @@ namespace Cubiquity
 	}
 	typedef OctreeConstructionModes::OctreeConstructionMode OctreeConstructionMode;
 
-	template <typename VoxelType>
+	/*template <typename VoxelType>
 	class ClearWantedForRenderingVisitor
 	{
 	public:
@@ -35,7 +35,7 @@ namespace Cubiquity
 			octreeNode->mWantedForRendering = false;
 			return true;
 		}
-	};
+	};*/
 
 	template <typename VoxelType>
 	class DetermineActiveNodesVisitor
@@ -67,7 +67,7 @@ namespace Cubiquity
 
 				// As we move far away only the highesy nodes will be larger than the threshold. But these may be too
 				// high to ever generate meshes, so we set here a maximum height for which nodes can be set to inacive.
-				bool active = (projectedSize > mLodThreshold) || (parentNode->mHeight >= HighestMeshLevel);
+				bool active = (projectedSize > mLodThreshold) || (octreeNode->mHeight >= HighestMeshLevel);
 
 				octreeNode->setActive(active);
 			}
@@ -84,7 +84,7 @@ namespace Cubiquity
 		float mLodThreshold;
 	};
 
-	template <typename VoxelType>
+	/*template <typename VoxelType>
 	class DetermineWantedForRenderingVisitor
 	{
 	public:
@@ -129,9 +129,9 @@ namespace Cubiquity
 	private:
 		const Vector3F& mViewPosition;
 		float mLodThreshold;
-	};
+	}*/;
 
-	template <typename VoxelType>
+	/*template <typename VoxelType>
 	class DetermineWhetherToRenderVisitor
 	{
 	public:
@@ -145,7 +145,7 @@ namespace Cubiquity
 			}
 			return true;
 		}
-	};
+	};*/
 
 	template <typename VoxelType>
 	class Octree

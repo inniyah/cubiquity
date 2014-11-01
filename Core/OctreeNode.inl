@@ -17,7 +17,7 @@ namespace Cubiquity
 		:mRegion(region)
 		,mParent(parent)
 		,mOctree(octree)
-		,mWantedForRendering(false)
+		//,mWantedForRendering(false)
 		,mRenderThisNode(false)
 		,mExtractOnMainThread(false)
 		,mActive(false)
@@ -78,11 +78,11 @@ namespace Cubiquity
 
 		mMeshLastChanged = Clock::getTimestamp();
 
-		if (mPolyVoxMesh == 0)
+		/*if (mPolyVoxMesh == 0)
 		{
 			// Force the mesh to be updated next time it is needed.
 			mDataLastModified = Clock::getTimestamp();
-		}
+		}*/
 	}
 
 	template <typename VoxelType>
@@ -99,9 +99,15 @@ namespace Cubiquity
 			mActive = active;
 			mStructureLastChanged = Clock::getTimestamp();
 
-			if (mActive == false)
+			/*if (mActive == false)
 			{
-				setMesh(0);
+				std::cout << "Deactivating " << mStructureLastChanged << std::endl;
+				//setMesh(0);
+			}*/
+
+			if (mActive == true)
+			{
+				std::cout << "Activating height " << int(mHeight) << std::endl;
 			}
 		}
 	}
