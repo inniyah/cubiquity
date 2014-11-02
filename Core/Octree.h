@@ -189,7 +189,8 @@ namespace Cubiquity
 
 		void sceduleUpdateIfNeeded(uint16_t index, const Vector3F& viewPosition);
 
-		bool Octree<VoxelType>::determineWhetherToRender(uint16_t index);
+		void Octree<VoxelType>::determineCanRenderNodeOrChildren(uint16_t index);
+		void Octree<VoxelType>::determineWhetherToRender(uint16_t index);
 
 		//void determineWantedForRendering(uint16_t index, const Vector3F& viewPosition, float lodThreshold);
 

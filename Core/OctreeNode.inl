@@ -19,6 +19,7 @@ namespace Cubiquity
 		,mOctree(octree)
 		//,mWantedForRendering(false)
 		,mRenderThisNode(false)
+		,mCanRenderNodeOrChildren(false)
 		,mExtractOnMainThread(false)
 		,mActive(false)
 		,mLastSceduledForUpdate(0) // The values of these few initialisations is important

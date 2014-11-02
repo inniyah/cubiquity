@@ -48,6 +48,7 @@ namespace Cubiquity
 		// Use flags here?
 		//bool mWantedForRendering;
 		bool mRenderThisNode;
+		bool mCanRenderNodeOrChildren;
 		bool mExtractOnMainThread;
 		bool mActive;
 		bool mIsLeaf;

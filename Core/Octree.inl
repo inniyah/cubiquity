@@ -132,6 +132,7 @@ namespace Cubiquity
 
 		//acceptVisitor(DetermineWhetherToRenderVisitor<VoxelType>());
 
+		determineCanRenderNodeOrChildren(mRootNodeIndex);
 		determineWhetherToRender(mRootNodeIndex);
 
 		propagateTimestamps(mRootNodeIndex);
@@ -364,11 +365,54 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	bool Octree<VoxelType>::determineWhetherToRender(uint16_t index)
+	void Octree<VoxelType>::determineCanRenderNodeOrChildren(uint16_t index)
 	{
 		OctreeNode<VoxelType>* node = mNodes[index];
 
-		bool renderAllChildren = true;
+		bool canRenderAllChildren = true;
+		bool isLeaf = true;
+
+		for (int iz = 0; iz < 2; iz++)
+		{
+			for (int iy = 0; iy < 2; iy++)
+			{
+				for (int ix = 0; ix < 2; ix++)
+				{
+					uint16_t childIndex = node->children[ix][iy][iz];
+					if (childIndex != InvalidNodeIndex)
+					{
+						OctreeNode<VoxelType>* childNode = mNodes[childIndex];
+						if (childNode->isActive())
+						{
+							isLeaf = false;
+							determineCanRenderNodeOrChildren(childIndex);
+							canRenderAllChildren = canRenderAllChildren && childNode->mRenderThisNode;
+						}
+						else
+						{
+							canRenderAllChildren = false;
+						}
+					}
+				}
+			}
+		}
+
+		if (isLeaf)
+		{
+			node->mCanRenderNodeOrChildren = node->isMeshUpToDate();
+		}
+		else
+		{
+			node->mCanRenderNodeOrChildren = node->isMeshUpToDate() | canRenderAllChildren;
+		}
+	}
+
+	template <typename VoxelType>
+	void Octree<VoxelType>::determineWhetherToRender(uint16_t index)
+	{
+		OctreeNode<VoxelType>* node = mNodes[index];
+
+		bool canRenderAllChildren = true;
 		bool isLeaf = true;
 
 		for(int iz = 0; iz < 2; iz++)
@@ -384,11 +428,12 @@ namespace Cubiquity
 						if (childNode->isActive())
 						{
 							isLeaf = false;
-							renderAllChildren = renderAllChildren && determineWhetherToRender(childIndex);
+							determineWhetherToRender(childIndex);
+							canRenderAllChildren = canRenderAllChildren && childNode->mCanRenderNodeOrChildren;
 						}
 						else
 						{
-							renderAllChildren = false;
+							canRenderAllChildren = false;
 						}
 					}
 				}
@@ -401,17 +446,35 @@ namespace Cubiquity
 		}
 		else
 		{
-			if (renderAllChildren == false)
+			if (canRenderAllChildren)
 			{
-				node->mRenderThisNode = true;
+				// If we can render all the children then don't render ourself.
+				node->mRenderThisNode = false;
 			}
 			else
 			{
-				node->mRenderThisNode = false;
+				// If we can't render all children then render no children.
+				for (int iz = 0; iz < 2; iz++)
+				{
+					for (int iy = 0; iy < 2; iy++)
+					{
+						for (int ix = 0; ix < 2; ix++)
+						{
+							OctreeNode<VoxelType>* childNode = node->getChildNode(ix, iy, iz);
+							if (childNode)
+							{
+								childNode->mRenderThisNode = false;
+							}
+						}
+					}
+				}
+
+				//Render ourself if we can
+				node->mRenderThisNode = node->isMeshUpToDate();
 			}
 		}
 
-		return node->mRenderThisNode | renderAllChildren;
+		//return node->mRenderThisNode | renderAllChildren;
 	}
 
 	/*template <typename VoxelType>
