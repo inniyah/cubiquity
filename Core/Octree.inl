@@ -99,11 +99,7 @@ namespace Cubiquity
 	template <typename VoxelType>
 	void Octree<VoxelType>::update(const Vector3F& viewPosition, float lodThreshold)
 	{
-		//acceptVisitor(ClearWantedForRenderingVisitor<VoxelType>());
-
 		acceptVisitor(DetermineActiveNodesVisitor<VoxelType>(viewPosition, lodThreshold));
-
-		//acceptVisitor(DetermineWantedForRenderingVisitor<VoxelType>(viewPosition, lodThreshold));
 
 		//determineWantedForRendering(mRootNodeIndex, viewPosition, lodThreshold);
 
@@ -476,78 +472,6 @@ namespace Cubiquity
 
 		//return node->mRenderThisNode | renderAllChildren;
 	}
-
-	/*template <typename VoxelType>
-	void Octree<VoxelType>::determineWantedForRendering(uint16_t index, const Vector3F& viewPosition, float lodThreshold)
-	{
-		OctreeNode<VoxelType>* octreeNode = mNodes[index];
-
-		if(octreeNode->mHeight == 0)
-		{
-			octreeNode->mWantedForRendering = true;
-		}
-		else
-		{
-			Vector3F regionCentre = static_cast<Vector3F>(octreeNode->mRegion.getCentre());
-
-			float distance = (viewPosition - regionCentre).length();
-
-			Vector3I diagonal = octreeNode->mRegion.getUpperCorner() - octreeNode->mRegion.getLowerCorner();
-			float diagonalLength = diagonal.length(); // A measure of our regions size
-
-			float projectedSize = diagonalLength / distance;
-
-			bool processChildren = ((projectedSize > lodThreshold) || (octreeNode->mHeight > 2)); //subtree height check prevents building LODs for node near the root.
-
-			if(processChildren)
-			{
-				for(int z = 0; z < 2; z++)
-				{
-					for(int y = 0; y < 2; y++)
-					{
-						for(int x = 0; x < 2; x++)
-						{
-							uint16_t childIndex = octreeNode->children[x][y][z];
-
-							//If the node doesn't exist we create it.
-							if(childIndex == InvalidNodeIndex)
-							{
-								Vector3I baseLowerCorner = octreeNode->mRegion.getLowerCorner();
-								int32_t childSize = (mOctreeConstructionMode == OctreeConstructionModes::BoundCells) ? octreeNode->mRegion.getWidthInCells() / 2 : octreeNode->mRegion.getWidthInVoxels() / 2;
-
-								Vector3I baseUpperCorner;
-								if(mOctreeConstructionMode == OctreeConstructionModes::BoundCells)
-								{
-									baseUpperCorner = baseLowerCorner + Vector3I(childSize, childSize, childSize);
-								}
-								else
-								{
-									baseUpperCorner = baseLowerCorner + Vector3I(childSize-1, childSize-1, childSize-1);
-								}
-
-								Vector3I offset (x*childSize, y*childSize, z*childSize);
-								Region childRegion(baseLowerCorner + offset, baseUpperCorner + offset);
-								if(intersects(childRegion, mRegionToCover))
-								{
-									childIndex = createNode(childRegion, index);
-									octreeNode->children[x][y][z] = childIndex;
-								}
-							}
-
-							if(childIndex != InvalidNodeIndex)
-							{
-								determineWantedForRendering(childIndex, viewPosition, lodThreshold);
-							}
-						}
-					}
-				}
-			}
-			else
-			{
-				octreeNode->mWantedForRendering = true;
-			}
-		}
-	}*/
 
 	template <typename VoxelType>
 	template<typename VisitorType>

@@ -17,7 +17,6 @@ namespace Cubiquity
 		:mRegion(region)
 		,mParent(parent)
 		,mOctree(octree)
-		//,mWantedForRendering(false)
 		,mRenderThisNode(false)
 		,mCanRenderNodeOrChildren(false)
 		,mExtractOnMainThread(false)

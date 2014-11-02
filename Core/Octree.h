@@ -26,17 +26,6 @@ namespace Cubiquity
 	}
 	typedef OctreeConstructionModes::OctreeConstructionMode OctreeConstructionMode;
 
-	/*template <typename VoxelType>
-	class ClearWantedForRenderingVisitor
-	{
-	public:
-		bool operator()(OctreeNode<VoxelType>* octreeNode)
-		{
-			octreeNode->mWantedForRendering = false;
-			return true;
-		}
-	};*/
-
 	template <typename VoxelType>
 	class DetermineActiveNodesVisitor
 	{
@@ -84,69 +73,6 @@ namespace Cubiquity
 		float mLodThreshold;
 	};
 
-	/*template <typename VoxelType>
-	class DetermineWantedForRenderingVisitor
-	{
-	public:
-		DetermineWantedForRenderingVisitor(const Vector3F& viewPosition, float lodThreshold)
-			:mViewPosition(viewPosition)
-			,mLodThreshold(lodThreshold)
-		{
-		}
-
-		bool operator()(OctreeNode<VoxelType>* octreeNode)
-		{
-			if(octreeNode->mHeight == 0)
-			{
-				octreeNode->mWantedForRendering = true;
-				return false;
-			}
-			else
-			{
-				Vector3F regionCentre = static_cast<Vector3F>(octreeNode->mRegion.getCentre());
-
-				float distance = (mViewPosition - regionCentre).length();
-
-				Vector3I diagonal = octreeNode->mRegion.getUpperCorner() - octreeNode->mRegion.getLowerCorner();
-				float diagonalLength = diagonal.length(); // A measure of our regions size
-
-				float projectedSize = diagonalLength / distance;
-
-				bool processChildren = ((projectedSize > mLodThreshold) || (octreeNode->mHeight > HighestMeshLevel)); //subtree height check prevents building LODs for node near the root.
-
-				if(processChildren)
-				{
-					return true;
-				}
-				else
-				{
-					octreeNode->mWantedForRendering = true;
-					return false;
-				}
-			}
-		}
-
-	private:
-		const Vector3F& mViewPosition;
-		float mLodThreshold;
-	}*/;
-
-	/*template <typename VoxelType>
-	class DetermineWhetherToRenderVisitor
-	{
-	public:
-		bool operator()(OctreeNode<VoxelType>* octreeNode)
-		{
-			//At some point we should handle the issue that we might want to render but the mesh might not be ready.
-			if (octreeNode->mRenderThisNode != octreeNode->mWantedForRendering)
-			{
-				octreeNode->mRenderThisNode = octreeNode->mWantedForRendering;
-				octreeNode->mStructureLastChanged = Clock::getTimestamp();
-			}
-			return true;
-		}
-	};*/
-
 	template <typename VoxelType>
 	class Octree
 	{
@@ -191,8 +117,6 @@ namespace Cubiquity
 
 		void Octree<VoxelType>::determineCanRenderNodeOrChildren(uint16_t index);
 		void Octree<VoxelType>::determineWhetherToRender(uint16_t index);
-
-		//void determineWantedForRendering(uint16_t index, const Vector3F& viewPosition, float lodThreshold);
 
 		std::vector< OctreeNode<VoxelType>*> mNodes;
 
