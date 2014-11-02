@@ -119,7 +119,7 @@ namespace Cubiquity
 		if (mRenderThisNode != render)
 		{
 			mRenderThisNode = render;
-			mRenderThisNodeChanged = Clock::getTimestamp();
+			mPropertiesLastChanged = Clock::getTimestamp();
 		}
 	}
 

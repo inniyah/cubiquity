@@ -315,7 +315,7 @@ namespace Cubiquity
 	{
 		OctreeNode<VoxelType>* node = mNodes[index];
 
-		node->mRenderThisNodeChangedRecursive = node->mRenderThisNodeChanged;
+		node->mPropertiesLastChangedRecursive = node->mPropertiesLastChanged;
 
 		for (int iz = 0; iz < 2; iz++)
 		{
@@ -327,13 +327,13 @@ namespace Cubiquity
 					if (childIndex != InvalidNodeIndex)
 					{
 						Timestamp subtreeTimestamp = propagateRenderFlagTimestamps(childIndex);
-						node->mRenderThisNodeChangedRecursive = (std::max)(node->mRenderThisNodeChangedRecursive, subtreeTimestamp);
+						node->mPropertiesLastChangedRecursive = (std::max)(node->mPropertiesLastChangedRecursive, subtreeTimestamp);
 					}
 				}
 			}
 		}
 
-		return node->mRenderThisNodeChangedRecursive;
+		return node->mPropertiesLastChangedRecursive;
 	}
 
 	template <typename VoxelType>

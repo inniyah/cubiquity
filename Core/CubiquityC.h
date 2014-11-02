@@ -119,8 +119,8 @@ extern "C"
 		uint32_t meshLastChanged;
 		uint32_t meshLastChangedRecursive;
 
-		uint32_t renderFlagChanged;
-		uint32_t renderFlagChangedRecursive;
+		uint32_t propertiesLastChanged;
+		uint32_t propertiesLastChangedRecursive;
 
 		uint32_t childHandles[2][2][2];
 

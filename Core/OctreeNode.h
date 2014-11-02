@@ -43,8 +43,8 @@ namespace Cubiquity
 		Timestamp mStructureLastChanged;
 		Timestamp mStructureLastChangedRecursive;
 
-		Timestamp mRenderThisNodeChanged;
-		Timestamp mRenderThisNodeChangedRecursive;
+		Timestamp mPropertiesLastChanged;
+		Timestamp mPropertiesLastChangedRecursive;
 
 		Timestamp mMeshLastChanged;
 		Timestamp mMeshLastChangedRecursive;

@@ -237,7 +237,7 @@ void processOctreeNodeFlags(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLO
 	CuOctreeNode octreeNode;
 	validate(cuGetOctreeNode(octreeNodeHandle, &octreeNode));
 
-	if (octreeNode.renderFlagChangedRecursive > openGLOctreeNode->flagsAndChildFlagsLastSynced)
+	if (octreeNode.propertiesLastChangedRecursive > openGLOctreeNode->flagsAndChildFlagsLastSynced)
 	{
 		openGLOctreeNode->renderThisNode = octreeNode.renderThisNode;
 

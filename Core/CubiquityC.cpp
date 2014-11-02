@@ -694,8 +694,8 @@ CUBIQUITYC_API int32_t cuGetOctreeNode(uint32_t nodeHandle, CuOctreeNode* result
 		result->structureLastChangedRecursive = node->mStructureLastChangedRecursive;
 		result->meshLastChanged = node->mMeshLastChanged;
 		result->meshLastChangedRecursive = node->mMeshLastChangedRecursive;
-		result->renderFlagChanged = node->mRenderThisNodeChanged;
-		result->renderFlagChangedRecursive = node->mRenderThisNodeChangedRecursive;
+		result->propertiesLastChanged = node->mPropertiesLastChanged;
+		result->propertiesLastChangedRecursive = node->mPropertiesLastChangedRecursive;
 
 		for (int childZ = 0; childZ < 2; childZ++)
 		{
@@ -738,8 +738,8 @@ CUBIQUITYC_API int32_t cuGetOctreeNode(uint32_t nodeHandle, CuOctreeNode* result
 		result->structureLastChangedRecursive = node->mStructureLastChangedRecursive;
 		result->meshLastChanged = node->mMeshLastChanged;
 		result->meshLastChangedRecursive = node->mMeshLastChangedRecursive;
-		result->renderFlagChanged = node->mRenderThisNodeChanged;
-		result->renderFlagChangedRecursive = node->mRenderThisNodeChangedRecursive;
+		result->propertiesLastChanged = node->mPropertiesLastChanged;
+		result->propertiesLastChangedRecursive = node->mPropertiesLastChangedRecursive;
 
 		for (int childZ = 0; childZ < 2; childZ++)
 		{
