@@ -694,6 +694,8 @@ CUBIQUITYC_API int32_t cuGetOctreeNode(uint32_t nodeHandle, CuOctreeNode* result
 		result->structureLastChangedRecursive = node->mStructureLastChangedRecursive;
 		result->meshLastChanged = node->mMeshLastChanged;
 		result->meshLastChangedRecursive = node->mMeshLastChangedRecursive;
+		result->renderFlagChanged = node->mRenderThisNodeChanged;
+		result->renderFlagChangedRecursive = node->mRenderThisNodeChangedRecursive;
 
 		for (int childZ = 0; childZ < 2; childZ++)
 		{
@@ -723,7 +725,7 @@ CUBIQUITYC_API int32_t cuGetOctreeNode(uint32_t nodeHandle, CuOctreeNode* result
 		
 		result->hasMesh = (node->getMesh() != 0) && (node->getMesh()->getNoOfVertices() > 0) && (node->getMesh()->getNoOfIndices() > 0) ? 1 : 0;
 		result->height = node->mHeight;
-		result->renderThisNode = node->mRenderThisNode;
+		result->renderThisNode = node->renderThisNode();
 	}
 	else
 	{
@@ -736,6 +738,8 @@ CUBIQUITYC_API int32_t cuGetOctreeNode(uint32_t nodeHandle, CuOctreeNode* result
 		result->structureLastChangedRecursive = node->mStructureLastChangedRecursive;
 		result->meshLastChanged = node->mMeshLastChanged;
 		result->meshLastChangedRecursive = node->mMeshLastChangedRecursive;
+		result->renderFlagChanged = node->mRenderThisNodeChanged;
+		result->renderFlagChangedRecursive = node->mRenderThisNodeChangedRecursive;
 
 		for (int childZ = 0; childZ < 2; childZ++)
 		{
@@ -765,7 +769,7 @@ CUBIQUITYC_API int32_t cuGetOctreeNode(uint32_t nodeHandle, CuOctreeNode* result
 
 		result->hasMesh = (node->getMesh() != 0) && (node->getMesh()->getNoOfVertices() > 0) && (node->getMesh()->getNoOfIndices() > 0) ? 1 : 0;
 		result->height = node->mHeight;
-		result->renderThisNode = node->mRenderThisNode;
+		result->renderThisNode = node->renderThisNode();
 	}
 
 	CLOSE_C_INTERFACE

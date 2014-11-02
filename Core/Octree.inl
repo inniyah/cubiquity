@@ -133,6 +133,7 @@ namespace Cubiquity
 
 		propagateTimestamps(mRootNodeIndex);
 		propagateMeshTimestamps(mRootNodeIndex);
+		propagateRenderFlagTimestamps(mRootNodeIndex);
 	}
 
 	template <typename VoxelType>
@@ -310,6 +311,32 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
+	Timestamp Octree<VoxelType>::propagateRenderFlagTimestamps(uint16_t index)
+	{
+		OctreeNode<VoxelType>* node = mNodes[index];
+
+		node->mRenderThisNodeChangedRecursive = node->mRenderThisNodeChanged;
+
+		for (int iz = 0; iz < 2; iz++)
+		{
+			for (int iy = 0; iy < 2; iy++)
+			{
+				for (int ix = 0; ix < 2; ix++)
+				{
+					uint16_t childIndex = node->children[ix][iy][iz];
+					if (childIndex != InvalidNodeIndex)
+					{
+						Timestamp subtreeTimestamp = propagateRenderFlagTimestamps(childIndex);
+						node->mRenderThisNodeChangedRecursive = (std::max)(node->mRenderThisNodeChangedRecursive, subtreeTimestamp);
+					}
+				}
+			}
+		}
+
+		return node->mRenderThisNodeChangedRecursive;
+	}
+
+	template <typename VoxelType>
 	void Octree<VoxelType>::sceduleUpdateIfNeeded(uint16_t index, const Vector3F& viewPosition)
 	{
 		OctreeNode<VoxelType>* node = mNodes[index];
@@ -382,7 +409,7 @@ namespace Cubiquity
 						{
 							isLeaf = false;
 							determineCanRenderNodeOrChildren(childIndex);
-							canRenderAllChildren = canRenderAllChildren && childNode->mRenderThisNode;
+							canRenderAllChildren = canRenderAllChildren && childNode->renderThisNode();
 						}
 						else
 						{
@@ -438,14 +465,14 @@ namespace Cubiquity
 
 		if (isLeaf)
 		{
-			node->mRenderThisNode = node->isMeshUpToDate();
+			node->setRenderThisNode(node->isMeshUpToDate());
 		}
 		else
 		{
 			if (canRenderAllChildren)
 			{
 				// If we can render all the children then don't render ourself.
-				node->mRenderThisNode = false;
+				node->setRenderThisNode(false);
 			}
 			else
 			{
@@ -459,18 +486,16 @@ namespace Cubiquity
 							OctreeNode<VoxelType>* childNode = node->getChildNode(ix, iy, iz);
 							if (childNode)
 							{
-								childNode->mRenderThisNode = false;
+								childNode->setRenderThisNode(false);
 							}
 						}
 					}
 				}
 
 				//Render ourself if we can
-				node->mRenderThisNode = node->isMeshUpToDate();
+				node->setRenderThisNode(node->isMeshUpToDate());
 			}
 		}
-
-		//return node->mRenderThisNode | renderAllChildren;
 	}
 
 	template <typename VoxelType>

@@ -28,6 +28,9 @@ namespace Cubiquity
 		bool isActive(void);
 		void setActive(bool active);
 
+		bool renderThisNode(void);
+		void setRenderThisNode(bool render);
+
 		bool isMeshUpToDate(void);
 		bool isSceduledForUpdate(void);
 
@@ -40,16 +43,18 @@ namespace Cubiquity
 		Timestamp mStructureLastChanged;
 		Timestamp mStructureLastChangedRecursive;
 
+		Timestamp mRenderThisNodeChanged;
+		Timestamp mRenderThisNodeChangedRecursive;
+
 		Timestamp mMeshLastChanged;
 		Timestamp mMeshLastChangedRecursive;
 
 		Octree<VoxelType>* mOctree;
 
 		// Use flags here?
-		bool mRenderThisNode;
+		
 		bool mCanRenderNodeOrChildren;
-		bool mExtractOnMainThread;
-		bool mActive;
+		bool mExtractOnMainThread;		
 		bool mIsLeaf;
 
 		uint8_t mHeight; // Zero for leaf nodes.
@@ -61,6 +66,9 @@ namespace Cubiquity
 	private:
 		uint16_t mParent;
 		uint16_t children[2][2][2];
+
+		bool mRenderThisNode;
+		bool mActive;
 
 		const ::PolyVox::Mesh< typename VoxelTraits<VoxelType>::VertexType, uint16_t >* mPolyVoxMesh;
 	};

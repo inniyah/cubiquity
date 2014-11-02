@@ -104,11 +104,22 @@ namespace Cubiquity
 				std::cout << "Deactivating " << mStructureLastChanged << std::endl;
 				//setMesh(0);
 			}*/
+		}
+	}
 
-			if (mActive == true)
-			{
-				std::cout << "Activating height " << int(mHeight) << std::endl;
-			}
+	template <typename VoxelType>
+	bool OctreeNode<VoxelType>::renderThisNode(void)
+	{
+		return mRenderThisNode;
+	}
+
+	template <typename VoxelType>
+	void OctreeNode<VoxelType>::setRenderThisNode(bool render)
+	{
+		if (mRenderThisNode != render)
+		{
+			mRenderThisNode = render;
+			mRenderThisNodeChanged = Clock::getTimestamp();
 		}
 	}
 

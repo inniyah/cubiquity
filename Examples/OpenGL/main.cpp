@@ -42,6 +42,9 @@ public:
 		renderThisNode = false;
 		structureAndChildStructureLastSynced = 0;
 
+		flagsLastSyncronised = 0;
+		flagsAndChildFlagsLastSynced = 0;
+
 		this->parent = parent;
 
 		for (uint32_t z = 0; z < 2; z++)
@@ -70,6 +73,9 @@ public:
 	uint32_t renderThisNode;
 	uint32_t structureAndChildStructureLastSynced;
 
+	uint32_t flagsLastSyncronised;
+	uint32_t flagsAndChildFlagsLastSynced;
+
 	OpenGLOctreeNode* parent;
 	OpenGLOctreeNode* children[2][2][2];
 
@@ -90,8 +96,6 @@ void processOctreeNodeStructure(uint32_t octreeNodeHandle, OpenGLOctreeNode* ope
 	CuOctreeNode octreeNode;
 	validate(cuGetOctreeNode(octreeNodeHandle, &octreeNode));
 
-	openGLOctreeNode->renderThisNode = octreeNode.renderThisNode;
-
 	//if ((octreeNode.structureLastChangedRecursive > openGLOctreeNode->structureAndChildStructureLastSynced) || (octreeNode.meshLastChangedRecursive > openGLOctreeNode->meshAndChildMeshesLastSynced))
 	{
 		openGLOctreeNode->height = octreeNode.height;
@@ -102,7 +106,7 @@ void processOctreeNodeStructure(uint32_t octreeNodeHandle, OpenGLOctreeNode* ope
 			{
 				for (uint32_t x = 0; x < 2; x++)
 				{
-					if (octreeNode.childHandles[x][y][z] != 0xFFFFFFFF /*&& openGLOctreeNode->renderThisNode == 0*/)
+					if (octreeNode.childHandles[x][y][z] != 0xFFFFFFFF)
 					{
 						if (!openGLOctreeNode->children[x][y][z])
 						{
@@ -225,6 +229,34 @@ void processOctreeNodeMeshes(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGL
 		}
 
 		cuGetCurrentTime(&(openGLOctreeNode->meshAndChildMeshesLastSynced));
+	}
+}
+
+void processOctreeNodeFlags(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctreeNode)
+{
+	CuOctreeNode octreeNode;
+	validate(cuGetOctreeNode(octreeNodeHandle, &octreeNode));
+
+	if (octreeNode.renderFlagChangedRecursive > openGLOctreeNode->flagsAndChildFlagsLastSynced)
+	{
+		openGLOctreeNode->renderThisNode = octreeNode.renderThisNode;
+
+		for (uint32_t z = 0; z < 2; z++)
+		{
+			for (uint32_t y = 0; y < 2; y++)
+			{
+				for (uint32_t x = 0; x < 2; x++)
+				{
+					if (octreeNode.childHandles[x][y][z] != 0xFFFFFFFF)
+					{
+						// Recursivly call the octree traversal
+						processOctreeNodeFlags(octreeNode.childHandles[x][y][z], openGLOctreeNode->children[x][y][z]);
+					}
+				}
+			}
+		}
+
+		cuGetCurrentTime(&(openGLOctreeNode->flagsAndChildFlagsLastSynced));
 	}
 }
 
@@ -356,6 +388,7 @@ int main( void )
 			cuGetRootOctreeNode(volumeHandle, &octreeNodeHandle);
 			processOctreeNodeStructure(octreeNodeHandle, rootOpenGLOctreeNode);
 			processOctreeNodeMeshes(octreeNodeHandle, rootOpenGLOctreeNode);
+			processOctreeNodeFlags(octreeNodeHandle, rootOpenGLOctreeNode);
 		}
 		else
 		{
