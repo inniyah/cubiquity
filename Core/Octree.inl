@@ -423,7 +423,7 @@ namespace Cubiquity
 						{
 							isLeaf = false;
 							determineCanRenderNodeOrChildren(childIndex);
-							canRenderAllChildren = canRenderAllChildren && childNode->renderThisNode();
+							canRenderAllChildren = canRenderAllChildren && childNode->mCanRenderNodeOrChildren;
 						}
 						else
 						{
