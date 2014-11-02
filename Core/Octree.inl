@@ -107,8 +107,14 @@ namespace Cubiquity
 
 
 		// Make sure any surface extraction tasks which were scheduled on the main thread get processed before we determine what to render.
-		//gMainThreadTaskProcessor.processAllTasks(); //Doesn't really belong here
-		gMainThreadTaskProcessor.processOneTask(); //Doesn't really belong here
+		if (gMainThreadTaskProcessor.hasTasks())
+		{
+			gMainThreadTaskProcessor.processAllTasks(); //Doesn't really belong here
+		}
+		else
+		{
+			gBackgroundTaskProcessor.processOneTask(); //Doesn't really belong here
+		}
 
 		// This will include tasks from both the background and main threads.
 		while(!mFinishedSurfaceExtractionTasks.empty())
@@ -355,7 +361,15 @@ namespace Cubiquity
 				// We're going to process immediatly, but the completed task will still get queued in the finished
 				// queue, and we want to make sure it's the first out. So we still set a priority and make it high.
 				node->mLastSurfaceExtractionTask->mPriority = (std::numeric_limits<uint32_t>::max)();
-				gMainThreadTaskProcessor.addTask(node->mLastSurfaceExtractionTask);
+
+				if (node->renderThisNode()) // Still set from last frame. If we rendered it then we will probably want it again.
+				{
+					gMainThreadTaskProcessor.addTask(node->mLastSurfaceExtractionTask);
+				}
+				else
+				{
+					gBackgroundTaskProcessor.addTask(node->mLastSurfaceExtractionTask);
+				}
 			}
 			/*else
 			{
