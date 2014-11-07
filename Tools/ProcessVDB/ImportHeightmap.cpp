@@ -14,18 +14,20 @@
 
 using namespace std;
 
-bool importHeightmap(const std::string& heightmapFilename, const std::string& colormapFilename, const std::string& pathToVoxelDatabase, uint32_t outputFormat)
+bool importHeightmap(ez::ezOptionParser& options)
 {
-	cout << "Importing '" << heightmapFilename << "' as heightmap and '" << colormapFilename << "' as colormap" << endl;
-	cout << "Writing result to '" << pathToVoxelDatabase << "'" << endl;
+	//cout << "Importing '" << heightmapFilename << "' as heightmap and '" << colormapFilename << "' as colormap" << endl;
+	//cout << "Writing result to '" << pathToVoxelDatabase << "'" << endl;
 
-	if (outputFormat == CU_COLORED_CUBES)
+	//if (outputFormat == CU_COLORED_CUBES)
+	if (options.isSet("-coloredcubes"))
 	{
-		return importHeightmapAsColoredCubesVolume(heightmapFilename, colormapFilename, pathToVoxelDatabase);
+		return importHeightmapAsColoredCubesVolume(options);
 	}
-	else if (outputFormat == CU_TERRAIN)
+	//else if (outputFormat == CU_TERRAIN)
+	else if (options.isSet("-terrain"))
 	{
-		return importHeightmapAsTerrainVolume(heightmapFilename, pathToVoxelDatabase);
+		return importHeightmapAsTerrainVolume(options);
 	}
 	else
 	{
@@ -33,10 +35,12 @@ bool importHeightmap(const std::string& heightmapFilename, const std::string& co
 	}
 }
 
-bool importHeightmapAsColoredCubesVolume(const std::string& heightmapFilename, const std::string& colormapFilename, const std::string& pathToVoxelDatabase)
+bool importHeightmapAsColoredCubesVolume(ez::ezOptionParser& options)
 {
 	// Open the heightmap
 	int heightmapWidth = 0, heightmapHeight = 0, heightmapChannels;
+	string heightmapFilename;
+	options.get("-heightmap")->getString(heightmapFilename);
 	unsigned char* heightmapData = stbi_load(heightmapFilename.c_str(), &heightmapWidth, &heightmapHeight, &heightmapChannels, 0);
 
 	// Make sure it opened sucessfully
@@ -48,6 +52,8 @@ bool importHeightmapAsColoredCubesVolume(const std::string& heightmapFilename, c
 
 	// Open the colormap
 	int colormapWidth = 0, colormapHeight = 0, colormapChannels;
+	string colormapFilename;
+	options.get("-colormap")->getString(colormapFilename);
 	unsigned char* colormapData = stbi_load(colormapFilename.c_str(), &colormapWidth, &colormapHeight, &colormapChannels, 0);
 
 	// Make sure it opened sucessfully
@@ -68,6 +74,8 @@ bool importHeightmapAsColoredCubesVolume(const std::string& heightmapFilename, c
 	uint32_t volumeWidth = heightmapWidth;
 	uint32_t volumeHeight = 256; // Assume we're not loading HDR images, not supported by stb_image anyway
 	uint32_t volumeDepth = heightmapHeight;
+	string pathToVoxelDatabase;
+	options.get("-coloredcubes")->getString(pathToVoxelDatabase);
 	if (cuNewEmptyColoredCubesVolume(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, pathToVoxelDatabase.c_str(), 32, &volumeHandle) != CU_OK)
 	{
 		cerr << "Failed to create new empty volume" << endl;
@@ -115,10 +123,12 @@ bool importHeightmapAsColoredCubesVolume(const std::string& heightmapFilename, c
 	return true;
 }
 
-bool importHeightmapAsTerrainVolume(const std::string& heightmapFilename, const std::string& pathToVoxelDatabase)
+bool importHeightmapAsTerrainVolume(ez::ezOptionParser& options)
 {
 	// Open the heightmap
 	int heightmapWidth = 0, heightmapHeight = 0, heightmapChannels;
+	string heightmapFilename;
+	options.get("-heightmap")->getString(heightmapFilename);
 	unsigned char* heightmapData = stbi_load(heightmapFilename.c_str(), &heightmapWidth, &heightmapHeight, &heightmapChannels, 0);
 
 	// Make sure it opened sucessfully
@@ -134,6 +144,8 @@ bool importHeightmapAsTerrainVolume(const std::string& heightmapFilename, const 
 	uint32_t volumeWidth = heightmapWidth;
 	uint32_t volumeHeight = 32; // Assume we're not loading HDR images, not supported by stb_image anyway
 	uint32_t volumeDepth = heightmapHeight;
+	string pathToVoxelDatabase;
+	options.get("-terrain")->getString(pathToVoxelDatabase);
 	if (cuNewEmptyTerrainVolume(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, pathToVoxelDatabase.c_str(), 32, &volumeHandle) != CU_OK)
 	{
 		cerr << "Failed to create new empty volume" << endl;

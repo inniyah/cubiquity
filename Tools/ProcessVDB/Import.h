@@ -3,6 +3,8 @@
 
 #include <string>
 
+#include "ezOptionParser.hpp"
+
 namespace InputFormats
 {
 	enum InputFormat
@@ -16,7 +18,7 @@ namespace InputFormats
 }
 typedef InputFormats::InputFormat InputFormat;
 
-int import(int argc, char* argv[]);
+int import(int argc, const char* argv[], ez::ezOptionParser& options);
 InputFormat determineInputFormat(const std::string& input);
 void printUsage(void);
 

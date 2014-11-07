@@ -4,7 +4,7 @@
 #include <string>
 
 // Simple command-line parsing from here: http://stackoverflow.com/a/868894
-char* getCmdOption(char ** begin, char ** end, const std::string & option);
-bool cmdOptionExists(char** begin, char** end, const std::string& option);
+char* getCmdOption(const char ** begin, const char ** end, const std::string & option);
+bool cmdOptionExists(const char** begin, const char** end, const std::string& option);
 
 #endif // CUBIQUITYTOOLS_CMDOPTION_H_

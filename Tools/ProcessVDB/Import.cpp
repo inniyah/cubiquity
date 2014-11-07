@@ -11,11 +11,30 @@
 
 #include <iostream>
 
+using namespace ez;
 using namespace std;
 
-int import(int argc, char* argv[])
+int import(int argc, const char* argv[], ezOptionParser& options)
 {
-	InputFormat inputFormat = InputFormats::Unknown;
+	string outputFilename;
+	
+	if (options.isSet("-coloredcubes"))
+		options.get("-coloredcubes")->getString(outputFilename);
+	if (options.isSet("-terrain"))
+		options.get("-terrain")->getString(outputFilename);
+	
+	// If the output file already exists then we need to delete
+	// it before we can use the filename for the new volume.
+	remove(outputFilename.c_str());
+
+	if (options.isSet("-heightmap"))
+	{
+		importHeightmap(options);
+	}
+
+	return 0;
+
+	/*InputFormat inputFormat = InputFormats::Unknown;
 	string inputFilenameOrFolder;
 	if (cmdOptionExists(argv, argv + argc, "-Heightmap"))
 	{
@@ -86,7 +105,7 @@ int import(int argc, char* argv[])
 		cerr << "Unrecognised input format" << endl;
 	}
 
-	return 0;
+	return 0;*/
 }
 
 void printUsage(void)
