@@ -114,13 +114,10 @@ extern "C"
 		int32_t posY;
 		int32_t posZ;
 
-		uint32_t structureLastChangedRecursive;
-
-		uint32_t meshLastChanged;
-		uint32_t meshLastChangedRecursive;
-
+		uint32_t structureLastChanged;
 		uint32_t propertiesLastChanged;
-		uint32_t propertiesLastChangedRecursive;
+		uint32_t meshLastChanged;
+		uint32_t nodeOrChildrenLastChanged;
 
 		uint32_t childHandles[2][2][2];
 

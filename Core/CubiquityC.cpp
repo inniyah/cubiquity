@@ -691,11 +691,10 @@ CUBIQUITYC_API int32_t cuGetOctreeNode(uint32_t nodeHandle, CuOctreeNode* result
 		result->posY = lowerCorner.getY();
 		result->posZ = lowerCorner.getZ();
 
-		result->structureLastChangedRecursive = node->mStructureLastChangedRecursive;
-		result->meshLastChanged = node->mMeshLastChanged;
-		result->meshLastChangedRecursive = node->mMeshLastChangedRecursive;
+		result->structureLastChanged = node->mStructureLastChanged;
 		result->propertiesLastChanged = node->mPropertiesLastChanged;
-		result->propertiesLastChangedRecursive = node->mPropertiesLastChangedRecursive;
+		result->meshLastChanged = node->mMeshLastChanged;		
+		result->nodeOrChildrenLastChanged = node->mNodeOrChildrenLastChanged;
 
 		for (int childZ = 0; childZ < 2; childZ++)
 		{
@@ -735,11 +734,10 @@ CUBIQUITYC_API int32_t cuGetOctreeNode(uint32_t nodeHandle, CuOctreeNode* result
 		result->posY = lowerCorner.getY();
 		result->posZ = lowerCorner.getZ();
 
-		result->structureLastChangedRecursive = node->mStructureLastChangedRecursive;
-		result->meshLastChanged = node->mMeshLastChanged;
-		result->meshLastChangedRecursive = node->mMeshLastChangedRecursive;
+		result->structureLastChanged = node->mStructureLastChanged;
 		result->propertiesLastChanged = node->mPropertiesLastChanged;
-		result->propertiesLastChangedRecursive = node->mPropertiesLastChangedRecursive;
+		result->meshLastChanged = node->mMeshLastChanged;
+		result->nodeOrChildrenLastChanged = node->mNodeOrChildrenLastChanged;
 
 		for (int childZ = 0; childZ < 2; childZ++)
 		{

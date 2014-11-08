@@ -138,8 +138,6 @@ namespace Cubiquity
 		determineWhetherToRender(mRootNodeIndex);
 
 		propagateTimestamps(mRootNodeIndex);
-		propagateMeshTimestamps(mRootNodeIndex);
-		propagateRenderFlagTimestamps(mRootNodeIndex);
 	}
 
 	template <typename VoxelType>
@@ -269,7 +267,7 @@ namespace Cubiquity
 	{
 		OctreeNode<VoxelType>* node = mNodes[index];
 
-		node->mStructureLastChangedRecursive = node->mStructureLastChanged;
+		node->mNodeOrChildrenLastChanged = (std::max)({ node->mStructureLastChanged, node->mPropertiesLastChanged, node->mMeshLastChanged });
 
 		for (int iz = 0; iz < 2; iz++)
 		{
@@ -281,65 +279,13 @@ namespace Cubiquity
 					if (childIndex != InvalidNodeIndex)
 					{
 						Timestamp subtreeTimestamp = propagateTimestamps(childIndex);
-						node->mStructureLastChangedRecursive = (std::max)(node->mStructureLastChangedRecursive, subtreeTimestamp);
+						node->mNodeOrChildrenLastChanged = (std::max)(node->mNodeOrChildrenLastChanged, subtreeTimestamp);
 					}
 				}
 			}
 		}
 
-		return node->mStructureLastChangedRecursive;
-	}
-
-	template <typename VoxelType>
-	Timestamp Octree<VoxelType>::propagateMeshTimestamps(uint16_t index)
-	{
-		OctreeNode<VoxelType>* node = mNodes[index];
-
-		node->mMeshLastChangedRecursive = node->mMeshLastChanged;
-
-		for (int iz = 0; iz < 2; iz++)
-		{
-			for (int iy = 0; iy < 2; iy++)
-			{
-				for (int ix = 0; ix < 2; ix++)
-				{
-					uint16_t childIndex = node->children[ix][iy][iz];
-					if (childIndex != InvalidNodeIndex)
-					{
-						Timestamp subtreeTimestamp = propagateMeshTimestamps(childIndex);
-						node->mMeshLastChangedRecursive = (std::max)(node->mMeshLastChangedRecursive, subtreeTimestamp);
-					}
-				}
-			}
-		}
-
-		return node->mMeshLastChangedRecursive;
-	}
-
-	template <typename VoxelType>
-	Timestamp Octree<VoxelType>::propagateRenderFlagTimestamps(uint16_t index)
-	{
-		OctreeNode<VoxelType>* node = mNodes[index];
-
-		node->mPropertiesLastChangedRecursive = node->mPropertiesLastChanged;
-
-		for (int iz = 0; iz < 2; iz++)
-		{
-			for (int iy = 0; iy < 2; iy++)
-			{
-				for (int ix = 0; ix < 2; ix++)
-				{
-					uint16_t childIndex = node->children[ix][iy][iz];
-					if (childIndex != InvalidNodeIndex)
-					{
-						Timestamp subtreeTimestamp = propagateRenderFlagTimestamps(childIndex);
-						node->mPropertiesLastChangedRecursive = (std::max)(node->mPropertiesLastChangedRecursive, subtreeTimestamp);
-					}
-				}
-			}
-		}
-
-		return node->mPropertiesLastChangedRecursive;
+		return node->mNodeOrChildrenLastChanged;
 	}
 
 	template <typename VoxelType>

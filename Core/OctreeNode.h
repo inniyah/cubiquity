@@ -41,13 +41,9 @@ namespace Cubiquity
 		Timestamp mLastSceduledForUpdate;
 
 		Timestamp mStructureLastChanged;
-		Timestamp mStructureLastChangedRecursive;
-
 		Timestamp mPropertiesLastChanged;
-		Timestamp mPropertiesLastChangedRecursive;
-
 		Timestamp mMeshLastChanged;
-		Timestamp mMeshLastChangedRecursive;
+		Timestamp mNodeOrChildrenLastChanged;
 
 		Octree<VoxelType>* mOctree;
 

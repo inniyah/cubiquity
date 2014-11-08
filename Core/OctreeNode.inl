@@ -24,7 +24,9 @@ namespace Cubiquity
 		,mLastSceduledForUpdate(0) // The values of these few initialisations is important
 		,mMeshLastChanged(1)	   // to make sure the node is set to an 'out of date' 
 		,mDataLastModified(2)      // state which will then try to update.
-		,mStructureLastChanged(3)
+		,mStructureLastChanged(1)
+		,mPropertiesLastChanged(1)
+		,mNodeOrChildrenLastChanged(1)
 		,mPolyVoxMesh(0)
 		,mHeight(0)
 		,mLastSurfaceExtractionTask(0)
@@ -97,13 +99,13 @@ namespace Cubiquity
 		if (mActive != active)
 		{
 			mActive = active;
-			mStructureLastChanged = Clock::getTimestamp();
 
-			/*if (mActive == false)
+			// When a node is activated or deactivated it is the structure of the *parent* 
+			// which has changed (i.e. the parent has gained or lost a child (this node).
+			if (getParentNode())
 			{
-				std::cout << "Deactivating " << mStructureLastChanged << std::endl;
-				//setMesh(0);
-			}*/
+				getParentNode()->mStructureLastChanged = Clock::getTimestamp();
+			}
 		}
 	}
 
