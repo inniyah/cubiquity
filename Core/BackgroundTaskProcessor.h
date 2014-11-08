@@ -37,6 +37,7 @@ namespace Cubiquity
 		virtual ~BackgroundTaskProcessor();
 
 		void addTask(Task* task);
+		bool hasTasks(void);
 
 		virtual void processOneTask(void)/* = 0*/;
 		virtual void processAllTasks(void)/* = 0*/;

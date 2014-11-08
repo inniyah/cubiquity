@@ -97,7 +97,7 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void Octree<VoxelType>::update(const Vector3F& viewPosition, float lodThreshold)
+	bool Octree<VoxelType>::update(const Vector3F& viewPosition, float lodThreshold)
 	{
 		acceptVisitor(DetermineActiveNodesVisitor<VoxelType>(viewPosition, lodThreshold));
 
@@ -138,6 +138,9 @@ namespace Cubiquity
 		determineWhetherToRender(mRootNodeIndex);
 
 		propagateTimestamps(mRootNodeIndex);
+
+		// If there are no pending tasks then return truem to indicate we are up to date.
+		return (gMainThreadTaskProcessor.hasTasks() == false) && (gBackgroundTaskProcessor.hasTasks() == false);
 	}
 
 	template <typename VoxelType>

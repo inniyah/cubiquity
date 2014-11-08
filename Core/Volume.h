@@ -66,7 +66,7 @@ namespace Cubiquity
 		}
 
 		// Should be called before rendering a frame to update the meshes and octree structure.
-		virtual void update(const Vector3F& viewPosition, float lodThreshold);
+		virtual bool update(const Vector3F& viewPosition, float lodThreshold);
 
 	protected:
 		Octree<VoxelType>* mOctree;

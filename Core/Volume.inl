@@ -120,8 +120,8 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void Volume<VoxelType>::update(const Vector3F& viewPosition, float lodThreshold)
+	bool Volume<VoxelType>::update(const Vector3F& viewPosition, float lodThreshold)
 	{
-		mOctree->update(viewPosition, lodThreshold);
+		return mOctree->update(viewPosition, lodThreshold);
 	}
 }

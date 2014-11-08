@@ -106,7 +106,8 @@ void testTerrainVolume()
 	uint32_t volumeHandle;
 	validate(cuNewTerrainVolumeFromVDB("C:/code/cubiquity/Data/Volumes/Version 0/SmoothVoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
 
-	validate(cuUpdateVolume(volumeHandle, 0.0f, 0.0f, 0.0f, 0.0f));
+	uint32_t isUpToDate;
+	validate(cuUpdateVolume(volumeHandle, 0.0f, 0.0f, 0.0f, 0.0f, &isUpToDate));
 
 	uint32_t hasRootNode;
 	validate(cuHasRootOctreeNode(volumeHandle, &hasRootNode));

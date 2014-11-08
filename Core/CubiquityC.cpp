@@ -364,7 +364,7 @@ CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVDB(const char* pathToExisting
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuUpdateVolume(uint32_t volumeHandle, float eyePosX, float eyePosY, float eyePosZ, float lodThreshold)
+CUBIQUITYC_API int32_t cuUpdateVolume(uint32_t volumeHandle, float eyePosX, float eyePosY, float eyePosZ, float lodThreshold, uint32_t* isUpToDate)
 {
 	OPEN_C_INTERFACE
 
@@ -374,12 +374,12 @@ CUBIQUITYC_API int32_t cuUpdateVolume(uint32_t volumeHandle, float eyePosX, floa
 	if (volumeType == CU_COLORED_CUBES)
 	{
 		ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeIndex);
-		volume->update(Vector3F(eyePosX, eyePosY, eyePosZ), lodThreshold);
+		*isUpToDate = volume->update(Vector3F(eyePosX, eyePosY, eyePosZ), lodThreshold);
 	}
 	else
 	{
 		TerrainVolume* volume = getTerrainVolumeFromHandle(volumeIndex);
-		volume->update(Vector3F(eyePosX, eyePosY, eyePosZ), lodThreshold);
+		*isUpToDate = volume->update(Vector3F(eyePosX, eyePosY, eyePosZ), lodThreshold);
 	}
 
 	CLOSE_C_INTERFACE

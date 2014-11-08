@@ -62,6 +62,11 @@ namespace Cubiquity
 		mPendingTasks.push_back(task);
 	}
 
+	bool BackgroundTaskProcessor::hasTasks(void)
+	{
+		return mPendingTasks.size() > 0;
+	}
+
 	void BackgroundTaskProcessor::processOneTask(void)
 	{
 		if (mPendingTasks.size() > 0)

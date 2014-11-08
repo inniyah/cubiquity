@@ -335,7 +335,8 @@ int main( void )
 		worldSpaceEyePos /= worldSpaceEyePos.w;
 
 		//std::cout << "Updating..." << std::endl;
-		validate(cuUpdateVolume(volumeHandle, worldSpaceEyePos[0], worldSpaceEyePos[1], worldSpaceEyePos[2], 1.0f));
+		uint32_t isUpToDate;
+		validate(cuUpdateVolume(volumeHandle, worldSpaceEyePos[0], worldSpaceEyePos[1], worldSpaceEyePos[2], 1.0f, &isUpToDate));
 
 		uint32_t hasRootNode;
 		validate(cuHasRootOctreeNode(volumeHandle, &hasRootNode));

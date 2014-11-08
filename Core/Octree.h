@@ -92,7 +92,7 @@ namespace Cubiquity
 		// This one feels hacky?
 		OctreeNode<VoxelType>* getNodeFromIndex(uint16_t index) { return mNodes[index]; }
 
-		void update(const Vector3F& viewPosition, float lodThreshold);
+		bool update(const Vector3F& viewPosition, float lodThreshold);
 
 		void markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority);
 		void markDataAsModified(const Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority);
