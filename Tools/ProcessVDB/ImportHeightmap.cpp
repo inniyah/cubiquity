@@ -5,6 +5,10 @@
 #define STBI_HEADER_FILE_ONLY
 #include "stb_image.cpp"
 
+#define STB_IMAGE_RESIZE_IMPLEMENTATION
+#define STBIR_DEFAULT_FILTER_UPSAMPLE     STBIR_FILTER_CATMULLROM
+#include "stb_image_resize.h"
+
 #include <algorithm>
 #include <iomanip>
 #include <iostream>
@@ -126,24 +130,46 @@ bool importHeightmapAsColoredCubesVolume(ez::ezOptionParser& options)
 bool importHeightmapAsTerrainVolume(ez::ezOptionParser& options)
 {
 	// Open the heightmap
-	int heightmapWidth = 0, heightmapHeight = 0, heightmapChannels;
+	int originalWidth = 0, originalHeight = 0, originalChannels; // 'Original' values are before resampling
 	string heightmapFilename;
 	options.get("-heightmap")->getString(heightmapFilename);
-	unsigned char* heightmapData = stbi_load(heightmapFilename.c_str(), &heightmapWidth, &heightmapHeight, &heightmapChannels, 0);
+	unsigned char* originalData = stbi_load(heightmapFilename.c_str(), &originalWidth, &originalHeight, &originalChannels, 0);
 
 	// Make sure it opened sucessfully
-	if (heightmapData == NULL)
+	if (originalData == NULL)
 	{
 		cerr << "Failed to open heightmap" << endl;
 		return false;
 	}
 
+	int originalPixelCount = originalWidth * originalHeight;
+	float* floatOriginalData = new float[originalPixelCount];
+	for (int y = 0; y < originalHeight; y++)
+	{
+		for (int x = 0; x < originalWidth; x++)
+		{
+			floatOriginalData[y * originalWidth + x] = static_cast<float>(originalData[(y * originalWidth + x) * originalChannels]) / 255.0f;
+		}
+	}
+
+	int resampledWidth = 512;
+	int resampledHeight = 512;
+	int resampledPixelCount = resampledWidth * resampledHeight;
+	float* resampledData = new float[resampledPixelCount];
+	/*for (int ct = 0; ct < resampledPixelCount; ct++)
+	{
+		resampledData[ct] = floatOriginalData[ct];
+	}*/
+
+	stbir_resize_float(floatOriginalData, originalWidth, originalHeight, 0,
+		resampledData, resampledWidth, resampledHeight, 0, 1);
+
 	// Create the volume. When importing we treat 'y' as up because most game engines and
 	// physics engines expect this. This means we need to swap the 'y' and 'slice' indices.
 	uint32_t volumeHandle;
-	uint32_t volumeWidth = heightmapWidth;
-	uint32_t volumeHeight = 32; // Assume we're not loading HDR images, not supported by stb_image anyway
-	uint32_t volumeDepth = heightmapHeight;
+	uint32_t volumeWidth = resampledWidth;
+	uint32_t volumeHeight = 64; // Assume we're not loading HDR images, not supported by stb_image anyway
+	uint32_t volumeDepth = resampledHeight;
 	string pathToVoxelDatabase;
 	options.get("-terrain")->getString(pathToVoxelDatabase);
 	if (cuNewEmptyTerrainVolume(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, pathToVoxelDatabase.c_str(), 32, &volumeHandle) != CU_OK)
@@ -152,23 +178,22 @@ bool importHeightmapAsTerrainVolume(ez::ezOptionParser& options)
 		return false;
 	}
 
-	for (uint32_t imageY = 0; imageY < heightmapHeight; imageY++)
+	for (uint32_t imageY = 0; imageY < resampledHeight; imageY++)
 	{
-		for (uint32_t imageX = 0; imageX < heightmapWidth; imageX++)
+		for (uint32_t imageX = 0; imageX < resampledWidth; imageX++)
 		{
-			unsigned char* heightmapPixel = heightmapData + (imageY * heightmapWidth + imageX) * heightmapChannels;
+			float fPixelHeight = resampledData[imageY * resampledWidth + imageX];
 
 			for (uint32_t height = 0; height < volumeHeight; height++)
 			{
 				CuMaterialSet materialSet;
 				materialSet.data = 0;
 
-				float fHeight = float(height) / float(volumeHeight);
-				float fPixelHeight = float(*heightmapPixel) / 255.0f;
+				float fHeight = float(height) / float(volumeHeight);				
 
 				float fDiff = fPixelHeight - fHeight;
 
-				fDiff *= 10000.0f;
+				fDiff *= 1000.0f;
 
 				int diff = int(fDiff);
 				diff += 127;
