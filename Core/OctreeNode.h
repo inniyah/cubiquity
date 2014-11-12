@@ -50,7 +50,6 @@ namespace Cubiquity
 		// Use flags here?
 		
 		bool mCanRenderNodeOrChildren;
-		bool mExtractOnMainThread;		
 		bool mIsLeaf;
 
 		uint8_t mHeight; // Zero for leaf nodes.

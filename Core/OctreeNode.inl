@@ -19,7 +19,6 @@ namespace Cubiquity
 		,mOctree(octree)
 		,mRenderThisNode(false)
 		,mCanRenderNodeOrChildren(false)
-		,mExtractOnMainThread(false)
 		,mActive(false)
 		,mLastSceduledForUpdate(0) // The values of these few initialisations is important
 		,mMeshLastChanged(1)	   // to make sure the node is set to an 'out of date' 

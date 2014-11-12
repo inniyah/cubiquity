@@ -214,10 +214,6 @@ namespace Cubiquity
 			//mIsMeshUpToDate = false;
 			node->mDataLastModified = newTimeStamp;
 
-			// Note: If DontUpdate was passed (an invalid choice) it will end up on the background thread.
-			// Also we maintain mExtractOnMainThread if it was already set.
-			node->mExtractOnMainThread = node->mExtractOnMainThread || (updatePriority == UpdatePriorities::Immediate);
-
 			for(int iz = 0; iz < 2; iz++)
 			{
 				for(int iy = 0; iy < 2; iy++)
@@ -244,9 +240,6 @@ namespace Cubiquity
 		{
 			//mIsMeshUpToDate = false;
 			node->mDataLastModified = newTimeStamp;
-
-			// Note: If DontUpdate was passed (an invalid choice) it will end up on the background thread.
-			node->mExtractOnMainThread = (updatePriority == UpdatePriorities::Immediate);
 
 			for(int iz = 0; iz < 2; iz++)
 			{
@@ -329,9 +322,6 @@ namespace Cubiquity
 			node->mLastSurfaceExtractionTask->mPriority = (std::numeric_limits<uint32_t>::max)() - static_cast<uint32_t>(distance);
 			gBackgroundTaskProcessor.addTask(node->mLastSurfaceExtractionTask);
 			}*/
-
-			// Clear this flag otherwise this node will always be done on the main thread.
-			node->mExtractOnMainThread = false;
 		}
 
 		for (int iz = 0; iz < 2; iz++)
