@@ -14,6 +14,10 @@
 using namespace ez;
 using namespace std;
 
+// Sample command lines
+// -import -heightmap C:\temp\temp\height.png -terrain C:\code\cubiquity\Data\exported_volume.vdb -scale 0.25
+// -import -imageslices C:\code\cubiquity\Data\SliceData\VoxeliensTerrain -coloredcubes C:\code\cubiquity\Data\exported_volume.vdb
+
 int main(int argc, const char* argv[])
 {
 	ezOptionParser options;
@@ -51,6 +55,16 @@ int main(int argc, const char* argv[])
 		"Import volume data from colormap.", // Help description.
 		"-colormap",     // Flag token.
 		"--colormap"     // Flag token.
+		);
+
+	options.add(
+		"", // Default.
+		0, // Required?
+		1, // Number of args expected.
+		0, // Delimiter if expecting multiple args.
+		"Import volume data from image slices.", // Help description.
+		"-imageslices",     // Flag token.
+		"--imageslices"     // Flag token.
 		);
 
 	options.add(

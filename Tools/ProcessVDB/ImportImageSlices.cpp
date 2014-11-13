@@ -63,8 +63,13 @@ std::vector<std::string> findImagesInFolder(std::string folder)
 	return imageFilenames;
 }
 
-bool importImageSlices(const std::string& folder, const std::string& pathToVoxelDatabase, uint32_t outputFormat)
+bool importImageSlices(ez::ezOptionParser& options)
 {
+	string folder;
+	options.get("-imageslices")->getString(folder);
+	string pathToVoxelDatabase;
+	options.get("-coloredcubes")->getString(pathToVoxelDatabase);
+
 	cout << "Importing images from '" << folder << "' and into '" << pathToVoxelDatabase << "'";
 
 	std::vector<std::string> imageFilenames = findImagesInFolder(folder);

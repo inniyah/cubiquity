@@ -211,6 +211,11 @@ bool importHeightmapAsTerrainVolume(ez::ezOptionParser& options)
 
 				materialSet.data = static_cast<uint8_t>(diff);
 
+				/*if (materialSet.data < 140)
+				{
+					materialSet.data <<= 8;
+				}*/
+
 				if (cuSetVoxel(volumeHandle, imageX, height, imageY, &materialSet) != CU_OK)
 				{
 					cerr << "Error setting voxel materials" << endl;
