@@ -26,53 +26,6 @@ namespace Cubiquity
 	typedef OctreeConstructionModes::OctreeConstructionMode OctreeConstructionMode;
 
 	template <typename VoxelType>
-	class DetermineActiveNodesVisitor
-	{
-	public:
-		DetermineActiveNodesVisitor(const Vector3F& viewPosition, float lodThreshold)
-			:mViewPosition(viewPosition)
-			, mLodThreshold(lodThreshold)
-		{
-
-		}
-
-		bool operator()(OctreeNode<VoxelType>* octreeNode)
-		{
-			// FIXME - Should have an early out to set active to false if parent is false.
-
-			OctreeNode<VoxelType>* parentNode = octreeNode->getParentNode();
-			if (parentNode)
-			{
-
-				Vector3F regionCentre = static_cast<Vector3F>(parentNode->mRegion.getCentre());
-
-				float distance = (mViewPosition - regionCentre).length();
-
-				Vector3I diagonal = parentNode->mRegion.getUpperCorner() - parentNode->mRegion.getLowerCorner();
-				float diagonalLength = diagonal.length(); // A measure of our regions size
-
-				float projectedSize = diagonalLength / distance;
-
-				// As we move far away only the highest nodes will be larger than the threshold. But these may be too
-				// high to ever generate meshes, so we set here a maximum height for which nodes can be set to inacive.
-				bool active = (projectedSize > mLodThreshold) || (octreeNode->mHeight >= HighestMeshLevel);
-
-				octreeNode->setActive(active);
-			}
-			else
-			{
-				octreeNode->setActive(true);
-			}
-
-			return true; // Process children
-		}
-
-	private:
-		const Vector3F& mViewPosition;
-		float mLodThreshold;
-	};
-
-	template <typename VoxelType>
 	class Octree
 	{
 		friend class OctreeNode<VoxelType>;
@@ -84,7 +37,7 @@ namespace Cubiquity
 		~Octree();
 
 		template<typename VisitorType>
-		void acceptVisitor(VisitorType visitor) { visitNode(mRootNodeIndex, visitor); }
+		void acceptVisitor(VisitorType visitor) { visitNode(getRootNode(), visitor); }
 
 		OctreeNode<VoxelType>* getRootNode(void) { return mNodes[mRootNodeIndex]; }
 
@@ -97,6 +50,7 @@ namespace Cubiquity
 		void markDataAsModified(const Region& region, Timestamp newTimeStamp);
 
 		void buildOctreeNodeTree(uint16_t parent);
+		void determineActiveNodes(OctreeNode<VoxelType>* octreeNode, const Vector3F& viewPosition, float lodThreshold);
 
 		concurrent_queue<typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType*, TaskSortCriterion> mFinishedSurfaceExtractionTasks;
 
@@ -104,7 +58,7 @@ namespace Cubiquity
 		uint16_t createNode(Region region, uint16_t parent);
 
 		template<typename VisitorType>
-		void visitNode(uint16_t index, VisitorType visitor);
+		void visitNode(OctreeNode<VoxelType>* node, VisitorType visitor);
 
 		void markAsModified(uint16_t index, int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp);
 		void markAsModified(uint16_t index, const Region& region, Timestamp newTimeStamp);

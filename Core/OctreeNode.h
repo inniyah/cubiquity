@@ -56,10 +56,10 @@ namespace Cubiquity
 		typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* mLastSurfaceExtractionTask;
 
 		uint16_t mSelf;
+		uint16_t children[2][2][2];
 
 	private:
-		uint16_t mParent;
-		uint16_t children[2][2][2];
+		uint16_t mParent;		
 
 		bool mRenderThisNode;
 		bool mActive;

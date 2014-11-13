@@ -99,7 +99,8 @@ namespace Cubiquity
 	template <typename VoxelType>
 	bool Octree<VoxelType>::update(const Vector3F& viewPosition, float lodThreshold)
 	{
-		acceptVisitor(DetermineActiveNodesVisitor<VoxelType>(viewPosition, lodThreshold));
+		//acceptVisitor(DetermineActiveNodesVisitor<VoxelType>(viewPosition, lodThreshold));
+		determineActiveNodes(getRootNode(), viewPosition, lodThreshold);
 
 		//determineWantedForRendering(mRootNodeIndex, viewPosition, lodThreshold);
 
@@ -252,6 +253,52 @@ namespace Cubiquity
 						{
 							markAsModified(childIndex, region, newTimeStamp);
 						}
+					}
+				}
+			}
+		}
+	}
+
+	template <typename VoxelType>
+	void Octree<VoxelType>::determineActiveNodes(OctreeNode<VoxelType>* octreeNode, const Vector3F& viewPosition, float lodThreshold)
+	{
+		// FIXME - Should have an early out to set active to false if parent is false.
+
+		OctreeNode<VoxelType>* parentNode = octreeNode->getParentNode();
+		if (parentNode)
+		{
+
+			Vector3F regionCentre = static_cast<Vector3F>(parentNode->mRegion.getCentre());
+
+			float distance = (viewPosition - regionCentre).length();
+
+			Vector3I diagonal = parentNode->mRegion.getUpperCorner() - parentNode->mRegion.getLowerCorner();
+			float diagonalLength = diagonal.length(); // A measure of our regions size
+
+			float projectedSize = diagonalLength / distance;
+
+			// As we move far away only the highest nodes will be larger than the threshold. But these may be too
+			// high to ever generate meshes, so we set here a maximum height for which nodes can be set to inacive.
+			bool active = (projectedSize > lodThreshold) || (octreeNode->mHeight >= HighestMeshLevel);
+
+			octreeNode->setActive(active);
+		}
+		else
+		{
+			octreeNode->setActive(true);
+		}
+
+		for (int iz = 0; iz < 2; iz++)
+		{
+			for (int iy = 0; iy < 2; iy++)
+			{
+				for (int ix = 0; ix < 2; ix++)
+				{
+					uint16_t childIndex = octreeNode->children[ix][iy][iz];
+					if (childIndex != InvalidNodeIndex)
+					{
+						OctreeNode<VoxelType>* childNode = mNodes[childIndex];
+						determineActiveNodes(childNode, viewPosition, lodThreshold);
 					}
 				}
 			}
@@ -453,10 +500,8 @@ namespace Cubiquity
 
 	template <typename VoxelType>
 	template<typename VisitorType>
-	void Octree<VoxelType>::visitNode(uint16_t index, VisitorType visitor)
+	void Octree<VoxelType>::visitNode(OctreeNode<VoxelType>* node, VisitorType visitor)
 	{
-		OctreeNode<VoxelType>* node = mNodes[index];
-
 		bool processChildren = visitor(node);
 
 		if(processChildren)
@@ -470,7 +515,8 @@ namespace Cubiquity
 						uint16_t childIndex = node->children[ix][iy][iz];
 						if(childIndex != InvalidNodeIndex)
 						{
-							visitNode(childIndex, visitor);
+							OctreeNode<VoxelType>* childNode = mNodes[childIndex];
+							visitNode(childNode, visitor);
 						}
 					}
 				}
