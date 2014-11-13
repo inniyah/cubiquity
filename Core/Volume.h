@@ -3,7 +3,6 @@
 
 #include "CubiquityForwardDeclarations.h"
 #include "Octree.h"
-#include "UpdatePriorities.h"
 #include "Vector.h"
 #include "VoxelTraits.h"
 #include "WritePermissions.h"
@@ -48,10 +47,10 @@ namespace Cubiquity
 		OctreeNode<VoxelType>* getRootOctreeNode(void) { return mOctree->getRootNode(); }
 
 		// Set voxel doesn't just pass straight through, it also validates the position and marks the voxel as modified.
-		void setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, UpdatePriority updatePriority = UpdatePriorities::Background);
+		void setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, bool markAsModified);
 
 		// Marks a region as modified so it will be regenerated later.
-		void markAsModified(const Region& region, UpdatePriority updatePriority = UpdatePriorities::Background);
+		void markAsModified(const Region& region);
 
 		void acceptOverrideChunks(void)
 		{

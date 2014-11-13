@@ -98,25 +98,23 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void Volume<VoxelType>::setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, UpdatePriority updatePriority)
+	void Volume<VoxelType>::setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, bool markAsModified)
 	{
 		// Validate the voxel position
 		POLYVOX_THROW_IF(mPolyVoxVolume->getEnclosingRegion().containsPoint(x, y, z) == false,
 			std::invalid_argument, "Attempted to write to a voxel which is outside of the volume");
 
 		mPolyVoxVolume->setVoxelAt(x, y, z, value);
-		if(updatePriority != UpdatePriorities::DontUpdate)
+		if(markAsModified)
 		{
-			mOctree->markDataAsModified(x, y, z, Clock::getTimestamp(), updatePriority);
+			mOctree->markDataAsModified(x, y, z, Clock::getTimestamp());
 		}
 	}
 
 	template <typename VoxelType>
-	void Volume<VoxelType>::markAsModified(const Region& region, UpdatePriority updatePriority)
+	void Volume<VoxelType>::markAsModified(const Region& region)
 	{
-		POLYVOX_THROW_IF(updatePriority == UpdatePriorities::DontUpdate, std::invalid_argument, "You cannot mark as modified yet request no update");
-
-		mOctree->markDataAsModified(region, Clock::getTimestamp(), updatePriority);
+		mOctree->markDataAsModified(region, Clock::getTimestamp());
 	}
 
 	template <typename VoxelType>

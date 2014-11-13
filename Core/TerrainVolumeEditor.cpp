@@ -112,12 +112,12 @@ namespace Cubiquity
 			{
 				for(int x = firstX; x <= lastX; ++x)
 				{
-					terrainVolume->setVoxelAt(x, y, z, mSmoothingVolume.getVoxelAt(x, y, z), UpdatePriorities::DontUpdate);
+					terrainVolume->setVoxelAt(x, y, z, mSmoothingVolume.getVoxelAt(x, y, z), false);
 				}
 			}
 		}
 
-		terrainVolume->markAsModified(region, UpdatePriorities::Immediate);
+		terrainVolume->markAsModified(region);
 	}
 
 	void blurTerrainVolume(TerrainVolume* terrainVolume, const Vector3F& centre, const Brush& brush)
@@ -197,12 +197,12 @@ namespace Cubiquity
 			{
 				for(int x = firstX; x <= lastX; ++x)
 				{
-					terrainVolume->setVoxelAt(x, y, z, mSmoothingVolume.getVoxelAt(x, y, z), UpdatePriorities::DontUpdate);
+					terrainVolume->setVoxelAt(x, y, z, mSmoothingVolume.getVoxelAt(x, y, z), false);
 				}
 			}
 		}
 
-		terrainVolume->markAsModified(region, UpdatePriorities::Immediate);
+		terrainVolume->markAsModified(region);
 	}
 
 	void blurTerrainVolume(TerrainVolume* terrainVolume, const Region& region)
@@ -257,12 +257,12 @@ namespace Cubiquity
 			{
 				for(int x = croppedRegion.getLowerX(); x <= croppedRegion.getUpperX(); ++x)
 				{
-					terrainVolume->setVoxelAt(x, y, z, mSmoothingVolume.getVoxelAt(x, y, z), UpdatePriorities::DontUpdate);
+					terrainVolume->setVoxelAt(x, y, z, mSmoothingVolume.getVoxelAt(x, y, z), false);
 				}
 			}
 		}
 
-		terrainVolume->markAsModified(croppedRegion, UpdatePriorities::Immediate);
+		terrainVolume->markAsModified(croppedRegion);
 	}
 
 	void addToMaterial(uint32_t index, uint8_t amountToAdd, MaterialSet& material)
@@ -341,12 +341,12 @@ namespace Cubiquity
 					MaterialSet voxel = terrainVolume->getVoxelAt(x, y, z);
 					addToMaterial(materialIndex, amountToAdd, voxel);
 					voxel.clampSumOfMaterials();
-					terrainVolume->setVoxelAt(x, y, z, voxel);
+					terrainVolume->setVoxelAt(x, y, z, voxel, false);
 					
 				}
 			}
 		}
 
-		terrainVolume->markAsModified(region, UpdatePriorities::Immediate);
+		terrainVolume->markAsModified(region);
 	}
 }

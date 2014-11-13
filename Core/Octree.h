@@ -6,7 +6,6 @@
 #include "CubiquityForwardDeclarations.h"
 #include "Region.h"
 #include "Task.h"
-#include "UpdatePriorities.h"
 #include "Vector.h"
 #include "VoxelTraits.h"
 
@@ -94,8 +93,8 @@ namespace Cubiquity
 
 		bool update(const Vector3F& viewPosition, float lodThreshold);
 
-		void markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority);
-		void markDataAsModified(const Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority);
+		void markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp);
+		void markDataAsModified(const Region& region, Timestamp newTimeStamp);
 
 		void buildOctreeNodeTree(uint16_t parent);
 
@@ -107,8 +106,8 @@ namespace Cubiquity
 		template<typename VisitorType>
 		void visitNode(uint16_t index, VisitorType visitor);
 
-		void markAsModified(uint16_t index, int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority);
-		void markAsModified(uint16_t index, const Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority);
+		void markAsModified(uint16_t index, int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp);
+		void markAsModified(uint16_t index, const Region& region, Timestamp newTimeStamp);
 
 		Timestamp Octree<VoxelType>::propagateTimestamps(uint16_t index);
 

@@ -307,7 +307,7 @@ CUBIQUITYC_API int32_t cuNewEmptyColoredCubesVolume(int32_t lowerX, int32_t lowe
 	OPEN_C_INTERFACE
 
 	ColoredCubesVolume* volume = new ColoredCubesVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pathToNewVoxelDatabase, baseNodeSize);
-	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
+	volume->markAsModified(volume->getEnclosingRegion());
 
 	// Replace an existing entry if it has been deleted.
 	bool foundEmptySlot = false;
@@ -339,7 +339,7 @@ CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVDB(const char* pathToExisting
 	// Fixme - Find out how to pass this write permissions enum properly.
 	WritePermission cubiquityWritePermissions = (writePermissions == CU_READONLY) ? WritePermissions::ReadOnly : WritePermissions::ReadWrite;
 	ColoredCubesVolume* volume = new ColoredCubesVolume(pathToExistingVoxelDatabase, cubiquityWritePermissions, baseNodeSize);
-	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
+	volume->markAsModified(volume->getEnclosingRegion());
 
 	// Replace an existing entry if it has been deleted.
 	bool foundEmptySlot = false;
@@ -483,13 +483,13 @@ CUBIQUITYC_API int32_t cuSetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, i
 	{
 		Color* pColor = (Color*)value;
 		ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeIndex);
-		volume->setVoxelAt(x, y, z, *pColor, UpdatePriorities::Immediate);
+		volume->setVoxelAt(x, y, z, *pColor, true);
 	}
 	else
 	{
 		MaterialSet* pMat = (MaterialSet*)value;
 		TerrainVolume* volume = getTerrainVolumeFromHandle(volumeIndex);
-		volume->setVoxelAt(x, y, z, *pMat, UpdatePriorities::Immediate);
+		volume->setVoxelAt(x, y, z, *pMat, true);
 	}
 	
 	CLOSE_C_INTERFACE
@@ -544,7 +544,7 @@ CUBIQUITYC_API int32_t cuNewEmptyTerrainVolume(int32_t lowerX, int32_t lowerY, i
 	OPEN_C_INTERFACE
 
 	TerrainVolume* volume = new TerrainVolume(Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ), pathToNewVoxelDatabase, baseNodeSize);
-	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
+	volume->markAsModified(volume->getEnclosingRegion());
 
 	// Replace an existing entry if it has been deleted.
 	bool foundEmptySlot = false;
@@ -576,7 +576,7 @@ CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxel
 	// Fixme - Find out how to pass this write permissions enum properly.
 	WritePermission cubiquityWritePermissions = (writePermissions == CU_READONLY) ? WritePermissions::ReadOnly : WritePermissions::ReadWrite;
 	TerrainVolume* volume = new TerrainVolume(pathToExistingVoxelDatabase, cubiquityWritePermissions, baseNodeSize);
-	volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Immediate); //Immediate update just while we do unity experiments.
+	volume->markAsModified(volume->getEnclosingRegion());
 
 	// Replace an existing entry if it has been deleted.
 	bool foundEmptySlot = false;

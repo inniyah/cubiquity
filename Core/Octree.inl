@@ -144,15 +144,15 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void Octree<VoxelType>::markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority)
+	void Octree<VoxelType>::markDataAsModified(int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp)
 	{
-		markAsModified(mRootNodeIndex, x, y, z, newTimeStamp, updatePriority);
+		markAsModified(mRootNodeIndex, x, y, z, newTimeStamp);
 	}
 
 	template <typename VoxelType>
-	void Octree<VoxelType>::markDataAsModified(const Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority)
+	void Octree<VoxelType>::markDataAsModified(const Region& region, Timestamp newTimeStamp)
 	{
-		markAsModified(mRootNodeIndex, region, newTimeStamp, updatePriority);
+		markAsModified(mRootNodeIndex, region, newTimeStamp);
 	}
 
 	template <typename VoxelType>
@@ -200,7 +200,7 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void Octree<VoxelType>::markAsModified(uint16_t index, int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp, UpdatePriority updatePriority)
+	void Octree<VoxelType>::markAsModified(uint16_t index, int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp)
 	{
 		// Note - Can't this function just call the other version?
 
@@ -223,7 +223,7 @@ namespace Cubiquity
 						uint16_t childIndex = node->children[ix][iy][iz];
 						if(childIndex != InvalidNodeIndex)
 						{
-							markAsModified(childIndex, x, y, z, newTimeStamp, updatePriority);
+							markAsModified(childIndex, x, y, z, newTimeStamp);
 						}
 					}
 				}
@@ -232,7 +232,7 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void Octree<VoxelType>::markAsModified(uint16_t index, const Region& region, Timestamp newTimeStamp, UpdatePriority updatePriority)
+	void Octree<VoxelType>::markAsModified(uint16_t index, const Region& region, Timestamp newTimeStamp)
 	{
 		OctreeNode<VoxelType>* node = mNodes[index];
 
@@ -250,7 +250,7 @@ namespace Cubiquity
 						uint16_t childIndex = node->children[ix][iy][iz];
 						if(childIndex != InvalidNodeIndex)
 						{
-							markAsModified(childIndex, region, newTimeStamp, updatePriority);
+							markAsModified(childIndex, region, newTimeStamp);
 						}
 					}
 				}
