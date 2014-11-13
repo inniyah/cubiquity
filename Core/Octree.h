@@ -58,7 +58,7 @@ namespace Cubiquity
 		uint16_t createNode(Region region, uint16_t parent);
 
 		template<typename VisitorType>
-		void visitNode(OctreeNode<VoxelType>* node, VisitorType visitor);
+		void visitNode(OctreeNode<VoxelType>* node, VisitorType& visitor);
 
 		void markAsModified(uint16_t index, int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp);
 		void markAsModified(uint16_t index, const Region& region, Timestamp newTimeStamp);

@@ -5,6 +5,32 @@
 namespace Cubiquity
 {
 	template <typename VoxelType>
+	class PropagateTimestampsVisitor
+	{
+	public:
+		PropagateTimestampsVisitor()
+		{
+			subtreeTimestamp = 0;
+		}
+
+		bool preChildren(OctreeNode<VoxelType>* octreeNode)
+		{
+			octreeNode->mNodeOrChildrenLastChanged = (std::max)({ octreeNode->mStructureLastChanged, octreeNode->mPropertiesLastChanged, octreeNode->mMeshLastChanged });
+
+			subtreeTimestamp = (std::max)(octreeNode->mNodeOrChildrenLastChanged, subtreeTimestamp);
+
+			return true;
+		}
+
+		void postChildren(OctreeNode<VoxelType>* octreeNode)
+		{
+			octreeNode->mNodeOrChildrenLastChanged = (std::max)(octreeNode->mNodeOrChildrenLastChanged, subtreeTimestamp);
+		}
+
+		Timestamp subtreeTimestamp;
+	};
+
+	template <typename VoxelType>
 	Octree<VoxelType>::Octree(Volume<VoxelType>* volume, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize)
 		:mVolume(volume)
 		,mRootNodeIndex(InvalidNodeIndex)
@@ -138,7 +164,9 @@ namespace Cubiquity
 		determineCanRenderNodeOrChildren(mRootNodeIndex);
 		determineWhetherToRender(mRootNodeIndex);
 
-		propagateTimestamps(mRootNodeIndex);
+		//propagateTimestamps(mRootNodeIndex);
+
+		acceptVisitor(PropagateTimestampsVisitor<VoxelType>());
 
 		// If there are no pending tasks then return truem to indicate we are up to date.
 		return (gMainThreadTaskProcessor.hasTasks() == false) && (gBackgroundTaskProcessor.hasTasks() == false);
@@ -500,9 +528,9 @@ namespace Cubiquity
 
 	template <typename VoxelType>
 	template<typename VisitorType>
-	void Octree<VoxelType>::visitNode(OctreeNode<VoxelType>* node, VisitorType visitor)
+	void Octree<VoxelType>::visitNode(OctreeNode<VoxelType>* node, VisitorType& visitor)
 	{
-		bool processChildren = visitor(node);
+		bool processChildren = visitor.preChildren(node);
 
 		if(processChildren)
 		{
@@ -522,5 +550,7 @@ namespace Cubiquity
 				}
 			}
 		}
+
+		visitor.postChildren(node);
 	}
 }
