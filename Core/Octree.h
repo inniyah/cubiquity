@@ -41,6 +41,8 @@ namespace Cubiquity
 
 		OctreeNode<VoxelType>* getRootNode(void) { return mNodes[mRootNodeIndex]; }
 
+		Volume<VoxelType>* getVolume(void) { return mVolume; }
+
 		// This one feels hacky?
 		OctreeNode<VoxelType>* getNodeFromIndex(uint16_t index) { return mNodes[index]; }
 
@@ -65,7 +67,7 @@ namespace Cubiquity
 
 		Timestamp Octree<VoxelType>::propagateTimestamps(uint16_t index);
 
-		void sceduleUpdateIfNeeded(uint16_t index, const Vector3F& viewPosition);
+		void scheduleUpdateIfNeeded(OctreeNode<VoxelType>* node, const Vector3F& viewPosition);
 
 		void Octree<VoxelType>::determineCanRenderNodeOrChildren(uint16_t index);
 		void Octree<VoxelType>::determineWhetherToRender(uint16_t index);

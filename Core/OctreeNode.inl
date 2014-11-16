@@ -51,7 +51,17 @@ namespace Cubiquity
 	template <typename VoxelType>
 	OctreeNode<VoxelType>* OctreeNode<VoxelType>::getChildNode(uint32_t childX, uint32_t childY, uint32_t childZ)
 	{
-		return children[childX][childY][childZ] == Octree<VoxelType>::InvalidNodeIndex ? 0 : mOctree->mNodes[children[childX][childY][childZ]];
+		uint16_t childIndex = children[childX][childY][childZ];
+		if (childIndex != Octree<VoxelType>::InvalidNodeIndex)
+		{
+			OctreeNode<VoxelType>* child = mOctree->mNodes[children[childX][childY][childZ]];
+			if (child->isActive())
+			{
+				return child;
+			}
+		}
+
+		return 0;
 	}
 
 	template <typename VoxelType>
