@@ -15,18 +15,23 @@ namespace Cubiquity
 
 		bool preChildren(OctreeNode<VoxelType>* octreeNode)
 		{
-			octreeNode->mNodeOrChildrenLastChanged = (std::max)({ octreeNode->mStructureLastChanged, octreeNode->mPropertiesLastChanged, octreeNode->mMeshLastChanged });
-
-			subtreeTimestamp = (std::max)(octreeNode->mNodeOrChildrenLastChanged, subtreeTimestamp);
-
+			// Don't actually do any work here, just make sure all children get processed.
 			return true;
 		}
 
 		void postChildren(OctreeNode<VoxelType>* octreeNode)
 		{
-			octreeNode->mNodeOrChildrenLastChanged = (std::max)(octreeNode->mNodeOrChildrenLastChanged, subtreeTimestamp);
+			// Set timestamp to max of our own timestamps, and those of our children.
+			octreeNode->mNodeOrChildrenLastChanged = (std::max)({ subtreeTimestamp,
+				octreeNode->mStructureLastChanged, octreeNode->mPropertiesLastChanged, octreeNode->mMeshLastChanged });
+
+			// This will get propagatd back to the parent as the visitor is passed by reference.
+			subtreeTimestamp = octreeNode->mNodeOrChildrenLastChanged;
 		}
 
+	private:
+		// The visitor has no direct access to the children, so we
+		// use this to propagate the timestamp back up to the parent.
 		Timestamp subtreeTimestamp;
 	};
 
