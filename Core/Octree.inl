@@ -351,7 +351,6 @@ namespace Cubiquity
 		OctreeNode<VoxelType>* parentNode = octreeNode->getParentNode();
 		if (parentNode)
 		{
-
 			Vector3F regionCentre = static_cast<Vector3F>(parentNode->mRegion.getCentre());
 
 			float distance = (viewPosition - regionCentre).length();
@@ -372,6 +371,8 @@ namespace Cubiquity
 			octreeNode->setActive(true);
 		}
 
+		octreeNode->mIsLeaf = true;
+
 		for (int iz = 0; iz < 2; iz++)
 		{
 			for (int iy = 0; iy < 2; iy++)
@@ -384,6 +385,12 @@ namespace Cubiquity
 						OctreeNode<VoxelType>* childNode = mNodes[childIndex];
 						determineActiveNodes(childNode, viewPosition, lodThreshold);
 					}
+
+					// If we have (or have just created) an active and valid chld then we are not a leaf.
+					if (octreeNode->getChildNode(ix, iy, iz))
+					{
+						octreeNode->mIsLeaf = false;
+					}
 				}
 			}
 		}
@@ -395,7 +402,6 @@ namespace Cubiquity
 		OctreeNode<VoxelType>* node = mNodes[index];
 
 		bool canRenderAllChildren = true;
-		bool isLeaf = true;
 
 		for (int iz = 0; iz < 2; iz++)
 		{
@@ -409,7 +415,6 @@ namespace Cubiquity
 						OctreeNode<VoxelType>* childNode = mNodes[childIndex];
 						if (childNode->isActive())
 						{
-							isLeaf = false;
 							determineCanRenderNodeOrChildren(childIndex);
 							canRenderAllChildren = canRenderAllChildren && childNode->mCanRenderNodeOrChildren;
 						}
@@ -422,7 +427,7 @@ namespace Cubiquity
 			}
 		}
 
-		if (isLeaf)
+		if (node->mIsLeaf)
 		{
 			node->mCanRenderNodeOrChildren = node->isMeshUpToDate();
 		}
@@ -438,7 +443,6 @@ namespace Cubiquity
 		OctreeNode<VoxelType>* node = mNodes[index];
 
 		bool canRenderAllChildren = true;
-		bool isLeaf = true;
 
 		for(int iz = 0; iz < 2; iz++)
 		{
@@ -452,7 +456,6 @@ namespace Cubiquity
 						OctreeNode<VoxelType>* childNode = mNodes[childIndex];
 						if (childNode->isActive())
 						{
-							isLeaf = false;
 							determineWhetherToRender(childIndex);
 							canRenderAllChildren = canRenderAllChildren && childNode->mCanRenderNodeOrChildren;
 						}
@@ -465,7 +468,7 @@ namespace Cubiquity
 			}
 		}
 
-		if (isLeaf)
+		if (node->mIsLeaf)
 		{
 			node->setRenderThisNode(node->isMeshUpToDate());
 		}
