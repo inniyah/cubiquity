@@ -14,7 +14,7 @@
 using namespace ez;
 using namespace std;
 
-int import(int argc, const char* argv[], ezOptionParser& options)
+int import(ezOptionParser& options)
 {
 	string outputFilename;
 	

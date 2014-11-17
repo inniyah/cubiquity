@@ -5,21 +5,7 @@
 
 #include "ezOptionParser.hpp"
 
-namespace InputFormats
-{
-	enum InputFormat
-	{
-		Heightmap,
-		ImageSlices,
-		MagicaVoxel,
-		VXL,
-		Unknown
-	};
-}
-typedef InputFormats::InputFormat InputFormat;
-
-int import(int argc, const char* argv[], ez::ezOptionParser& options);
-InputFormat determineInputFormat(const std::string& input);
+int import(ez::ezOptionParser& options);
 void printUsage(void);
 
 #endif //CUBIQUITYTOOLS_IMPORT_H_

@@ -123,7 +123,7 @@ int main(int argc, const char* argv[])
 
 	if (options.isSet("--import"))
 	{
-		return import(argc, argv, options);
+		return import(options);
 	}
 
 	return 0;
