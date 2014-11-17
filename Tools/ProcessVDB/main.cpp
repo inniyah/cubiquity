@@ -29,95 +29,30 @@ int main(int argc, const char* argv[])
 	options.example = "complete a b -f --list 1,2,3 --list 4,5,6,7,8 -s string -int -2147483648,2147483647 -ulong 9223372036854775807 -float 3.40282e+038 -double 1.79769e+308 f1 f2 f3 f4 f5 f6 fout\n\n";
 	options.footer = "ezOptionParser 0.1.4  Copyright (C) 2011 Remik Ziemlinski\nThis program is free and without warranty.\n";
 
-	options.add(
-		"", // Default.
-		0, // Required?
-		0, // Number of args expected.
-		0, // Delimiter if expecting multiple args.
-		"Import volume data.", // Help description.
-		"-import",     // Flag token.
-		"--import"     // Flag token.
-		);
+	// We have to declare here all options which we might later want to check for. Unfortunaltly ezOptionParser does not support 'increamental',
+	// parsing which would let us for example reparse the command line looking for a input format once we had establised that we wanted to import.
+	// Format for adding an option is:
+	// 
+	//   options.add(Default, Required?, Number of args expected, Delimiter if expecting multiple args, Help description, Flag token, Flag token);
+	
+	// Mode of operation
+	options.add("", 0, 0, 0, "Import volume data.", "-import", "--import");
 
-	options.add(
-		"", // Default.
-		0, // Required?
-		1, // Number of args expected.
-		0, // Delimiter if expecting multiple args.
-		"Import volume data from heightmap.", // Help description.
-		"-heightmap",     // Flag token.
-		"--heightmap"     // Flag token.
-		);
+	// Recognised data formats
+	options.add("", 0, 1, 0, "A grayscale image representing a heightmap.", "-heightmap", "--heightmap");
+	options.add("", 0, 1, 0, "A color image corresponding to a heightmap.", "-colormap", "--colormap");
+	options.add("", 0, 1, 0, "A folder containing a series of images representing slices through the volume.", "-imageslices", "--imageslices");
+	options.add("", 0, 1, 0, "The format used by the MagicaVoxel modelling application.", "-magicavoxel", "--magicavoxel");
+	options.add("", 0, 1, 0, "The format used by the game 'Build and Shoot', and possibly other games built on the 'Voxlap' engine.", "-vxl", "--vxl");
 
-	options.add(
-		"", // Default.
-		0, // Required?
-		1, // Number of args expected.
-		0, // Delimiter if expecting multiple args.
-		"Import volume data from colormap.", // Help description.
-		"-colormap",     // Flag token.
-		"--colormap"     // Flag token.
-		);
+	// Volume formats
+	options.add( "", 0, 1, 0, "A volume consisting of colored cubes.", "-coloredcubes", "--coloredcubes" );
+	options.add("", 0, 1, 0, "A volume representing a terrain with each voxel being a 'MaterialSet'.", "-terrain", "--terrain");
 
-	options.add(
-		"", // Default.
-		0, // Required?
-		1, // Number of args expected.
-		0, // Delimiter if expecting multiple args.
-		"Import volume data from image slices.", // Help description.
-		"-imageslices",     // Flag token.
-		"--imageslices"     // Flag token.
-		);
+	// Other parameters.
+	options.add("1.0", 0, 1, 0, "Scale factor" "-scale", "--scale");
 
-	options.add(
-		"", // Default.
-		0, // Required?
-		1, // Number of args expected.
-		0, // Delimiter if expecting multiple args.
-		"Export volume as colored cubes", // Help description.
-		"-coloredcubes",     // Flag token.
-		"--coloredcubes"     // Flag token.
-		);
-
-	options.add(
-		"", // Default.
-		0, // Required?
-		1, // Number of args expected.
-		0, // Delimiter if expecting multiple args.
-		"Export volume as terrain", // Help description.
-		"-terrain",     // Flag token.
-		"--terrain"     // Flag token.
-		);
-
-	options.add(
-		"1.0", // Default.
-		0, // Required?
-		1, // Number of args expected.
-		0, // Delimiter if expecting multiple args.
-		"Scale factor", // Help description.
-		"-scale",     // Flag token.
-		"--scale"     // Flag token.
-		);
-
-	options.add(
-		"", // Default.
-		0, // Required?
-		1, // Number of args expected.
-		0, // Delimiter if expecting multiple args.
-		"Import volume data from Magica Voxel file.", // Help description.
-		"-magicavoxel",     // Flag token.
-		"--magicavoxel"     // Flag token.
-		);
-
-	options.add(
-		"", // Default.
-		0, // Required?
-		1, // Number of args expected.
-		0, // Delimiter if expecting multiple args.
-		"Import volume data from Magica Voxel file.", // Help description.
-		"-vxl",     // Flag token.
-		"--vxl"     // Flag token.
-		);
+	
 
 	options.parse(argc, argv);
 
