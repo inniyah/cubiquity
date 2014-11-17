@@ -76,8 +76,14 @@ bool isMagicaVoxel(const std::string& filename)
 	return true;
 }
 
-bool importMagicaVoxel(const std::string& filename, const std::string& pathToVoxelDatabase, uint32_t outputFormat)
+bool importMagicaVoxel(ez::ezOptionParser& options)
 {
+	string filename;
+	options.get("-magicavoxel")->getString(filename);
+	string pathToVoxelDatabase;
+	options.get("-coloredcubes")->getString(pathToVoxelDatabase);
+
+	cout << "Importing images from '" << filename << "' and into '" << pathToVoxelDatabase << "'";
 	MV_Model model;
 	model.LoadModel(filename.c_str());
 

@@ -35,6 +35,14 @@ int import(int argc, const char* argv[], ezOptionParser& options)
 	{
 		importImageSlices(options);
 	}
+	else if (options.isSet("-magicavoxel"))
+	{
+		importMagicaVoxel(options);
+	}
+	else
+	{
+		cout << "Unknown import type" << endl;
+	}
 
 	return 0;
 }
