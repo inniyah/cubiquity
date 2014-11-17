@@ -115,7 +115,7 @@ void processOctreeNode(uint32_t octreeNodeHandle)
 void testTerrainVolume()
 {
 	uint32_t volumeHandle;
-	validate(cuNewTerrainVolumeFromVDB("C:/code/cubiquity/Data/Volumes/Version 0/SmoothVoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
+	validate(cuNewTerrainVolumeFromVDB("C:/code/cubiquity/Data/VoxelDatabases/Version 0/SmoothVoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
 
 	validate(cuUpdateVolume(volumeHandle, 0.0f, 0.0f, 0.0f, 0.0f));
 

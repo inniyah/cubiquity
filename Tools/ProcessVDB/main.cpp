@@ -16,7 +16,7 @@ using namespace std;
 
 // Sample command lines
 // -import -heightmap C:\temp\temp\height.png -terrain C:\code\cubiquity\Data\exported_volume.vdb -scale 0.25
-// -import -imageslices C:\code\cubiquity\Data\SliceData\VoxeliensTerrain -coloredcubes C:\code\cubiquity\Data\exported_volume.vdb
+// -import -imageslices C:\code\cubiquity\Data\ImageSlices\VoxeliensTerrain -coloredcubes C:\code\cubiquity\Data\exported_volume.vdb
 
 int main(int argc, const char* argv[])
 {
