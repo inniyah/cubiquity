@@ -6,8 +6,15 @@
 
 using namespace std;
 
-bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDatabase, bool dryRun, uint32_t outputFormat)
+bool importVxl(ez::ezOptionParser& options)
 {
+	string vxlFilename;
+	options.get("-vxl")->getString(vxlFilename);
+	string pathToVoxelDatabase;
+	options.get("-coloredcubes")->getString(pathToVoxelDatabase);
+
+	cout << "Importing vxl from '" << vxlFilename << "' and into '" << pathToVoxelDatabase << "'";
+
 	FILE* inputFile = fopen(vxlFilename.c_str(), "rb");
 	if(inputFile == NULL)
 	{
@@ -30,14 +37,12 @@ bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDat
 	fclose(inputFile);
 
 	uint32_t volumeHandle = 1000000; // Better if handles were ints so they could be set invalid?
-	if(!dryRun)
+	if(cuNewEmptyColoredCubesVolume(0, 0, 0, 511, 63, 511, pathToVoxelDatabase.c_str(), 32, &volumeHandle) != CU_OK)
 	{
-		if(cuNewEmptyColoredCubesVolume(0, 0, 0, 511, 63, 511, pathToVoxelDatabase.c_str(), 32, &volumeHandle) != CU_OK)
-		{
-			cerr << "Failed to create new empty volume" << endl;
-			return false;
-		}
+		cerr << "Failed to create new empty volume" << endl;
+		return false;
 	}
+
 
 	uint8_t N, S, E, A, K, Z, M, colorI, zz, runlength, j, red, green, blue;
 
@@ -103,19 +108,16 @@ bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDat
 					return false;
 				}
 
-				if(!dryRun)
+				red = data[i + 6 + colorI * 4];
+				green = data[i + 5 + colorI * 4];
+				blue = data[i + 4 + colorI * 4];
+				// Do something with these colors
+				//makeVoxelColorful(x, y, zz, red, green, blue);
+				CuColor color = cuMakeColor(red, green, blue, 255);
+				if (cuSetVoxel(volumeHandle, x, 63 - zz, y, &color) != CU_OK)
 				{
-					red = data[i + 6 + colorI * 4];
-					green = data[i + 5 + colorI * 4];
-					blue = data[i + 4 + colorI * 4];
-					// Do something with these colors
-					//makeVoxelColorful(x, y, zz, red, green, blue);
-					CuColor color = cuMakeColor(red, green, blue, 255);
-					if (cuSetVoxel(volumeHandle, x, 63 - zz, y, &color) != CU_OK)
-					{
-						cerr << "Error setting voxel color" << endl;
-						return false;
-					}
+					cerr << "Error setting voxel color" << endl;
+					return false;
 				}
 
 				zz++;
@@ -129,14 +131,11 @@ bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDat
 		for (j = 0; j < runlength; j++)
 		{
 			//makeVoxelSolid(x, y, zz);
-			if(!dryRun)
+			CuColor color = cuMakeColor(127, 127, 127, 255);
+			if(cuSetVoxel(volumeHandle, x, 63 - zz, y, &color) != CU_OK) 
 			{
-				CuColor color = cuMakeColor(127, 127, 127, 255);
-				if(cuSetVoxel(volumeHandle, x, 63 - zz, y, &color) != CU_OK) 
-				{
-					cerr << "Error setting voxel color" << endl;
-					return false;
-				}
+				cerr << "Error setting voxel color" << endl;
+				return false;
 			}
 
 			zz++;
@@ -158,11 +157,8 @@ bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDat
 		}
 	}
 
-	if (!dryRun)
-	{
-		cuAcceptOverrideChunks(volumeHandle);
-		cuDeleteVolume(volumeHandle);
-	}
+	cuAcceptOverrideChunks(volumeHandle);
+	cuDeleteVolume(volumeHandle);
 
 	return true;
 }

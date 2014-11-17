@@ -83,7 +83,7 @@ bool importMagicaVoxel(ez::ezOptionParser& options)
 	string pathToVoxelDatabase;
 	options.get("-coloredcubes")->getString(pathToVoxelDatabase);
 
-	cout << "Importing images from '" << filename << "' and into '" << pathToVoxelDatabase << "'";
+	cout << "Importing MagicaVoxel from '" << filename << "' and into '" << pathToVoxelDatabase << "'";
 	MV_Model model;
 	model.LoadModel(filename.c_str());
 

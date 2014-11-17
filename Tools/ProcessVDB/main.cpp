@@ -18,6 +18,7 @@ using namespace std;
 // -import -heightmap C:\temp\temp\height.png -terrain C:\code\cubiquity\Data\exported_volume.vdb -scale 0.25
 // -import -imageslices C:\code\cubiquity\Data\ImageSlices\VoxeliensTerrain -coloredcubes C:\code\cubiquity\Data\exported_volume.vdb
 // -import -magicavoxel C:\code\cubiquity\Data\MagicaVoxel\scene_store3.vox -coloredcubes C:\code\cubiquity\Data\exported_volume.vdb
+// -import -vxl C:\code\cubiquity\Data\VXL\RealisticBridge.vxl -coloredcubes C:\code\cubiquity\Data\exported_volume.vdb
 
 int main(int argc, const char* argv[])
 {
@@ -106,6 +107,16 @@ int main(int argc, const char* argv[])
 		"Import volume data from Magica Voxel file.", // Help description.
 		"-magicavoxel",     // Flag token.
 		"--magicavoxel"     // Flag token.
+		);
+
+	options.add(
+		"", // Default.
+		0, // Required?
+		1, // Number of args expected.
+		0, // Delimiter if expecting multiple args.
+		"Import volume data from Magica Voxel file.", // Help description.
+		"-vxl",     // Flag token.
+		"--vxl"     // Flag token.
 		);
 
 	options.parse(argc, argv);

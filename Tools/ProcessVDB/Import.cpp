@@ -39,6 +39,10 @@ int import(int argc, const char* argv[], ezOptionParser& options)
 	{
 		importMagicaVoxel(options);
 	}
+	else if (options.isSet("-vxl"))
+	{
+		importVxl(options);
+	}
 	else
 	{
 		cout << "Unknown import type" << endl;
