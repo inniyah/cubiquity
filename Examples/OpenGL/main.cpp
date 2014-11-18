@@ -98,6 +98,7 @@ void processOctreeNodeStructure(uint32_t octreeNodeHandle, OpenGLOctreeNode* ope
 	{
 		if (octreeNode.propertiesLastChanged > openGLOctreeNode->propertiesLastSynced)
 		{
+			std::cout << "Resynced properties at " << openGLOctreeNode->propertiesLastSynced << std::endl;
 			openGLOctreeNode->height = octreeNode.height;
 			openGLOctreeNode->renderThisNode = octreeNode.renderThisNode;
 			cuGetCurrentTime(&(openGLOctreeNode->propertiesLastSynced));
@@ -171,6 +172,7 @@ void processOctreeNodeStructure(uint32_t octreeNodeHandle, OpenGLOctreeNode* ope
 			}
 
 			cuGetCurrentTime(&(openGLOctreeNode->meshLastSynced));
+			std::cout << "Resynced mesh at " << openGLOctreeNode->meshLastSynced << std::endl;
 		}
 
 		if (octreeNode.structureLastChanged > openGLOctreeNode->structureLastSynced)
@@ -201,6 +203,7 @@ void processOctreeNodeStructure(uint32_t octreeNodeHandle, OpenGLOctreeNode* ope
 			}
 
 			cuGetCurrentTime(&(openGLOctreeNode->structureLastSynced));
+			std::cout << "Resynced structure at " << openGLOctreeNode->structureLastSynced << std::endl;
 		}
 
 		for (uint32_t z = 0; z < 2; z++)

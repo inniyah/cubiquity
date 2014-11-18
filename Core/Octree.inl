@@ -219,8 +219,7 @@ namespace Cubiquity
 
 		//acceptVisitor(DetermineWhetherToRenderVisitor<VoxelType>());
 
-		determineCanRenderNodeOrChildren(mRootNodeIndex);
-		determineWhetherToRender(mRootNodeIndex);
+		determineWhetherToRenderNode(mRootNodeIndex);
 
 		acceptVisitor(PropagateTimestampsVisitor<VoxelType>());
 
@@ -386,7 +385,7 @@ namespace Cubiquity
 						determineActiveNodes(childNode, viewPosition, lodThreshold);
 					}
 
-					// If we have (or have just created) an active and valid chld then we are not a leaf.
+					// If we have (or have just created) an active and valid child then we are not a leaf.
 					if (octreeNode->getChildNode(ix, iy, iz))
 					{
 						octreeNode->mIsLeaf = false;
@@ -397,12 +396,17 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void Octree<VoxelType>::determineCanRenderNodeOrChildren(uint16_t index)
+	void Octree<VoxelType>::determineWhetherToRenderNode(uint16_t index)
 	{
 		OctreeNode<VoxelType>* node = mNodes[index];
+		if (node->mIsLeaf)
+		{
+			node->mCanRenderNodeOrChildren = node->isMeshUpToDate();
+			node->setRenderThisNode(node->isMeshUpToDate());
+			return;
+		}
 
 		bool canRenderAllChildren = true;
-
 		for (int iz = 0; iz < 2; iz++)
 		{
 			for (int iy = 0; iy < 2; iy++)
@@ -415,7 +419,7 @@ namespace Cubiquity
 						OctreeNode<VoxelType>* childNode = mNodes[childIndex];
 						if (childNode->isActive())
 						{
-							determineCanRenderNodeOrChildren(childIndex);
+							determineWhetherToRenderNode(childIndex);
 							canRenderAllChildren = canRenderAllChildren && childNode->mCanRenderNodeOrChildren;
 						}
 						else
@@ -427,79 +431,33 @@ namespace Cubiquity
 			}
 		}
 
-		if (node->mIsLeaf)
+		node->mCanRenderNodeOrChildren = node->isMeshUpToDate() | canRenderAllChildren;
+
+		if (canRenderAllChildren)
 		{
-			node->mCanRenderNodeOrChildren = node->isMeshUpToDate();
+			// If we can render all the children then don't render ourself.
+			node->setRenderThisNode(false);
 		}
 		else
 		{
-			node->mCanRenderNodeOrChildren = node->isMeshUpToDate() | canRenderAllChildren;
-		}
-	}
-
-	template <typename VoxelType>
-	void Octree<VoxelType>::determineWhetherToRender(uint16_t index)
-	{
-		OctreeNode<VoxelType>* node = mNodes[index];
-
-		bool canRenderAllChildren = true;
-
-		for(int iz = 0; iz < 2; iz++)
-		{
-			for(int iy = 0; iy < 2; iy++)
+			// As we can't render all children then we must render no children.
+			for (int iz = 0; iz < 2; iz++)
 			{
-				for(int ix = 0; ix < 2; ix++)
+				for (int iy = 0; iy < 2; iy++)
 				{
-					uint16_t childIndex = node->children[ix][iy][iz];
-					if(childIndex != InvalidNodeIndex)
+					for (int ix = 0; ix < 2; ix++)
 					{
-						OctreeNode<VoxelType>* childNode = mNodes[childIndex];
-						if (childNode->isActive())
+						OctreeNode<VoxelType>* childNode = node->getChildNode(ix, iy, iz);
+						if (childNode)
 						{
-							determineWhetherToRender(childIndex);
-							canRenderAllChildren = canRenderAllChildren && childNode->mCanRenderNodeOrChildren;
-						}
-						else
-						{
-							canRenderAllChildren = false;
+							childNode->setRenderThisNode(false);
 						}
 					}
 				}
 			}
-		}
 
-		if (node->mIsLeaf)
-		{
+			// So we render ourself if we can
 			node->setRenderThisNode(node->isMeshUpToDate());
-		}
-		else
-		{
-			if (canRenderAllChildren)
-			{
-				// If we can render all the children then don't render ourself.
-				node->setRenderThisNode(false);
-			}
-			else
-			{
-				// If we can't render all children then render no children.
-				for (int iz = 0; iz < 2; iz++)
-				{
-					for (int iy = 0; iy < 2; iy++)
-					{
-						for (int ix = 0; ix < 2; ix++)
-						{
-							OctreeNode<VoxelType>* childNode = node->getChildNode(ix, iy, iz);
-							if (childNode)
-							{
-								childNode->setRenderThisNode(false);
-							}
-						}
-					}
-				}
-
-				//Render ourself if we can
-				node->setRenderThisNode(node->isMeshUpToDate());
-			}
 		}
 	}
 

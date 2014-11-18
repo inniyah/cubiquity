@@ -69,8 +69,7 @@ namespace Cubiquity
 
 		void scheduleUpdateIfNeeded(OctreeNode<VoxelType>* node, const Vector3F& viewPosition);
 
-		void Octree<VoxelType>::determineCanRenderNodeOrChildren(uint16_t index);
-		void Octree<VoxelType>::determineWhetherToRender(uint16_t index);
+		void Octree<VoxelType>::determineWhetherToRenderNode(uint16_t index);
 
 		std::vector< OctreeNode<VoxelType>*> mNodes;
 
