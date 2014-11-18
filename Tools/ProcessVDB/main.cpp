@@ -15,7 +15,7 @@ using namespace ez;
 using namespace std;
 
 // Sample command lines
-// -import -heightmap C:\temp\temp\height.png -terrain C:\code\cubiquity\Data\exported_volume.vdb -scale 0.25
+// -import -heightmap C:\code\cubiquity\Data\Heightmaps\height.png -terrain C:\code\cubiquity\Data\exported_volume.vdb -scale 0.25
 // -import -imageslices C:\code\cubiquity\Data\ImageSlices\VoxeliensTerrain -coloredcubes C:\code\cubiquity\Data\exported_volume.vdb
 // -import -magicavoxel C:\code\cubiquity\Data\MagicaVoxel\scene_store3.vox -coloredcubes C:\code\cubiquity\Data\exported_volume.vdb
 // -import -vxl C:\code\cubiquity\Data\VXL\RealisticBridge.vxl -coloredcubes C:\code\cubiquity\Data\exported_volume.vdb
