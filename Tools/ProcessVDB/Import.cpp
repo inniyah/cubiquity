@@ -5,8 +5,6 @@
 #include "ImportMagicaVoxel.h"
 #include "ImportVXL.h"
 
-#include "CmdOption.h"
-
 #include "CubiquityC.h"
 
 #include <iostream>
