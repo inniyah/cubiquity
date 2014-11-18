@@ -2,6 +2,7 @@
 
 #include "CmdOption.h"
 #include "Import.h"
+#include "Export.h"
 
 #include "CubiquityC.h"
 
@@ -19,6 +20,8 @@ using namespace std;
 // -import -imageslices C:\code\cubiquity\Data\ImageSlices\VoxeliensTerrain -coloredcubes C:\code\cubiquity\Data\exported_volume.vdb
 // -import -magicavoxel C:\code\cubiquity\Data\MagicaVoxel\scene_store3.vox -coloredcubes C:\code\cubiquity\Data\exported_volume.vdb
 // -import -vxl C:\code\cubiquity\Data\VXL\RealisticBridge.vxl -coloredcubes C:\code\cubiquity\Data\exported_volume.vdb
+//
+// -export -coloredcubes C:\code\cubiquity\Data\exported_volume.vdb -imageslices C:\code\cubiquity\Data\ImageSlices\ExportedVolume
 
 int main(int argc, const char* argv[])
 {
@@ -37,6 +40,7 @@ int main(int argc, const char* argv[])
 	
 	// Mode of operation
 	options.add("", 0, 0, 0, "Import volume data.", "-import", "--import");
+	options.add("", 0, 0, 0, "Export volume data.", "-export", "--export");
 
 	// Recognised data formats
 	options.add("", 0, 1, 0, "A grayscale image representing a heightmap.", "-heightmap", "--heightmap");
@@ -52,13 +56,19 @@ int main(int argc, const char* argv[])
 	// Other parameters.
 	options.add("1.0", 0, 1, 0, "Scale factor" "-scale", "--scale");
 
-	
-
 	options.parse(argc, argv);
 
 	if (options.isSet("--import"))
 	{
 		return import(options);
+	}
+	else if (options.isSet("--export"))
+	{
+		return export(options);
+	}
+	else
+	{
+		std::cout << "Unknown operation" << std::endl;
 	}
 
 	return 0;
