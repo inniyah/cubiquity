@@ -48,15 +48,3 @@ int importVDB(ezOptionParser& options)
 
 	return 0;
 }
-
-void printUsage(void)
-{
-	cout << "Usage: ConvertToVDB -InputFormat inputFileOrFolder -OutputFormat outputFile" << endl;
-	cout << "" << endl;
-	cout << "Where:" << endl;
-	cout << "\tInputFormat is from {ImageSlices, MagicaVoxel, VXL}" << endl;
-	cout << "\tOutputFormat is from {ColoredCubesVolume, TerrainVolume}" << endl;
-	cout << "" << endl;
-	cout << "\tE.g. 'ConvertToVDB -VXL my_map.vxl -ColoredCubesVolume my_output.vdb'" << endl;
-	cout << "" << endl;
-}
