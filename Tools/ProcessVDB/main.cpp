@@ -9,7 +9,10 @@
 #include <iostream>
 #include <string>
 
+#include "easylogging++.h"
 #include "ezOptionParser.hpp"
+
+_INITIALIZE_EASYLOGGINGPP
 
 using namespace ez;
 using namespace std;
@@ -24,6 +27,8 @@ using namespace std;
 
 int main(int argc, const char* argv[])
 {
+	_START_EASYLOGGINGPP(argc, argv);
+
 	ezOptionParser options;
 
 	options.overview = "Demo of parser's features.";
