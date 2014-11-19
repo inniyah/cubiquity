@@ -12,7 +12,7 @@
 using namespace ez;
 using namespace std;
 
-int import(ezOptionParser& options)
+int importVDB(ezOptionParser& options)
 {
 	string outputFilename;
 	

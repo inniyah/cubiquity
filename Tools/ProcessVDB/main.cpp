@@ -63,11 +63,11 @@ int main(int argc, const char* argv[])
 
 		if (options.isSet("--import"))
 		{
-			return import(options);
+			return importVDB(options);
 		}
 		else if (options.isSet("--export"))
 		{
-			return export(options);
+			return exportVDB(options);
 		}
 		else
 		{

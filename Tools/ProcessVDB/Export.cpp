@@ -7,7 +7,7 @@
 using namespace ez;
 using namespace std;
 
-int export(ezOptionParser& options)
+int exportVDB(ezOptionParser& options)
 {
 	if (options.isSet("-imageslices"))
 	{

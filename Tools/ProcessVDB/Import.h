@@ -5,7 +5,7 @@
 
 #include "ezOptionParser.hpp"
 
-int import(ez::ezOptionParser& options);
+int importVDB(ez::ezOptionParser& options);
 void printUsage(void);
 
 #endif //CUBIQUITYTOOLS_IMPORT_H_

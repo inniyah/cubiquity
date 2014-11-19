@@ -5,6 +5,6 @@
 
 #include "ezOptionParser.hpp"
 
-int export(ez::ezOptionParser& options);
+int exportVDB(ez::ezOptionParser& options);
 
 #endif //CUBIQUITYTOOLS_EXPORT_H_
