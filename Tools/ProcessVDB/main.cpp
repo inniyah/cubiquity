@@ -1,5 +1,6 @@
 #include "main.h"
 
+#include "Exceptions.h"
 #include "Export.h"
 #include "HeaderOnlyLibs.h"
 #include "Import.h"
@@ -9,9 +10,6 @@
 #include <cstdio>
 #include <iostream>
 #include <string>
-
-
-
 
 using namespace ez;
 using namespace std;
@@ -28,51 +26,70 @@ int main(int argc, const char* argv[])
 {
 	_START_EASYLOGGINGPP(argc, argv);
 
-	ezOptionParser options;
-
-	options.overview = "Demo of parser's features.";
-	options.syntax = "complete first second [OPTIONS] in1 [... inN] out";
-	options.example = "complete a b -f --list 1,2,3 --list 4,5,6,7,8 -s string -int -2147483648,2147483647 -ulong 9223372036854775807 -float 3.40282e+038 -double 1.79769e+308 f1 f2 f3 f4 f5 f6 fout\n\n";
-	options.footer = "ezOptionParser 0.1.4  Copyright (C) 2011 Remik Ziemlinski\nThis program is free and without warranty.\n";
-
-	// We have to declare here all options which we might later want to check for. Unfortunaltly ezOptionParser does not support 'increamental',
-	// parsing which would let us for example reparse the command line looking for a input format once we had establised that we wanted to import.
-	// Format for adding an option is:
-	// 
-	//   options.add(Default, Required?, Number of args expected, Delimiter if expecting multiple args, Help description, Flag token, Flag token);
-	
-	// Mode of operation
-	options.add("", 0, 0, 0, "Import volume data.", "-import", "--import");
-	options.add("", 0, 0, 0, "Export volume data.", "-export", "--export");
-
-	// Recognised data formats
-	options.add("", 0, 1, 0, "A grayscale image representing a heightmap.", "-heightmap", "--heightmap");
-	options.add("", 0, 1, 0, "A color image corresponding to a heightmap.", "-colormap", "--colormap");
-	options.add("", 0, 1, 0, "A folder containing a series of images representing slices through the volume.", "-imageslices", "--imageslices");
-	options.add("", 0, 1, 0, "The format used by the MagicaVoxel modelling application.", "-magicavoxel", "--magicavoxel");
-	options.add("", 0, 1, 0, "The format used by the game 'Build and Shoot', and possibly other games built on the 'Voxlap' engine.", "-vxl", "--vxl");
-
-	// Volume formats
-	options.add( "", 0, 1, 0, "A volume consisting of colored cubes.", "-coloredcubes", "--coloredcubes" );
-	options.add("", 0, 1, 0, "A volume representing a terrain with each voxel being a 'MaterialSet'.", "-terrain", "--terrain");
-
-	// Other parameters.
-	options.add("1.0", 0, 1, 0, "Scale factor" "-scale", "--scale");
-
-	options.parse(argc, argv);
-
-	if (options.isSet("--import"))
+	try
 	{
-		return import(options);
+		ezOptionParser options;
+
+		options.overview = "Demo of parser's features.";
+		options.syntax = "complete first second [OPTIONS] in1 [... inN] out";
+		options.example = "complete a b -f --list 1,2,3 --list 4,5,6,7,8 -s string -int -2147483648,2147483647 -ulong 9223372036854775807 -float 3.40282e+038 -double 1.79769e+308 f1 f2 f3 f4 f5 f6 fout\n\n";
+		options.footer = "ezOptionParser 0.1.4  Copyright (C) 2011 Remik Ziemlinski\nThis program is free and without warranty.\n";
+
+		// We have to declare here all options which we might later want to check for. Unfortunaltly ezOptionParser does not support 'increamental',
+		// parsing which would let us for example reparse the command line looking for a input format once we had establised that we wanted to import.
+		// Format for adding an option is:
+		// 
+		//   options.add(Default, Required?, Number of args expected, Delimiter if expecting multiple args, Help description, Flag token, Flag token);
+
+		// Mode of operation
+		options.add("", 0, 0, 0, "Import volume data.", "-import", "--import");
+		options.add("", 0, 0, 0, "Export volume data.", "-export", "--export");
+
+		// Recognised data formats
+		options.add("", 0, 1, 0, "A grayscale image representing a heightmap.", "-heightmap", "--heightmap");
+		options.add("", 0, 1, 0, "A color image corresponding to a heightmap.", "-colormap", "--colormap");
+		options.add("", 0, 1, 0, "A folder containing a series of images representing slices through the volume.", "-imageslices", "--imageslices");
+		options.add("", 0, 1, 0, "The format used by the MagicaVoxel modelling application.", "-magicavoxel", "--magicavoxel");
+		options.add("", 0, 1, 0, "The format used by the game 'Build and Shoot', and possibly other games built on the 'Voxlap' engine.", "-vxl", "--vxl");
+
+		// Volume formats
+		options.add("", 0, 1, 0, "A volume consisting of colored cubes.", "-coloredcubes", "--coloredcubes");
+		options.add("", 0, 1, 0, "A volume representing a terrain with each voxel being a 'MaterialSet'.", "-terrain", "--terrain");
+
+		// Other parameters.
+		options.add("1.0", 0, 1, 0, "Scale factor" "-scale", "--scale");
+
+		options.parse(argc, argv);
+
+		if (options.isSet("--import"))
+		{
+			return import(options);
+		}
+		else if (options.isSet("--export"))
+		{
+			return export(options);
+		}
+		else
+		{
+			throwException(OptionsError("No mode of operation has been set."));
+		}
 	}
-	else if (options.isSet("--export"))
+	catch (OptionsError& e)
 	{
-		return export(options);
+		LOG(ERROR) << "There is a problem with the provided program options: \"" << e.what() << "\"";
+		LOG(ERROR) << "Please see the user manual for information on how to format the command line.";
+		return EXIT_FAILURE;
 	}
-	else
+	catch (const std::exception& e)
 	{
-		std::cout << "Unknown operation" << std::endl;
+		LOG(ERROR) << "Unhandled exception: \"" << e.what() << "\"";
+		return EXIT_FAILURE;
+	}
+	catch (...)
+	{
+		LOG(ERROR) << "Unhandled exception caught by catch-all handler.";
+		return EXIT_FAILURE;
 	}
 
-	return 0;
+	return EXIT_SUCCESS;
 }
