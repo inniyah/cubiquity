@@ -1,9 +1,8 @@
 #include "ImportImageSlices.h"
 
-#include "CubiquityC.h"
+#include "HeaderOnlyLibs.h"
 
-#define STBI_HEADER_FILE_ONLY
-#include "stb_image.cpp"
+#include "CubiquityC.h"
 
 #include <iomanip>
 #include <iostream>

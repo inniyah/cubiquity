@@ -8,4 +8,7 @@
 #include "ezOptionParser.hpp" // Needs to go before 'easylogging++' od compile errors result.
 #include "easylogging++.h"
 
+#include "stb_image.h"
+#include "stb_image_resize.h"
+
 #endif //CUBIQUITYTOOLS_HEADERONLYLIBS_H_

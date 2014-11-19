@@ -1,13 +1,8 @@
 #include "ImportHeightmap.h"
 
+#include "HeaderOnlyLibs.h"
+
 #include "CubiquityC.h"
-
-#define STBI_HEADER_FILE_ONLY
-#include "stb_image.cpp"
-
-#define STB_IMAGE_RESIZE_IMPLEMENTATION
-#define STBIR_DEFAULT_FILTER_UPSAMPLE     STBIR_FILTER_CATMULLROM
-#include "stb_image_resize.h"
 
 #include <algorithm>
 #include <iomanip>
