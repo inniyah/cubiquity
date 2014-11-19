@@ -1,5 +1,7 @@
 #include "ExportImageSlices.h"
 
+#include "HeaderOnlyLibs.h"
+
 #include "CubiquityC.h"
 
 #include <iomanip>
@@ -7,9 +9,6 @@
 #include <cstdint>
 #include <sstream>
 #include <vector>
-
-#define STB_IMAGE_WRITE_IMPLEMENTATION
-#include "stb_image_write.h"
 
 using namespace std;
 

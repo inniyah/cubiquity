@@ -1,7 +1,7 @@
 #ifndef CUBIQUITYTOOLS_IMPORTMAGICAVOXEL_H_
 #define CUBIQUITYTOOLS_IMPORTMAGICAVOXEL_H_
 
-#include "ezOptionParser.hpp"
+#include "HeaderOnlyLibs.h"
 
 #include <cstdint>
 #include <string>

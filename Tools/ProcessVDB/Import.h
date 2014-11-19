@@ -3,7 +3,7 @@
 
 #include <string>
 
-#include "ezOptionParser.hpp"
+#include "HeaderOnlyLibs.h"
 
 int importVDB(ez::ezOptionParser& options);
 

@@ -1,7 +1,7 @@
 #ifndef CUBIQUITYTOOLS_IMPORTHEIGHTMAP_H_
 #define CUBIQUITYTOOLS_IMPORTHEIGHTMAP_H_
 
-#include "ezOptionParser.hpp"
+#include "HeaderOnlyLibs.h"
 
 #include <cstdint>
 #include <string>
