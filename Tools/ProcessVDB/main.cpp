@@ -1,7 +1,8 @@
 #include "main.h"
 
-#include "Import.h"
 #include "Export.h"
+#include "HeaderOnlyLibs.h"
+#include "Import.h"
 
 #include "CubiquityC.h"
 
@@ -9,10 +10,8 @@
 #include <iostream>
 #include <string>
 
-#include "easylogging++.h"
-#include "ezOptionParser.hpp"
 
-_INITIALIZE_EASYLOGGINGPP
+
 
 using namespace ez;
 using namespace std;
