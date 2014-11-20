@@ -30,16 +30,14 @@ int main(int argc, const char* argv[])
 	{
 		ezOptionParser options;
 
-		options.overview = "Demo of parser's features.";
-		options.syntax = "complete first second [OPTIONS] in1 [... inN] out";
-		options.example = "complete a b -f --list 1,2,3 --list 4,5,6,7,8 -s string -int -2147483648,2147483647 -ulong 9223372036854775807 -float 3.40282e+038 -double 1.79769e+308 f1 f2 f3 f4 f5 f6 fout\n\n";
-		options.footer = "ezOptionParser 0.1.4  Copyright (C) 2011 Remik Ziemlinski\nThis program is free and without warranty.\n";
-
 		// We have to declare here all options which we might later want to check for. Unfortunaltly ezOptionParser does not support 'increamental',
-		// parsing which would let us for example reparse the command line looking for a input format once we had establised that we wanted to import.
+		// parsing which would let us for example reparse the command line looking for an input format once we had establised that we wanted to import.
 		// Format for adding an option is:
 		// 
 		//   options.add(Default, Required?, Number of args expected, Delimiter if expecting multiple args, Help description, Flag token, Flag token);
+
+		// Help/usage
+		options.add("", 0, 0, 0, "Display usage instructions.", "-h", "-help", "--help", "--usage");
 
 		// Mode of operation
 		options.add("", 0, 0, 0, "Import volume data.", "-import", "--import");
@@ -60,8 +58,18 @@ int main(int argc, const char* argv[])
 		options.add("1.0", 0, 1, 0, "Scale factor" "-scale", "--scale");
 
 		options.parse(argc, argv);
-
-		if (options.isSet("--import"))
+		if (options.isSet("-h"))
+		{
+			// We don't use exOptionParser's built-in functionality for generating help text because our options are
+			// too complex. Also, we have see it craching on VS 2013 (http://sourceforge.net/p/ezoptionparser/bugs/3/).
+			// Therefore we just print a simple error mesage telling the user to consult the manual for instructions.
+			std::cout << std::endl;
+			std::cout << "ProcessVDB is a tool for performing various operations on voxel databases" << std::endl;
+			std::cout << "Please see the Cubiquity user manual for options and examples." << std::endl;
+			std::cout << std::endl;
+			return EXIT_SUCCESS;
+		}
+		else if (options.isSet("--import"))
 		{
 			return importVDB(options);
 		}
@@ -76,7 +84,8 @@ int main(int argc, const char* argv[])
 	}
 	catch (OptionsError& e)
 	{
-		LOG(ERROR) << "There is a problem with the provided program options: \"" << e.what() << "\"";
+		LOG(ERROR) << "There is a problem with the provided program options:";
+		LOG(ERROR) << "\t" << e.what();
 		LOG(ERROR) << "Please see the user manual for information on how to format the command line.";
 		return EXIT_FAILURE;
 	}
