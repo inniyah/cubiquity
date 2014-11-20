@@ -1,5 +1,6 @@
 #include "ExportImageSlices.h"
 
+#include "Exceptions.h"
 #include "HeaderOnlyLibs.h"
 
 #include "CubiquityC.h"
@@ -16,12 +17,16 @@ bool exportImageSlices(ez::ezOptionParser& options)
 {
 	LOG(INFO) << "Exporting as image slices...";
 
+	// We know the -imageslices flag was set or we wouldn't be
+	// in this function. Must check the -coloredcubes flag though.
+	throwExceptionIf(!options.get("-coloredcubes"), OptionsError("-coloredcubes flag not found"));
+
 	string folder;
 	options.get("-imageslices")->getString(folder);
 	string pathToVoxelDatabase;
 	options.get("-coloredcubes")->getString(pathToVoxelDatabase);
 
-	cout << "Exporting images from '" << pathToVoxelDatabase << "' and into '" << folder << "'";
+	LOG(INFO) << "Exporting data from '" << pathToVoxelDatabase << "' and into '" << folder << "'";
 
 	uint32_t volumeHandle = 0;
 	if (cuNewColoredCubesVolumeFromVDB(pathToVoxelDatabase.c_str(), CU_READWRITE, 32, &volumeHandle) != CU_OK)
