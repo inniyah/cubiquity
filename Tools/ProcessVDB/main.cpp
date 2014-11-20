@@ -28,6 +28,11 @@ int main(int argc, const char* argv[])
 
 	try
 	{
+		el::Configurations defaultConf;
+		defaultConf.setToDefault();
+		defaultConf.set(el::Level::Global, el::ConfigurationType::Format, "[%datetime{%H:%m:%s}, %level]: %msg");
+		el::Loggers::reconfigureLogger("default", defaultConf);
+
 		ezOptionParser options;
 
 		// We have to declare here all options which we might later want to check for. Unfortunaltly ezOptionParser does not support 'increamental',
@@ -91,7 +96,8 @@ int main(int argc, const char* argv[])
 	}
 	catch (const std::exception& e)
 	{
-		LOG(ERROR) << "Unhandled exception: \"" << e.what() << "\"";
+		LOG(ERROR) << "Unhandled exception:";
+		LOG(ERROR) << "\t" << e.what();
 		return EXIT_FAILURE;
 	}
 	catch (...)
