@@ -5,6 +5,6 @@
 
 #include "HeaderOnlyLibs.h"
 
-int importVDB(ez::ezOptionParser& options);
+void importVDB(ez::ezOptionParser& options);
 
 #endif //CUBIQUITYTOOLS_IMPORT_H_

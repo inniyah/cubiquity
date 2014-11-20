@@ -78,6 +78,7 @@ bool isMagicaVoxel(const std::string& filename)
 
 bool importMagicaVoxel(ez::ezOptionParser& options)
 {
+	LOG(INFO) << "Importing from Magica Voxel...";
 	string filename;
 	options.get("-magicavoxel")->getString(filename);
 	string pathToVoxelDatabase;

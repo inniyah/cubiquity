@@ -8,6 +8,8 @@ using namespace std;
 
 bool importVxl(ez::ezOptionParser& options)
 {
+	LOG(INFO) << "Importing from VXL...";
+
 	string vxlFilename;
 	options.get("-vxl")->getString(vxlFilename);
 	string pathToVoxelDatabase;

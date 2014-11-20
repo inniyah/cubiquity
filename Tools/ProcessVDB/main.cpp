@@ -28,18 +28,19 @@ int main(int argc, const char* argv[])
 
 	try
 	{
+		// Configure our logging library.
 		el::Configurations defaultConf;
 		defaultConf.setToDefault();
 		defaultConf.set(el::Level::Global, el::ConfigurationType::Format, "[%datetime{%H:%m:%s}, %level]: %msg");
 		el::Loggers::reconfigureLogger("default", defaultConf);
-
-		ezOptionParser options;
 
 		// We have to declare here all options which we might later want to check for. Unfortunaltly ezOptionParser does not support 'increamental',
 		// parsing which would let us for example reparse the command line looking for an input format once we had establised that we wanted to import.
 		// Format for adding an option is:
 		// 
 		//   options.add(Default, Required?, Number of args expected, Delimiter if expecting multiple args, Help description, Flag token, Flag token);
+
+		ezOptionParser options;
 
 		// Help/usage
 		options.add("", 0, 0, 0, "Display usage instructions.", "-h", "-help", "--help", "--usage");
@@ -76,11 +77,11 @@ int main(int argc, const char* argv[])
 		}
 		else if (options.isSet("--import"))
 		{
-			return importVDB(options);
+			importVDB(options);
 		}
 		else if (options.isSet("--export"))
 		{
-			return exportVDB(options);
+			exportVDB(options);
 		}
 		else
 		{

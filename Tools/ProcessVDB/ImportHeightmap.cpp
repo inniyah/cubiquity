@@ -15,8 +15,7 @@ using namespace std;
 
 bool importHeightmap(ez::ezOptionParser& options)
 {
-	//cout << "Importing '" << heightmapFilename << "' as heightmap and '" << colormapFilename << "' as colormap" << endl;
-	//cout << "Writing result to '" << pathToVoxelDatabase << "'" << endl;
+	LOG(INFO) << "Importing from heightmap...";
 
 	//if (outputFormat == CU_COLORED_CUBES)
 	if (options.isSet("-coloredcubes"))

@@ -1,5 +1,6 @@
 #include "Import.h"
 
+#include "Exceptions.h"
 #include "ImportHeightmap.h"
 #include "ImportImageSlices.h"
 #include "ImportMagicaVoxel.h"
@@ -12,10 +13,12 @@
 using namespace ez;
 using namespace std;
 
-int importVDB(ezOptionParser& options)
+void importVDB(ezOptionParser& options)
 {
-	string outputFilename;
-	
+	LOG(INFO) << "Importing voxel database...";
+
+	// Check the filename here, so we can ensure it doesn't already exist.
+	string outputFilename;	
 	if (options.isSet("-coloredcubes"))
 		options.get("-coloredcubes")->getString(outputFilename);
 	if (options.isSet("-terrain"))
@@ -23,7 +26,10 @@ int importVDB(ezOptionParser& options)
 	
 	// If the output file already exists then we need to delete
 	// it before we can use the filename for the new volume.
-	remove(outputFilename.c_str());
+	if (remove(outputFilename.c_str()) == 0)
+	{
+		LOG(INFO) << "Deleted previous file called \"" << outputFilename << "\"";
+	}
 
 	if (options.isSet("-heightmap"))
 	{
@@ -43,8 +49,6 @@ int importVDB(ezOptionParser& options)
 	}
 	else
 	{
-		cout << "Unknown import type" << endl;
+		throwException(OptionsError("No valid import format specified."));
 	}
-
-	return 0;
 }

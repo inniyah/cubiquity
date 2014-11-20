@@ -14,6 +14,8 @@ using namespace std;
 
 bool exportImageSlices(ez::ezOptionParser& options)
 {
+	LOG(INFO) << "Exporting as image slices...";
+
 	string folder;
 	options.get("-imageslices")->getString(folder);
 	string pathToVoxelDatabase;

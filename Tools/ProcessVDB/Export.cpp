@@ -1,5 +1,6 @@
 #include "Export.h"
 
+#include "Exceptions.h"
 #include "ExportImageSlices.h"
 
 #include <iostream>
@@ -7,16 +8,16 @@
 using namespace ez;
 using namespace std;
 
-int exportVDB(ezOptionParser& options)
+void exportVDB(ezOptionParser& options)
 {
+	LOG(INFO) << "Exporting voxel database...";
+
 	if (options.isSet("-imageslices"))
 	{
 		exportImageSlices(options);
 	}
 	else
 	{
-		cout << "Unknown export type" << endl;
+		throwException(OptionsError("No valid export format specified."));
 	}
-
-	return 0;
 }

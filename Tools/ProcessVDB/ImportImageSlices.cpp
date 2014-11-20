@@ -64,6 +64,8 @@ std::vector<std::string> findImagesInFolder(std::string folder)
 
 bool importImageSlices(ez::ezOptionParser& options)
 {
+	LOG(INFO) << "Importing from image slices...";
+
 	string folder;
 	options.get("-imageslices")->getString(folder);
 	string pathToVoxelDatabase;
