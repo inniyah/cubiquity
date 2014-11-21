@@ -17,20 +17,16 @@
 
 namespace Cubiquity
 {
-	namespace LogLevels
+	enum class LogLevel
 	{
-		enum LogLevel
-		{
-			Disabled,
-			Trace,
-			Debug,
-			Info,
-			Warning,
-			Error,
-			Fatal,
-		};
-	}
-	typedef LogLevels::LogLevel LogLevel;
+		Disabled,
+		Trace,
+		Debug,
+		Info,
+		Warning,
+		Error,
+		Fatal,
+	};
 
 	class FileLogger : public PolyVox::Logger
 	{
