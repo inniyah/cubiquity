@@ -332,7 +332,7 @@ CUBIQUITYC_API int32_t cuNewEmptyColoredCubesVolume(int32_t lowerX, int32_t lowe
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVDB(const char* pathToExistingVoxelDatabase, uint32_t writePermissions, uint32_t baseNodeSize, uint32_t* result)
+CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVDB(const char* pathToExistingVoxelDatabase, CuWritePermissions writePermissions, uint32_t baseNodeSize, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
@@ -569,7 +569,7 @@ CUBIQUITYC_API int32_t cuNewEmptyTerrainVolume(int32_t lowerX, int32_t lowerY, i
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxelDatabase, uint32_t writePermissions, uint32_t baseNodeSize, uint32_t* result)
+CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxelDatabase, CuWritePermissions writePermissions, uint32_t baseNodeSize, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 

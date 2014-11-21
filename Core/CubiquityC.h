@@ -58,9 +58,11 @@ extern "C"
 	const int32_t CU_UNKNOWN_ERROR = 1000;
 
 	// C version of Cubiquity::WritePermissions
-	// Fixme - should this be a C enum?
-	const uint32_t CU_READONLY = 0;
-	const uint32_t CU_READWRITE = 1;
+	typedef enum CuWritePermissions_e
+	{
+		CU_READONLY = 0,
+		CU_READWRITE = 1,
+	} CuWritePermissions;
 
 	// Fixme - should this be a C enum?
 	const uint32_t CU_COLORED_CUBES = 0;
