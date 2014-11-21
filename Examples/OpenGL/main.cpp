@@ -107,7 +107,7 @@ void processOctreeNode(uint32_t octreeNodeHandle, OpenGLOctreeNode* openGLOctree
 			validate(cuGetNoOfVertices(octreeNodeHandle, &noOfVertices));
 			validate(cuGetVertices(octreeNodeHandle, &vertices));
 
-			uint32_t volumeType;
+			CuVolumeType volumeType;
 			validate(cuGetVolumeType(octreeNodeHandle, &volumeType));
 
 			// Pass it to the OpenGL node.

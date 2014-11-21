@@ -64,9 +64,11 @@ extern "C"
 		CU_READWRITE = 1,
 	} CuWritePermissions;
 
-	// Fixme - should this be a C enum?
-	const uint32_t CU_COLORED_CUBES = 0;
-	const uint32_t CU_TERRAIN = 1;
+	typedef enum CuVolumeType_e
+	{
+		CU_COLORED_CUBES = 0,
+		CU_TERRAIN = 1,
+	} CuVolumeType;
 
 	struct CuColor_s
 	{
@@ -130,7 +132,7 @@ extern "C"
 
 	// Volume functions
 	CUBIQUITYC_API int32_t cuNewEmptyColoredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pathToNewVoxelDatabase, uint32_t baseNodeSize, uint32_t* result);
-	CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVDB(const char* pathToExistingVoxelDatabase, uint32_t writePermissions, uint32_t baseNodeSize, uint32_t* result);
+	CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVDB(const char* pathToExistingVoxelDatabase, CuWritePermissions writePermissions, uint32_t baseNodeSize, uint32_t* result);
 	CUBIQUITYC_API int32_t cuUpdateVolume(uint32_t volumeHandle, float eyePosX, float eyePosY, float eyePosZ, float lodThreshold);
 	CUBIQUITYC_API int32_t cuDeleteVolume(uint32_t volumeHandle);
 
@@ -140,9 +142,9 @@ extern "C"
 	CUBIQUITYC_API int32_t cuDiscardOverrideChunks(uint32_t volumeHandle);
 
 	CUBIQUITYC_API int32_t cuNewEmptyTerrainVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pathToNewVoxelDatabase, uint32_t baseNodeSize, uint32_t* result);
-	CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxelDatabase, uint32_t writePermissions, uint32_t baseNodeSize, uint32_t* result);
+	CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxelDatabase, CuWritePermissions writePermissions, uint32_t baseNodeSize, uint32_t* result);
 
-	CUBIQUITYC_API int32_t cuGetVolumeType(uint32_t volumeHandle, uint32_t* result);
+	CUBIQUITYC_API int32_t cuGetVolumeType(uint32_t volumeHandle, CuVolumeType* result);
 
 	// Voxel functions
 	CUBIQUITYC_API int32_t cuGetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, int32_t z, void* result);

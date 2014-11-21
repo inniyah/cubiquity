@@ -138,7 +138,7 @@ TerrainVolume* getTerrainVolumeFromHandle(uint32_t volumeIndex)
 	return volume;
 }
 
-uint32_t encodeHandle(uint32_t volumeType, uint32_t volumeIndex, uint32_t nodeIndex)
+uint32_t encodeHandle(CuVolumeType volumeType, uint32_t volumeIndex, uint32_t nodeIndex)
 {
 	uint32_t handle = volumeType << (TotalHandleBits - 1);
 	handle |= (volumeIndex << NodeHandleBits);
@@ -146,9 +146,9 @@ uint32_t encodeHandle(uint32_t volumeType, uint32_t volumeIndex, uint32_t nodeIn
 	return handle;
 }
 
-void decodeHandle(uint32_t handle, uint32_t* volumeType, uint32_t* volumeIndex, uint32_t* nodeIndex)
+void decodeHandle(uint32_t handle, CuVolumeType* volumeType, uint32_t* volumeIndex, uint32_t* nodeIndex)
 {
-	*volumeType = handle >> (TotalHandleBits - 1);
+	*volumeType = static_cast<CuVolumeType>(handle >> (TotalHandleBits - 1));
 	*volumeIndex = (handle >> NodeHandleBits) & 0xFF;
 	*nodeIndex = handle & NodeHandleMask;
 }
@@ -368,7 +368,8 @@ CUBIQUITYC_API int32_t cuUpdateVolume(uint32_t volumeHandle, float eyePosX, floa
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(volumeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
 	if (volumeType == CU_COLORED_CUBES)
@@ -389,7 +390,8 @@ CUBIQUITYC_API int32_t cuDeleteVolume(uint32_t volumeHandle)
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(volumeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
 	POLYVOX_LOG_DEBUG("Deleting volume with index " << volumeIndex);
@@ -415,7 +417,8 @@ CUBIQUITYC_API int32_t cuGetEnclosingRegion(uint32_t volumeHandle, int32_t* lowe
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(volumeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
 	if (volumeType == CU_COLORED_CUBES)
@@ -450,7 +453,8 @@ CUBIQUITYC_API int32_t cuGetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, i
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(volumeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
 	if (volumeType == CU_COLORED_CUBES)
@@ -476,7 +480,8 @@ CUBIQUITYC_API int32_t cuSetVoxel(uint32_t volumeHandle, int32_t x, int32_t y, i
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(volumeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
 	if (volumeType == CU_COLORED_CUBES)
@@ -499,7 +504,8 @@ CUBIQUITYC_API int32_t cuAcceptOverrideChunks(uint32_t volumeHandle)
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(volumeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
 	if (volumeType == CU_COLORED_CUBES)
@@ -520,7 +526,8 @@ CUBIQUITYC_API int32_t cuDiscardOverrideChunks(uint32_t volumeHandle)
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(volumeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
 	if (volumeType == CU_COLORED_CUBES)
@@ -601,7 +608,7 @@ CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxel
 	CLOSE_C_INTERFACE
 }
 
-CUBIQUITYC_API int32_t cuGetVolumeType(uint32_t volumeHandle, uint32_t* result)
+CUBIQUITYC_API int32_t cuGetVolumeType(uint32_t volumeHandle, CuVolumeType* result)
 {
 	OPEN_C_INTERFACE
 
@@ -618,7 +625,8 @@ CUBIQUITYC_API int32_t cuHasRootOctreeNode(uint32_t volumeHandle, uint32_t* resu
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(volumeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
 	if (volumeType == CU_COLORED_CUBES)
@@ -641,7 +649,8 @@ CUBIQUITYC_API int32_t cuGetRootOctreeNode(uint32_t volumeHandle, uint32_t* resu
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(volumeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
 	if (volumeType == CU_COLORED_CUBES)
@@ -680,7 +689,8 @@ CUBIQUITYC_API int32_t cuHasChildNode(uint32_t nodeHandle, uint32_t childX, uint
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(nodeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
 	if (volumeType == CU_COLORED_CUBES)
@@ -703,7 +713,8 @@ CUBIQUITYC_API int32_t cuGetChildNode(uint32_t nodeHandle, uint32_t childX, uint
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(nodeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
 	if (volumeType == CU_COLORED_CUBES)
@@ -750,7 +761,8 @@ CUBIQUITYC_API int32_t cuNodeHasMesh(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(nodeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
 	if (volumeType == CU_COLORED_CUBES)
@@ -771,7 +783,8 @@ CUBIQUITYC_API int32_t cuGetNodePosition(uint32_t nodeHandle, int32_t* x, int32_
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(nodeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
 	if (volumeType == CU_COLORED_CUBES)
@@ -798,7 +811,8 @@ CUBIQUITYC_API int32_t cuGetMeshLastUpdated(uint32_t nodeHandle, uint32_t* resul
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(nodeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
 	if (volumeType == CU_COLORED_CUBES)
@@ -819,7 +833,8 @@ CUBIQUITYC_API int32_t cuRenderThisNode(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(nodeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
 	if (volumeType == CU_COLORED_CUBES)
@@ -843,7 +858,8 @@ CUBIQUITYC_API int32_t cuGetNoOfVertices(uint32_t nodeHandle, uint16_t* result)
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(nodeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
 	if (volumeType == CU_COLORED_CUBES)
@@ -866,7 +882,8 @@ CUBIQUITYC_API int32_t cuGetNoOfIndices(uint32_t nodeHandle, uint32_t* result)
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(nodeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
 	if (volumeType == CU_COLORED_CUBES)
@@ -889,7 +906,8 @@ CUBIQUITYC_API int32_t cuGetVertices(uint32_t nodeHandle, void** result)
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(nodeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
 	if (volumeType == CU_COLORED_CUBES)
@@ -920,7 +938,8 @@ CUBIQUITYC_API int32_t cuGetIndices(uint32_t nodeHandle, uint16_t** result)
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(nodeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
 	if (volumeType == CU_COLORED_CUBES)
@@ -949,7 +968,8 @@ CUBIQUITYC_API int32_t cuGetMesh(uint32_t nodeHandle, uint16_t* noOfVertices, vo
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(nodeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
 	if (volumeType == CU_COLORED_CUBES)
@@ -1029,7 +1049,8 @@ CUBIQUITYC_API int32_t cuPickFirstSolidVoxel(uint32_t volumeHandle, float raySta
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(volumeHandle, &volumeType, &volumeIndex, &nodeIndex);
 	ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeIndex);
 
@@ -1049,7 +1070,8 @@ CUBIQUITYC_API int32_t cuPickLastEmptyVoxel(uint32_t volumeHandle, float rayStar
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(volumeHandle, &volumeType, &volumeIndex, &nodeIndex);
 	ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeIndex);
 
@@ -1069,7 +1091,8 @@ CUBIQUITYC_API int32_t cuPickTerrainSurface(uint32_t volumeHandle, float rayStar
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(volumeHandle, &volumeType, &volumeIndex, &nodeIndex);
 	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeIndex);
 
@@ -1092,7 +1115,8 @@ CUBIQUITYC_API int32_t cuSculptTerrainVolume(uint32_t volumeHandle, float brushX
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(volumeHandle, &volumeType, &volumeIndex, &nodeIndex);
 	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeIndex);
 
@@ -1105,7 +1129,8 @@ CUBIQUITYC_API int32_t cuBlurTerrainVolume(uint32_t volumeHandle, float brushX, 
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(volumeHandle, &volumeType, &volumeIndex, &nodeIndex);
 	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeIndex);
 
@@ -1118,7 +1143,8 @@ CUBIQUITYC_API int32_t cuBlurTerrainVolumeRegion(uint32_t volumeHandle, int32_t 
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(volumeHandle, &volumeType, &volumeIndex, &nodeIndex);
 	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeIndex);
 
@@ -1131,7 +1157,8 @@ CUBIQUITYC_API int32_t cuPaintTerrainVolume(uint32_t volumeHandle, float brushX,
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(volumeHandle, &volumeType, &volumeIndex, &nodeIndex);
 	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeIndex);
 
@@ -1147,7 +1174,8 @@ CUBIQUITYC_API int32_t cuGenerateFloor(uint32_t volumeHandle, int32_t lowerLayer
 {
 	OPEN_C_INTERFACE
 
-	uint32_t volumeType, volumeIndex, nodeIndex;
+	CuVolumeType volumeType;
+	uint32_t volumeIndex, nodeIndex;
 	decodeHandle(volumeHandle, &volumeType, &volumeIndex, &nodeIndex);
 	TerrainVolume* volume = getTerrainVolumeFromHandle(volumeIndex);
 
