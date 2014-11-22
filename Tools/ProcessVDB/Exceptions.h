@@ -66,7 +66,13 @@ void throwExceptionIf(bool condition, ExceptionType e)
 	}
 }
 
-//#define VALIDATE(functionCall) \
-	//if
+#define VALIDATE_CALL(functionCall) \
+{ \
+	int32_t result = functionCall; \
+	if (result != CU_OK) \
+	{ \
+	throwException(CubiquityError(result, cuGetLastErrorMessage())); \
+	} \
+}
 
 #endif //CUBIQUITYTOOLS_EXCEPTIONS_H_

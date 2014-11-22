@@ -29,18 +29,10 @@ bool exportImageSlices(ez::ezOptionParser& options)
 	LOG(INFO) << "Exporting data from '" << pathToVoxelDatabase << "' and into '" << folder << "'";
 
 	uint32_t volumeHandle = 0;
-	int32_t result = cuNewColoredCubesVolumeFromVDB(pathToVoxelDatabase.c_str(), CU_READWRITE, 32, &volumeHandle);
-	if (result != CU_OK)
-	{
-		throwException(CubiquityError(result, cuGetLastErrorMessage()));
-	}
+	VALIDATE_CALL(cuNewColoredCubesVolumeFromVDB(pathToVoxelDatabase.c_str(), CU_READWRITE, 32, &volumeHandle))
 
 	int lowerX, lowerY, lowerZ, upperX, upperY, upperZ;
-	if (cuGetEnclosingRegion(volumeHandle, &lowerX, &lowerY, &lowerZ, &upperX, &upperY, &upperZ) != CU_OK)
-	{
-		cerr << "Error geting enclosing region" << endl;
-		return EXIT_FAILURE;
-	}
+	VALIDATE_CALL(cuGetEnclosingRegion(volumeHandle, &lowerX, &lowerY, &lowerZ, &upperX, &upperY, &upperZ))
 
 	// Note that 'y' and 'z' axis are flipped as Gameplay physics engine assumes 'y' is up.
 	uint32_t imageWidth = upperX - lowerX + 1;
@@ -65,11 +57,7 @@ bool exportImageSlices(ez::ezOptionParser& options)
 				unsigned char* pixelData = outputSliceData + (z * imageWidth + x) * componentCount;
 
 				CuColor color;
-				if (cuGetVoxel(volumeHandle, x + lowerX, slice + lowerY, z + lowerZ, &color) != CU_OK)
-				{
-					cerr << "Error getting voxel value" << endl;
-					return EXIT_FAILURE;
-				}
+				VALIDATE_CALL(cuGetVoxel(volumeHandle, x + lowerX, slice + lowerY, z + lowerZ, &color))
 
 				cuGetAllComponents(color, pixelData + 0, pixelData + 1, pixelData + 2, pixelData + 3);
 			}
