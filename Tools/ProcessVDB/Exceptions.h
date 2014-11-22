@@ -3,9 +3,11 @@
 
 #include "HeaderOnlyLibs.h" // For logging
 
+#include "CubiquityC.h"
+
 #include <stdexcept>
 
-// Used if 
+// Thrown if there is a problem parsing command line options
 class OptionsError : public std::runtime_error
 {
 public:
@@ -13,6 +15,35 @@ public:
 		:runtime_error(what_arg)
 	{
 	}
+};
+
+// Thrown if an error code is returned by Cubiquity.
+class CubiquityError : public std::runtime_error
+{
+public:
+	CubiquityError(int32_t errorCode, const std::string& errorMessage)
+		:runtime_error(errorMessage)
+		,mErrorCode(errorCode)
+	{
+	}
+
+	int32_t getErrorCode(void)
+	{
+		return mErrorCode;
+	}
+
+	std::string getErrorCodeAsString(void)
+	{
+		return cuGetErrorCodeAsString(mErrorCode);
+	}
+
+	std::string getErrorMessage(void)
+	{
+		return what();
+	}
+
+private:
+	int32_t mErrorCode;
 };
 
 // We use this utility function for throwing exceptions
@@ -34,5 +65,8 @@ void throwExceptionIf(bool condition, ExceptionType e)
 		throwException(e);
 	}
 }
+
+//#define VALIDATE(functionCall) \
+	//if
 
 #endif //CUBIQUITYTOOLS_EXCEPTIONS_H_

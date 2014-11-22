@@ -29,10 +29,10 @@ bool exportImageSlices(ez::ezOptionParser& options)
 	LOG(INFO) << "Exporting data from '" << pathToVoxelDatabase << "' and into '" << folder << "'";
 
 	uint32_t volumeHandle = 0;
-	if (cuNewColoredCubesVolumeFromVDB(pathToVoxelDatabase.c_str(), CU_READWRITE, 32, &volumeHandle) != CU_OK)
+	int32_t result = cuNewColoredCubesVolumeFromVDB(pathToVoxelDatabase.c_str(), CU_READWRITE, 32, &volumeHandle);
+	if (result != CU_OK)
 	{
-		cerr << "Error opening VDB database" << endl;
-		return EXIT_FAILURE;
+		throwException(CubiquityError(result, cuGetLastErrorMessage()));
 	}
 
 	int lowerX, lowerY, lowerZ, upperX, upperY, upperZ;

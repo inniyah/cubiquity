@@ -88,6 +88,13 @@ int main(int argc, const char* argv[])
 			throwException(OptionsError("No mode of operation has been set."));
 		}
 	}
+	catch (CubiquityError& e)
+	{
+		LOG(ERROR) << "An error occured inside the Cubiquity library:";
+		LOG(ERROR) << "\tError code: " << e.getErrorCode() << " (" << e.getErrorCodeAsString() << ")";
+		LOG(ERROR) << "\tError message: " << e.getErrorMessage();
+		return EXIT_FAILURE;
+	}
 	catch (OptionsError& e)
 	{
 		LOG(ERROR) << "There is a problem with the provided program options:";
