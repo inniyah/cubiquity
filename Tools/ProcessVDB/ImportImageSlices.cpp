@@ -1,5 +1,6 @@
 #include "ImportImageSlices.h"
 
+#include "Exceptions.h"
 #include "HeaderOnlyLibs.h"
 
 #include "CubiquityC.h"
@@ -101,11 +102,7 @@ bool importImageSlices(ez::ezOptionParser& options)
 	// Create the volume. When importing we treat 'y' as up because most game engines and
 	// physics engines expect this. This means we need to swap the 'y' and 'slice' indices.
 	uint32_t volumeHandle;
-	if(cuNewEmptyColoredCubesVolume(0, 0, 0, volumeWidth - 1, sliceCount - 1, volumeHeight - 1, pathToVoxelDatabase.c_str(), 32, &volumeHandle) != CU_OK)
-	{
-		cerr << "Failed to create new empty volume" << endl;
-		return false;
-	}
+	VALIDATE_CALL(cuNewEmptyColoredCubesVolume(0, 0, 0, volumeWidth - 1, sliceCount - 1, volumeHeight - 1, pathToVoxelDatabase.c_str(), 32, &volumeHandle))
 
 	// Now iterate over each slice and import the data.
 	for(int slice = 0; slice < sliceCount; slice++)
@@ -139,11 +136,7 @@ bool importImageSlices(ez::ezOptionParser& options)
 
 				// When importing we treat 'y' as up because most game engines and physics
 				// engines expect this. This means we need to swap the 'y' and 'slice' indices.
-				if(cuSetVoxel(volumeHandle, x, slice, y, &color) != CU_OK)
-				{
-					cerr << "Error setting voxel color" << endl;
-					return false;
-				}
+				VALIDATE_CALL(cuSetVoxel(volumeHandle, x, slice, y, &color))
 			}
 		}
 
@@ -152,8 +145,8 @@ bool importImageSlices(ez::ezOptionParser& options)
 
 	//volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Background);
 
-	cuAcceptOverrideChunks(volumeHandle);
-	cuDeleteVolume(volumeHandle);
+	VALIDATE_CALL(cuAcceptOverrideChunks(volumeHandle));
+	VALIDATE_CALL(cuDeleteVolume(volumeHandle));
 
 	return true;
 }

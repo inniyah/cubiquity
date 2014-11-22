@@ -1,5 +1,7 @@
 #include "ImportVXL.h"
 
+#include "Exceptions.h"
+
 #include "CubiquityC.h"
 
 #include <iostream>
@@ -39,12 +41,7 @@ bool importVxl(ez::ezOptionParser& options)
 	fclose(inputFile);
 
 	uint32_t volumeHandle = 1000000; // Better if handles were ints so they could be set invalid?
-	if(cuNewEmptyColoredCubesVolume(0, 0, 0, 511, 63, 511, pathToVoxelDatabase.c_str(), 32, &volumeHandle) != CU_OK)
-	{
-		cerr << "Failed to create new empty volume" << endl;
-		return false;
-	}
-
+	VALIDATE_CALL(cuNewEmptyColoredCubesVolume(0, 0, 0, 511, 63, 511, pathToVoxelDatabase.c_str(), 32, &volumeHandle))
 
 	uint8_t N, S, E, A, K, Z, M, colorI, zz, runlength, j, red, green, blue;
 
@@ -116,11 +113,7 @@ bool importVxl(ez::ezOptionParser& options)
 				// Do something with these colors
 				//makeVoxelColorful(x, y, zz, red, green, blue);
 				CuColor color = cuMakeColor(red, green, blue, 255);
-				if (cuSetVoxel(volumeHandle, x, 63 - zz, y, &color) != CU_OK)
-				{
-					cerr << "Error setting voxel color" << endl;
-					return false;
-				}
+				VALIDATE_CALL(cuSetVoxel(volumeHandle, x, 63 - zz, y, &color))
 
 				zz++;
 				colorI++;
@@ -134,11 +127,7 @@ bool importVxl(ez::ezOptionParser& options)
 		{
 			//makeVoxelSolid(x, y, zz);
 			CuColor color = cuMakeColor(127, 127, 127, 255);
-			if(cuSetVoxel(volumeHandle, x, 63 - zz, y, &color) != CU_OK) 
-			{
-				cerr << "Error setting voxel color" << endl;
-				return false;
-			}
+			VALIDATE_CALL(cuSetVoxel(volumeHandle, x, 63 - zz, y, &color))
 
 			zz++;
 		}
@@ -159,8 +148,8 @@ bool importVxl(ez::ezOptionParser& options)
 		}
 	}
 
-	cuAcceptOverrideChunks(volumeHandle);
-	cuDeleteVolume(volumeHandle);
+	VALIDATE_CALL(cuAcceptOverrideChunks(volumeHandle));
+	VALIDATE_CALL(cuDeleteVolume(volumeHandle));
 
 	return true;
 }

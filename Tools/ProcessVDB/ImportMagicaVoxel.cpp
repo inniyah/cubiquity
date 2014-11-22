@@ -1,5 +1,6 @@
 #include "ImportMagicaVoxel.h"
 
+#include "Exceptions.h"
 #include "MagicaVoxelModel.h"
 
 #include "CubiquityC.h"
@@ -90,11 +91,7 @@ bool importMagicaVoxel(ez::ezOptionParser& options)
 
 	uint32_t volumeHandle;
 	// NOTE: Y/Z axis swapped to better match Magica to Cubiquity.
-	if(cuNewEmptyColoredCubesVolume(0, 0, 0, model.sizex - 1, model.sizez - 1, model.sizey - 1, pathToVoxelDatabase.c_str(), 32, &volumeHandle) != CU_OK)
-	{
-		cerr << "Failed to create new empty volume" << endl;
-		return false;
-	}
+	VALIDATE_CALL(cuNewEmptyColoredCubesVolume(0, 0, 0, model.sizex - 1, model.sizez - 1, model.sizey - 1, pathToVoxelDatabase.c_str(), 32, &volumeHandle))
 
 	for(int i = 0; i < model.numVoxels; i++)
 	{
@@ -115,15 +112,11 @@ bool importMagicaVoxel(ez::ezOptionParser& options)
 		CuColor color = cuMakeColor(rgba.r, rgba.g, rgba.b, rgba.a);
 
 		// NOTE: Y/Z axis swapped to better match Magica to Cubiquity.
-		if(cuSetVoxel(volumeHandle, model.voxels[i].x, model.voxels[i].z, model.voxels[i].y, &color) != CU_OK)
-		{
-			cerr << "Error setting voxel color" << endl;
-			return false;
-		}
+		VALIDATE_CALL(cuSetVoxel(volumeHandle, model.voxels[i].x, model.voxels[i].z, model.voxels[i].y, &color))
 	}
 
-	cuAcceptOverrideChunks(volumeHandle);
-	cuDeleteVolume(volumeHandle);
+	VALIDATE_CALL(cuAcceptOverrideChunks(volumeHandle));
+	VALIDATE_CALL(cuDeleteVolume(volumeHandle));
 
 	return true;
 }

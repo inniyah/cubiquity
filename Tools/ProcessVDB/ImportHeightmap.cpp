@@ -1,5 +1,6 @@
 #include "ImportHeightmap.h"
 
+#include "Exceptions.h"
 #include "HeaderOnlyLibs.h"
 
 #include "CubiquityC.h"
@@ -74,11 +75,7 @@ bool importHeightmapAsColoredCubesVolume(ez::ezOptionParser& options)
 	uint32_t volumeDepth = heightmapHeight;
 	string pathToVoxelDatabase;
 	options.get("-coloredcubes")->getString(pathToVoxelDatabase);
-	if (cuNewEmptyColoredCubesVolume(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, pathToVoxelDatabase.c_str(), 32, &volumeHandle) != CU_OK)
-	{
-		cerr << "Failed to create new empty volume" << endl;
-		return false;
-	}
+	VALIDATE_CALL(cuNewEmptyColoredCubesVolume(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, pathToVoxelDatabase.c_str(), 32, &volumeHandle))
 
 	CuColor gray = cuMakeColor(63, 63, 63, 255);
 	CuColor empty = cuMakeColor(0, 0, 0, 0);
@@ -106,17 +103,13 @@ bool importHeightmapAsColoredCubesVolume(ez::ezOptionParser& options)
 					colorToUse = empty;
 				}
 
-				if (cuSetVoxel(volumeHandle, imageX, height, imageY, &colorToUse) != CU_OK)
-				{
-					cerr << "Error setting voxel color" << endl;
-					return false;
-				}
+				VALIDATE_CALL(cuSetVoxel(volumeHandle, imageX, height, imageY, &colorToUse))
 			}
 		}
 	}
 
-	cuAcceptOverrideChunks(volumeHandle);
-	cuDeleteVolume(volumeHandle);
+	VALIDATE_CALL(cuAcceptOverrideChunks(volumeHandle));
+	VALIDATE_CALL(cuDeleteVolume(volumeHandle));
 
 	return true;
 }
@@ -171,11 +164,7 @@ bool importHeightmapAsTerrainVolume(ez::ezOptionParser& options)
 	uint32_t volumeDepth = resampledHeight; // so that 'y' is 'up'
 	string pathToVoxelDatabase;
 	options.get("-terrain")->getString(pathToVoxelDatabase);
-	if (cuNewEmptyTerrainVolume(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, pathToVoxelDatabase.c_str(), 32, &volumeHandle) != CU_OK)
-	{
-		cerr << "Failed to create new empty volume" << endl;
-		return false;
-	}
+	VALIDATE_CALL(cuNewEmptyTerrainVolume(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, pathToVoxelDatabase.c_str(), 32, &volumeHandle))
 
 	// Don't yet know the best value for this.
 	float scalarFieldCompressionFactor = 255.0f;
@@ -210,17 +199,13 @@ bool importHeightmapAsTerrainVolume(ez::ezOptionParser& options)
 					materialSet.data <<= 8;
 				}*/
 
-				if (cuSetVoxel(volumeHandle, imageX, height, imageY, &materialSet) != CU_OK)
-				{
-					cerr << "Error setting voxel materials" << endl;
-					return false;
-				}
+				VALIDATE_CALL(cuSetVoxel(volumeHandle, imageX, height, imageY, &materialSet))
 			}
 		}
 	}
 
-	cuAcceptOverrideChunks(volumeHandle);
-	cuDeleteVolume(volumeHandle);
+	VALIDATE_CALL(cuAcceptOverrideChunks(volumeHandle));
+	VALIDATE_CALL(cuDeleteVolume(volumeHandle));
 
 	return true;
 }

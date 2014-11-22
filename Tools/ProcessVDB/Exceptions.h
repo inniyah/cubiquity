@@ -66,12 +66,14 @@ void throwExceptionIf(bool condition, ExceptionType e)
 	}
 }
 
+// I don't think it matters whether or not calls to this macro have
+// a terminating ';' or not. Extra semicolons should be harmless.
 #define VALIDATE_CALL(functionCall) \
 { \
 	int32_t result = functionCall; \
 	if (result != CU_OK) \
 	{ \
-	throwException(CubiquityError(result, cuGetLastErrorMessage())); \
+		throwException(CubiquityError(result, cuGetLastErrorMessage())); \
 	} \
 }
 
