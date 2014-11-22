@@ -77,17 +77,24 @@ bool isMagicaVoxel(const std::string& filename)
 	return true;
 }
 
-bool importMagicaVoxel(ez::ezOptionParser& options)
+void importMagicaVoxel(ez::ezOptionParser& options)
 {
 	LOG(INFO) << "Importing from Magica Voxel...";
+
+	// We know the -magicavoxel flag was set or we wouldn't be
+	// in this function. Must check the -coloredcubes flag though.
+	throwExceptionIf(!options.get("-coloredcubes"), OptionsError("-coloredcubes flag not found"));
+
 	string filename;
 	options.get("-magicavoxel")->getString(filename);
 	string pathToVoxelDatabase;
 	options.get("-coloredcubes")->getString(pathToVoxelDatabase);
 
-	cout << "Importing MagicaVoxel from '" << filename << "' and into '" << pathToVoxelDatabase << "'";
+	LOG(INFO) << "Importing MagicaVoxel from '" << filename << "' and into '" << pathToVoxelDatabase << "'";
+
 	MV_Model model;
-	model.LoadModel(filename.c_str());
+	bool result = model.LoadModel(filename.c_str());
+	throwExceptionIf(!result, ParseError("Failed to load Magica Voxel file."));
 
 	uint32_t volumeHandle;
 	// NOTE: Y/Z axis swapped to better match Magica to Cubiquity.
@@ -117,6 +124,4 @@ bool importMagicaVoxel(ez::ezOptionParser& options)
 
 	VALIDATE_CALL(cuAcceptOverrideChunks(volumeHandle));
 	VALIDATE_CALL(cuDeleteVolume(volumeHandle));
-
-	return true;
 }

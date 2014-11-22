@@ -7,6 +7,6 @@
 #include <string>
 
 // Read AoS/B&S map - based on: http://silverspaceship.com/aosmap/aos_file_format.html
-bool importVxl(ez::ezOptionParser& options);
+void importVxl(ez::ezOptionParser& options);
 
 #endif //CUBIQUITYTOOLS_IMPORTVXL_H_

@@ -7,6 +7,6 @@
 #include <string>
 #include <vector>
 
-bool exportImageSlices(ez::ezOptionParser& options);
+void exportImageSlices(ez::ezOptionParser& options);
 
 #endif // CUBIQUITYTOOLS_EXPORTIMAGESLICES_H_

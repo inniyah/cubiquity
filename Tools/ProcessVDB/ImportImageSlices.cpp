@@ -63,38 +63,32 @@ std::vector<std::string> findImagesInFolder(std::string folder)
 	return imageFilenames;
 }
 
-bool importImageSlices(ez::ezOptionParser& options)
+void importImageSlices(ez::ezOptionParser& options)
 {
 	LOG(INFO) << "Importing from image slices...";
+
+	// We know the -imageslices flag was set or we wouldn't be
+	// in this function. Must check the -coloredcubes flag though.
+	throwExceptionIf(!options.get("-coloredcubes"), OptionsError("-coloredcubes flag not found"));
 
 	string folder;
 	options.get("-imageslices")->getString(folder);
 	string pathToVoxelDatabase;
 	options.get("-coloredcubes")->getString(pathToVoxelDatabase);
 
-	cout << "Importing images from '" << folder << "' and into '" << pathToVoxelDatabase << "'";
+	LOG(INFO) << "Importing images from '" << folder << "' and into '" << pathToVoxelDatabase << "'";
 
 	std::vector<std::string> imageFilenames = findImagesInFolder(folder);
 
 	// Make sure at least one image was found.
 	uint32_t sliceCount = imageFilenames.size();
-	if(sliceCount == 0)
-	{
-		cerr << "No images found in provided folder" << endl;
-		return false;
-	}
-	cout << "Found " << imageFilenames.size() << " images for import" << endl;
+	LOG(INFO) << "Found " << sliceCount << " images for import" << endl;
+	throwExceptionIf(sliceCount == 0, FileSystemError("No images found in provided folder"));	
 
 	// Open the first image to determine the width and height
 	int volumeWidth = 0, volumeHeight = 0, noOfChannels;
 	unsigned char *sliceData = stbi_load((*(imageFilenames.begin())).c_str(), &volumeWidth, &volumeHeight, &noOfChannels, 0);
-
-	// Make sure it opened sucessfully
-	if(sliceData == NULL)
-	{
-		cerr << "Failed to open first image" << endl;
-		return false;
-	}
+	throwExceptionIf(sliceData == NULL, FileSystemError("Failed to open first image"));
 
 	//Close it straight away - we only wanted to find the dimensions.
 	stbi_image_free(sliceData);
@@ -107,23 +101,18 @@ bool importImageSlices(ez::ezOptionParser& options)
 	// Now iterate over each slice and import the data.
 	for(int slice = 0; slice < sliceCount; slice++)
 	{
-		cout << "Importing image " << slice << endl;
+		LOG(INFO) << "Importing image " << slice << endl;
 		int imageWidth = 0, imageHeight = 0, imageChannels;
 		unsigned char *sliceData = stbi_load(imageFilenames[slice].c_str(), &imageWidth, &imageHeight, &imageChannels, 0);
 
 		if((imageWidth != volumeWidth) || (imageHeight != volumeHeight))
 		{
-			cerr << "All images must have the same dimensions!" << endl;
-			return false;
+			throwException(ParseError("All images must have the same dimensions!"));
 		}
 
-		if(imageChannels != 4)
-		{
-			// When building a colored cubes volume we need an alpha channel in the images
-			// or we do not know what to write into the alpha channel of the volume.
-			cerr << "Image does not have an alpha channel but one is required" << endl;
-			return false;
-		}
+		// When building a colored cubes volume we need an alpha channel in the images
+		// or we do not know what to write into the alpha channel of the volume.
+		throwExceptionIf(imageChannels != 4, ParseError("Image must be in RGBA format (four channels)"));
 
 		// Now iterate over each pixel.
 		for(int x = 0; x < imageWidth; x++)
@@ -147,6 +136,4 @@ bool importImageSlices(ez::ezOptionParser& options)
 
 	VALIDATE_CALL(cuAcceptOverrideChunks(volumeHandle));
 	VALIDATE_CALL(cuDeleteVolume(volumeHandle));
-
-	return true;
 }

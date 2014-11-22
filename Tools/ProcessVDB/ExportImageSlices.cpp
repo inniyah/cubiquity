@@ -13,7 +13,7 @@
 
 using namespace std;
 
-bool exportImageSlices(ez::ezOptionParser& options)
+void exportImageSlices(ez::ezOptionParser& options)
 {
 	LOG(INFO) << "Exporting as image slices...";
 
@@ -66,14 +66,10 @@ bool exportImageSlices(ez::ezOptionParser& options)
 		// Now save the slice data as an image file.
 		std::stringstream ss;
 		ss << folder << "/" << std::setfill('0') << std::setw(6) << slice << "." << sliceExtension;
+		LOG(INFO) << "Writing slice " << slice << " to " << ss.str();
 		int result = stbi_write_png(ss.str().c_str(), imageWidth, imageHeight, componentCount, outputSliceData, imageWidth * componentCount);
-		if (result == 0)
-		{
-			cerr << "Failed to write " << ss.str() << endl;
-		}
+		throwExceptionIf(result == 0, FileSystemError("Failed to write image. Does the folder exist and have write permissions?"));
 	}
 
 	delete[] outputSliceData;
-
-	return false;
 }

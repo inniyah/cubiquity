@@ -17,6 +17,26 @@ public:
 	}
 };
 
+// Thrown if there is a problem parsing a file format
+class ParseError : public std::runtime_error
+{
+public:
+	ParseError(const std::string& what_arg)
+		:runtime_error(what_arg)
+	{
+	}
+};
+
+// Thrown if there is a problem parsing a file format
+class FileSystemError : public std::runtime_error
+{
+public:
+	FileSystemError(const std::string& what_arg)
+		:runtime_error(what_arg)
+	{
+	}
+};
+
 // Thrown if an error code is returned by Cubiquity.
 class CubiquityError : public std::runtime_error
 {

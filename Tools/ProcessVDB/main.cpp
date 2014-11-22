@@ -114,5 +114,6 @@ int main(int argc, const char* argv[])
 		return EXIT_FAILURE;
 	}
 
+	LOG(INFO) << "Exiting normally.";
 	return EXIT_SUCCESS;
 }

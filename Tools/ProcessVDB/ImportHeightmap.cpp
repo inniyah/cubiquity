@@ -14,7 +14,7 @@
 
 using namespace std;
 
-bool importHeightmap(ez::ezOptionParser& options)
+void importHeightmap(ez::ezOptionParser& options)
 {
 	LOG(INFO) << "Importing from heightmap...";
 
@@ -30,12 +30,14 @@ bool importHeightmap(ez::ezOptionParser& options)
 	}
 	else
 	{
-		return false;
+		throwException(OptionsError("No volume type specified."));
 	}
 }
 
-bool importHeightmapAsColoredCubesVolume(ez::ezOptionParser& options)
+void importHeightmapAsColoredCubesVolume(ez::ezOptionParser& options)
 {
+	// At this point we know the -heightmap and -coloredcubes flags were set, otherwise we wouldn't be in this function.
+
 	// Open the heightmap
 	int heightmapWidth = 0, heightmapHeight = 0, heightmapChannels;
 	string heightmapFilename;
@@ -43,28 +45,19 @@ bool importHeightmapAsColoredCubesVolume(ez::ezOptionParser& options)
 	unsigned char* heightmapData = stbi_load(heightmapFilename.c_str(), &heightmapWidth, &heightmapHeight, &heightmapChannels, 0);
 
 	// Make sure it opened sucessfully
-	if (heightmapData == NULL)
-	{
-		cerr << "Failed to open heightmap" << endl;
-		return false;
-	}
+	throwExceptionIf(heightmapData == NULL, FileSystemError("Failed to open or understand heightmap file. Note: Our image loader is limited - if the file exists then try resaving it as a different format."));
 
 	// Open the colormap
 	int colormapWidth = 0, colormapHeight = 0, colormapChannels;
 	string colormapFilename;
+	throwExceptionIf(options.get("-colormap") == 0, OptionsError("No colormap specified."));
 	options.get("-colormap")->getString(colormapFilename);
 	unsigned char* colormapData = stbi_load(colormapFilename.c_str(), &colormapWidth, &colormapHeight, &colormapChannels, 0);
-
-	// Make sure it opened sucessfully
-	if (colormapData == NULL)
-	{
-		cerr << "Failed to open colormap" << endl;
-		return false;
-	}
+	throwExceptionIf(colormapData == NULL, FileSystemError("Failed to open or understand colormap file. Note: Our image loader is limited - if the file exists then try resaving it as a different format."));
 
 	if ((heightmapWidth != colormapWidth) || (heightmapHeight != colormapHeight))
 	{
-		cerr << "Heightmap and colormap must have same dimensions" << endl;
+		throwException(ParseError("Heightmap and colormap must have same dimensions"));
 	}
 
 	// Create the volume. When importing we treat 'y' as up because most game engines and
@@ -110,12 +103,12 @@ bool importHeightmapAsColoredCubesVolume(ez::ezOptionParser& options)
 
 	VALIDATE_CALL(cuAcceptOverrideChunks(volumeHandle));
 	VALIDATE_CALL(cuDeleteVolume(volumeHandle));
-
-	return true;
 }
 
-bool importHeightmapAsTerrainVolume(ez::ezOptionParser& options)
+void importHeightmapAsTerrainVolume(ez::ezOptionParser& options)
 {
+	// At this point we know the -heightmap and -terrain flags were set, otherwise we wouldn't be in this function.
+
 	// Open the heightmap
 	int originalWidth = 0, originalHeight = 0, originalChannels = 0; // 'Original' values are before resampling
 	int originalDepth = 256; // Assume 8-bit input image.
@@ -124,11 +117,7 @@ bool importHeightmapAsTerrainVolume(ez::ezOptionParser& options)
 	unsigned char* originalData = stbi_load(heightmapFilename.c_str(), &originalWidth, &originalHeight, &originalChannels, 0);
 
 	// Make sure it opened sucessfully
-	if (originalData == NULL)
-	{
-		cerr << "Failed to open heightmap" << endl;
-		return false;
-	}
+	throwExceptionIf(originalData == NULL, FileSystemError("Failed to open or understand heightmap file. Note: Our image loader is limited - if the file exists then try resaving it as a different format."));
 
 	int originalPixelCount = originalWidth * originalHeight;
 	float* floatOriginalData = new float[originalPixelCount];
@@ -140,8 +129,11 @@ bool importHeightmapAsTerrainVolume(ez::ezOptionParser& options)
 		}
 	}
 
-	float scale;
-	options.get("-scale")->getFloat(scale);
+	float scale = 1.0f;
+	if (options.get("-scale"))
+	{
+		options.get("-scale")->getFloat(scale);
+	}
 
 	if (scale > 0.5f)
 	{
@@ -206,6 +198,4 @@ bool importHeightmapAsTerrainVolume(ez::ezOptionParser& options)
 
 	VALIDATE_CALL(cuAcceptOverrideChunks(volumeHandle));
 	VALIDATE_CALL(cuDeleteVolume(volumeHandle));
-
-	return true;
 }

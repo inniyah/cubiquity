@@ -8,7 +8,7 @@
 
 using namespace std;
 
-bool importVxl(ez::ezOptionParser& options)
+void importVxl(ez::ezOptionParser& options)
 {
 	LOG(INFO) << "Importing from VXL...";
 
@@ -20,11 +20,7 @@ bool importVxl(ez::ezOptionParser& options)
 	cout << "Importing vxl from '" << vxlFilename << "' and into '" << pathToVoxelDatabase << "'";
 
 	FILE* inputFile = fopen(vxlFilename.c_str(), "rb");
-	if(inputFile == NULL)
-	{
-		cerr << "Failed to open input file!" << endl;
-		return false;
-	}
+	throwExceptionIf(inputFile == NULL, FileSystemError("Failed to open input file."));
 
 	// Determine input file's size.
 	fseek(inputFile, 0, SEEK_END);
@@ -33,12 +29,8 @@ bool importVxl(ez::ezOptionParser& options)
 
 	uint8_t* data = new uint8_t[fileSize];
 	long bytesRead = fread(data, sizeof(uint8_t), fileSize, inputFile);
-	if(fileSize != bytesRead)
-	{
-		cerr << "Failed to read file!" << endl;
-		return false;
-	}
 	fclose(inputFile);
+	throwExceptionIf(fileSize != bytesRead, FileSystemError("Failed to read input file."));
 
 	uint32_t volumeHandle = 1000000; // Better if handles were ints so they could be set invalid?
 	VALIDATE_CALL(cuNewEmptyColoredCubesVolume(0, 0, 0, 511, 63, 511, pathToVoxelDatabase.c_str(), 32, &volumeHandle))
@@ -58,7 +50,7 @@ bool importVxl(ez::ezOptionParser& options)
 		// Bounds check before accessing data[...], useful incase we don't actually have a valid VXL file (e.g. in dry-run mode)
 		if((i + 3) >= fileSize)
 		{
-			return false;
+			throwException(ParseError("Error parsing VXL file."));
 		}
 
 		// i = span start byte
@@ -78,7 +70,7 @@ bool importVxl(ez::ezOptionParser& options)
 			// Bounds check before accessing data[...], useful incase we don't actually have a valid VXL file (e.g. in dry-run mode)
 			if((i + N * 4 + 3) >= fileSize)
 			{
-				return false;
+				throwException(ParseError("Error parsing VXL file."));
 			}
 
 			// A of the next span
@@ -104,7 +96,7 @@ bool importVxl(ez::ezOptionParser& options)
 				// Bounds check before accessing data[...], useful incase we don't actually have a valid VXL file (e.g. in dry-run mode)
 				if((i + 6 + colorI * 4) >= fileSize)
 				{
-					return false;
+					throwException(ParseError("Error parsing VXL file."));
 				}
 
 				red = data[i + 6 + colorI * 4];
@@ -150,6 +142,4 @@ bool importVxl(ez::ezOptionParser& options)
 
 	VALIDATE_CALL(cuAcceptOverrideChunks(volumeHandle));
 	VALIDATE_CALL(cuDeleteVolume(volumeHandle));
-
-	return true;
 }

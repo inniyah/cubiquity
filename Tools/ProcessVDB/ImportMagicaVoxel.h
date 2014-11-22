@@ -9,6 +9,6 @@
 // Check is this is a Magica Voxel file.
 bool isMagicaVoxel(const std::string& filename);
 // Read MagicaVoxel map: https://voxel.codeplex.com/
-bool importMagicaVoxel(ez::ezOptionParser& options);
+void importMagicaVoxel(ez::ezOptionParser& options);
 
 #endif //CUBIQUITYTOOLS_IMPORTMAGICAVOXEL_H_

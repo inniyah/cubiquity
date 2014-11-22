@@ -7,8 +7,8 @@
 #include <string>
 #include <vector>
 
-bool importHeightmap(ez::ezOptionParser& options);
-bool importHeightmapAsColoredCubesVolume(ez::ezOptionParser& options);
-bool importHeightmapAsTerrainVolume(ez::ezOptionParser& options);
+void importHeightmap(ez::ezOptionParser& options);
+void importHeightmapAsColoredCubesVolume(ez::ezOptionParser& options);
+void importHeightmapAsTerrainVolume(ez::ezOptionParser& options);
 
 #endif //CUBIQUITYTOOLS_IMPORTHEIGHTMAP_H_

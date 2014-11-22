@@ -8,6 +8,6 @@
 #include <vector>
 
 std::vector<std::string> findImagesInFolder(std::string folder);
-bool importImageSlices(ez::ezOptionParser& options);
+void importImageSlices(ez::ezOptionParser& options);
 
 #endif // CUBIQUITYTOOLS_IMPORTIMAGESLICES_H_
