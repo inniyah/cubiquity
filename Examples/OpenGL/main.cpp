@@ -32,6 +32,7 @@ public:
 		noOfIndices = 0;
 		indexBuffer = 0;
 		vertexBuffer = 0;
+		vertexArrayObject = 0;
 
 		posX = 0;
 		posY = 0;
@@ -56,6 +57,27 @@ public:
 				}
 			}
 		}
+	}
+
+	~OpenGLOctreeNode()
+	{
+		for (uint32_t z = 0; z < 2; z++)
+		{
+			for (uint32_t y = 0; y < 2; y++)
+			{
+				for (uint32_t x = 0; x < 2; x++)
+				{
+					delete children[x][y][z];
+					children[x][y][z] = 0;
+				}
+			}
+		}
+
+		glDeleteBuffers(1, &indexBuffer);
+		glDeleteBuffers(1, &vertexBuffer);
+
+		glBindVertexArray(0);
+		glDeleteVertexArrays(1, &vertexArrayObject);		
 	}
 
 	GLuint noOfIndices;
