@@ -57,6 +57,11 @@ public:
 				}
 			}
 		}
+
+		glGenVertexArrays(1, &vertexArrayObject);
+
+		glGenBuffers(1, &indexBuffer);
+		glGenBuffers(1, &vertexBuffer);
 	}
 
 	~OpenGLOctreeNode()
@@ -151,14 +156,12 @@ void processOctreeNodeStructure(uint32_t octreeNodeHandle, OpenGLOctreeNode* ope
 
 				openGLOctreeNode->noOfIndices = noOfIndices;
 
-				glGenVertexArrays(1, &(openGLOctreeNode->vertexArrayObject));
+				
 				glBindVertexArray(openGLOctreeNode->vertexArrayObject);
 
-				glGenBuffers(1, &(openGLOctreeNode->indexBuffer));
 				glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, openGLOctreeNode->indexBuffer);
 				glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint16_t)* noOfIndices, indices, GL_STATIC_DRAW);
 
-				glGenBuffers(1, &(openGLOctreeNode->vertexBuffer));
 				glBindBuffer(GL_ARRAY_BUFFER, openGLOctreeNode->vertexBuffer);
 
 				if (volumeType == CU_COLORED_CUBES)
