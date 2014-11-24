@@ -24,6 +24,7 @@ namespace Cubiquity
 		:mPolyVoxVolume(0)
 		,m_pVoxelDatabase(0)
 		,mOctree(0)
+		,mBackgroundTaskProcessor(0)
 	{
 		POLYVOX_THROW_IF(region.getWidthInVoxels() == 0, std::invalid_argument, "Volume width must be greater than zero");
 		POLYVOX_THROW_IF(region.getHeightInVoxels() == 0, std::invalid_argument, "Volume height must be greater than zero");
@@ -45,6 +46,8 @@ namespace Cubiquity
 		mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pVoxelDatabase, 32);
 
 		mPolyVoxVolume->setMemoryUsageLimit(256 * 1024 * 1024);
+
+		mBackgroundTaskProcessor = new BackgroundTaskProcessor();
 	}
 
 	template <typename VoxelType>
@@ -53,6 +56,7 @@ namespace Cubiquity
 		,m_pVoxelDatabase(0)
 		,mOctree(0)
 		//,mDatabase(0)
+		,mBackgroundTaskProcessor(0)
 	{
 		//m_pVoxelDatabase = new VoxelDatabase<VoxelType>;
 		//m_pVoxelDatabase->open(pathToExistingVoxelDatabase);
@@ -72,12 +76,17 @@ namespace Cubiquity
 		mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pVoxelDatabase, 32);
 
 		mPolyVoxVolume->setMemoryUsageLimit(64 * 1024 * 1024);
+
+		mBackgroundTaskProcessor = new BackgroundTaskProcessor();
 	}
 
 	template <typename VoxelType>
 	Volume<VoxelType>::~Volume()
 	{
 		POLYVOX_LOG_TRACE("Entering ~Volume()");
+
+		delete mBackgroundTaskProcessor;
+		mBackgroundTaskProcessor = 0;
 
 		// NOTE: We should really delete the volume here, but the background task processor might still be using it.
 		// We need a way to shut that down, or maybe smart pointers can help here. Just flush until we have a better fix.

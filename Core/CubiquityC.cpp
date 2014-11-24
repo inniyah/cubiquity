@@ -121,20 +121,22 @@ public:
 // The single global instance of the above class.
 EntryAndExitPoints gEntryAndExitPoints;
 
-void* getVolumeFromHandle(uint32_t volumeHandle)
+void* getVolumeFromIndex(uint32_t volumeIndex)
 {
-	return gVolumes[volumeHandle];
+	void* volume = gVolumes[volumeIndex];
+	POLYVOX_THROW_IF(volume == 0, std::runtime_error, "Handle represents a null volume");
+	return volume;
 }
 
 ColoredCubesVolume* getColoredCubesVolumeFromHandle(uint32_t volumeIndex)
 {
-	ColoredCubesVolume* volume = reinterpret_cast<ColoredCubesVolume*>(gVolumes[volumeIndex]);
+	ColoredCubesVolume* volume = reinterpret_cast<ColoredCubesVolume*>(getVolumeFromIndex(volumeIndex));
 	return volume;
 }
 
 TerrainVolume* getTerrainVolumeFromHandle(uint32_t volumeIndex)
 {
-	TerrainVolume* volume = reinterpret_cast<TerrainVolume*>(gVolumes[volumeIndex]);
+	TerrainVolume* volume = reinterpret_cast<TerrainVolume*>(getVolumeFromIndex(volumeIndex));
 	return volume;
 }
 

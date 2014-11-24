@@ -67,7 +67,7 @@ namespace Cubiquity
 					}
 					else
 					{
-						gBackgroundTaskProcessor.addTask(octreeNode->mLastSurfaceExtractionTask);
+						octreeNode->mOctree->getVolume()->mBackgroundTaskProcessor->addTask(octreeNode->mLastSurfaceExtractionTask);
 					}
 				}
 				/*else
@@ -198,7 +198,7 @@ namespace Cubiquity
 		}
 		else
 		{
-			gBackgroundTaskProcessor.processOneTask(); //Doesn't really belong here
+			getVolume()->mBackgroundTaskProcessor->processOneTask(); //Doesn't really belong here
 		}
 
 		// This will include tasks from both the background and main threads.
@@ -224,7 +224,7 @@ namespace Cubiquity
 		acceptVisitor(PropagateTimestampsVisitor<VoxelType>());
 
 		// If there are no pending tasks then return truem to indicate we are up to date.
-		return (gMainThreadTaskProcessor.hasTasks() == false) && (gBackgroundTaskProcessor.hasTasks() == false);
+		return (gMainThreadTaskProcessor.hasTasks() == false) && (getVolume()->mBackgroundTaskProcessor->hasTasks() == false);
 	}
 
 	template <typename VoxelType>

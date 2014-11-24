@@ -1,6 +1,7 @@
 #ifndef VOLUME_H_
 #define VOLUME_H_
 
+#include "BackgroundTaskProcessor.h"
 #include "CubiquityForwardDeclarations.h"
 #include "Octree.h"
 #include "Vector.h"
@@ -66,6 +67,12 @@ namespace Cubiquity
 
 		// Should be called before rendering a frame to update the meshes and octree structure.
 		virtual bool update(const Vector3F& viewPosition, float lodThreshold);
+
+		// It's a bit ugly that the background task processor is part of the volume class.
+		// We do this because we want to clear it when the volume is destroyed, to avoid
+		// the situation wher it continues to process tasks from the destroyed volume.
+		// A better solution is needed here (smart pointers?).
+		BackgroundTaskProcessor* mBackgroundTaskProcessor;
 
 	protected:
 		Octree<VoxelType>* mOctree;

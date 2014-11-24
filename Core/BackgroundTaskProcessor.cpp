@@ -55,6 +55,7 @@ namespace Cubiquity
 
 	BackgroundTaskProcessor::~BackgroundTaskProcessor()
 	{
+		mPendingTasks.clear();
 	}
 
 	void BackgroundTaskProcessor::addTask(Task* task)

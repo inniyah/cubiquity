@@ -45,7 +45,7 @@ namespace Cubiquity
 		std::list<Task*> mPendingTasks;
 	};
 
-	extern BackgroundTaskProcessor gBackgroundTaskProcessor;
+	//extern BackgroundTaskProcessor gBackgroundTaskProcessor;
 }
 
 #endif //CUBIQUITY_BACKGROUNDTASKPROCESSOR_H_
