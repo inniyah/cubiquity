@@ -7,6 +7,8 @@ in vec4 materialWeights;
 // Output data
 out vec3 color;
 
+uniform uint height;
+
 void main()
 {
 	// Vertex colors coming out of Cubiquity don't actually sum to one
@@ -27,6 +29,23 @@ void main()
 		material1 * normalizedMaterialWeights.y +
 		material2 * normalizedMaterialWeights.z +
 		material3 * normalizedMaterialWeights.w;
+		
+		if(height == 0u)
+		{
+			blendedColor = vec4(1.0, 0.5, 0.5, 1.0);
+		}
+		else if(height == 1u)
+		{
+			blendedColor = vec4(0.5, 1.0, 0.5, 1.0);
+		}
+		else if(height == 2u)
+		{
+			blendedColor = vec4(0.5, 0.5, 1.0, 1.0);
+		}
+		else if(height == 3u)
+		{
+			blendedColor = vec4(1.0, 1.0, 1.0, 1.0);
+		}
 		
 	// Basic lighting calculation for overhead light.
 	float ambient = 0.3;
