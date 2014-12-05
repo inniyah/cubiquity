@@ -54,9 +54,9 @@ namespace Cubiquity
 
 		concurrent_queue<typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType*, TaskSortCriterion> mFinishedSurfaceExtractionTasks;
 
-		// Note that the maximum LOD refers to the *highest* level of detail, which is actually the *smallest* hieght in
-		// the octree. If confused, think how texture mipmapping works, where the highest MIP levels have the smallest  
-		// images and the lowest amount of detail. Level zero is the raw voxel data and succesive levels downsample it.
+		// Note that the maximum LOD refers to the *most detailed* LOD, which is actually the *smallest* hieght
+		// in the octree (the greatest depth). If confused, think how texture mipmapping works, where the most 
+		// detailed MIP is number zero. Level zero is the raw voxel data and succesive levels downsample it.
 		int32_t mMaximumLOD;
 		int32_t mMinimumLOD;
 
