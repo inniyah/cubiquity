@@ -13,8 +13,6 @@
 
 namespace Cubiquity
 {
-	const uint32_t HighestMeshLevel = 2;
-
 	namespace OctreeConstructionModes
 	{
 		enum OctreeConstructionMode
@@ -56,6 +54,12 @@ namespace Cubiquity
 
 		concurrent_queue<typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType*, TaskSortCriterion> mFinishedSurfaceExtractionTasks;
 
+		// Note that the maximum LOD refers to the *highest* level of detail, which is actually the *smallest* hieght in
+		// the octree. If confused, think how texture mipmapping works, where the highest MIP levels have the smallest  
+		// images and the lowest amount of detail. Level zero is the raw voxel data and succesive levels downsample it.
+		int32_t mMaximumLOD;
+		int32_t mMinimumLOD;
+
 	private:
 		uint16_t createNode(Region region, uint16_t parent);
 
@@ -76,7 +80,7 @@ namespace Cubiquity
 		uint16_t mRootNodeIndex;
 		const unsigned int mBaseNodeSize;
 
-		Volume<VoxelType>* mVolume;
+		Volume<VoxelType>* mVolume;		
 
 		// The extent of the octree may be significantly larger than the volume, but we only want to
 		// create nodes which actually overlap the volume (otherwise they are guarenteed to be empty).

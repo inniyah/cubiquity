@@ -46,7 +46,18 @@ namespace Cubiquity
 
 		bool preChildren(OctreeNode<VoxelType>* octreeNode)
 		{
-			if ((octreeNode->isMeshUpToDate() == false) && (octreeNode->isSceduledForUpdate() == false) && ((octreeNode->mLastSurfaceExtractionTask == 0) || (octreeNode->mLastSurfaceExtractionTask->mProcessingStartedTimestamp < Clock::getTimestamp())) && (octreeNode->isActive()))
+			if
+			(
+				(octreeNode->isMeshUpToDate() == false) && 
+				(octreeNode->isSceduledForUpdate() == false) && 
+				(
+					(octreeNode->mLastSurfaceExtractionTask == 0) || 
+					(octreeNode->mLastSurfaceExtractionTask->mProcessingStartedTimestamp < Clock::getTimestamp())
+				) && 
+				(octreeNode->isActive() &&
+				(octreeNode->mHeight <= octreeNode->mOctree->mMinimumLOD) && // Remember that min and max 
+				(octreeNode->mHeight >= octreeNode->mOctree->mMaximumLOD))   // are counter-intuitive here!
+			)
 			{
 				octreeNode->mLastSceduledForUpdate = Clock::getTimestamp();
 
@@ -93,9 +104,11 @@ namespace Cubiquity
 	template <typename VoxelType>
 	Octree<VoxelType>::Octree(Volume<VoxelType>* volume, OctreeConstructionMode octreeConstructionMode, unsigned int baseNodeSize)
 		:mVolume(volume)
-		,mRootNodeIndex(InvalidNodeIndex)
-		,mBaseNodeSize(baseNodeSize)
-		,mOctreeConstructionMode(octreeConstructionMode)
+		, mRootNodeIndex(InvalidNodeIndex)
+		, mBaseNodeSize(baseNodeSize)
+		, mOctreeConstructionMode(octreeConstructionMode)
+		, mMaximumLOD(0)
+		, mMinimumLOD(2) // Must be *more* than maximum
 	{
 		mRegionToCover = mVolume->getEnclosingRegion();
 		if(mOctreeConstructionMode == OctreeConstructionModes::BoundVoxels)
@@ -361,7 +374,7 @@ namespace Cubiquity
 
 			// As we move far away only the highest nodes will be larger than the threshold. But these may be too
 			// high to ever generate meshes, so we set here a maximum height for which nodes can be set to inacive.
-			bool active = (projectedSize > lodThreshold) || (octreeNode->mHeight >= HighestMeshLevel);
+			bool active = (projectedSize > lodThreshold) || (octreeNode->mHeight >= mMinimumLOD);
 
 			octreeNode->setActive(active);
 		}
