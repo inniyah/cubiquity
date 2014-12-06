@@ -1,5 +1,6 @@
 #include "ImportMagicaVoxel.h"
 
+#include "Exceptions.h"
 #include "MagicaVoxelModel.h"
 
 #include "CubiquityC.h"
@@ -76,18 +77,28 @@ bool isMagicaVoxel(const std::string& filename)
 	return true;
 }
 
-bool importMagicaVoxel(const std::string& filename, const std::string& pathToVoxelDatabase)
+void importMagicaVoxel(ez::ezOptionParser& options)
 {
+	LOG(INFO) << "Importing from Magica Voxel...";
+
+	// We know the -magicavoxel flag was set or we wouldn't be
+	// in this function. Must check the -coloredcubes flag though.
+	throwExceptionIf(!options.get("-coloredcubes"), OptionsError("-coloredcubes flag not found"));
+
+	string filename;
+	options.get("-magicavoxel")->getString(filename);
+	string pathToVoxelDatabase;
+	options.get("-coloredcubes")->getString(pathToVoxelDatabase);
+
+	LOG(INFO) << "Importing MagicaVoxel from '" << filename << "' and into '" << pathToVoxelDatabase << "'";
+
 	MV_Model model;
-	model.LoadModel(filename.c_str());
+	bool result = model.LoadModel(filename.c_str());
+	throwExceptionIf(!result, ParseError("Failed to load Magica Voxel file."));
 
 	uint32_t volumeHandle;
 	// NOTE: Y/Z axis swapped to better match Magica to Cubiquity.
-	if(cuNewEmptyColoredCubesVolume(0, 0, 0, model.sizex - 1, model.sizez - 1, model.sizey - 1, pathToVoxelDatabase.c_str(), 32, &volumeHandle) != CU_OK)
-	{
-		cerr << "Failed to create new empty volume" << endl;
-		return false;
-	}
+	VALIDATE_CALL(cuNewEmptyColoredCubesVolume(0, 0, 0, model.sizex - 1, model.sizez - 1, model.sizey - 1, pathToVoxelDatabase.c_str(), 32, &volumeHandle))
 
 	for(int i = 0; i < model.numVoxels; i++)
 	{
@@ -108,15 +119,9 @@ bool importMagicaVoxel(const std::string& filename, const std::string& pathToVox
 		CuColor color = cuMakeColor(rgba.r, rgba.g, rgba.b, rgba.a);
 
 		// NOTE: Y/Z axis swapped to better match Magica to Cubiquity.
-		if(cuSetVoxel(volumeHandle, model.voxels[i].x, model.voxels[i].z, model.voxels[i].y, &color) != CU_OK)
-		{
-			cerr << "Error setting voxel color" << endl;
-			return false;
-		}
+		VALIDATE_CALL(cuSetVoxel(volumeHandle, model.voxels[i].x, model.voxels[i].z, model.voxels[i].y, &color))
 	}
 
-	cuAcceptOverrideChunks(volumeHandle);
-	cuDeleteVolume(volumeHandle);
-
-	return true;
+	VALIDATE_CALL(cuAcceptOverrideChunks(volumeHandle));
+	VALIDATE_CALL(cuDeleteVolume(volumeHandle));
 }

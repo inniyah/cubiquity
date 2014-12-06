@@ -63,8 +63,10 @@ extern "C"
 	const uint32_t CU_READWRITE = 1;
 
 	// Fixme - should this be a C enum?
+	// Also, apped '_VOLUME_TYPE'?
 	const uint32_t CU_COLORED_CUBES = 0;
 	const uint32_t CU_TERRAIN = 1;
+	const uint32_t CU_UNKNOWN = 0xFFFFFFFF;
 
 	struct CuColor_s
 	{

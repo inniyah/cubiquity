@@ -337,12 +337,12 @@ int main( void )
 	bool coloredCubesMode = false;
 	if (coloredCubesMode)
 	{
-		validate(cuNewColoredCubesVolumeFromVDB("C:/code/cubiquity/Data/Volumes/Version 0/VoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
+		validate(cuNewColoredCubesVolumeFromVDB("C:/code/cubiquity/Data/VoxelDatabases/Version 0/VoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
 		programID = LoadShaders("ColoredCubesVertexShader.glsl", "ColoredCubesFragmentShader.glsl");
 	}
 	else
 	{
-		validate(cuNewTerrainVolumeFromVDB("C:/code/cubiquity/Data/Volumes/Version 0/SmoothVoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
+		validate(cuNewTerrainVolumeFromVDB("C:/code/cubiquity/Data/VoxelDatabases/Version 0/SmoothVoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
 		programID = LoadShaders("TerrainVertexShader.glsl", "TerrainFragmentShader.glsl");
 	}
 	
