@@ -61,13 +61,13 @@ int main(int argc, const char* argv[])
 		options.add("", 0, 1, 0, "A volume representing a terrain with each voxel being a 'MaterialSet'.", "-terrain", "--terrain");
 
 		// Other parameters.
-		options.add("1.0", 0, 1, 0, "Scale factor" "-scale", "--scale");
+		options.add("1.0", 0, 1, 0, "Scaling factor.", "-scale", "--scale");
 
 		options.parse(argc, argv);
 		if (options.isSet("-h"))
 		{
 			// We don't use exOptionParser's built-in functionality for generating help text because our options are
-			// too complex. Also, we have see it craching on VS 2013 (http://sourceforge.net/p/ezoptionparser/bugs/3/).
+			// too complex. Also, we have see it crashing on VS 2013 (http://sourceforge.net/p/ezoptionparser/bugs/3/).
 			// Therefore we just print a simple error mesage telling the user to consult the manual for instructions.
 			std::cout << std::endl;
 			std::cout << "ProcessVDB is a tool for performing various operations on voxel databases" << std::endl;
