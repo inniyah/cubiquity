@@ -11,11 +11,17 @@ namespace Cubiquity
 
 	MainThreadTaskProcessor::~MainThreadTaskProcessor()
 	{
+		mPendingTasks.clear();
 	}
 
 	void MainThreadTaskProcessor::addTask(Task* task)
 	{
 		mPendingTasks.push_back(task);
+	}
+
+	bool MainThreadTaskProcessor::hasTasks(void)
+	{
+		return mPendingTasks.size() > 0;
 	}
 
 	void MainThreadTaskProcessor::processOneTask(void)

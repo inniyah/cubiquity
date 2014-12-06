@@ -66,26 +66,21 @@ void testColoredCubesVolume()
 
 void processOctreeNode(uint32_t octreeNodeHandle)
 {
-	int32_t nodeX, nodeY, nodeZ;
-	cuGetNodePosition(octreeNodeHandle, &nodeX, &nodeY, &nodeZ);
+	CuOctreeNode octreeNode;
+	cuGetOctreeNode(octreeNodeHandle, &octreeNode);
 
-	std::cout << "Node position: " << nodeX << " " << nodeY << " " << nodeZ << std::endl;
+	std::cout << "Node position: " << octreeNode.posX << " " << octreeNode.posY << " " << octreeNode.posZ << std::endl;
 
-	uint32_t hasMesh;
-	validate(cuNodeHasMesh(octreeNodeHandle, &hasMesh));
-	if (hasMesh == 1)
+	if (octreeNode.hasMesh)
 	{
+		// These will point to the index and vertex data
 		uint32_t noOfIndices;
-		validate(cuGetNoOfIndices(octreeNodeHandle, &noOfIndices));
-
-		uint16_t* indices = new uint16_t[noOfIndices];
-		validate(cuGetIndices(octreeNodeHandle, &indices));
-
+		uint16_t* indices;
 		uint16_t noOfVertices;
-		validate(cuGetNoOfVertices(octreeNodeHandle, &noOfVertices));
+		void* vertices;
 
-		void* vertices;// = new float[noOfVertices * 7]; // Vertex no longer built from floats.
-		validate(cuGetVertices(octreeNodeHandle, &vertices));
+		// Get the index and vertex data
+		validate(cuGetMesh(octreeNodeHandle, &noOfVertices, &vertices, &noOfIndices, &indices));
 
 		std::cout << "Found mesh - it has " << noOfVertices << " vertices and " << noOfIndices << " indices." << std::endl;
 	}
@@ -96,16 +91,10 @@ void processOctreeNode(uint32_t octreeNodeHandle)
 		{
 			for (uint32_t x = 0; x < 2; x++)
 			{
-				uint32_t hasChildNode;
-				validate(cuHasChildNode(octreeNodeHandle, x, y, z, &hasChildNode));
-
-				if (hasChildNode == 1)
+				if (octreeNode.childHandles[x][y][z] != 0xFFFFFFFF)
 				{
-					uint32_t childNodeHandle;
-					validate(cuGetChildNode(octreeNodeHandle, x, y, z, &childNodeHandle));
-
 					// Recursivly call the octree traversal
-					processOctreeNode(childNodeHandle);
+					processOctreeNode(octreeNode.childHandles[x][y][z]);
 				}
 			}
 		}
@@ -117,7 +106,8 @@ void testTerrainVolume()
 	uint32_t volumeHandle;
 	validate(cuNewTerrainVolumeFromVDB("C:/code/cubiquity/Data/VoxelDatabases/Version 0/SmoothVoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
 
-	validate(cuUpdateVolume(volumeHandle, 0.0f, 0.0f, 0.0f, 0.0f));
+	uint32_t isUpToDate;
+	validate(cuUpdateVolume(volumeHandle, 0.0f, 0.0f, 0.0f, 0.0f, &isUpToDate));
 
 	uint32_t hasRootNode;
 	validate(cuHasRootOctreeNode(volumeHandle, &hasRootNode));

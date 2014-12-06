@@ -92,7 +92,6 @@ set(HEADERS
 	TerrainVolume.h
 	TerrainVolumeEditor.h
 	TerrainVolumeGenerator.h
-	UpdatePriorities.h
 	Vector.h
 	Volume.h
 	Volume.inl

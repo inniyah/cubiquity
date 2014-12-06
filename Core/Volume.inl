@@ -24,6 +24,7 @@ namespace Cubiquity
 		:mPolyVoxVolume(0)
 		,m_pVoxelDatabase(0)
 		,mOctree(0)
+		,mBackgroundTaskProcessor(0)
 	{
 		POLYVOX_THROW_IF(region.getWidthInVoxels() == 0, std::invalid_argument, "Volume width must be greater than zero");
 		POLYVOX_THROW_IF(region.getHeightInVoxels() == 0, std::invalid_argument, "Volume height must be greater than zero");
@@ -44,7 +45,9 @@ namespace Cubiquity
 		
 		mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pVoxelDatabase, 32);
 
-		mPolyVoxVolume->setMemoryUsageLimit(64 * 1024 * 1024);
+		mPolyVoxVolume->setMemoryUsageLimit(256 * 1024 * 1024);
+
+		mBackgroundTaskProcessor = new BackgroundTaskProcessor();
 	}
 
 	template <typename VoxelType>
@@ -53,6 +56,7 @@ namespace Cubiquity
 		,m_pVoxelDatabase(0)
 		,mOctree(0)
 		//,mDatabase(0)
+		,mBackgroundTaskProcessor(0)
 	{
 		//m_pVoxelDatabase = new VoxelDatabase<VoxelType>;
 		//m_pVoxelDatabase->open(pathToExistingVoxelDatabase);
@@ -72,12 +76,17 @@ namespace Cubiquity
 		mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pVoxelDatabase, 32);
 
 		mPolyVoxVolume->setMemoryUsageLimit(64 * 1024 * 1024);
+
+		mBackgroundTaskProcessor = new BackgroundTaskProcessor();
 	}
 
 	template <typename VoxelType>
 	Volume<VoxelType>::~Volume()
 	{
 		POLYVOX_LOG_TRACE("Entering ~Volume()");
+
+		delete mBackgroundTaskProcessor;
+		mBackgroundTaskProcessor = 0;
 
 		// NOTE: We should really delete the volume here, but the background task processor might still be using it.
 		// We need a way to shut that down, or maybe smart pointers can help here. Just flush until we have a better fix.
@@ -98,30 +107,28 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	void Volume<VoxelType>::setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, UpdatePriority updatePriority)
+	void Volume<VoxelType>::setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, bool markAsModified)
 	{
 		// Validate the voxel position
 		POLYVOX_THROW_IF(mPolyVoxVolume->getEnclosingRegion().containsPoint(x, y, z) == false,
 			std::invalid_argument, "Attempted to write to a voxel which is outside of the volume");
 
 		mPolyVoxVolume->setVoxelAt(x, y, z, value);
-		if(updatePriority != UpdatePriorities::DontUpdate)
+		if(markAsModified)
 		{
-			mOctree->markDataAsModified(x, y, z, Clock::getTimestamp(), updatePriority);
+			mOctree->markDataAsModified(x, y, z, Clock::getTimestamp());
 		}
 	}
 
 	template <typename VoxelType>
-	void Volume<VoxelType>::markAsModified(const Region& region, UpdatePriority updatePriority)
+	void Volume<VoxelType>::markAsModified(const Region& region)
 	{
-		POLYVOX_THROW_IF(updatePriority == UpdatePriorities::DontUpdate, std::invalid_argument, "You cannot mark as modified yet request no update");
-
-		mOctree->markDataAsModified(region, Clock::getTimestamp(), updatePriority);
+		mOctree->markDataAsModified(region, Clock::getTimestamp());
 	}
 
 	template <typename VoxelType>
-	void Volume<VoxelType>::update(const Vector3F& viewPosition, float lodThreshold)
+	bool Volume<VoxelType>::update(const Vector3F& viewPosition, float lodThreshold)
 	{
-		mOctree->update(viewPosition, lodThreshold);
+		return mOctree->update(viewPosition, lodThreshold);
 	}
 }

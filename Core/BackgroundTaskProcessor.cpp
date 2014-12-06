@@ -43,3 +43,48 @@ namespace Cubiquity
 		//}
 	}
 }*/
+
+namespace Cubiquity
+{
+	BackgroundTaskProcessor gBackgroundTaskProcessor; //Our global instance
+
+	BackgroundTaskProcessor::BackgroundTaskProcessor()
+		:TaskProcessor()
+	{
+	}
+
+	BackgroundTaskProcessor::~BackgroundTaskProcessor()
+	{
+		mPendingTasks.clear();
+	}
+
+	void BackgroundTaskProcessor::addTask(Task* task)
+	{
+		mPendingTasks.push_back(task);
+	}
+
+	bool BackgroundTaskProcessor::hasTasks(void)
+	{
+		return mPendingTasks.size() > 0;
+	}
+
+	void BackgroundTaskProcessor::processOneTask(void)
+	{
+		if (mPendingTasks.size() > 0)
+		{
+			Task* task = mPendingTasks.front();
+			mPendingTasks.pop_front();
+			task->process();
+		}
+	}
+
+	void BackgroundTaskProcessor::processAllTasks(void)
+	{
+		while (mPendingTasks.size() > 0)
+		{
+			Task* task = mPendingTasks.front();
+			mPendingTasks.pop_front();
+			task->process();
+		}
+	}
+}

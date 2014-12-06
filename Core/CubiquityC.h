@@ -109,6 +109,26 @@ extern "C"
 	};
 	typedef struct CuColoredCubesVertex_s CuColoredCubesVertex;
 
+	struct CuOctreeNode_s
+	{
+	public:
+		int32_t posX;
+		int32_t posY;
+		int32_t posZ;
+
+		uint32_t structureLastChanged;
+		uint32_t propertiesLastChanged;
+		uint32_t meshLastChanged;
+		uint32_t nodeOrChildrenLastChanged;
+
+		uint32_t childHandles[2][2][2];
+
+		uint8_t hasMesh;
+		uint8_t renderThisNode;
+		uint8_t height;
+	};
+	typedef struct CuOctreeNode_s CuOctreeNode;
+
 	// Version functions
 	CUBIQUITYC_API int32_t cuGetVersionNumber(uint32_t* majorVersion, uint32_t* minorVersion, uint32_t* patchVersion);
 
@@ -131,7 +151,7 @@ extern "C"
 	// Volume functions
 	CUBIQUITYC_API int32_t cuNewEmptyColoredCubesVolume(int32_t lowerX, int32_t lowerY, int32_t lowerZ, int32_t upperX, int32_t upperY, int32_t upperZ, const char* pathToNewVoxelDatabase, uint32_t baseNodeSize, uint32_t* result);
 	CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVDB(const char* pathToExistingVoxelDatabase, uint32_t writePermissions, uint32_t baseNodeSize, uint32_t* result);
-	CUBIQUITYC_API int32_t cuUpdateVolume(uint32_t volumeHandle, float eyePosX, float eyePosY, float eyePosZ, float lodThreshold);
+	CUBIQUITYC_API int32_t cuUpdateVolume(uint32_t volumeHandle, float eyePosX, float eyePosY, float eyePosZ, float lodThreshold, uint32_t* isUpToDate);
 	CUBIQUITYC_API int32_t cuDeleteVolume(uint32_t volumeHandle);
 
 	CUBIQUITYC_API int32_t cuGetEnclosingRegion(uint32_t volumeHandle, int32_t* lowerX, int32_t* lowerY, int32_t* lowerZ, int32_t* upperX, int32_t* upperY, int32_t* upperZ);
@@ -151,20 +171,10 @@ extern "C"
 	// Octree functions
 	CUBIQUITYC_API int32_t cuHasRootOctreeNode(uint32_t volumeHandle, uint32_t* result);
 	CUBIQUITYC_API int32_t cuGetRootOctreeNode(uint32_t volumeHandle, uint32_t* result);
-	CUBIQUITYC_API int32_t cuHasChildNode(uint32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ, uint32_t* result);
-	CUBIQUITYC_API int32_t cuGetChildNode(uint32_t nodeHandle, uint32_t childX, uint32_t childY, uint32_t childZ, uint32_t* result);
-	CUBIQUITYC_API int32_t cuNodeHasMesh( uint32_t nodeHandle, uint32_t* result);
-	CUBIQUITYC_API int32_t cuGetNodePosition(uint32_t nodeHandle, int32_t* x, int32_t* y, int32_t* z);
-	CUBIQUITYC_API int32_t cuGetMeshLastUpdated(uint32_t nodeHandle, uint32_t* result);
-	CUBIQUITYC_API int32_t cuRenderThisNode(uint32_t nodeHandle, uint32_t* result);
+	CUBIQUITYC_API int32_t cuGetOctreeNode(uint32_t nodeHandle, CuOctreeNode* result);
 
 	// Mesh functions
-	CUBIQUITYC_API int32_t cuGetNoOfVertices(uint32_t nodeHandle, uint16_t* result);
-	CUBIQUITYC_API int32_t cuGetNoOfIndices(uint32_t nodeHandle, uint32_t* result);
-
-	CUBIQUITYC_API int32_t cuGetVertices(uint32_t nodeHandle, void** result);
-	CUBIQUITYC_API int32_t cuGetIndices(uint32_t nodeHandle, uint16_t** result);
-
+	CUBIQUITYC_API int32_t cuSetLodRange(uint32_t volumeHandle, int32_t minimumLOD, int32_t maximumLOD);
 	CUBIQUITYC_API int32_t cuGetMesh(uint32_t nodeHandle, uint16_t* noOfVertices, void** vertices, uint32_t* noOfIndices, uint16_t** indices);
 
 	// Clock functions

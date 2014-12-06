@@ -17,14 +17,16 @@ namespace Cubiquity
 		:mRegion(region)
 		,mParent(parent)
 		,mOctree(octree)
-		,mWantedForRendering(false)
 		,mRenderThisNode(false)
-		,mExtractOnMainThread(false)
+		,mCanRenderNodeOrChildren(false)
+		,mActive(false)
 		,mLastSceduledForUpdate(0) // The values of these few initialisations is important
-		,mMeshLastUpdated(1)	   // to make sure the node is set to an 'out of date' 
+		,mMeshLastChanged(1)	   // to make sure the node is set to an 'out of date' 
 		,mDataLastModified(2)      // state which will then try to update.
+		,mStructureLastChanged(1)
+		,mPropertiesLastChanged(1)
+		,mNodeOrChildrenLastChanged(1)
 		,mPolyVoxMesh(0)
-		,mGameEngineNode(0)
 		,mHeight(0)
 		,mLastSurfaceExtractionTask(0)
 	{
@@ -49,7 +51,17 @@ namespace Cubiquity
 	template <typename VoxelType>
 	OctreeNode<VoxelType>* OctreeNode<VoxelType>::getChildNode(uint32_t childX, uint32_t childY, uint32_t childZ)
 	{
-		return children[childX][childY][childZ] == Octree<VoxelType>::InvalidNodeIndex ? 0 : mOctree->mNodes[children[childX][childY][childZ]];
+		uint16_t childIndex = children[childX][childY][childZ];
+		if (childIndex != Octree<VoxelType>::InvalidNodeIndex)
+		{
+			OctreeNode<VoxelType>* child = mOctree->mNodes[children[childX][childY][childZ]];
+			if (child->isActive())
+			{
+				return child;
+			}
+		}
+
+		return 0;
 	}
 
 	template <typename VoxelType>
@@ -59,38 +71,94 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
+	const ::PolyVox::Mesh< typename VoxelTraits<VoxelType>::VertexType, uint16_t >* OctreeNode<VoxelType>::getMesh(void)
+	{
+		return mPolyVoxMesh;
+	}
+
+	template <typename VoxelType>
+	void OctreeNode<VoxelType>::setMesh(const ::PolyVox::Mesh< typename VoxelTraits<VoxelType>::VertexType, uint16_t >* mesh)
+	{
+		if (mPolyVoxMesh)
+		{
+			delete mPolyVoxMesh;
+			mPolyVoxMesh = 0;
+		}
+
+		mPolyVoxMesh = mesh;
+
+		mMeshLastChanged = Clock::getTimestamp();
+
+		/*if (mPolyVoxMesh == 0)
+		{
+			// Force the mesh to be updated next time it is needed.
+			mDataLastModified = Clock::getTimestamp();
+		}*/
+	}
+
+	template <typename VoxelType>
+	bool OctreeNode<VoxelType>::isActive(void)
+	{
+		return mActive;
+	}
+
+	template <typename VoxelType>
+	void OctreeNode<VoxelType>::setActive(bool active)
+	{
+		if (mActive != active)
+		{
+			mActive = active;
+
+			// When a node is activated or deactivated it is the structure of the *parent* 
+			// which has changed (i.e. the parent has gained or lost a child (this node).
+			if (getParentNode())
+			{
+				getParentNode()->mStructureLastChanged = Clock::getTimestamp();
+			}
+		}
+	}
+
+	template <typename VoxelType>
+	bool OctreeNode<VoxelType>::renderThisNode(void)
+	{
+		return mRenderThisNode;
+	}
+
+	template <typename VoxelType>
+	void OctreeNode<VoxelType>::setRenderThisNode(bool render)
+	{
+		if (mRenderThisNode != render)
+		{
+			mRenderThisNode = render;
+			mPropertiesLastChanged = Clock::getTimestamp();
+		}
+	}
+
+	template <typename VoxelType>
 	bool OctreeNode<VoxelType>::isMeshUpToDate(void)
 	{
-		return mMeshLastUpdated > mDataLastModified;
+		return mMeshLastChanged > mDataLastModified;
 	}
 
 	template <typename VoxelType>
 	bool OctreeNode<VoxelType>::isSceduledForUpdate(void)
 	{
 		//We are sceduled for an update if being sceduled was the most recent thing that happened.
-		return (mLastSceduledForUpdate > mDataLastModified) && (mLastSceduledForUpdate > mMeshLastUpdated);
-	}
-
-	template <typename VoxelType>
-	void OctreeNode<VoxelType>::setMeshLastUpdated(Timestamp newTimeStamp)
-	{
-		mMeshLastUpdated = newTimeStamp;
+		return (mLastSceduledForUpdate > mDataLastModified) && (mLastSceduledForUpdate > mMeshLastChanged);
 	}
 
 	template <typename VoxelType>
 	void OctreeNode<VoxelType>::updateFromCompletedTask(typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* completedTask)
 	{
-		// Delete the old mesh first.
-		delete mPolyVoxMesh;
-		mPolyVoxMesh = 0;
-
-		// Assign a new on if available
-		if(completedTask->mPolyVoxMesh->getNoOfIndices() > 0)
-		{
-			mPolyVoxMesh = completedTask->mPolyVoxMesh;
+		// Assign a new mesh if available
+		/*if(completedTask->mPolyVoxMesh->getNoOfIndices() > 0)
+		{*/
+			setMesh(completedTask->mPolyVoxMesh);
 			completedTask->mOwnMesh = false; // So the task doesn't delete the mesh
-		}
-
-		setMeshLastUpdated(Clock::getTimestamp());
+		/*}
+		else // Otherwise it will just be deleted.
+		{
+			setMesh(0);
+		}*/
 	}
 }

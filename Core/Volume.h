@@ -1,9 +1,9 @@
 #ifndef VOLUME_H_
 #define VOLUME_H_
 
+#include "BackgroundTaskProcessor.h"
 #include "CubiquityForwardDeclarations.h"
 #include "Octree.h"
-#include "UpdatePriorities.h"
 #include "Vector.h"
 #include "VoxelTraits.h"
 #include "WritePermissions.h"
@@ -48,10 +48,10 @@ namespace Cubiquity
 		OctreeNode<VoxelType>* getRootOctreeNode(void) { return mOctree->getRootNode(); }
 
 		// Set voxel doesn't just pass straight through, it also validates the position and marks the voxel as modified.
-		void setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, UpdatePriority updatePriority = UpdatePriorities::Background);
+		void setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, bool markAsModified);
 
 		// Marks a region as modified so it will be regenerated later.
-		void markAsModified(const Region& region, UpdatePriority updatePriority = UpdatePriorities::Background);
+		void markAsModified(const Region& region);
 
 		void acceptOverrideChunks(void)
 		{
@@ -66,7 +66,13 @@ namespace Cubiquity
 		}
 
 		// Should be called before rendering a frame to update the meshes and octree structure.
-		virtual void update(const Vector3F& viewPosition, float lodThreshold);
+		virtual bool update(const Vector3F& viewPosition, float lodThreshold);
+
+		// It's a bit ugly that the background task processor is part of the volume class.
+		// We do this because we want to clear it when the volume is destroyed, to avoid
+		// the situation wher it continues to process tasks from the destroyed volume.
+		// A better solution is needed here (smart pointers?).
+		BackgroundTaskProcessor* mBackgroundTaskProcessor;
 
 	protected:
 		Octree<VoxelType>* mOctree;

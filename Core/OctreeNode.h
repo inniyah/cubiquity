@@ -4,7 +4,6 @@
 #include "Clock.h"
 #include "CubiquityForwardDeclarations.h"
 #include "Region.h"
-#include "UpdatePriorities.h"
 #include "Vector.h"
 #include "VoxelTraits.h"
 
@@ -22,38 +21,50 @@ namespace Cubiquity
 		OctreeNode* getChildNode(uint32_t childX, uint32_t childY, uint32_t childZ);
 		OctreeNode* getParentNode(void);
 
+		const ::PolyVox::Mesh< typename VoxelTraits<VoxelType>::VertexType, uint16_t >* getMesh(void);
+		void setMesh(const ::PolyVox::Mesh< typename VoxelTraits<VoxelType>::VertexType, uint16_t >* mesh);
+
+		bool isActive(void);
+		void setActive(bool active);
+
+		bool renderThisNode(void);
+		void setRenderThisNode(bool render);
+
 		bool isMeshUpToDate(void);
 		bool isSceduledForUpdate(void);
-
-		void setMeshLastUpdated(Timestamp newTimeStamp);
 
 		void updateFromCompletedTask(typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* completedTask);
 
 		Region mRegion;
 		Timestamp mDataLastModified;
-		Timestamp mMeshLastUpdated;
 		Timestamp mLastSceduledForUpdate;
+
+		Timestamp mStructureLastChanged;
+		Timestamp mPropertiesLastChanged;
+		Timestamp mMeshLastChanged;
+		Timestamp mNodeOrChildrenLastChanged;
 
 		Octree<VoxelType>* mOctree;
 
 		// Use flags here?
-		bool mWantedForRendering;
-		bool mRenderThisNode;
-		bool mExtractOnMainThread;
-
-		const ::PolyVox::Mesh< typename VoxelTraits<VoxelType>::VertexType, uint16_t >* mPolyVoxMesh;
-
-		void* mGameEngineNode;
+		
+		bool mCanRenderNodeOrChildren;
+		bool mIsLeaf;
 
 		uint8_t mHeight; // Zero for leaf nodes.
 
 		typename VoxelTraits<VoxelType>::SurfaceExtractionTaskType* mLastSurfaceExtractionTask;
 
 		uint16_t mSelf;
+		uint16_t children[2][2][2];
 
 	private:
-		uint16_t mParent;
-		uint16_t children[2][2][2];
+		uint16_t mParent;		
+
+		bool mRenderThisNode;
+		bool mActive;
+
+		const ::PolyVox::Mesh< typename VoxelTraits<VoxelType>::VertexType, uint16_t >* mPolyVoxMesh;
 	};
 }
 
