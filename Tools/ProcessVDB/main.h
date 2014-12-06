@@ -1,0 +1,6 @@
+#ifndef CUBIQUITYTOOLS_MAIN_H_
+#define CUBIQUITYTOOLS_MAIN_H_
+
+#include <string>
+
+#endif //CUBIQUITYTOOLS_MAIN_H_

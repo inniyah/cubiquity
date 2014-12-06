@@ -1,9 +1,9 @@
 #include "ImportImageSlices.h"
 
-#include "CubiquityC.h"
+#include "Exceptions.h"
+#include "HeaderOnlyLibs.h"
 
-#define STBI_HEADER_FILE_ONLY
-#include "stb_image.cpp"
+#include "CubiquityC.h"
 
 #include <iomanip>
 #include <iostream>
@@ -63,31 +63,32 @@ std::vector<std::string> findImagesInFolder(std::string folder)
 	return imageFilenames;
 }
 
-bool importImageSlices(const std::string& folder, const std::string& pathToVoxelDatabase)
+void importImageSlices(ez::ezOptionParser& options)
 {
-	cout << "Importing images from '" << folder << "' and into '" << pathToVoxelDatabase << "'";
+	LOG(INFO) << "Importing from image slices...";
+
+	// We know the -imageslices flag was set or we wouldn't be
+	// in this function. Must check the -coloredcubes flag though.
+	throwExceptionIf(!options.get("-coloredcubes"), OptionsError("-coloredcubes flag not found"));
+
+	string folder;
+	options.get("-imageslices")->getString(folder);
+	string pathToVoxelDatabase;
+	options.get("-coloredcubes")->getString(pathToVoxelDatabase);
+
+	LOG(INFO) << "Importing images from '" << folder << "' and into '" << pathToVoxelDatabase << "'";
 
 	std::vector<std::string> imageFilenames = findImagesInFolder(folder);
 
 	// Make sure at least one image was found.
 	uint32_t sliceCount = imageFilenames.size();
-	if(sliceCount == 0)
-	{
-		cerr << "No images found in provided folder" << endl;
-		return false;
-	}
-	cout << "Found " << imageFilenames.size() << " images for import" << endl;
+	LOG(INFO) << "Found " << sliceCount << " images for import" << endl;
+	throwExceptionIf(sliceCount == 0, FileSystemError("No images found in provided folder"));	
 
 	// Open the first image to determine the width and height
 	int volumeWidth = 0, volumeHeight = 0, noOfChannels;
 	unsigned char *sliceData = stbi_load((*(imageFilenames.begin())).c_str(), &volumeWidth, &volumeHeight, &noOfChannels, 0);
-
-	// Make sure it opened sucessfully
-	if(sliceData == NULL)
-	{
-		cerr << "Failed to open first image" << endl;
-		return false;
-	}
+	throwExceptionIf(sliceData == NULL, FileSystemError("Failed to open first image"));
 
 	//Close it straight away - we only wanted to find the dimensions.
 	stbi_image_free(sliceData);
@@ -95,32 +96,23 @@ bool importImageSlices(const std::string& folder, const std::string& pathToVoxel
 	// Create the volume. When importing we treat 'y' as up because most game engines and
 	// physics engines expect this. This means we need to swap the 'y' and 'slice' indices.
 	uint32_t volumeHandle;
-	if(cuNewEmptyColoredCubesVolume(0, 0, 0, volumeWidth - 1, sliceCount - 1, volumeHeight - 1, pathToVoxelDatabase.c_str(), 32, &volumeHandle) != CU_OK)
-	{
-		cerr << "Failed to create new empty volume" << endl;
-		return false;
-	}
+	VALIDATE_CALL(cuNewEmptyColoredCubesVolume(0, 0, 0, volumeWidth - 1, sliceCount - 1, volumeHeight - 1, pathToVoxelDatabase.c_str(), 32, &volumeHandle))
 
 	// Now iterate over each slice and import the data.
 	for(int slice = 0; slice < sliceCount; slice++)
 	{
-		cout << "Importing image " << slice << endl;
+		LOG(INFO) << "Importing image " << slice << endl;
 		int imageWidth = 0, imageHeight = 0, imageChannels;
 		unsigned char *sliceData = stbi_load(imageFilenames[slice].c_str(), &imageWidth, &imageHeight, &imageChannels, 0);
 
 		if((imageWidth != volumeWidth) || (imageHeight != volumeHeight))
 		{
-			cerr << "All images must have the same dimensions!" << endl;
-			return false;
+			throwException(ParseError("All images must have the same dimensions!"));
 		}
 
-		if(imageChannels != 4)
-		{
-			// When building a colored cubes volume we need an alpha channel in the images
-			// or we do not know what to write into the alpha channel of the volume.
-			cerr << "Image does not have an alpha channel but one is required" << endl;
-			return false;
-		}
+		// When building a colored cubes volume we need an alpha channel in the images
+		// or we do not know what to write into the alpha channel of the volume.
+		throwExceptionIf(imageChannels != 4, ParseError("Image must be in RGBA format (four channels)"));
 
 		// Now iterate over each pixel.
 		for(int x = 0; x < imageWidth; x++)
@@ -133,11 +125,7 @@ bool importImageSlices(const std::string& folder, const std::string& pathToVoxel
 
 				// When importing we treat 'y' as up because most game engines and physics
 				// engines expect this. This means we need to swap the 'y' and 'slice' indices.
-				if(cuSetVoxel(volumeHandle, x, slice, y, &color) != CU_OK)
-				{
-					cerr << "Error setting voxel color" << endl;
-					return false;
-				}
+				VALIDATE_CALL(cuSetVoxel(volumeHandle, x, slice, y, &color))
 			}
 		}
 
@@ -146,8 +134,6 @@ bool importImageSlices(const std::string& folder, const std::string& pathToVoxel
 
 	//volume->markAsModified(volume->getEnclosingRegion(), UpdatePriorities::Background);
 
-	cuAcceptOverrideChunks(volumeHandle);
-	cuDeleteVolume(volumeHandle);
-
-	return true;
+	VALIDATE_CALL(cuAcceptOverrideChunks(volumeHandle));
+	VALIDATE_CALL(cuDeleteVolume(volumeHandle));
 }

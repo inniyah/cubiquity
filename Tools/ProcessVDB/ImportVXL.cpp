@@ -1,19 +1,26 @@
 #include "ImportVXL.h"
 
+#include "Exceptions.h"
+
 #include "CubiquityC.h"
 
 #include <iostream>
 
 using namespace std;
 
-bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDatabase, bool dryRun)
+void importVxl(ez::ezOptionParser& options)
 {
+	LOG(INFO) << "Importing from VXL...";
+
+	string vxlFilename;
+	options.get("-vxl")->getString(vxlFilename);
+	string pathToVoxelDatabase;
+	options.get("-coloredcubes")->getString(pathToVoxelDatabase);
+
+	cout << "Importing vxl from '" << vxlFilename << "' and into '" << pathToVoxelDatabase << "'";
+
 	FILE* inputFile = fopen(vxlFilename.c_str(), "rb");
-	if(inputFile == NULL)
-	{
-		cerr << "Failed to open input file!" << endl;
-		return false;
-	}
+	throwExceptionIf(inputFile == NULL, FileSystemError("Failed to open input file."));
 
 	// Determine input file's size.
 	fseek(inputFile, 0, SEEK_END);
@@ -22,22 +29,11 @@ bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDat
 
 	uint8_t* data = new uint8_t[fileSize];
 	long bytesRead = fread(data, sizeof(uint8_t), fileSize, inputFile);
-	if(fileSize != bytesRead)
-	{
-		cerr << "Failed to read file!" << endl;
-		return false;
-	}
 	fclose(inputFile);
+	throwExceptionIf(fileSize != bytesRead, FileSystemError("Failed to read input file."));
 
 	uint32_t volumeHandle = 1000000; // Better if handles were ints so they could be set invalid?
-	if(!dryRun)
-	{
-		if(cuNewEmptyColoredCubesVolume(0, 0, 0, 511, 63, 511, pathToVoxelDatabase.c_str(), 32, &volumeHandle) != CU_OK)
-		{
-			cerr << "Failed to create new empty volume" << endl;
-			return false;
-		}
-	}
+	VALIDATE_CALL(cuNewEmptyColoredCubesVolume(0, 0, 0, 511, 63, 511, pathToVoxelDatabase.c_str(), 32, &volumeHandle))
 
 	uint8_t N, S, E, A, K, Z, M, colorI, zz, runlength, j, red, green, blue;
 
@@ -54,7 +50,7 @@ bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDat
 		// Bounds check before accessing data[...], useful incase we don't actually have a valid VXL file (e.g. in dry-run mode)
 		if((i + 3) >= fileSize)
 		{
-			return false;
+			throwException(ParseError("Error parsing VXL file."));
 		}
 
 		// i = span start byte
@@ -74,7 +70,7 @@ bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDat
 			// Bounds check before accessing data[...], useful incase we don't actually have a valid VXL file (e.g. in dry-run mode)
 			if((i + N * 4 + 3) >= fileSize)
 			{
-				return false;
+				throwException(ParseError("Error parsing VXL file."));
 			}
 
 			// A of the next span
@@ -100,23 +96,16 @@ bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDat
 				// Bounds check before accessing data[...], useful incase we don't actually have a valid VXL file (e.g. in dry-run mode)
 				if((i + 6 + colorI * 4) >= fileSize)
 				{
-					return false;
+					throwException(ParseError("Error parsing VXL file."));
 				}
 
-				if(!dryRun)
-				{
-					red = data[i + 6 + colorI * 4];
-					green = data[i + 5 + colorI * 4];
-					blue = data[i + 4 + colorI * 4];
-					// Do something with these colors
-					//makeVoxelColorful(x, y, zz, red, green, blue);
-					CuColor color = cuMakeColor(red, green, blue, 255);
-					if (cuSetVoxel(volumeHandle, x, 63 - zz, y, &color) != CU_OK)
-					{
-						cerr << "Error setting voxel color" << endl;
-						return false;
-					}
-				}
+				red = data[i + 6 + colorI * 4];
+				green = data[i + 5 + colorI * 4];
+				blue = data[i + 4 + colorI * 4];
+				// Do something with these colors
+				//makeVoxelColorful(x, y, zz, red, green, blue);
+				CuColor color = cuMakeColor(red, green, blue, 255);
+				VALIDATE_CALL(cuSetVoxel(volumeHandle, x, 63 - zz, y, &color))
 
 				zz++;
 				colorI++;
@@ -129,15 +118,8 @@ bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDat
 		for (j = 0; j < runlength; j++)
 		{
 			//makeVoxelSolid(x, y, zz);
-			if(!dryRun)
-			{
-				CuColor color = cuMakeColor(127, 127, 127, 255);
-				if(cuSetVoxel(volumeHandle, x, 63 - zz, y, &color) != CU_OK) 
-				{
-					cerr << "Error setting voxel color" << endl;
-					return false;
-				}
-			}
+			CuColor color = cuMakeColor(127, 127, 127, 255);
+			VALIDATE_CALL(cuSetVoxel(volumeHandle, x, 63 - zz, y, &color))
 
 			zz++;
 		}
@@ -158,11 +140,6 @@ bool importVxl(const std::string& vxlFilename, const std::string& pathToVoxelDat
 		}
 	}
 
-	if (!dryRun)
-	{
-		cuAcceptOverrideChunks(volumeHandle);
-		cuDeleteVolume(volumeHandle);
-	}
-
-	return true;
+	VALIDATE_CALL(cuAcceptOverrideChunks(volumeHandle));
+	VALIDATE_CALL(cuDeleteVolume(volumeHandle));
 }
