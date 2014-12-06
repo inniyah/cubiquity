@@ -779,6 +779,28 @@ CUBIQUITYC_API int32_t cuGetOctreeNode(uint32_t nodeHandle, CuOctreeNode* result
 // Mesh functions
 ////////////////////////////////////////////////////////////////////////////////
 
+// This isn't really a mesh function... more of an Octree one?
+CUBIQUITYC_API int32_t cuSetLodRange(uint32_t volumeHandle, int32_t minimumLOD, int32_t maximumLOD)
+{
+	OPEN_C_INTERFACE
+
+	uint32_t volumeType, volumeIndex, nodeIndex;
+	decodeHandle(volumeHandle, &volumeType, &volumeIndex, &nodeIndex);
+
+	if (volumeType == CU_COLORED_CUBES)
+	{
+		ColoredCubesVolume* volume = getColoredCubesVolumeFromHandle(volumeIndex);
+		volume->getOctree()->setLodRange(minimumLOD, maximumLOD);
+	}
+	else
+	{
+		TerrainVolume* volume = getTerrainVolumeFromHandle(volumeIndex);
+		volume->getOctree()->setLodRange(minimumLOD, maximumLOD);
+	}
+
+	CLOSE_C_INTERFACE
+}
+
 CUBIQUITYC_API int32_t cuGetMesh(uint32_t nodeHandle, uint16_t* noOfVertices, void** vertices, uint32_t* noOfIndices, uint16_t** indices)
 {
 	OPEN_C_INTERFACE

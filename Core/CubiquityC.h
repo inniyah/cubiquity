@@ -172,6 +172,7 @@ extern "C"
 	CUBIQUITYC_API int32_t cuGetOctreeNode(uint32_t nodeHandle, CuOctreeNode* result);
 
 	// Mesh functions
+	CUBIQUITYC_API int32_t cuSetLodRange(uint32_t volumeHandle, int32_t minimumLOD, int32_t maximumLOD);
 	CUBIQUITYC_API int32_t cuGetMesh(uint32_t nodeHandle, uint16_t* noOfVertices, void** vertices, uint32_t* noOfIndices, uint16_t** indices);
 
 	// Clock functions

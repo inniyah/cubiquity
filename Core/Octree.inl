@@ -248,8 +248,16 @@ namespace Cubiquity
 
 	template <typename VoxelType>
 	void Octree<VoxelType>::markDataAsModified(const Region& region, Timestamp newTimeStamp)
-	{
+	{		
 		markAsModified(mRootNodeIndex, region, newTimeStamp);
+	}
+
+	template <typename VoxelType>
+	void Octree<VoxelType>::setLodRange(int32_t minimumLOD, int32_t maximumLOD)
+	{
+		POLYVOX_THROW_IF(minimumLOD < maximumLOD, std::invalid_argument, "Invalid LOD range. For LOD levels, the 'minimum' must be *more* than or equal to the 'maximum'");
+		mMinimumLOD = minimumLOD;
+		mMaximumLOD = maximumLOD;
 	}
 
 	template <typename VoxelType>
