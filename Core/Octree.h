@@ -71,11 +71,11 @@ namespace Cubiquity
 		void markAsModified(uint16_t index, int32_t x, int32_t y, int32_t z, Timestamp newTimeStamp);
 		void markAsModified(uint16_t index, const Region& region, Timestamp newTimeStamp);
 
-		Timestamp Octree<VoxelType>::propagateTimestamps(uint16_t index);
+		Timestamp propagateTimestamps(uint16_t index);
 
 		void scheduleUpdateIfNeeded(OctreeNode<VoxelType>* node, const Vector3F& viewPosition);
 
-		void Octree<VoxelType>::determineWhetherToRenderNode(uint16_t index);
+		void determineWhetherToRenderNode(uint16_t index);
 
 		std::vector< OctreeNode<VoxelType>*> mNodes;
 
