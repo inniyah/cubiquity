@@ -186,10 +186,10 @@ void importHeightmapAsTerrainVolume(ez::ezOptionParser& options)
 
 				materialSet.data = static_cast<uint8_t>(diff);
 
-				/*if (materialSet.data < 140)
+				if (materialSet.data > 135)
 				{
 					materialSet.data <<= 8;
-				}*/
+				}
 
 				VALIDATE_CALL(cuSetVoxel(volumeHandle, imageX, height, imageY, &materialSet))
 			}
