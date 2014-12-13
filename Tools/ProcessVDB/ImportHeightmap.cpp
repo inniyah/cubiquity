@@ -62,6 +62,7 @@ void importHeightmapAsColoredCubesVolume(ez::ezOptionParser& options)
 
 	// Create the volume. When importing we treat 'y' as up because most game engines and
 	// physics engines expect this. This means we need to swap the 'y' and 'slice' indices.
+	// Ideally we should allow command line parameters to control this mapping.
 	uint32_t volumeHandle;
 	uint32_t volumeWidth = heightmapWidth;
 	uint32_t volumeHeight = 256; // Assume we're not loading HDR images, not supported by stb_image anyway
@@ -96,7 +97,9 @@ void importHeightmapAsColoredCubesVolume(ez::ezOptionParser& options)
 					colorToUse = empty;
 				}
 
-				VALIDATE_CALL(cuSetVoxel(volumeHandle, imageX, height, imageY, &colorToUse))
+				// Note: We are flipping Y here to match the Unity3D coordinate system. This no longer matches the
+				// OpenGL coordinate system. This flipping shold ideally be controlled by command line switches.
+				VALIDATE_CALL(cuSetVoxel(volumeHandle, imageX, height, (heightmapHeight - 1) - imageY, &colorToUse))
 			}
 		}
 	}
@@ -191,7 +194,9 @@ void importHeightmapAsTerrainVolume(ez::ezOptionParser& options)
 					materialSet.data <<= 8;
 				}
 
-				VALIDATE_CALL(cuSetVoxel(volumeHandle, imageX, height, imageY, &materialSet))
+				// Note: We are flipping Y here to match the Unity3D coordinate system. This no longer matches the
+				// OpenGL coordinate system. This flipping shold ideally be controlled by command line switches.
+				VALIDATE_CALL(cuSetVoxel(volumeHandle, imageX, height, (resampledHeight-1) - imageY, &materialSet))
 			}
 		}
 	}
