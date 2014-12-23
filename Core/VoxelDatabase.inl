@@ -160,7 +160,7 @@ namespace Cubiquity
 		// we leave the chunk in it's default state (initialized to zero).
 		if (compressedData)
 		{
-			mz_ulong uncomp_len;
+			mz_ulong uncomp_len = pChunk->getDataSizeInBytes();
 			int status = uncompress((unsigned char*)pChunk->getData(), &uncomp_len, (const unsigned char*)compressedData, compressedLength);
 			POLYVOX_THROW_IF(status != Z_OK, CompressionError, "Decompression failed with error message \'" << mz_error(status) << "\'");
 		}
