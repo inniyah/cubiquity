@@ -4,7 +4,7 @@
 
 #include "PolyVoxCore/MarchingCubesSurfaceExtractor.h"
 #include "PolyVoxCore/RawVolume.h"
-#include "PolyVoxCore/LargeVolume.h"
+#include "PolyVoxCore/PagedVolume.h"
 
 #include <limits>
 
@@ -22,7 +22,7 @@ namespace Cubiquity
 		}
 	}
 
-	SmoothSurfaceExtractionTask::SmoothSurfaceExtractionTask(OctreeNode< MaterialSet >* octreeNode, ::PolyVox::LargeVolume<MaterialSet>* polyVoxVolume)
+	SmoothSurfaceExtractionTask::SmoothSurfaceExtractionTask(OctreeNode< MaterialSet >* octreeNode, ::PolyVox::PagedVolume<MaterialSet>* polyVoxVolume)
 		:Task()
 		,mOctreeNode(octreeNode)
 		,mPolyVoxVolume(polyVoxVolume)
@@ -95,7 +95,7 @@ namespace Cubiquity
 		}
 	}
 
-	void recalculateMaterials(TerrainMesh* mesh, const Vector3F& meshOffset,  ::PolyVox::LargeVolume<MaterialSet>* volume)
+	void recalculateMaterials(TerrainMesh* mesh, const Vector3F& meshOffset, ::PolyVox::PagedVolume<MaterialSet>* volume)
 	{
 		// Nasty casting away of constness so we can tweak the material values.
 		std::vector<TerrainVertex>& vertices = const_cast<std::vector< MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >&>(mesh->getVertices());
@@ -121,9 +121,9 @@ namespace Cubiquity
 	}
 
 
-	MaterialSet getInterpolatedValue(::PolyVox::LargeVolume<MaterialSet>* volume, const Vector3F& position)
+	MaterialSet getInterpolatedValue(::PolyVox::PagedVolume<MaterialSet>* volume, const Vector3F& position)
 	{
-		::PolyVox::LargeVolume<MaterialSet>::Sampler sampler(volume);
+		::PolyVox::PagedVolume<MaterialSet>::Sampler sampler(volume);
 
 		int32_t iLowerX = ::PolyVox::roundTowardsNegInf(position.getX());
 		int32_t iLowerY = ::PolyVox::roundTowardsNegInf(position.getY());

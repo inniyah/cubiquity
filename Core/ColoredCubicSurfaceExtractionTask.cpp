@@ -5,7 +5,7 @@
 
 #include "PolyVoxCore/CubicSurfaceExtractor.h"
 #include "PolyVoxCore/RawVolume.h"
-#include "PolyVoxCore/LargeVolume.h"
+#include "PolyVoxCore/PagedVolume.h"
 
 #include <limits>
 
@@ -35,7 +35,7 @@ namespace Cubiquity
 		}
 	}*/
 
-	ColoredCubicSurfaceExtractionTask::ColoredCubicSurfaceExtractionTask(OctreeNode< Color >* octreeNode, ::PolyVox::LargeVolume<Color>* polyVoxVolume)
+	ColoredCubicSurfaceExtractionTask::ColoredCubicSurfaceExtractionTask(OctreeNode< Color >* octreeNode, ::PolyVox::PagedVolume<Color>* polyVoxVolume)
 		:Task()
 		,mOctreeNode(octreeNode)
 		,mPolyVoxVolume(polyVoxVolume)

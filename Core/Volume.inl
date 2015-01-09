@@ -43,7 +43,7 @@ namespace Cubiquity
 		m_pVoxelDatabase->setProperty("upperY", region.getUpperY());
 		m_pVoxelDatabase->setProperty("upperZ", region.getUpperZ());
 		
-		mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pVoxelDatabase, 32);
+		mPolyVoxVolume = new ::PolyVox::PagedVolume<VoxelType>(region, m_pVoxelDatabase, 32);
 
 		mPolyVoxVolume->setMemoryUsageLimit(256 * 1024 * 1024);
 
@@ -73,7 +73,7 @@ namespace Cubiquity
 		int32_t upperZ = m_pVoxelDatabase->getPropertyAsInt("upperZ", 512);
 		Region region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
 		
-		mPolyVoxVolume = new ::PolyVox::LargeVolume<VoxelType>(region, m_pVoxelDatabase, 32);
+		mPolyVoxVolume = new ::PolyVox::PagedVolume<VoxelType>(region, m_pVoxelDatabase, 32);
 
 		mPolyVoxVolume->setMemoryUsageLimit(64 * 1024 * 1024);
 
