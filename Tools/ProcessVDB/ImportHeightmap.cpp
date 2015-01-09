@@ -161,8 +161,9 @@ void importHeightmapAsTerrainVolume(ez::ezOptionParser& options)
 	options.get("-terrain")->getString(pathToVoxelDatabase);
 	VALIDATE_CALL(cuNewEmptyTerrainVolume(0, 0, 0, volumeWidth - 1, volumeHeight - 1, volumeDepth - 1, pathToVoxelDatabase.c_str(), 32, &volumeHandle))
 
-	// Don't yet know the best value for this.
-	float scalarFieldCompressionFactor = 255.0f;
+	// Don't yet know the best value for this. Setting it smaller makes the 
+	// result smoother but sculpting goes a bit crazy (some kind of wraparound)?
+	float scalarFieldCompressionFactor = 1024.0f;
 
 	for (uint32_t imageY = 0; imageY < resampledHeight; imageY++)
 	{
@@ -175,7 +176,7 @@ void importHeightmapAsTerrainVolume(ez::ezOptionParser& options)
 				CuMaterialSet materialSet;
 				materialSet.data = 0;
 
-				float fHeight = float(height) / float(volumeHeight);				
+				float fHeight = float(height) / float(volumeHeight - 1);				
 
 				float fDiff = fPixelHeight - fHeight;
 
