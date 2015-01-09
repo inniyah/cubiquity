@@ -2,6 +2,8 @@
 #include "Volume.h"
 #include "MainThreadTaskProcessor.h"
 
+#include <algorithm>
+
 namespace Cubiquity
 {
 	template <typename VoxelType>

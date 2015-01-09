@@ -5,6 +5,8 @@
 
 #include "CubiquityC.h"
 
+#include <limits.h> // For CHAR_BIT - should find C++ alternative.
+
 #include <iomanip>
 #include <iostream>
 #include <cstdint>
