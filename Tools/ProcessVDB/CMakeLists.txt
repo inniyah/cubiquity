@@ -6,7 +6,7 @@ add_executable (ProcessVDB Export.cpp ExportImageSlices.cpp HeaderOnlyLibs.cpp I
 
 # Set LINK_FLAGS
 if(CMAKE_CXX_COMPILER_ID MATCHES "CLANG")
-  set_target_properties(ProcessVDB PROPERTIES LINK_FLAGS "-arch i386 -static-libstdc++")
+  set_target_properties(ProcessVDB PROPERTIES LINK_FLAGS "-arch i386 -arch x86_64 -static-libstdc++")
 elseif(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
   set_target_properties(ProcessVDB PROPERTIES LINK_FLAGS "-static-libstdc++")
 endif()
