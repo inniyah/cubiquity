@@ -24,7 +24,7 @@ using namespace std;
 
 int main(int argc, const char* argv[])
 {
-	_START_EASYLOGGINGPP(argc, argv);
+	START_EASYLOGGINGPP(argc, argv);
 
 	try
 	{
@@ -32,6 +32,7 @@ int main(int argc, const char* argv[])
 		el::Configurations defaultConf;
 		defaultConf.setToDefault();
 		defaultConf.set(el::Level::Global, el::ConfigurationType::Format, "[%datetime{%H:%m:%s}, %level]: %msg");
+		defaultConf.set(el::Level::Global, el::ConfigurationType::ToFile, "false"); // See also ELPP_NO_DEFAULT_LOG_FILE
 		el::Loggers::reconfigureLogger("default", defaultConf);
 
 		// We have to declare here all options which we might later want to check for. Unfortunaltly ezOptionParser does not support 'increamental',

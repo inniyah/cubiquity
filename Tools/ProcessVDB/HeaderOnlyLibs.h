@@ -9,6 +9,8 @@
 // constants exactly once per program. We take tare of this in this HeaderOnlyLibs.h/cpp
 
 #include "Dependencies/ezOptionParser.hpp" // Needs to go before 'easylogging++' od compile errors result.
+
+#define ELPP_NO_DEFAULT_LOG_FILE
 #include "Dependencies/easylogging++.h"
 
 #include "Dependencies/stb_image.h"
