@@ -92,6 +92,15 @@ namespace Cubiquity
 		int flags = (writePermission == WritePermissions::ReadOnly) ? SQLITE_OPEN_READONLY : SQLITE_OPEN_READWRITE;
 		EXECUTE_SQLITE_FUNC(sqlite3_open_v2(pathToExistingVoxelDatabase.c_str(), &(voxelDatabase->mDatabase), flags, NULL));
 
+		// If the database was requested with write permissions but only read-only was possible, then SQLite opens it in read-only mode 
+		// instead. This is undisirable for us as we would rather know that it has failed. In one case this was due to a user having the
+		// VDB in source control, and is is desirable to give an error so that the user knows they need to check out the database.
+		if ((writePermission == WritePermissions::ReadWrite) && (sqlite3_db_readonly(voxelDatabase->mDatabase, "main") == 1))
+		{
+			EXECUTE_SQLITE_FUNC(sqlite3_close(voxelDatabase->mDatabase));
+			POLYVOX_THROW(std::runtime_error, "Voxel database could not be opened with requested 'write' permissions (only read-only was possible)");
+		}
+
 		voxelDatabase->initialize();
 		return voxelDatabase;
 	}
