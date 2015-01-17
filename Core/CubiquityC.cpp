@@ -21,9 +21,25 @@
 
 using namespace std;
 
+// In principle we try to use semantic versioning (http://semver.org/), though in practice it's more complex and we
+// the addition of a build number. The reason is that we want to keep the Cubiquity for Unity3D/Unreal version numbers
+// matching the main Cubiquity ones. For example, if we release version 1.0.0 of Cubiquity for Unity3D and then we want
+// to release a simple bugfix then users expect this to have version 1.0.1. However, implementing the bugfix may require
+// changes to the native library interface, which would in theory require a minor version increase. For users of Cubiquity
+// for Unity the C API is some implementation detail which is not important, but for direct users of Cubiquity it is
+// very important.
+//
+// We therefore add the build number, which can be updated any time for any reason. I *think* it should be reset when the
+// patch number is incremented. It's really for our internal use with Unity3D/Unreal so probably we tell C/C++ users not 
+// to use it.
+//
+// Longer term we can hope the native code API stabilizes, and we can just leave the build number at zero or something. 
+// I still think the Unity/Unreal wrapper version numbers should follow the Cubiquity ones, and this will be less
+// disruptive once the Cubiquity ones are more settled.
 const uint32_t CuMajorVersion = 1;
 const uint32_t CuMinorVersion = 2;
 const uint32_t CuPatchVersion = 0;
+const uint32_t CuBuildVersion = 0;
 
 char gLastErrorMessage[4096];
 
@@ -174,13 +190,14 @@ void* getNode(uint32_t volumeType, uint32_t volumeIndex, uint32_t nodeIndex)
 ////////////////////////////////////////////////////////////////////////////////
 // Version functions
 ////////////////////////////////////////////////////////////////////////////////
-CUBIQUITYC_API int32_t cuGetVersionNumber(uint32_t* majorVersion, uint32_t* minorVersion, uint32_t* patchVersion)
+CUBIQUITYC_API int32_t cuGetVersionNumber(uint32_t* majorVersion, uint32_t* minorVersion, uint32_t* patchVersion, uint32_t* buildVersion)
 {
 	OPEN_C_INTERFACE
 
 	*majorVersion = CuMajorVersion;
 	*minorVersion = CuMinorVersion;
 	*patchVersion = CuPatchVersion;
+	*buildVersion = CuBuildVersion;
 
 	CLOSE_C_INTERFACE
 }
