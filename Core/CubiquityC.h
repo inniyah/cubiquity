@@ -130,7 +130,7 @@ extern "C"
 	typedef struct CuOctreeNode_s CuOctreeNode;
 
 	// Version functions
-	CUBIQUITYC_API int32_t cuGetVersionNumber(uint32_t* majorVersion, uint32_t* minorVersion, uint32_t* patchVersion);
+	CUBIQUITYC_API int32_t cuGetVersionNumber(uint32_t* majorVersion, uint32_t* minorVersion, uint32_t* patchVersion, uint32_t* buildVersion);
 
 	// Logging functions - Doesn't return error code as it is too simple to fail.
 	CUBIQUITYC_API const char* cuGetLogFilePath(void);
