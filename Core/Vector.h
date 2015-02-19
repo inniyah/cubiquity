@@ -1,7 +1,7 @@
 #ifndef __Cubiquity_Vector_H__
 #define __Cubiquity_Vector_H__
 
-#include "PolyVoxCore/Vector.h"
+#include "PolyVox/Vector.h"
 
 namespace Cubiquity
 {

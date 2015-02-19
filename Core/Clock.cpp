@@ -1,6 +1,6 @@
 #include "Clock.h"
 
-#include "PolyVoxCore/Impl/ErrorHandling.h"
+#include "PolyVox/Impl/ErrorHandling.h"
 
 #include <limits>
 

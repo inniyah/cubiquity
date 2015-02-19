@@ -1,7 +1,7 @@
 #ifndef CUBIQUITY_TASK_H_
 #define CUBIQUITY_TASK_H_
 
-#include "PolyVoxCore/Impl/ErrorHandling.h"
+#include "PolyVox/Impl/ErrorHandling.h"
 
 #include <cstdint>
 

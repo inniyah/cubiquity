@@ -5,7 +5,7 @@
 
 #include "SQLite/sqlite3.h"
 
-#include "PolyVoxCore/Impl/ErrorHandling.h"
+#include "PolyVox/Impl/ErrorHandling.h"
 
 #include <stdexcept>
 #include <sstream>

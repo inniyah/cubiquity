@@ -5,7 +5,7 @@
 #include "Color.h"
 #include "MaterialSet.h"
 
-#include "PolyVoxCore/Raycast.h"
+#include "PolyVox/Raycast.h"
 
 namespace Cubiquity
 {

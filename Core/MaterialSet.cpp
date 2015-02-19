@@ -1,6 +1,6 @@
 #include "MaterialSet.h"
 
-#include "PolyVoxCore/Interpolation.h"
+#include "PolyVox/Interpolation.h"
 
 using namespace Cubiquity;
 

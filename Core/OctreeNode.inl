@@ -4,8 +4,8 @@
 #include "Octree.h"
 #include "SmoothSurfaceExtractionTask.h"
 
-#include "PolyVoxCore/Region.h"
-#include "PolyVoxCore/Mesh.h"
+#include "PolyVox/Region.h"
+#include "PolyVox/Mesh.h"
 
 #include <limits>
 #include <sstream>

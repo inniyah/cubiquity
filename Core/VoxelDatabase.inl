@@ -1,5 +1,5 @@
-#include "PolyVoxCore/Impl/Timer.h"
-#include "PolyVoxCore/Impl/Utility.h"
+#include "PolyVox/Impl/Timer.h"
+#include "PolyVox/Impl/Utility.h"
 
 #include "SQLiteUtils.h"
 

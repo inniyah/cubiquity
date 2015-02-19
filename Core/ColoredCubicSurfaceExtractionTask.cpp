@@ -3,9 +3,9 @@
 #include "Color.h"
 #include "OctreeNode.h"
 
-#include "PolyVoxCore/CubicSurfaceExtractor.h"
-#include "PolyVoxCore/RawVolume.h"
-#include "PolyVoxCore/PagedVolume.h"
+#include "PolyVox/CubicSurfaceExtractor.h"
+#include "PolyVox/RawVolume.h"
+#include "PolyVox/PagedVolume.h"
 
 #include <limits>
 

@@ -1,7 +1,7 @@
 #ifndef __Cubiquity_ForwardDeclarations_H__
 #define __Cubiquity_ForwardDeclarations_H__
 
-#include "PolyVoxCore/PolyVoxForwardDeclarations.h"
+#include "PolyVox/PolyVoxForwardDeclarations.h"
 
 namespace Cubiquity
 {

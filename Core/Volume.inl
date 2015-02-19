@@ -1,9 +1,9 @@
-#include "PolyVoxCore/LowPassFilter.h"
-#include "PolyVoxCore/MaterialDensityPair.h"
-#include "PolyVoxCore/Raycast.h"
-#include "PolyVoxCore/VolumeResampler.h"
+#include "PolyVox/LowPassFilter.h"
+#include "PolyVox/MaterialDensityPair.h"
+#include "PolyVox/Raycast.h"
+#include "PolyVox/VolumeResampler.h"
 
-#include "PolyVoxCore/Impl/Utility.h" //Should we include from Impl?
+#include "PolyVox/Impl/Utility.h" //Should we include from Impl?
 
 #include "Clock.h"
 #include "BackgroundTaskProcessor.h"

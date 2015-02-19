@@ -1,7 +1,7 @@
 #ifndef __Cubiquity_Region_H__
 #define __Cubiquity_Region_H__
 
-#include "PolyVoxCore/Region.h"
+#include "PolyVox/Region.h"
 
 namespace Cubiquity
 {

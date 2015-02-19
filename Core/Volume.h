@@ -8,14 +8,14 @@
 #include "VoxelTraits.h"
 #include "WritePermissions.h"
 
-#include "PolyVoxCore/Array.h"
-#include "PolyVoxCore/Material.h"
-#include "PolyVoxCore/RawVolume.h"
+#include "PolyVox/Array.h"
+#include "PolyVox/Material.h"
+#include "PolyVox/RawVolume.h"
 
-#include "PolyVoxCore/PagedVolume.h"
+#include "PolyVox/PagedVolume.h"
 
-#include "PolyVoxCore/CubicSurfaceExtractor.h"
-#include "PolyVoxCore/MarchingCubesSurfaceExtractor.h"
+#include "PolyVox/CubicSurfaceExtractor.h"
+#include "PolyVox/MarchingCubesSurfaceExtractor.h"
 
 #include "SQLite/sqlite3.h"
 

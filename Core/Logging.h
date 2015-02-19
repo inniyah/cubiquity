@@ -1,7 +1,7 @@
 #ifndef __CUBIQUITY_LOGGING_H__
 #define __CUBIQUITY_LOGGING_H__
 
-#include "PolyVoxCore/Impl/ErrorHandling.h"
+#include "PolyVox/Impl/ErrorHandling.h"
 
 #include <ctime>
 #include <fstream>

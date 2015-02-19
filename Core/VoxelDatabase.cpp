@@ -2,7 +2,7 @@
 
 #include "VoxelDatabase.h"
 
-#include "PolyVoxCore/Region.h"
+#include "PolyVox/Region.h"
 
 #include "Logging.h"
 

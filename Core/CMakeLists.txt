@@ -15,29 +15,29 @@ SET_PROPERTY(TARGET _sqlite3 PROPERTY FOLDER "Core/Dependancies")
 ################################################################################
 set(POLYVOX_SRCS
 	# PolyVox code
-	Dependancies/polyvox/library/PolyVoxCore/source/AStarPathfinder.cpp
-	Dependancies/polyvox/library/PolyVoxCore/source/Region.cpp
+	#Dependancies/polyvox/library/PolyVox/source/AStarPathfinder.cpp
+	#Dependancies/polyvox/library/PolyVox/source/Region.cpp
 	
-	Dependancies/polyvox/library/PolyVoxCore/source/Impl/ErrorHandling.cpp
-	Dependancies/polyvox/library/PolyVoxCore/source/Impl/Logging.cpp
-	Dependancies/polyvox/library/PolyVoxCore/source/Impl/MarchingCubesTables.cpp
-	Dependancies/polyvox/library/PolyVoxCore/source/Impl/RandomUnitVectors.cpp
-	Dependancies/polyvox/library/PolyVoxCore/source/Impl/RandomVectors.cpp
-	Dependancies/polyvox/library/PolyVoxCore/source/Impl/Timer.cpp
-	Dependancies/polyvox/library/PolyVoxCore/source/Impl/Utility.cpp
+	#Dependancies/polyvox/library/PolyVox/source/Impl/ErrorHandling.cpp
+	#Dependancies/polyvox/library/PolyVox/source/Impl/Logging.cpp
+	#Dependancies/polyvox/library/PolyVox/source/Impl/MarchingCubesTables.cpp
+	#Dependancies/polyvox/library/PolyVox/source/Impl/RandomUnitVectors.cpp
+	#Dependancies/polyvox/library/PolyVox/source/Impl/RandomVectors.cpp
+	#Dependancies/polyvox/library/PolyVox/source/Impl/Timer.cpp
+	#Dependancies/polyvox/library/PolyVox/source/Impl/Utility.cpp
 )
 
-add_library(_PolyVoxCore STATIC ${POLYVOX_SRCS})
+#add_library(_PolyVox STATIC ${POLYVOX_SRCS})
 
 # Organise the Visual Studio folders.
-SET_PROPERTY(TARGET _PolyVoxCore PROPERTY FOLDER "Core/Dependancies")
+#SET_PROPERTY(TARGET _PolyVox PROPERTY FOLDER "Core/Dependancies")
 
 ################################################################################
 # Build Cubiquity
 ################################################################################
 include_directories(
 	Dependancies/
-	Dependancies/polyvox/library/PolyVoxCore/include/
+	Dependancies/polyvox/include/
 )
 
 set(SRCS
@@ -119,9 +119,9 @@ endif()
 
 # Set target_link_libraries
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-	target_link_libraries(CubiquityC _sqlite3 _PolyVoxCore)
+	target_link_libraries(CubiquityC _sqlite3)
 else()
-	target_link_libraries(CubiquityC _sqlite3 _PolyVoxCore pthread)
+	target_link_libraries(CubiquityC _sqlite3 pthread)
 endif()
 
 # The code below was copied from the old separate 'C' wrapper. I'm not sure we need it but it's here for safe keeping.

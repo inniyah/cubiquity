@@ -2,7 +2,7 @@
 #include "ColoredCubesVolume.h"
 #include "TerrainVolume.h"
 
-#include "PolyVoxCore/Picking.h"
+#include "PolyVox/Picking.h"
 
 namespace Cubiquity
 {

@@ -1,11 +1,11 @@
 #ifndef __MaterialSet_H__
 #define __MaterialSet_H__
 
-#include "PolyVoxCore/Impl/TypeDef.h"
+#include "PolyVox/Impl/TypeDef.h"
 
-#include "PolyVoxCore/BaseVolume.h"
-#include "PolyVoxCore/Vector.h"
-#include "PolyVoxCore/Vertex.h"
+#include "PolyVox/BaseVolume.h"
+#include "PolyVox/Vector.h"
+#include "PolyVox/Vertex.h"
 
 #include "BitField.h"
 

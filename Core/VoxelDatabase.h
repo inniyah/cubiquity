@@ -1,9 +1,9 @@
 #ifndef __CUBIQUITY_VOXELDATABASE_H__
 #define __CUBIQUITY_VOXELDATABASE_H__
 
-#include "PolyVoxCore/Impl/TypeDef.h"
+#include "PolyVox/Impl/TypeDef.h"
 
-#include "PolyVoxCore/Region.h"
+#include "PolyVox/Region.h"
 
 #include "SQLite/sqlite3.h"
 
