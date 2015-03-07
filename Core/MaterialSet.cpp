@@ -99,29 +99,13 @@ namespace Cubiquity
 		return result;
 	}
 
-	MaterialSet MaterialSetMarchingCubesController::getBorderValue(void)
-	{
-		return m_tBorder;
-	}
-
 	MaterialSetMarchingCubesController::DensityType MaterialSetMarchingCubesController::getThreshold(void)
 	{			
 		return m_tThreshold;
 	}
 
-	::PolyVox::WrapMode MaterialSetMarchingCubesController::getWrapMode(void)
-	{
-		return m_eWrapMode;
-	}
-
 	void MaterialSetMarchingCubesController::setThreshold(DensityType tThreshold)
 	{
 		m_tThreshold = tThreshold;
-	}
-
-	void MaterialSetMarchingCubesController::setWrapMode(::PolyVox::WrapMode eWrapMode, MaterialSet tBorder)
-	{
-		m_eWrapMode = eWrapMode;
-		m_tBorder = tBorder;
 	}
 }

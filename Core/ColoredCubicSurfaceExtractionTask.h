@@ -82,13 +82,13 @@ namespace Cubiquity
 					{
 						Color color;
 						color.setColor(averageOf8Red / noOfSolidVoxels, averageOf8Green / noOfSolidVoxels, averageOf8Blue / noOfSolidVoxels, 255);
-						pVolDst->setVoxelAt(dstPos, color);
+						pVolDst->setVoxel(dstPos, color);
 					}
 					else
 					{
 						Color color;
 						color.setColor(0,0,0,0);
-						pVolDst->setVoxelAt(dstPos, color);
+						pVolDst->setVoxel(dstPos, color);
 					}
 				}
 			}
@@ -166,7 +166,7 @@ namespace Cubiquity
 
 							Color color;
 							color.setColor(totalRed / totalExposedFaces, totalGreen / totalExposedFaces, totalBlue / totalExposedFaces, 255);
-							pVolDst->setVoxelAt(dstPos, color);
+							pVolDst->setVoxel(dstPos, color);
 						}
 					}
 				}

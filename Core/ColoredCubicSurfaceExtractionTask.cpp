@@ -71,7 +71,7 @@ namespace Cubiquity
 
 		if(downScaleFactor == 1) 
 		{
-			extractCubicMeshCustom(mPolyVoxVolume, mOctreeNode->mRegion, mPolyVoxMesh, isQuadNeeded, ::PolyVox::WrapModes::Border, Color(), true);
+			extractCubicMeshCustom(mPolyVoxVolume, mOctreeNode->mRegion, mPolyVoxMesh, isQuadNeeded, true);
 		}
 		else if(downScaleFactor == 2)
 		{
@@ -96,7 +96,7 @@ namespace Cubiquity
 		
 			//dstRegion.shiftLowerCorner(-1, -1, -1);
 
-			extractCubicMeshCustom(&resampledVolume, dstRegion, mPolyVoxMesh, isQuadNeeded, ::PolyVox::WrapModes::Border, Color(), true);
+			extractCubicMeshCustom(&resampledVolume, dstRegion, mPolyVoxMesh, isQuadNeeded, true);
 
 			scaleVertices(mPolyVoxMesh, downScaleFactor);
 			//translateVertices(mPolyVoxMesh, Vector3DFloat(0.5f, 0.5f, 0.5f)); // Removed when going from float positions to uin8_t. Do we need this?
@@ -137,7 +137,7 @@ namespace Cubiquity
 
 			//dstRegion.shiftLowerCorner(-1, -1, -1);
 
-			extractCubicMeshCustom(&resampledVolume2, dstRegion2, mPolyVoxMesh, isQuadNeeded, ::PolyVox::WrapModes::Border, Color(), true);
+			extractCubicMeshCustom(&resampledVolume2, dstRegion2, mPolyVoxMesh, isQuadNeeded, true);
 
 			scaleVertices(mPolyVoxMesh, downScaleFactor);
 			//translateVertices(mPolyVoxMesh, Vector3DFloat(1.5f, 1.5f, 1.5f)); // Removed when going from float positions to uin8_t. Do we need this?

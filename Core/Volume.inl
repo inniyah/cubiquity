@@ -33,6 +33,8 @@ namespace Cubiquity
 		//m_pVoxelDatabase = new VoxelDatabase<VoxelType>;
 		//m_pVoxelDatabase->create(pathToNewVoxelDatabase);
 
+		mEnclosingRegion = region;
+
 		m_pVoxelDatabase = VoxelDatabase<VoxelType>::createEmpty(pathToNewVoxelDatabase);
 
 		// Store the volume region to the database.
@@ -43,9 +45,7 @@ namespace Cubiquity
 		m_pVoxelDatabase->setProperty("upperY", region.getUpperY());
 		m_pVoxelDatabase->setProperty("upperZ", region.getUpperZ());
 		
-		mPolyVoxVolume = new ::PolyVox::PagedVolume<VoxelType>(region, m_pVoxelDatabase, 32);
-
-		mPolyVoxVolume->setMemoryUsageLimit(256 * 1024 * 1024);
+		mPolyVoxVolume = new ::PolyVox::PagedVolume<VoxelType>(m_pVoxelDatabase, 256 * 1024 * 1024, 32);
 
 		mBackgroundTaskProcessor = new BackgroundTaskProcessor();
 	}
@@ -71,11 +71,10 @@ namespace Cubiquity
 		int32_t upperX = m_pVoxelDatabase->getPropertyAsInt("upperX", 512);
 		int32_t upperY = m_pVoxelDatabase->getPropertyAsInt("upperY", 512);
 		int32_t upperZ = m_pVoxelDatabase->getPropertyAsInt("upperZ", 512);
-		Region region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
-		
-		mPolyVoxVolume = new ::PolyVox::PagedVolume<VoxelType>(region, m_pVoxelDatabase, 32);
 
-		mPolyVoxVolume->setMemoryUsageLimit(64 * 1024 * 1024);
+		mEnclosingRegion = Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
+		
+		mPolyVoxVolume = new ::PolyVox::PagedVolume<VoxelType>(m_pVoxelDatabase, 256 * 1024 * 1024, 32);
 
 		mBackgroundTaskProcessor = new BackgroundTaskProcessor();
 	}
@@ -100,20 +99,19 @@ namespace Cubiquity
 	}
 
 	template <typename VoxelType>
-	VoxelType Volume<VoxelType>::getVoxelAt(int32_t x, int32_t y, int32_t z) const
+	VoxelType Volume<VoxelType>::getVoxel(int32_t x, int32_t y, int32_t z) const
 	{
-		// Border value is returned for invalid position
-		return mPolyVoxVolume->template getVoxel< ::PolyVox::WrapModes::Border>(x, y, z, VoxelType());
+		return mPolyVoxVolume->getVoxel(x, y, z);
 	}
 
 	template <typename VoxelType>
-	void Volume<VoxelType>::setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, bool markAsModified)
+	void Volume<VoxelType>::setVoxel(int32_t x, int32_t y, int32_t z, VoxelType value, bool markAsModified)
 	{
 		// Validate the voxel position
-		POLYVOX_THROW_IF(mPolyVoxVolume->getEnclosingRegion().containsPoint(x, y, z) == false,
+		POLYVOX_THROW_IF(mEnclosingRegion.containsPoint(x, y, z) == false,
 			std::invalid_argument, "Attempted to write to a voxel which is outside of the volume");
 
-		mPolyVoxVolume->setVoxelAt(x, y, z, value);
+		mPolyVoxVolume->setVoxel(x, y, z, value);
 		if(markAsModified)
 		{
 			mOctree->markDataAsModified(x, y, z, Clock::getTimestamp());

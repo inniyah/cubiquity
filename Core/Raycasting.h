@@ -44,14 +44,14 @@ namespace Cubiquity
 			int32_t iY = static_cast<int32_t>(fFloorY > 0.0f ? fFloorY + 0.5f : fFloorY - 0.5f); 
 			int32_t iZ = static_cast<int32_t>(fFloorZ > 0.0f ? fFloorZ + 0.5f : fFloorZ - 0.5f);
 
-			const typename PolyVoxVolumeType::VoxelType& voxel000 = polyVoxVolume->getVoxelAt(iX, iY, iZ);
-			const typename PolyVoxVolumeType::VoxelType& voxel001 = polyVoxVolume->getVoxelAt(iX, iY, iZ + 1);
-			const typename PolyVoxVolumeType::VoxelType& voxel010 = polyVoxVolume->getVoxelAt(iX, iY + 1, iZ);
-			const typename PolyVoxVolumeType::VoxelType& voxel011 = polyVoxVolume->getVoxelAt(iX, iY + 1, iZ + 1);
-			const typename PolyVoxVolumeType::VoxelType& voxel100 = polyVoxVolume->getVoxelAt(iX + 1, iY, iZ);
-			const typename PolyVoxVolumeType::VoxelType& voxel101 = polyVoxVolume->getVoxelAt(iX + 1, iY, iZ + 1);
-			const typename PolyVoxVolumeType::VoxelType& voxel110 = polyVoxVolume->getVoxelAt(iX + 1, iY + 1, iZ);
-			const typename PolyVoxVolumeType::VoxelType& voxel111 = polyVoxVolume->getVoxelAt(iX + 1, iY + 1, iZ + 1);
+			const typename PolyVoxVolumeType::VoxelType& voxel000 = polyVoxVolume->getVoxel(iX, iY, iZ);
+			const typename PolyVoxVolumeType::VoxelType& voxel001 = polyVoxVolume->getVoxel(iX, iY, iZ + 1);
+			const typename PolyVoxVolumeType::VoxelType& voxel010 = polyVoxVolume->getVoxel(iX, iY + 1, iZ);
+			const typename PolyVoxVolumeType::VoxelType& voxel011 = polyVoxVolume->getVoxel(iX, iY + 1, iZ + 1);
+			const typename PolyVoxVolumeType::VoxelType& voxel100 = polyVoxVolume->getVoxel(iX + 1, iY, iZ);
+			const typename PolyVoxVolumeType::VoxelType& voxel101 = polyVoxVolume->getVoxel(iX + 1, iY, iZ + 1);
+			const typename PolyVoxVolumeType::VoxelType& voxel110 = polyVoxVolume->getVoxel(iX + 1, iY + 1, iZ);
+			const typename PolyVoxVolumeType::VoxelType& voxel111 = polyVoxVolume->getVoxel(iX + 1, iY + 1, iZ + 1);
 
 			typename PolyVoxVolumeType::VoxelType tInterpolatedValue = ::PolyVox::trilerp(voxel000,voxel100,voxel010,voxel110,voxel001,voxel101,voxel011,voxel111,fInterpX,fInterpY,fInterpZ);
 		

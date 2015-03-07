@@ -251,17 +251,12 @@ namespace Cubiquity
 
 		MaterialType blendMaterials(MaterialSet a, MaterialSet b, float weight);
 
-		MaterialSet getBorderValue(void);
 		DensityType getThreshold(void);
-		::PolyVox::WrapMode getWrapMode(void);
 
 		void setThreshold(DensityType tThreshold);
-		void setWrapMode(::PolyVox::WrapMode eWrapMode, MaterialSet tBorder = MaterialSet(0));
 
 	private:
 		DensityType m_tThreshold;
-		::PolyVox::WrapMode m_eWrapMode;
-		MaterialSet m_tBorder;
 	};
 
 	typedef ::PolyVox::MarchingCubesVertex<MaterialSet> TerrainVertex;

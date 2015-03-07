@@ -35,10 +35,10 @@ namespace Cubiquity
 		uint32_t getWidth(void) const { return mPolyVoxVolume->getWidth(); }
 		uint32_t getHeight(void) const { return mPolyVoxVolume->getHeight(); }
 		uint32_t getDepth(void) const { return mPolyVoxVolume->getDepth(); }
-		const Region& getEnclosingRegion(void) const { return mPolyVoxVolume->getEnclosingRegion(); }
+		const Region& getEnclosingRegion(void) const { return mEnclosingRegion; }
 
 		// Note this adds a border rather than calling straight through.
-		VoxelType getVoxelAt(int32_t x, int32_t y, int32_t z) const;
+		VoxelType getVoxel(int32_t x, int32_t y, int32_t z) const;
 
 		// This one's a bit of a hack... direct access to underlying PolyVox volume
 		::PolyVox::PagedVolume<VoxelType>* _getPolyVoxVolume(void) const { return mPolyVoxVolume; }
@@ -48,7 +48,7 @@ namespace Cubiquity
 		OctreeNode<VoxelType>* getRootOctreeNode(void) { return mOctree->getRootNode(); }
 
 		// Set voxel doesn't just pass straight through, it also validates the position and marks the voxel as modified.
-		void setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, bool markAsModified);
+		void setVoxel(int32_t x, int32_t y, int32_t z, VoxelType value, bool markAsModified);
 
 		// Marks a region as modified so it will be regenerated later.
 		void markAsModified(const Region& region);
@@ -81,6 +81,7 @@ namespace Cubiquity
 	private:
 		Volume& operator=(const Volume&);
 
+		::PolyVox::Region mEnclosingRegion;
 		::PolyVox::PagedVolume<VoxelType>* mPolyVoxVolume;
 
 		//sqlite3* mDatabase;

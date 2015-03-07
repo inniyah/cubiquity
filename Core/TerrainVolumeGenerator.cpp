@@ -32,7 +32,7 @@ namespace Cubiquity
 			{
 				for(int32_t z = region.getLowerZ(); z <= region.getUpperZ(); z++)
 				{
-					terrainVolume->setVoxelAt(x, y, z, material, false);
+					terrainVolume->setVoxel(x, y, z, material, false);
 				}
 			}
 		}

@@ -60,7 +60,7 @@ namespace Cubiquity
 
 		if(lodLevel == 0)
 		{
-			extractMarchingCubesMeshCustom(mPolyVoxVolume, region, resultMesh, controller, ::PolyVox::WrapModes::Border, MaterialSet(0));
+			extractMarchingCubesMeshCustom(mPolyVoxVolume, region, resultMesh, controller);
 		}
 		else
 		{
@@ -87,7 +87,7 @@ namespace Cubiquity
 
 			lowRegion.shrink(1, 1, 1);
 
-			extractMarchingCubesMeshCustom(&resampledVolume, lowRegion, resultMesh, controller, ::PolyVox::WrapModes::Border, MaterialSet(0));
+			extractMarchingCubesMeshCustom(&resampledVolume, lowRegion, resultMesh, controller);
 
 			scaleVertices(resultMesh, downSampleFactor);
 
