@@ -172,6 +172,10 @@ namespace Cubiquity
 			mz_ulong uncomp_len = pChunk->getDataSizeInBytes();
 			int status = uncompress((unsigned char*)pChunk->getData(), &uncomp_len, (const unsigned char*)compressedData, compressedLength);
 			POLYVOX_THROW_IF(status != Z_OK, CompressionError, "Decompression failed with error message \'" << mz_error(status) << "\'");
+
+			// Data on disk is stored in linear order because so far we have not been able to show that Morton order
+			// has better compression. But data in memory has Morton order because it is (probably) faster to access.
+			pChunk->changeLinearOrderingToMorton();
 		}
 
 		POLYVOX_LOG_TRACE("Paged chunk in in " << timer.elapsedTimeInMilliSeconds() << "ms");
@@ -185,6 +189,10 @@ namespace Cubiquity
 		PolyVox::Timer timer;
 
 		POLYVOX_LOG_TRACE("Paging out data for " << region);
+
+		// Data on disk is stored in linear order because so far we have not been able to show that Morton order
+		// has better compression. But data in memory has Morton order because it is (probably) faster to access.
+		pChunk->changeMortonOrderingToLinear();
 
 		// Prepare for compression
 		uLong srcLength = pChunk->getDataSizeInBytes();
