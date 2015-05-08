@@ -172,14 +172,6 @@ namespace Cubiquity
 			mz_ulong uncomp_len = pChunk->getDataSizeInBytes();
 			int status = uncompress((unsigned char*)pChunk->getData(), &uncomp_len, (const unsigned char*)compressedData, compressedLength);
 			POLYVOX_THROW_IF(status != Z_OK, CompressionError, "Decompression failed with error message \'" << mz_error(status) << "\'");
-
-			// Old versions of Cubiquity using linear ordering for data in the chunks. We now use
-			// Morton ordering, but still support the old voxel databases for backwards compatability.
-			std::string ordering = getPropertyAsString("ordering", "linear");
-			if (ordering == "linear")
-			{
-				pChunk->changeLinearOrderingToMorton(); // Database has linear, which we convert to Morton for use.
-			}
 		}
 
 		POLYVOX_LOG_TRACE("Paged chunk in in " << timer.elapsedTimeInMilliSeconds() << "ms");
@@ -193,14 +185,6 @@ namespace Cubiquity
 		PolyVox::Timer timer;
 
 		POLYVOX_LOG_TRACE("Paging out data for " << region);
-
-		// Old versions of Cubiquity using linear ordering for data in the chunks. We now use
-		// Morton ordering, but still support the old voxel databases for backwards compatability.
-		std::string ordering = getPropertyAsString("ordering", "linear");
-		if (ordering == "linear")
-		{
-			pChunk->changeMortonOrderingToLinear(); // We are using Morton ordering, but we convert to linear for starage.
-		}
 
 		// Prepare for compression
 		uLong srcLength = pChunk->getDataSizeInBytes();
@@ -256,6 +240,7 @@ namespace Cubiquity
 		}
 		else
 		{
+			POLYVOX_LOG_WARNING("Property '" << name << "' was not found. The default value will be used instead");
 			return false;
 		}
 	}

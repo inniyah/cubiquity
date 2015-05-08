@@ -44,9 +44,6 @@ namespace Cubiquity
 		m_pVoxelDatabase->setProperty("upperX", region.getUpperX());
 		m_pVoxelDatabase->setProperty("upperY", region.getUpperY());
 		m_pVoxelDatabase->setProperty("upperZ", region.getUpperZ());
-
-		// All new databases use Morton ordering. Support for linear ordering is only maintained for backwards compatability.
-		m_pVoxelDatabase->setProperty("ordering", "morton");
 		
 		mPolyVoxVolume = new ::PolyVox::PagedVolume<VoxelType>(m_pVoxelDatabase, 256 * 1024 * 1024, 32);
 
@@ -74,13 +71,6 @@ namespace Cubiquity
 		int32_t upperX = m_pVoxelDatabase->getPropertyAsInt("upperX", 512);
 		int32_t upperY = m_pVoxelDatabase->getPropertyAsInt("upperY", 512);
 		int32_t upperZ = m_pVoxelDatabase->getPropertyAsInt("upperZ", 512);
-
-		// All new databases use Morton ordering. Support for linear ordering is only maintained for backwards compatability.
-		std::string ordering = m_pVoxelDatabase->getPropertyAsString("ordering", "linear");
-		if (ordering == "linear")
-		{
-			POLYVOX_LOG_WARNING("This database is using the old 'linear' ordering for it's data, rather than the new 'morton' ordering.");
-		}
 
 		mEnclosingRegion = Region(lowerX, lowerY, lowerZ, upperX, upperY, upperZ);
 		
