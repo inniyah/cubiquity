@@ -18,7 +18,7 @@ namespace Cubiquity
 			int rc = function; \
 			if(rc != SQLITE_OK) \
 			{ \
-				POLYVOX_THROW(DatabaseError, "Encountered '" << sqlite3_errstr(rc) << "' (error code " << rc << ") when executing '" << #function << "'"); \
+				POLYVOX_THROW(DatabaseError, "Encountered '", sqlite3_errstr(rc), "' (error code ", rc, ") when executing '", #function, "'"); \
 			} \
 		} while(0)
 }

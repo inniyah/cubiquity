@@ -1,8 +1,6 @@
 #ifndef __MaterialSet_H__
 #define __MaterialSet_H__
 
-#include "PolyVox/Impl/TypeDef.h"
-
 #include "PolyVox/BaseVolume.h"
 #include "PolyVox/Vector.h"
 #include "PolyVox/Vertex.h"

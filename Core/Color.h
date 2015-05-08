@@ -1,7 +1,6 @@
 #ifndef __COLOUR_H__
 #define __COLOUR_H__
 
-#include "PolyVox/Impl/TypeDef.h"
 #include "PolyVox/Vertex.h"
 
 #include "BitField.h"

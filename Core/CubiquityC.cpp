@@ -46,7 +46,7 @@ char gLastErrorMessage[4096];
 #define CATCH_EXCEPTION_AND_MAP_TO_ERROR_CODE(exception, errorCode) \
 catch (const exception& ex) \
 { \
-	POLYVOX_LOG_ERROR("Caught \'" #exception "\' at C interface. Message reads: \"" << ex.what() << "\""); \
+	POLYVOX_LOG_ERROR("Caught \'" #exception "\' at C interface. Message reads: \"", ex.what(), "\""); \
 	strcpy(gLastErrorMessage, ex.what()); \
 	return errorCode; \
 }
@@ -343,7 +343,7 @@ CUBIQUITYC_API int32_t cuNewEmptyColoredCubesVolume(int32_t lowerX, int32_t lowe
 
 	POLYVOX_THROW_IF(!foundEmptySlot, std::invalid_argument, "Cannot create new volume as there is a limit of " + MaxNoOfVolumes);
 
-	POLYVOX_LOG_DEBUG("Created new colored cubes volume in slot " << ct);
+	POLYVOX_LOG_DEBUG("Created new colored cubes volume in slot ", ct);
 
 	// Build the handle
 	*result = encodeHandle(CU_COLORED_CUBES, ct, 0);
@@ -375,7 +375,7 @@ CUBIQUITYC_API int32_t cuNewColoredCubesVolumeFromVDB(const char* pathToExisting
 
 	POLYVOX_THROW_IF(!foundEmptySlot, std::invalid_argument, "Cannot create new volume as there is a limit of " + MaxNoOfVolumes);
 
-	POLYVOX_LOG_DEBUG("Created new colored cubes volume in slot " << ct);
+	POLYVOX_LOG_DEBUG("Created new colored cubes volume in slot ", ct);
 
 	// Build the handle
 	*result = encodeHandle(CU_COLORED_CUBES, ct, 0);
@@ -411,7 +411,7 @@ CUBIQUITYC_API int32_t cuDeleteVolume(uint32_t volumeHandle)
 	uint32_t volumeType, volumeIndex, nodeIndex;
 	decodeHandle(volumeHandle, &volumeType, &volumeIndex, &nodeIndex);
 
-	POLYVOX_LOG_DEBUG("Deleting volume with index " << volumeIndex);
+	POLYVOX_LOG_DEBUG("Deleting volume with index ", volumeIndex);
 
 	if (volumeType == CU_COLORED_CUBES)
 	{
@@ -580,7 +580,7 @@ CUBIQUITYC_API int32_t cuNewEmptyTerrainVolume(int32_t lowerX, int32_t lowerY, i
 
 	POLYVOX_THROW_IF(!foundEmptySlot, std::invalid_argument, "Cannot create new volume as there is a limit of " + MaxNoOfVolumes);
 
-	POLYVOX_LOG_DEBUG("Created new smooth volume in slot " << ct);
+	POLYVOX_LOG_DEBUG("Created new smooth volume in slot ", ct);
 
 	// Build the handle
 	*result = encodeHandle(CU_TERRAIN, ct, 0);
@@ -612,7 +612,7 @@ CUBIQUITYC_API int32_t cuNewTerrainVolumeFromVDB(const char* pathToExistingVoxel
 
 	POLYVOX_THROW_IF(!foundEmptySlot, std::invalid_argument, "Cannot create new volume as there is a limit of " + MaxNoOfVolumes);
 
-	POLYVOX_LOG_DEBUG("Created new smooth volume in slot " << ct);
+	POLYVOX_LOG_DEBUG("Created new smooth volume in slot ", ct);
 
 	// Build the handle
 	*result = encodeHandle(CU_TERRAIN, ct, 0);

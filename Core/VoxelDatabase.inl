@@ -40,14 +40,14 @@ namespace Cubiquity
 			{
 				PolyVox::Timer timer;
 				EXECUTE_SQLITE_FUNC(sqlite3_exec(mDatabase, "VACUUM;", 0, 0, 0));
-				POLYVOX_LOG_TRACE("Vacuumed database in " << timer.elapsedTimeInMilliSeconds() << "ms");
+				POLYVOX_LOG_TRACE("Vacuumed database in ", timer.elapsedTimeInMilliSeconds(), "ms");
 			}
 			catch (DatabaseError& e)
 			{
 				// It seems that vacuuming of the database can fail even when opened in readwrite mode, if other processes are still
 				// accessing the database. This can happen if multiple volumes are sharing the database. This shouldn't really matter
 				// as the database will probably get vacuumed at some point in the future, and it's not essential anyway.
-				POLYVOX_LOG_WARNING("Failed to vacuum database. Error message was as follows:" << std::endl << "\t" << e.what());
+				POLYVOX_LOG_WARNING("Failed to vacuum database. Error message was as follows:\n\t", e.what());
 			}
 		}
 
@@ -63,10 +63,10 @@ namespace Cubiquity
 		if (file != NULL)
 		{
 			fclose(file);
-			POLYVOX_THROW(std::invalid_argument, "Cannot create a new voxel database as the provided filename (" << pathToNewVoxelDatabase << ") already exists");
+			POLYVOX_THROW(std::invalid_argument, "Cannot create a new voxel database as the provided filename (", pathToNewVoxelDatabase, ") already exists");
 		}
 
-		POLYVOX_LOG_INFO("Creating empty voxel database as '" << pathToNewVoxelDatabase << "'");
+		POLYVOX_LOG_INFO("Creating empty voxel database as '", pathToNewVoxelDatabase, "'");
 		VoxelDatabase<VoxelType>* voxelDatabase = new VoxelDatabase<VoxelType>;
 		EXECUTE_SQLITE_FUNC(sqlite3_open_v2(pathToNewVoxelDatabase.c_str(), &(voxelDatabase->mDatabase), SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL));
 
@@ -87,7 +87,7 @@ namespace Cubiquity
 		// the database will be temporary, but when creating from a VDB a valid path must be provided.
 		POLYVOX_THROW_IF(pathToExistingVoxelDatabase.empty(), std::invalid_argument, "Path must not be an empty string");
 
-		POLYVOX_LOG_INFO("Creating voxel database from '" << pathToExistingVoxelDatabase << "'");
+		POLYVOX_LOG_INFO("Creating voxel database from '", pathToExistingVoxelDatabase, "'");
 		VoxelDatabase<VoxelType>* voxelDatabase = new VoxelDatabase<VoxelType>;
 		int flags = (writePermission == WritePermissions::ReadOnly) ? SQLITE_OPEN_READONLY : SQLITE_OPEN_READWRITE;
 		EXECUTE_SQLITE_FUNC(sqlite3_open_v2(pathToExistingVoxelDatabase.c_str(), &(voxelDatabase->mDatabase), flags, NULL));
@@ -171,14 +171,14 @@ namespace Cubiquity
 		{
 			mz_ulong uncomp_len = pChunk->getDataSizeInBytes();
 			int status = uncompress((unsigned char*)pChunk->getData(), &uncomp_len, (const unsigned char*)compressedData, compressedLength);
-			POLYVOX_THROW_IF(status != Z_OK, CompressionError, "Decompression failed with error message \'" << mz_error(status) << "\'");
+			POLYVOX_THROW_IF(status != Z_OK, CompressionError, "Decompression failed with error message \'", mz_error(status), "\'");
 
 			// Data on disk is stored in linear order because so far we have not been able to show that Morton order
 			// has better compression. But data in memory has Morton order because it is (probably) faster to access.
 			pChunk->changeLinearOrderingToMorton();
 		}
 
-		POLYVOX_LOG_TRACE("Paged chunk in in " << timer.elapsedTimeInMilliSeconds() << "ms");
+		POLYVOX_LOG_TRACE("Paged chunk in in ", timer.elapsedTimeInMilliSeconds(), "ms");
 	}
 
 	template <typename VoxelType>
@@ -188,7 +188,7 @@ namespace Cubiquity
 
 		PolyVox::Timer timer;
 
-		POLYVOX_LOG_TRACE("Paging out data for " << region);
+		POLYVOX_LOG_TRACE("Paging out data for ", region);
 
 		// Data on disk is stored in linear order because so far we have not been able to show that Morton order
 		// has better compression. But data in memory has Morton order because it is (probably) faster to access.
@@ -200,13 +200,13 @@ namespace Cubiquity
 		if (mCompressedBuffer.size() != compressedLength)
 		{
 			// All chunks are the same size so should have the same upper bound. Therefore this should only happen once.
-			POLYVOX_LOG_INFO("Resizing compressed data buffer to " << compressedLength << "bytes. This should only happen once");
+			POLYVOX_LOG_INFO("Resizing compressed data buffer to ", compressedLength, "bytes. This should only happen once");
 			mCompressedBuffer.resize(compressedLength);
 		}
 
 		// Perform the compression, and update passed parameter with the new length.
 		int status = compress(&(mCompressedBuffer[0]), &compressedLength, (const unsigned char *)pChunk->getData(), srcLength);
-		POLYVOX_THROW_IF(status != Z_OK, CompressionError, "Compression failed with error message \'" << mz_error(status) << "\'");
+		POLYVOX_THROW_IF(status != Z_OK, CompressionError, "Compression failed with error message \'", mz_error(status), "\'");
 
 		int64_t key = regionToKey(region);
 
@@ -216,7 +216,7 @@ namespace Cubiquity
 		sqlite3_bind_blob(mInsertOrReplaceOverrideChunkStatement, 2, static_cast<const void*>(&(mCompressedBuffer[0])), compressedLength, SQLITE_TRANSIENT);
 		sqlite3_step(mInsertOrReplaceOverrideChunkStatement);
 
-		POLYVOX_LOG_TRACE("Paged chunk out in " << timer.elapsedTimeInMilliSeconds() << "ms (" << pChunk->getDataSizeInBytes() << "bytes of data)");
+		POLYVOX_LOG_TRACE("Paged chunk out in ", timer.elapsedTimeInMilliSeconds(), "ms (", pChunk->getDataSizeInBytes(), "bytes of data)");
 	}
 
 	template <typename VoxelType>
@@ -248,7 +248,7 @@ namespace Cubiquity
 		}
 		else
 		{
-			POLYVOX_LOG_WARNING("Property '" << name << "' was not found. The default value will be used instead");
+			POLYVOX_LOG_WARNING("Property '", name, "' was not found. The default value will be used instead");
 			return false;
 		}
 	}
