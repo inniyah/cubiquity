@@ -116,7 +116,7 @@ public:
 	EntryAndExitPoints()
 		:mFileLogger()
 	{
-		PolyVox::setLogger(&mFileLogger);
+		PolyVox::setLoggerInstance(&mFileLogger);
 
 		// HACK - Should have a seperate init function for this?
 		for (int ct = 0; ct < MaxNoOfVolumes; ct++)
@@ -127,7 +127,7 @@ public:
 
 	~EntryAndExitPoints()
 	{
-		PolyVox::setLogger(0);
+		PolyVox::setLoggerInstance(0);
 	}
 
 public:
