@@ -132,3 +132,6 @@ endif()
 #elseif(CMAKE_SYSTEM_NAME MATCHES "Windows")
 	#
 #endif()
+
+install(TARGETS CubiquityC DESTINATION bin)
+install(FILES CubiquityC.h DESTINATION include)
