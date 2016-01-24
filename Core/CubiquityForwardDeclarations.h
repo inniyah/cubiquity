@@ -1,8 +1,6 @@
 #ifndef __Cubiquity_ForwardDeclarations_H__
 #define __Cubiquity_ForwardDeclarations_H__
 
-#include "PolyVox/PolyVoxForwardDeclarations.h"
-
 namespace Cubiquity
 {
 	class Brush;

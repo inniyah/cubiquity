@@ -97,12 +97,12 @@ namespace Cubiquity
 
 	void recalculateMaterials(TerrainMesh* mesh, const Vector3F& meshOffset, ::PolyVox::PagedVolume<MaterialSet>* volume)
 	{
-		// Nasty casting away of constness so we can tweak the material values.
-		std::vector<TerrainVertex>& vertices = const_cast<std::vector< MarchingCubesVertex< typename MaterialSetMarchingCubesController::MaterialType > >&>(mesh->getVertices());
-
-		for(uint32_t ct = 0; ct < vertices.size(); ct++)
+		for(uint32_t ct = 0; ct < mesh->getNoOfVertices(); ct++)
 		{
-			const Vector3DFloat& vertexPos = decodeVertex(vertices[ct]).position + meshOffset;
+			// Nasty casting away of constness so we can tweak the material values.
+			TerrainVertex& vertex = const_cast<TerrainVertex&>(mesh->getVertex(ct))
+				;
+			const Vector3DFloat& vertexPos = decodeVertex(vertex).position + meshOffset;
 			MaterialSet value = getInterpolatedValue(volume, vertexPos);
 
 			// It seems that sometimes the vertices can fall in an empty cell. The reason for this
@@ -116,7 +116,7 @@ namespace Cubiquity
 				value.setMaterial(0, 255);
 			}
 
-			vertices[ct].data = value;
+			vertex.data = value;
 		}
 	}
 

@@ -9,6 +9,8 @@
 #include "Vector.h"
 #include "VoxelTraits.h"
 
+#include "PolyVox/PagedVolume.h"
+
 namespace Cubiquity
 {
 	class ColoredCubicSurfaceExtractionTask : public Task

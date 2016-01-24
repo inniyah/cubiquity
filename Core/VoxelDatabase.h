@@ -1,6 +1,7 @@
 #ifndef __CUBIQUITY_VOXELDATABASE_H__
 #define __CUBIQUITY_VOXELDATABASE_H__
 
+#include "PolyVox/PagedVolume.h"
 #include "PolyVox/Region.h"
 
 #include "SQLite/sqlite3.h"

@@ -837,8 +837,7 @@ CUBIQUITYC_API int32_t cuGetMesh(uint32_t nodeHandle, uint16_t* noOfVertices, vo
 		*noOfVertices = polyVoxMesh->getNoOfVertices();
 
 		// Get the vertices
-		const std::vector< typename VoxelTraits<Color>::VertexType >& vertexVector = polyVoxMesh->getVertices();
-		const VoxelTraits<Color>::VertexType* vertexPointer = &(vertexVector[0]);
+		const VoxelTraits<Color>::VertexType* vertexPointer = polyVoxMesh->getRawVertexData();
 		const void* constVoidPointer = reinterpret_cast<const void*>(vertexPointer);
 		void* voidPointer = const_cast<void*>(constVoidPointer);
 		*vertices = voidPointer;
@@ -847,8 +846,7 @@ CUBIQUITYC_API int32_t cuGetMesh(uint32_t nodeHandle, uint16_t* noOfVertices, vo
 		*noOfIndices = polyVoxMesh->getNoOfIndices();
 
 		// Get the indices
-		const std::vector< uint16_t >& indexVector = polyVoxMesh->getIndices();
-		const uint16_t* constUInt16Pointer = &(indexVector[0]);
+		const uint16_t* constUInt16Pointer = polyVoxMesh->getRawIndexData();
 		uint16_t* uintPointer = const_cast<uint16_t*>(constUInt16Pointer);
 		*indices = uintPointer;
 	}
@@ -864,8 +862,7 @@ CUBIQUITYC_API int32_t cuGetMesh(uint32_t nodeHandle, uint16_t* noOfVertices, vo
 		*noOfVertices = polyVoxMesh->getNoOfVertices();
 
 		// Get the vertices
-		const std::vector< typename VoxelTraits<MaterialSet>::VertexType >& vertexVector = polyVoxMesh->getVertices();
-		const VoxelTraits<MaterialSet>::VertexType* vertexPointer = &(vertexVector[0]);
+		const VoxelTraits<MaterialSet>::VertexType* vertexPointer = polyVoxMesh->getRawVertexData();
 		const void* constVoidPointer = reinterpret_cast<const void*>(vertexPointer);
 		void* voidPointer = const_cast<void*>(constVoidPointer);
 		*vertices = voidPointer;
@@ -874,8 +871,7 @@ CUBIQUITYC_API int32_t cuGetMesh(uint32_t nodeHandle, uint16_t* noOfVertices, vo
 		*noOfIndices = polyVoxMesh->getNoOfIndices();
 
 		// Get the indices
-		const std::vector< uint16_t >& indexVector = polyVoxMesh->getIndices();
-		const uint16_t* constUIntPointer = &(indexVector[0]);
+		const uint16_t* constUIntPointer = polyVoxMesh->getRawIndexData();
 		uint16_t* uintPointer = const_cast<uint16_t*>(constUIntPointer);
 		*indices = uintPointer;
 	}

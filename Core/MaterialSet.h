@@ -2,6 +2,7 @@
 #define __MaterialSet_H__
 
 #include "PolyVox/BaseVolume.h"
+#include "PolyVox/MarchingCubesSurfaceExtractor.h"
 #include "PolyVox/Vector.h"
 #include "PolyVox/Vertex.h"
 
