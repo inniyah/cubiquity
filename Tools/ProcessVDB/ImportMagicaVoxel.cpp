@@ -25,7 +25,8 @@
 #include "ImportMagicaVoxel.h"
 
 #include "Exceptions.h"
-#include "MagicaVoxelModel.h"
+
+#include "Dependencies/MagicaVoxelModel.h"
 
 #include "CubiquityC.h"
 
