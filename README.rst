@@ -9,12 +9,12 @@ It is not expected that you will make use of this voxel engine directly, but ins
 
 Unity integration
 -----------------
-Source Code: https://bitbucket.org/volumesoffun/cubiquity-for-unity3d
-Support thread: http://forum.unity3d.com/threads/cubiquity-a-fast-and-powerful-voxel-plugin-for-unity3d.184599/
+* Source Code: https://bitbucket.org/volumesoffun/cubiquity-for-unity3d
+* Support thread: http://forum.unity3d.com/threads/cubiquity-a-fast-and-powerful-voxel-plugin-for-unity3d.184599/
 
 Unreal integration
 ------------------
-Source code: https://github.com/volumesoffun/cubiquity-for-unreal-engine
-Support thread: https://forums.unrealengine.com/showthread.php?29873-Cubiquity-for-UE4-Voxel-Terrain-Plugin
+* Source code: https://github.com/volumesoffun/cubiquity-for-unreal-engine
+* Support thread: https://forums.unrealengine.com/showthread.php?29873-Cubiquity-for-UE4-Voxel-Terrain-Plugin
 
 This repository is mainly for users who want to recompile the library for new platforms, or for advanced users who want to fix bugs or extend the capabilities of the system.
