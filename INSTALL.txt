@@ -1,0 +1,88 @@
+Cubiquity was originally created as a closed source commercial project which was pre-compiled into a shared library for shipping with our Unity and Unreal integration layers. As such it was not designed for other people to compile, and you may find there are parts of the build process which are dependent on our development machines.
+
+Therefore, if you want to compile Cubiquity from source you are largely on your own. You may be able to make use of the provided CMake scripts if you know how to use them and they are supported on your target platform, or you may wish to just create an empty project in your chosen development environment and simply copy across the contents of the 'Core' folder. You may have to make some minor changes to the source to get it to build on your platform.
+
+The notes below are for our own internal use and give reminders of what we used to do prior to release. They are included here just in case they are useful.
+
+Internal release checklist
+--------------------------
+Start on develop branch.
+
+Changelog
+	- Update CHANGELOG.txt.
+		- Copy to asset store release info.
+
+Documentation
+	If major/minor (not patch) version change:
+		Update PROJECT_NUMBER
+		Compile latest HTML documentation.
+		Upload to website
+		Print HTML documentation to PDF files.
+			- Print from website so that links in PDF work properly.
+			- Don't use Latex output because it requires .eps images (I think)
+			- Don't use htmldoc because it doesn't produce nice layout (can experiment more)
+		Commit PDF documentation.
+		Update link in 0_ReadMe.txt if required
+		Update asset store description to point at latest documentation
+	
+Build Cubiquity library for all platforms:
+	- Check release mode.
+	- Check version number.
+	- Ensure debug log is disabled. 
+	- Ensure asserts are disabled.
+	- On Windows
+		- Check files with VirusTotal website.
+	- On OS X
+		- Build in Release mode: cmake -DCMAKE_BUILD_TYPE=Release ..
+		- Fix paths in executables so that they search the current directory for the library.
+			- Use https://github.com/auriamg/macdylibbundler/
+			- Sample command: ~/macdylibbundler/dylibbundler -d . -p . -x ProcessVDB
+		- Move to Cubiquity for Unity3D folder
+			- Delete original binaries, so we can verify that the hard-coded paths are fixed.
+			- e.g. mv * ~/cubiquity-for-unity3d/Assets/StreamingAssets/Cubiquity/SDK/OSX
+	- On Linux
+		- To be followed on both 32 and 64-bit build machines.
+			- Install cmake make g++ libx11-dev libxi-dev libgl1-mesa-dev libglu1-mesa-dev libxrandr-dev libxext-dev
+			- Install xorg-dev
+			- Build in Release mode: cmake -DCMAKE_BUILD_TYPE=Release ..
+			- Move to target folder: mv libCubiquityC.so ../../../cubiquity-for-unity3d/Assets/StreamingAssets/Cubiquity/SDK/
+		
+I think begin Git Flow release process at this point? Create release branch.
+
+Prepare submission
+	- Create 'new scene', as otherwise Unity seems to remember the last opened scene even after deleting repo.
+	- Delete repo from disk and get a fresh checkout
+		- Remember to run 'git flow init' and get on correct branch.
+	- Build package to be released as non-commercial version.
+	- Create zip of non-commercial package (no compression).
+	- Upload non-commercial files to website.
+	- Modify licensing file to return true.
+		- No need to delete 'LICENSE' file as it is outside assets folder which gets packed.
+	- Install asset store tools
+	- Run asset store tools
+		- Set 'Assets' folder (should be default)
+			- This seems to show up as having selected '/'
+		- Press 'Upload'.
+		- During upload of asset, make a copy of the .unitypackage which is actually being uploaded.
+			- An explorer window should pop open to show this, if not the path should be: C:\code\cubiquity-for-unity3d\Temp
+			- Upload submitted package to Google Drive.
+	
+Testing process
+	- Reset Windows XP VM to state with Unity freshly installed.
+	- Download non-commercial Cubiquity from website and test (pink shaders are normal here).
+	- Create x86 and x86-64 MacOS builds.
+	- Upload MacOS test builds to Google drive.
+	- Reset MacOS test machine to state with Unity freshly installed.
+	- Test builds produced by WinXP. Both 32 and 64 bit versions should run on the same VM.
+	- Download non-commercial Cubiquity from website and test in Unity.
+	- Create 32 and 64 bit Linux builds.
+	- Upload build to Google drive.
+	- From Windows, copy Linux builds to shared folders.
+	- Test Linux builds
+	
+Submit
+		- Set the version number.
+		- Enter message to reviewer.
+		- Press ok.
+	
+Finish Git Flow release.
