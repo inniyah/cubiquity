@@ -2,7 +2,7 @@
 	This system is not currently under active development, but a replacement system ('Cubiquity 2') is currently in the research phase. For more details please see this blog post: http://www.volumesoffun.com/reflections-on-cubiquity-and-finding-the-path-forward/
 
 Cubiquity voxel engine
-=======================================================
+======================
 Cubiquity is a voxel engine written in C++ and released under the terms of the `MIT license <https://www.tldrlegal.com/l/mit>`_. It was created to provide a higher-level wrapper around our `PolyVox <https://bitbucket.org/volumesoffun/polyvox>`_ library and to simplify integration into existing game engine such as `Unity <https://unity3d.com/>`_ and `Unreal <https://www.unrealengine.com>`_. It began life as a commercial project and was sold on the Unity Asset Store, but limited time and real-world commitments have led to us releasing the whole system for free.
 
 It is not expected that you will make use of this voxel engine directly, but instead use one of the existing integration layers for Unity or Unreal:
