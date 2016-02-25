@@ -61,7 +61,7 @@ using namespace std;
 // I still think the Unity/Unreal wrapper version numbers should follow the Cubiquity ones, and this will be less
 // disruptive once the Cubiquity ones are more settled.
 const uint32_t CuMajorVersion = 1;
-const uint32_t CuMinorVersion = 2;
+const uint32_t CuMinorVersion = 3;
 const uint32_t CuPatchVersion = 0;
 const uint32_t CuBuildVersion = 0;
 
