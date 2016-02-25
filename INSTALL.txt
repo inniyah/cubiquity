@@ -68,7 +68,7 @@ Prepare submission
 			- Upload submitted package to Google Drive.
 	
 Testing process
-	- Reset Windows XP VM to state with Unity freshly installed.
+	- Reset Windows XP VM to state with Unity freshly installed (EDIT - WinXP no longer supported)
 	- Download non-commercial Cubiquity from website and test (pink shaders are normal here).
 	- Create x86 and x86-64 MacOS builds.
 	- Upload MacOS test builds to Google drive.

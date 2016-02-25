@@ -42,14 +42,6 @@ set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
-# Use this toolset to ensure the resulting binaries run on Windows XP
-if (CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
-	# Note - Hardcoded value for VS2013. May need changing in the future.
-	# Setting as described here: http://binglongx.wordpress.com/tag/cmake_vs_platform_toolset/
-	#set( CMAKE_VS_PLATFORM_TOOLSET v120_xp )
-	set(CMAKE_GENERATOR_TOOLSET "v120_xp" CACHE STRING "Platform Toolset" FORCE) 
-endif()
-
 # We set the CXX flags here as 'global' options, and then add to them as required using set_target_properties()
 # See: http://stackoverflow.com/questions/5096881/does-set-target-properties-in-cmake-override-cmake-cxx-flags
 # Note: Should we be using 'CMAKE_CXX_COMPILE_FLAGS' instead of 'CMAKE_CXX_FLAGS'? See http://goo.gl/rLqUyk
