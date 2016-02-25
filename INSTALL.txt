@@ -6,25 +6,7 @@ The notes below are for our own internal use and give reminders of what we used 
 
 Internal release checklist
 --------------------------
-Start on develop branch.
 
-Changelog
-	- Update CHANGELOG.txt.
-		- Copy to asset store release info.
-
-Documentation
-	If major/minor (not patch) version change:
-		Update PROJECT_NUMBER
-		Compile latest HTML documentation.
-		Upload to website
-		Print HTML documentation to PDF files.
-			- Print from website so that links in PDF work properly.
-			- Don't use Latex output because it requires .eps images (I think)
-			- Don't use htmldoc because it doesn't produce nice layout (can experiment more)
-		Commit PDF documentation.
-		Update link in 0_ReadMe.txt if required
-		Update asset store description to point at latest documentation
-	
 Build Cubiquity library for all platforms:
 	- Check release mode.
 	- Check version number.
@@ -47,42 +29,3 @@ Build Cubiquity library for all platforms:
 			- Build in Release mode: cmake -DCMAKE_BUILD_TYPE=Release ..
 			- Move to target folder: mv libCubiquityC.so ../../../cubiquity-for-unity3d/Assets/StreamingAssets/Cubiquity/SDK/
 		
-I think begin Git Flow release process at this point? Create release branch.
-
-Prepare submission
-	- Create 'new scene', as otherwise Unity seems to remember the last opened scene even after deleting repo.
-	- Delete repo from disk and get a fresh checkout
-		- Remember to run 'git flow init' and get on correct branch.
-	- Build package to be released as non-commercial version.
-	- Create zip of non-commercial package (no compression).
-	- Upload non-commercial files to website.
-	- Modify licensing file to return true.
-		- No need to delete 'LICENSE' file as it is outside assets folder which gets packed.
-	- Install asset store tools
-	- Run asset store tools
-		- Set 'Assets' folder (should be default)
-			- This seems to show up as having selected '/'
-		- Press 'Upload'.
-		- During upload of asset, make a copy of the .unitypackage which is actually being uploaded.
-			- An explorer window should pop open to show this, if not the path should be: C:\code\cubiquity-for-unity3d\Temp
-			- Upload submitted package to Google Drive.
-	
-Testing process
-	- Reset Windows XP VM to state with Unity freshly installed (EDIT - WinXP no longer supported)
-	- Download non-commercial Cubiquity from website and test (pink shaders are normal here).
-	- Create x86 and x86-64 MacOS builds.
-	- Upload MacOS test builds to Google drive.
-	- Reset MacOS test machine to state with Unity freshly installed.
-	- Test builds produced by WinXP. Both 32 and 64 bit versions should run on the same VM.
-	- Download non-commercial Cubiquity from website and test in Unity.
-	- Create 32 and 64 bit Linux builds.
-	- Upload build to Google drive.
-	- From Windows, copy Linux builds to shared folders.
-	- Test Linux builds
-	
-Submit
-		- Set the version number.
-		- Enter message to reviewer.
-		- Press ok.
-	
-Finish Git Flow release.
