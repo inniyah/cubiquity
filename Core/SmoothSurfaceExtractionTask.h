@@ -1,3 +1,27 @@
+/*******************************************************************************
+* The MIT License (MIT)
+*
+* Copyright (c) 2016 David Williams and Matthew Williams
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all
+* copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+*******************************************************************************/
+
 #ifndef CUBIQUITY_SMOOTHSURFACEEXTRACTIONTASK_H_
 #define CUBIQUITY_SMOOTHSURFACEEXTRACTIONTASK_H_
 
@@ -10,17 +34,17 @@ namespace Cubiquity
 	class SmoothSurfaceExtractionTask : public Task
 	{
 	public:
-		SmoothSurfaceExtractionTask(OctreeNode< MaterialSet >* octreeNode, ::PolyVox::LargeVolume< typename MaterialSetMarchingCubesController::MaterialType >* polyVoxVolume);
+		SmoothSurfaceExtractionTask(OctreeNode< MaterialSet >* octreeNode, ::PolyVox::PagedVolume<MaterialSet>* polyVoxVolume);
 		~SmoothSurfaceExtractionTask();
 
 		void process(void);
 
-		void generateSmoothMesh(const Region& region, uint32_t lodLevel, ::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MaterialSetMarchingCubesController::MaterialType > >* resultMesh);
+		void generateSmoothMesh(const Region& region, uint32_t lodLevel, TerrainMesh* resultMesh);
 
 	public:
 		OctreeNode< MaterialSet >* mOctreeNode;
-		::PolyVox::LargeVolume<typename MaterialSetMarchingCubesController::MaterialType>* mPolyVoxVolume;
-		::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MaterialSetMarchingCubesController::MaterialType> >* mPolyVoxMesh;
+		::PolyVox::PagedVolume<MaterialSet>* mPolyVoxVolume;
+		TerrainMesh* mPolyVoxMesh;
 		Timestamp mProcessingStartedTimestamp;
 
 		// Whether the task owns the mesh, or whether it has been passed to
@@ -28,8 +52,8 @@ namespace Cubiquity
 		bool mOwnMesh;
 	};
 
-	void recalculateMaterials(::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MaterialSetMarchingCubesController::MaterialType > >* mesh, const Vector3F& meshOffset, ::PolyVox::LargeVolume<MaterialSet>* volume);
-	MaterialSet getInterpolatedValue(::PolyVox::LargeVolume<MaterialSet>* volume, const Vector3F& position);
+	void recalculateMaterials(TerrainMesh* mesh, const Vector3F& meshOffset, ::PolyVox::PagedVolume<MaterialSet>* volume);
+	MaterialSet getInterpolatedValue(::PolyVox::PagedVolume<MaterialSet>* volume, const Vector3F& position);
 
 	template< typename SrcPolyVoxVolumeType, typename DstPolyVoxVolumeType>
 	void resampleVolume(uint32_t factor, SrcPolyVoxVolumeType* srcVolume, const Region& srcRegion, DstPolyVoxVolumeType* dstVolume, const Region& dstRegion)
@@ -48,8 +72,8 @@ namespace Cubiquity
 					int32_t sy = (dy - dstRegion.getLowerCorner().getY()) * factor + srcRegion.getLowerCorner().getY();
 					int32_t sz = (dz - dstRegion.getLowerCorner().getZ()) * factor + srcRegion.getLowerCorner().getZ();
 
-					const MaterialSet& srcVoxel = srcVolume->template getVoxel<PolyVox::WrapModes::Border>(sx,sy,sz);
-					dstVolume->setVoxelAt(dx,dy,dz,srcVoxel);
+					const MaterialSet& srcVoxel = srcVolume->getVoxel(sx,sy,sz);
+					dstVolume->setVoxel(dx,dy,dz,srcVoxel);
 				}
 			}
 		}

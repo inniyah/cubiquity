@@ -1,20 +1,45 @@
+/*******************************************************************************
+* The MIT License (MIT)
+*
+* Copyright (c) 2016 David Williams and Matthew Williams
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all
+* copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+*******************************************************************************/
+
 #ifndef VOLUME_H_
 #define VOLUME_H_
 
+#include "BackgroundTaskProcessor.h"
 #include "CubiquityForwardDeclarations.h"
 #include "Octree.h"
-#include "UpdatePriorities.h"
 #include "Vector.h"
 #include "VoxelTraits.h"
+#include "WritePermissions.h"
 
-#include "PolyVoxCore/Array.h"
-#include "PolyVoxCore/Material.h"
-#include "PolyVoxCore/RawVolume.h"
+#include "PolyVox/Array.h"
+#include "PolyVox/Material.h"
+#include "PolyVox/RawVolume.h"
 
-#include "PolyVoxCore/LargeVolume.h"
+#include "PolyVox/PagedVolume.h"
 
-#include "PolyVoxCore/CubicSurfaceExtractor.h"
-#include "PolyVoxCore/MarchingCubesSurfaceExtractor.h"
+#include "PolyVox/CubicSurfaceExtractor.h"
+#include "PolyVox/MarchingCubesSurfaceExtractor.h"
 
 #include "SQLite/sqlite3.h"
 
@@ -27,71 +52,65 @@ namespace Cubiquity
 		typedef _VoxelType VoxelType;
 
 		Volume(const Region& region, const std::string& pathToNewVoxelDatabase, uint32_t baseNodeSize);
-		Volume(const std::string& pathToExistingVoxelDatabase, uint32_t baseNodeSize);
+		Volume(const std::string& pathToExistingVoxelDatabase, WritePermission writePermission, uint32_t baseNodeSize);
 		~Volume();
 
 		// These functions just forward to the underlying PolyVox volume.
 		uint32_t getWidth(void) const { return mPolyVoxVolume->getWidth(); }
 		uint32_t getHeight(void) const { return mPolyVoxVolume->getHeight(); }
 		uint32_t getDepth(void) const { return mPolyVoxVolume->getDepth(); }
-		const Region& getEnclosingRegion(void) const { return mPolyVoxVolume->getEnclosingRegion(); }
+		const Region& getEnclosingRegion(void) const { return mEnclosingRegion; }
 
 		// Note this adds a border rather than calling straight through.
-		VoxelType getVoxelAt(int32_t x, int32_t y, int32_t z) const;
+		VoxelType getVoxel(int32_t x, int32_t y, int32_t z) const;
 
 		// This one's a bit of a hack... direct access to underlying PolyVox volume
-		::PolyVox::LargeVolume<VoxelType>* _getPolyVoxVolume(void) const { return mPolyVoxVolume; }
+		::PolyVox::PagedVolume<VoxelType>* _getPolyVoxVolume(void) const { return mPolyVoxVolume; }
 
 		// Octree access
 		Octree<VoxelType>* getOctree(void) { return mOctree; };
 		OctreeNode<VoxelType>* getRootOctreeNode(void) { return mOctree->getRootNode(); }
 
 		// Set voxel doesn't just pass straight through, it also validates the position and marks the voxel as modified.
-		void setVoxelAt(int32_t x, int32_t y, int32_t z, VoxelType value, UpdatePriority updatePriority = UpdatePriorities::Background);
+		void setVoxel(int32_t x, int32_t y, int32_t z, VoxelType value, bool markAsModified);
 
 		// Marks a region as modified so it will be regenerated later.
-		void markAsModified(const Region& region, UpdatePriority updatePriority = UpdatePriorities::Background);
+		void markAsModified(const Region& region);
 
-		void acceptOverrideBlocks(void)
+		void acceptOverrideChunks(void)
 		{
 			mPolyVoxVolume->flushAll();
-			m_pVoxelDatabase->acceptOverrideBlocks();
+			m_pVoxelDatabase->acceptOverrideChunks();
 		}
 		
-		void discardOverrideBlocks(void)
+		void discardOverrideChunks(void)
 		{
 			mPolyVoxVolume->flushAll();
-			m_pVoxelDatabase->discardOverrideBlocks();
+			m_pVoxelDatabase->discardOverrideChunks();
 		}
 
 		// Should be called before rendering a frame to update the meshes and octree structure.
-		virtual void update(const Vector3F& viewPosition, float lodThreshold);
+		virtual bool update(const Vector3F& viewPosition, float lodThreshold);
+
+		// It's a bit ugly that the background task processor is part of the volume class.
+		// We do this because we want to clear it when the volume is destroyed, to avoid
+		// the situation wher it continues to process tasks from the destroyed volume.
+		// A better solution is needed here (smart pointers?).
+		BackgroundTaskProcessor* mBackgroundTaskProcessor;
 
 	protected:
-		int32_t getPropertyAsInt(const std::string& name, int32_t defaultValue);
-		float getPropertyAsFloat(const std::string& name, float defaultValue);
-		std::string getPropertyAsString(const std::string& name, const std::string& defaultValue);
-
-		void setProperty(const std::string& name, int value);
-		void setProperty(const std::string& name, float value);
-		void setProperty(const std::string& name, const std::string& value);
-
 		Octree<VoxelType>* mOctree;
+		VoxelDatabase<VoxelType>* m_pVoxelDatabase;
 
 	private:
 		Volume& operator=(const Volume&);
 
-		bool getProperty(const std::string& name, std::string& value);
+		::PolyVox::Region mEnclosingRegion;
+		::PolyVox::PagedVolume<VoxelType>* mPolyVoxVolume;
 
-		::PolyVox::LargeVolume<VoxelType>* mPolyVoxVolume;
+		//sqlite3* mDatabase;
 
-		//::PolyVox::MinizBlockCompressor<VoxelType>* m_pCompressor;
-		VoxelDatabase<VoxelType>* m_pVoxelDatabase;
-
-		sqlite3* mDatabase;
-
-		sqlite3_stmt* mSelectPropertyStatement;		
-		sqlite3_stmt* mInsertOrReplacePropertyStatement;
+		
 
 		// Friend functions
 		friend class Octree<VoxelType>;

@@ -1,3 +1,27 @@
+/*******************************************************************************
+* The MIT License (MIT)
+*
+* Copyright (c) 2016 David Williams and Matthew Williams
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all
+* copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+*******************************************************************************/
+
 #include "TerrainVolumeEditor.h"
 
 #include "Brush.h"
@@ -59,16 +83,16 @@ namespace Cubiquity
 
 					for(uint32_t matIndex = 0; matIndex < MaterialSet::getNoOfMaterials(); matIndex++)
 					{
-						int32_t original = terrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
+						int32_t original = terrainVolume->getVoxel(x, y, z).getMaterial(matIndex);
 
-						float voxel1nx = static_cast<float>(terrainVolume->getVoxelAt(x-1, y, z).getMaterial(matIndex));
-						float voxel1px = static_cast<float>(terrainVolume->getVoxelAt(x+1, y, z).getMaterial(matIndex));
+						float voxel1nx = static_cast<float>(terrainVolume->getVoxel(x-1, y, z).getMaterial(matIndex));
+						float voxel1px = static_cast<float>(terrainVolume->getVoxel(x+1, y, z).getMaterial(matIndex));
 
-						float voxel1ny = static_cast<float>(terrainVolume->getVoxelAt(x, y-1, z).getMaterial(matIndex));
-						float voxel1py = static_cast<float>(terrainVolume->getVoxelAt(x, y+1, z).getMaterial(matIndex));
+						float voxel1ny = static_cast<float>(terrainVolume->getVoxel(x, y-1, z).getMaterial(matIndex));
+						float voxel1py = static_cast<float>(terrainVolume->getVoxel(x, y+1, z).getMaterial(matIndex));
 
-						float voxel1nz = static_cast<float>(terrainVolume->getVoxelAt(x, y, z-1).getMaterial(matIndex));
-						float voxel1pz = static_cast<float>(terrainVolume->getVoxelAt(x, y, z+1).getMaterial(matIndex));
+						float voxel1nz = static_cast<float>(terrainVolume->getVoxel(x, y, z-1).getMaterial(matIndex));
+						float voxel1pz = static_cast<float>(terrainVolume->getVoxel(x, y, z+1).getMaterial(matIndex));
 
 						Vector3DFloat normal
 						(
@@ -94,12 +118,12 @@ namespace Cubiquity
 						iAverage = (std::min)(iAverage, static_cast<int32_t>(MaterialSet::getMaxMaterialValue()));
 						iAverage = (std::max)(iAverage, 1);
 
-						MaterialSet result = mSmoothingVolume.getVoxelAt(x, y, z);
+						MaterialSet result = mSmoothingVolume.getVoxel(x, y, z);
 						result.setMaterial(matIndex, iAverage);
 						mSmoothingVolume.setVoxel(x, y, z, result);
 					}
 
-					MaterialSet result = mSmoothingVolume.getVoxelAt(x, y, z);
+					MaterialSet result = mSmoothingVolume.getVoxel(x, y, z);
 					result.clampSumOfMaterials();
 					mSmoothingVolume.setVoxel(x, y, z, result);
 				}
@@ -112,12 +136,12 @@ namespace Cubiquity
 			{
 				for(int x = firstX; x <= lastX; ++x)
 				{
-					terrainVolume->setVoxelAt(x, y, z, mSmoothingVolume.getVoxelAt(x, y, z), UpdatePriorities::DontUpdate);
+					terrainVolume->setVoxel(x, y, z, mSmoothingVolume.getVoxel(x, y, z), false);
 				}
 			}
 		}
 
-		terrainVolume->markAsModified(region, UpdatePriorities::Immediate);
+		terrainVolume->markAsModified(region);
 	}
 
 	void blurTerrainVolume(TerrainVolume* terrainVolume, const Vector3F& centre, const Brush& brush)
@@ -158,16 +182,16 @@ namespace Cubiquity
 
 					for(uint32_t matIndex = 0; matIndex < MaterialSet::getNoOfMaterials(); matIndex++)
 					{
-						int32_t original = terrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
+						int32_t original = terrainVolume->getVoxel(x, y, z).getMaterial(matIndex);
 
 						int32_t sum = 0;
-						sum += terrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
-						sum += terrainVolume->getVoxelAt(x+1, y, z).getMaterial(matIndex);
-						sum += terrainVolume->getVoxelAt(x-1, y, z).getMaterial(matIndex);
-						sum += terrainVolume->getVoxelAt(x, y+1, z).getMaterial(matIndex);
-						sum += terrainVolume->getVoxelAt(x, y-1, z).getMaterial(matIndex);
-						sum += terrainVolume->getVoxelAt(x, y, z+1).getMaterial(matIndex);
-						sum += terrainVolume->getVoxelAt(x, y, z-1).getMaterial(matIndex);
+						sum += terrainVolume->getVoxel(x, y, z).getMaterial(matIndex);
+						sum += terrainVolume->getVoxel(x+1, y, z).getMaterial(matIndex);
+						sum += terrainVolume->getVoxel(x-1, y, z).getMaterial(matIndex);
+						sum += terrainVolume->getVoxel(x, y+1, z).getMaterial(matIndex);
+						sum += terrainVolume->getVoxel(x, y-1, z).getMaterial(matIndex);
+						sum += terrainVolume->getVoxel(x, y, z+1).getMaterial(matIndex);
+						sum += terrainVolume->getVoxel(x, y, z-1).getMaterial(matIndex);
 
 						float fAverage = static_cast<float>(sum) / 7.0f;
 
@@ -179,12 +203,12 @@ namespace Cubiquity
 						iLerped = (std::min)(iLerped, static_cast<int32_t>(MaterialSet::getMaxMaterialValue()));
 						iLerped = (std::max)(iLerped, 0);
 
-						MaterialSet result = mSmoothingVolume.getVoxelAt(x, y, z);
+						MaterialSet result = mSmoothingVolume.getVoxel(x, y, z);
 						result.setMaterial(matIndex, iLerped);
 						mSmoothingVolume.setVoxel(x, y, z, result);
 					}
 
-					MaterialSet result = mSmoothingVolume.getVoxelAt(x, y, z);
+					MaterialSet result = mSmoothingVolume.getVoxel(x, y, z);
 					result.clampSumOfMaterials();
 					mSmoothingVolume.setVoxel(x, y, z, result);
 				}
@@ -197,12 +221,12 @@ namespace Cubiquity
 			{
 				for(int x = firstX; x <= lastX; ++x)
 				{
-					terrainVolume->setVoxelAt(x, y, z, mSmoothingVolume.getVoxelAt(x, y, z), UpdatePriorities::DontUpdate);
+					terrainVolume->setVoxel(x, y, z, mSmoothingVolume.getVoxel(x, y, z), false);
 				}
 			}
 		}
 
-		terrainVolume->markAsModified(region, UpdatePriorities::Immediate);
+		terrainVolume->markAsModified(region);
 	}
 
 	void blurTerrainVolume(TerrainVolume* terrainVolume, const Region& region)
@@ -220,16 +244,16 @@ namespace Cubiquity
 				{
 					for(uint32_t matIndex = 0; matIndex < MaterialSet::getNoOfMaterials(); matIndex++)
 					{
-						int32_t original = terrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
+						int32_t original = terrainVolume->getVoxel(x, y, z).getMaterial(matIndex);
 
 						int32_t sum = 0;
-						sum += terrainVolume->getVoxelAt(x, y, z).getMaterial(matIndex);
-						sum += terrainVolume->getVoxelAt(x+1, y, z).getMaterial(matIndex);
-						sum += terrainVolume->getVoxelAt(x-1, y, z).getMaterial(matIndex);
-						sum += terrainVolume->getVoxelAt(x, y+1, z).getMaterial(matIndex);
-						sum += terrainVolume->getVoxelAt(x, y-1, z).getMaterial(matIndex);
-						sum += terrainVolume->getVoxelAt(x, y, z+1).getMaterial(matIndex);
-						sum += terrainVolume->getVoxelAt(x, y, z-1).getMaterial(matIndex);
+						sum += terrainVolume->getVoxel(x, y, z).getMaterial(matIndex);
+						sum += terrainVolume->getVoxel(x+1, y, z).getMaterial(matIndex);
+						sum += terrainVolume->getVoxel(x-1, y, z).getMaterial(matIndex);
+						sum += terrainVolume->getVoxel(x, y+1, z).getMaterial(matIndex);
+						sum += terrainVolume->getVoxel(x, y-1, z).getMaterial(matIndex);
+						sum += terrainVolume->getVoxel(x, y, z+1).getMaterial(matIndex);
+						sum += terrainVolume->getVoxel(x, y, z-1).getMaterial(matIndex);
 
 						float fAverage = static_cast<float>(sum) / 7.0f;
 
@@ -239,12 +263,12 @@ namespace Cubiquity
 						iAverage = (std::min)(iAverage, static_cast<int32_t>(MaterialSet::getMaxMaterialValue()));
 						iAverage = (std::max)(iAverage, 0);
 
-						MaterialSet result = mSmoothingVolume.getVoxelAt(x, y, z);
+						MaterialSet result = mSmoothingVolume.getVoxel(x, y, z);
 						result.setMaterial(matIndex, iAverage);
 						mSmoothingVolume.setVoxel(x, y, z, result);
 					}
 
-					MaterialSet result = mSmoothingVolume.getVoxelAt(x, y, z);
+					MaterialSet result = mSmoothingVolume.getVoxel(x, y, z);
 					result.clampSumOfMaterials();
 					mSmoothingVolume.setVoxel(x, y, z, result);
 				}
@@ -257,12 +281,12 @@ namespace Cubiquity
 			{
 				for(int x = croppedRegion.getLowerX(); x <= croppedRegion.getUpperX(); ++x)
 				{
-					terrainVolume->setVoxelAt(x, y, z, mSmoothingVolume.getVoxelAt(x, y, z), UpdatePriorities::DontUpdate);
+					terrainVolume->setVoxel(x, y, z, mSmoothingVolume.getVoxel(x, y, z), false);
 				}
 			}
 		}
 
-		terrainVolume->markAsModified(croppedRegion, UpdatePriorities::Immediate);
+		terrainVolume->markAsModified(croppedRegion);
 	}
 
 	void addToMaterial(uint32_t index, uint8_t amountToAdd, MaterialSet& material)
@@ -338,15 +362,15 @@ namespace Cubiquity
 					int32_t amountToAdd = static_cast<int32_t>(fAmmountToAdd + 0.5f);
 
 
-					MaterialSet voxel = terrainVolume->getVoxelAt(x, y, z);
+					MaterialSet voxel = terrainVolume->getVoxel(x, y, z);
 					addToMaterial(materialIndex, amountToAdd, voxel);
 					voxel.clampSumOfMaterials();
-					terrainVolume->setVoxelAt(x, y, z, voxel);
+					terrainVolume->setVoxel(x, y, z, voxel, false);
 					
 				}
 			}
 		}
 
-		terrainVolume->markAsModified(region, UpdatePriorities::Immediate);
+		terrainVolume->markAsModified(region);
 	}
 }

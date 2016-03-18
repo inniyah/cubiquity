@@ -1,10 +1,34 @@
+/*******************************************************************************
+* The MIT License (MIT)
+*
+* Copyright (c) 2016 David Williams and Matthew Williams
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all
+* copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+*******************************************************************************/
+
 #include "SmoothSurfaceExtractionTask.h"
 
 #include "MaterialSet.h"
 
-#include "PolyVoxCore/MarchingCubesSurfaceExtractor.h"
-#include "PolyVoxCore/RawVolume.h"
-#include "PolyVoxCore/LargeVolume.h"
+#include "PolyVox/MarchingCubesSurfaceExtractor.h"
+#include "PolyVox/RawVolume.h"
+#include "PolyVox/PagedVolume.h"
 
 #include <limits>
 
@@ -12,7 +36,17 @@ using namespace PolyVox;
 
 namespace Cubiquity
 {
-	SmoothSurfaceExtractionTask::SmoothSurfaceExtractionTask(OctreeNode< MaterialSet >* octreeNode, ::PolyVox::LargeVolume<typename MaterialSetMarchingCubesController::MaterialType>* polyVoxVolume)
+	// Eliminate this
+	void scaleVertices(TerrainMesh* mesh, uint32_t amount)
+	{
+		for (uint32_t ct = 0; ct < mesh->getNoOfVertices(); ct++)
+		{
+			TerrainVertex& vertex = const_cast<TerrainVertex&>(mesh->getVertex(ct));
+			vertex.encodedPosition *= amount;
+		}
+	}
+
+	SmoothSurfaceExtractionTask::SmoothSurfaceExtractionTask(OctreeNode< MaterialSet >* octreeNode, ::PolyVox::PagedVolume<MaterialSet>* polyVoxVolume)
 		:Task()
 		,mOctreeNode(octreeNode)
 		,mPolyVoxVolume(polyVoxVolume)
@@ -36,7 +70,7 @@ namespace Cubiquity
 	{
 		mProcessingStartedTimestamp = Clock::getTimestamp();
 		//Extract the surface
-		mPolyVoxMesh = new ::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MaterialSetMarchingCubesController::MaterialType > >;
+		mPolyVoxMesh = new TerrainMesh;
 		mOwnMesh = true;
 
 		generateSmoothMesh(mOctreeNode->mRegion, mOctreeNode->mHeight, mPolyVoxMesh);
@@ -44,15 +78,13 @@ namespace Cubiquity
 		mOctreeNode->mOctree->mFinishedSurfaceExtractionTasks.push(this);
 	}
 
-	void SmoothSurfaceExtractionTask::generateSmoothMesh(const Region& region, uint32_t lodLevel, ::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MaterialSetMarchingCubesController::MaterialType > >* resultMesh)
+	void SmoothSurfaceExtractionTask::generateSmoothMesh(const Region& region, uint32_t lodLevel, TerrainMesh* resultMesh)
 	{
 		MaterialSetMarchingCubesController controller;
 
 		if(lodLevel == 0)
 		{
-			//SurfaceMesh<PositionMaterialNormal< typename MaterialSetMarchingCubesController::MaterialType > > mesh;
-			::PolyVox::MarchingCubesSurfaceExtractor< ::PolyVox::LargeVolume<MaterialSet>, MaterialSetMarchingCubesController > surfaceExtractor(mPolyVoxVolume, region, resultMesh, ::PolyVox::WrapModes::Border, MaterialSet(0), controller);
-			surfaceExtractor.execute();
+			extractMarchingCubesMeshCustom(mPolyVoxVolume, region, resultMesh, controller);
 		}
 		else
 		{
@@ -79,21 +111,22 @@ namespace Cubiquity
 
 			lowRegion.shrink(1, 1, 1);
 
-			::PolyVox::MarchingCubesSurfaceExtractor< ::PolyVox::RawVolume<MaterialSet>, MaterialSetMarchingCubesController > surfaceExtractor(&resampledVolume, lowRegion, resultMesh, ::PolyVox::WrapModes::Border, MaterialSet(0), controller);
-			surfaceExtractor.execute();
+			extractMarchingCubesMeshCustom(&resampledVolume, lowRegion, resultMesh, controller);
 
-			resultMesh->scaleVertices(static_cast<float>(downSampleFactor));
+			scaleVertices(resultMesh, downSampleFactor);
 
 			recalculateMaterials(resultMesh, static_cast<Vector3F>(mOctreeNode->mRegion.getLowerCorner()), mPolyVoxVolume);
 		}
 	}
 
-	void recalculateMaterials(::PolyVox::SurfaceMesh<::PolyVox::PositionMaterialNormal< typename MaterialSetMarchingCubesController::MaterialType > >* mesh, const Vector3F& meshOffset,  ::PolyVox::LargeVolume<MaterialSet>* volume)
+	void recalculateMaterials(TerrainMesh* mesh, const Vector3F& meshOffset, ::PolyVox::PagedVolume<MaterialSet>* volume)
 	{
-		std::vector< PositionMaterialNormal< typename MaterialSetMarchingCubesController::MaterialType > >& vertices = mesh->getRawVertexData();
-		for(uint32_t ct = 0; ct < vertices.size(); ct++)
+		for(uint32_t ct = 0; ct < mesh->getNoOfVertices(); ct++)
 		{
-			const Vector3DFloat& vertexPos = vertices[ct].getPosition() + meshOffset;
+			// Nasty casting away of constness so we can tweak the material values.
+			TerrainVertex& vertex = const_cast<TerrainVertex&>(mesh->getVertex(ct))
+				;
+			const Vector3DFloat& vertexPos = decodeVertex(vertex).position + meshOffset;
 			MaterialSet value = getInterpolatedValue(volume, vertexPos);
 
 			// It seems that sometimes the vertices can fall in an empty cell. The reason for this
@@ -107,14 +140,14 @@ namespace Cubiquity
 				value.setMaterial(0, 255);
 			}
 
-			vertices[ct].setMaterial(value);
+			vertex.data = value;
 		}
 	}
 
 
-	MaterialSet getInterpolatedValue(::PolyVox::LargeVolume<MaterialSet>* volume, const Vector3F& position)
+	MaterialSet getInterpolatedValue(::PolyVox::PagedVolume<MaterialSet>* volume, const Vector3F& position)
 	{
-		::PolyVox::LargeVolume<MaterialSet>::Sampler sampler(volume);
+		::PolyVox::PagedVolume<MaterialSet>::Sampler sampler(volume);
 
 		int32_t iLowerX = ::PolyVox::roundTowardsNegInf(position.getX());
 		int32_t iLowerY = ::PolyVox::roundTowardsNegInf(position.getY());

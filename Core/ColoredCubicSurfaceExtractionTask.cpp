@@ -1,11 +1,35 @@
+/*******************************************************************************
+* The MIT License (MIT)
+*
+* Copyright (c) 2016 David Williams and Matthew Williams
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all
+* copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+*******************************************************************************/
+
 #include "ColoredCubicSurfaceExtractionTask.h"
 
 #include "Color.h"
 #include "OctreeNode.h"
 
-#include "PolyVoxCore/CubicSurfaceExtractor.h"
-#include "PolyVoxCore/RawVolume.h"
-#include "PolyVoxCore/LargeVolume.h"
+#include "PolyVox/CubicSurfaceExtractor.h"
+#include "PolyVox/RawVolume.h"
+#include "PolyVox/PagedVolume.h"
 
 #include <limits>
 
@@ -13,7 +37,29 @@ using namespace PolyVox;
 
 namespace Cubiquity
 {
-	ColoredCubicSurfaceExtractionTask::ColoredCubicSurfaceExtractionTask(OctreeNode< Color >* octreeNode, ::PolyVox::LargeVolume<Color>* polyVoxVolume)
+	// Eliminate this
+	void scaleVertices(ColoredCubesMesh* mesh, uint32_t amount)
+	{
+		for (uint32_t ct = 0; ct < mesh->getNoOfVertices(); ct++)
+		{
+			ColoredCubesVertex& vertex = const_cast<ColoredCubesVertex&>(mesh->getVertex(ct));
+			vertex.encodedPosition *= amount;
+		}
+	}
+
+	// Eliminate this
+	/*void translateVertices(ColoredCubesMesh* mesh, const Vector3DUint8& amount)
+	{
+		for (uint32_t ct = 0; ct < mesh->m_vecVertices.size(); ct++)
+		{
+			//TODO: Should rethink accessors here to provide faster access
+			Vector3DUint8 position = mesh->m_vecVertices[ct].position;
+			position += amount;
+			mesh->m_vecVertices[ct].position = position;
+		}
+	}*/
+
+	ColoredCubicSurfaceExtractionTask::ColoredCubicSurfaceExtractionTask(OctreeNode< Color >* octreeNode, ::PolyVox::PagedVolume<Color>* polyVoxVolume)
 		:Task()
 		,mOctreeNode(octreeNode)
 		,mPolyVoxVolume(polyVoxVolume)
@@ -40,7 +86,7 @@ namespace Cubiquity
 		Region lod0Region = mOctreeNode->mRegion;
 
 		//Extract the surface
-		mPolyVoxMesh = new ::PolyVox::SurfaceMesh<::PolyVox::PositionMaterial<Color> >;
+		mPolyVoxMesh = new ColoredCubesMesh;
 		mOwnMesh = true;
 
 		uint32_t downScaleFactor = 0x0001 << mOctreeNode->mHeight;
@@ -49,8 +95,7 @@ namespace Cubiquity
 
 		if(downScaleFactor == 1) 
 		{
-			::PolyVox::CubicSurfaceExtractor< ::PolyVox::LargeVolume<Color>, ColoredCubesIsQuadNeeded > surfaceExtractor(mPolyVoxVolume, mOctreeNode->mRegion, mPolyVoxMesh, ::PolyVox::WrapModes::Border, Color(), true, isQuadNeeded);
-			surfaceExtractor.execute();
+			extractCubicMeshCustom(mPolyVoxVolume, mOctreeNode->mRegion, mPolyVoxMesh, isQuadNeeded, true);
 		}
 		else if(downScaleFactor == 2)
 		{
@@ -75,11 +120,10 @@ namespace Cubiquity
 		
 			//dstRegion.shiftLowerCorner(-1, -1, -1);
 
-			::PolyVox::CubicSurfaceExtractor< ::PolyVox::RawVolume<Color>, ColoredCubesIsQuadNeeded > surfaceExtractor(&resampledVolume, dstRegion, mPolyVoxMesh, ::PolyVox::WrapModes::Border, Color(), true, isQuadNeeded);
-			surfaceExtractor.execute();
+			extractCubicMeshCustom(&resampledVolume, dstRegion, mPolyVoxMesh, isQuadNeeded, true);
 
-			mPolyVoxMesh->scaleVertices(static_cast<float>(downScaleFactor));
-			mPolyVoxMesh->translateVertices(Vector3DFloat(0.5f, 0.5f, 0.5f));
+			scaleVertices(mPolyVoxMesh, downScaleFactor);
+			//translateVertices(mPolyVoxMesh, Vector3DFloat(0.5f, 0.5f, 0.5f)); // Removed when going from float positions to uin8_t. Do we need this?
 		}
 		else if(downScaleFactor == 4)
 		{
@@ -117,11 +161,10 @@ namespace Cubiquity
 
 			//dstRegion.shiftLowerCorner(-1, -1, -1);
 
-			::PolyVox::CubicSurfaceExtractor< ::PolyVox::RawVolume<Color>, ColoredCubesIsQuadNeeded > surfaceExtractor(&resampledVolume2, dstRegion2, mPolyVoxMesh, ::PolyVox::WrapModes::Border, Color(), true, isQuadNeeded);
-			surfaceExtractor.execute();
+			extractCubicMeshCustom(&resampledVolume2, dstRegion2, mPolyVoxMesh, isQuadNeeded, true);
 
-			mPolyVoxMesh->scaleVertices(static_cast<float>(downScaleFactor));
-			mPolyVoxMesh->translateVertices(Vector3DFloat(1.5f, 1.5f, 1.5f));
+			scaleVertices(mPolyVoxMesh, downScaleFactor);
+			//translateVertices(mPolyVoxMesh, Vector3DFloat(1.5f, 1.5f, 1.5f)); // Removed when going from float positions to uin8_t. Do we need this?
 		}
 
 		mOctreeNode->mOctree->mFinishedSurfaceExtractionTasks.push(this);

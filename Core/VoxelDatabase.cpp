@@ -1,6 +1,32 @@
+/*******************************************************************************
+* The MIT License (MIT)
+*
+* Copyright (c) 2016 David Williams and Matthew Williams
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all
+* copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+*******************************************************************************/
+
+#include "miniz/miniz.c"
+
 #include "VoxelDatabase.h"
 
-#include "PolyVoxCore/Region.h"
+#include "PolyVox/Region.h"
 
 #include "Logging.h"
 
@@ -26,7 +52,7 @@ namespace Cubiquity
 		return (Part1By2(z) << 2) + (Part1By2(y) << 1) + Part1By2(x);
 	}
 
-	// This function encodes a Region as a 64-bit integer so that it can be used as a key to access block data in the SQLite database.
+	// This function encodes a Region as a 64-bit integer so that it can be used as a key to access chunk data in the SQLite database.
 	// A region actually contains more than 64-bits of data so some has to be lost here. Specifically we assume that we already know
 	// the size of the region (so we only have to encode it's lower corner and not its upper corner or extents), and we also restrict
 	// the range of valid coordinates. A Region's coordinates are represented by 3-bits of data, but we only support converting to a key 

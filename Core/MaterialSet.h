@@ -1,11 +1,34 @@
+/*******************************************************************************
+* The MIT License (MIT)
+*
+* Copyright (c) 2016 David Williams and Matthew Williams
+*
+* Permission is hereby granted, free of charge, to any person obtaining a copy
+* of this software and associated documentation files (the "Software"), to deal
+* in the Software without restriction, including without limitation the rights
+* to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+* copies of the Software, and to permit persons to whom the Software is
+* furnished to do so, subject to the following conditions:
+*
+* The above copyright notice and this permission notice shall be included in all
+* copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+* IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+* FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+* AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+* LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+* OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+* SOFTWARE.
+*******************************************************************************/
+
 #ifndef __MaterialSet_H__
 #define __MaterialSet_H__
 
-#include "PolyVoxCore/Impl/TypeDef.h"
-
-#include "PolyVoxCore/BaseVolume.h"
-#include "PolyVoxCore/Vector.h"
-#include "PolyVoxCore/VertexTypes.h"
+#include "PolyVox/BaseVolume.h"
+#include "PolyVox/MarchingCubesSurfaceExtractor.h"
+#include "PolyVox/Vector.h"
+#include "PolyVox/Vertex.h"
 
 #include "BitField.h"
 
@@ -251,18 +274,16 @@ namespace Cubiquity
 
 		MaterialType blendMaterials(MaterialSet a, MaterialSet b, float weight);
 
-		MaterialSet getBorderValue(void);
 		DensityType getThreshold(void);
-		::PolyVox::WrapMode getWrapMode(void);
 
 		void setThreshold(DensityType tThreshold);
-		void setWrapMode(::PolyVox::WrapMode eWrapMode, MaterialSet tBorder = MaterialSet(0));
 
 	private:
 		DensityType m_tThreshold;
-		::PolyVox::WrapMode m_eWrapMode;
-		MaterialSet m_tBorder;
 	};
+
+	typedef ::PolyVox::MarchingCubesVertex<MaterialSet> TerrainVertex;
+	typedef ::PolyVox::Mesh<TerrainVertex, uint16_t> TerrainMesh;
 }
 
 // We overload the trilinear interpolation for the MaterialSet type because it does not have enough precision.

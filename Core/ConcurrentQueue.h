@@ -1,3 +1,8 @@
+// Based on http://www.justsoftwaresolutions.co.uk/threading/implementing-a-thread-safe-queue-using-condition-variables.html
+//
+// Note from the comments on licensing: "Yes, you can just copy the code presented here and use
+// it for whatever you like. There won't be any licensing issues. I'm glad you find it helpful."
+
 #ifndef CUBIQUITY_CONCURRENTQUEUE_H
 #define CUBIQUITY_CONCURRENTQUEUE_H
 
@@ -9,8 +14,6 @@ namespace Cubiquity
 	// FIXME: THIS QUEUE IS CURRENTLY NOT THREAD SAFE DESPITE IT'S NAME. THE THREADING CODE WAS BASED ON BOOST AND IS COMMENTED OUT
 	// PENDING A STD C++ VERSION. THE STD FUNCTIONS/TYPES DO NOT HAVE A ONE-TO-ONE CORRESPONDANCE TO THE BOOST FUNCTIONS/TYPES SO
 	// I WANT TO TAKE SOME CARE OVER THIS.
-
-	//Based on http://www.justsoftwaresolutions.co.uk/threading/implementing-a-thread-safe-queue-using-condition-variables.html
 	template<class Data, class Compare>
 	class concurrent_queue
 	{
