@@ -2,12 +2,30 @@
 cmake_minimum_required (VERSION 2.6)
 project (Tutorials)
 
+set(OpenGL_GL_PREFERENCE LEGACY)
 find_package(OpenGL REQUIRED)
 
+find_package(GLEW REQUIRED)
+include_directories(${GLEW_INCLUDE_DIRS})
+link_libraries(${GLEW_LIBRARIES})
 
-if( CMAKE_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR )
-    message( FATAL_ERROR "Please select another Build Directory ! (and give it a clever name, like bin_Visual2012_64bits/)" )
+find_package(glfw3 REQUIRED)
+link_libraries(glfw ${GLFW_LIBRARIES})
+
+
+if(OPENGL_FOUND AND GLEW_FOUND)
+    message(STATUS "OpenGL, GLFW and GLEW successfully found")
+    message(STATUS OPENGL_LIBRARY: ${OPENGL_gl_LIBRARY})
+    message(STATUS GLEW_LIBRARIES: ${GLEW_LIBRARIES})
+    message(STATUS GLFW_LIBRARIES: ${GLFW_LIBRARIES})
+else()
+    message(STATUS "Cannot find GL libraries")
 endif()
+
+
+#~ if( CMAKE_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR )
+#~     message( FATAL_ERROR "Please select another Build Directory ! (and give it a clever name, like bin_Visual2012_64bits/)" )
+#~ endif()
 if( CMAKE_SOURCE_DIR MATCHES " " )
 	message( "Your Source Directory contains spaces. If you experience problems when compiling, this can be the cause." )
 endif()
@@ -17,8 +35,8 @@ endif()
 
 
 
-# Compile external dependencies 
-add_subdirectory (external)
+#~ # Compile external dependencies 
+#~ add_subdirectory (external)
 
 # On Visual 2005 and above, this module can set the debug working directory
 #list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/external/rpavlik-cmake-modules-1c73e35")
@@ -32,17 +50,18 @@ endif(INCLUDE_DISTRIB)
 
 
 include_directories(
-	${CubiquityCore_SOURCE_DIR} ${CubiquityC_SOURCE_DIR}
-	external/glfw-3.0.3/include/GLFW/
-	external/glm-0.9.4.0/
-	external/glew-1.9.0/include/
+	${CubiquityCore_SOURCE_DIR}
+	${CubiquityC_SOURCE_DIR}
+	#~ external/glfw-3.0.3/include/GLFW/
+	#~ external/glm-0.9.4.0/
+	#~ external/glew-1.9.0/include/
 	.
 )
 
 set(ALL_LIBS
 	${OPENGL_LIBRARY}
-	GLFW_303
-	GLEW_190
+	#~ GLFW_303
+	#~ GLEW_190
 )
 
 add_definitions(
@@ -101,7 +120,7 @@ endif()
 if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
   # Organise the Visual Studio folders.
   SET_PROPERTY(TARGET OpenGLExample PROPERTY FOLDER "Examples")
-  SET_PROPERTY(TARGET GLEW_190 PROPERTY FOLDER "Examples/external")
-  SET_PROPERTY(TARGET GLFW_303 PROPERTY FOLDER "Examples/external")
-  SET_PROPERTY(TARGET docs PROPERTY FOLDER "Examples/external")
+  #~ SET_PROPERTY(TARGET GLEW_190 PROPERTY FOLDER "Examples/external")
+  #~ SET_PROPERTY(TARGET GLFW_303 PROPERTY FOLDER "Examples/external")
+  #~ SET_PROPERTY(TARGET docs PROPERTY FOLDER "Examples/external")
 endif()

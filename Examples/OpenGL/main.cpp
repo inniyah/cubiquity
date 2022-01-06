@@ -8,7 +8,7 @@
 #include <GL/glew.h>
 
 // Include GLFW
-#include <glfw3.h>
+#include <GLFW/glfw3.h>
 GLFWwindow* window;
 
 // Include GLM
@@ -21,6 +21,14 @@ using namespace glm;
 #include "controls.hpp"
 
 #include "CubiquityC.h"
+
+#ifndef DATA_DIR
+#define DATA_DIR "./Data"
+#endif
+
+#ifndef SHADERS_DIR
+#define SHADERS_DIR "./Examples/OpenGL"
+#endif
 
 GLuint programID;
 
@@ -337,13 +345,13 @@ int main( void )
 	bool coloredCubesMode = false;
 	if (coloredCubesMode)
 	{
-		validate(cuNewColoredCubesVolumeFromVDB("C:/code/cubiquity/Data/VoxelDatabases/Version 0/VoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
-		programID = LoadShaders("ColoredCubesVertexShader.glsl", "ColoredCubesFragmentShader.glsl");
+		validate(cuNewColoredCubesVolumeFromVDB(DATA_DIR "/VoxelDatabases/Version 0/VoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
+		programID = LoadShaders(SHADERS_DIR "/ColoredCubesVertexShader.glsl", SHADERS_DIR "/ColoredCubesFragmentShader.glsl");
 	}
 	else
 	{
-		validate(cuNewTerrainVolumeFromVDB("C:/code/cubiquity/Data/VoxelDatabases/Version 0/SmoothVoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
-		programID = LoadShaders("TerrainVertexShader.glsl", "TerrainFragmentShader.glsl");
+		validate(cuNewTerrainVolumeFromVDB(DATA_DIR "/VoxelDatabases/Version 0/SmoothVoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
+		programID = LoadShaders(SHADERS_DIR "/TerrainVertexShader.glsl", SHADERS_DIR "/TerrainFragmentShader.glsl");
 	}
 	
 	// Get a handle for our "MVP" uniform

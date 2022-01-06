@@ -27,6 +27,10 @@
 
 #include "CubiquityC.h"
 
+#ifndef DATA_DIR
+#define DATA_DIR "./Data"
+#endif
+
 void validate(int returnCode)
 {
 	if (returnCode != CU_OK)
@@ -128,7 +132,7 @@ void processOctreeNode(uint32_t octreeNodeHandle)
 void testTerrainVolume()
 {
 	uint32_t volumeHandle;
-	validate(cuNewTerrainVolumeFromVDB("C:/code/cubiquity/Data/VoxelDatabases/Version 0/SmoothVoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
+	validate(cuNewTerrainVolumeFromVDB(DATA_DIR "/VoxelDatabases/Version 0/SmoothVoxeliensTerrain.vdb", CU_READONLY, 32, &volumeHandle));
 
 	uint32_t isUpToDate;
 	validate(cuUpdateVolume(volumeHandle, 0.0f, 0.0f, 0.0f, 0.0f, &isUpToDate));
