@@ -40,6 +40,7 @@ namespace Cubiquity
 
 		bool operator()(Vector3F pos, const VoxelType& voxel)
 		{
+			return false;
 		}
 	};
 
