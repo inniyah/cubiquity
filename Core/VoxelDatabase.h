@@ -30,8 +30,7 @@
 
 #include "SQLite/sqlite3.h"
 
-#define MINIZ_HEADER_FILE_ONLY
-#include "miniz/miniz.c"
+#include "miniz/miniz.h"
 
 #include "Exceptions.h"
 #include "WritePermissions.h"
